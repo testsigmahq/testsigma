@@ -2,11 +2,13 @@
 
 Thank you for your interest in Testsigma and for taking the time to contribute to this project. If you feel insecure about how to start contributing, feel free to ask us on our [Discord Server](https://discord.gg/invite/5caWS7R6QX) in the #contributors channel.
 
+&emsp;
 
 ## **Code of conduct**
 
 Read our [Code of Conduct](CODE_OF_CONDUCT.md) before contributing.
 
+&emsp;
 
 ## **How can I contribute?**
 
@@ -57,6 +59,7 @@ You can help by suggesting improvements to our tutorials using the [Tutorials Im
 
 We welcome contributions that help make testsigma bug-free & improve the test automation experience for our users. You can also find issues tagged [Good First Issues](https://github.com/testsigmahq/testsigma/issues?q=is%3Aopen+is%3Aissue+label%3A"good+first+issue"). Check out the below sections to begin.
 
+&emsp;
 
 ## **Writing Code**
 
@@ -68,7 +71,6 @@ All submissions, including submissions by project members, require review. Befor
 We appreciate first-time contributors and we are happy to assist you in getting started. In case of questions, just [reach out to us!](https://discord.gg/invite/5caWS7R6QX)
 You find all issues suitable for first-time contributors [here.](https://github.com/testsigmahq/testsigma/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
 
-&emsp;
 
 ### Repo overview
 
@@ -102,6 +104,7 @@ We use [Github Flow](https://guides.github.com/introduction/flow/index.html), so
 Refer to [this](https://testsigma.com/docs/contributing/setup-dev-environment
 ) document to learn how to set up a dev environment.
 
+&emsp;
 
 ## **Committing code**
 

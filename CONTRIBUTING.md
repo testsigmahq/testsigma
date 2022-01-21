@@ -1,6 +1,6 @@
 # Contributing to Testsigma
 
-Thank you for your interest in Testsigma and for taking the time to contribute to this project. If you feel insecure about how to start contributing, feel free to ask us on our [Discord channel](https://discord.gg/invite/5caWS7R6QX) in the #contributors channel.
+Thank you for your interest in Testsigma and for taking the time to contribute to this project. If you feel insecure about how to start contributing, feel free to ask us on our [Discord Server](https://discord.gg/invite/5caWS7R6QX) in the #contributors channel.
 
 
 ## **Code of conduct**
@@ -27,49 +27,40 @@ We display blogs featuring Testsigma on our [Blogs](https://testsigma.com/blog) 
 
 You can talk about Testsigma in online/offline meetups. Drop a line to [community@testsigma.com](mailto:community@testsigma.com) ahead of time and we'll send you some swag. 👕
 
-&emsp;
 
 #### 🐛 Build an Add-on 
 
 Enhance Testsigma’s automation capabilities by building add-ons to solve unique test automation problems. Check out [Contribution Guide](https://github.com/testsigmahq/testsigma-addons/blob/main/CONTRIBUTING.md) for more details.
 
-&emsp;
 
 #### 🐛 Report a bug
 
 Report all issues through GitHub Issues using the [Report a Bug](https://github.com/testsigmahq/testsigma/issues/new/choose) template. Provide as much information as you can.
 
-&emsp;
 
 #### 🛠 Create a feature request
 
 We welcome all feature requests, whether for new features or enhancements to existing features. File your feature request through GitHub Issues using the [Feature Request](https://github.com/testsigmahq/testsigma/issues/new/choose) template.
 
-&emsp;
 
 #### 📝 Improve the documentation
 
 Suggest improvements to our documentation using the [Documentation Improvement](https://github.com/testsigmahq/testsigma-docs/issues/new/choose) template or check out our [Docs Contribution Guide](https://github.com/testsigmahq/testsigma-docs/blob/main/CONTRIBUTING.md). Testsigma docs are published on [here](https://testsigma.com/docs/)
 
-&emsp;
 
 #### 📝 Contribute to Tutorials 
 
 You can help by suggesting improvements to our tutorials using the [Tutorials Improvement](https://github.com/testsigmahq/testsigma-tutorials/issues/new/choose) template or create a new tutorial. Checkout [Tutorials Contribution Guide](https://github.com/testsigmahq/testsigma-tutorials/blob/main/CONTRIBUTING.md) for more details.
 
-&emsp;
 
 #### ⚙️ Write code to fix a Bug / new Feature Request
 
 We welcome contributions that help make testsigma bug-free & improve the test automation experience for our users. You can also find issues tagged [Good First Issues](https://github.com/testsigmahq/testsigma/issues?q=is%3Aopen+is%3Aissue+label%3A"good+first+issue"). Check out the below sections to begin.
 
-&emsp;
 
 ## **Writing Code**
 
 All submissions, including submissions by project members, require review. Before raising a pull request, ensure you have raised a corresponding issue and discussed a possible solution with a maintainer. This gives your pull request the highest chance of getting merged quickly. Join our [Discord channel](https://discord.gg/invite/5caWS7R6QX) if you need any help.
-
-&emsp;
 
  
 ### First-time contributors
@@ -92,7 +83,6 @@ consisting of 4 components:
 
 For all contributions, a CLA (Contributor License Agreement) needs to be signed [here](https://cla-assistant.io/testsigmahq/testsigma) before (or after) the pull request has been submitted. A bot will prompt contributors to sign the CLA via a pull request comment, if necessary.
 
-&emsp;
 
 ### Set up your branch to write code
 
@@ -106,14 +96,12 @@ We use [Github Flow](https://guides.github.com/introduction/flow/index.html), so
  6. push your changes.
  7. Raise a pull request against the staging branch of the main repository.
 
-&emsp;
 
 ### 🏡  Setup for local development
 
 Refer to [this](https://testsigma.com/docs/contributing/setup-dev-environment
 ) document to learn how to set up a dev environment.
 
-&emsp;
 
 ## **Committing code**
 
@@ -124,7 +112,6 @@ The repository contains two important (protected) branches.
 
 Pull requests should be made against the <span style="color:grey">staging</span> branch. <span style="color:grey">staging</span> contains all of the new features and fixes that are under testing and ready to go out in the next release.
 
-&emsp;
 
 ### Commit & Create Pull Requests 
 
@@ -135,7 +122,6 @@ Pull requests should be made against the <span style="color:grey">staging</span>
  5. Link the issue of the base repository in your Pull request description. [Guide](https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue)
  6. Fill out the [Pull Request Template](./.github/PULL_REQUEST_TEMPLATE.md) completely within the body of the PR. If you feel some areas are not relevant add `N/A` but don’t delete those sections.
 
-&emsp;
 
 ###  Commit messages
 
@@ -145,47 +131,3 @@ Pull requests should be made against the <span style="color:grey">staging</span>
   for more information on writing good commit messages.
 
 - Don't add a period/dot (.) at the end of the summary line.
-
-
-
-&emsp;
-
-
-—-------------END—----------------
-
-&emsp;
-
-
- 1. https://github.com/testsigmahq/testsigma/issues?q=is%3Aopen+is%3Aissue+label%3A"good+first+issue"
-
- 2. https://github.com/testsigmahq/testsigma/issues/new/choose
-
- 3. https://github.com/testsigmahq/testsigma/labels/good%20first%20issue
-
- 4. https://github.com/testsigmahq/testsigma-addons/blob/main/CONTRIBUTING.md
- 5. https://github.com/testsigmahq/testsigma-docs/blob/main/CONTRIBUTING.md
- 6. https://github.com/testsigmahq/testsigma-tutorials/blob/main/CONTRIBUTING.md
-
-&emsp;
-
-
-**References**
-
-
- 1. https://github.com/cypress-io/cypress/blob/develop/CONTRIBUTING.md 
-
-
- 2.  https://github.com/hasura/graphql-engine/blob/master/CONTRIBUTING.md 
-
-
-3. https://github.com/appsmithorg/appsmith/blob/release/CONTRIBUTING.md
-
-
-&emsp;
-
-
-**Pull Requests References:**
-
-1. https://github.com/cypress-io/cypress/blob/master/CONTRIBUTING.md#pull-requests
-2. https://github.com/hasura/graphql-engine/blob/master/CONTRIBUTING.md#working-on-an-issue
-3. https://github.com/appsmithorg/appsmith/blob/release/contributions/CodeContributionsGuidelines.md#-git-workflow

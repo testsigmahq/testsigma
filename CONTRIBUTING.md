@@ -2,31 +2,26 @@
 
 Thank you for your interest in Testsigma and for taking the time to contribute to this project. If you feel insecure about how to start contributing, feel free to ask us on our [Discord channel](https://discord.gg/invite/5caWS7R6QX) in the #contributors channel.
 
-&emsp;
 
 ## **Code of conduct**
 
 Read our [Code of Conduct](CODE_OF_CONDUCT.md) before contributing.
 
-&emsp;
 
 ## **How can I contribute?**
 
 There are many ways in which you can contribute to Testsigma.
 
-&emsp;
 
 #### 🐛 Join the community
 
 Join our [Discord server](https://discord.gg/invite/5caWS7R6QX), help others use Testsigma for their test automation requirements.
 
-&emsp;
 
 #### 🐛 Blog about Testsigma
 
 We display blogs featuring Testsigma on our [Blogs](https://testsigma.com/blog) page. If you'd like your blog to be published here, write to us at [community@testsigma.com](mailto:community@testsigma.com).
 
-&emsp;
 
 #### 🐛 Give a talk about Testsigma
 

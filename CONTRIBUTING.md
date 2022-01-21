@@ -15,27 +15,27 @@ Read our [Code of Conduct](CODE_OF_CONDUCT.md) before contributing.
 There are many ways in which you can contribute to Testsigma.
 
 
-#### 🐛 Join the community
+#### 👥 Join the community
 
 Join our [Discord server](https://discord.gg/invite/5caWS7R6QX), help others use Testsigma for their test automation requirements.
 
 
-#### 🐛 Blog about Testsigma
+#### 🖋️ Blog about Testsigma
 
 We display blogs featuring Testsigma on our [Blogs](https://testsigma.com/blog) page. If you'd like your blog to be published here, write to us at [community@testsigma.com](mailto:community@testsigma.com).
 
 
-#### 🐛 Give a talk about Testsigma
+#### 🗣️ Give a talk about Testsigma
 
 You can talk about Testsigma in online/offline meetups. Drop a line to [community@testsigma.com](mailto:community@testsigma.com) ahead of time and we'll send you some swag. 👕
 
 
-#### 🐛 Build an Add-on 
+#### 🧩 Build an Add-on 
 
 Enhance Testsigma’s automation capabilities by building add-ons to solve unique test automation problems. Check out [Contribution Guide](https://github.com/testsigmahq/testsigma-addons/blob/main/CONTRIBUTING.md) for more details.
 
 
-#### 🐛 Report a bug
+#### 🐞 Report a bug
 
 Report all issues through GitHub Issues using the [Report a Bug](https://github.com/testsigmahq/testsigma/issues/new/choose) template. Provide as much information as you can.
 
@@ -50,7 +50,7 @@ We welcome all feature requests, whether for new features or enhancements to exi
 Suggest improvements to our documentation using the [Documentation Improvement](https://github.com/testsigmahq/testsigma-docs/issues/new/choose) template or check out our [Docs Contribution Guide](https://github.com/testsigmahq/testsigma-docs/blob/main/CONTRIBUTING.md). Testsigma docs are published on [here](https://testsigma.com/docs/)
 
 
-#### 📝 Contribute to Tutorials 
+#### 📚 Contribute to Tutorials 
 
 You can help by suggesting improvements to our tutorials using the [Tutorials Improvement](https://github.com/testsigmahq/testsigma-tutorials/issues/new/choose) template or create a new tutorial. Checkout [Tutorials Contribution Guide](https://github.com/testsigmahq/testsigma-tutorials/blob/main/CONTRIBUTING.md) for more details.
 

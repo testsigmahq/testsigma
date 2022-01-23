@@ -2,3 +2,5 @@
 .idea
 *.iml
 out/**
+bin/**
+logs/**

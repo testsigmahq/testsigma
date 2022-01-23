@@ -1120,11 +1120,10 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       this.replacer.nativeElement.innerHTML = this.testStep.parsedKibbutzStep;
       this.setKibbutzTemplate(this.testStep.kibbutzTemplate);
       if (this.testStep.kibbutzElements) {
-        const elementPlaceholder = this.elementPlaceholder();
+        const uiIdentifierPlaceHolders = this.elementPlaceholder();
         let index = 0;
         for (const key in this.testStep.kibbutzElements) {
-          const elementsPlaceholders = this.replacer.nativeElement.querySelectorAll('div.actiontext span.element[data-reference="' + key + '"]');
-          this.assignElement(this.testStep.kibbutzElements[key].name, elementsPlaceholders[index++]);
+          this.assignElement(this.testStep.kibbutzElements[key].name, uiIdentifierPlaceHolders[index++]);
         }
       }
       if (this.testStep.kibbutzTestData) {

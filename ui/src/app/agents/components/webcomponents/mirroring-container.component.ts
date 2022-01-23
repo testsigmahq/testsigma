@@ -236,7 +236,7 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
       this.inspectedElement.mobileElement = new MobileElement();
       this.inspectedElement.mobileElement.contentDesc = "";
       this.inspectedElement.mobileElement[this.locatorTypes[this.selectedUiIdentifier?.locatorType]?.variableName]
-        = this.uiId ? this.selectedUiIdentifier.locatorValue : "";
+        = this.uiId ? this.selectedUiIdentifier?.locatorValue : "";
       this.selectElement(this.inspectedElement);
     }
   }

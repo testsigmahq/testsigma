@@ -75,7 +75,7 @@ export class ElementsContainerComponent implements OnInit {
     }
   }
 
-  public setScreenName(screenName: any, save?) {
+  public setScreenName(screenName: any) {
 
     if(screenName?.id != null){
       this.element.screenNameObj.name = screenName.name;
@@ -89,9 +89,6 @@ export class ElementsContainerComponent implements OnInit {
         this.element.screenNameObj.name = screenNameBean.name;
         this.element.screenNameId = screenNameBean.id;
         this.elementForm.get('screen_name').setValue(this.element.screenNameObj.name);
-        if(save){
-          (Boolean(this.uiId)) ? this.updateElement(): this.createElement;
-        }
         // this.isInProgress =false;
       })
     }
@@ -194,7 +191,7 @@ export class ElementsContainerComponent implements OnInit {
     let screenNameBean:ElementScreenName = new ElementScreenName();
     screenNameBean.name = this.elementForm.get('screen_name').value;
     screenNameBean.workspaceVersionId = this.element.workspaceVersionId;
-    this.setScreenName(screenNameBean, true);
+    this.setScreenName(screenNameBean);
   }
 
   public saveElements() {

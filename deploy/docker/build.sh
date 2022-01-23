@@ -8,13 +8,23 @@ EXPECTED_ARGS=1
 E_BADARGS=65
 CURRENT_DIR="$(pwd -P)"
 
-if [ $# -ne $EXPECTED_ARGS ]
+if [ $# -lt $EXPECTED_ARGS ]
 then
   echo "Usage: $0 <version>"
   exit $E_BADARGS
 fi
 
+PUSH_LATEST=false
 
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --PUSH_LATEST=*)
+      PUSH_LATEST="${1#*=}"
+      ;;
+    *)
+  esac
+  shift
+done
 
 ROOT_FOLDER="$(
   cd "$(dirname "$0")" || exit
@@ -30,5 +40,13 @@ docker build -t server -f $ROOT_FOLDER/Dockerfile .
 
 docker tag server:latest testsigmahq/server:$VERSION
 docker push testsigmahq/server:$VERSION
+
+if [[ "$PUSH_LATEST" == "true"* ]]; then
+  echo "Pushing build with latest tag"
+  docker tag server:latest testsigmahq/server:latest
+  docker push testsigmahq/server:latest
+else
+  echo "Latest tag build not requested. So Skipping it..."
+fi
 
 cd $CURRENT_DIR

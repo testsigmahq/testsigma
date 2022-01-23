@@ -16,24 +16,27 @@
   &nbsp; &#8901; &nbsp;
   <a href="https://www.youtube.com/testsigma" target="_bank">YouTube</a>
 </p>
+&emsp;
+&emsp;
+&emsp;
 
   Rapidly automate web, mobile app, and API tests in plain English, on a single, extensible platform that works out of the box.
   
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &#8901; &nbsp;Powerful / OpenSource  Test Automation, deployed instantly. Create end-to end tests in minutes
+  - Powerful / OpenSource  Test Automation, deployed instantly. Create end-to end tests in minutes
   
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &#8901; &nbsp;Open Source platform to automate tests for any application in minutes
+  - Open Source platform to automate tests for any application in minutes
   
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &#8901; &nbsp;An open source platform to bring test automation in one place
+  - An open source platform to bring test automation in one place
 
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &#8901; &nbsp;Replace <ins>the broken test stack</ins> with a powerful open source platform
+  - Replace <ins>the broken test stack</ins> with a powerful open source platform
 
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &#8901; &nbsp;Deploy **end-to-end / unified /integrated** Test Automation for any application in minutes
+  - Deploy **end-to-end / unified /integrated** Test Automation for any application in minutes
 
-<br/><br/><br/>
- 
+&emsp;
 
-Powerful open-source test automation platform for websites, mobile apps & API. Write tests in simple English, auto-capture elements, parametrize testing with built-in test data generators, instant APIs for integrations, customize for unique use-cases with 100+ pre-built add-ons or build your own with SDKs.
+<br><a href="https://www.youtube.com/watch?v=xfmEI6RMGg4" target="_blank"><img src="http://docs.testsigma.com/images/github/how-to-automate-with-testsigma-button.png" alt="How to automate testing with Testsigma" width="410px" /></a>
 
+&emsp;
 
 ## **Quick start: One click deployment on Testsigma Cloud**
 

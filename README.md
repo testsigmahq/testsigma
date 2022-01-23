@@ -18,7 +18,6 @@
   <a href="https://www.youtube.com/testsigma" target="_bank">YouTube</a>
 </p>
 
-<p align="center">
   Rapidly automate web, mobile app, and API tests in plain English, on a single, extensible platform that works out of the box.
   
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &#8901; &nbsp;Powerful / OpenSource  Test Automation, deployed instantly. Create end-to end tests in minutes
@@ -31,10 +30,8 @@
 
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &#8901; &nbsp;Deploy **end-to-end / unified /integrated** Test Automation for any application in minutes
 
-</p>
+<br/>
  
-
-## Description:
 
 Powerful open-source test automation platform for websites, mobile apps & API. Write tests in simple English, auto-capture elements, parametrize testing with built-in test data generators, instant APIs for integrations, customize for unique use-cases with 100+ pre-built add-ons or build your own with SDKs.
 

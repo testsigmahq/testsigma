@@ -1,6 +1,5 @@
-<p align="center">
-  <img src="http://docs.testsigma.com/images/github/overview.jpg">
-</p>
+
+  <img src="http://docs.testsigma.com/images/github/overview.jpg" width="100%">
 
 <p align="center">
   <a href="https://testsigma.com/signup" target="_bank">Getting started</a>

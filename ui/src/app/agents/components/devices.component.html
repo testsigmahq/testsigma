@@ -70,25 +70,25 @@
         <span [textContent]="device.screenWidth"></span>x
         <span [textContent]="device.screenHeight"></span>
       </div>
-      <div class="ts-col-5 action-icons">
-        <a
-          href="javascript:void(0)" data-placement="bottom"
-          [matTooltip]="'agents.devices.actions.view_device' | translate"
-          (click)="startInspector(device)"
-          *ngIf="agent.isLocalAgent && device.inspectorStartAllowed() &&  !hasMirroredDevice"
-          class="fa-mirroring action-icon text-brand"></a>
-        <a
-          href="javascript:void(0)" data-placement="bottom"
-          [matTooltip]="'agents.devices.actions.stop_device_view' | translate"
-          (click)="stopInspector(device)"
-          *ngIf="agent.isLocalAgent && device.inspectorStopAllowed() &&
-          (hasMirroredDevice && (mirroredDevice.id == device.id))"
-          class="fa-mirroring action-icon text-brand"></a>
-        <i [class.disabled]="device.osName == 'IOS'"
-           [matTooltip]="'agents.devices.actions.mirroring.not_supported' | translate"
-           *ngIf="agent.isLocalAgent && device.inspectorDisabled()"
-           class="pointer fa-mirroring action-icon"></i>
-      </div>
+<!--      <div class="ts-col-5 action-icons">-->
+<!--        <a-->
+<!--          href="javascript:void(0)" data-placement="bottom"-->
+<!--          [matTooltip]="'agents.devices.actions.view_device' | translate"-->
+<!--          (click)="startInspector(device)"-->
+<!--          *ngIf="agent.isLocalAgent && device.inspectorStartAllowed() &&  !hasMirroredDevice"-->
+<!--          class="fa-mirroring action-icon text-brand"></a>-->
+<!--        <a-->
+<!--          href="javascript:void(0)" data-placement="bottom"-->
+<!--          [matTooltip]="'agents.devices.actions.stop_device_view' | translate"-->
+<!--          (click)="stopInspector(device)"-->
+<!--          *ngIf="agent.isLocalAgent && device.inspectorStopAllowed() &&-->
+<!--          (hasMirroredDevice && (mirroredDevice.id == device.id))"-->
+<!--          class="fa-mirroring action-icon text-brand"></a>-->
+<!--        <i [class.disabled]="device.osName == 'IOS'"-->
+<!--           [matTooltip]="'agents.devices.actions.mirroring.not_supported' | translate"-->
+<!--           *ngIf="agent.isLocalAgent && device.inspectorDisabled()"-->
+<!--           class="pointer fa-mirroring action-icon"></i>-->
+<!--      </div>-->
     </div>
   </div>
   <div *ngIf="devices?.length==0" class="w-100">

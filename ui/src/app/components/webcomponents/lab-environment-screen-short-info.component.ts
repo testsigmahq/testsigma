@@ -43,7 +43,7 @@ import {Platform} from "../../enums/platform.enum";
             [textContent]="isHybrid && agentDevice ? 'V. ' +agentDevice.osVersion : executionEnvironment?.formattedOsVersion"></span>
           <span
             class="mr-5 sm" style="height: 14px"
-            [class.fa-mobile-alt-solid]="executionEnvironment?.deviceName && (executionEnvironment?.isIOS || executionEnvironment?.isAndroid)"></span>
+            [class.fa-mobile-alt-solid]="!isMobileNative && executionEnvironment?.deviceName && (executionEnvironment?.isIOS || executionEnvironment?.isAndroid)"></span>
           <span
             *ngIf="!isMobile"
             class="mr-5 sm" style="height: 14px"
@@ -60,7 +60,7 @@ import {Platform} from "../../enums/platform.enum";
             *ngIf="!isHybrid && executionEnvironment?.deviceName && (executionEnvironment?.isIOS || executionEnvironment?.isAndroid)"
             [textContent]="executionEnvironment?.deviceName"></span>
           <span class="ml-5 sm" style="height: 14px"
-                *ngIf="(executionEnvironment?.isIOS || executionEnvironment?.isAndroid) && executionEnvironment?.browser"
+                *ngIf="!isMobileNative && (executionEnvironment?.isIOS || executionEnvironment?.isAndroid) && executionEnvironment?.browser"
                 [class.chrome]="executionEnvironment?.isChrome"
                 [class.safari]="executionEnvironment?.isSafari"></span>
           <span *ngIf="canShowResolution">

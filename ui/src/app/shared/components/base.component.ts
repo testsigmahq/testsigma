@@ -13,6 +13,7 @@ import {NotificationsService, NotificationType} from 'angular2-notifications';
 import {TranslateService} from '@ngx-translate/core';
 import {Validators} from '@angular/forms';
 import {ToastrService} from "ngx-toastr";
+import {ProgressAnimationType} from "ngx-toastr/toastr/toastr-config";
 
 
 @Component({
@@ -62,6 +63,7 @@ export class BaseComponent implements OnInit {
       timeOut: 7000,
       positionClass: 'toast-bottom-left',
       progressBar: true,
+      progressAnimation: <ProgressAnimationType>'increasing'
     };
     if (this.toastrService) {
       this.toastrService.show(temp.content, temp.title, temp, temp.type);

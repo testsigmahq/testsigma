@@ -206,7 +206,8 @@ export class ActionElementSuggestionComponent implements OnInit {
         isNew: true,
         testCaseId: this.option?.testCase?.id,
         isDryRun: this.option?.isDryRun,
-        testCaseResultId: this.option.testCaseResultId
+        testCaseResultId: this.option.testCaseResultId,
+        isStepRecordView: this.option.isStepRecordView
       },
       panelClass: ['mat-dialog', 'rds-none'],
       ...this.alterStyleIfStepRecorder()

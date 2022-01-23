@@ -13,8 +13,6 @@ sh "$WORKING_DIR/zip-build.sh" Mac mac
 sh "$WORKING_DIR/zip-build.sh" Linux linux
 sh "$WORKING_DIR/zip-build.sh" Windows windows
 
-cd ../osassets # Temporary...we can remove once we have published the the branch to a new repo.
-
 gh release upload $VERSION $WORKING_DIR/../../TestsigmaAgent-Mac.zip --clobber
 gh release upload $VERSION $WORKING_DIR/../../TestsigmaAgent-Windows.zip --clobber
 gh release upload $VERSION $WORKING_DIR/../../TestsigmaAgent-Linux.zip --clobber

@@ -127,7 +127,7 @@ export class ListComponent extends BaseComponent implements OnInit {
   agentDownloadLink(os?: String) {
     os = os || this.osName;
     let camelizeOsName = os[0].toUpperCase() + os.substr(1).toLowerCase();
-    return "https://github.com/TestsigmaInc/osassets/releases/download/1.0.0/TestsigmaAgent-" + camelizeOsName + ".zip";
+    return "https://github.com/Testsigmahq/testsigma/releases/download/1.0.0-beta/TestsigmaAgent-" + camelizeOsName + ".zip";
   };
 
   private goToPreviousPageIfEmpty(res) {

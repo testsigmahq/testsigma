@@ -59,25 +59,25 @@ We have 2 more deployment options to choose from
 
 ## **Features**
 
-Heading: Test Development
+### Test Development
 -  Write code-agnostic, human-readable tests in plain English with built-in NLP Grammar.
 - Generate airtight test scripts for web and mobile apps using Test Recorder.
 - Integrate automated API calls within your functional/UI test steps.
 
-Heading: Data-Driven/Parameterized Testing
+### Data-Driven/Parameterized Testing
 - Upload test data sets as (file format) files.
 - Use built-in data generators for mock test data (what types of strings are supported).
 - Create your own custom data generators as add-ons.
 
-Heading: Visual Testing
+### Visual Testing
 
 Enable visual testing with a toggle while creating a test plan.
 
-Heading: Run Results
+### Run Results
 
 Debug using screenshots, videos, text logs, and more. Generate custom reports at test, module, test suite, or device/system levels. 
 
-Heading: Integrations
+### Integrations
 
 Integrate with any CI tool for continuous testing.
 
@@ -187,29 +187,3 @@ We love our contributors! If you'd like to contribute anything from a bug fix to
 
 Testsigma is available under the [Apache License 2.0](LICENSE) (Apache-2.0).
 
-—-------------------Dont add content below this section—------------
- 
- 
-**Home page tagline**
-
-Setup powerful Test Automation instantly, create end-to-end tests in minutes
-
-**Repo Tag lines:**
-
-- **Testsigma**
-
-    Open-Source Test Automation project that lets you set up instantly, write and run end-to-end tests in minutes.
-
-- **Testsigma Docs**
-
-    Guides, use-cases, integrations, APIs you can use to work with Testsigma.
-
-- **Tutorials**
-
-    Learn how to automate end-to-end test scenarios in Testsigma. Contains real-world examples.
-
-- **Add-ons**
-
-    All available add-ons for automation actions, data generators + Java SDKs and templates to build custom add-ons.
-
-**Banner tagline**

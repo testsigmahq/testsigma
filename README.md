@@ -29,7 +29,7 @@
 
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &#8901; &nbsp;Deploy **end-to-end / unified /integrated** Test Automation for any application in minutes
 
-<br/>
+<br/><br/><br/>
  
 
 Powerful open-source test automation platform for websites, mobile apps & API. Write tests in simple English, auto-capture elements, parametrize testing with built-in test data generators, instant APIs for integrations, customize for unique use-cases with 100+ pre-built add-ons or build your own with SDKs.

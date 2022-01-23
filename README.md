@@ -1,5 +1,9 @@
 # Testsigma Community Software
 
+<p align="center">
+  <img width="460" height="300" src="http://docs.testsigma.com/images/github/overview.svg">
+</p>
+
 - Powerful / OpenSource  Test Automation, deployed instantly. Create end-to end tests in minutes
 
 - Open Source platform to automate tests for any application in minutes

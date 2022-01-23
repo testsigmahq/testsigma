@@ -178,7 +178,7 @@
               <div class="p-0 field mb-0" appearance="fill">
 
                 <input id="screen_name" [matAutocomplete]="screename" [(ngModel)]="element.screenNameObj.name" type="text" class="form-control" [formControlName]="['screen_name']"
-                       (keyup)="filterData($event.target)" (change)="this.saveScreenName($event.target, false)" >
+                       (keyup)="filterData($event.target)">
                 <label for="screen_name"  class="required" [translate]="'elements.screen_name'"></label>
                 <mat-autocomplete #screename="matAutocomplete" disableOptionCentering panelClass="single">
                   <mat-option *ngFor="let option of screenNameOptions|async" [value]="option.id"  (click)="this.setScreenName(option)">

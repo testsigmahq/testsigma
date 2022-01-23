@@ -38,6 +38,7 @@ public interface ElementMapper {
 
   List<ElementDTO> map(List<Element> elementList);
 
+  @Mapping(target = "screenNameObj", ignore = true)
   void merge(ElementRequest elementRequest, @MappingTarget Element element);
 
   @Mapping(target = "screenNameObj", ignore = true)

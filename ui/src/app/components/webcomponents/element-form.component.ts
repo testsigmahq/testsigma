@@ -49,9 +49,9 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
   public saving = false;
   public testCaseResultId: number;
   public reviewSubmittedElement: Element;
-  public  screenNameOptions : Observable<Set<ElementScreenName>>;
-  public  screenNames : Set<ElementScreenName>;
-  public isInProgress:Boolean;
+  public screenNameOptions: Observable<Set<ElementScreenName>>;
+  public screenNames: Set<ElementScreenName>;
+  public isInProgress: Boolean;
 
   constructor(
     public authGuard: AuthenticationGuard,
@@ -64,21 +64,22 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
     private dialogRef: MatDialogRef<ElementFormComponent>,
     private workspaceVersionService: WorkspaceVersionService,
     private agentService: AgentService,
-    private elementScreenNameService : ElementScreenNameService,
+    private elementScreenNameService: ElementScreenNameService,
     private sanitizer: DomSanitizer,
     @Inject(MAT_DIALOG_DATA) public options: {
       isStepRecordView: boolean;
       elementId?: number, versionId?: number,
       name?: string, isNew?: boolean, isDryRun?: boolean,
-      testCaseId: number, testCaseResultId: number},
+      testCaseId: number, testCaseResultId: number
+    },
     private userPreferenceService: UserPreferenceService,
-    public chromeRecorderService : ChromeRecorderService,
+    public chromeRecorderService: ChromeRecorderService,
     private matDialog: MatDialog) {
     super(authGuard, notificationsService, translate, toastrService);
     this.versionId = this.options.versionId;
     this.elementId = this.options.elementId;
     this.testCaseId = this.options?.testCaseId;
-    this.testCaseResultId= this.options?.testCaseResultId;
+    this.testCaseResultId = this.options?.testCaseResultId;
     this.screenNameOptions = new Observable<Set<ElementScreenName>>();
     this.screenNames = new Set<ElementScreenName>();
   }
@@ -108,7 +109,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
       this.fetchApplicationVersion();
       if (this.elementId)
         this.fetchElement();
-      else if(this.options?.name&&!this.options?.isNew)
+      else if (this.options?.name && !this.options?.isNew)
         this.fetchElementByName()
       else {
         this.setElement();
@@ -119,7 +120,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
   }
 
   setElement() {
-    if(this.workspaceVersion?.workspace) {
+    if (this.workspaceVersion?.workspace) {
       this.createElement();
       this.element.name = this.options?.name || '';
       this.addValidations();
@@ -147,8 +148,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
       if (this.workspaceVersion.workspace.isWebMobile) {
         this.chromeRecorderService.isChromeBrowser();
         this.chromeRecorderService.pingRecorder();
-      }
-      else if (this.workspaceVersion.workspace.isMobileNative) {
+      } else if (this.workspaceVersion.workspace.isMobileNative) {
         this.isAgentInstalled();
       }
     });
@@ -184,7 +184,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
       locatorType: new FormControl(this.element.locatorType),
       screen_name: new FormControl(this.element.screenNameObj.name, [Validators.required]),
     });
-    this.element.createdType = this.options.isStepRecordView?ElementCreateType.MANUAL:this.element.createdType;
+    this.element.createdType = this.options.isStepRecordView ? ElementCreateType.MANUAL : this.element.createdType;
   }
 
   saveElement() {
@@ -193,7 +193,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
       this.saving = true;
       this.checkIsDynamic()
       this.element.workspaceVersionId = this.workspaceVersion.id;
-      this.element.createdType = this.options.isStepRecordView?ElementCreateType.MOBILE_INSPECTOR:this.element.createdType;
+      this.element.createdType = this.options.isStepRecordView ? ElementCreateType.MOBILE_INSPECTOR : this.element.createdType;
       this.elementService.create(this.element).subscribe((element: Element) => {
           this.saving = false;
           this.translate.get('message.common.created.success', {FieldName: 'Element'}).subscribe((res) => {
@@ -216,7 +216,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
     if (this.elementForm.valid && this.nameIsValid(this.element.name)) {
       this.saving = true;
       this.checkIsDynamic()
-      this.element.createdType = this.options.isStepRecordView?ElementCreateType.MOBILE_INSPECTOR:this.element.createdType;
+      this.element.createdType = this.options.isStepRecordView ? ElementCreateType.MOBILE_INSPECTOR : this.element.createdType;
       this.elementService.update(this.elementId, this.element).subscribe(
         (element: Element) => {
           this.saving = false;
@@ -247,7 +247,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
       let testData = {};
       testData['test-data'] = data[1] ? data[1] : data[2]
       testData['test-data-type'] = isTestData.test(this.element.locatorValue) ? 'parameter' : 'environment';
-      this.element.metadata = this.element.metadata ? this.element.metadata: new ElementMetaData();
+      this.element.metadata = this.element.metadata ? this.element.metadata : new ElementMetaData();
       this.element.metadata.testData = <JSON>(testData)
     }
   }
@@ -255,7 +255,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
   nameIsValid(name) {
     let notAllowedChar = "[{}().+*?^$%`'/\\\\|]";
     let exp = new RegExp(notAllowedChar)
-    if(exp.test(name)) {
+    if (exp.test(name)) {
       this.translate.get('element.name.invalid.message').subscribe((res) => {
         this.showNotification(NotificationType.Error, res);
       })
@@ -275,7 +275,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
     this.agentService.ping().subscribe({
       next: (res) => this.agentInstalled = res['isRegistered'],
       error: () => this.agentInstalled = false
-  });
+    });
   }
 
   startCapture() {
@@ -284,12 +284,12 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
     this.chromeRecorderService.pingRecorder();
     this.chromeRecorderService.uiIdentifierCallBackContext = this;
     this.chromeRecorderService.uiIdentifierCallBack = this.chromeExtensionUIIdentifierCallback;
-    if(this.chromeRecorderService.isInstalled)
+    if (this.chromeRecorderService.isInstalled)
       this.chromeRecorderService.postGetUIIdentifierMessage(false);
   }
 
   private setIdentifierTypeToXpath() {
-    if(!this.elementId)
+    if (!this.elementId)
       this.elementForm.controls['locatorType'].setValue(this.locatorTypes[0])
   }
 
@@ -305,10 +305,10 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
 
 
   private fetchElementByName() {
-    this.elementService.findAll('name:'+ encodeURIComponent(this.options.name) +',workspaceVersionId:'+this.versionId).subscribe(res => {
-      if(res.empty){
-       this.setElement();
-       return;
+    this.elementService.findAll('name:' + encodeURIComponent(this.options.name) + ',workspaceVersionId:' + this.versionId).subscribe(res => {
+      if (res.empty) {
+        this.setElement();
+        return;
       }
       this.element = res.content[0];
       this.elementId = this.element.id;
@@ -319,7 +319,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
   }
 
   private fetchScreenNames() {
-    this.elementScreenNameService.findAll('workspaceVersionId:'+this.versionId).subscribe(res => {
+    this.elementScreenNameService.findAll('workspaceVersionId:' + this.versionId).subscribe(res => {
       res.content.forEach(screenName => {
         this.screenNames.add(screenName);
       })
@@ -327,20 +327,24 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
 
     })
   }
-  public filterData(target:any){
-    let name:String = target.value;
-      let arrSet:Set<ElementScreenName> = new Set<ElementScreenName>();
-      this.elementScreenNameService.findAll('workspaceVersionId:'+this.versionId+(name?.length >0 ? ",name~"+name : '')).subscribe(res => {
-        res.content.forEach(screenName => {
-          arrSet.add(screenName);
-        })
-        this.screenNameOptions = of(arrSet)
+
+  public filterData(target: any) {
+    let name: String = target.value;
+    if (!name.length) {
+      this.element.screenNameId = null;
+    }
+    let arrSet: Set<ElementScreenName> = new Set<ElementScreenName>();
+    this.elementScreenNameService.findAll('workspaceVersionId:' + this.versionId + (name?.length > 0 ? ",name~" + name : '')).subscribe(res => {
+      res.content.forEach(screenName => {
+        arrSet.add(screenName);
       })
+      this.screenNameOptions = of(arrSet)
+    })
   }
 
   private setLocatorTypeToXpath() {
-    if(!this.elementId)
-    this.elementForm.controls['locatorType'].setValue(this.locatorTypes[0])
+    if (!this.elementId)
+      this.elementForm.controls['locatorType'].setValue(this.locatorTypes[0])
   }
 
   openChat() {
@@ -348,55 +352,69 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
     window.fcWidget.open();
   }
 
-  public saveScreenName(target : any, save){
-    this.isInProgress = true;
-    var name = save? target : target.value;
-    let screenNameBean:ElementScreenName = new ElementScreenName();
+  public addScreenNameIfNeed(target: any) {
+    let name = target.value;
+    let screenNameBean: ElementScreenName = new ElementScreenName();
     screenNameBean.name = name;
     screenNameBean.workspaceVersionId = this.element.workspaceVersionId;
-    if(!this.screenNames.has(screenNameBean)){
-      this.elementScreenNameService.create(screenNameBean).subscribe(screenNameBean =>{
-        this.element.screenName = screenNameBean.name;
-        this.element.screenNameId = screenNameBean.id;
-        this.isInProgress =false;
-        if(save)
-        this.saveElement()
-      })
+    if (!this.screenNames.has(screenNameBean)) {
+
     }
   }
-  public setScreenName(screenName: any) {
-    if(screenName.id != null){
+
+  public setScreenName(screenName: any, save?) {
+    if (screenName.id != null) {
       this.element.screenNameObj.name = screenName.name;
       this.element.screenNameObj.id = screenName.id;
       this.element.screenName = screenName.name;
       this.element.screenNameId = screenName.id;
+    } else {
+      let screenNameBean: ElementScreenName = new ElementScreenName();
+      screenNameBean.name = screenName.name;
+      screenNameBean.workspaceVersionId = this.element.workspaceVersionId;
+      this.elementScreenNameService.create(screenNameBean).subscribe(screenNameBean => {
+        this.element.screenNameObj.name = screenNameBean.name;
+        this.element.screenNameId = screenNameBean.id;
+        this.elementForm.get('screen_name').setValue(this.element.screenNameObj.name);
+        if (save) {
+          (this.elementId) ? this.updateElement() : this.saveElement();
+        }
+        this.isInProgress = false;
+      })
     }
   }
 
   saveOrUpdate() {
-    if(!this.isInProgress){
-      this.element.screenNameId ?
-        ((this.elementId) ? this.updateElement(): this.saveElement())
-        : this.saveScreenName(this.element.name, true);
+    if (!this.isInProgress) {
+      this.formSubmitted = true;
+      if (this.elementForm.invalid)
+        return;
+      if (this.element.screenNameId) {
+        (this.elementId) ? this.updateElement() : this.saveElement()
+      } else {
+        let screenNameBean: ElementScreenName = new ElementScreenName();
+        screenNameBean.name = this.elementForm.get('screen_name').value;
+        screenNameBean.workspaceVersionId = this.element.workspaceVersionId;
+        this.setScreenName(screenNameBean, true);
+      }
     }
   }
 
-  get isWeb(){
+  get isWeb() {
     return this.workspaceVersion.workspace.workspaceType == WorkspaceType.WebApplication;
   }
 
-  get isMobileWeb(){
+  get isMobileWeb() {
     return this.workspaceVersion.workspace.workspaceType == WorkspaceType.MobileWeb;
   }
 
-  get isAndroidNative(){
+  get isAndroidNative() {
     return this.workspaceVersion.workspace.workspaceType == WorkspaceType.AndroidNative;
   }
 
-  get isIosNative(){
+  get isIosNative() {
     return this.workspaceVersion.workspace.workspaceType == WorkspaceType.IOSNative;
   }
-
 
 
 }

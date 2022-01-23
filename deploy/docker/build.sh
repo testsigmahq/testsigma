@@ -14,18 +14,6 @@ then
   exit $E_BADARGS
 fi
 
-PUSH_LATEST=false
-
-while [ $# -gt 0 ]; do
-  case "$1" in
-    --PUSH_LATEST=*)
-      PUSH_LATEST="${1#*=}"
-      ;;
-    *)
-  esac
-  shift
-done
-
 ROOT_FOLDER="$(
   cd "$(dirname "$0")" || exit
   cd ../..
@@ -40,13 +28,5 @@ docker build -t server -f $ROOT_FOLDER/Dockerfile .
 
 docker tag server:latest testsigmahq/server:$VERSION
 docker push testsigmahq/server:$VERSION
-
-if [[ "$PUSH_LATEST" == "true"* ]]; then
-  echo "Pushing build with latest tag"
-  docker tag server:latest testsigmahq/server:latest
-  docker push testsigmahq/server:latest
-else
-  echo "Latest tag build not requested. So Skipping it..."
-fi
 
 cd $CURRENT_DIR

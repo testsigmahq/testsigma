@@ -3,6 +3,7 @@ description: Suggest an idea to improve Testsigma
 title: "[Feature]: "
 labels: [enhancement]
 assignees:
+- rukmangada
 body:
 - type: checkboxes
   attributes:

@@ -113,7 +113,7 @@ export class TestSuiteResultsComponent implements OnInit {
 
   toggleSearch() {
     this.isSearchEnable = !this.isSearchEnable;
-    let query = "executionRunId:" + this.executionResult.id;
+    let query = "testPlanResultId:" + this.executionResult.id;
     if (this.isSearchEnable) {
       setTimeout(() => {
         this.searchMachineInput.nativeElement.focus();

@@ -79,7 +79,7 @@ export class TestMachineResultsComponent extends BaseComponent implements OnInit
 
   clearSearch() {
     this.testDeviceResults = undefined;
-    let query = "executionRunId:" + this.executionResult.id;
+    let query = "testPlanResultId:" + this.executionResult.id;
     this.testDeviceResults = new InfiniteScrollableDataSource(this.environmentResultService, query);
     this.inputClear();
   }
@@ -111,7 +111,7 @@ export class TestMachineResultsComponent extends BaseComponent implements OnInit
   filter(event) {
     let applyFilter: boolean = event.applyFilter;
     let filterResult: ResultConstant[] = event.filterResult;
-    let query = "executionRunId:" + this.executionResult.id;
+    let query = "testPlanResultId:" + this.executionResult.id;
     this.isFilterApplied = false;
     this.filterResult = undefined;
     if (applyFilter) {
@@ -127,7 +127,7 @@ export class TestMachineResultsComponent extends BaseComponent implements OnInit
 
   toggleSearch() {
     this.isSearchEnable = !this.isSearchEnable;
-    let query = "executionRunId:" + this.executionResult.id;
+    let query = "testPlanResultId:" + this.executionResult.id;
     if (this.isSearchEnable) {
       setTimeout(() => {
         this.searchMachineInput.nativeElement.focus();
@@ -145,7 +145,7 @@ export class TestMachineResultsComponent extends BaseComponent implements OnInit
         debounceTime(500),
         distinctUntilChanged(),
         tap((event: KeyboardEvent) => {
-          let query = "executionRunId:" + this.executionResult.id;
+          let query = "testPlanResultId:" + this.executionResult.id;
           if (this.searchMachineInput.nativeElement.value) {
             query += ",environmentName:*" + this.searchMachineInput.nativeElement.value + "*";
             this.testDeviceResults = new InfiniteScrollableDataSource(this.environmentResultService, query);

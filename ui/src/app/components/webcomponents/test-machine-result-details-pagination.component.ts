@@ -76,7 +76,7 @@ export class TestMachineResultDetailsPaginationComponent implements OnInit {
   }
 
   fetchPreviousTestcaseResult(isInit?) {
-    let previousQuery = "executionRunId:" + this.testDeviceResult.testPlanResult.id +
+    let previousQuery = "testPlanResultId:" + this.testDeviceResult.testPlanResult.id +
       ",id<" + this.testDeviceResult.id;
     this.environmentResultService.findAll(previousQuery, "id,desc", this.pageable).subscribe(res => {
       this.environmentResultPreviousPage = res;
@@ -90,7 +90,7 @@ export class TestMachineResultDetailsPaginationComponent implements OnInit {
   }
 
   fetchNextTestcaseResults(isInit?) {
-    let nextQuery = "executionRunId:" + this.testDeviceResult.testPlanResult.id +
+    let nextQuery = "testPlanResultId:" + this.testDeviceResult.testPlanResult.id +
       ",id>" + this.testDeviceResult.id;
     this.environmentResultService.findAll(nextQuery, undefined, this.pageable).subscribe(res => {
       this.environmentResultNextPage = res;

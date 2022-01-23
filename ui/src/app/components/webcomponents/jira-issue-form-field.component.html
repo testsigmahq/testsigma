@@ -1,0 +1,120 @@
+<div [formGroup]="form" class="form-group pb-20">
+  <label
+    class="custom-label text-t-highlight"
+    [attr.for]="field?.key"
+    [class.required]="field?.required">{{field?.name}}</label>
+  <div [ngSwitch]="field?.type">
+
+    <input
+      class="form-control field"
+      *ngSwitchCase="'text'"
+      [formControlName]="field?.key"
+      [id]="field?.key" [type]="field?.type">
+    <input
+      class="form-control field"
+      *ngSwitchCase="'number'"
+      [formControlName]="field?.key"
+      [id]="field?.key" [type]="field?.type">
+    <input
+      class="form-control field"
+      *ngSwitchCase="'url'"
+      [formControlName]="field?.key"
+      [id]="field?.key" [type]="field?.type">
+
+    <textarea
+      class="form-control field"
+      *ngSwitchCase="'textarea'"
+      [formControlName]="field?.key"
+      [id]="field?.key"></textarea>
+
+    <input
+      class="form-control field flex-row"
+      *ngSwitchCase="'date'"
+      [formControlName]="field?.key"
+      [id]="field?.key" [type]="field?.type">
+
+    <div *ngSwitchCase="'radio'">
+      <div
+        *ngFor="let opt of field?.allowedValues"
+        class="d-flex align-items-center py-5">
+        <input
+          type="radio"
+          [id]="field?.key+'_'+opt.value"
+          [name]="field?.key" [value]="opt.value"
+          [formControlName]="field?.key">
+        <label
+          class="pl-10 fz-14"
+          [attr.for]="field?.key+'_'+opt.value">{{opt.value}}</label>
+      </div>
+    </div>
+
+    <div *ngSwitchCase="'multicheckbox'">
+      <div
+        *ngFor="let opt of field?.allowedValues"
+        class="d-flex align-items-center py-5">
+        <mat-checkbox
+          class="mat-checkbox"
+          [id]="field?.key+'_'+opt.value"
+          [name]="field?.key" [value]="opt.value"
+          [formControlName]="field?.key">
+            <span class="fz-14" [translate]="opt.value"></span>
+          </mat-checkbox>
+      </div>
+    </div>
+
+    <select
+      class="form-control field"
+      [id]="field?.key"
+      *ngSwitchCase="'dropdown'"
+      [formControlName]="field?.key"
+      [multiple]="field?.isCustomMultiSelect">
+      <option
+        *ngFor="let opt of field?.allowedValues"
+        [value]="opt.value || opt.id">{{opt.value || opt.name}}</option>
+    </select>
+    <div class="dropdown section-title ts-col-50" *ngSwitchCase="'priority'">
+      <div
+        [class.showField]="isShowPriority"
+        class="btn-group text-nowrap field">
+        <a
+          (click)="toggleDropdown('isShowPriority');"
+          class="rb-medium d-flex align-items-center theme-border-y theme-border-x p-10 border-rds-4">
+          <span class="img-wh">
+            <img
+              [alt]="selectedPriority.name"
+              [src]="selectedPriority.iconUrl"
+              class="w-100"/>
+          </span>
+          <span
+            class="pl-8"
+            [textContent]="selectedPriority.name"></span>
+        </a>
+      </div>
+      <div
+        *ngIf="isShowPriority"
+        class="dropdown-menu d-block drop-down-transparent">
+        <ul
+          class="bg-white border-rds-4 ng-scope pl-0 shadow-all2-b4 m-0">
+          <li
+            class="p-10 rb-medium grey-on-hover text-dark d-flex align-items-center"
+            *ngFor="let opt of field?.allowedValues"
+            (click)="toggleProject(opt)">
+              <span class="img-wh">
+                <img
+                  [alt]="opt.value || opt.name"
+                  [src]="opt.iconUrl"
+                  class="w-100"/>
+              </span>
+            <span
+              class="pl-8"
+              [translate]="opt.value || opt.name"></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="text-danger text-right mt-5" *ngIf="field && !isValid"
+       [textContent]="'form.validation.common.required' | translate : { 'FieldName': field?.name }"></div>
+</div>

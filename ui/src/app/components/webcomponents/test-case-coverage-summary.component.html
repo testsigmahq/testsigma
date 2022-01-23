@@ -1,0 +1,16 @@
+<div
+  class="d-flex flex-wrap mt-25 h-100 pt-2">
+  <app-test-case-coverage-count
+    class="mh-30 ts-col-100 d-flex justify-content-between"
+    [version]="version"
+  ></app-test-case-coverage-count>
+  <div class="d-flex justify-content-between ts-col-100" style="max-height: 33.5ex;">
+    <app-test-case-by-status-summary
+      class="ts-col-auto mt-20 dashboard-section-xl"
+      [version]="version"></app-test-case-by-status-summary>
+    <app-test-case-by-type-summary
+      class="ts-col-auto mt-20 pl-20 dashboard-section-xl"
+      [version]="version"></app-test-case-by-type-summary>
+  </div>
+</div>
+

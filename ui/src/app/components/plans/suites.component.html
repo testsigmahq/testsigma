@@ -1,0 +1,44 @@
+<div class="pl-60 pr-20 py-20 ts-col-100 h-100">
+  <div class="py-4 ts-form d-flex align-items-baseline">
+    <i class="fa-search"></i>
+    <input #searchInput class="form-control border-0 ts-col-85"
+           [placeholder]="'common.place_holder.search' | translate"/>
+    <button class="theme-btn-clear-default" (click)="selectSuites()"
+            [translate]="'test_plan.environment.select_suite.title'"></button>
+  </div>
+  <div class="list-container lg-h theme-w-o-h-scroll" *ngIf="suitesList?.totalElements">
+    <cdk-virtual-scroll-viewport
+      class="virtual-scroll-viewport outer-sm-pm"
+                                 itemSize="50">
+      <div
+        class="drag-list pr-25"
+        cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListData]="this.suitesList?.totalElements">
+        <div
+          cdkDrag
+          cdkDragBoundary=".cdk-drop-list.drag-list"
+          cdkDragLockAxis="y"
+          [cdkDragData]="testSuite"
+          [cdkDragDisabled]="this.suitesList?.cachedItems.indexOf(testSuite.parentSuite) > -1 || testSuite.preRequisiteSuite"
+          class="w-100 scroll-item selected-box list-view green-highlight lg-pm pl-10 pointer align-items-center"
+          *cdkVirtualFor="let testSuite of this.suitesList">
+          <i class="fa-drag-n-drop-sm mr-10"></i>
+          <a
+            [routerLink]="['/td', 'suites', testSuite.id]"
+             class="pr-10 text-dark text-decoration-none rb-medium ts-col-25" [textContent]="testSuite.name">
+          </a>
+        </div>
+      </div>
+    </cdk-virtual-scroll-viewport>
+  </div>
+  <app-placeholder-loader
+    *ngIf="isFetching"></app-placeholder-loader>
+  <div *ngIf="!suitesList?.totalElements && !isFetching" class="h-100">
+    <div
+      class="empty-full-container">
+      <div class="empty-run-md"></div>
+      <div
+        class="empty-text"
+        [translate]="'message.common.search.not_found'"></div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+<mat-accordion class="elements-panel expansion-table" *ngIf="(element?.attributes|keyvalue)?.length>0">
+  <mat-expansion-panel (closed)="panelOpenState = false" (opened)="expandedPanelIndex=index;panelOpenState = true"
+                       [expanded]="index == expandedPanelIndex"
+                       [class.border-lightGray-1]="panelOpenState"
+                       class="theme-gray-light"
+                       hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title class="fz-14 text-dark" [textContent]="title">
+      </mat-panel-title>
+      <i class="{{panelOpenState?'fa-expand':'fa-collapse'}}"></i>
+    </mat-expansion-panel-header>
+    <table class="elements-table px-30" matExpansionPanelContent>
+      <thead>
+      <th [translate]="'elements.form.label.attribute'"></th>
+      <th [translate]="'elements.form.label.operator'"></th>
+      <th [translate]="'elements.form.label.value'"></th>
+      </thead>
+      <tbody>
+      <tr *ngFor="let attribute of element.attributes | keyvalue">
+        <td [textContent]="attribute.key"></td>
+        <td [translate]="'elements.form.attributes.operator.='"></td>
+        <td [textContent]="attribute.value"></td>
+      </tr>
+      </tbody>
+    </table>
+  </mat-expansion-panel>
+</mat-accordion>

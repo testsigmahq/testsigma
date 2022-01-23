@@ -1,0 +1,129 @@
+<div class="ts-col-80 pl-40">
+  <div class="page-header theme-border-b pl-0">
+    <div
+      class="page-title" [translate]="'page_title.auth_config'">
+    </div>
+  </div>
+</div>
+<div class="page-content">
+  <div class="ts-col-80 d-flex-wrap">
+    <div class="ts-col-100">
+      <div
+        class="pt-35 pb-18 section-title-sm"
+        [translate]="'settings.auth.select'"></div>
+      <div class="d-flex-wrap ts-col-100">
+        <div class="white-border-container">
+          <div class="item-content">
+            <div
+              class="item-title-sm ts-col-100"
+              [translate]="'settings.auth.no_auth_type'"></div>
+            <div class="item-action-sm">
+              <mat-slide-toggle
+                class="mat-slide-toggle slide-with-text"
+                [checked]="!!status(AuthenticationType.NO_AUTH)"
+                (change)="checkOrCreate($event,AuthenticationType.NO_AUTH)">
+              </mat-slide-toggle>
+            </div>
+          </div>
+        </div>
+
+        <div class="white-border-container">
+          <div class="item-content">
+            <div
+              class="item-title-sm"
+              [translate]="'settings.auth.user_name_auth_type'"></div>
+            <div class="item-action-sm">
+              <mat-slide-toggle
+                class="mat-slide-toggle slide-with-text"
+                [checked]="!!status(AuthenticationType.FORM)"
+                (change)="checkOrCreate($event,AuthenticationType.FORM)">
+              </mat-slide-toggle>
+              <a class="text-link pl-15 text-nowrap"
+                 *ngIf="hasFormAuth()"
+                 (click)="view($event,AuthenticationType.FORM)"
+                 [translate]="'message.common.view_details'"></a>
+            </div>
+          </div>
+        </div>
+        <div class="white-border-container">
+          <div class="item-content">
+            <div
+              class="item-title-sm"
+              [translate]="'settings.auth.google_auth_type'"></div>
+            <div class="item-action-sm">
+              <mat-slide-toggle
+                class="mat-slide-toggle slide-with-text"
+                [checked]="!!status(AuthenticationType.GOOGLE)"
+                (change)="checkOrCreate($event,AuthenticationType.GOOGLE)">
+              </mat-slide-toggle>
+              <a class="text-link pl-15 text-nowrap"
+                 *ngIf="hasGoogleAuth()"
+                 (click)="view($event,AuthenticationType.GOOGLE)"
+                 [translate]="'message.common.view_details'"></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ts-col-100">
+      <div
+        class="section-title-sm pb-8"
+        [translate]="'settings.auth.api_details'"></div>
+      <div class="border-rds-4 px-20 py-30 theme-gray-light ts-form">
+        <div class="ts-col-80">
+          <div
+            class="form-group ts-col-100 d-flex">
+            <div class="p-0 field mb-0 flex-auto">
+              <input
+                type="text"
+                id="api_key"
+                name="api_key"
+                [readOnly]="true"
+                [value]="authConfig?.apiKey"
+                class="form-control py-8"/>
+              <label
+                [translate]="'settings.auth.api_key'"
+                for="api_key"></label>
+            </div>
+            <button
+              [translate]="coping?.['apiKey']? 'uploads.list.message.copied' : 'btn.common.copy'"
+              [cdkCopyToClipboard]="authConfig?.apiKey"
+              (click)="showCopied('apiKey')"
+              class="theme-btn-clear-default ml-12 py-8"></button>
+            <button
+              appAsyncBtn
+              [isLoading]="coping?.['generating']"
+              [message]="'message.common.generating'"
+              (click)="regenerate(AuthenticationType.API)"
+              class="theme-btn-clear-default py-8"
+              [translate]="'settings.auth.regenerate'"></button>
+          </div>
+          <div
+            class="form-group ts-col-100 d-flex p-0">
+            <div class="p-0 field mb-0 flex-auto">
+              <input
+                type="text"
+                id="jwt"
+                name="jwt"
+                [value]="authConfig?.jwtSecret"
+                [readOnly]="true"
+                class="form-control py-8"/>
+              <label
+                [translate]="'settings.auth.jwt'"
+                for="jwt"></label>
+            </div>
+            <button
+              [translate]="coping?.['jwtSecret'] ? 'uploads.list.message.copied' : 'btn.common.copy'"
+              (click)="showCopied('jwtSecret')"
+              [cdkCopyToClipboard]="authConfig?.jwtSecret"
+              class="theme-btn-clear-default ml-12 py-8"></button>
+            <button
+              (click)="regenerate(AuthenticationType.JWT)"
+              class="theme-btn-clear-default py-8"
+              [translate]="'settings.auth.regenerate'"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

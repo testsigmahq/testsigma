@@ -1,0 +1,270 @@
+<div class="w-100 h-100 d-flex-wrap align-content-start">
+  <div mat-dialog-title *ngIf="!elementInspection" class="ts-col-100">
+    <div [textContent]="isStepGroup? ('agents.mobile.inspection.record_test_step_title' | translate):('agents.mobile.inspection.record_title' | translate)"></div>
+    <button class="close" mat-dialog-close [matTooltip]="'btn.common.close'|translate">
+    </button>
+  </div>
+
+  <mat-dialog-content class="ts-col-100 p-20 m-auto"
+                      [class.px-40]="!showInlineLaunch" >
+
+    <form class="ts-form align-items-center border-rds-10 bg-light p-40"
+          [formGroup]="physicalDeviceForm"
+          [ngSwitch]="isPhysicalDevice">
+      <div class="d-flex justify-content-between mb-20" *ngIf="elementInspection">
+        <label
+          class="rb-bold pr-20"
+          [translate]="'elements.form.mobile_inspection.title'"></label>
+      </div>
+      <app-inspector-test-lab-selection
+        class="d-flex-wrap"
+        (testPlanLabTypeChange)="settestPlanLabType($event)"></app-inspector-test-lab-selection>
+      <div *ngSwitchCase="true">
+        <div
+          *ngIf="agentChecksFailed"
+          class="batch-banner">
+          <div class="pr-20">
+            <span [translate]="agentCheckFailedMessage || 'agents.not_found'"></span>
+            <div class="pt-10 lh-2">
+              <a class="theme-text d-flex w-fit-content text-underline"
+                 href="https://testsigma.com/docs/agent/troubleshooting-setup-issues/"
+                 target="_blank">
+                <i class="fa fa-question fz-20 mr-10 text-link"></i>
+                <span [translate]="'elements.form.element_inspect.troubleshoot'" class="text-link"></span>
+              </a>
+            </div>
+          </div>
+          <div class="text-center">
+            <a
+              [routerLink]="['/agents']"
+              class="align-items-center fz-15 install-btn text-nowrap"
+              target="_blank">
+              <div class="testSigma-lab-logo"></div>
+              <span class="text-wrap" [translate]="'elements.form.element_inspect_btn'"></span>
+            </a>
+            <a (click)="openChat()" class="lh-2point6 text-t-highlight">
+              <i class="fa-support pr-5"></i>
+              <span [translate]="'elements.form.contact_support'" class="fz-12"></span>
+            </a>
+            <a class="theme-text d-flex justify-content-center text-underline align-items-center"
+               href="https://testsigma.com/docs/agent/setup-on-windows-mac-linux/"
+               target="_blank">
+              <i class="fa fa-open-book fz-20 mr-10 text-link"></i>
+              <span [translate]="'elements.form.element_inspect.step_guide'" class="text-link"></span>
+            </a>
+          </div>
+        </div>
+        <div *ngIf="!agentChecksFailed " [formGroup]="physicalDeviceForm" class="d-flex justify-content-between">
+          <div *ngIf="isDevicesAvailable && !agentChecksFailed" class="ts-col-50 form-group">
+            <div class="w-90">
+              <app-agent-devices-auto-complete
+                (onAgentDeviceChange)="setAgentDevice($event)"
+                (onDeviceList)="setDeviceList($event)"
+                [agentId]="agentId"
+                [formCtrl]="physicalDeviceForm.controls['deviceId']"
+                [formGroup]="physicalDeviceForm"
+                [labelText]="('agents.mobile.inspection.select_device' | translate)"
+                [mobileOsType]="mobileOsType">
+              </app-agent-devices-auto-complete>
+              <div *ngIf="physicalDeviceForm.controls.deviceId.errors?.required && formSubmitted"
+                   [translate]="'agents.mobile.inspection.device.required'"
+                   class="error mr-40 mt-5"></div>
+            </div>
+            <i [matTooltip]="'agents.mobile.inspection.select_device_hint' | translate"
+               class="fa-question-circle-solid fixed-help-icon right-0 mr-6"></i>
+          </div>
+
+          <div
+            *ngIf="deviceList?.empty"
+            class="batch-banner">
+            <i class="batch-icon"></i>
+            <span class="d-flex flex-column">
+          <span [translate]="'agents.devices_not_found'"></span>
+          <a
+            [target]="'_blank'"
+            href="https://testsigma.com/docs/troubleshooting/agent/mobile-device-not-displayed-recorder/"
+            class="text-link"
+            [translate]="'agents.devices_troubleshoot'"></a>
+        </span>
+          </div>
+        </div>
+        <ul *ngIf="!agentChecksFailed" class="tab-nav border-brand-b-1" role="tablist">
+          <li
+            (click)="isManually= false"
+            [class.active]="!isManually"
+            class="nav-items"
+            nav-active
+            role="presentation">
+            <a
+              (click)="isManually= false;appSubmitted=false"
+              [class.active]="!isManually" aria-controls="Test_steps" class="normal-text pb-6 align-items-center pb-0 border-img-none" data-toggle="tab"
+              role="tab"
+              tabindex
+              target="_self">
+              <span [textContent]="'agents.mobile.recorder.upload_app' | translate"></span>
+            </a>
+          </li>
+          <li
+            (click)="isManually= true;appSubmitted=false"
+            [class.active]="isManually"
+            class="nav-items"
+            nav-active
+            role="presentation">
+            <a
+              (click)="isManually= true"
+              [class.active]="isManually"
+              class="normal-text pb-6 align-items-center"
+              data-toggle="tab"
+              role="tab" target="_self">
+              <span [textContent]="'agents.mobile.recorder.add_manually' | translate"></span>
+            </a>
+          </li>
+        </ul>
+        <ng-container *ngTemplateOutlet="AppSection"></ng-container>
+      </div>
+      <div *ngSwitchCase="false">
+        <ng-container *ngTemplateOutlet="AppSection"></ng-container>
+      </div>
+      <ng-template #AppSection>
+        <div
+          *ngIf="show(agentChecksFailed,isPhysicalDevice) && authGuard.openSource.isEnabled" class="tab-content pt-10">
+          <div *ngIf="!isManually || !isPhysicalDevice" [class.active]="!isManually || !isPhysicalDevice"
+               [class.align-items-center]="!isManually || !isPhysicalDevice"
+               [class.d-flex]="!isManually || !isPhysicalDevice"
+               [formGroup]="uploadSelectionForm"
+               class="d-flex flex-wrap form-group h-90p pb-0">
+
+            <div *ngIf="version && showUploadDropDown" [ngSwitch]="uploads?.content?.length > 0"
+                 class="d-flex-wrap ts-col-100">
+              <app-uploads-auto-complete
+                (isContainsApp)="setContainsApp($event)"
+                *ngSwitchCase="true"
+                [class.ts-col-45]="!showInlineLaunch"
+                [deviceId]="deviceId"
+                [testPlanLabType]="testPlanLabType"
+                [formCtrl]="uploadSelectionForm?.controls['app_upload_id']"
+                [formGroup]="uploadSelectionForm"
+                [upload]="upload? upload:null"
+                [version]="version"
+                class="ts-col-40"
+              ></app-uploads-auto-complete>
+              <div [class.h-47p]="!uploads?.content?.length"
+                   [class.pl-30]="uploads?.content?.length"
+                   class="ts-col-35 pl-30 py-4 d-flex">
+                <mat-divider *ngSwitchCase="true" [vertical]="true" class="mr-30"></mat-divider>
+                <span *ngSwitchCase="true" [translate]="'message.common.or'"
+                      class="bg-white border-brand-1 circle fz-14 ml-n12 mt-8 position-absolute text-dark pb-2"></span>
+                <button
+                  (click)="openUploadForm()"
+                  [class.mr-20]="!uploads?.content?.length"
+                  [class.w-100-60]="!uploads?.content?.length && showInlineLaunch"
+                  [class.w-100-60]="showInlineLaunch"
+                  [class.w-167p]="!showInlineLaunch"
+                  [translate]="'agents.mobile.inspection.upload'"
+                  class="theme-btn-clear-default border-rds-4 bg-white fz-14">
+                </button>
+              </div>
+              <ng-container *ngTemplateOutlet="launchbtn"></ng-container>
+              <div class="ts-col-100 pt-30">
+                <app-desired-capabilities
+                  *ngIf="capabilitiesForm"
+                  [capabilities]="this.data?.capabilities"
+                  [formGroup]="capabilitiesForm"
+                  class="ts-col-50"></app-desired-capabilities>
+              </div>
+            </div>
+
+            <div *ngIf="version && !showUploadDropDown && !uploading" class="d-flex-wrap ts-col-100">
+              <app-uploads-form (onUpload)="uploadSuccess($event)"
+                                [upload]="upload"
+                                [version]="version"
+                                class="ts-col-100"></app-uploads-form>
+            </div>
+
+            <app-placeholder-loader
+              *ngIf="uploading"
+              [displayText]="('uploads.form.progress' | translate)"
+              [isLogoLoader]="true"
+              class="ts-form align-items-center  ts-col-100"
+            ></app-placeholder-loader>
+          </div>
+
+          <div *ngIf="manuallyInstalledAppForm"
+               [class.active]="isManually && isPhysicalDevice"
+               [class.align-items-center]="isManually"
+               [class.d-flex]="isManually"
+               [class.show]="isManually && isPhysicalDevice"
+               [formGroup]="manuallyInstalledAppForm"
+               class="tab-pane fade justify-content-between form-group h-80p">
+
+            <div *ngIf="isIOS" class="ts-col-60 pr-60">
+              <input [(ngModel)]="data.bundleId"
+                     [formControlName]="['bundle_id']" [placeholder]="'test_plan.application.path_type.APP_DETAILS.placeholder_bundle_id'| translate"
+                     class="form-control" name="bundleId"
+                     required
+                     type="text"/>
+              <label
+                [translate]="'test_plan.app_details.bundle_id'"
+                class="control-label required"></label>
+              <div *ngIf="manuallyInstalledAppForm.controls.bundle_id.errors?.required && appSubmitted"
+                   [translate]="'agents.mobile.inspection.bundle_id.required'"
+                   class="error mr-60"></div>
+            </div>
+            <div *ngIf="!isIOS" [class.ts-col-100]="!showInlineLaunch"
+                 class="d-flex-wrap ts-col-75 justify-content-between">
+              <div class="form-group p-0 ts-col-45">
+                <label [translate]="'agents.mobile.recorder.app.package'"
+                       class="control-label required mat-proxy-label"></label>
+                <mat-form-field appearance="outline" class="form-group p-0 w-100">
+                  <input [(ngModel)]="data.app_package"
+                         [formControlName]="['app_package']" [placeholder]="'agents.mobile.recorder.app.package' | translate"
+                         matInput>
+                  <div *ngIf="manuallyInstalledAppForm.controls.app_package.errors?.required && appSubmitted"
+                       [translate]="'agents.mobile.inspection.app_package.required'"
+                       class="error"></div>
+                </mat-form-field>
+              </div>
+              <div class="form-group p-0 ts-col-50 pr-30">
+                <label [translate]="'agents.mobile.recorder.app.activity'"
+                       class="control-label required mat-proxy-label"></label>
+                <mat-form-field appearance="outline" class="form-group p-0 w-100">
+                  <input [(ngModel)]="data.app_activity" [formControlName]="['app_activity']" [placeholder]="'agents.mobile.recorder.app.activity' | translate"
+                         matInput>
+                  <div *ngIf="manuallyInstalledAppForm.controls.app_activity.errors?.required && appSubmitted"
+                       [translate]="'agents.mobile.inspection.app_activity.required'"
+                       class="error"></div>
+                </mat-form-field>
+              </div>
+            </div>
+            <ng-container *ngTemplateOutlet="launchbtn"></ng-container>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template #launchbtn>
+        <div *ngIf="showInlineLaunch && showUploadDropDown"
+             class="ts-col-20 py-4 d-flex ml-auto mb-auto">
+          <mat-divider [vertical]="true" class="pl-10"></mat-divider>
+          <button (click)="launch()"
+                  [disabled]="!launchAllowed" class="btn-lg btn btn-grey-light ml-auto text-capitalize h-40p w-80 my-auto">
+            <i class="fa-launch"></i>
+            <span [translate]="'elements.form.btn.launch' | translate"></span>
+            <i
+              *ngIf="!hasInspectorFeature()"
+              [matTooltip]="'hint.message.common.upgrade' | translate"
+              class="fa-bolt-solid fz-10 result-status-text-4 ml-5"></i>
+          </button>
+        </div>
+      </ng-template>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions *ngIf="show(agentChecksFailed,isPhysicalDevice) && !elementInspection"
+                      align="end" class="w-100">
+    <button class="theme-btn-clear-default my-6" [textContent]="'btn.common.cancel' | translate" mat-dialog-close></button>
+    <button class="theme-btn-primary" (click)="launch()" [disabled]="disableRecordButton">
+      <i class="fa-launch"></i>
+      <span [textContent]="'agents.mobile.recorder.launch' | translate"></span>
+    </button>
+  </mat-dialog-actions>
+<!--  <simple-notifications></simple-notifications>-->
+</div>

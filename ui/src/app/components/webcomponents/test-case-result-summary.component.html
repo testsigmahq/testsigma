@@ -1,0 +1,119 @@
+<div
+  class="h-100">
+  <div class="theme-overlay-container">
+    <div class="theme-overlay-header" id="overlay-header">
+      <span class="theme-overlay-title" [translate]="'runs.details.test_case_result'"></span>
+      <button type="button"
+              [matTooltip]="'hint.message.common.close' | translate"
+              mat-dialog-close
+              class="close">
+      </button>
+    </div>
+
+    <div
+      *ngIf="testcaseResult"
+      class="theme-overlay-content without-footer p-0">
+      <div class="bg-default p-35">
+        <div class="d-flex bg-white py-20">
+          <div class="d-flex w-50 mx-auto">
+            <div class="highChart ml-auto m-auto">
+              <app-result-donut-chart
+                [width]="137" [height]="137" [resultEntity]="testcaseResult">
+              </app-result-donut-chart>
+            </div>
+            <div class="legend-container d-flex flex-wrap justify-content-between align-items-center ts-col-50 text-right">
+              <div class="legend-item ts-col-100 pb-25">
+                <i
+                  class="result-status-0 fa-show legend-icon btn">
+                </i>
+                <span
+                  [textContent]="('execution.result.SUCCESS' | translate) + ' : '+testcaseResult.passedCount+''"></span>
+              </div>
+              <div class="legend-item ts-col-100 pb-25">
+                <i
+                  class="result-status-1 fa-show legend-icon btn result-status-active-1">
+                </i>
+                <span
+                  [textContent]="('execution.result.FAILURE' | translate) + ' : '+testcaseResult.failedCount+''"></span>
+              </div>
+              <div class="legend-item ts-col-100 pb-25">
+                <i
+                  class="result-status-2 fa-show legend-icon btn result-status-active-2">
+                </i>
+                <span
+                  [textContent]="('execution.result.ABORTED' | translate) + ' : '+testcaseResult.abortedCount+''"></span>
+              </div>
+              <div class="legend-item ts-col-100 pb-25">
+                <i
+                  class="result-status-3 fa-show legend-icon btn result-status-active-3">
+                </i>
+                <span
+                  [textContent]="('execution.result.NOT_EXECUTED' | translate) + ' : '+testcaseResult.notExecutedCount+''"></span>
+              </div>
+              <div class="legend-item ts-col-100 pb-25">
+                <i
+                  class="result-status-5 fa-show legend-icon btn result-status-active-5">
+                </i>
+                <span
+                  [textContent]="('execution.result.QUEUED' | translate) + ' : '+testcaseResult.queuedCount+''"></span>
+              </div>
+              <div class="legend-item ts-col-100 pb-25 theme-border-t mt-5">
+                <span
+                  [textContent]="('execution.result.test_step.total' | translate) + ' : '+testcaseResult.totalCount+''"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="details-container p-35 details-container-spacing">
+        <div class="details-items ts-col-30">
+          <label
+            class="details-title"
+            [translate]="'testcase.summary.test_case_priority'"></label>
+          <div class="details-info" [textContent]="testcaseResult.testCasePriority?.displayName">
+          </div>
+        </div>
+        <div
+          class="details-items ts-col-30">
+          <label
+            class="details-title"
+            [translate]="'testcase.summary.test_case_type'"></label>
+          <div class="details-info" [textContent]="testcaseResult.testCaseType?.displayName">
+          </div>
+        </div>
+        <div class="details-items ts-col-30">
+          <label class="details-title" [translate]="'testcase.summary.data_driven'"></label>
+          <div class="details-info"
+               [textContent]="(testcaseResult.parentId ? 'common.yes' : 'common.no') | translate"></div>
+        </div>
+        <div
+          *ngIf="testcaseResult?.testDataId"
+          class="details-items ts-col-30">
+          <label class="details-title" [translate]="'testcase.summary.test_data_name'"></label>
+          <div class="details-info">
+            <a
+              [routerLink]="['/td', 'data', testcaseResult?.testDataId]"
+              class="theme-text text-decoration-none"
+              [textContent]="testcaseResult?.testDataProfile?.name"></a>
+          </div>
+        </div>
+        <div
+          *ngIf="testcaseResult.testDataSetName"
+          class="details-items ts-col-30">
+          <label class="details-title" [translate]="'step_result.data_set_name'"></label>
+          <div class="details-info"
+               [textContent]="testcaseResult.testDataSetName"></div>
+        </div>
+        <div class="details-items ts-col-100">
+          <label
+            class="details-title"
+            [translate]="'message.common.msg'"></label>
+          <div class="details-info"
+               [innerHTML]="testcaseResult.message"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

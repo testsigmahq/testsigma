@@ -1,0 +1,22 @@
+<button
+  cdkOverlayOrigin #trigger="cdkOverlayOrigin"
+  (click)="openFilterByOptions($event)"
+  class="dropdown-btn pointer">
+  <span [translate]="translatePrefix + filterByValue" class="fz-18 rb-medium"></span>
+  <i class="fa fa-caret-down my-auto"></i>
+</button>
+<ng-template
+  #sortByOptions="cdkConnectedOverlay"
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="openFilter"
+  cdkConnectedOverlayPanelClass="filter-dropdown">
+  <div [@collapse]="openFilter" class="overflow-hidden">
+    <ul>
+      <li *ngFor="let value of filterByEnumList" class="pointer"
+          (click)="filter(value)"
+          [translate]="translatePrefix+value"
+          [class.selected]="value == filterByValue"></li>
+    </ul>
+  </div>
+</ng-template>

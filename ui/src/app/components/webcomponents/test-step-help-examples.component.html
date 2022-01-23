@@ -1,0 +1,102 @@
+<div class="theme-gray-light h-100 action-help">
+  <div class="px-25 pt-30">
+    <div class="p-5 theme-border bg-white border-rds-4 d-flex">
+
+      <mat-form-field
+        class="mat-select-custom ts-col-35 inline-no-border text-capitalize sm" appearance="fill">
+        <mat-select #selectToggle
+          disableOptionCentering panelClass="single"
+          (ngModelChange)="toggleAction(selectedAction)"
+          [(ngModel)]="selectedAction" [(value)]="selectedAction">
+          <mat-option
+            *ngFor="let action of actions"
+            [value]="action"
+            (onSelectionChange)="toggleMatSelect($event)"
+            class="text-capitalize"
+            [textContent]="action">
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <input
+        class="form-control border-0 w-85 p-0 d-inline-block bg-white pl-5"
+        #searchInput
+        [placeholder]="'test_step.example.search_placeholder' | translate">
+    </div>
+  </div>
+  <div
+    class="card-container overflow-x-hidden pt-25 pb-25 h-100-150 pl-25 pr-20 mx-n2">
+    <div
+      class="list-card bordered lg-pm align-items-center pointer"
+      *ngFor='let example of filteredTemplates;let index=index'>
+      <mat-accordion class="ts-col-100">
+        <mat-expansion-panel
+          (closed)="panelOpenState = false;expandedPanelIndex=null"
+          (opened)="expandedPanelIndex=index;panelOpenState = true;fetchDetails(example.id)"
+          [expanded]="index == expandedPanelIndex"
+          class="m-0"
+          hideToggle>
+          <mat-expansion-panel-header
+            class="p-0 h-unset">
+            <mat-panel-title class="fz-12 m-0 align-items-center d-flex">
+
+              <i
+                (click)="selectTemplate($event,example)"
+                class="fa-circle-plus-alt fz-15"></i>
+              <span
+                class="mw-90 px-14 rb-regular-i-d fz-12"
+                [innerHTML]="parsedStep(example)"></span>
+              <i
+                [class.fa-right-arrow-thin]="expandedPanelIndex != index"
+                [class.fa-arrow-down]="expandedPanelIndex == index"
+                class="ml-auto"></i>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div
+            class="pr-0 pt-15 pl-5 fz-12" matExpansionPanelContent>
+            <div *ngIf="!isFetching && selectedTemplateDetails">
+              <div class="rb-medium light-text-color" [translate]="'message.common.description'"></div>
+              <p
+                class="m-0 pl-7 rb-regular-i-d light-text-color"
+                [textContent]="selectedTemplateDetails.description"></p>
+              <div class="rb-medium pt-7 light-text-color" [translate]="'nl_actions.list.label.example'"></div>
+              <p
+                class="m-0 pl-7 rb-regular-i-d light-text-color"
+                [textContent]="selectedTemplateDetails.example"></p>
+              <div class="rb-medium pt-7 light-text-color"
+                   [translate]="'nl_actions.list.label.example_application'"></div>
+              <p class="m-0 pl-7 rb-regular-i-d light-text-color">
+                <a [href]="selectedTemplateDetails.workspace" target="_blank" class="text-link d-flex">
+                  <span [textContent]="selectedTemplateDetails.workspace" class="mw-90 text-truncate"></span>
+                  <i class="fa-external-link-alt-solid text-dark pl-10"></i>
+                </a>
+              </p>
+              <div class="rb-medium pt-7 light-text-color" [translate]="'nl_actions.list.label.example_data'"></div>
+              <p
+                class="m-0 pl-7 rb-regular-i-d light-text-color"
+                [textContent]="selectedTemplateDetails.data"></p>
+            </div>
+            <div *ngIf="isFetching">
+              <div class="details-container ts-col-100">
+                <div
+                  class="ml-30 mw-20 ts-col-auto"
+                  *ngFor="let two of [1,2]">
+                  <div class="text-line-loader"></div>
+                  <div class="text-line-loader mw-75"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+    <div *ngIf="!filteredTemplates?.length"
+         class="empty-full-container-transparent-bg">
+      <div class="empty-full-content">
+        <div class="empty-run-xs"></div>
+        <div
+          class="text-t-secondary pt-30 pb-18"
+          [translate]="'message.common.search.not_found'"></div>
+      </div>
+    </div>
+  </div>
+</div>

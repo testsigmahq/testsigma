@@ -1,0 +1,112 @@
+<!--
+  ~ /*
+  ~  * *****************************************************************************
+  ~  *  Copyright (C) 2020 Testsigma Technologies Inc.
+  ~  *  All rights reserved.
+  ~  *  ****************************************************************************
+  ~  */
+  -->
+<div
+  class="page-details-navigation-md">
+  <ul class="tab-nav" role="tablist">
+    <li class="nav-items" role="presentation">
+      <a
+        [routerLink]="['/td', 'cases', testCaseId, 'steps']"
+        [routerLinkActive]="'active'"
+        class="normal-text">
+        <i class="fa-list"></i>
+        <span [textContent]="('result.test_step'  | translate)"></span>
+      </a>
+    </li>
+    <li
+      class="nav-items" role="presentation" *ngIf="!noSteps">
+      <a
+        [routerLink]="['/td', 'cases', testCaseId, 'dry_runs']"
+        [routerLinkActive]="'active'"
+        class="normal-text">
+        <i class="fa-step-group"></i>
+        <span [translate]="'testcase.details.dry_runs'"></span>
+      </a>
+    </li>
+  </ul>
+  <div class="ml-auto d-flex align-items-center flex-nowrap">
+    <app-auto-refresh
+      *ngIf="isRunning"
+      class="fz-13"
+      [autoRefreshIntervalTime]="autoRefreshInterval"
+      (autoRefreshIntervalTime)="changeAutoRefreshTime($event)"
+      (autoRefreshToggle)="toggleAutoRefresh($event)"></app-auto-refresh>
+  </div>
+</div>
+<div class="list-content overflow-x-hidden theme-w-o-h-scroll lg-h pt-30 px-40 pb-20">
+  <cdk-virtual-scroll-viewport
+    itemSize="65"
+    class="list-container virtual-scroll-viewport h-100 min-h-100">
+    <div class="list-view md-pm green-highlight"
+         *cdkVirtualFor="let dryTestCaseResult of dryTestCaseResults; let index=index">
+      <div class="ts-col-15">
+        <a [routerLink]="['/td', 'test_case_results', dryTestCaseResult?.id]"
+           class="d-flex pointer">
+          <app-result-pie-chart-column [resultEntity]="dryTestCaseResult"></app-result-pie-chart-column>
+        </a>
+      </div>
+      <div class="ts-col-25 rb-medium d-flex align-items-center">
+        <a [routerLink]="['/td', 'test_case_results', dryTestCaseResult?.id]" class="theme-text">
+          <span
+            [textContent]="'testcase.details.dry_runs.name' | translate : {index: (dryTestCaseResults.totalElements-index)}"></span>
+        </a>
+      </div>
+      <div class="ts-col-20 text-t-secondary d-flex align-items-center">
+        <app-test-machine-info-column
+          [environmentResult]="dryTestCaseResult?.testDeviceResult"
+          [executionResult]="dryTestCaseResult?.testDeviceResult?.testPlanResult"
+          [executionEnvironment]="dryTestCaseResult?.testDeviceResult?.testDevice"></app-test-machine-info-column>
+      </div>
+      <div class="ts-col-10 text-t-secondary d-flex align-items-center"
+           [textContent]="dryTestCaseResult?.testDeviceResult?.startTime | date:'hh:mm a MMM d'">
+      </div>
+      <div class="ts-col-15 text-t-secondary d-flex align-items-center">
+        <app-duration-format
+          [duration]="dryTestCaseResult.duration"></app-duration-format>
+      </div>
+      <div class="ts-col-15 text-right">
+        <div>
+          <button
+            class="theme-btn-clear-default"
+            *ngIf="!dryTestCaseResult?.isQueued"
+            (click)="reRun(dryTestCaseResult.testDeviceResult?.testPlanResult?.testPlan)">
+            <i class="fa-play fz-10 mr-10 text-t-secondary"></i>
+            <span [translate]="'testcase.details.dry_runs.re-run'"></span>
+          </button>
+        </div>
+        <button
+          class="theme-btn-clear-default btn-delete border-0 text-white"
+          *ngIf="dryTestCaseResult?.isQueued"
+          (click)="stop(dryTestCaseResult.testDeviceResult?.testPlanResult)">
+          <i class="fa-stop-circle-solid text-white fz-10 mr-10"></i>
+          <span [translate]="'hint.message.common.stop'"></span>
+        </button>
+      </div>
+    </div>
+    <app-placeholder-loader
+      *ngIf="dryTestCaseResults.isFetching"></app-placeholder-loader>
+    <div *ngIf="dryTestCaseResults?.isEmpty && !dryTestCaseResults?.isFetching" class="h-100">
+      <div
+        class="empty-full-container">
+        <div class="empty-run-md"></div>
+        <div
+          class="empty-text"
+          [translate]="'runs.list_view.empty.list'"></div>
+        <div>
+          <button
+            (click)="openDryRun()"
+            class="theme-btn-primary">
+            <i class="fa-filled-circled-play pr-7"></i>
+            <span
+              [translate]="'dry.testcase.btn.run'"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </cdk-virtual-scroll-viewport>
+</div>

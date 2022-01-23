@@ -1,0 +1,87 @@
+<div class="theme-sec-header">
+  <div
+    [translate]="'step_result.auto_healed.title'"
+    class="fz-15 rb-medium pb-5 pt-5">
+  </div>
+  <button class="theme-overlay-close"
+          type="button"
+          [matTooltip]="'hint.message.common.close' | translate"
+          mat-dialog-close>
+  </button>
+</div>
+<div class="d-flex theme-border-b theme-overlay-content only-content px-20 py-10">
+  <div
+    *ngIf="!selfHealMetadata?.priorityXpaths?.length"
+    class="theme-warning px-20 py-10 border-rds-4 d-flex align-items-center">
+    <i class="fa-info pr-7"></i>
+    <span [translate]="'step_result.auto.healed.fail.info'"></span>
+  </div>
+  <div
+    *ngIf="selfHealMetadata?.priorityXpaths?.length"
+    (click)="toggleAutoHeal('passedXpath')"
+    [class.passed]="isAutoHeal=='passedXpath'"
+    [class.active]="isAutoHeal=='passedXpath'"
+    class="border-rds-6 passed border-0 theme-br-tab-selection sm-p p-20">
+    <div
+      class="theme-text"
+      [translate]="'step_result.auto.healed.pass.title'"></div>
+    <div>
+      <i class="fa-result-0 fz-26"></i>
+      <span
+        class="theme-text fz-32 pl-6"
+        [textContent]="selfHealMetadata?.priorityXpaths?.length"></span>
+    </div>
+    <div
+      class="theme-text"
+      [translate]="'step_result.auto.healed.pass.description'"></div>
+  </div>
+  <div
+    *ngIf="selfHealMetadata?.priorityXpaths?.length"
+    (click)="toggleAutoHeal('failedXpath')"
+    [class.failed]="isAutoHeal=='failedXpath'"
+    [class.active]="isAutoHeal=='failedXpath'"
+    class="border-rds-6 border-0 ml-20 theme-br-tab-selection sm-p p-20">
+    <div
+      class="theme-text"
+      [translate]="'step_result.auto.healed.fail.title'"></div>
+    <div>
+      <i class="fa-result-1 fz-26"></i>
+      <span
+        class="fz-32 theme-text pl-6"
+        [textContent]="selfHealMetadata?.possibleXpaths?.length"></span>
+    </div>
+    <div
+      class="theme-text"
+      [translate]="'step_result.auto.healed.fail.description'"></div>
+  </div>
+</div>
+<div
+  *ngIf="isAutoHeal == 'failedXpath'"
+  class="list-container overflow-y-auto h-100-190">
+  <span
+    class="list-view green-highlight md-pm pointer pl-30"
+    *ngFor="let possibleXpath of selfHealMetadata?.possibleXpaths; let index = index">
+    <span
+      [innerHTML]="(index+1) +'. '+ possibleXpath"
+      [matTooltip]="possibleXpath"
+      class="text-truncate text-nowrap ts-col-90">
+    </span>
+    <i class="pl-5 fz-15 ml-auto fa-times-circle-regular result-status-text-1"></i>
+  </span>
+</div>
+<div *ngIf="isAutoHeal == 'passedXpath'"
+     class="list-container overflow-y-auto h-100-190">
+  <span
+    class="list-view green-highlight md-pm pointer pl-30"
+    *ngFor="let priorityXpath of selfHealMetadata?.priorityXpaths; let index = index">
+    <span
+      [innerHTML]="(index+1) +'. '+ priorityXpath"
+      [matTooltip]="priorityXpath"
+      class="text-truncate text-nowrap ts-col-95">
+    </span>
+    <i
+      [class.result-status-text-2]="priorityXpath != selfHealMetadata?.updatedXpath"
+      [class.result-status-text-0]="priorityXpath == selfHealMetadata?.updatedXpath"
+      class="pl-5 fz-15 ml-auto fa-check-circle-regular"></i>
+  </span>
+</div>

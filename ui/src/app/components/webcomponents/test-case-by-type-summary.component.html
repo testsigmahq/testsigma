@@ -1,0 +1,31 @@
+<div class="dashboard-section-title" [translate]="'dashboard.test_cases.by_type'"></div>
+<div
+  class="theme-w-o-h-scroll x-sm-h ts-col-100 theme-border border-rds-5 p-20 d-flex align-items-center justify-content-center">
+  <div class="highChart">
+    <app-by-summary-donut-chart
+      *ngIf="entity?.length"
+      [width]="118"
+      [height]="118"
+      [entity]="entity"></app-by-summary-donut-chart>
+    <div *ngIf="!entity?.length" class="empty-full-container-transparent-bg">
+      <div class="empty-full-content">
+        <div class="empty-run-xs"></div>
+        <div
+          class="text-t-secondary pt-30 pb-18"
+          [translate]="'dashboard.test_cases.empty'"></div>
+      </div>
+    </div>
+  </div>
+   <div  [class.d-flex]="entity?.length<3" class="legend-container ml-14 flex-column justify-content-center h-90 overflow-auto">
+    <div
+      *ngFor="let legend of entity"
+      class="d-flex legend-item align-items-center">
+      <span
+          class="rounded-circle d-inline-block p-4 img-wh sm-wh"
+          [ngStyle]="{background: legend['color']}"
+          [matTooltip]="legend['name']">&nbsp;</span>
+      <span class="legend-y-text" [textContent]="legend['y']"></span>
+      <span [textContent]="legend['name']"></span>
+    </div>
+  </div>
+</div>

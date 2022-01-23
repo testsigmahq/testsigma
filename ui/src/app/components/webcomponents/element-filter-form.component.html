@@ -1,0 +1,45 @@
+<div class="dialog-header">
+  <div
+    [translate]="data.filter?'filter.save.title':'filter.save_as.title'"
+    class="title">
+  </div>
+  <button
+    class="close"
+    type="button"
+    [matTooltip]="'hint.message.common.close' | translate"
+    mat-dialog-close>
+  </button>
+</div>
+<form
+  class="ts-form rb-regular" #saveFilterForm="ngForm"
+  name="elementFilterForm">
+  <div
+    class="dialog-body">
+    <div class="form-group pb-20">
+      <input class="form-control"
+             required minlength="4"
+             name="filterName"
+             #filterName="ngModel"
+             [ngModel]="filter.name"
+             autofocus>
+      <label class="control-label required" [translate]="'filter.name'"></label>
+    </div>
+    <div class="form-group">
+      <mat-checkbox
+        name="filterPublic"
+        #filterPublic="ngModel"
+        [(ngModel)]="filter.isPublic">{{'filter.visibility_make_public' | translate}}</mat-checkbox>
+    </div>
+  </div>
+  <div class="dialog-footer text-right">
+    <button
+      class="theme-btn-clear-default"
+      mat-dialog-close
+      [translate]="'btn.common.cancel'"></button>
+    <button
+      [disabled]="!saveFilterForm.valid"
+      class="theme-btn-primary"
+      [translate]="'btn.common.save'"
+      (click)="filter.name = filterName.value; save()"></button>
+  </div>
+</form>

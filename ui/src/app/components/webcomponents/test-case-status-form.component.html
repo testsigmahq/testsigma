@@ -1,0 +1,52 @@
+<div class="theme-overlay-container">
+  <div class="theme-overlay-header">
+    <div
+      class="theme-overlay-title"
+      [translate]="'testcase.status.update.title'">
+    </div>
+    <button
+      class="theme-overlay-close"
+      type="button"
+      [matTooltip]="'hint.message.common.close' | translate"
+      mat-dialog-close>
+    </button>
+  </div>
+
+  <div class="theme-overlay-content">
+    <form
+      class="ts-form" id="testcaseStatusForm"
+      (keydown.enter)="false"
+      novalidate="novalidate"
+      [formGroup]="testcaseStatusForm"
+      *ngIf="testcase"
+      name="testcaseStatusForm">
+      <div
+        class="form-group ts-col-100">
+        <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill">
+          <mat-select
+            disableOptionCentering panelClass="single"
+            [(ngModel)]="testcase.status"
+            name="status"
+            [formControlName]="['status']"
+            [(value)]="testcase.status">
+            <mat-option
+              *ngFor="let testcaseStatus of statuses"
+              [value]="testcaseStatus"
+              [textContent]="'testcase.status_'+testcaseStatus | translate"></mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
+  <div class="theme-overlay-footer">
+    <button
+      class="theme-btn-clear-default"
+      mat-dialog-close
+      [translate]="'btn.common.cancel'"></button>
+    <button
+      [disabled]="!testcaseStatusForm.valid"
+      (click)="updateTestCaseStatus()"
+      class="theme-btn-primary"
+      [translate]="'btn.common.update'"></button>
+  </div>
+</div>

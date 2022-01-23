@@ -1,0 +1,37 @@
+<div class="ts-form overflow-x-hidden p-30 theme-only-items-scroll sm-h theme-gray-light">
+  <li class="flex-wrap pointer p-10 grey-on-hover list-style-none"
+      *ngFor="let useCase of sampleUseCaseByApp">
+    <div
+      [matTooltip]="(selectedUseCase?.id != useCase?.id ? 'elements.form.btn.view_details' :
+      'elements.form.btn.hide_details') | translate"
+      class="ts-col-100 d-flex justify-content-between"
+      (click)="toggleUseCase(useCase)">
+        <span
+          [textContent]="useCase?.title"
+          class="ts-col-85 rb-medium">
+        </span>
+      <span
+        class="ml-auto"
+        [class.fa-expand]="selectedUseCase?.id != useCase?.id"
+        [class.fa-collapse]="selectedUseCase?.id == useCase?.id">
+        </span>
+    </div>
+    <div
+      *ngIf="selectedUseCase?.id == useCase?.id"
+      [class.selected-use-case]="selectedUseCase?.id == useCase?.id"
+      class="p-10"
+    >
+      <ol class="pl-20 m-0">
+        <li
+          *ngFor="let step of selectedUseCase?.steps"
+          class="py-5">
+          <span
+            class="fa-plus-square-regular action-icon d-inline-flex text-brand p-4 ng-scope"
+            *ngIf="step.indexOf('Reusable Steps') > -1"
+            [matTooltip]="'testcase.list.hint.step_group' | translate"></span>
+          <span [textContent]="step"></span>
+        </li>
+      </ol>
+    </div>
+  </li>
+</div>

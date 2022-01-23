@@ -1,0 +1,20 @@
+<div class="ts-col-100 m-auto h-100" [ngStyle]="{'padding':'5% 6%'}">
+  <div class="w-40 mx-auto mt-50 text-center" *ngIf="!isAddon && !showEmailForm" [translate]= "'settings.testsigma_free_lab.quick_signup'"></div>
+  <div class="rb-medium mx-auto my-35 text-center fz-28 lh-4 rb-semi-bold" *ngIf="isAddon" [translate]="'addons.register.title'"></div>
+  <div class="mx-auto mt-15 text-center" *ngIf="isAddon && !showEmailForm" [translate]= "'settings.testsigma_community.quick_signup'"></div>
+  <span *ngIf="!showEmailForm">
+    <button class="github btn btn-clear-default py-25 w-40 d-flex mx-auto my-35" (click)="signup('github')"></button>
+    <button class="google btn btn-clear-default py-25 w-40 d-flex mx-auto my-35" (click)="signup('google')"></button>
+  </span>
+   <div>
+     <app-testsigma-email-signin
+       (click)="showEmailForm=true"
+       [showEmailForm]="showEmailForm"
+       (goBackRequest)="cancel($event)"></app-testsigma-email-signin>
+   </div>
+  <div class="w-90 mx-auto py-40" *ngIf="!showEmailForm">
+    <div>
+      <span [innerHTML]="'settings.testsigma_free_lab.terms_of_service' | translate"></span>
+    </div>
+  </div>
+</div>

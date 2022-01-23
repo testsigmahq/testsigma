@@ -1,0 +1,65 @@
+<div class="theme-overlay-container">
+  <div class="theme-overlay-header">
+    <div
+      class="theme-overlay-title">
+      <i class="fa-warning text-danger fz-20"></i>
+      <span [translate]="'message.common.confirmation.title'" class="pl-8 fz-16 rb-medium"></span>
+    </div>
+    <button
+      class="theme-overlay-close"
+      type="button"
+      [matTooltip]="'hint.message.common.close' | translate"
+      mat-dialog-close>
+    </button>
+  </div>
+
+  <div class="theme-overlay-content confirmation-model">
+    <div
+      [innerHTML]="modalData.description"
+      class="text-t-secondary pb-15 lh-2"></div>
+    <div class="list-content overflow-x-hidden  theme-only-items-scroll">
+      <cdk-virtual-scroll-viewport
+        class="list-container virtual-scroll-viewport"
+        itemSize="27"
+        style="max-height:261px;height:261px">
+        <div
+          *cdkVirtualFor="let linkedEntity of modalData.linkedEntityList ; let index=index; let first=first"
+          [class.border-separator-t-1]="first"
+          class="list-view md-pm green-highlight">
+          <div [textContent]="linkedEntity.name" class="ts-col-50 text-truncate pr-20"></div>
+          <div (click)="openLinkedEntity(linkedEntity.id)" class="ts-col-50 pointer d-flex" target="_blank">
+            <span *ngIf="(linkedEntity.requirement?.requirementName || linkedEntity.workspaceVersionId)"
+              [textContent]="linkedEntity.requirement?.requirementName || ('linked_entities.open_test_suite'|translate)"
+              class="pr-20 ts-col-90 text-truncate"></span>
+            <div *ngIf="!(linkedEntity.requirement?.requirementName || linkedEntity.workspaceVersionId)"
+                 class="pr-20 ts-col-90 text-truncate d-flex">
+              <span
+                *ngIf="linkedEntity?.workspaceVersion?.application?.project?.hasMultipleApps"
+                [textContent]="linkedEntity?.workspaceVersion?.application?.name"
+                class="ts-col-75 text-truncate"
+                [matTooltip]="linkedEntity?.workspaceVersion?.application?.name">
+              </span>
+              <span
+                *ngIf="linkedEntity?.workspaceVersion?.application?.project?.hasMultipleVersions"
+                [textContent]="linkedEntity?.workspaceVersion?.versionName"
+                class="ts-col-25 text-truncate"
+                [class.mw-30]="linkedEntity?.workspaceVersion?.application?.project?.hasMultipleApps"
+                [class.mw-90]="!linkedEntity?.workspaceVersion?.application?.project?.hasMultipleApps"
+                [class.ml-0]="!linkedEntity?.workspaceVersion?.application?.project?.hasMultipleApps"
+                [matTooltip]="linkedEntity?.workspaceVersion?.versionName">
+              </span>
+            </div>
+            <i class="fa-external-link-alt-solid pl-5 ml-auto"></i>
+          </div>
+        </div>
+      </cdk-virtual-scroll-viewport>
+    </div>
+  </div>
+
+  <div class="theme-overlay-footer">
+    <button
+      [translate]="'btn.common.done'"
+      class="btn icon-btn border-rds-2"
+      mat-dialog-close></button>
+  </div>
+</div>

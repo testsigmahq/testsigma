@@ -1,0 +1,43 @@
+DROP TABLE IF EXISTS `test_suite_results`;
+CREATE TABLE `test_suite_results`
+(
+  `id`                           BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `test_plan_result_id`          BIGINT(20),
+  `test_device_result_id`        BIGINT(20) NOT NULL,
+  `suite_id`                     BIGINT(20) NOT NULL,
+  `result`                       VARCHAR(100)    DEFAULT NULL,
+  `status`                       VARCHAR(100)    DEFAULT NULL,
+  `message`                      TEXT,
+  `start_time`                   TIMESTAMP  NULL DEFAULT NULL,
+  `end_time`                     TIMESTAMP  NULL DEFAULT NULL,
+  `duration`                     BIGINT(20)      DEFAULT NULL,
+  `order_id`                     INT(11),
+  `suite_details`                JSON,
+  `started`                      BIT(1),
+  `execution_initiated_on`       TIMESTAMP  NULL DEFAULT NULL,
+  `agent_picked_on`              TIMESTAMP  NULL DEFAULT NULL,
+  `device_allocated_on`          TIMESTAMP  NULL DEFAULT NULL,
+  `session_created_on`           TIMESTAMP  NULL DEFAULT NULL,
+  `session_completed_on`         TIMESTAMP  NULL DEFAULT NULL,
+  `total_count`                  BIGINT(20)      DEFAULT 0,
+  `failed_count`                 BIGINT(20)      DEFAULT 0,
+  `passed_count`                 BIGINT(20)      DEFAULT 0,
+  `aborted_count`                BIGINT(20)      DEFAULT 0,
+  `stopped_count`                BIGINT(20)      DEFAULT 0,
+  `not_executed_count`           BIGINT(20)      DEFAULT 0,
+  `queued_count`                 BIGINT(20)      DEFAULT 0,
+  `is_visually_passed`           BIT(1)          DEFAULT NULL,
+  `session_id`                   VARCHAR(256)    DEFAULT NULL,
+  `re_run_parent_id`             BIGINT(20)      DEFAULT NULL,
+  `platform_assets_endpoint_url` TEXT            DEFAULT NULL,
+  `created_date`                 DATETIME        DEFAULT CURRENT_TIMESTAMP,
+  `updated_date`                 DATETIME        DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY `index_test_suite_results_on_test_device_result_id` (`test_device_result_id`),
+  KEY `index_test_suite_results_on_test_plan_result_id` (`test_plan_result_id`),
+  KEY `index_test_suite_results_on_re_run_parent_id` (`re_run_parent_id`),
+  CONSTRAINT `fk_test_plan_result_id_to_test_plan_results` FOREIGN KEY (`test_plan_result_id`) REFERENCES `test_plan_results` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `fk_test_device_result_id_to_test_device_results` FOREIGN KEY (`test_device_result_id`) REFERENCES `test_device_results` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  COLLATE utf8_unicode_ci;

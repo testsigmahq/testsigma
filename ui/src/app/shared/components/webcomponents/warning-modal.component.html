@@ -1,0 +1,23 @@
+<div
+  class="confirm-message"
+  [innerHTML]='modalData?.title'></div>
+<div
+  class="confirm-note pr-15"
+  [innerHTML]="modalData?.message"></div>
+<mat-dialog-actions class="confirm-actions">
+  <button
+    *ngIf="modalData?.confirmMessage"
+    class="theme-btn-primary"
+    mat-dialog-close
+    [translate]="'btn.common.cancel'"></button>
+  <button
+    *ngIf="modalData?.confirmMessage"
+    class="border-0 p-8 pl-12 pr-12 btn btn-delete text-white theme-btn-clear-default"
+    [translate]="'btn.common.yes_change'"
+    [mat-dialog-close]="true"></button>
+  <button
+    *ngIf="!modalData?.confirmMessage"
+    class="theme-btn-primary"
+    mat-dialog-close
+    [translate]="'btn.common.ok'"></button>
+</mat-dialog-actions>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+  <Properties>
+    <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss} %X{X-Request-Id} %-5p %c{1}:%M:%L %t %m%n</Property>
+    <property name="LOG_FOLDER">${sys:TS_DATA_DIR}/logs</property>
+  </Properties>
+  <Appenders>
+    <Console name="ConsoleAppender" target="SYSTEM_OUT" follow="true">
+      <PatternLayout pattern="${LOG_PATTERN}"/>
+    </Console>
+
+    <RollingFile name="AgentLogAppender" fileName="${LOG_FOLDER}/agent.log" filePattern="${LOG_FOLDER}/agent-%i.log">
+      <PatternLayout>
+        <Pattern>${LOG_PATTERN}</Pattern>
+      </PatternLayout>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="10MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="10"/>
+    </RollingFile>
+
+    <RollingFile name="AutomatorLogAppender" fileName="${LOG_FOLDER}/automator.log"
+                 filePattern="${LOG_FOLDER}/automator-%i.log">
+      <PatternLayout>
+        <Pattern>${LOG_PATTERN}</Pattern>
+      </PatternLayout>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="10MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="10"/>
+    </RollingFile>
+  </Appenders>
+
+  <Loggers>
+    <AsyncLogger name="com.testsigma.agent" level="ALL" additivity="false" includeLocation="true">
+      <AppenderRef ref="ConsoleAppender"/>
+      <AppenderRef ref="AgentLogAppender"/>
+    </AsyncLogger>
+
+    <AsyncLogger name="com.testsigma.automator" level="ALL" additivity="false" includeLocation="true">
+      <AppenderRef ref="ConsoleAppender"/>
+      <AppenderRef ref="AutomatorLogAppender"/>
+    </AsyncLogger>
+
+    <Root level="INFO">
+      <AppenderRef ref="ConsoleAppender"/>
+      <AppenderRef ref="AgentLogAppender"/>
+      <AppenderRef ref="AutomatorLogAppender"/>
+    </Root>
+  </Loggers>
+</Configuration>

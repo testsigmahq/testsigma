@@ -1,0 +1,72 @@
+<div class="td-create-container pb-30">
+  <div
+    class="ts-col-100 d-flex flex-wrap">
+    <div class="d-flex align-items-center ts-col-100">
+      <app-td-overlay-menu-button
+        [versionId]="versionId"></app-td-overlay-menu-button>
+      <a class="go-back-icon pl-10"
+         [matTooltip]="'hint.message.common.back' | translate"
+         [routerLink]="['/td', 'data', this.testData?.id]"></a>
+      <div
+           class="d-flex ts-col-100-77 align-items-center">
+        <div class="ts-col-45 form-group">
+          <div class="error left"
+               *ngIf="formSubmitted && testDataForm.controls.name.errors?.required"
+               [textContent]="'validation.required.message' | translate: {field:'Name'}"></div>
+          <div class="error left"
+               *ngIf="formSubmitted && testDataForm.controls.name.errors?.minlength"
+               [textContent]="'form.validation.common.min_length' | translate: {FieldName:'Name' , min:'4'}"></div>
+          <div class="error left"
+               *ngIf="formSubmitted && testDataForm.controls.name.errors?.maxlength"
+               [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'126'}"></div>
+          <div [formGroup]="testDataForm" class="theme-details-header ts-form" *ngIf="testData">
+            <div class="form-group pb-0 w-100">
+              <input class="form-control md-form-control"
+                     required minlength="4"
+                     [(ngModel)]="testData.name"
+                     [formControlName]="['name']"
+                     name="filterName"
+                     autofocus>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex align-items-baseline ml-auto">
+          <button
+            class="theme-btn-clear-default"
+            [routerLink]="['/td', 'data', this.testData?.id]"
+            [translate]="'btn.common.cancel'">
+          </button>
+          <button
+            (click)="update()"
+            appAsyncBtn
+            [isLoading]="saving"
+            [message]="'message.common.updating'"
+            class="btn ml-14 theme-btn-primary"
+            [textContent]="'btn.common.update'">
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="page-details-navigation-sm">
+  <ul class="tab-nav" role="tablist">
+    <li class="nav-items" role="presentation">
+      <a [routerLink]="['/td', 'data', testData?.id, 'data']"
+         [routerLinkActive]="'active'"
+         class="normal-text active">
+        <i class="fa-list"></i>
+        <span [translate]="'test_data_profiles.test_data_tabs.title.data_list'"></span>
+      </a>
+    </li>
+  </ul>
+</div>
+<div class="edit-grid-container">
+  <app-test-data-grid
+    class="ml-n20"
+    [testData]="testData"
+    [testDataForm]="testDataForm"
+    [formSubmitted]="formSubmitted"
+    *ngIf="testData"></app-test-data-grid>
+</div>

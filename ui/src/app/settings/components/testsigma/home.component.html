@@ -1,0 +1,74 @@
+<div class="page-header theme-border-b">
+  <div class="page-title" [translate]="'page_title.testsigma_free_lab.register'"></div>
+  <div class="short-hand-actions"></div>
+</div>
+<div class="page-content p-0">
+  <div class="ts-col-100 d-flex justify-content-between h-100">
+    <div class="ts-col-50 my-auto registered-message" *ngIf="authGuard?.openSource?.isEnabled">
+      <div class="text-center fz-20 rb-light"
+           [innerHTML]="'settings.testsigma_free_lab.already_registered' | translate">
+      </div>
+      <div class="text-center fz-14">
+        <p [innerHTML]="'settings.testsigma_free_lab.already_registered_message' | translate"></p>
+      </div>
+    </div>
+    <div class="ts-col-50 " *ngIf="!authGuard?.openSource?.isEnabled">
+      <app-testsigma-signin [isAddon]=false></app-testsigma-signin>
+    </div>
+    <div class="ts-col-50 bg-light px-60" [ngStyle]="{'background-color': '#F2F8F2','overflow':'auto'}">
+      <div class="mx-auto mt-80">
+        <div class="text-brand fz-28 rb-bold mt-50" [translate]="'settings.testsigma_free_lab.title'"></div>
+      </div>
+      <div class="d-flex free-lab-details flex-column w-100-60">
+        <div class="text-wrap big-icon d-flex fa-outline-cloudy text-grey my-30">
+          <div>
+            <div class="rb-medium fz-16 mb-5" [translate]="'settings.testsigma_free_lab.heading1'"></div>
+            <div [translate]="'settings.testsigma_free_lab.message1'"></div>
+          </div>
+        </div>
+        <div class="d-flex mb-30">
+          <div class="text-wrap big-icon d-flex fa-database-solid text-grey">
+            <div>
+              <div class="rb-medium fz-16 mb-5" [translate]="'settings.testsigma_free_lab.heading2'"></div>
+              <div [translate]="'settings.testsigma_free_lab.message2'"></div>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex mb-30">
+          <div>
+            <div class="text-wrap big-icon d-flex fa-visual text-grey">
+              <div>
+              <div class="rb-medium fz-16 mb-5" [translate]="'settings.testsigma_free_lab.heading3'"></div>
+              <div [translate]="'settings.testsigma_free_lab.message3'"></div>
+            </div>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex mb-30">
+          <div class="text-wrap big-icon d-flex fa-app-store-ios text-grey">
+            <div>
+              <div class="rb-medium fz-16 mb-5" [translate]="'settings.testsigma_free_lab.heading4'"></div>
+              <div [translate]="'settings.testsigma_free_lab.message4'"></div>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex mb-30">
+          <div class="text-wrap big-icon d-flex fa-building-shop text-grey">
+            <div>
+              <div class="rb-medium fz-16 mb-5" [translate]="'settings.testsigma_free_lab.heading5'"></div>
+              <div [translate]="'settings.testsigma_free_lab.message5'"></div>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex mb-30">
+          <div class="text-wrap big-icon d-flex fa-people-group text-grey">
+            <div>
+              <div class="rb-medium fz-16 mb-5" [translate]="'settings.testsigma_free_lab.heading6'"></div>
+              <div [translate]="'settings.testsigma_free_lab.message6'"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

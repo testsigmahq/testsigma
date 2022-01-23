@@ -1,0 +1,178 @@
+<div class="mat-dialog-header border-0">
+  <div
+    class="ts-col-15 d-flex fz-15 rb-medium"
+    [translate]="'usage_details.title'">
+  </div>
+  <i class="pointer fa-refresh-thick pl-5" (click)="refresh()" [matTooltip]="'hint.message.common.refresh' | translate"></i>
+  <button
+    class="theme-overlay-close"
+    type="button"
+    [matTooltip]="'hint.message.common.close' | translate"
+    mat-dialog-close>
+  </button>
+</div>
+<div class="usage-container usage-count">
+
+  <div class="ts-col-100 usage-details-content">
+<!--    <div class="d-flex justify-content-end mb-n40">-->
+<!--      <button class="mat-tooltip-trigger btn icon-btn border-rds-2 ml-14 filter-icon-with-reset z-in-2"><i class="filter-icon"></i></button>-->
+<!--    </div>-->
+    <mat-tab-group animationDuration="0ms">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <div class="d-flex align-items-center">
+            <span [translate]="'usage_details.runs.title'"></span>
+          </div>
+        </ng-template>
+        <div class="theme-application-scroll sm-h">
+          <div
+            class="list-header ts-col-100 mt-20 pl-12">
+            <div class="d-flex flex-wrap ts-col-100">
+              <div class="ts-col-20 pr-10 d-flex" [translate]="'usage_details.runs.name'"></div>
+              <div class="ts-col-10" [translate]="'usage_details.runs.running_count'"></div>
+              <div class="ts-col-20" [translate]="'usage_details.runs.type'"></div>
+              <div class="ts-col-20" [translate]="'usage_details.runs.start_time'"></div>
+              <div class="ts-col-20" [translate]="'usage_details.runs.workspace_details'"></div>
+              <div class="ts-col-10" ></div>
+            </div>
+          </div>
+          <cdk-virtual-scroll-viewport
+            itemSize="46"
+            class="ts-col-100 list-container virtual-scroll-viewport viewport-height h-90">
+            <div *cdkVirtualFor='let executionResult of runsList'
+                 class="list-view green-highlight lg-pm pl-10 text-t-secondary ts-col-100">
+              <div class="ts-col-100 d-flex align-items-center" *ngIf="executionResult">
+                <div class="d-flex pr-10 rb-medium text-dark ts-col-20">
+                  <span [textContent]="executionResult?.testPlan?.name"></span>
+                  <span class="pl-10" [textContent]="'usage_details.runs_run_id' | translate : {id:executionResult?.id }"></span>
+                </div>
+                <div class="ts-col-10" [textContent]="executionResult?.totalRunningCount+ executionResult?.totalQueuedCount"></div>
+                <div class="ts-col-20">
+                  <span [translate]="'usage_details.test_plan'" *ngIf="!isDry(executionResult)" ></span>
+                  <span [translate]="'usage_details.dry_run'" *ngIf="isDry(executionResult)" ></span>
+                  (<span [translate]="'execution.lab_type.'+ executionResult?.testPlan?.testPlanLabType"></span>)
+                </div>
+                <div class="ts-col-20 d-flex">
+        <span
+          [textContent]="executionResult?.startTime  | date:'h:mm a MMM d'"></span>
+                  <app-duration-format class="ml-10" [duration]="(today | amDifference: executionResult?.startTime :'seconds' : true)"></app-duration-format>
+                </div>
+                <div class="ts-col-20">
+                  <div class="ts-col-100 text-truncate" [textContent]="executionResult?.testPlan?.workspaceVersion?.workspace?.name"></div>
+                  <div class="ts-col-100 d-flex">
+                    <div class="ts-col-20 version-label text-truncate" [matTooltip]="executionResult?.testPlan?.workspaceVersion?.versionName" [textContent]="executionResult?.testPlan?.workspaceVersion?.versionName"></div>
+                  </div>
+                </div>
+                <div class="ts-col-10">
+                  <app-run-now-button
+                    [displayText]="('hint.message.common.stop' | translate)"
+                    (onStart)="refresh()"
+                    (onStop)="refresh()"
+                    [executionResult]="executionResult"
+                    [execution]="executionResult?.execution"
+                    class="ml-10">
+                  </app-run-now-button>
+                </div>
+              </div>
+              <div class="ts-col-100 d-flex align-items-center" *ngIf="!executionResult">
+                <div class="d-flex pr-10 rb-medium text-dark ts-col-20" [textContent]="executionResult.testCase.name"></div>
+                <div class="ts-col-20">
+                  <span [translate]="'usage_details.test_plan'" *ngIf="!isDry(executionResult)" ></span>
+                  <span [translate]="'usage_details.dry_run'" *ngIf="isDry(executionResult)" ></span>
+                  <span [translate]="'execution.lab_type.'+ executionResult?.testPlan?.testPlanLabType"></span>)
+                </div>
+                <div class="ts-col-20 d-flex">
+        <span
+          [textContent]="executionResult?.startTime  | date:'h:mm a MMM d'"></span>
+                  <app-duration-format class="ml-10" [duration]="(today | amDifference: executionResult?.startTime :'seconds' : true)"></app-duration-format>
+                </div>
+                <div class="ts-col-20">
+                  <div class="ts-col-100 text-truncate" [textContent]="executionResult?.testPlan?.workspaceVersion?.workspace?.name"></div>
+                  <div class="ts-col-100 d-flex">
+                    <div class="ts-col-20 version-label text-truncate" [matTooltip]="executionResult?.testPlan?.workspaceVersion?.versionName" [textContent]="executionResult?.testPlan?.workspaceVersion?.versionName"></div>
+                  </div>
+                </div>
+                <div class="ts-col-10">
+                  <app-run-now-button
+                    [displayText]="('hint.message.common.stop' | translate)"
+                    (onStart)="refresh()"
+                    (onStop)="refresh()"
+                    [executionResult]="executionResult"
+                    [execution]="executionResult?.execution"
+                    class="ml-10">
+                  </app-run-now-button>
+                </div>
+              </div>
+            </div>
+
+            <div
+              *ngIf="!isFetching && (!!!runsQuery || !!runsQuery) && !runsArray.length"
+              class="empty-full-container-transparent-bg">
+              <div class="empty-full-content mt-40">
+                <div class="empty-run-xs"></div>
+                <div
+                  class="empty-text mt-20"
+                  [translate]="!!runsQuery ? 'message.common.search.not_found' : 'usage_details.runs.runs.empty_message'"></div>
+              </div>
+            </div>
+            <app-placeholder-loader *ngIf="isFetching"></app-placeholder-loader>
+          </cdk-virtual-scroll-viewport>
+        </div>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <div class="d-flex align-items-center">
+            <span [translate]="'usage_details.mobile_inspections.runs.title'"></span>
+          </div>
+        </ng-template>
+        <div class="theme-application-scroll sm-h mb-20">
+          <div class="d-flex ts-col-100 flex-wrap h-100">
+            <div
+              class="list-header ts-col-100 mt-20 pl-12">
+              <div class="d-flex flex-wrap ts-col-100">
+                <div class="ts-col-30" [translate]="'usage_details.mobile_inspections.created_at'"></div>
+                <div class="ts-col-30" [translate]="'usage_details.runs.type'"></div>
+                <div class="ts-col-10"></div>
+              </div>
+            </div>
+            <cdk-virtual-scroll-viewport
+              itemSize="46"
+              class="ts-col-100 list-container virtual-scroll-viewport viewport-height h-80">
+              <div *cdkVirtualFor='let run of inspectionsList'
+                   class="list-view green-highlight lg-pm pl-10 text-t-secondary ts-col-100">
+                <div class="ts-col-100 d-flex align-items-center" *ngIf="run?.status">
+                  <div class="ts-col-30 d-flex" [textContent]="run?.createdAt  | date:'h:mm a MMM d'"></div>
+                  <div class="ts-col-30" [translate]="'execution.lab_type.'+run?.labType"></div>
+                  <div class="ts-col-10">
+                    <button
+                      (click)="stopMobileInspection(run?.id)"
+                      class="btn btn-delete">
+                      <i class="fa-stop-circle-solid pr-4"></i>
+                      <span [translate]="'hint.message.common.stop'"></span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                *ngIf="!isFetching && (!!!runsQuery || !!runsQuery) && inspectionsArray.length ==0"
+                class="empty-full-container-transparent-bg">
+                <div class="empty-full-content mt-40">
+                  <div class="empty-run-xs"></div>
+                  <div
+                    class="empty-text mt-20"
+                    [translate]="!!runsQuery ? 'message.common.search.not_found' : 'usage_details.mobile_inspections.runs.empty_message'"></div>
+                </div>
+              </div>
+              <app-placeholder-loader *ngIf="isFetching"></app-placeholder-loader>
+            </cdk-virtual-scroll-viewport>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+
+
+
+
+</div>

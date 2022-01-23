@@ -1,0 +1,15 @@
+<div class="align-items-center d-flex">
+  <i class="pointer text-t-secondary fz-17 fa-search-right pr-4"
+     (click)="toggleSearch()"
+     [matTooltip]="'hint.message.common.search' | translate"></i>
+  <div class="search-form-group ts-form text-right"  *ngIf="showSearch" aria-hidden="false">
+    <input
+      #searchInput
+      type="text"
+      [(ngModel)]="inputValue"
+      class="form-control d-inline-block"
+      [placeholder]="'agents.mobile.inspection.search_element' | translate" aria-invalid="false">
+    <i [ngClass]= "{'visibility-visible' : inputValue}"  style="margin-left: 1px;padding-left: 1px" [matTooltip]="'hint.message.common.clear' | translate"
+       class="fa-close-alt text-t-secondary fz-12 pt-2 mr-5 pointer visibility-hidden" (click)="clearSearch()"></i>
+  </div>
+</div>

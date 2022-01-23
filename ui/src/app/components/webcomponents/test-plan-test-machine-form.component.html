@@ -1,0 +1,180 @@
+<div
+  *ngIf="environmentFormGroup"
+  class="form-group">
+  <div
+    [translate]="'test_plan.environment.machine.title'"
+    class="fz-14 rb-medium pb-30"></div>
+  <div *ngIf="testPlanLabType && !isHybrid" class="d-flex">
+    <div
+      class="ts-col-20 pr-14">
+      <mat-form-field
+        [formGroup]="environmentFormGroup"
+        class="mat-select-custom w-100 example-full-width" appearance="fill">
+        <span
+          matPrefix
+          [class.fa-linux-2]="platform?.isLinux"
+          [class.fa-windows-brands]="platform?.isWindows"
+          [class.fa-apple]="platform?.isMac"
+          class="mr-10 text-t-secondary"></span>
+        <mat-select
+          disableOptionCentering panelClass="single"
+          formControlName="platform"
+          (selectionChange)="setPlatform($event.value)"
+          name="platform">
+          <mat-option
+            *ngFor="let platform of platforms"
+            [value]="platform.id">
+            <i [class.fa-apple]="platform?.isMac"
+               [class.fa-linux-2]="platform?.isLinux"
+               [class.fa-windows-brands]="platform?.isWindows" class="mr-10 text-t-secondary"></i>
+            <span [textContent]="platform.name"></span>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <label class="control-label required" [translate]="'test_plan.environment.selected_os'"></label>
+    </div>
+    <div
+      class="ts-col-20 pr-25 theme-border-r">
+      <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill" [formGroup]="environmentFormGroup">
+        <mat-select
+          disableOptionCentering panelClass="single"
+          formControlName="platformOsVersionId"
+          (selectionChange)="setOsVersion($event.value);"
+          name="osVersion">
+          <mat-option
+            *ngFor="let osVersion of platformOsVersions"
+            [value]="osVersion.id">
+            <span [textContent]="osVersion.displayName"></span>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <label class="control-label required" [translate]="'test_plan.environment.os_version'"></label>
+    </div>
+
+    <div
+      class="ts-col-20 pr-14 ml-25">
+      <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill" [formGroup]="environmentFormGroup">
+        <span
+          matPrefix
+          [class.fa-edge]="platformBrowser?.isEdge"
+          [class.fa-firefox]="platformBrowser?.isFirefox"
+          [class.fa-safari-brands]="platformBrowser?.isSafari"
+          [class.fa-chrome]="platformBrowser?.isChrome"
+          class="mr-10 text-t-secondary"></span>
+        <mat-select
+          disableOptionCentering panelClass="single"
+          formControlName="browser"
+          (selectionChange)="setPlatformBrowser($event.value)"
+          name="browser">
+          <mat-option
+            *ngFor="let browser of browsers"
+            [value]="browser.id">
+            <i [class.fa-edge]="browser.isEdge"
+               [class.fa-firefox]="browser.isFirefox"
+               [class.fa-safari-brands]="browser.isSafari"
+               [class.fa-chrome]="browser.isChrome"
+               class="mr-10 text-t-secondary"></i>
+            <span [textContent]="browser.name" ></span>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <label class="control-label required" [translate]="'test_plan.environment.selected_browser'"></label>
+    </div>
+    <div
+      class="ts-col-20 pr-14">
+      <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill" [formGroup]="environmentFormGroup">
+        <mat-select
+          disableOptionCentering panelClass="single"
+          formControlName="platformBrowserVersionId"
+          (selectionChange)="setPlatformBrowserVersion($event.value)"
+          name="browserVersion">
+          <mat-option
+            *ngFor="let browserVersion of browserVersions;let i=index"
+            [value]="browserVersion.id">
+            <span [textContent]="browserVersion.displayVersion"></span>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <label class="control-label required" [translate]="'test_plan.environment.selected_version'"></label>
+    </div>
+    <div
+      class="ts-col-20 pr-14">
+      <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill" [formGroup]="environmentFormGroup">
+        <mat-select
+          disableOptionCentering panelClass="single"
+          formControlName="platformScreenResolutionId"
+          (selectionChange)="setResolution($event)"
+          name="resoultion">
+          <mat-option
+            *ngFor="let resolution of screenResolutions"
+            [value]="resolution.id" [textContent]="resolution.displayResolution"></mat-option>
+        </mat-select>
+      </mat-form-field>
+      <label class="control-label required" [translate]="'test_plan.environment.resolution'"></label>
+    </div>
+
+  </div>
+
+  <div class="d-flex" *ngIf="testPlanLabType && isHybrid">
+    <div
+      [class.ts-col-100]="agentsEmpty"
+      [class.ts-col-30]="!agentsEmpty"
+      class="pr-5" *ngIf="environmentFormGroup">
+      <app-agents-auto-complete
+        *ngIf="environmentFormGroup && version"
+        (onAgentChange)="setAgent($event)"
+        (onAgents)="setAgents($event)"
+        [value]="agent"
+        [version]="version"
+        [formGroup]="environmentFormGroup"
+        [formCtrl]="environmentFormGroup?.controls['agentId']"
+        [labelText]="'test_plan.environment.test_machine' | translate"
+        [isAvailableCheck]="isAvailableCheck">
+      </app-agents-auto-complete>
+    </div>
+    <div
+      *ngIf="!agentsEmpty && !version?.workspace?.isRest"
+      class="ts-col-25 pr-5 d-flex align-items-center justify-content-center">
+      <i [class.fa-linux-2]="agent?.isLinux"
+         [class.fa-windows-brands]="agent?.isWindows"
+         [class.fa-apple]="agent?.isMac"
+         class="text-t-secondary mr-4"></i>
+      <span *ngIf="!agent?.isLinux" [translate]="environmentFormGroup.controls['osVersion']?.value"></span>
+      <label class="control-label required" [translate]="'test_plan.environment.os_version'"></label>
+    </div>
+    <div
+      *ngIf="!agentsEmpty && !version?.workspace?.isRest"
+      class="ts-col-20 pr-14">
+      <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill">
+        <span
+          matPrefix
+          [class.fa-edge]="browser?.isEdge"
+          [class.fa-firefox]="browser?.isFirefox"
+          [class.fa-safari-brands]="browser?.isSafari"
+          [class.fa-chrome]="browser?.isChrome"
+          class="mr-10 text-t-secondary" ></span>
+        <mat-select
+          disableOptionCentering panelClass="single"
+          (selectionChange)="setBrowser($event.value)"
+          name="browserVersion" [formControl]="environmentFormGroup?.controls['browser']">
+          <mat-option
+            *ngFor="let browser of agent?.browsers" [value]="browser.name.toUpperCase()">
+            <i [class.fa-edge]="browser.isEdge"
+               [class.fa-firefox]="browser.isFirefox"
+               [class.fa-safari-brands]="browser.isSafari"
+               [class.fa-chrome]="browser.isChrome" class="mr-10 text-t-secondary"></i>
+            <span [textContent]="'browser.name.'+browser.name.toUpperCase() | translate"></span>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <label class="control-label required" [translate]="'test_plan.environment.browser'"></label>
+    </div>
+    <div
+      *ngIf="!agentsEmpty && !version?.workspace?.isRest"
+      class="ts-col-25 pr-5 d-flex align-items-center justify-content-center">
+      {{environmentFormGroup.controls['browserVersion']?.value}}
+      <label class="control-label required" [translate]="'test_plan.environment.selected_version'"></label>
+    </div>
+  </div>
+
+</div>

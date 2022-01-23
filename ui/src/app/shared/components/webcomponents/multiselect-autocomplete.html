@@ -1,0 +1,33 @@
+<mat-form-field class="mat-select-custom w-100" appearance="fill">
+  <mat-select (openedChange)="openedChange($event)"
+              (selectionChange)="selectionChange($event)"
+              [(value)]="value" [formControl]="selectFormControl"
+              disableOptionCentering
+              #matSelect
+              multiple [panelClass]="['multiple']"
+              [placeholder]="'Select'">
+    <mat-option class="p-4" [disabled]="true">
+      <mat-progress-spinner
+        class="search-spinner" mode="indeterminate" diameter="15" *ngIf="loadingSearch">
+      </mat-progress-spinner>
+      <input #search (keydown)="$event.stopPropagation()"
+             [formControl]="searchTextboxControl" aria-label="Search" autocomplete="off"
+             matInput placeholder="Search" class="mb-4">
+      <button (click)="clearSearch($event)"
+              *ngIf="search.value && !loadingSearch" [disableRipple]="true"
+              class="position-absolute ml-n30 mt-n2 h-30p"
+              mat-icon-button
+              matSuffix>
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-option>
+    <mat-option
+      *ngIf="items?.content?.length == 0 && !!searchTextboxControl.value"
+      [disabled]="true" [textContent]="'select.search.notfound'|translate"></mat-option>
+    <mat-option *ngFor="let option of filteredOptions" [value]="option.id">
+      <div class="text-truncate text-nowrap lh-2point6" [textContent]="option.name"
+           appTooltipOnEllipsis></div>
+    </mat-option>
+    <mat-option  *ngFor="let option of selectedPlaceholder" class="d-none" [value]="option?.id" [textContent]="option?.name"></mat-option>
+  </mat-select>
+</mat-form-field>

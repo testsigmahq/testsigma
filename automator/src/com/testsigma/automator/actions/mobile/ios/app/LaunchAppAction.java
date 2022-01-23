@@ -1,0 +1,6 @@
+package com.testsigma.automator.actions.mobile.ios.app;
+
+import com.testsigma.automator.actions.mobile.MobileNativeLaunchSnippet;
+
+public class LaunchAppAction extends MobileNativeLaunchSnippet {
+}

@@ -1,0 +1,42 @@
+<div class="w-100 h-100">
+  <div class="theme-overlay-container">
+    <div class="theme-overlay-header">
+      <span class="theme-overlay-title" [translate]="'settings.storage.local'" ></span>
+      <button
+        type="button"
+        [matTooltip]="'hint.message.common.close' | translate"
+        mat-dialog-close
+        class="close">
+      </button>
+    </div>
+
+    <div class="theme-overlay-content">
+      <form class="ts-form pt-30" [formGroup]="updateForm">
+        <div class="form-group ts-form" >
+          <label for="rootDirectory" class="control-label required">
+            <span [translate]="'settings.storage.local.root_dir_name'"></span>
+          </label>
+          <input
+            type="text"
+            formControlName="rootDirectory"
+            id="rootDirectory" class="form-control">
+          <span *ngIf="!updateForm.get('rootDirectory').valid && updateForm.get('rootDirectory').touched" class="help-block"
+                [translate]="'form.validation.common.invalid' | translate:{FieldName: 'Root Directory'}">
+          </span>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="theme-overlay-footer">
+      <button
+        type="button"
+        mat-dialog-close
+        class="theme-btn-clear-default" [translate]="'btn.common.cancel'">
+      </button>
+      <button type="submit" [disabled]="!updateForm.valid"
+              class="theme-btn-primary" (click)="onSubmit()"
+              [translate]="saving? 'message.common.saving' : 'btn.common.create'"></button>
+    </div>
+  </div>
+</div>

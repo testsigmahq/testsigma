@@ -1,0 +1,199 @@
+<div class="theme-section-header theme-border-l theme-section-header-spacing">
+  <div
+    class="section-title"
+    [translate]="'runs.details.quick_info.header' | translate: {runId: executionResult.id}"></div>
+  <div class="ml-auto">
+    <i
+      class="fa-close-alt  action-hover-icon pointer"
+      (click)="toggleDetails()"
+      [matTooltip]="'btn.common.close' | translate"></i>
+  </div>
+</div>
+<div class="theme-quick-container">
+  <div class="d-flex" *ngIf="showList == 'TCR'">
+
+    <div class="highChart">
+      <app-result-donut-chart
+        [width]="118"
+        [height]="118"
+        [resultEntity]="executionResult"></app-result-donut-chart>
+    </div>
+    <div class="legend-container ml-14 w-100 text-right">
+      <div class="legend-item" (click)="filter(resultConstant.SUCCESS)">
+        <i
+          class="result-status-0 fa-show legend-icon btn">
+        </i>
+        <span [textContent]="('execution.result.SUCCESS' | translate) +
+        ' : '+ executionResult.passedCount+''"></span>
+      </div>
+      <div class="legend-item" (click)="filter(resultConstant.FAILURE)">
+        <i
+          class="result-status-1 fa-show legend-icon btn result-status-active-1">
+        </i>
+        <span [textContent]="('execution.result.FAILURE' | translate) +
+        ' : '+ executionResult.failedCount+''"></span>
+      </div>
+      <div class="legend-item" (click)="filter(resultConstant.ABORTED)">
+        <i
+          class="result-status-2 fa-show legend-icon btn result-status-active-2">
+        </i>
+        <span [textContent]="('execution.result.ABORTED' | translate) +
+        ' : '+ executionResult.abortedCount+''"></span>
+      </div>
+      <div class="legend-item" (click)="filter(resultConstant.NOT_EXECUTED)">
+        <i
+          class="result-status-3 fa-show legend-icon btn result-status-active-3">
+        </i>
+        <span [textContent]="('execution.result.NOT_EXECUTED' | translate) +
+        ' : '+ executionResult.notExecutedCount+''"></span>
+      </div>
+      <div class="legend-item" (click)="filter(resultConstant.QUEUED)">
+        <i
+          class="result-status-5 fa-show legend-icon btn result-status-active-5">
+        </i>
+        <span [textContent]="('execution.result.QUEUED' | translate) +
+        ' : '+ executionResult.queuedCount+''"></span>
+      </div>
+      <div class="legend-item" (click)="filter(resultConstant.STOPPED)">
+        <i
+          class="result-status-6 fa-show legend-icon btn result-status-active-6">
+        </i>
+        <span [textContent]="('execution.result.STOPPED' | translate) +
+        ' : '+ executionResult.stoppedCount+''"></span>
+      </div>
+
+      <div class="legend-item theme-border-t mt-5 mr-xl-n8">
+        <span class="white-space-nowrap" [textContent]="('execution.result.test_case.total' | translate) +
+        ' : '+ executionResult.totalCount+''"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex flex-column" *ngIf="showList != 'TCR' && results">
+    <!--    TODO Temp fixes -->
+    <div
+      class="highChart ts-col-100 d-flex"
+      id="run-details-bar"
+      style="height: 150px">
+      <app-run-details-bar-chart
+        class="ts-col-100 d-flex"
+        [id]="'run-details-bar'"
+        [results]="results"></app-run-details-bar-chart>
+    </div>
+    <div class="legend-container mt-30 text-right">
+      <div class="legend-item" (click)="filter(resultConstant.SUCCESS)">
+        <i
+          class="result-status-0 fa-show legend-icon btn">
+        </i>
+        <span [textContent]="('execution.result.SUCCESS' | translate) +
+        ' : '+ passedCount+''"></span>
+      </div>
+      <div class="legend-item" (click)="filter(resultConstant.FAILURE)">
+        <i
+          class="result-status-1 fa-show legend-icon btn result-status-active-1">
+        </i>
+        <span [textContent]="('execution.result.FAILURE' | translate) +
+        ' : '+ failedCount+''"></span>
+      </div>
+      <div class="legend-item" (click)="filter(resultConstant.ABORTED)">
+        <i
+          class="result-status-2 fa-show legend-icon btn result-status-active-2">
+        </i>
+        <span [textContent]="('execution.result.ABORTED' | translate) +
+        ' : '+ abortedCount+''"></span>
+      </div>
+      <div class="legend-item" (click)="filter(resultConstant.NOT_EXECUTED)">
+        <i
+          class="result-status-3 fa-show legend-icon btn result-status-active-3">
+        </i>
+        <span [textContent]="('execution.result.NOT_EXECUTED' | translate) +
+        ' : '+ notExecutedCount+''"></span>
+      </div>
+      <div class="legend-item" (click)="filter(resultConstant.QUEUED)">
+        <i
+          class="result-status-5 fa-show legend-icon btn result-status-active-5">
+        </i>
+        <span [textContent]="('execution.result.QUEUED' | translate) +
+        ' : '+ queuedCount+''"></span>
+      </div>
+      <div class="legend-item" (click)="filter(resultConstant.STOPPED)">
+        <i
+          class="result-status-6 fa-show legend-icon btn result-status-active-6">
+        </i>
+        <span [textContent]="('execution.result.STOPPED' | translate) +
+        ' : '+ stoppedCount+' '"></span>
+      </div>
+      <div class="legend-item theme-border-t mt-5">
+        <span [textContent]="((showList == 'TSR'? 'execution.result.test_suite.total':'execution.result.test_machine.total')| translate) +
+        ' : '+ totalCount+''"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="details-container sm value-sm flex-column align-items-baseline pt-30">
+    <div class="details-items">
+      <label
+        class="details-title"
+        [translate]="'result.start_time'"></label>
+      <div class="details-info d-flex">
+        <span
+          [textContent]="executionResult?.startTime  | date:'h:mm a MMM d, y'"></span>
+        <span class="d-flex pl-7">
+          <span [textContent]="'( '"></span>
+          <app-duration-format [duration]="executionResult.duration"></app-duration-format>
+          <span [textContent]="' )'"></span>
+        </span>
+      </div>
+    </div>
+
+    <div class="details-items">
+      <label
+        class="details-title"
+        [translate]="'runs.details.build_no'"></label>
+      <div>
+      <span *ngIf="!isEditBuildNo"
+            class="details-info"
+            [textContent]="executionResult.buildNo ? executionResult.buildNo : '-'"></span>
+        <i *ngIf="!isEditBuildNo" class="fa-pencil-on-paper pl-7 pointer"
+           [matTooltip]="'runs.details.hint.update_build_no' | translate"
+           (click)="toggleBuildNo()"></i>
+
+        <div *ngIf="isEditBuildNo" class="d-flex ts-form">
+          <div class="align-items-center d-flex form-group p-0 theme-border-b">
+            <input
+              class="border-0 form-control"
+              #buildNoInput
+              [(ngModel)]="executionResult.buildNo"
+              [placeholder]="'runs.details.build_no' | translate " style="background: none;padding: 0!important;">
+            <i
+              class="fa-tick pr-2 result-status-text-0"
+              (click)="updateBuildId()"
+              [matTooltip]="'hint.message.common.save' | translate"></i>
+            <i
+              class="fa-close-large result-status-text-1 pl-4 close-thick mt-n2"
+              (click)="toggleBuildNo()"
+              [matTooltip]="'hint.message.common.cancel' | translate"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="details-items text-break"
+      *ngIf="executionResult?.environment?.name">
+      <label
+        class="details-title"
+        [translate]="'runs.details.environment'"></label>
+      <div class="details-info"
+           [textContent]="executionResult?.environment?.name"></div>
+    </div>
+
+    <div class="details-items">
+      <label
+        class="details-title"
+        [translate]="'message.common.msg'"></label>
+      <div class="details-info text-wrap"
+           [textContent]="executionResult?.message"></div>
+    </div>
+  </div>
+</div>

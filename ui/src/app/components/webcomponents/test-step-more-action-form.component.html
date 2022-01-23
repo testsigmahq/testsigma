@@ -1,0 +1,80 @@
+<div
+  class="h-100 ts-form"
+  [formGroup]="form">
+  <div class="theme-overlay-container">
+    <div class="theme-overlay-header">
+      <div
+        class="theme-overlay-title">
+        <span [translate]="'test.step.details.modal.title'"></span>
+        <span [textContent]="'(' + testStep.stepDisplayNumber + ')'"></span>
+        <span class="pl-4" [translate]="'test.step.details.modal.title.details'"></span>
+      </div>
+      <button
+        class="close"
+        type="button"
+        [matTooltip]="'hint.message.common.close' | translate"
+        (click)="maxTimeValidate()">
+      </button>
+    </div>
+
+    <div class="theme-overlay-content without-footer pt-20">
+      <div class="form-group" *ngIf="!testStep.isRestStep && !testStep.isForLoopStep">
+        <div class="p-0 field m-0">
+          <input
+            type="number"
+            id="waitTime"
+            name="waitTime"
+            placeholder=" "
+            (focus)="form?.controls['waitTime'].errors = {}"
+            class="form-control"
+            [formControlName]="['waitTime']"/>
+          <label
+            [textContent]="('step_result.max.waitTime' | translate) + ' ( < '+ ('step_result.waitTime' | translate : {waitTime: '120'}) +' )'"
+            for="waitTime" class="required"></label>
+        </div>
+        <div
+          *ngIf="form.get('waitTime').hasError('max')"
+          class="error" [translate]="'test_step.max_wait_time.error'">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label" [translate]="'test_step.results.prerequisite'"></label>
+        <mat-form-field class="mat-select-custom w-100" appearance="fill">
+          <mat-select [placeholder]="'None'"
+                      disableOptionCentering panelClass="single"
+                      [formControlName]="['preRequisiteStepId']"
+                      (selectionChange)="resetOnPreRequisiteNone($event)">
+            <mat-option [value]="null" [textContent]="'message.common.none' | translate"></mat-option>
+            <mat-option
+              *ngFor="let prerequisite of prerequisiteList; let index = index"
+              [value]="prerequisite.id"
+              [textContent]="prerequisite.stepDisplayNumber"></mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div
+        *ngIf="!testStep.isConditionalType && !conditionalIf"
+        class="form-group d-flex align-items-center">
+        <mat-checkbox
+          [formControl]="priorityControl"
+        ><span [translate]="'test_step.priority.MAJOR_STOP'"></span></mat-checkbox>
+      </div>
+<!--      <div-->
+<!--        *ngIf="!testStep.isConditionalType && !conditionalIf"-->
+<!--        class="form-group d-flex align-items-center">-->
+<!--        <mat-checkbox-->
+<!--          [formControlName]="['isMandatory']"-->
+<!--        ><span [translate]="'test_step.results.mandatory_label'"></span></mat-checkbox>-->
+<!--      </div>-->
+      <div>
+        <mat-checkbox
+          [matTooltip]="options?.parentDisabled ? ('test_step.results.cant_enable_hint'|translate):''"
+          [matTooltipPosition]="'right'"
+          [class.disabled]="options?.parentDisabled"
+          [disabled]="options?.parentDisabled"
+          [formControlName]="['disabled']">
+          <span [translate]="'test_step.results.disable_label'"></span></mat-checkbox>
+      </div>
+    </div>
+  </div>
+</div>

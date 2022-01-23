@@ -1,0 +1,272 @@
+<form
+  class="ts-form p-30 mt-n80"
+  [formGroup]="actionForm">
+  <div class="step-container-section">
+    <div
+      class="d-flex flex-wrap pt-14 px-10 ts-col-90 pb-6">
+      <!--      <input-->
+      <!--        #searchInput-->
+      <!--        [class.placeholder-animate]="animatedPlaceholder"-->
+      <!--        class="ts-col-100 word-break actiontext hide"-->
+      <!--        name="actiontext"-->
+      <!--        [formControlName]="['action']"-->
+      <!--        [placeholder]="animatedPlaceholder? animatedPlaceholder : 'Start typing the action (go to, click, enter, select etc.)…'">-->
+      <div
+        #replacer
+        id="action"
+        [attr.data-placeholder]="animatedPlaceholder? animatedPlaceholder :  'Start typing the action (' + (version?.workspace?.isMobile ? 'tab, enter, launch, swipe' : 'go to, click, enter, select etc.') +')…'"
+        (focus)="showACTIONDropdown();showActions = true"
+        (keydown.enter)="selectTemplate()"
+        (keydown.arrowUp)="scrollUpTemplateFocus()"
+        (keydown.arrowDown)="scrollDownTemplateFocus()"
+        contenteditable="true"
+        class="ts-col-100 word-break actiontext d-flex">
+      </div>
+    </div>
+    <div class="ml-auto d-flex pt-14 text-t-secondary fz-24">
+      <i
+        *ngIf="actionTextLength"
+        (click)="clearSelection(true)"
+        [matTooltip]="'message.common.clear' | translate"
+        class="fa-eraser pointer fz-13"></i>
+    </div>
+  </div>
+  <div
+    class="theme-border-b mx-n30 px-30 pt-12"></div>
+  <div
+    *ngIf="formSubmitted && inValidParameter"
+    class="d-flex align-items-center form-group p-0 action-error-content mt-13">
+    <div class="error top-0 left" [translate]="'form.validation.common.required' | translate : {FieldName: inValidParameter}"></div>
+  </div>
+  <div
+    *ngIf="showTemplates"
+    #actionsDropDownContainer
+    tabindex="-1" class="action-drop-down-container">
+    <div
+      *ngFor='let template of filteredTemplate; let index = index'
+      class="action-drop-down-item"
+      [class.h-active]="currentFocusedIndex == index"
+      (mouseover)="currentFocusedIndex = index"
+      (click)="this.selectTemplate()">
+        <span class="px-14">
+          <i class="fa-addon mr-7" *ngIf="template.isAddon"></i>
+          <span [innerHTML]="template.htmlGrammar"></span>
+        </span>
+    </div>
+    <div *ngIf="!filteredTemplates?.length && !filteredKibbutzTemplates?.length"
+         class="w-100 h-100">
+      <div class="p-50 d-flex align-items-center justify-content-center h-100 flex-column">
+        <div
+          class="text-t-secondary pt-30 pb-18"
+          [translate]="'message.common.search.not_found'"></div>
+      </div>
+    </div>
+  </div>
+  <div
+    *ngIf="showDataTypes"
+    #dataTypesContainer
+    tabindex="-1"
+    id="testDataContainer"
+    class="action-drop-down-container">
+    <div  *ngIf="!currentTemplate?.allowedValues && !currentKibbutzAllowedValues">
+      <div
+        *ngFor="let type of dataTypes; let index=index"
+        [class.h-active]="currentDataTypeIndex == index"
+        (mouseover)="currentDataTypeIndex=index"
+        (click)="selectTestDataType(type, true)"
+        [attr.appUpgradePopup]="false"
+        class="d-flex align-items-center pointer py-8 grey-on-hover">
+          <span
+            class="px-14"
+            [translate]="'action.testDataType.'+type"></span>
+      </div>
+    </div>
+    <div  *ngIf="currentTemplate?.allowedValues">
+      <div
+        *ngFor="let value of currentTemplate?.allowedValues; let index=index"
+        [class.h-active]="currentDataTypeIndex == index"
+        (mouseover)="currentDataTypeIndex=index"
+        (click)="selectAllowedValues(value, true)"
+        class="d-flex align-items-center pointer py-8 grey-on-hover">
+        <span
+          class="px-14"
+          [textContent]="value"></span>
+      </div>
+  </div>
+
+  <div  *ngIf="currentKibbutzTemplate && currentKibbutzAllowedValues">
+    <div
+      *ngFor="let value of currentKibbutzAllowedValues; let index=index"
+      [class.h-active]="currentDataTypeIndex == index"
+      (mouseover)="currentDataTypeIndex=index"
+      (click)="selectAllowedValues(value, true)"
+      class="d-flex align-items-center pointer py-8 grey-on-hover">
+        <span
+          class="px-14"
+          [textContent]="value"></span>
+    </div>
+  </div>
+
+
+  </div>
+  <div
+    *ngIf="displayNames"
+    #displayNamesContainer
+    id="test_data_args_list" class="d-flex flex-wrap ts-col-100 justify-content-start form-group pt-40 pb-0">
+    <div
+      class="ts-col-30"
+      [class.pl-15]="index % 3 !== 0"
+      *ngFor="let displayName of displayNames | keyvalue; let index= index; let first=first">
+      <div class="p-0 field">
+        <input
+          [type]="inputType(argumentList[displayName.key])"
+          [placeholder]="argumentList[displayName.key]"
+          class="form-control"
+          [class.autofocus]="first"
+          [id]="displayName.key"
+          [name]="displayName.key"
+          [formControlName]="[''+displayName.key]"/>
+        <label
+          [translate]="displayName.value+' ('+argumentList[displayName.key]+')'"
+          [for]="displayName.key"></label>
+      </div>
+    </div>
+    <div *ngIf="currentKibbutzTemplate && !isEmptyObject(displayNames)" class="ts-col-100">
+      <button (click)="setTestDataFunctionToDom()" class="theme-btn-clear-default" [translate]="'btn.common.save'"></button>
+    </div>
+  </div>
+
+<!---->
+  <div
+    *ngIf="currentTestDataFunctionParameters" class="d-flex flex-wrap ts-col-100 justify-content-start form-group pt-40 pb-0">
+    <div
+      class="ts-col-30"
+      [class.pl-15]="index % 3 !== 0"
+      *ngFor="let parameter of currentTestDataFunctionParameters; let index= index; let first=first">
+      <div class="p-0 field">
+        <input
+          type="text"
+          [placeholder]="parameter.reference"
+          class="form-control"
+          [class.autofocus]="first"
+          [id]="parameter.reference"
+          [name]="parameter.reference"
+          [formControlName]="[''+parameter.reference]"/>
+        <label
+          [translate]="parameter.reference"></label>
+      </div>
+    </div>
+    <div class="ts-col-100" *ngIf="currentKibbutzTemplate && currentTestDataFunctionParameters.length">
+      <button (click)="setKibbutzTestDataValues(currentKibbutzTDF.id)" class="theme-btn-clear-default" [translate]="'btn.common.save'"></button>
+    </div>
+  </div>
+<!---->
+
+  <div
+    class="d-flex align-items-center theme-gray-light action-error-content p-sm mt-13 ts-col-100-63"
+    *ngIf="(showActions ||testStep?.id && testStep?.action?.length || (currentKibbutzTemplate || currentTemplate))  && showHelps">
+    <div
+      *ngIf="(currentKibbutzTemplate || currentTemplate) && testDataPlaceholder() && !navigateTemplate.includes(currentTemplate?.id)"
+      [class.mr-50]="elementPlaceholder()?.length"
+      class="dropdown mouse-over d-inline-block">
+      <div class="btn-group pointer">
+        <i class="fa-help text-t-secondary pr-7"></i>
+        <span
+          class="text-t-secondary"
+          [translate]="'action.step.what_is_test_data'"></span>
+      </div>
+      <div
+        class="dropdown-menu drop-down-transparent min-w left-x-sm">
+        <ul
+          class="bg-white border-rds-4 ng-scope px-15 py-10 shadow-all2-b4">
+          <li
+            class="border-rds-10 list-style-none text-dark"
+            [translate]="'action.step.test_data_info'">
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div
+      *ngIf="(currentKibbutzTemplate || currentTemplate) && elementPlaceholder()?.length"
+      class="dropdown mouse-over d-inline-block">
+      <div class="btn-group pointer">
+        <i class="fa-help text-t-secondary pr-7"></i>
+        <span
+          class="text-t-secondary"
+          [translate]="'action.step.what_is_element'"></span>
+      </div>
+      <div
+        class="dropdown-menu left-sm drop-down-transparent min-sm">
+        <ul
+          class="bg-white border-rds-4 ng-scope px-15 py-10 shadow-all2-b4">
+          <li
+            class="border-rds-10 list-style-none text-dark"
+            [innerHTML]="'action.step.element_info' | translate">
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div
+      class="ts-col-80 pr-10"
+      *ngIf="(currentKibbutzTemplate || currentTemplate)  && navigateTemplate.includes(currentTemplate?.id)">
+    <span
+      class="text-break"
+      *ngIf="!localUrlVerifying && localUrlValid > 0 && (currentKibbutzTemplate || currentTemplate)">
+      <i class="fa-lightbulb-solid result-status-text-2 pr-7"></i>
+      <span
+        class="result-status-text-2 pr-20"
+        [innerHTML]="'action.step.message.localUrl.failure'| translate : {
+        URL : testDataPlaceholder()[0].innerHTML,
+        LINK: 'https://testsigma.com/docs/troubleshooting/web/url-not-accessible/'}">
+      </span>
+    </span>
+
+      <span
+        *ngIf="localUrlVerifying && (currentKibbutzTemplate || currentTemplate) && !urlPatternError"
+        [translate]="'action.step.message.localUrl.processing' | translate : {URL : testDataPlaceholder()[0].innerHTML}"
+        class="fa-refresh-thick result-status-text-5 text-break"></span>
+      <span
+        *ngIf="!localUrlVerifying && localUrlValid == 0 && (currentKibbutzTemplate || currentTemplate) && !urlPatternError"
+        class="fa-tick text-brand text-break"
+        [translate]="'action.step.message.localUrl.success'"></span>
+      <span *ngIf="urlPatternError" class="result-status-text-2 text-break">
+        <i class="fa-lightbulb-solid pr-7"></i>
+        <span [translate]="'action.step.message.UrlPattern.error' | translate : {URL : testDataPlaceholder()[0].innerHTML}"></span>
+      </span>
+    </div>
+    <span *ngIf="!((currentKibbutzTemplate || currentTemplate) && (testDataPlaceholder() || elementPlaceholder()?.length))">
+      <i class="fa-help text-t-secondary pr-7"></i>
+      <a
+        class=" text-t-secondary"
+        [href]="stepArticleUrl"
+        target="_blank"
+        [translate]="'step.create.help.note'"></a>
+    </span>
+
+    <div class="ml-auto text-nowrap ts-col-20 text-right" (mouseover)="navigateUrlValidation()">
+      <button
+        [disabled]="saving || localUrlVerifying"
+        (click)="cancel()"
+        class="theme-btn-clear-default"
+        [translate]="'btn.common.cancel'"></button>
+      <button
+        *ngIf="!testStep.id"
+        [isLoading]="saving"
+        [message]="'message.common.saving'"
+        appAsyncBtn
+        [disabled]="localUrlVerifying || (!currentTemplate?.id && !currentKibbutzTemplate?.id)"
+        (click)="save()"
+        class="theme-btn-primary"
+        [textContent]="'btn.common.create' | translate"></button>
+      <button
+        *ngIf="testStep.id"
+        [isLoading]="saving"
+        [message]="'message.common.updating'"
+        appAsyncBtn
+        [disabled]="localUrlVerifying || (!currentTemplate?.id && !currentKibbutzTemplate?.id)"
+        (click)="update(testStep.naturalTextActionId, testStep.addonActionId)"
+        class="theme-btn-primary"
+        [textContent]="'btn.common.update' | translate"></button>
+    </div>
+  </div>
+</form>

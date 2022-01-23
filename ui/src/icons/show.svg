@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>show ts</title>
+    <desc>Created with Sketch.</desc>
+    <g id="show-ts" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M36,30 C36,33.315 33.315,36 30,36 C26.685,36 24,33.315 24,30 C24,26.685 26.685,24 30,24 C33.315,24 36,26.685 36,30 M30.5,42 C21.652151,42 13.3164057,37.4851171 8,30.0015875 C13.3164057,22.5180579 21.652151,18 30.5,18 C39.347849,18 47.6835943,22.5180579 53,30.0015875 C47.6835943,37.4851171 39.347849,42 30.5,42 M30,12 C17.172,12 5.997,19.2504542 0,30.0015572 C5.997,40.7526603 17.172,48 30,48 C42.828,48 54.003,40.7526603 60,30.0015572 C54.003,19.2504542 42.828,12 30,12" id="view_simple-[#815]" fill="#000000"></path>
+    </g>
+</svg>

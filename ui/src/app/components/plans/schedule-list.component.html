@@ -1,0 +1,46 @@
+<div class="page-header d-flex fz-20 align-items-center">
+  <ul class="tab-nav" role="tablist">
+    <li class="nav-items" role="presentation">
+      <a
+        [routerLink]="['/td', versionId, 'plans']"
+        class="normal-text pb-5">
+        <span class="theme-text fz-18" [translate]="'test_plan.title'"></span>
+      </a>
+    </li>
+    <li
+      class="nav-items" role="presentation">
+      <a
+        [routerLink]="['/td', versionId, 'plans', 'schedules']"
+        [routerLinkActive]="'active'"
+        class="normal-text pb-5">
+        <span class="theme-text fz-18" [translate]="'test_plan.schedule.title'"></span>
+      </a>
+    </li>
+  </ul>
+</div>
+<div class="page-content">
+  <div class="d-flex position-absolute">
+    <mat-button-toggle-group
+      class="custom-mat-button-toggle sm"
+      [formControl]="viewTypeControl">
+      <mat-button-toggle value="calendar_view">
+        <i class="fa-calendar mr-10"></i>
+        <span [translate]="'schedule.view_type.calendar'"></span>
+      </mat-button-toggle>
+      <mat-button-toggle value="list_view">
+        <i class="fa-list mr-10"></i>
+        <span [translate]="'schedule.view_type.list'"></span>
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+    <div class="ml-auto" *ngIf="isCalendarView">
+
+    </div>
+  </div>
+  <app-schedules-calendar
+    *ngIf="isCalendarView"
+    class="d-flex flex-wrap"
+    [versionId]="versionId"></app-schedules-calendar>
+  <app-schedules-list
+    *ngIf="isListView"
+    [versionId]="versionId"></app-schedules-list>
+</div>

@@ -1,0 +1,152 @@
+<div
+  class="btn-group" style="margin-left: 45%">
+  <i
+    mwlCalendarPreviousView
+    [view]="view"
+    [(viewDate)]="viewDate"
+    class="d-inline-block fa-left-arrow-thin circle-icon"></i>
+  <span
+    mwlCalendarToday
+    [(viewDate)]="viewDate"
+    class="text-t-secondary rb-medium pointer px-30">
+    {{ viewDate | calendarDate: view + 'ViewTitle':'en' }}
+  </span>
+  <i
+    mwlCalendarNextView
+    [view]="view"
+    [(viewDate)]="viewDate"
+    class="d-inline-block fa-right-arrow-thin circle-icon"></i>
+</div>
+<mat-button-toggle-group
+  class="ml-auto custom-mat-button-toggle sm"
+  [formControl]="calendarViewTypeControl">
+  <mat-button-toggle value="month">
+    <span [translate]="'schedule.calendar.monthly'"></span>
+  </mat-button-toggle>
+  <mat-button-toggle value="week">
+    <span [translate]="'schedule.calendar.weekly'"></span>
+  </mat-button-toggle>
+</mat-button-toggle-group>
+<div
+  class="ts-col-100"
+  [ngSwitch]="view">
+  <mwl-calendar-month-view
+    class="custom-calender"
+    *ngSwitchCase="'month'"
+    [viewDate]="viewDate"
+    (beforeViewRender)="updateCalendarEvents($event)"
+    [cellTemplate]="customCellTemplate"
+    [events]="calendarEvents"
+    (eventClicked)="showEventDetails($event.sourceEvent, $event.event)">
+  </mwl-calendar-month-view>
+  <mwl-calendar-week-view
+    class="custom-calender"
+    *ngSwitchCase="'week'"
+    [viewDate]="viewDate"
+    [eventTemplate]="weekViewEventTemplate"
+    [events]="calendarEvents"
+    (eventClicked)="showEventDetails($event.sourceEvent, $event.event)"
+    (beforeViewRender)="updateCalendarEvents($event)">
+  </mwl-calendar-week-view>
+
+  <ng-template
+    cdkConnectedOverlayHasBackdrop="true"
+    cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+    #eventDetailsOverlay="cdkConnectedOverlay"
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="trigger"
+    [cdkConnectedOverlayOpen]="eventDetails">
+    <div class="event-popup scrollbar">
+      <div class="header d-flex">
+        <button type="button" class="ml-auto close close-more-popup" (click)="this.eventDetails = null"></button>
+      </div>
+      <div class="details-container sm value-sm flex-column align-items-baseline">
+        <div class="details-items">
+          <div class="details-info text-wrap" [translate]="eventDetails?.data?.name"></div>
+          <div class="details-title" [translate]="eventDetails?.data?.execution?.name"></div>
+        </div>
+        <div class="details-items">
+          <div class="details-info text-wrap"
+               [textContent]="'schedule.repeat_'+eventDetails?.data?.scheduleType | translate"></div>
+        </div>
+        <div class="details-items">
+          <label
+            class="details-title"
+            [translate]="'schedule.title.schedule_on'"></label>
+          <div class="details-info d-flex">
+            <div [textContent]="eventDetails?.data?.scheduleTime | date : 'EEE d MMM'"></div>
+            <div
+              [textContent]="'message.common.at_a_time'| translate: {time: (eventDetails?.data?.scheduleTime | date: 'hh:mm a')}"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template
+    #customCellTemplate
+    let-day="day" let-locale="locale"
+    let-tooltipPlacement="tooltipPlacement"
+    let-eventClicked="eventClicked"
+    let-tooltipTemplate="tooltipTemplate"
+    let-tooltipAppendToBody="tooltipAppendToBody" let-tooltipDelay="tooltipDelay">
+    <div class="cal-cell-top" *ngIf="day">
+        <span class="cal-day-badge" *ngIf="day?.badgeTotal > 0">
+          {{ day?.badgeTotal }}</span>
+      <span class="cal-day-number">
+        {{ day?.date | calendarDate:'monthViewDayNumber':locale }}</span>
+    </div>
+    <div *ngIf="day?.events?.length > 0">
+      <div *ngFor="let event of day.events;  index as i" #eventPopupRef="cdkOverlayOrigin" cdkOverlayOrigin>
+
+        <ng-template *ngIf="i < 100; then showEventsBlock; else showMoreBlock">
+        </ng-template>
+        <ng-template #showEventsBlock>
+          <div
+            class="cal-events d-flex align-items-stretch theme-border border-rds-2 bg-white"
+            [ngClass]="event?.cssClass" (mwlClick)="eventClicked.emit({sourceEvent: $event, event:event})"
+            [mwlCalendarTooltip]="event.title | calendarEventTitle: 'monthTooltip':event"
+            [tooltipPlacement]="tooltipPlacement" [tooltipEvent]="event" [tooltipTemplate]="tooltipTemplate"
+            [tooltipAppendToBody]="tooltipAppendToBody" [tooltipDelay]="tooltipDelay"
+            data-title="{{'evn_title'+event.title+ i+ (day.date | calendarDate:'monthViewDayNumber':locale)}}">
+            <span
+              class="px-10 py-7 ts-col-100-4 text-truncate"
+              [translate]="event.title"></span>
+            <span
+              class="p-2 ml-auto border-rds-right-2"
+              [ngStyle]="{ backgroundColor: event.color?.primary }"></span>
+          </div>
+        </ng-template>
+        <ng-template #showMoreBlock>
+        </ng-template>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template
+    #weekViewEventTemplate
+    let-weekEvent="weekEvent"
+    let-eventClicked="eventClicked"
+    let-tooltipPlacement="tooltipPlacement"
+    let-tooltipTemplate="tooltipTemplate"
+    let-tooltipAppendToBody="tooltipAppendToBody"
+    let-daysInWeek="daysInWeek">
+
+    <div *ngIf="weekEvent?.event" #test123="cdkOverlayOrigin" cdkOverlayOrigin>
+      <div
+        class="cal-events d-flex align-items-stretch theme-border border-rds-2 bg-white"
+        [ngClass]="weekEvent?.event?.cssClass" (mwlClick)="eventClicked.emit({sourceEvent: $event, event:weekEvent?.event})"
+        [mwlCalendarTooltip]="weekEvent?.event.title | calendarEventTitle
+                : (daysInWeek === 1 ? 'dayTooltip' : 'weekTooltip')
+                : weekEvent.tempEvent || weekEvent.event"
+        [tooltipPlacement]="tooltipPlacement" [tooltipEvent]="weekEvent?.event" [tooltipTemplate]="tooltipTemplate"
+        [tooltipAppendToBody]="tooltipAppendToBody"
+        data-title="{{'evn_title'+weekEvent?.event.title}}">
+            <span
+              class="px-10 py-7 ts-col-100-4 text-truncate"
+              [translate]="weekEvent?.event.title"></span>
+        <span
+          class="p-2 ml-auto border-rds-right-2"
+          [ngStyle]="{ backgroundColor: weekEvent?.event.color?.primary }"></span>
+      </div>
+    </div>
+  </ng-template>
+</div>

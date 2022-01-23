@@ -1,0 +1,28 @@
+<div class="list-header ts-col-100">
+  <div class="ts-col-95 d-flex">
+    <div class="text-truncate rb-medium" [textContent]="'element.details.'+name | translate"></div>
+    <div class="text-truncate rb-medium ml-10" [textContent]="(pos+1)"></div>
+  </div>
+  <div class="ts-col-5">
+    <a (click)="parent.viewMore = !parent.viewMore" >
+      <span class="fa ml-auto fa-expand" *ngIf="!parent.viewMore"></span>
+      <span class="fa ml-auto fa-collapse" *ngIf="parent.viewMore"></span>
+    </a>
+  </div>
+</div>
+<div class="list-container px-14" *ngIf="parent.viewMore">
+  <a class="list-view green-highlight sm-pm pointer align-items-center">
+    <div class="ts-col-30 text-truncate rb-medium" [textContent]="'element.details.attribute'  | translate"></div>
+    <div class="ts-col-30 text-truncate rb-medium" [textContent]="'element.details.operator'  | translate"></div>
+    <div class="ts-col-30 text-truncate rb-medium" [textContent]="'element.details.value'  | translate"></div>
+  </a>
+  <a
+    class="list-view green-highlight sm-pm pointer align-items-center"
+    *ngFor='let option of parent?.attributes | keyvalue'>
+    <div class="ts-col-100 d-flex flex-wrap">
+      <div class="ts-col-30" [textContent]="option.key"></div>
+      <div class="ts-col-30" [textContent]="'='"></div>
+      <div class="ts-col-30" [textContent]="option.value"></div>
+    </div>
+  </a>
+</div>

@@ -1,0 +1,53 @@
+<app-placeholder-loader *ngIf="!element"></app-placeholder-loader>
+<div class="ts-col-100" *ngIf="element">
+  <div *ngIf="element?.elementDetails?.attributes?.length">
+    <div class="list-header ts-col-100">
+      <div class="ts-col-95 d-flex">
+        <div class="text-truncate rb-medium" [textContent]="'element.details.target_element_input' | translate"> </div>
+        <div class="text-truncate rb-medium ml-5" [textContent]="element?.elementDetails?.type"> </div>
+      </div>
+      <div class="ts-col-5">
+        <a (click)="element.elementDetails.viewMore = !element.elementDetails.viewMore" >
+          <span class="fa ml-auto fa-expand" *ngIf="!element.elementDetails.viewMore"></span>
+          <span class="fa ml-auto fa-collapse" *ngIf="element.elementDetails.viewMore"></span>
+        </a>
+      </div>
+    </div>
+    <div class="list-container px-14" *ngIf="element.elementDetails.viewMore">
+      <a class="list-view green-highlight sm-pm pointer align-items-center">
+        <div class="ts-col-30 text-truncate rb-medium" [textContent]="'element.details.attribute'  | translate"></div>
+        <div class="ts-col-30 text-truncate rb-medium" [textContent]="'element.details.operator'  | translate"></div>
+        <div class="ts-col-30 text-truncate rb-medium" [textContent]="'element.details.value'  | translate"></div>
+      </a>
+      <a
+        class="list-view green-highlight sm-pm pointer align-items-center"
+        *ngFor='let option of element?.elementDetails?.attributes'>
+        <div class="ts-col-100 d-flex flex-wrap">
+          <div class="ts-col-30" [textContent]="option.name"></div>
+          <div class="ts-col-30" [textContent]="getOperator(option.operator)"></div>
+          <div class="ts-col-30" [textContent]="option.value"></div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <div *ngFor='let parent of element?.metadata?.parents; let pos=index' class="mt-20">
+    <app-elements-metadata [name]="'parent'" [parent]="parent"  [pos]="pos"></app-elements-metadata>
+  </div>
+
+  <div *ngFor='let parent of element?.metadata?.followingSiblings; let pos=index' class="mt-20">
+    <app-elements-metadata [name]="'followingSiblings'" [parent]="parent"  [pos]="pos"></app-elements-metadata>
+  </div>
+
+  <div *ngFor='let parent of element?.metadata?.precedingSiblings; let pos=index' class="mt-20">
+    <app-elements-metadata [name]="'precedingSiblings'" [parent]="parent"  [pos]="pos"></app-elements-metadata>
+  </div>
+
+  <div *ngFor='let parent of element?.metadata?.firstLevelChildren; let pos=index' class="mt-20">
+    <app-elements-metadata [name]="'firstLevelChildren'" [parent]="parent"  [pos]="pos"></app-elements-metadata>
+  </div>
+
+  <div *ngFor='let parent of element?.metadata?.secondLevelChildren; let pos=index' class="mt-20">
+    <app-elements-metadata [name]="'secondLevelChildren'" [parent]="parent"  [pos]="pos"></app-elements-metadata>
+  </div>
+</div>

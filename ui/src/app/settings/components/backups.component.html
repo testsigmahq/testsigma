@@ -1,0 +1,103 @@
+<div class="page-header">
+  <div
+    class="page-title"
+    [translate]="'settings.backup.title'">
+  </div>
+
+  <div class="short-hand-actions" *ngIf="backups?.totalElements">
+    <button
+      *ngIf="hasIncomplete"
+      (click)="fetchBackups()"
+      [matTooltip]="'result.hint.click.here.refresh' | translate"
+      class="btn icon-btn border-rds-2 ml-14">
+      <i class="fa-refresh-thick"></i>
+    </button>
+    <button
+      (click)="openBackupForm()"
+      class="theme-btn-primary border-rds-2 ml-14">
+      <i class="fa-export-thin mr-8"></i>
+      <span [translate]="'settings.backup.xml'"></span>
+    </button>
+    <div class=" ml-15 pl-15 theme-border-l">
+      <app-pagination
+        *ngIf="backups?.totalElements" [paginationData]="backups"
+        [currentPage]="currentPage"
+        (paginationAction)="fetchBackups()"></app-pagination>
+    </div>
+  </div>
+</div>
+
+<div class="page-content">
+  <div
+    *ngIf="backups?.totalElements"
+    class="list-header ts-col-100">
+    <div
+      class="ts-col-100 d-flex">
+      <span
+        class="ts-col-15" [translate]="'message.common.text.workspace'"></span>
+      <span
+        class="ts-col-15" [translate]="'message.common.text.version'"></span>
+      <span
+        class="ts-col-15" [translate]="'message.common.text.title'"></span>
+    </div>
+  </div>
+  <div class="list-container ts-col-100 without-title-height">
+    <a
+      class="list-view green-highlight lg-pm text-t-secondary d-flex ts-col-100 text-break"
+      *ngFor='let backup of backups?.content'>
+          <span
+            class="ts-col-15 list-title"
+            [textContent]="backup?.workspaceVersion?.workspace?.name"></span>
+          <span
+            class="ts-col-15 list-title"
+            [textContent]="backup?.workspaceVersion?.versionName"></span>
+          <span
+            class="ts-col-15 list-title"
+            [textContent]="backup?.name"></span>
+          <span
+            class="ts-col-10 text-t-secondary rb-regular-i-d mx-10"
+            [textContent]="'message.common.on_a_time'| translate : { time: (backup.createdAt | date : 'MMM d, yyyy hh:mm a')}"></span>
+          <div class="ts-col-10" *ngIf="backup.isCompleted">
+            <a
+              [matTooltip]="'hint.message.common.download' | translate"
+              [href]="'/settings/backups/'+backup.id+'/download'"
+              target="_blank"
+              class="fa-download-thin text-dark"></a>
+            <i [matTooltip]="'hint.message.common.delete' | translate" class="fa-trash-thin ml-10"
+               (click)="delete(backup)"></i>
+          </div>
+          <div class="ts-col-10 h-30p" *ngIf="backup.isInProgress || backup.isFailed">
+            <mat-progress-spinner
+              class="search-spinner" mode="indeterminate" diameter="15" *ngIf="backup.isInProgress">
+            </mat-progress-spinner>
+            <div class="action-icons">
+              <i
+                [matTooltip]="'settings.backup.failed_msg' | translate: {message: backup.message}"
+                class="fa-warning text-warning" *ngIf="backup.isFailed"></i>
+              <i [matTooltip]="'hint.message.common.delete' | translate"
+                 *ngIf="backup.isFailed"
+                 class="fa-trash-thin ml-16" (click)="delete(backup)"></i>
+            </div>
+          </div>
+    </a>
+    <div
+      *ngIf="!backups?.totalElements && isFetchCompleted"
+      class="empty-full-container ts-col-100">
+      <div class="empty-full-content">
+        <div class="empty-run-md"></div>
+        <div
+          class="empty-text"
+          [textContent]="'message.common.empty_page' | translate : { categoryType: 'Backups'}"></div>
+        <div>
+          <button
+            (click)="openBackupForm()"
+            class="theme-btn-primary border-rds-2 ml-14">
+            <i class="fa-export-thin mr-8"></i>
+            <span [translate]="'settings.backup.xml'"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <app-placeholder-loader *ngIf="!isFetchCompleted"></app-placeholder-loader>
+  </div>
+</div>

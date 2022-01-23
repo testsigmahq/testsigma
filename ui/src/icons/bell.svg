@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>bell ts</title>
+    <desc>Created with Sketch.</desc>
+    <g id="bell-ts" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M42,42 L18,42 L18,24 C18,16.002 24,12 29.997,12 L30.003,12 C36,12 42,16.002 42,24 L42,42 Z M34,51.5 C34,53.432 32.208,55 30,55 C27.792,55 26,53.432 26,51.5 L26,48 L34,48 L34,51.5 Z M48,36 L48,24 C48,13.341 40.896,7.425 33,6.237 L33,0 L27,0 L27,6.237 C19.104,7.425 12,13.341 12,24 L12,36 C12,39.315 9.315,42 6,42 L6,48 L21,48 L21,51 C21,55.971 25.029,60 30,60 C34.971,60 39,55.971 39,51 L39,48 L54,48 L54,42 C50.685,42 48,39.315 48,36 L48,36 Z" id="notification_bell-[#1396]" fill="#000000"></path>
+    </g>
+</svg>

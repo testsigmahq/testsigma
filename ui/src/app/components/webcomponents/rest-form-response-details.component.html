@@ -1,0 +1,84 @@
+<div style="width: 90% !important;">
+  <div
+    [formGroup]="form"
+    class="form-group ts-col-50 pr-10">
+    <div class="p-0 field">
+      <input
+        (mousewheel)="focusOut($event)"
+        type="text"
+        id="status"
+        name="status"
+        placeholder=" "
+        class="form-control"
+        [formControlName]="['status']"/>
+      <label
+        [translate]="'rest.step.status_code'"
+        for="status" class="required"></label>
+    </div>
+    <div
+      *ngIf="formSubmitted && form?.invalid && form?.controls['status']?.errors?.required"
+      class="error" [translate]="'form.validation.common.required' | translate : {FieldName: 'Status'}">
+    </div>
+  </div>
+
+  <div
+    class="form-group">
+    <label
+      class="custom-label pb-sm"
+      [translate]="'rest.step.header_content'"></label>
+    <app-rest-step-headers
+      [controlName]="'responseHeaders'"
+      [form]="form"
+      [headers]="restStep.responseHeaders"></app-rest-step-headers>
+  </div>
+
+  <div
+    [formGroup]="form"
+    class="align-items-center d-flex form-group">
+    <div class="ts-col-40">
+      <label
+        class="custom-label pb-lg"
+        [translate]="'rest.step.body_compare_type'"></label>
+      <mat-form-field
+        class="mat-select-custom w-100" appearance="fill">
+        <mat-select
+          disableOptionCentering panelClass="single"
+          [formControlName]="['responseCompareType']" (valueChange)="changeValue($event)">
+          <mat-option
+            *ngFor="let compareType of compareTypes"
+            [value]="compareType"
+            [textContent]="'rest.step.compare_type.'+compareType | translate">
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="ts-col-50 pl-10 pt-20" *ngIf="canShowBodyJson">
+      <i class="fa-power-bulb" style="color: #F2994A"></i>
+      (<a class='text-link'
+          href="https://testsigma.com/tutorials/rest-api-testing/what-is-jsonpath/"
+          target="_blank" [translate]="'message.common.click_here'"></a> {{'rest.step.json_path.help_msg' | translate}})
+    </div>
+  </div>
+  <div class="form-group" *ngIf="canShowBodyJson">
+    <app-rest-step-headers
+      [controlName]="'responseBodyJson'"
+      [form]="form"
+      [headers]="restStep.response"></app-rest-step-headers>
+  </div>
+  <div
+    [formGroup]="form"
+    *ngIf="!canShowBodyJson"
+    class="form-group ts-col-100">
+    <label
+      class="custom-label pb-lg required"
+      for="response"
+      [translate]="'rest.step.body_content'"></label>
+    <div>
+        <textarea
+          class="form-control field flex-row"
+          id="response"
+          name="response"
+          [formControlName]="['response']"></textarea>
+    </div>
+  </div>
+</div>

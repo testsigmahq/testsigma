@@ -1,0 +1,123 @@
+<div class="page-header">
+  <div class="page-title" [textContent]="'runs.title' | translate"></div>
+  <div class="short-hand-actions" [class.d-none]="!testPlans?.content?.length && !searchQuery">
+    <app-auto-refresh
+      *ngIf="isRunning"
+      class="fz-13"
+      [autoRefreshIntervalTime]="autoRefreshInterval"
+      (autoRefreshIntervalTime)="changeAutoRefreshTime($event)"
+      (autoRefreshToggle)="toggleAutoRefresh($event)"></app-auto-refresh>
+    <app-toggle-search-button
+      *ngIf="testPlans?.content.length || searchQuery"
+      (searchAction)="search($event)"></app-toggle-search-button>
+    <app-pagination [paginationData]="testPlans" [currentPage]="currentPage"
+                    (paginationAction)="fetchTestPlans()"></app-pagination>
+  </div>
+</div>
+<div class="page-content">
+  <app-placeholder-loader
+    *ngIf="!fetchingCompleted"></app-placeholder-loader>
+  <div *ngIf="testPlans?.content.length">
+    <div class="list-header ml-4">
+      <div
+        class="ts-col-15"
+        [textContent]="'runs.list_view.last_run' | translate"></div>
+      <div
+        class="ts-col-35 pl-10  pr-7"
+        [textContent]="'runs.list_view.title' | translate"></div>
+      <div
+        class="ts-col-15"
+        [textContent]="'runs.list_view.test_lab' | translate"></div>
+      <div
+        class="ts-col-20 px-20"
+        [textContent]="'runs.list_view.last_run_at' | translate"></div>
+      <div class="ts-col-15"></div>
+    </div>
+    <div class="card-container">
+      <div
+        class="list-card bordered lg-pm"
+        *ngFor="let testPlan of testPlans?.content">
+        <div class="ts-col-15 d-flex">
+          <a
+            [routerLink]="[testPlan.lastRun ? '/td/runs': null, testPlan.lastRun ? testPlan.lastRun.id : null]">
+          <app-result-pie-chart-column
+            *ngIf="testPlan.lastRun"
+            [resultEntity]="testPlan.lastRun"></app-result-pie-chart-column>
+          </a>
+          <div *ngIf="!testPlan.lastRun">
+            <div
+              class="empty-chart-placeholder"
+              [translate]="'message.common.not_available'">
+            </div>
+          </div>
+        </div>
+        <div class="ts-col-35 pr-7 pl-0 text-break">
+          <a
+            class="list-title"
+            [routerLink]="[testPlan.lastRun ? '/td/runs': null, testPlan.lastRun ? testPlan.lastRun.id : null]"
+            [matTooltip]="(!testPlan.lastRun ? 'result.hint.not_run' : '') | translate"
+            [textContent]="testPlan.name"></a>
+          <div
+            class="pt-4 text-t-secondary"
+            [matTooltip]="(testPlan?.description?.length>151) ? testPlan?.description : ''"
+            [innerHTML]="(testPlan?.description?.length>151) ?
+            (testPlan?.description | slice:0:150)+'...':(testPlan?.description) ||
+              ('results.list_view.no_description' | translate) "></div>
+        </div>
+        <div class="ts-col-15">
+          <app-lab-environments-info
+            *ngIf="testPlan.environments"
+            [execution]="testPlan"
+            [executionEnvironments]="testPlan.environments"></app-lab-environments-info>
+          <span [ngSwitch]="testPlan.testPlanType==getCrossBrowser() && testPlan?.workspaceVersion?.workspace?.isMobile">
+            <div
+              class="pt-4 text-t-secondary"  *ngSwitchCase="true"
+              [textContent]="('execution.test_plan_type.CROSS_DEVICE') | translate"></div>
+            <div
+              class="pt-4 text-t-secondary" *ngSwitchCase="false"
+              [textContent]="('execution.type.'+testPlan.testPlanType) | translate"></div>
+          </span>
+        </div>
+        <div
+          class="ts-col-20 text-t-secondary px-20 d-flex flex-column fz-12">
+          <div *ngIf="!testPlan.lastRun">-</div>
+          <div *ngIf="testPlan.lastRun"
+               [textContent]="testPlan.lastRun?.startTime | date:'h:mm a MMM d, y'"></div>
+          <div class="pt-12" *ngIf="testPlan.lastRun">
+            <app-duration-format
+              [duration]="testPlan.lastRun?.duration"></app-duration-format>
+          </div>
+        </div>
+        <div class="ts-col-15 d-flex align-items-center">
+          <app-schedule-form-button
+            [execution]="testPlan"></app-schedule-form-button>
+          <app-reports-button
+            class="ml-10"
+            [execution]="testPlan"></app-reports-button>
+          <app-run-now-button
+            class="ml-10"
+            [execution]="testPlan"
+            (onStart)="fetchTestPlans()"
+            (onStop)="fetchTestPlans()">
+          </app-run-now-button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!testPlans?.content.length" class="h-100">
+    <div *ngIf="fetchingCompleted"
+         class="empty-full-container">
+      <div class="empty-run-md"></div>
+      <div
+        class="empty-text"
+        [translate]="isFiltered ? 'message.common.search.not_found' : 'runs.list_view.empty.list'"></div>
+      <button
+        *ngIf="!isFiltered"
+        [routerLink]="['/td', versionId, 'plans', 'new']"
+        class="theme-btn-primary">
+        +
+        <span [translate]="'test_plan.run_results.create_test_plan'"></span>
+      </button>
+    </div>
+  </div>
+</div>

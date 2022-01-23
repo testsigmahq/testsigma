@@ -1,0 +1,78 @@
+<div class="d-flex flex-column h-100">
+  <div class="dashboard-header">
+    <app-workspace-switcher
+      class="ts-col-15"
+      [version]="version"></app-workspace-switcher>
+    <div class="header-quick-link-container position-relative">
+      <a
+        class="link-item"
+        [routerLink]="['/support']">
+        <i class="fa-question-circle-solid link-icon"></i>
+        <span [translate]="'hint.message.common.help'"></span>
+      </a>
+      <div class="dashboard-global-love">
+           <div class="line-height-none">
+             <svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <mask id="path-1-inside-1_375:274" fill="white">
+              <path d="M4.5 0C6.98625 0 9 1.97438 9 4.41C9 1.97438 11.0138 0 13.5 0C15.9862 0 18 1.97438 18 4.41C18 8.08088 14.3618 9.37575 9.441 15.219C9.38682 15.2832 9.3193 15.3348 9.24313 15.3701C9.16696 15.4055 9.08399 15.4238 9 15.4238C8.91601 15.4238 8.83304 15.4055 8.75687 15.3701C8.6807 15.3348 8.61318 15.2832 8.559 15.219C3.63825 9.37575 0 8.08088 0 4.41C0 1.97438 2.01375 0 4.5 0Z"/>
+              </mask>
+              <path d="M4.5 0C6.98625 0 9 1.97438 9 4.41C9 1.97438 11.0138 0 13.5 0C15.9862 0 18 1.97438 18 4.41C18 8.08088 14.3618 9.37575 9.441 15.219C9.38682 15.2832 9.3193 15.3348 9.24313 15.3701C9.16696 15.4055 9.08399 15.4238 9 15.4238C8.91601 15.4238 8.83304 15.4055 8.75687 15.3701C8.6807 15.3348 8.61318 15.2832 8.559 15.219C3.63825 9.37575 0 8.08088 0 4.41C0 1.97438 2.01375 0 4.5 0Z" fill="#FF6176"/>
+              <path d="M9.441 15.219L10.358 15.9931L10.3589 15.992L9.441 15.219ZM8.559 15.219L7.64111 15.992L7.64204 15.9931L8.559 15.219ZM4.5 1.2C6.34632 1.2 7.8 2.6597 7.8 4.41H10.2C10.2 1.28905 7.62618 -1.2 4.5 -1.2V1.2ZM10.2 4.41C10.2 2.6597 11.6537 1.2 13.5 1.2V-1.2C10.3738 -1.2 7.8 1.28905 7.8 4.41H10.2ZM13.5 1.2C15.3463 1.2 16.8 2.6597 16.8 4.41H19.2C19.2 1.28905 16.6262 -1.2 13.5 -1.2V1.2ZM16.8 4.41C16.8 5.74073 16.1962 6.6837 14.7205 8.14808C13.2762 9.58134 11.0278 11.4717 8.52312 14.446L10.3589 15.992C12.7749 13.123 14.806 11.4443 16.411 9.85164C17.9847 8.29005 19.2 6.75014 19.2 4.41H16.8ZM8.52404 14.4449C8.58251 14.3757 8.65539 14.32 8.7376 14.2818L9.74865 16.4585C9.9832 16.3495 10.1911 16.1907 10.358 15.9931L8.52404 14.4449ZM8.7376 14.2818C8.81981 14.2436 8.90936 14.2238 9 14.2238V16.6238C9.25861 16.6238 9.51411 16.5674 9.74865 16.4585L8.7376 14.2818ZM9 14.2238C9.09064 14.2238 9.18019 14.2436 9.2624 14.2818L8.25135 16.4585C8.48589 16.5674 8.74139 16.6238 9 16.6238V14.2238ZM9.2624 14.2818C9.34461 14.32 9.41749 14.3757 9.47596 14.4449L7.64204 15.9931C7.80886 16.1907 8.0168 16.3495 8.25135 16.4585L9.2624 14.2818ZM9.47688 14.446C6.97216 11.4717 4.7238 9.58134 3.27948 8.14808C1.8038 6.6837 1.2 5.74073 1.2 4.41H-1.2C-1.2 6.75014 0.0153224 8.29005 1.58896 9.85164C3.19395 11.4443 5.22509 13.123 7.64112 15.992L9.47688 14.446ZM1.2 4.41C1.2 2.6597 2.65368 1.2 4.5 1.2V-1.2C1.37382 -1.2 -1.2 1.28905 -1.2 4.41H1.2Z" fill="black" mask="url(#path-1-inside-1_375:274)"/>
+             </svg>
+          </div>
+        <app-testsigma-love
+          *ngIf="authGuard?.session?.user"
+          class="gl-drop-menu-love"></app-testsigma-love>
+      </div>
+      <div class="dashboard-global-add">
+        <div class="btn-group d-flex">
+          <button class="border-rds-left-2 py-7 pl-14 pr-14 btn-primary mr-0 fz-13">
+            <span [translate]="'btn.common.create_new'"></span>
+          </button>
+          <button class="drop-down-icon-container">
+            <i class="fa-down-arrow dr-icon"></i>
+          </button>
+        </div>
+        <app-global-add
+          *ngIf="authGuard?.session?.user"
+          class="gl-drop-menu"></app-global-add>
+      </div>
+    </div>
+  </div>
+  <div class="addon_widget" *ngIf="testsigmaOSEnabled">
+    <div class="ts-col-90 h-100">
+      <iframe src="/kibbutz/login?redirect_uri=/ui/strip" class="h-100 w-100 border-0">
+      </iframe>
+    </div>
+
+    <div class="d-flex-wrap px-20 py-30 ts-col-10 h-100">
+      <button
+        [routerLink]="['/addons']"
+        [queryParams]="{create: true}"
+        class="border-0 btn-clear btn-clear-default btn-sm pl-14 pointer pr-14 py-7 w-100"
+        [translate]="'dashboard.addon.create'"></button>
+      <button
+        [routerLink]="['/addons']"
+        class="border-0 btn-clear btn-clear-default btn-sm mt-16 pl-14 pointer pr-14 py-7 w-100"
+        [translate]="'dashboard.addon.view_more'"></button>
+    </div>
+
+  </div>
+  <div
+    [class.show-addons]="testsigmaOSEnabled"
+    class="dashboard-content" *ngIf="version">
+    <div
+      class="d-flex flex-wrap ts-col-100">
+    <app-latest-runs
+      class="ts-col-50 dashboard-section-lg"
+      [version]="version"></app-latest-runs>
+    <app-test-case-coverage-summary
+      class="dashboard-section-lg ts-col-50 pl-20"
+      style="height: 321px"
+      [version]="version"></app-test-case-coverage-summary>
+    </div>
+    <app-weekly-schedule-calendar
+      class="ts-col-100 mt-60 dashboard-section-md"
+      [version]="version"></app-weekly-schedule-calendar>
+  </div>
+</div>

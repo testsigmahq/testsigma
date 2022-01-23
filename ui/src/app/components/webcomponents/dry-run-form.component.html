@@ -1,0 +1,150 @@
+<div class="ts-form h-100 theme-overlay-container">
+  <!--Header-->
+  <div class="theme-overlay-header">
+    <div
+      class="theme-overlay-title">
+      <i
+        [matTooltip]="'hint.message.common.back' | translate"
+        class="fa-back-arrow pr-7 pointer" mat-dialog-close></i>
+      <span
+        [translate]="'ad_hoc.title'"></span></div>
+    <div class="ml-auto d-flex align-items-center flex-nowrap">
+      <div
+        *ngIf="configurations?.length && !testPlan?.id"
+        class="d-flex align-items-center">
+        <span
+          class="text-nowrap pr-7 text-t-secondary"
+          [translate]="'ad_hoc.save_config'"></span>
+        <mat-form-field class="w-90 custom-mat-auto-complete" appearance="outline"
+                        (click)="groupTrigger.openPanel();focusOnMatSelectSearch();searchAutoComplete.setValue('')">
+            <input
+              type="text" readonly
+              [value]="configuration?.id ? configuration?.name : 'None'"
+              class="autocomplete-placeholder text-truncate">
+            <i class="fa-down-arrow-filled"></i>
+            <input
+              type="text" matInput
+              [(ngModel)]="configuration"
+              [ngModelOptions]="{standalone: true}"
+              #groupTrigger="matAutocompleteTrigger"
+              [matAutocomplete]="autoComplete" hidden>
+          <mat-autocomplete
+            #autoComplete="matAutocomplete" disableOptionCentering>
+            <mat-option class="p-4" [disabled]="true">
+              <input (keydown)="$event.stopPropagation()"
+                     type="text" [formControl]="searchAutoComplete" autocomplete="off">
+            </mat-option>
+            <mat-option
+              *ngIf="filteredDryRunConfigs.length && !searchAutoComplete?.value"
+              [value]="noneConfiguration"
+              (click)="setConfigurationId(null)"
+              [textContent]="'message.common.none' | translate"></mat-option>
+            <mat-option
+              *ngFor="let config of filteredDryRunConfigs"
+              [value]="config"
+              (click)="setConfigurationId(config)"
+              [class.mat-active]="config.id==configuration?.id">
+              <span class="d-block text-nowrap text-truncate pr-4"
+                    [class.selection-highlight]="config.id==configuration?.id"
+                    [textContent]="config.name"></span>
+            </mat-option>
+            <mat-option
+              *ngIf="filteredDryRunConfigs.length == 0 && !!searchAutoComplete.value"
+              [disabled]="true" [textContent]="'select.search.notfound'|translate"></mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      <button
+        *ngIf="configurations?.length"
+        (click)="openSavedConfigsList()"
+        [matTooltip]="'hint.message.ad_hoc.saved_config.list' | translate"
+        class="btn icon-btn border-rds-2 mx-20" style="padding: 8px 12px">
+        <i class="fa-setting-outlined fz-18"></i>
+      </button>
+      <button
+        [matTooltip]="'hint.message.common.close' | translate"
+        class="close" mat-dialog-close closeBtn></button>
+    </div>
+  </div>
+  <!--Header-->
+
+  <div class="theme-overlay-content">
+    <div class="theme-warning text-danger border-rds-4 px-10 py-5 fz-12 mt-2 mb-40 text-center"
+      *ngIf="emptyElements.length>0">
+      <div class="mx-auto w-fit-content d-flex align-items-center">
+        <i class="fa-warning fz-20 pr-8"></i>
+        <span [innerHTML]="'ad_hoc.empty_elements'| translate:{ fieldNames:emptyElements.join(', ') }"></span>
+      </div>
+    </div>
+    <div class="theme-warning text-danger border-rds-4 px-10 py-5 fz-12 mt-2 mb-40 text-center"
+         *ngIf="invalidUrls.length>0 && !isHybrid">
+      <div class="mx-auto w-fit-content d-flex align-items-center">
+        <i class="fa-warning fz-20 pl-15 pr-8"></i>
+        <span class="p-10 text-left" [innerHTML]="'ad_hoc.invalid_url'| translate:{ fieldNames:invalidUrls.join(', ') }"></span>
+      </div>
+    </div>
+    <app-dry-run-rest-form
+      (closeDialog)="closeDialogTab()"
+      *ngIf="dryExecutionForm && isRest && version"
+      [formGroup]="dryExecutionForm"
+      [version]="version"></app-dry-run-rest-form>
+    <app-dry-run-mobile-native-form
+      (closeDialog)="closeDialogTab()"
+      *ngIf="dryExecutionForm && isMobileNative && version && refresh"
+      [formGroup]="dryExecutionForm"
+      [execution]="this.testPlan"
+      [environment]="environment"
+      [version]="version"></app-dry-run-mobile-native-form>
+    <app-dry-run-mobile-web-form
+      (closeDialog)="closeDialogTab()"
+      *ngIf="dryExecutionForm && isMobileWeb && version"
+      [formGroup]="dryExecutionForm"
+      [execution]="this.testPlan"
+      [environment]="environment"
+      [version]="version"></app-dry-run-mobile-web-form>
+    <app-dry-run-web-form
+      (closeDialog)="closeDialogTab()"
+      *ngIf="dryExecutionForm && isWeb && version && testPlan"
+      [formGroup]="dryExecutionForm"
+      [execution]="testPlan"
+      [environment]="environment"
+      [version]="version"></app-dry-run-web-form>
+    <app-desired-capabilities
+      *ngIf="dryExecutionForm?.controls['environments']?.controls[0] && (isHybrid || (!isHybrid && authGuard.openSource.isEnabled))"
+      [capabilities]="this.testPlan?.environments[0]?.capabilities"
+      [formGroup]="dryExecutionForm?.controls['environments']?.controls[0]"></app-desired-capabilities>
+  </div>
+
+  <!--Footer actions-->
+  <div class="theme-overlay-footer">
+    <div class="d-flex">
+      <button
+        *ngIf="dryExecutionForm && configuration && configuration?.id && isConfigurationChanged"
+        [disabled]="savingConfig"
+        (click)="updateConfiguration()"
+        class="theme-btn-clear-default rb-medium"
+        [translate]="savingConfig ? 'message.common.saving': 'ad_hoc.saved_config.update'">
+      </button>
+      <button
+        (click)="openSavedConfigs()"
+        class="theme-btn-clear-default rb-medium"
+        [translate]="'ad_hoc.saved_config.save_as'">
+      </button>
+      <div class="mx-30 theme-border-l"></div>
+    </div>
+    <button
+      class="theme-btn-clear-default rb-medium"
+      [translate]="'btn.common.cancel'" mat-dialog-close>
+    </button>
+    <button
+      [disabled]="disableRunButton()"
+      (click)="save()"
+      class="theme-btn-primary"
+      [isLoading]="saving"
+      [message]="'message.common.saving'"
+      appAsyncBtn
+      [textContent]="'ad_hoc.btn.create_run' | translate">
+    </button>
+  </div>
+  <!--Footer actions-->
+</div>

@@ -1,0 +1,121 @@
+<div class="d-flex flex-column h-100" *ngIf="agent">
+  <div class="pt-25 px-40">
+    <div class="ts-col-100 details-header d-flex mb-16 flex-wrap pr-14">
+      <div class="ts-col-60">
+        <div class="theme-details-header">
+          <i
+            class="go-back-icon"
+            [matTooltip]="'hint.message.common.back' | translate"
+            [routerLink]="['/agents']"></i>
+          <span
+            class="title-name"
+            [textContent]="agent?.title">
+              </span>
+        </div>
+        <div
+          class="pt-7 text-t-secondary pl-30"
+          [textContent]="('agent.details.version' | translate )+' '+agent.agentVersion">
+        </div>
+      </div>
+      <div class="ml-auto">
+        <button class="btn icon-btn"
+                [routerLink]="['/agents', agent?.id,'edit']"
+                data-placement="bottom"
+                [matTooltip]="'pagination.edit' | translate">
+          <i class="fa-pencil-on-paper"></i>
+        </button>
+        <button class="btn icon-btn" (click)="deleteAgent(agent)"
+                data-placement="bottom"
+                [matTooltip]="'pagination.delete' | translate">
+          <i class="fa-trash-thin"></i>
+        </button>
+      </div>
+    </div>
+    <div class="details-container lg value-md pl-30 justify-content-between">
+      <div class="details-items">
+        <label class="details-title"
+               [translate]="'agent.details.ip_address'"></label>
+        <div class="details-info text-uppercase"
+             [textContent]="agent.ipAddress"></div>
+      </div>
+      <div class="details-items">
+        <label class="details-title"
+               [translate]="'agent.details.created_at'"></label>
+        <div class="details-info text-uppercase"
+             [textContent]="agent.createdAt | amTimeAgo"></div>
+      </div>
+      <div class="details-items">
+        <label class="details-title"
+               [translate]="'agent.details.version'"></label>
+        <div class="details-info text-uppercase"
+             [textContent]="agent.agentVersion"></div>
+      </div>
+      <div class="ts-col-40 details-items">
+        <label class="details-title"
+               [translate]="'agents.list_view.available_browsers'"></label>
+        <div class="d-flex details-info lh-1point4">
+          <div class="d-flex mr-10 pointer"
+               *ngFor="let browser of agent.browsers"
+               [matTooltip]="browser.version">
+            <span
+              class="edge"
+              *ngIf="browser.name=='Edge'"></span>
+            <span class="chrome"
+                  *ngIf="browser.name=='Chrome'"></span>
+            <span class="safari"
+                  *ngIf="browser.name=='Safari'"></span>
+            <span class="firefox"
+                  *ngIf="browser.name=='Firefox'"></span>
+            <span class="pl-5"
+                  [textContent]="'V.'+browser.majorVersion"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-container theme-details-scroll-content">
+    <div class="page_header details-panel py-0 border-dark-separator-y-1">
+      <ul class="tab-nav h-auto pl-20" role="tablist">
+        <li role="presentation" class="nav-items active"
+            [routerLink]="['/agents', agent.id, 'test_plans']"
+            [routerLinkActive]="'active'">
+          <a [routerLink]="['/agents', agent.id, 'test_plans']"
+             [routerLinkActive]="'active'"
+             class="normal-text"
+             aria-controls="executions"
+             target="_self" role="tab" data-toggle="tab"
+             aria-selected="true">
+            <span [translate]="'agent.details.nav_header.test_plans'"></span>
+          </a>
+        </li>
+        <li role="presentation" class="nav-items"
+            [routerLink]="['/agents', agent.id, 'dry_runs']"
+            [routerLinkActive]="'active'">
+          <a [routerLink]="['/agents', agent.id, 'dry_runs']"
+             [routerLinkActive]="'active'"
+             class="normal-text"
+             aria-controls="dry_executions"
+             target="_self" role="tab" data-toggle="tab"
+             aria-selected="true">
+            <span [translate]="'agent.details.nav_header.dry_runs'"></span>
+          </a>
+        </li>
+        <li role="presentation" class="nav-items"
+            [routerLink]="['./devices']"
+            [routerLinkActive]="'active'">
+          <a
+            [routerLink]="['./devices']"
+            [routerLinkActive]="'active'"
+            class="normal-text"
+            aria-controls="agent_devices"
+            target="_self" role="tab" data-toggle="tab"
+            aria-selected="true">
+            <span [translate]="'agent.details.nav_header.devices'"></span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <router-outlet></router-outlet>
+  </div>
+</div>
+<router-outlet name="overlay"></router-outlet>

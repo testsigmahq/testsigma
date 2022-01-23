@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="62px" height="56px" viewBox="0 0 62 56" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59 (86127) - https://sketch.com -->
+    <title>business</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="business" transform="translate(1.000000, 1.000000)" fill="#000000" fill-rule="nonzero" stroke="#000000">
+            <path d="M53,38 L53,26 L31,26 L31,15.931 C34.94,15.436 38,12.072 38,8 C38,3.589 34.411,0 30,0 C25.589,0 22,3.589 22,8 C22,12.072 25.06,15.436 29,15.931 L29,26 L7,26 L7,38 L0,38 L0,54 L16,54 L16,38 L9,38 L9,28 L29,28 L29,38 L22,38 L22,54 L38,54 L38,38 L31,38 L31,28 L51,28 L51,38 L44,38 L44,54 L60,54 L60,38 L53,38 Z M24,8 C24,4.691 26.691,2 30,2 C33.309,2 36,4.691 36,8 C36,11.309 33.309,14 30,14 C26.691,14 24,11.309 24,8 Z M14,52 L2,52 L2,40 L14,40 L14,52 Z M36,52 L24,52 L24,40 L36,40 L36,52 Z M58,52 L46,52 L46,40 L58,40 L58,52 Z" id="Shape"></path>
+        </g>
+    </g>
+</svg>

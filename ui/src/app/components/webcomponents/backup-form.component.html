@@ -1,0 +1,141 @@
+<div class="theme-overlay-container sm-pm-content-px-0 add-test-suite">
+  <div class="theme-overlay-header">
+    <div
+      class="theme-overlay-title"
+      [translate]="'backup.form.title'">
+    </div>
+    <button
+      class="theme-overlay-close"
+      type="button"
+      [matTooltip]="'hint.message.common.close' | translate"
+      mat-dialog-close>
+    </button>
+  </div>
+  <div class="theme-overlay-content theme-border-y p-0">
+    <div class="ts-form h-100 px-20 py-30">
+      <form class="h-100">
+        <div class="d-flex align-items-center h-100">
+          <div *ngIf="!(this.option.filterId>0)" class="ts-col-35 h-100 theme-border-r pr-20 pt-40">
+            <div class="form-group">
+              <app-auto-complete
+                *ngIf="applications"
+                class="pb-2 d-block"
+                [items]="applications"
+                [formGroup]="workspaceSwitcherForm"
+                [hasApplicationIcon]="true"
+                [formCtrlName]="workspaceSwitcherForm?.controls['application']"
+                [value]="selectedWorkspace"
+                (onSearch)="fetchApplications($event)"
+                (onValueChange)="setSelectedApplication($event)"
+              ></app-auto-complete>
+              <label [translate]="'project_switcher.select_workspace'" class="control-label"></label>
+            </div>
+            <div class="form-group mb-5">
+              <app-auto-complete
+                *ngIf="versions"
+                class="pb-2 d-block"
+                [items]="versions"
+                [formGroup]="workspaceSwitcherForm"
+                [formCtrlName]="workspaceSwitcherForm?.controls['version']"
+                [value]="selectedVersion"
+                (onSearch)="fetchVersions($event)"
+                (onValueChange)="setSelectedVersion($event)"
+              ></app-auto-complete>
+              <label [translate]="'project_switcher.select_version'" class="control-label"></label>
+            </div>
+          </div>
+          <div [class.ts-col-65]="!(this.option.filterId>0)" [class.ts-col-100]="(this.option.filterId>0)" class="pt-30 h-100 pr-30 overflow-y-auto">
+            <div class="d-flex">
+              <div class="h-30p pl-30 rb-light">
+                <i class="fa-info"></i>
+                <span class="pl-8" [translate]="'backup.model.info'"></span>
+              </div>
+            </div>
+            <div class="d-flex" [formGroup]="backupForm">
+              <div class="ts-col-50 pl-30">
+                <div class="py-5">
+                  <mat-checkbox class="mat-checkbox" [formControlName]="['isTestDataEnabled']"
+                                (change)="checkDependencies($event, 'isTestDataEnabled')">
+                    <span [translate]="'backup.model.test_data'" class="rb-medium"></span>
+                  </mat-checkbox>
+                </div>
+                <div class="py-5">
+                  <mat-checkbox [formControlName]="['isElementEnabled']" class="mat-checkbox"
+                                (change)="checkDependencies($event, 'isElementEnabled')">
+                    <span [translate]="'backup.model.elements'" class="rb-medium"></span>
+                  </mat-checkbox>
+                </div>
+                <div class="py-5">
+                  <mat-checkbox [formControlName]="['isTestDeviceEnabled']" class="mat-checkbox"
+                                (change)="checkDependencies($event, 'isTestDeviceEnabled')">
+                    <span [translate]="'backup.model.test_device'" class="rb-medium"></span></mat-checkbox>
+                </div>
+                <div class="py-5">
+                  <mat-checkbox [formControlName]="['isUploadsEnabled']" class="mat-checkbox"
+                                (change)="checkDependencies($event, 'isUploadsEnabled')">
+                    <span [translate]="'backup.model.uploads'" class="rb-medium"></span></mat-checkbox>
+                </div>
+                <div class="py-5">
+                  <mat-checkbox [formControlName]="['isTestCaseEnabled']" class="mat-checkbox"
+                                (change)="checkDependencies($event, 'isTestCaseEnabled')">
+                    <span [translate]="'backup.model.testcase'" class="rb-medium"></span></mat-checkbox>
+                </div>
+                <div class="py-5">
+                  <mat-checkbox [formControlName]="['isTestStepEnabled']" class="mat-checkbox"
+                                (change)="checkDependencies($event, 'isTestStepEnabled')">
+                    <span [translate]="'backup.model.teststep'" class="rb-medium"></span></mat-checkbox>
+                </div>
+                <div class="py-5">
+                  <mat-checkbox [formControlName]="['isSuitesEnabled']" class="mat-checkbox"
+                                (change)="checkDependencies($event, 'isSuitesEnabled')">
+                    <span [translate]="'backup.model.test_suites'" class="rb-medium"></span></mat-checkbox>
+                </div>
+                <div class="py-5">
+                  <mat-checkbox [formControlName]="['isTestPlanEnabled']" class="mat-checkbox"
+                                (change)="checkDependencies($event, 'isTestPlanEnabled')">
+                    <span [translate]="'backup.model.test_plans'" class="rb-medium"></span></mat-checkbox>
+                </div>
+              </div>
+              <div class="ts-col-50">
+<!--                <div class="py-5">-->
+<!--                  <mat-checkbox [formControlName]="['isRequirementEnabled']" class="mat-checkbox"-->
+<!--                                (change)="checkDependencies($event, 'isRequirementEnabled')">-->
+<!--                    <span [translate]="'backup.model.requirement'" class="rb-medium"></span></mat-checkbox>-->
+<!--                </div>-->
+                <div class="py-5">
+                  <mat-checkbox [formControlName]="['isTestCaseTypeEnabled']" class="mat-checkbox"
+                                (change)="checkDependencies($event, 'isTestCaseTypeEnabled')">
+                    <span [translate]="'backup.model.test_case_types'" class="rb-medium"></span></mat-checkbox>
+                </div>
+                <div class="py-5">
+                  <mat-checkbox [formControlName]="['isTestCasePriorityEnabled']" class="mat-checkbox"
+                                (change)="checkDependencies($event, 'isTestCasePriorityEnabled')">
+                    <span [translate]="'backup.model.test_case_priorities'" class="rb-medium"></span></mat-checkbox>
+                </div>
+                <div class="py-5">
+                  <mat-checkbox [formControlName]="['isLabelEnabled']" class="mat-checkbox"
+                                (change)="checkDependencies($event, 'isLabelEnabled')">
+                    <span [translate]="'backup.model.label'" class="rb-medium"></span></mat-checkbox>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="theme-overlay-footer">
+    <button
+      [translate]="'btn.common.cancel'"
+      class="theme-btn-clear-default" mat-dialog-close></button>
+    <button
+      (click)="backup()"
+      class="theme-btn-primary"
+      type="button"
+      appAsyncBtn
+      [isLoading]="isSaving"
+      [message]="'btn.common.please_wait'"
+      [textContent]="'btn.common.backup' | translate">
+    </button>
+  </div>
+</div>

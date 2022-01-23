@@ -1,0 +1,110 @@
+<div class="d-flex flex-row position-relative h-100">
+  <button (click)="loading?'':quit()"
+          [disabled]="deleteClicked"
+          [matTooltip]="(loading?'agents.mobile.inspection.quit_session_later':'agents.mobile.inspection.quit_session')| translate"
+          class="btn btn-clear mobile-ins-close-recording">&times;
+  </button>
+  <div [class.ts-col-60]="fullScreenMode"
+       class="mirroring-section ts-col-40">
+    <div class="ts-col-100 d-flex theme-border-b">
+      <div [translate]="'agents.mobile.inspection.record_title'"
+           class="p-15 fz-16 rb-medium lh-3"></div>
+      <i *ngIf="data?.showFullScreen"
+         (click)="toggleFullScreen()"
+         [class.disabled]="loading"
+         [class.fa-expand-horizontal]="!fullScreenMode"
+         [class.fa-shrink-horizontal]="fullScreenMode"
+         [class.text-muted]="loading"
+         [matTooltip]="(fullScreenMode?'message.common.shrink':'message.common.expand')|translate"
+         class="pointer ml-auto my-auto mr-25 fz-14"></i>
+    </div>
+    <app-mirroring-container #mirroringContainerComponent
+                             [(dataSource)]="dataSource"
+                             [(loading)]="loading"
+                             [loadingActions]="loadingActions"
+                             [currentPageSource]="currentPageSource"
+                             [isIosNative]="isIosNative()"
+                             [isEdit]="isEdit"
+                             [uiId]="uiId"
+                             [sessionId]="sessionId"
+                             [data]="data"
+                             [mirroring]="mirroring"
+                             [selectedUiIdentifier]="selectedElement1"
+    ></app-mirroring-container>
+  </div>
+  <div *ngIf="!mirroring" [class.ts-col-40]="fullScreenMode"
+       class="inspection-details-section ts-col-30">
+    <mat-tab-group [class.disabled]="loading" [class.show-close]="fullScreenMode"
+                   [(selectedIndex)]="selectedIndex"
+                   class="inspector-mat-tab w-100 border-0 mt-14 pr-15"
+                   mat-stretch-tabs>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span [translate]="'agents.mobile.inspection.app_source'"></span>
+        </ng-template>
+        <app-source *ngIf="mirroringContainerComponent"
+                    (highlightCanvas)="mirroringContainerComponent.highlightOnSelection($event)"
+                    (highlightCanvasOnHover)="mirroringContainerComponent.mouseInFromAppSource($event)"
+                    (mouseOutFromAppSource)="mirroringContainerComponent.mouseOutFromAppSource()"
+                    [dataSource]="dataSource"
+                    [inspectedElement]="mirroringContainerComponent.inspectedElement"
+                    [isNativeAppEnabled]="mirroringContainerComponent.isNativeAppEnabled"
+                    [loading]="loading">
+        </app-source>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span [translate]="'agents.mobile.inspection.selected_element'"></span>
+        </ng-template>
+        <app-selected-elements *ngIf="mirroringContainerComponent"
+                               [currentPageSource]="currentPageSource"
+                               [inspectedElement]="mirroringContainerComponent.inspectedElement"
+                               [isNativeAppEnabled]="mirroringContainerComponent.isNativeAppEnabled"
+                               [sessionId]="sessionId"
+                               [devicesService]="devicesService"
+                               [optimisingXpath]="mirroringContainerComponent.optimisingXpath">
+        </app-selected-elements>
+      </mat-tab>
+      <mat-tab *ngIf="fullScreenMode">
+        <ng-template mat-tab-label>
+          <button (click)="backToListView()"
+                  *ngIf="saveElementsComponent?.elements?.length>0 && saveElementsComponent?.element"
+                  [matTooltip]="(element ? 'agents.mobile.inspection.go_back_to_list':'agents.mobile.inspection.go_back_to_form' )| translate"
+                  class="btn py-3 px-5">
+            <i class="fa-back-arrow pointer"></i>
+          </button>
+          <span [translate]="'agents.mobile.inspection.elements'"></span>
+        </ng-template>
+        <ng-container *ngTemplateOutlet="saveElementsTemplate"></ng-container>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+  <div *ngIf="!fullScreenMode" class="ts-col-30 pr-14 mt-45 pt-14 pb-15">
+    <div class="position-absolute top-n20 rb-medium mt-n8 fz-14">
+      <button (click)="backToListView()"
+              [class.visibility-hidden]="!(saveElementsComponent?.elements?.length>0 && saveElementsComponent?.element)"
+              [matTooltip]="(element ? 'agents.mobile.inspection.go_back_to_list':'agents.mobile.inspection.go_back_to_form' )| translate"
+              class="btn text-dark">
+        <i class="fa-back-arrow"></i>
+      </button>
+      <span [translate]="element ? 'agents.mobile.inspection.element_form':'agents.mobile.inspection.elements'"
+            class="text-secondary"
+      ></span>
+    </div>
+    <ng-container *ngTemplateOutlet="saveElementsTemplate"></ng-container>
+  </div>
+</div>
+<!--<simple-notifications></simple-notifications>-->
+<ng-template #saveElementsTemplate>
+  <app-save-elements #saveElementsComponent
+                     [(inspectedElement)]="mirroringContainerComponent.inspectedElement"
+                     [(element)]="element"
+                     [(elements)]="elements"
+                     [(elementForm)]="uiElementForm"
+                     [(selectElement)]="selectedElement1"
+                     [versionId]="data?.workspaceVersionId"
+                     [uiId]="uiId"
+                     [isEdit]="isEdit"
+                     (handleElementUpdateEventEmitter)="handleElementUpdate($event.err,$event.isCreate)">
+  </app-save-elements>
+</ng-template>

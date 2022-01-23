@@ -1,0 +1,160 @@
+<div class="ts-form mt-20" *ngIf="!fields">
+  <app-placeholder-loader [isDetails]="true" ></app-placeholder-loader>
+</div>
+
+<form
+  (ngSubmit)="onSubmit()"
+  class="ts-form h-100 form-field-bg"
+  [formGroup]="form" *ngIf="fields?.length > 0 && form">
+  <div
+    class=" overflow-x-hidden p-30 theme-only-items-scroll sm-h" >
+    <div class="d-flex">
+      <label
+        class="ts-col-50 rb-medium text-t-highlight fz-18"
+        [translate]="isLinkToIssue ? 'test_case_result.details.report_link_bug.title' : 'test_case_result.details.report_create_bug.title'"
+      ></label>
+      <button
+        type="button"
+        (click)="toggleLinkToIssue()"
+        [translate]="isLinkToIssue ?  'test_case_result.details.btn.create_new' : 'test_case_result.details.btn.link_to_existing'"
+        class="theme-btn-clear-default ml-auto"></button>
+    </div>
+    <div class="form-group pb-20 d-flex flex-wrap">
+      <label
+        class="custom-label text-t-highlight required ts-col-100"
+        [translate]="'test_case_result.details.project.title'"></label>
+      <div class="dropdown section-title ts-col-50">
+        <div
+          [class.showField]="isProjectShow"
+          class="btn-group text-nowrap field">
+          <a
+            (click)="toggleDropdown('isProjectShow');isIssueTypeShow = false"
+            class="rb-medium d-flex align-items-center theme-border-y theme-border-x p-10 border-rds-4">
+          <span class="img-wh">
+            <img
+              [alt]="selectedProject.name"
+              [src]="selectedProject.avatarUrls['16x16']"
+              class="w-100"/>
+          </span>
+            <span
+              class="pl-8"
+              [textContent]="selectedProject.name"></span>
+          </a>
+        </div>
+        <div
+          *ngIf="isProjectShow"
+          class="dropdown-menu d-block drop-down-transparent">
+          <ul
+            class="bg-white border-rds-4 ng-scope pl-0 shadow-all2-b4 m-0">
+            <li
+              class="p-10 rb-medium grey-on-hover text-dark d-flex align-items-center"
+              *ngFor="let project of projects"
+              (click)="toggleProject(project)">
+              <span class="img-wh">
+                <img
+                  [alt]="project.name"
+                  [src]="project.avatarUrls['16x16']"
+                  class="w-100"/>
+              </span>
+              <span
+                class="pl-8"
+                [translate]="project.name"></span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group pb-20 d-flex flex-wrap">
+      <label
+        class="custom-label text-t-highlight required ts-col-100"
+        [translate]="'test_case_result.details.issue_types'"></label>
+      <div class="dropdown section-title ts-col-50">
+        <div
+          [class.showField]="isIssueTypeShow"
+          class="btn-group text-nowrap field">
+          <a
+            (click)="toggleDropdown('isIssueTypeShow');isProjectShow = false"
+            class="rb-medium d-flex align-items-center theme-border-y theme-border-x p-10 border-rds-4">
+          <span class="img-wh">
+            <img
+              [alt]="selectedIssueType.name"
+              [src]="selectedIssueType.iconUrl"
+              class="w-100"/>
+          </span>
+            <span
+              class="pl-8"
+              [textContent]="selectedIssueType.name"></span>
+          </a>
+        </div>
+        <div
+          *ngIf="isIssueTypeShow"
+          class="dropdown-menu d-block drop-down-transparent">
+          <ul
+            class="bg-white border-rds-4 ng-scope pl-0 shadow-all2-b4 m-0">
+            <li
+              class="p-10 rb-medium grey-on-hover text-dark d-flex align-items-center"
+              *ngFor="let issueType of issueTypes"
+              (click)="toggleIssueType(issueType)">
+              <span class="img-wh">
+                <img
+                  [alt]="issueType.name"
+                  [src]="issueType.iconUrl"
+                  class="w-100"/>
+              </span>
+              <span
+                class="pl-8"
+                [translate]="issueType.name"></span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="from-group pb-20 flex-wrap pt-20 border-brand-t-1" *ngIf="isLinkToIssue">
+      <mat-form-field
+        class="example-full-width w-90 custom-mat-auto-complete">
+        <input
+          [formControl]="searchIssuesFormCtrl"
+          matInput
+          [placeholder]="'test_case_result.details.report_bug.search_issue_placeholder' | translate"
+          aria-label="State"
+          [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayIssueAutocomplete">
+          <mat-option *ngIf="isFetchingIssues">
+            <span [translate]="'message.common.loading'"></span>
+            <span class="loading-dots"></span>
+          </mat-option>
+          <mat-option *ngIf="!issueList.length && !isFetchingIssues">
+            <span [translate]="searchIssuesFormCtrl.value ?'search.notfound':'plugins.message.no_previous_issues'"></span>
+          </mat-option>
+          <mat-option *ngFor="let issue of issueList" [value]="issue">
+            <span [textContent]="'['+issue.key + ']' + issue.fields.summary"></span>
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+    <div *ngIf="!isLinkToIssue" class="pt-20 border-brand-t-1">
+      <div
+        *ngFor="let field of fields"
+        class="form-row">
+        <app-jira-issue-form-field
+          [field]="field"
+          (priority)="setPriority($event)"
+          [form]="form"></app-jira-issue-form-field>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row py-10 px-30 text-right">
+    <button
+      class="theme-btn-clear-default"
+      mat-dialog-close
+      type="button"
+      [translate]="'btn.common.cancel'"></button>
+    <button
+      class="theme-btn-primary"
+      type="submit"
+      [translate]="!isLinkToIssue ? 'btn.common.save' : 'test_case_result.details.btn.link_to_existing'"
+      [disabled]="!form?.valid && (!searchIssuesFormCtrl?.value || !searchIssuesFormCtrl?.value?.key) || isButtonClicked"></button>
+  </div>
+</form>

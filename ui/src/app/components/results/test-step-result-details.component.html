@@ -1,0 +1,22 @@
+<!--
+  ~ /*
+  ~  * *****************************************************************************
+  ~  *  Copyright (C) 2020 Testsigma Technologies Inc.
+  ~  *  All rights reserved.
+  ~  *  ****************************************************************************
+  ~  */
+  -->
+
+<div class="bg-default-grey-light ts-col-100 d-flex">
+
+  <app-action-step-result-details
+    *ngIf="isFetchingCompleted"
+    class="ts-col-100 d-flex"
+    [testStepResult]="testStepResult">
+  </app-action-step-result-details>
+  <app-placeholder-loader
+    class="align-items-center d-flex justify-content-center ts-col-100"
+    *ngIf="!isFetchingCompleted"
+    [isLogoLoader]="true"
+    [displayText]="('loading_text' | translate)"></app-placeholder-loader>
+</div>

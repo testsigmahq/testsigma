@@ -1,0 +1,24 @@
+<app-select-test-lab
+  (closeDryRunDialog)="closeDialogTab()"
+  [version]="version"
+  [formGroup]="nativeForm"
+  [isDry]="true"></app-select-test-lab>
+<app-test-plan-device-form
+  *ngIf="environmentFormGroup && (isHybrid || (!isHybrid && authGuard.openSource.isEnabled))"
+  [version]="version"
+  [formGroup]="environmentFormGroup"
+  [testPlanLabType]="testPlanLabType"
+  [isAvailableCheck]="true"></app-test-plan-device-form>
+<app-test-plan-app-uploads-form
+  *ngIf="isHybrid || (!isHybrid && authGuard.openSource.isEnabled)"
+  [formGroup]= "environmentFormGroup"
+  [version]="version"
+  [isEdit]="true"
+  [deviceId]="deviceId"></app-test-plan-app-uploads-form>
+<app-test-plan-time-out-settings
+  *ngIf="nativeForm?.controls['environmentId'] && version && (isHybrid || (!isHybrid && authGuard.openSource.isEnabled))"
+  [formGroup]="nativeForm"
+  [environment]="environment"
+  [environmentId]="nativeForm?.controls['environmentId']?.value"
+  [version]="version">
+</app-test-plan-time-out-settings>

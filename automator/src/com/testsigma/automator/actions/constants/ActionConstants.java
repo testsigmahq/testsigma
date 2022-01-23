@@ -1,0 +1,62 @@
+package com.testsigma.automator.actions.constants;
+
+public interface ActionConstants {
+  String SELECTED_OPTION_ERROR_MESSAGE = "If Select/list element is present, Please check if option is selected";
+  String SELECT_OPTIONS_NOT_AVAILABLE = "If Select/list element is present, Please verify if options are available";
+
+  String ATTRIBUTE_NAME = "name";
+  String ATTRIBUTE_VALUE = "value";
+  String ATTRIBUTE_TYPE = "type";
+  String ATTRIBUTE_ID = "id";
+  String TAG_BODY = "body";
+  String ATTRIBUTE_CLASS = "class";
+  String INNER_HTML = "innerHTML";
+  String NEW_LINE_CHARACTER = "\n";
+  String ELEMENT_TYPE_CHECKBOX = "checkbox";
+  String ELEMENT_TYPE_RADIO = "radio";
+  String TAG_IFRAME = "iframe";
+  String LEFT_TO_RIGHT = "left to right";
+  String RIGHT_TO_LEFT = "right to left";
+  String MIDDLE_TO_LEFT = "middle to left";
+  String MIDDLE_TO_RIGHT = "middle to right";
+  String LEFT_TO_MIDDLE = "left to middle";
+  String RIGHT_TO_MIDDLE = "right to middle";
+  String TOP_TO_BOTTOM = "top to bottom";
+  String BOTTOM_TO_TOP = "bottom to top";
+  String TOP_TO_MIDDLE = "top to middle";
+  String MIDDLE_TO_TOP = "middle to top";
+  String BOTTOM_TO_MIDDLE = "bottom to middle";
+  String MIDDLE_TO_BOTTOM = "middle to bottom";
+  String LEFT = "left";
+  String RIGHT = "right";
+  String TOP = "top";
+  String BOTTOM = "bottom";
+  String VISIBLE = "visible";
+  String NOT_VISIBLE = "not visible";
+  String SELECTED = "selected";
+  String NOT_SELECTED = "not selected";
+  String ENABLED = "enabled";
+  String ENABLE = "Enable";
+  String DISABLED = "disabled";
+  String DISABLE = "Disable";
+  String CLICKABLE = "clickable";
+  String PRESENT = "present";
+  String NOT_PRESENT = "not present";
+  String DISPLAYED = "displayed";
+  String NOT_DISPLAYED = "not displayed";
+  String CHECKED = "checked";
+  String UN_CHECKED = "unchecked";
+  String AVAILABLE = "available";
+  String SPACE = "space";
+  String BACKSPACE = "backspace";
+  String ENTER = "enter";
+  String SEARCH = "search";
+  String CANCEL = "Cancel";
+  String OK = "OK";
+  String REFRESH = "Refresh";
+  String FORWARD = "Forward";
+  String BACK = "Back";
+  String LOADED ="loaded";
+  String NOT_LOADED ="not loaded";
+
+}

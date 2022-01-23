@@ -1,0 +1,16 @@
+--
+--
+-- Dumping data for table `list_filters`
+--
+
+LOCK TABLES `list_filters` WRITE;
+/*!40000 ALTER TABLE `list_filters` DISABLE KEYS */;
+INSERT INTO `list_filters` (`id`, `name`, `version_id`, `type`, `query_hash`, `is_public`, `is_default`, `created_date`, `updated_date`) VALUES (1,'All Elements',NULL,'ELEMENT','[{\"key\": \"workspaceVersionId\", \"operation\": \"EQUALITY\", \"value\": -1}]',_binary '',_binary '',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+INSERT INTO `list_filters` (`id`, `name`, `version_id`, `type`, `query_hash`, `is_public`, `is_default`, `created_date`, `updated_date`) VALUES (2,'All Test Cases',NULL,'TEST_CASE','[{\"key\": \"workspaceVersionId\", \"operation\": \"EQUALITY\", \"value\": -1}, {\"key\": \"deleted\", \"operation\": \"EQUALITY\", \"value\": false}, {\"key\": \"isStepGroup\", \"operation\": \"EQUALITY\", \"value\": false}]',_binary '',_binary '',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+INSERT INTO `list_filters` (`id`, `name`, `version_id`, `type`, `query_hash`, `is_public`, `is_default`, `created_date`, `updated_date`) VALUES (3,'Trash (Deleted Test Cases)',NULL,'TEST_CASE','[{\"key\": \"workspaceVersionId\", \"operation\": \"EQUALITY\", \"value\": -1}, {\"key\": \"deleted\", \"operation\": \"EQUALITY\", \"value\": true}, {\"key\": \"isStepGroup\", \"operation\": \"EQUALITY\", \"value\": false}]',_binary '',_binary '',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+INSERT INTO `list_filters` (`id`, `name`, `version_id`, `type`, `query_hash`, `is_public`, `is_default`, `created_date`, `updated_date`) VALUES (4,'All Step Groups',NULL,'STEP_GROUP','[{\"key\": \"workspaceVersionId\", \"operation\": \"EQUALITY\", \"value\": -1}, {\"key\": \"isStepGroup\", \"operation\": \"EQUALITY\", \"value\": true}, {\"key\": \"deleted\", \"operation\": \"EQUALITY\", \"value\": false}]',_binary '',_binary '',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+INSERT INTO `list_filters` (`id`, `name`, `version_id`, `type`, `query_hash`, `is_public`, `is_default`, `created_date`, `updated_date`) VALUES (5,'Trash (Deleted Step Groups)',NULL,'STEP_GROUP','[{\"key\": \"workspaceVersionId\", \"operation\": \"EQUALITY\", \"value\": -1}, {\"key\": \"deleted\", \"operation\": \"EQUALITY\", \"value\": true}, {\"key\": \"isStepGroup\", \"operation\": \"EQUALITY\", \"value\": true}]',_binary '',_binary '',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+INSERT INTO `list_filters` (`id`, `name`, `version_id`, `type`, `query_hash`, `is_public`, `is_default`, `created_date`, `updated_date`) VALUES (6,'Unused Elements',NULL,'ELEMENT','[{\"key\": \"workspaceVersionId\", \"operation\": \"EQUALITY\", \"value\": -1}, {\"key\": \"isUsed\", \"operation\": \"EQUALITY\", \"value\": false}]',_binary '',_binary '',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+INSERT INTO `list_filters` (`id`, `name`, `version_id`, `type`, `query_hash`, `is_public`, `is_default`, `created_date`, `updated_date`) VALUES (7,'Used Elements',NULL,'ELEMENT','[{\"key\": \"workspaceVersionId\", \"operation\": \"EQUALITY\", \"value\": -1}, {\"key\": \"isUsed\", \"operation\": \"EQUALITY\", \"value\": true}]',_binary '',_binary '',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+/*!40000 ALTER TABLE `list_filters` ENABLE KEYS */;
+UNLOCK TABLES;

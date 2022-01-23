@@ -1,0 +1,11 @@
+<div class="description-label">
+  <label
+    [translate]="'message.common.description_optional'"
+    class="custom-label"></label>
+  <p
+    [textContent]="'message.common.character_limit_info'|translate:{charactersUsed: (formCtrlName.value?.length||0)}"
+    class="text-t-secondary"></p>
+</div>
+<div class="border-lightGray-1 border-rds-4 text-break">
+  <trix-editor #editor name="description" [formControl]="formCtrlName" ngDefaultControl></trix-editor>
+</div>

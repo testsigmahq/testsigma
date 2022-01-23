@@ -1,0 +1,121 @@
+<div class="element-tree">
+  <div>
+    <div class="position-absolute z-in-3 bg-white theme-border-b theme-border-x right-0"
+         [class.w-100]="!closeSearch"
+         [class.px-4]="closeSearch">
+      <div class="align-items-center d-flex">
+        <i [matTooltip]="(closeSearch? 'hint.message.common.search':'hint.message.common.close') | translate"
+           (click)="closeSearch = !closeSearch"
+           class="text-t-secondary fz-17 fa-search-right pr-4 p-4 mt-2"></i>
+        <div aria-hidden="false" class="ts-form text-right d-none w-100"
+             [class.d-flex]="!closeSearch">
+          <input
+            #searchInput
+            [(ngModel)]="inputValue"
+            [placeholder]="'agents.mobile.inspection.search_element' | translate"
+            aria-invalid="false"
+            class="form-control d-inline-block p-2 m-4" type="text">
+          <i (click)="clearSearch()"
+             [matTooltip]="'hint.message.common.clear' | translate"
+             [ngClass]="{'visibility-visible' : inputValue}"
+             class="fa-close-alt text-t-secondary pt-2 mr-5 pointer visibility-hidden ml-n20 mt-6 fz-10"
+             style="margin-left: 1px;padding-left: 1px"></i>
+          <div class="d-flex text-nowrap ml-auto align-items-center" *ngIf="searchCount">
+            <span>{{currentSearchIndex+1}} of {{searchCount}}</span>
+            <div class="mx-4">
+              <i class="fa-caret-up p-2 theme-border border-rds-4 mr-4" [class.disabled-pointer-events]="currentSearchIndex<1" (click)="findPreviousInAppSource()"></i>
+              <i class="fa-caret-down p-2 theme-border border-rds-4" [class.disabled-pointer-events]="currentSearchIndex+1>=searchCount" (click)="findNextInAppSource()"></i>
+            </div>
+          </div>
+          <i (click)="closeSearch = true"
+             [matTooltip]="'hint.message.common.close' | translate"
+             class="fa-close-alt text-t-secondary mr-5 pointer fz-12 mt-8 ml-4"
+             style="margin-left: 1px;padding-left: 1px"></i>
+        </div>
+      </div>
+    </div>
+    <ng-container [class.pt-30]="!closeSearch"
+                  *ngTemplateOutlet="treeViewList;context:{$implicit:{dataSource:dataSource,paddingLeft:10}}"></ng-container>
+    <ng-template #treeViewList let-list>
+      <ul class="h-100 pl-0 my-0">
+        <li *ngFor="let item of list.dataSource" [class.h-100]="list.dataSource.length==1"
+            class="bg-white">
+          <div (click)="highLightCanvas(item); $event.stopPropagation()"
+               *ngIf="(isNativeAppEnabled && !item?.webViewName) || (!isNativeAppEnabled && item?.hasWebViewChild)"
+               class="pointer position-relative">
+            <div (mouseout)="mouseoutFromAppSource(); $event.stopPropagation()"
+                 (mouseover)="highLightCanvasOnHover(item); $event.stopPropagation()"
+                 [class.bg-grey-light]="item?.uuid == inspectedElement?.mobileElement?.uuid"
+                 [style.paddingLeft.px]="list.paddingLeft"
+                 class="d-flex bg-white py-2 bg-grey-x-light-on-hover d-flex-wrap">
+              <i (click)="item.close=!item.close"
+                 *ngIf="item.childElements"
+                 [class.mr-n5]="item.close"
+                 [class.fa-caret-down]="!item.close"
+                 [class.fa-caret-right-solid]="item.close"
+                 [class.fz-10]="!item.close"
+                 [class.mt-2]="!item.close"
+                 class="z-in-2"
+                 style="margin-left: 0.5px;">
+              </i>
+              <span class="text-tag">&lt;</span>
+              <span class="position-relative text-tag">{{item.type}}
+                <span *ngIf="searchInput?.value?.length && item.type.startsWith(searchInput.value)"
+                      class="position-absolute theme-yellow left-0">{{searchInput.value}}</span>
+              </span>
+              <span *ngFor="let attribute of item.attributes|keyvalue">
+                &nbsp;
+                <span class="position-relative text-attribute">{{attribute.key}}
+                  <span *ngIf="searchInput?.value.length && attribute.key.startsWith(searchInput.value)"
+                        class="position-absolute theme-yellow left-0">{{searchInput.value}}</span>
+                </span>
+                <span class="text-attribute ml-n2">=</span>
+                <span class="text-value">"</span>
+                <span class="position-relative text-value">{{attribute.value}}
+                  <span *ngIf="searchInput?.value.length && attribute.value.toString().startsWith(searchInput.value)"
+                        class="position-absolute theme-yellow left-0">{{searchInput.value}}</span>
+                </span>
+                <span class="text-value ml-n4">"</span>
+              </span>
+              <span *ngIf="isNativeAppEnabled">
+               <span *ngFor="let attribute of nativeAttributes">
+                 <span *ngIf="item[attribute]">
+                   &nbsp;
+                   <span class="position-relative text-attribute">{{attribute}}
+                     <span *ngIf="searchInput?.value.length && attribute.startsWith(searchInput.value)"
+                           class="position-absolute theme-yellow left-0">{{searchInput.value}}</span>
+                   </span>
+                   <span class="text-attribute ml-n2">=</span>
+                   <span class="text-value">"</span>
+                   <span class="position-relative text-value">{{item[attribute]}}
+                     <span *ngIf="searchInput?.value.length && item[attribute].startsWith(searchInput.value)"
+                           class="position-absolute theme-yellow left-0">{{searchInput.value}}</span>
+                  </span>
+                  <span class="text-value ml-n4">"</span>
+                </span>
+               </span>
+              </span>
+              <span class="text-tag">></span>
+            </div>
+            <ul *ngIf="item.childElements && !item.close" class="h-100 pl-0">
+              <ng-container
+                *ngTemplateOutlet="treeViewList;context:{$implicit:{dataSource:item.childElements,paddingLeft:list.paddingLeft + 10}}"></ng-container>
+            </ul>
+            <div *ngIf="item.childElements && item?.uuid == inspectedElement?.mobileElement?.uuid"
+                 [style.left.px]="list.paddingLeft+5"
+                 class="position-absolute h-100 top-0 pt-10">
+              <div class="h-100 border-lightGray-l-1"></div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </ng-template>
+  </div>
+  <div *ngIf="loading" class="d-flex h-90">
+    <app-placeholder-loader
+      [displayText]="'mobile_recorder.message.preparing'|translate"
+      [isLogoLoader]="true"
+      [showLoadingDots]="false"
+      class="m-auto w-100"></app-placeholder-loader>
+  </div>
+</div>

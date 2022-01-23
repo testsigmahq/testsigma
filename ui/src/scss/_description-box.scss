@@ -1,0 +1,23 @@
+.trix-button-row{
+  @extend .border-separator-b-1, .pt-10;
+  button, .trix-button-group{
+    @extend .border-0;
+  }
+}
+trix-editor{
+  @extend .border-0;
+  padding-left:12px;
+  padding-right:12px;
+  min-height: 120px;
+}
+trix-toolbar{
+  @extend .px-10;
+}
+.description-label{
+   @extend .d-flex, .justify-content-between, .align-items-center;
+}
+.without-label{
+  .description-label{
+      @extend .d-none;
+  }
+}

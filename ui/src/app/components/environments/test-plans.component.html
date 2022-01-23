@@ -1,0 +1,76 @@
+<div class="d-flex flex-wrap pl-75 pr-20 py-20 theme-details-scroll">
+  <div class="top-0 ts-col-100">
+    <div
+      *ngIf="testPlans?.content.length"
+      class="list-header flex-wrap">
+      <div
+        class="pr-10 d-flex ts-col-45">
+      <span
+        [translate]="'message.common.text.title'"
+        class="pl-10"></span>
+      </div>
+      <div
+        [translate]="'test_plan.lab_type'"
+        class="ts-col-25 px-10">
+      </div>
+    </div>
+    <cdk-virtual-scroll-viewport *ngIf="testPlans?.content.length"
+                                 class="list-container virtual-scroll-viewport md-h theme-only-items-scroll"
+                                 itemSize="59">
+      <a
+        *cdkVirtualFor="let testPlan of testPlans.content; let i = index"
+        [routerLink]="['/td', 'plans',  testPlan.id]"
+        class="list-view green-highlight lg-pm pl-10 text-t-secondary">
+        <div class="ts-col-45 text-break d-flex">
+          <div>
+            <a
+              [routerLink]="['/td/plans', testPlan.id]"
+              [textContent]="testPlan.name"
+              class="list-title"></a>
+            <div
+              [translate]="'message.common.automated'"
+              class="pt-4 text-t-secondary"></div>
+          </div>
+        </div>
+        <div class="ts-col-25 px-10">
+          <app-lab-environments-info
+            *ngIf="testPlan.environments"
+            [execution]="testPlan"
+            [executionEnvironments]="testPlan.environments"></app-lab-environments-info>
+          <div
+            [textContent]="('execution.type.'+testPlan.testPlanType) | translate"
+            class="pt-4 text-t-secondary"></div>
+        </div>
+        <div class="ts-col-25 text-center align-items-baseline ml-auto justify-content-end d-flex">
+          <app-schedule-form-button
+            [execution]="testPlan"></app-schedule-form-button>
+          <app-reports-button
+            [execution]="testPlan"
+            class="ml-10"></app-reports-button>
+          <app-run-now-button
+            (onStart)="fetchTestPlans()"
+            (onStop)="fetchTestPlans()"
+            [execution]="testPlan"
+            class="ml-10">
+          </app-run-now-button>
+        </div>
+      </a>
+    </cdk-virtual-scroll-viewport>
+    <app-pagination *ngIf="testPlans?.totalElements" [paginationData]="testPlans"
+                    [currentPage]="currentPage"
+                    (paginationAction)="fetchTestPlans()"></app-pagination>
+    <app-placeholder-loader
+      *ngIf="!fetchingCompleted"></app-placeholder-loader>
+    <div *ngIf="!testPlans?.content.length" class="h-100">
+      <div
+        *ngIf="fetchingCompleted"
+        class="empty-full-container">
+        <div class="empty-run-md"></div>
+        <div
+          [translate]="'environment.message.no_associated_plans'"
+          class="empty-text"></div>
+      </div>
+    </div>
+  </div>
+</div>
+

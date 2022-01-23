@@ -1,0 +1,30 @@
+<div style="width: 90% !important;">
+  <div
+    [formGroup]="form"
+    class="form-group d-flex align-items-center">
+    <mat-slide-toggle [formControlName]="['storeMetadata']">
+      <span [translate]="'rest.step.store'"></span>
+    </mat-slide-toggle>
+  </div>
+
+  <div class="d-flex flex-wrap">
+    <label
+      [translate]="'rest.step.runtime_head'" class="custom-label pb-sm"></label>
+    <div class="form-group ts-col-100">
+      <app-rest-step-headers
+        [controlName]="'headerRuntimeData'"
+        [form]="form"
+        [headers]="restStep.headerRuntimeData"></app-rest-step-headers>
+    </div>
+  </div>
+  <div class="d-flex form-group flex-wrap">
+    <label
+      [translate]="'rest.step.runtime_body'" class="custom-label pb-sm"></label>
+    <div class="ts-col-100">
+      <app-rest-step-headers
+        [controlName]="'bodyRuntimeData'"
+        [form]="form"
+        [headers]="restStep.bodyRuntimeData"></app-rest-step-headers>
+    </div>
+  </div>
+</div>

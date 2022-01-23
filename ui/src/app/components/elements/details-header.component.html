@@ -1,0 +1,88 @@
+<div class="theme-overlay-container">
+  <div class="theme-overlay-header theme-border-b">
+    <div
+      class="theme-overlay-title"
+      [translate]="'element.details.title'">
+    </div>
+    <div class="ml-auto">
+      <button class="theme-btn-clear-default py-3 px-10" (click)="openAddEditElement()">
+        <span class="fa-pencil-on-paper"></span>
+      </button>
+      <button class="theme-btn-clear-default py-3 px-10 mr-25" (click)="checkForLinkedTestCases()">
+        <span class="fa-trash-thin"></span>
+      </button>
+      <button
+        type="button"
+        [matTooltip]="'hint.message.common.close' | translate"
+        mat-dialog-close
+        class="close">
+      </button>
+    </div>
+  </div>
+
+  <div class="theme-overlay-content without-footer p-0">
+    <app-placeholder-loader *ngIf="!element"></app-placeholder-loader>
+    <div *ngIf="element">
+        <div class="inner-header mb-10 mt-20 px-40" [textContent]="element.name"></div>
+      <div class="d-flex align-items-center px-40">
+        <div class="ts-col-100 d-flex">
+          <div class="ts-col-50 d-flex align-items-center pr-10">
+          <span class="path-wrapper pt-0 d-flex"
+                [translate]="'element.locator_type.'+element.locatorType"></span>
+            <div class="details-items">
+              <label
+                class="details-title text-t-secondary pl-5"
+                [translate]="'message.common.created_at_on'"></label>
+            </div>
+            <div class="text-t-secondary pl-5 text-truncate"
+                 [textContent]="element.createdAt | date:'MMM d, y h:mm a'"></div>
+          </div>
+          <div *ngIf="!dataIsSame" class="ts-col-50 d-flex align-items-center">
+            <div class="details-items">
+              <label
+                class="details-title text-t-secondary pl-5"
+                [translate]="'message.common.created_at_on'"></label>
+            </div>
+            <div class="text-t-secondary pl-5" [textContent]="element.updatedAt | date:'MMM d, y h:mm a'"></div>
+          </div>
+        </div>
+      </div>
+        <div class="inner-content px-40">
+          <div class="ts-col-50 pr-20">
+            <div class="text-t-secondary" [translate]="'element.locator_type.elements'"></div>
+            <div class="rb-medium mt-8 text-break" [textContent]="element.locatorValue"></div>
+          </div>
+          <div class="ts-col-50">
+            <div class="text-t-secondary" [translate]="'element.details.screenName'"></div>
+            <div class="rb-medium mt-8 text-break" [textContent]="element.screenNameObj.name"></div>
+          </div>
+          <div class="ts-col-50 mt-40 mb-30">
+              <label class="text-t-secondary mb-8 d-inline-block" [translate]="'testcase.summary.labels'"></label>
+              <app-list-tags
+                [editable]="true"
+                [entityId]="elementId"
+                [service]="elementTagService"></app-list-tags>
+          </div>
+        </div>
+
+      <div class="ts-col-100 mt-20" style="height: calc(100% - 110px);">
+        <div class="tab-navigation theme-border-t">
+          <ul class="tab-nav px-40" role="tablist">
+            <li class="nav-items border-image-15" role="presentation" [class.active]="activeTab == 'details'" *ngIf="hasDetails">
+              <a (click)="activeTab = 'details'"
+                 class="normal-text py-15" [class.active]="activeTab == 'details'">
+                <span [translate]="'message.common.details'"></span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="mt-10 h-100 pl-40">
+          <div *ngIf="activeTab == 'details'" class="h-100 ts-col-100 pb-30">
+            <app-elements-details [element]="element"></app-elements-details>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

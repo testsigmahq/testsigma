@@ -1,0 +1,23 @@
+@mixin box-shadow($shadow...) {
+  @if $enable-shadows {
+    $result: ();
+
+    @if (length($shadow) == 1) {
+      // We can pass `@include box-shadow(none);`
+      $result: $shadow;
+    } @else {
+      // Filter to avoid invalid properties for example `box-shadow: none, 1px 1px black;`
+      @for $i from 1 through length($shadow) {
+        @if nth($shadow, $i) != "none" {
+          $result: append($result, nth($shadow, $i), "comma");
+        }
+      }
+    }
+    @if (length($result) > 0) {
+      box-shadow: $result;
+    }
+  }
+}
+.popup-sm-shadow {
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 4px 1px;
+}

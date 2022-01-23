@@ -1,0 +1,22 @@
+export enum OnBoarding {
+  FIRST_TEST_CASE = "first-test-case",
+  STEP_RECORDER_FIRST_TIME = "step-recorder-first-time",
+  FIRST_STEP_CHANGE = "first-step-change",
+  FIRST_NAVIGATE_STEP = "start-first-test-step",
+  FIRST_NATURAL_STEP = "type-action-text",
+  FIRST_INSTALL_CHROME = "first-install-chrome",
+  FIRST_INSTALL_APPIUM = "appium-install",
+  FIRST_STEP_CREATE = "first-step-create",
+  ON_BOARDING_INFO = "onboardingInfo",
+  ON_BOARDING_ABOUT = "onboarding_about",
+  ON_BOARDING_EXPLORE = "onboarding_explore",
+  OVERVIEW="overview",
+  WELCOME_HINT="welcome-hint",
+  SHOW_HINT="showhint",
+  CHAT_TALK_TO_US="chat-talk-to-us",
+  SCHEDULE_DEMO = "schedule-demo",
+  PRIMARY_HELP = "primary-help",
+  TEST_DEVELOPMENT = "test-development",
+  MANGE_PROJECT = "manage-project",
+  MANGE_PROJECT_WITH_DEFAULT = "manage-project-with-default"
+}

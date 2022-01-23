@@ -1,0 +1,80 @@
+<form class="ts-form">
+  <div class="ml-18 mb-10 pointer" *ngIf="selectedList.length && edit">
+    <i class="fa-trash-thin"
+       [matTooltip]="'hint.message.common.remove_selected_items'|translate"
+       (click)="removeMultipleParameters()"></i>
+  </div>
+  <div class="environments-table">
+    <div class="environments-table-header">
+      <span>
+        <mat-checkbox
+               [(ngModel)]="selectAll"
+               [ngModelOptions]="{standalone: true}"
+               (change)="selectAllToggle(selectAll)"
+          class="mat-checkbox"></mat-checkbox>
+      </span>
+      <span [translate]="'environments.form.table_header.parameter_name'"></span>
+      <span class="pl-16" [translate]="'environments.form.table_header.parameter_value'"></span>
+      <span></span>
+    </div>
+    <div class="environments-table-body">
+      <div class="environments-table-rows"
+           [formGroup]="parametersControl"
+           *ngFor="let parametersControl of rowControls().controls; let index = index; let isLast=last">
+        <span class="my-auto">
+          <mat-checkbox
+                   [class.d-none]="!edit" formControlName="selected"
+                   (change)="addOrRemoveFromSelectList()"
+                   [checked]="parametersControl.value.selected"
+            class="mat-checkbox"></mat-checkbox>
+        </span>
+        <span
+          class="position-relative"
+          [matTooltip]="!edit ? parametersControl.value.key:''"
+          [matTooltipPosition]="'right'">
+          <input
+            type="textbox" formControlName="key"
+            [readOnly]="!edit"
+            (blur)="setEncryptedNames()"
+            [class.border-fail-1]="isDuplicateParameters(parametersControl.value.key)"
+            [class.result-1]="isDuplicateParameters(parametersControl.value.key)"
+            [placeholder]="'common.key' | translate" (blur)="andEmptyRowIfMissing()"/>
+<!--          <div class="form-group">-->
+<!--            <div-->
+<!--              *ngIf="isDuplicateParameters(parametersControl.value.key)"-->
+<!--              class ="input-table-error"-->
+<!--              [translate]="'environments.form.message.duplicate_parameter_name'"></div>-->
+<!--          </div>-->
+        </span>
+        <span [matTooltip]="!edit ? parametersControl.value.value:''" [matTooltipPosition]="'right'">
+          <span
+            [class.view-input]="!edit"
+            class="input-encrypt">
+<!--           <i-->
+<!--             [matTooltip]="!edit? '':'hint.message.common.encrypt' | translate"-->
+<!--             *ngIf="!isParameterEncrypted(parametersControl)"-->
+<!--             class="fa-lock-open-solid input-encrypt-icon"-->
+<!--             (click)="!edit? '' : encrypt(parametersControl)"></i>-->
+<!--          <i-->
+<!--            [matTooltip]="!edit? '':'hint.message.common.decrypt' | translate"-->
+<!--            *ngIf="isParameterEncrypted(parametersControl)"-->
+<!--            class="fa-lock-solid input-encrypt-icon"-->
+<!--            (click)="!edit? '' : decrypt(parametersControl)"></i>-->
+          <input
+            [readOnly]="!edit"
+            class="ts-col-100-25 input-encrypt-field"
+            [type]="isParameterEncrypted(parametersControl) ? 'password' : 'textbox'"  formControlName="value"
+            [class.border-fail-1]="isEmptyValue(parametersControl)"
+            [class.result-1]="isEmptyValue(parametersControl)"
+            [placeholder]="'common.value' | translate" (blur)="andEmptyRowIfMissing()"/>
+          </span>
+        </span>
+          <span class="text-center my-auto">
+          <i class="fa-trash-thin" [class.d-none]="isLast && edit"
+             [matTooltip]="'hint.message.common.remove_row'| translate"
+             (click)="removeRowControl(index)"></i>
+        </span>
+      </div>
+    </div>
+  </div>
+</form>

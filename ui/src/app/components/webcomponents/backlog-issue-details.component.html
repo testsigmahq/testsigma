@@ -1,0 +1,97 @@
+<app-placeholder-loader  *ngIf="!externalApplicationDetails || !issueDetails"></app-placeholder-loader>
+
+<div
+  *ngIf="externalApplicationDetails && issueDetails"
+  class="d-flex align-items-center text-t-secondary fz-15 pb-30">
+  <a
+    class="text-t-secondary"
+    target="_blank"
+    [translate]="'test_case_result.details.projects'"></a>
+  <span class="px-5">/</span>
+  <a
+    [href]="application.url+'/projects/'+issueDetails.projectId"
+    class="text-t-secondary d-flex"
+    target="_blank">
+    <span
+      class="pl-5" [textContent]="issueDetails.issueKey.split('-')[0]"></span>
+  </a>
+  <span class="px-5">/</span>
+  <a
+    [href]="application.url+'/view/'+issueDetails.id"
+    target="_blank"
+    class="text-t-secondary d-flex">
+    <span
+      class="pl-5"
+      [textContent]="issueDetails.issueKey.split('-')[1]"></span>
+  </a>
+  <button
+    (click)="unLinkIssue(externalApplicationDetails)"
+    class="ml-auto theme-btn-clear-default"
+    [translate]="'test_case_result.details.btn.unlink'"></button>
+</div>
+<div
+  *ngIf="externalApplicationDetails && issueDetails"
+  class="d-flex">
+  <div class="ts-col-70">
+    <div
+      class="fz-24 rb-medium text-t-highlight pb-20"
+      [textContent]="issueDetails?.summary">
+    </div>
+    <div class="pb-20">
+      <label
+        class="rb-medium fz-14 pb-4"
+        [translate]="'test_case_result.details.description'"></label>
+      <div
+        class="rb-medium text-t-secondary pt-7"
+        [textContent]="issueDetails?.description? htmlToPlaintext(issueDetails.description) : 'message.common.none' | translate ">
+      </div>
+    </div>
+  </div>
+  <div class="ts-col-30">
+    <div class="pb-20">
+      <div
+        class="ml-7 px-10 py-6 d-inline-flex rb-medium fz-14 bg-grey-light border-rds-4 pr-50">
+        <span [textContent]="issueStatus?.name"></span>
+      </div>
+    </div>
+    <div class="pb-20">
+      <div class="rb-medium pb-4 pl-7" [translate]="'test_case_result.details.report_bug.reporter'"></div>
+      <div
+        class="rb-medium text-t-secondary fz-14 grey-on-hover p-7 d-flex align-items-center">
+        <div
+          class="img-wh lg-wh temp-user-profile">
+        </div>
+        <div
+          class="pl-8"
+          [textContent]="issueUserDetails?.name"></div>
+      </div>
+    </div>
+    <div class="pb-20">
+      <div
+        class="rb-medium pb-4 pl-7"
+        [translate]="'test_case_result.details.report_bug.category'"></div>
+      <div
+        class="rb-medium text-t-secondary fz-14 grey-on-hover p-7 d-flex align-items-center"
+        [textContent]="issueTypeDetails?.name">
+      </div>
+    </div>
+    <div class="pb-20">
+      <div
+        class="rb-medium pb-4 pl-7"
+        [translate]="'message.common.created_at'"></div>
+      <div
+        class="rb-medium text-t-secondary fz-14 grey-on-hover p-7 d-flex align-items-center"
+        [textContent]="issueDetails?.created | date:'MMM d, y  h:mm a'">
+      </div>
+    </div>
+    <div class="pb-20">
+      <div
+        class="rb-medium pb-4 pl-7"
+        [translate]="'message.common.updated_at'"></div>
+      <div
+        class="rb-medium text-t-secondary fz-14 grey-on-hover p-7 d-flex align-items-center"
+        [textContent]="issueDetails?.updated | date:'MMM d, y  h:mm a'">
+      </div>
+    </div>
+  </div>
+</div>

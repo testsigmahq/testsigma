@@ -1,0 +1,165 @@
+<div
+  *ngIf="jiraIssueDetails"
+  class="d-flex align-items-center text-t-secondary fz-15 pb-30">
+  <a
+    class="text-t-secondary"
+    target="_blank"
+    [translate]="'test_case_result.details.projects'"></a>
+  <span class="px-5">/</span>
+  <a
+    *ngIf="project"
+    [href]="application.url+'/browse/'+jiraIssueDetails.externalId.split('-')[0]"
+    class="text-t-secondary d-flex"
+    target="_blank">
+    <span class="img-wh md-wh">
+      <img
+        class="w-100"
+        [src]="project.avatarUrls['24x24']" [alt]="project.name">
+    </span>
+    <span
+      class="pl-5" [textContent]="project.name"></span>
+  </a>
+  <span class="px-5">/</span>
+  <a
+    *ngIf="issueType"
+    [href]="application.url+'/browse/'+jiraIssueDetails.externalId"
+    target="_blank"
+    class="text-t-secondary d-flex">
+    <span class="img-wh md-wh">
+      <img
+        class="w-100"
+        [src]="issueType.iconUrl" [alt]="issueType.name">
+    </span>
+    <span
+      class="pl-5"
+      [textContent]="jiraIssueDetails.externalId"></span>
+  </a>
+  <button
+    (click)="unLinkIssue(jiraIssueDetails)"
+    class="ml-auto theme-btn-clear-default"
+    [translate]="'test_case_result.details.btn.unlink'"></button>
+</div>
+<div
+  *ngIf="fields?.fields"
+  class="d-flex">
+  <div class="ts-col-70">
+    <div
+      *ngIf="fields"
+      class="fz-24 rb-medium text-t-highlight pb-20"
+      [textContent]="fields.fields.summary">
+    </div>
+    <div
+      *ngFor="let formField of formFields"
+      class="form-row">
+      <div [ngSwitch]="formField.type">
+        <div
+          *ngSwitchCase="'textarea'" class="pb-20">
+          <div
+            class="rb-medium fz-14 pb-4"
+            [textContent]="formField.name"></div>
+          <div
+            class="rb-medium text-t-secondary pt-7"
+            [textContent]="fields.fields[formField.key] ? fields.fields[formField.key] : 'message.common.none' | translate ">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ts-col-30">
+    <div class="pb-20">
+      <div
+        class="mr-2 px-10 py-6 d-inline-flex rb-medium fz-14 bg-grey-light border-rds-4 pr-50">
+        <span [textContent]="fields.fields.status?.name"></span>
+      </div>
+    </div>
+    <div class="pb-20">
+      <div class="rb-medium pb-4 pl-7" [textContent]="fields.names?.assignee"></div>
+      <div
+        class="rb-medium text-t-secondary fz-14 grey-on-hover p-7 d-flex align-items-center">
+        <div
+          [class.temp-user-profile]="!fields.fields.assignee"
+          class="img-wh lg-wh">
+          <img
+            *ngIf="fields.fields.assignee?.avatarUrls['24x24']"
+            class="w-100"
+            [src]="fields.fields.assignee?.avatarUrls['24x24']"
+            [alt]="fields.fields.assignee?.displayName"/>
+
+        </div>
+        <div
+          class="pl-8"
+          [textContent]="fields.fields?.assignee? fields.fields?.assignee.displayName : 'test_case_result.details.un_assignee' | translate"></div>
+      </div>
+    </div>
+    <div class="pb-20">
+      <div class="rb-medium pb-4 pl-7" [textContent]="fields.names?.reporter"></div>
+      <div
+        class="rb-medium text-t-secondary fz-14 grey-on-hover p-7 d-flex align-items-center">
+        <div
+          *ngIf="fields.fields?.reporter?.avatarUrls['24x24']"
+          class="img-wh lg-wh">
+          <img
+            class="w-100"
+            [src]="fields.fields?.reporter?.avatarUrls['24x24']"
+            [alt]="fields.fields?.reporter?.displayName"/>
+        </div>
+        <div
+          class="pl-8"
+          [textContent]="fields.fields?.reporter?.displayName"></div>
+      </div>
+    </div>
+    <div
+      *ngFor="let formField of formFields"
+      class="form-row" [ngSwitch]="true">
+      <div class="pb-20"
+           *ngSwitchCase="formField.type != 'textarea'">
+        <div
+          class="rb-medium pb-4 pl-7"
+          [textContent]="formField.name"></div>
+
+        <div
+          *ngIf="!(formField.isCustomMultiCheckbox || formField.isCustomMultiSelect || formField.isCustomURLField || formField.isPriorityField) && fields.fields[formField.key]"
+          class="rb-medium text-t-secondary fz-14 grey-on-hover p-7"
+          [textContent]="fields.fields[formField.key].value ||  fields.fields[formField.key]">
+        </div>
+        <div
+          *ngIf="(formField.isCustomMultiCheckbox || formField.isCustomMultiSelect) && fields.fields[formField.key]?.length"
+          class="rb-medium text-t-secondary fz-14 p-2 d-flex grey-on-hover ml-4">
+          <div
+            *ngFor="let opt of fields.fields[formField.key]"
+            class="mr-2 p-4 bg-grey-light border-rds-2">
+            <span [textContent]="opt.value"></span>
+          </div>
+        </div>
+        <div
+          *ngIf="formField.isCustomURLField && fields.fields[formField.key]"
+          class="rb-medium text-t-secondary fz-14 p-7 d-flex grey-on-hover">
+          <a
+            [href]="fields.fields[formField.key]"
+            class="text-link"
+            target="_blank"
+            [textContent]="fields.fields[formField.key]"></a>
+        </div>
+        <div
+          *ngIf="!fields.fields[formField.key]"
+          class="rb-medium text-t-secondary fz-14 grey-on-hover p-7 d-flex align-items-center"
+          [translate]="'message.common.none'"></div>
+        <div
+          *ngIf="formField.isPriorityField"
+          class="rb-medium text-t-secondary fz-14 grey-on-hover p-7 d-flex align-items-center">
+          <div
+            class="img-wh md-wh"
+            *ngIf="fields.fields[formField.key].iconUrl">
+            <img
+              class="w-100"
+              [src]="fields.fields[formField.key].iconUrl"
+              [alt]="fields.fields[formField.key].name"/>
+          </div>
+          <div
+            class="pl-8"
+            [textContent]="fields.fields[formField.key].name"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

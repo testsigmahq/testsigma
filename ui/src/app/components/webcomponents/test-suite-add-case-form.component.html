@@ -1,0 +1,267 @@
+<div class="theme-overlay-container sm-pm-content-px-0 add-test-suite">
+  <div class="theme-overlay-header">
+    <div
+      class="theme-overlay-title"
+      [translate]="'test_suites.form.select_case.title'">
+    </div>
+    <button
+      class="theme-overlay-close"
+      type="button"
+      [matTooltip]="'hint.message.common.close' | translate"
+      mat-dialog-close>
+    </button>
+  </div>
+  <div *ngIf="testCasesNotCreated(); else elseBlock" class="w-100 h-100-50">
+    <div
+      class="empty-full-container">
+      <div class="empty-run-md"></div>
+      <div
+        class="empty-text"
+        [textContent]="'message.common.empty_page' | translate : { categoryType:'Test Cases'}"></div>
+      <a
+        [routerLink]="['/td', versionId, 'cases', 'create']" [queryParams]="{ isGroup: false}"
+        [translate]="'btn.common.create'" mat-dialog-close
+        class="theme-btn-primary ml-14"></a>
+    </div>
+  </div>
+  <ng-template #elseBlock>
+    <div class="theme-overlay-content theme-border-y">
+      <div class="ts-form h-100">
+        <div class="d-flex align-items-center h-100 overflow-hidden">
+          <form
+            class="ts-form rb-regular ts-col-30 h-100 overflow-y-auto"
+            (keydown.enter)="false"
+            novalidate="novalidate">
+            <div>
+              <div class="h-100 position-absolute w-100 z-in-2" *ngIf="initialCasesCount==0"></div>
+              <div class="bg-light d-flex p-15 pl-40 rb-medium align-items-center lh-2">
+                <div class="filter-icon-with-reset">
+                  <i class="filter-icon fz-15 text-t-secondary lh-2 pr-8" [class.filtered]="filterApplied"></i>
+                </div>
+                <!--<div class="fa-filter-alt fz-15 text-t-secondary lh-2 pr-8" "></div>-->
+                <div class="ts-col-60" [translate]="'testcase.list.filter.title'"></div>
+                <span
+                  *ngIf="filterApplied"
+                  (click)="resetFilter()"
+                  class="ml-auto text-link pointer"
+                  [translate]="'btn.common.reset'"></span>
+              </div>
+              <div class="px-40 pt-20">
+<!--                <div class="form-group pb-30 mb-4">-->
+<!--                  <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill">-->
+<!--                    <mat-select-->
+<!--                      (selectionChange)="constructQueryString()"-->
+<!--                      disableOptionCentering panelClass="multiple"-->
+<!--                      [placeholder]="'message.common.any' | translate"-->
+<!--                      multiple [(value)]="filterRequirementIds">-->
+<!--                      <mat-option *ngFor="let requirement of requirements?.content"-->
+<!--                                  [value]="requirement.id"-->
+<!--                                  [textContent]="requirement.requirementName"></mat-option>-->
+<!--                    </mat-select>-->
+<!--                  </mat-form-field>-->
+<!--                  <label class="control-label" [translate]="'test_suites.form.label.requirement_name'"></label>-->
+<!--                </div>-->
+                <div class="form-group pb-30 mb-4">
+                  <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill">
+                    <mat-select
+                      (selectionChange)="constructQueryString()"
+                      disableOptionCentering panelClass="multiple"
+                      [placeholder]="'message.common.any' | translate"
+                      multiple [(value)]="filterTestCaseTypes">
+                      <mat-option *ngFor="let type of testCaseTypesList?.content"
+                                  [value]="type.id"
+                                  [textContent]="type.displayName"></mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <label class="control-label" [translate]="'testcase.summary.test_case_type'"></label>
+                </div>
+                <div class="form-group pb-30 mb-4">
+                  <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill">
+                    <mat-select
+                      (selectionChange)="constructQueryString()"
+                      disableOptionCentering panelClass="multiple"
+                      [placeholder]="'message.common.any' | translate"
+                      multiple [(value)]="filterTestCasePriorities">
+                      <mat-option *ngFor="let result of testCasePrioritiesList?.content"
+                                  [value]="result.id"
+                                  [textContent]="result.displayName"></mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <label class="control-label" [translate]="'testcase.summary.test_case_priority'"></label>
+                </div>
+                <div class="form-group pb-30 mb-0">
+                  <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill">
+                    <mat-select
+                      (selectionChange)="constructQueryString()"
+                      [placeholder]="'message.common.any' | translate"
+                      disableOptionCentering panelClass="multiple"
+                      multiple [(value)]="filterTagIds">
+                      <mat-option class="text-capitalize" *ngFor="let tag of testCaseTagList"
+                                  [value]="tag.id"
+                                  [textContent]="tag.name"></mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <label class="control-label" [translate]="'testcase.list.tags'"></label>
+                </div>
+              </div>
+            </div>
+          </form>
+          <div class="ts-col-35 h-100 theme-border-l">
+            <div class="bg-light d-flex p-15 pl-35 rb-medium align-items-center">
+
+              <mat-checkbox
+                [class.visibility-hidden]="availableTestCases?.totalElements==0 || availableTestCases?.cachedItems?.length == selectedTestCases?.length"
+                [(ngModel)]="checkAllAvailable"
+                [checked]="((availableTestCases?.cachedItems?.length - selectedTestCases.length) > 0 ) && checkedAvailableCases.length == (availableTestCases?.cachedItems?.length - selectedTestCases.length)"
+                [ngModelOptions]="{standalone: true}"
+                (change)="toggleCheckAll(checkAllAvailable, checkedAvailableCases);"
+                class="mat-checkbox">
+
+              </mat-checkbox>
+              <div class="ts-col-60 pl-8 text-nowrap" [textContent]="availableTestCases?.cachedItems?.length!=0 ?
+                    ('test_suites.form.available_cases' |
+                    translate: {loadedCount: availableTestCases?.cachedItems?.length,
+                                    count: (availableTestCases?.totalElements - excludedTestCasesCount) || 0 }) :
+                    ('test_suites.form.no_available_cases' |
+                    translate: {count: availableTestCases?.cachedItems?.length })">
+              </div>
+              <div class="d-none pl-10" [class.d-flex]="((availableTestCases?.totalElements - excludedTestCasesCount) != 0) || (availableInputValue?.length>0)">
+                <div class="search-form-group form-group-left-align ts-form ts-col-95 justify-content-end position-absolute top-10">
+                  <app-toggle-search-button (searchAction)="searchAvailableCases($event)"></app-toggle-search-button>
+                </div>
+              </div>
+            </div>
+
+            <cdk-virtual-scroll-viewport
+              *ngIf="!availableTestCases.isEmpty"
+              itemSize="47"
+              class="list-container virtual-scroll-viewport ml-20 theme-only-items-scroll sm-h">
+              <div class="list-view green-highlight lg-pm p-13 pt-15 pb-15 border-0"
+                   *cdkVirtualFor='let testCase of availableTestCases'>
+                <mat-checkbox
+                  class="mat-checkbox"
+                  [checked]="checkedAvailableCases.indexOf(testCase) > -1"
+                  (change)="toggleCheck(testCase, checkedAvailableCases)"></mat-checkbox>
+                <div [textContent]="testCase.name" class="w-80 text-truncate pl-8" [matTooltip]="testCase.name"></div>
+                <div (click)="tooltip.ngOnDestroy();selectCase(testCase)"
+                     class="fa-circle-plus-alt pointer ml-auto text-t-secondary"
+                     #tooltip="matTooltip"
+                     [matTooltip]="'hint.message.common.add' | translate"></div>
+              </div>
+            </cdk-virtual-scroll-viewport>
+            <div *ngIf="!availableTestCases?.isFetching && availableTestCases?.isEmpty" class="w-100 h-100-50">
+              <div class="empty-full-container">
+                <div class="empty-run-sm"></div>
+                <div class="text-t-secondary fz-15 py-12"
+                     [translate]="emptyTestCasePageMessage()"></div>
+              </div>
+            </div>
+          </div>
+          <div class="w-20 text-center flex-column d-flex align-items-center theme-border-x justify-content-center h-100">
+            <button
+              [disabled]="!checkedAvailableCases.length"
+              (click)="selectBulk()"
+              class="btn icon-btn p-10"
+              [matTooltip]="'hint.message.common.add_selected' | translate">
+              <i class="fa-double-arrow-right"></i>
+            </button>
+            <button
+              [disabled]="!checkedSelectedCases.length"
+              (click)="deSelectBulk()"
+              class="btn icon-btn ml-0 p-10 mt-10"
+              [matTooltip]="'hint.message.common.remove_selected' | translate">
+              <i class="fa-double-arrow-left"></i>
+            </button>
+          </div>
+          <div class="w-100 h-100 theme-border-r">
+            <div class="bg-alice-blue d-flex p-15 align-items-center position-relative rb-medium">
+              <mat-checkbox
+                class="mat-checkbox"
+                [class.visibility-hidden]="!selectedTestCases.length"
+                [(ngModel)]="checkAllSelected"
+                [checked]="checkedSelectedCases.length == selectedTestCases.length"
+                [ngModelOptions]="{standalone: true}"
+                (change)="toggleCheckAll(checkAllSelected, checkedSelectedCases)"></mat-checkbox>
+              <div class="ts-col-60 pl-8 text-nowrap" [textContent]="'test_suites.form.selected_cases'| translate: {count: selectedTestCases.length || 0}"></div>
+              <div class="d-flex pl-10" [class.d-none]="!selectedTestCases?.length">
+                <div class="search-form-group form-group-left-align ts-form ts-col-95 justify-content-end position-absolute top-10">
+                  <app-toggle-search-button
+                    [class.d-none]="!selectedInputValue && !selectedTestCases.length"
+                    (searchAction)="searchSelectedCases($event)"></app-toggle-search-button>
+                </div>
+              </div>
+            </div>
+            <cdk-virtual-scroll-viewport
+              *ngIf="!selectedInputValue && selectedTestCases.length"
+              itemSize="47"
+              class="list-container virtual-scroll-viewport d-flex max-w-100 theme-only-items-scroll sm-h"
+              cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListData]="selectedTestCases">
+              <div class="list-view green-highlight lg-pm p-10 pt-15 pb-15 d-flex"
+                cdkDrag
+                cdkDragBoundary=".cdk-drop-list.drag-list"
+                cdkDragLockAxis="y"
+                [cdkDragData]="testCase"
+                [cdkDragDisabled]="selectedTestCases.indexOf(testCase.parentCase) > -1 || testCase.preRequisiteCase"
+                *ngFor='let testCase of selectedTestCases'
+                [ngSwitch]="selectedCaseIds.indexOf(testCase.parentCase?.id) > -1">
+                <mat-checkbox
+                  *ngSwitchCase="false"
+                  [checked]="checkedSelectedCases.indexOf(testCase) > -1"
+                  (change)="toggleCheck(testCase, checkedSelectedCases)"
+                  class="mat-checkbox pr-8"></mat-checkbox>
+                <span *ngSwitchCase="true"
+                      class="bg-grey-light border-rds-3 fz-10 p-4 mr-4" [textContent]="'PreReq'"></span>
+                <div [textContent]="testCase.name" class="w-80 text-truncate" [matTooltip]="testCase.name"></div>
+                <a (click)="deSelectCase(testCase)" *ngSwitchCase="false"
+                   [matTooltip]="'hint.message.common.remove' | translate"
+                   class="fa-circle-minus-alt text-t-secondary ml-auto"></a>
+              </div>
+              <div *ngIf="submitted && !selectedTestCases.length" [translate]="'test_suite.form.test_cased.required'"
+                   class="rb-regular-i-d ts-col-100 text-center pt-80"></div>
+            </cdk-virtual-scroll-viewport>
+            <cdk-virtual-scroll-viewport
+              *ngIf="selectedInputValue && (selectedTestCases | search: {name:selectedInputValue}).length"
+              itemSize="47"
+              class="list-container virtual-scroll-viewport bg-light d-flex max-w-100 theme-only-items-scroll sm-h">
+              <div class="list-view green-highlight lg-pm p-15 border-0 d-flex"
+                   *ngFor='let testCase of selectedTestCases | search: {name:selectedInputValue}'
+                   [ngSwitch]="selectedCaseIds.indexOf(testCase.parentCase?.id) > -1">
+                <mat-checkbox
+                  *ngSwitchCase="false"
+                  [checked]="checkedSelectedCases.indexOf(testCase) > -1"
+                  (change)="toggleCheck(testCase, checkedSelectedCases)"
+                  class="mat-checkbox pr-8"></mat-checkbox>
+                <span *ngSwitchCase="true"
+                      class="bg-grey-light border-rds-3 fz-10 p-4 mr-4" [textContent]="'PreReq'"></span>
+                <div [textContent]="testCase.name" class="w-80 text-truncate" [matTooltip]="testCase.name"></div>
+                <a (click)="deSelectCase(testCase)" *ngSwitchCase="false"
+                   [matTooltip]="'hint.message.common.remove' | translate"
+                   class="fa-circle-minus-alt text-t-secondary ml-auto"></a>
+              </div>
+              <div *ngIf="submitted && !selectedTestCases.length" [translate]="'test_suite.form.test_cased.required'"
+                   class="rb-regular-i-d ts-col-100 text-center pt-80"></div>
+            </cdk-virtual-scroll-viewport>
+            <div  class="w-100 h-100-50">
+              <div class="empty-full-container">
+                <div class="empty-run-sm"></div>
+                  <div class="text-t-secondary fz-15 py-12"
+                       [translate]="!(selectedTestCases | search: {name:selectedInputValue}).length && selectedInputValue? 'message.common.search.not_found' : 'test_suites.select_test_case.not_selected'"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="theme-overlay-footer">
+      <button
+        [translate]="'btn.common.cancel'"
+        class="theme-btn-clear-default" mat-dialog-close></button>
+      <button
+        (click)="save()"
+        class="theme-btn-primary"
+        type="button"
+        [translate]="'btn.common.save'">
+      </button>
+    </div>
+  </ng-template>
+</div>

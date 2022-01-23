@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59 (86127) - https://sketch.com -->
+    <title>archieve copy</title>
+    <desc>Created with Sketch.</desc>
+    <g id="archieve-copy" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M42,42 L42,39 C42,37.344 43.344,36 45,36 L54,36 L54,51 C54,52.656 52.656,54 51,54 L9,54 C7.344,54 6,52.656 6,51 L6,36 L15,36 C16.656,36 18,37.344 18,39 L18,42 C18,45.315 20.685,48 24,48 L36,48 C39.315,48 42,45.315 42,42 L42,42 Z M36,36 L36,42 L24,42 L24,36 C24,32.685 21.315,30 18,30 L6,30 L10.8,6 L49.2,6 L54,30 L42,30 C38.685,30 36,32.685 36,36 L36,36 Z M60,30 L54.483,2.412 C54.201,1.008 52.971,0 51.54,0 L8.46,0 C7.029,0 5.799,1.008 5.517,2.412 L0,30 L0,54 C0,57.315 2.685,60 6,60 L54,60 C57.315,60 60,57.315 60,54 L60,30 Z" id="inbox_empty_round-[#1553]" fill="#000000"></path>
+    </g>
+</svg>

@@ -1,0 +1,44 @@
+<div class="theme-section-header theme-border-l theme-section-header-spacing">
+  <div
+    class="section-title" [translate]="'hint.message.common.filter'"></div>
+  <div class="ml-auto">
+    <i
+      class="fa-close-alt  action-hover-icon"
+      (click)="toggleFilter(true)"
+      [matTooltip]="'btn.common.close' | translate"></i>
+  </div>
+</div>
+<div class="theme-w-o-h-scroll theme-border-l position-relative">
+  <div class="theme-filter-sec">
+    <div class="form-group p-0">
+      <mat-form-field class="mat-select-custom w-100" appearance="fill">
+        <mat-select
+          disableOptionCentering panelClass="multiple"
+          (ngModelChange)="filterResult"
+          [(ngModel)]="filterResult" multiple [(value)]="filterResult">
+          <mat-option *ngFor="let result of resultConstant"
+                      [value]="result"
+                      [textContent]="'execution.result.'+result | translate"></mat-option>
+        </mat-select>
+      </mat-form-field>
+      <label class="control-label" [translate]="'result.result'"></label>
+    </div>
+  </div>
+  <div class="position-absolute theme-border-t text-right py-10 pr-20 fixed-full-pos mb-2 hide-get-started">
+    <button
+      class="theme-btn-clear-default"
+      [translate]="'btn.common.close'"
+      (click)="toggleFilter(true)"></button>
+    <button
+      *ngIf="filterApplied"
+      class="theme-btn-clear-default"
+      [translate]="'btn.common.reset'"
+      (click)="reset();"></button>
+    <button
+      class="theme-btn-primary"
+      [translate]="'btn.common.filter'"
+      [disabled]="!isFilterChanged"
+      (click)="filter()"></button>
+  </div>
+</div>
+

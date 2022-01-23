@@ -1,0 +1,6 @@
+<app-addons *ngIf="!authGuard?.openSource?.isEnabled"></app-addons>
+
+<iframe src="/kibbutz/login?redirect_uri=/ui/" class="h-100 w-100 border-0" *ngIf="!isCreate && authGuard?.openSource?.isEnabled"></iframe>
+<iframe src="/kibbutz/login?redirect_uri=/ui/plugins/overview?create=true" class="h-100 w-100 border-0" *ngIf="isCreate && authGuard?.openSource?.isEnabled"></iframe>
+
+

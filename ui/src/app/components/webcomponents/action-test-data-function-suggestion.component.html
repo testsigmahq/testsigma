@@ -1,0 +1,180 @@
+<div class="theme-overlay-container">
+  <div class="theme-overlay-header with-br-bottom">
+    <div
+      class="theme-overlay-title"
+      [translate]="'test_data_generators.list.title'">
+    </div>
+    <button
+      class="theme-overlay-close"
+      type="button"
+      [matTooltip]="'hint.message.common.close' | translate"
+      mat-dialog-close>
+    </button>
+  </div>
+  <div class="identifier-record text-center"
+       *ngIf="testDataFunctionSuggestion?.isEmpty && !isQueryBased && !testDataFunctionSuggestion?.isFetching">
+    <div class="identifier-bg px-60">
+      <div [translate]="'test_data_generators_suggestion.not_found.title'" class="fz-20 rb-medium py-20"></div>
+      <a class="btn btn-lg btn-clear-default border-rds-4 my-30"
+         href="#">
+        <i class="text-purplish-blue fa-article pr-6 fz-15"></i>
+        <span class="text-dark" [translate]="'test_data_generators_suggestion.not_found.know_more'"></span>
+      </a>
+    </div>
+    <div class="pt-30">
+      <div [translate]="'test_data_generators_suggestion.not_found.start_title'" class="fz-14 pb-20"></div>
+      <button class="btn theme-btn-primary" [routerLink]="['/td', versionId, 'custom-functions', 'new']"
+              [mat-dialog-close]="true">
+        <span [translate]="'btn.common.create'"></span>
+      </button>
+    </div>
+  </div>
+  <form
+    *ngIf="!testDataFunctionSuggestion?.isEmpty || isQueryBased || testDataFunctionSuggestion?.isFetching"
+    class="ts-form theme-overlay-content" id="testcaseStatusForm"
+    (keydown.enter)="false"
+    novalidate="novalidate">
+    <div
+      class="overflow-x-hidden h-100 pt-30">
+      <div
+        class="d-flex text-t-secondary pb-30">
+        <div class="w-85 d-flex align-items-center">
+          <i
+            [matTooltip]="'hint.message.common.search' | translate"
+            class="fa-search fz-13 mr-5"></i>
+          <div
+            class="form-control border-0 w-85 data-placeholder-content d-inline-block p-0"
+            #searchInput
+            (focus)="this.currentFocusedIndex=0"
+            (keydown.enter)="selectedSuggestion()"
+            (keydown.arrowup)="scrollUpFunctionFocus()"
+            (keydown.arrowDown)="scrollDownFunctionFocus()"
+            contenteditable="true"
+            [attr.data-placeholder]="'action.custom_function.suggestion.method_placeholder' | translate"></div>
+        </div>
+      </div>
+      <div class="theme-w-o-h-scroll lg-h">
+        <div class="tab-navigation-inline h-100">
+          <ul class="tab-nav" role="tablist">
+            <li class="nav-items" role="presentation" [class.active]="activeTab == 'custom_functions'">
+              <a (click)="activeTab = 'custom_functions'"
+                 class="normal-text pb-10" [class.active]="activeTab == 'custom_functions'">
+                <span [translate]="'action.custom_function.default'"></span>
+              </a>
+            </li>
+            <li class="nav-items" role="presentation" [class.active]="activeTab == 'kibbutz_functions'">
+              <a (click)="activeTab = 'kibbutz_functions'"
+                 class="normal-text pb-10" [class.active]="activeTab == 'kibbutz_functions'">
+                <i class="fa-addon fz-16"></i>
+                <span [translate]="'action.custom_function.kibbutz_functions'"></span>
+              </a>
+            </li>
+          </ul>
+          <div class="h-100">
+            <div *ngIf="activeTab == 'kibbutz_functions'" class="h-90 mt-n30">
+              <div
+                class="overflow-x-hidden h-100 pt-30">
+                <cdk-virtual-scroll-viewport
+                  itemSize="29"
+                  class="list-container virtual-scroll-viewport theme-details-scroll x-sm-h">
+                  <a
+                    class="list-view py-7 px-5 border-0 pointer align-items-center"
+                    *cdkVirtualFor='let element of kibbutzCustomFunctionSuggestion; let index = index'
+                    [class.h-active]="currentFocusedIndex == index"
+                    (mouseover)="currentFocusedIndex = index">
+                    <div
+                      class="ts-col-100 d-flex text-truncate pr-10">
+                      <div class="ts-col-80" (click)="selectedSuggestion(element)">
+                      <span
+                        class="pl-7 text-truncate"
+                        [matTooltip]="element?.displayName.length > 35 ?  element?.displayName.substring(0, 35)+'...' : element?.displayName"
+                        [textContent]="element?.displayName.length > 35 ? element?.displayName.substring(0, 35)+'...' : element?.displayName"></span>
+                      </div>
+                      <div class="ts-col-10">
+                        <a (click)="openAddonDetails(element?.id)"
+                           [matTooltip]="'addon.show_details' | translate">
+                          <i class="fa-addon fz-16"></i>
+                        </a>
+                      </div>
+                      <div class="ts-col-10">
+                        <i class="fa-info" (click)="element.showInfo= !element.showInfo"></i>
+                      </div>
+                    </div>
+                    <div *ngIf="element?.showInfo" class="ts-col-100 text-truncate p-15 border-lightGray-y-1 mt-10">
+                      <div class="ts-col-100 mb-10">
+                        <span [translate]="'nlp.custom_function.suggestion.description'" class="rb-medium"></span>
+                        <span [textContent]="element?.description" class="pl-5"></span>
+                      </div>
+                      <div class="ts-col-100 mb-10" *ngIf="element?.parameters.length">
+                        <span [translate]="'nlp.custom_function.suggestion.input'" class="rb-medium"></span>
+                        <div *ngFor="let parameter of element?.parameters; let index = index" class="pl-5 pt-5">
+                          <span [textContent]="parameter?.name" class="pl-5"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </cdk-virtual-scroll-viewport>
+              </div>
+            </div>
+            <div *ngIf="activeTab == 'custom_functions'" class="h-100">
+              <div
+                class="overflow-x-hidden h-100 pt-30">
+                <cdk-virtual-scroll-viewport
+                  itemSize="29"
+                  class="list-container virtual-scroll-viewport theme-details-scroll x-sm-h">
+                  <a
+                    class="list-view py-7 px-5 border-0 pointer align-items-center"
+                    *cdkVirtualFor='let element of testDataFunctionSuggestion; let index = index'
+                    [class.h-active]="currentFocusedIndex == index"
+                    (mouseover)="currentFocusedIndex = index"
+                    [attr.appUpgradePopup]="upgradeCheck(element)">
+                    <div class="ts-col-100 d-flex text-truncate pr-10">
+                      <div class="ts-col-90" (click)="upgradeCheck(element) ? '' : selectedSuggestion(element)">
+                      <span
+                        class="pl-7 text-truncate"
+                        [matTooltip]="(element?.classDisplayName + ' :: ' + element?.displayName).length > 40 ?
+                        (element?.classDisplayName + ' :: ' + element?.displayName).substring(0,40)+'...' :
+                        (element?.classDisplayName + ' :: ' + element?.displayName) "
+                        [textContent]="(element?.classDisplayName + ' :: ' + element?.displayName).length > 40 ?
+                        (element?.classDisplayName + ' :: ' + element?.displayName).substring(0,40)+'...' :
+                        (element?.classDisplayName + ' :: ' + element?.displayName) "></span>
+                        <i *ngIf="upgradeCheck(element)" class="upgrade-flash-icon"></i>
+                      </div>
+                      <div class="ts-col-10">
+                        <i class="fa-info" (click)="element.showInfo= !element.showInfo"></i>
+                      </div>
+                    </div>
+
+                    <div *ngIf="element?.showInfo" class="ts-col-100 text-truncate p-15 border-lightGray-y-1 mt-10">
+                      <div class="ts-col-100 mb-10">
+                        <span [translate]="'nlp.custom_function.suggestion.description'" class="rb-medium"></span>
+                        <span [textContent]="element?.description" class="pl-5"></span>
+                      </div>
+                      <div class="ts-col-100 mb-10"
+                           *ngIf="canShowCustomFunctionsParameters(element?.arguments?.display_names)">
+                        <span [translate]="'nlp.custom_function.suggestion.input'" class="rb-medium"></span>
+                        <div *ngFor="let item of element?.arguments?.display_names | keyvalue; let index=index"
+                             class="pl-5 pt-5">
+                          <span [textContent]="item.value" class="pl-5 rb-medium"></span>
+                          <span [textContent]="element?.arguments?.arg_types[item.key]" class="pl-5"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+
+                  <div
+                    *ngIf="searchCriteriaNotFound()"
+                    class="p-50 d-flex align-items-center justify-content-center h-100 flex-column">
+                    <div
+                      class="text-t-secondary pt-30 pb-18"
+                      [translate]="'message.common.search.not_found'"></div>
+                  </div>
+                </cdk-virtual-scroll-viewport>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

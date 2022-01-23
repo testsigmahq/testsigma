@@ -1,0 +1,51 @@
+<!--
+  ~ /*
+  ~  * *****************************************************************************
+  ~  *  Copyright (C) 2020 Testsigma Technologies Inc.
+  ~  *  All rights reserved.
+  ~  *  ****************************************************************************
+  ~  */
+  -->
+<div class="dialog-header">
+  <div
+    [translate]="filter.id ? 'filter.save.title' : 'filter.save_as.title'"
+    class="title">
+  </div>
+  <button
+    class="close"
+    type="button"
+    [matTooltip]="'hint.message.common.close' | translate"
+    mat-dialog-close>
+  </button>
+</div>
+<form
+  class="ts-form rb-regular"
+  (keydown.enter)="false"
+  novalidate="novalidate"
+  name="testCaseFilterForm" [formGroup]="filterForm">
+  <div
+    class="dialog-body">
+    <div class="form-group pb-20">
+      <input [(ngModel)]="filter.name" class="form-control" #name
+             [formControlName]="['name']"
+             [autofocus]="true">
+      <label class="control-label required" [translate]="'filter.name'"></label>
+    </div>
+    <div class="form-group">
+      <mat-checkbox
+        [formControlName]="['isPublic']"
+        [(ngModel)]="filter.isPublic">{{'filter.visibility_make_public' | translate}}</mat-checkbox>
+    </div>
+  </div>
+  <div class="dialog-footer text-right">
+    <button
+      class="theme-btn-clear-default"
+      mat-dialog-close
+      [translate]="'btn.common.cancel'"></button>
+    <button
+      [disabled]="!filterForm.valid"
+      class="theme-btn-primary"
+      [translate]="'btn.common.save'"
+      (click)="save()"></button>
+  </div>
+</form>

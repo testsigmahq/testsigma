@@ -1,0 +1,258 @@
+<div class="theme-overlay-container">
+  <div class="theme-overlay-header theme-border-b">
+    <div
+      class="theme-overlay-title"
+      [translate]="elementId ? 'elements.form.edit_title' : 'elements.form.create_title'">
+    </div>
+  </div>
+  <div class="theme-overlay-content pt-40">
+    <form
+      class="ts-form" id="elementForm"
+      (keydown.enter)="false"
+      novalidate="novalidate"
+      *ngIf="element && elementForm"
+      [formGroup]="elementForm"
+      name="elementForm">
+      <div [ngSwitch]="element.createdType">
+        <div *ngIf="!options?.isStepRecordView"
+          class="form-group ts-col-100 d-flex">
+          <label
+            class="rb-medium pr-20"
+            [translate]="'elements.form.selection.title'"></label>
+          <div
+            class="d-flex align-items-center pr-20" >
+            <input
+              type="radio"
+              id="manual"
+              name="created_type"
+              [value]="elementCreateType.MANUAL"
+              [ngModelOptions]="{standalone: true}"
+              [(ngModel)]="element.createdType"
+              (ngModelChange)="workspaceVersion?.workspace.isWeb? stopCapture():''"/>
+            <label
+              for="manual"
+              class="pl-5 pointer"
+              [translate]="'elements.form.label.manually'"></label>
+          </div>
+
+          <div
+            *ngIf="workspaceVersion?.workspace.isMobileNative"
+            class="d-flex align-items-center pl-25">
+            <input
+              type="radio"
+              id="element_inspect"
+              [value]="elementCreateType.MOBILE_INSPECTOR"
+              name="created_type"
+              [disabled]="!hasInspectorFeature()"
+              [ngModelOptions]="{standalone: true}"
+              [(ngModel)]="element.createdType"/>
+            <label
+              for="element_inspect"
+              class="pl-5 pointer"
+              [translate]="'elements.form.label.element_inspect'"></label>
+            <i
+              *ngIf="!hasInspectorFeature()"
+              [matTooltip]="'hint.message.common.upgrade' | translate"
+              class="fa-bolt-solid fz-10 result-status-text-4 ml-5"></i>
+          </div>
+          <div
+            *ngIf="workspaceVersion?.workspace.isWeb || workspaceVersion?.workspace?.isMobileWeb"
+            class="d-flex align-items-center pl-25">
+            <input
+              type="radio"
+              id="chrome_extension"
+              [value]="elementCreateType.CHROME"
+              name="created_type"
+              [ngModelOptions]="{standalone: true}"
+              (ngModelChange)="startCapture()"
+              [(ngModel)]="element.createdType"/>
+            <label
+              for="chrome_extension"
+              class="pl-5 pointer"
+              [translate]="'elements.form.label.chrome_extension'"></label>
+          </div>
+        </div>
+        <div *ngSwitchCase="elementCreateType.CHROME"
+             [ngSwitch]="chromeRecorderService.isChrome">
+          <div *ngSwitchCase="true"
+               [ngSwitch]="chromeRecorderService.isInstalled"
+               class="ts-col-100">
+            <div *ngSwitchCase="true" class="ts-col-100">
+              <div class="theme-info-light text-info p-10 border-rds-4 d-flex align-items-center justify-content-center">
+                <i class="fa-info fz-20 pr-8"></i>
+                <span
+                  class="mr-40"
+                  [translate]="'elements.form.chrome_extension.info'"></span>
+                <a *ngIf="isWeb"
+                  target="_blank"
+                  class="theme-text border-softBlue-l-1 py-7 text-nowrap"
+                  href="https://s3.amazonaws.com/assets.testsigma.com/videos/elements/web/create-element.mp4">
+                  <i class="fa-youtube text-desaturatedBlue mx-20"></i>
+                  <span class="text-strongBlue" [translate]="'elements.form.chrome_extension.watch_demo'"></span>
+                </a>
+                <a *ngIf="isMobileWeb"
+                   target="_blank"
+                   class="theme-text border-softBlue-l-1 py-7 text-nowrap"
+                   href="https://s3.amazonaws.com/assets.testsigma.com/videos/elements/mobile-web/create-element.mp4">
+                  <i class="fa-youtube text-desaturatedBlue mx-20"></i>
+                  <span class="text-strongBlue" [translate]="'elements.form.chrome_extension.watch_demo'"></span>
+                </a>
+                <a *ngIf="isAndroidNative"
+                   target="_blank"
+                   class="theme-text border-softBlue-l-1 py-7 text-nowrap"
+                   href="https://s3.amazonaws.com/assets.testsigma.com/videos/elements/android/create-element.mp4">
+                  <i class="fa-youtube text-desaturatedBlue mx-20"></i>
+                  <span class="text-strongBlue" [translate]="'elements.form.chrome_extension.watch_demo'"></span>
+                </a>
+                <a *ngIf="isIosNative"
+                   target="_blank"
+                   class="theme-text border-softBlue-l-1 py-7 text-nowrap"
+                   href="https://s3.amazonaws.com/assets.testsigma.com/videos/elements/ios/create-element.mp4">
+                  <i class="fa-youtube text-desaturatedBlue mx-20"></i>
+                  <span class="text-strongBlue" [translate]="'elements.form.chrome_extension.watch_demo'"></span>
+                </a>
+              </div>
+              <div class="theme-hint border-rds-4 px-10 py-5 fz-12 text-hint mt-2 mb-40 text-center">
+                <div class="mx-auto w-fit-content d-flex align-items-center">
+                  <i class="fa-warning fz-20 pr-8"></i>
+                  <span [translate]="'elements.form.chrome_extension.note'"></span>
+                </div>
+              </div>
+            </div>
+            <div *ngSwitchCase="false" class="install-note mb-10">
+              <div class="pr-20">
+                <span [translate]="'elements.form.chrome_extension.not_have_info'"></span>
+                <div class="pt-15 lh-2">
+                  <a
+                    target="_blank"
+                    class="theme-text d-flex"
+                    href="https://testsigma.com/docs/faqs/why-chrome-extension/">
+                    <span [translate]="'elements.form.learn_more'" class="text-link"></span></a>
+                </div>
+              </div>
+              <div class="text-center">
+                <a
+                  target="_blank"
+                  href="https://chrome.google.com/webstore/detail/testsigma/epmomlhdjfgdobefcpocockpjihaabdp?hl=en-US"
+                  class="install-btn">
+                  <div class="chrome"></div>
+                  <span [translate]="'elements.form.chrome_btn'"></span>
+                </a>
+                <div (click)="refresh()" class="text-t-highlight pt-4">
+                  <i class="fa-refresh-thick pr-5 pointer"></i>
+                  <span class="fz-12 pointer"
+                        [translate]="'elements.form.chrome_extension.refresh_ifInstalled'"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngSwitchCase="false"
+               class="theme-warning text-red-warning px-30 py-10 border-rds-4 d-flex align-items-center">
+            <i class="fa-warning fz-20 pr-8"></i>
+            <span class="pl-8 hint-text lh-2point6"
+                  [innerHTML]="'elements.form.chrome_extension.not_Chrome' | translate"></span>
+          </div>
+        </div>
+        <div class="d-flex flex-wrap justify-content-between" *ngIf="isManualOrHasMandatoryPrerequisites()">
+          <div class="d-flex flex-wrap justify-content-between ts-col-100">
+            <div class="form-group ts-col-50 pr-20">
+              <div class="p-0 field mb-0">
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder=" "
+                  class="form-control"
+                  [(ngModel)]="element.name"
+                  [formControlName]="['name']"/>
+                <label
+                  [translate]="'message.common.label.name'"
+                  for="name" class="required"></label>
+              </div>
+              <div
+                *ngIf="formSubmitted && elementForm.get('name').hasError('required')"
+                class="error" [translate]="'agents.message.title.required'">
+              </div>
+            </div>
+            <div class="form-group ts-col-50 pl-20" matAutocompleteOrigin #origin="matAutocompleteOrigin">
+              <div class="p-0 field mb-0" appearance="fill">
+
+                <input id="screen_name" [matAutocomplete]="screename" [(ngModel)]="element.screenNameObj.name" type="text" class="form-control" [formControlName]="['screen_name']"
+                       (keyup)="filterData($event.target)" (change)="this.saveScreenName($event.target, false)" >
+                <label for="screen_name"  class="required" [translate]="'elements.screen_name'"></label>
+                <mat-autocomplete #screename="matAutocomplete" disableOptionCentering panelClass="single">
+                  <mat-option *ngFor="let option of screenNameOptions|async" [value]="option.id"  (click)="this.setScreenName(option)">
+                    {{option.name}}
+                  </mat-option>
+                </mat-autocomplete>
+                <div
+                  *ngIf="formSubmitted && elementForm.get('screen_name').hasError('required')"
+                  class="error" [translate]="'agents.message.title.required'">
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="ts-col-100 d-flex justify-content-between"
+               *ngIf="elementCreateType.MOBILE_INSPECTOR != element.createdType">
+            <div
+              class="form-group ts-col-50 pr-20">
+              <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill">
+                <mat-select
+                  disableOptionCentering panelClass="single"
+                  [(ngModel)]="element.locatorType"
+                  name="locatorType"
+                  [formControlName]="['locatorType']"
+                  [(value)]="element.locatorType">
+                  <mat-option
+                    *ngFor="let locatorType of locatorTypes"
+                    [value]="locatorType"
+                    [textContent]="'element.locator_type.'+locatorType | translate"></mat-option>
+                </mat-select>
+              </mat-form-field>
+              <label class="control-label" [translate]="'elements.form.label.locator_type'"></label>
+            </div>
+            <div
+              class="form-group ts-col-50 pl-20">
+              <div class="p-0 field mb-0">
+                <input
+                  type="text"
+                  placeholder=" "
+                  id="definition"
+                  name="definition"
+                  class="form-control"
+                  [(ngModel)]="element.locatorValue"
+                  [formControlName]="['definition']"/>
+                <label
+                  for="definition"
+                  [translate]="'elements.form.label.xpath'">
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngSwitchCase="elementCreateType.MOBILE_INSPECTOR">
+          <app-inspection-modal *ngIf="hasInspectorFeature() && element" class="ts-col-100"
+                                [versionId]="versionId" [uiId]="element.id||0"
+                                [elementInspection]="true">
+          </app-inspection-modal>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="theme-overlay-footer">
+    <button
+      (click) = "stopCapture()"
+      class="theme-btn-clear-default"
+      [matDialogClose]="reviewSubmittedElement"
+      [translate]="'btn.common.cancel'"></button>
+    <button
+      [disabled]="!elementForm?.valid || this.isInProgress"
+      (click)="saveOrUpdate()"
+      appAsyncBtn
+      [isLoading]="saving"
+      [message]="elementId ? 'message.common.updating' : 'message.common.saving'"
+      class="theme-btn-primary"
+      [textContent]="(elementId ? 'btn.common.update' : 'btn.common.create') | translate"></button>
+  </div>
+</div>

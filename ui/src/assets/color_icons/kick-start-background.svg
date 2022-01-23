@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="283px" height="110px" viewBox="0 0 283 110" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59 (86127) - https://sketch.com -->
+    <title>Group 6</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="1.41997466%" y1="33.5625392%" x2="100%" y2="33.5625392%" id="linearGradient-1">
+            <stop stop-color="#868DF4" offset="0%"></stop>
+            <stop stop-color="#FB74B2" offset="100%"></stop>
+        </linearGradient>
+        <path d="M218.999945,47.7216259 C205.14063,59.9257289 209.462524,62.0482142 197.655207,73.4941528 C186.687255,84.1262596 163.54423,78.3419062 144.0829,83.2267712 C130.59878,86.6116142 117.055157,100.391087 120.560825,110 L280.390446,110 L283,110 L283,47.9231158 C276.04376,36.3182345 235.44953,33.2360949 218.999945,47.7216259" id="path-2"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="List-view-with-empty-data-&amp;-Resize-help-widgets" transform="translate(-774.000000, -357.000000)">
+            <g id="Group-6" transform="translate(774.000000, 357.000226)">
+                <rect id="Rectangle" fill="url(#linearGradient-1)" x="0" y="0" width="283" height="109" rx="10"></rect>
+                <mask id="mask-3" fill="white">
+                    <use xlink:href="#path-2"></use>
+                </mask>
+                <use id="Fill-1" fill="#BEF7F6" opacity="0.200000003" xlink:href="#path-2"></use>
+            </g>
+        </g>
+    </g>
+</svg>

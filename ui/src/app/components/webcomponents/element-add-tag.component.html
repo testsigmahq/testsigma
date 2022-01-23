@@ -1,0 +1,74 @@
+<div class="theme-overlay-container">
+  <div class="theme-overlay-header">
+    <div
+      [translate]="'add_labels.title'"
+      class="theme-overlay-title">
+    </div>
+    <button
+      class="close"
+      type="button"
+      [matTooltip]="'hint.message.common.close' | translate"
+      mat-dialog-close>
+    </button>
+  </div>
+  <form
+    class="ts-form rb-regular" [formGroup]="tagForm">
+    <div class="theme-overlay-content pt-10">
+      <div class="form-group pb-20">
+        <label class="control-label mat-proxy-label"
+               [translate]="'add_labels.form.label'"></label>
+        <mat-form-field appearance="outline" (click)="searchValue='';searchTag.focus()"
+                        class="form-group mat-select-custom-chipList w-100 pb-0">
+          <mat-select #selectField
+                      [formControlName]="'chipControl'" (selectionChange)="selected($event)"
+                      disableOptionCentering multiple panelClass="multiple-chip">
+            <mat-select-trigger>
+              <mat-chip-list #chipList>
+                <mat-chip class="custom-mat-chip"
+                          *ngFor="let tag of associatedTags"
+                          [removable]="true"
+                          (removed)="removeFromList(tag)">
+                  <div class="mb-2 mr-15" [textContent]="tag"></div>
+                  <i class="fa-close-large pl-2 position-relative right-10 mt-4 fz-13" matChipRemove></i>
+                </mat-chip>
+              </mat-chip-list>
+            </mat-select-trigger>
+
+            <mat-option class="p-4" [disabled]="true">
+              <input type="text" #searchTag name="searchTag" [(ngModel)]="searchValue" autocomplete="off"
+                     [ngModelOptions]="{standalone: true}"
+                     (keyup.space)="$event.stopImmediatePropagation()"
+                     (keydown.space)="$event.stopImmediatePropagation()"
+                     (keydown.enter)="(searchValue && tagList.indexOf(searchValue) == -1)?
+                      createNewTag(searchTag.value) : $event.stopImmediatePropagation()"
+                     autofocus></mat-option>
+            <mat-option class="element" *ngFor="let tag of tagList |  search: searchValue "
+                        [textContent]="tag" [value]="tag"></mat-option>
+            <mat-option *ngFor="let tag of tagList" class="d-none"
+                        [textContent]="tag" [value]="tag"></mat-option>
+            <mat-option *ngIf="searchValue && tagList.indexOf(searchTag.value) == -1"
+                        class="pointer" [value]="searchValue"
+                        (click)="createNewTag(searchTag.value)">
+              <div>{{searchTag.value}}
+                <span class="new-option-pill" [textContent]="'btn.common.new'|translate">
+                          </span></div>
+            </mat-option>
+            <mat-option *ngIf="!searchValue && !tagList.length"
+                        [disabled]="true" [textContent]="'select.search.notfound'|translate"></mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="theme-overlay-footer">
+      <button
+        class="theme-btn-clear-default"
+        mat-dialog-close
+        [translate]="'btn.common.cancel'"></button>
+      <button
+        class="theme-btn-primary"
+        (click)="updateTags()"
+        [translate]="'btn.common.save'"></button>
+    </div>
+  </form>
+</div>
+

@@ -1,0 +1,97 @@
+/*!
+ *
+ *  * *****************************************************************************
+ *  *  Copyright (C) 2020 Testsigma Technologies Inc.
+ *  *  All rights reserved.
+ *  *  ****************************************************************************
+ *
+ */
+
+.compare-container {
+  @extend .ts-col-100, .d-flex;
+  height: calc(100% - 53px);
+  .compare-section {
+    @extend .overflow-x-hidden;
+    flex: 0 0 calc(50% - 2px);
+    max-width: calc(50% - 2px);
+    position: relative;
+    min-height: 60vh;
+    width: 1420px; height: 2400px;
+    .image {
+      @extend .w-100;
+    }
+    .canvas-container {
+      @extend .position-absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom:0;
+      z-index: 9999;
+      .canvas {
+        position: relative;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom:0;
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+  .compare-border {
+    border: 2px dashed $black;height: 2400px
+  }
+  &.overlay-enabled {
+    .compare-section {
+      @extend .mh-100, .ts-col-100, .position-absolute, .h-100;
+      .canvas-container {
+        opacity: 0.8;
+        @extend .w-100;
+        canvas[class$='-canvas'] {
+          @extend .w-100;
+        }
+      }
+    }
+    .compare-border {
+      @extend .d-none;
+    }
+  }
+}
+
+.vi-view-container {
+  @extend .d-flex,.justify-content-between,.flex-wrap;
+  height: calc(100% - 76px);
+  .vi-img-title {
+    @extend .d-flex,.ts-col-100,.theme-border-b;
+    height: 53px;
+    .vi-text {
+      flex: 0 0 calc(50% - 4px);max-width: calc(50% - 4px); padding: 17px 60px;
+      .vi-title {
+        @extend .fz-14,.rb-medium;
+      }
+    }
+    .vi-combine-title {
+      @extend .ts-col-100,.d-none,.align-items-center,.justify-content-center,.fz-14,.rb-medium;
+    }
+    &.vi-overlap-enabled {
+      .vi-combine-title {
+        @extend .d-flex;
+      }
+      .vi-split-title {
+        @extend .d-none;
+      }
+    }
+  }
+}
+
+.vi-btn {
+  padding: 6px 10px;
+}
+
+.vi-container-p {
+  padding: 16px 45px
+}
+
+.vi-split-br {
+  border: 2px dashed $black;
+}

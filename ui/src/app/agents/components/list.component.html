@@ -88,7 +88,7 @@
                     agent.currentAgentVersion}">
                 <i class="fa-exclamation-triangle-solid text-pale-orange pr-6"></i>
               {{'agents.list_view.out_of_sync'|translate}}
-              <a href='https://testsigma.com/docs/agent/troubleshooting-setup-issues/' target='_blank' style='text-decoration:none' class='text-link text-secondary pl-4' [translate]="'agents.devices_troubleshoot'" >  </a>
+              <a href='https://testsigma.com/docs/agent/troubleshooting/setup-issues/' target='_blank' style='text-decoration:none' class='text-link text-secondary pl-4' [translate]="'agents.devices_troubleshoot'" >  </a>
               </span>
             <span *ngIf="!agent.isOnline()"
                   class="pl-5 pt-5 text-t-secondary d-inline-block"
@@ -96,7 +96,7 @@
                     translate: {updatedAt: (agent.updatedAt | amTimeAgo)}">
                   <i class="fa-exclamation-triangle-solid text-pale-orange pr-6"></i>
                   {{'agents.unable_to_reach'|translate}}
-              <a href='https://testsigma.com/docs/agent/troubleshooting-setup-issues/' target='_blank' style='text-decoration:none' class='text-link text-secondary pl-4' [translate]="'agents.devices_troubleshoot'" >  </a>
+              <a href='https://testsigma.com/docs/agent/troubleshooting/setup-issues/' target='_blank' style='text-decoration:none' class='text-link text-secondary pl-4' [translate]="'agents.devices_troubleshoot'" >  </a>
 
                 </span>
           </div>

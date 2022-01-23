@@ -1,29 +1,43 @@
-# Testsigma Community Software
-
 <p align="center">
-  <img width="460" height="300" src="http://docs.testsigma.com/images/github/overview.svg">
+  <img src="http://docs.testsigma.com/images/github/overview.jpg">
 </p>
 
-- Powerful / OpenSource  Test Automation, deployed instantly. Create end-to end tests in minutes
+<p align="center">
+  <a href="https://testsigma.com/signup" target="_bank">Getting started</a>
+  &nbsp; &#8901; &nbsp;
+  <a href="https://testsigma.com/docs/" target="_bank">Docs</a>
+  &nbsp; &#8901; &nbsp;
+  <a href="https://testsigma.com/tutorials/" target="_bank">Tutorials</a>
+  &nbsp; &#8901; &nbsp;
+  <a href="https://github.com/testsigmahq/testsigma/discussions" target="_bank">Discussions</a>
+  &nbsp; &#8901; &nbsp;
+  <a href="https://discord.com/invite/5caWS7R6QX" target="_bank">Discord</a>
+  &nbsp; &#8901; &nbsp;
+  <a href="https://testsigma.com/docs/product-updates/roadmap/" target="_bank">Roadmap</a>
+  &nbsp; &#8901; &nbsp;
+  <a href="https://www.youtube.com/testsigma" target="_bank">YouTube</a>
+</p>
 
-- Open Source platform to automate tests for any application in minutes
+<p align="center">
+  Rapidly automate web, mobile app, and API tests in plain English, on a single, extensible platform that works out of the box.
+  
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &#8901; &nbsp;Powerful / OpenSource  Test Automation, deployed instantly. Create end-to end tests in minutes
+  
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &#8901; &nbsp;Open Source platform to automate tests for any application in minutes
+  
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &#8901; &nbsp;An open source platform to bring test automation in one place
 
-- An open source platform to bring test automation in one place
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &#8901; &nbsp;Replace <ins>the broken test stack</ins> with a powerful open source platform
 
-- Replace <ins>the broken test stack</ins> with a powerful open source platform
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &#8901; &nbsp;Deploy **end-to-end / unified /integrated** Test Automation for any application in minutes
 
-- Deploy **end-to-end / unified /integrated** Test Automation for any application in minutes
+</p>
  
 
-Rapidly automate web, mobile app, and API tests in plain English, on a single, extensible platform that works out of the box.
-
-**Description:** 
+## Description:
 
 Powerful open-source test automation platform for websites, mobile apps & API. Write tests in simple English, auto-capture elements, parametrize testing with built-in test data generators, instant APIs for integrations, customize for unique use-cases with 100+ pre-built add-ons or build your own with SDKs.
 
-## **How Testsigma works**
-
-[Getting started](https://testsigma.com/signup) | [Docs](https://testsigma.com/docs/getting-started/terminology/) | [Tutorials](https://testsigma.com/tutorials/) | [Community](https://testsigma.com/community) | [Discord](https://discord.com/invite/5caWS7R6QX) | Roadmap | 
 
 ## **Quick start: One click deployment on Testsigma Cloud**
 

@@ -129,8 +129,7 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
   }
 
   getFieldDefinitionDetails() {
-    if(!this.fieldDefinitionDetails)
-      this.fieldDefinitionDetails = this.getElements(this.testStepResult?.fieldDefinitionDetails, true);
+    this.fieldDefinitionDetails = this.getElements(this.testStepResult?.fieldDefinitionDetails, true);
     return this.fieldDefinitionDetails.length;
   }
 

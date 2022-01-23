@@ -41,6 +41,7 @@ public class BackupDetailsController {
   private final BackupDetailService service;
 
   @GetMapping(path = "/{id}/download")
+  @ResponseStatus(HttpStatus.PERMANENT_REDIRECT)
   public void download(@PathVariable("id") Long id, HttpServletResponse response) throws ResourceNotFoundException, IOException {
     BackupDetail detail = this.service.find(id);
     Optional<URL> s3Url = this.service.downLoadURL(detail);

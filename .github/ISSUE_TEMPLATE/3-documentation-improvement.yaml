@@ -18,8 +18,8 @@ body:
       required: true
 - type: input
   attributes:
-    label: Doc/Tutorial Link 
-    description: Add a link to the page which needs improvement (if you are reporting an issue with the current page)
+    label: Doc/tutorial link 
+    description: Add a link to the page which needs improvement (optional)
   validations:
     required: false
 - type: textarea

@@ -57,6 +57,7 @@ public abstract class Action {
       return ActionResult.SUCCESS;
     } catch (Exception e) {
       log.error(e.getMessage(), e);
+      e = transformException(e);
       setException(new Exception(ObjectUtils.defaultIfNull(e.getCause(), e)));
       setErrorMessage("Unable to perform specified action, please verify element/Test data.");
       setErrorCode(ErrorCodes.GENERAL_EXCEPTION);
@@ -71,7 +72,13 @@ public abstract class Action {
       }
     }
   }
-
+  private Exception transformException(Exception e){
+    if(e.getCause() != null && e.getCause() instanceof ClassCastException
+            && (e.getMessage().contains("NoSuchElementError") || e.getMessage().toUpperCase().contains("NO SUCH ELEMENT"))){
+      return new Exception(new NoSuchElementException("No Element found with given criteria"));
+    }
+    return e;
+  }
   protected void beforeExecute() throws AutomatorException {
     log.debug("Started executing " + this.getClass().getName());
   }
@@ -124,12 +131,17 @@ public abstract class Action {
       if (e.getMessage().contains("has already finished")) {
         setErrorMessage("Unable to perform specified action on current page - " + e.getMessage());
         setErrorCode(ErrorCodes.NO_SUCH_SESSION_EXCEPTION);
+      }else{
+        setErrorMessage("Unable to perform specified action on current page - " + e.getMessage());
+        setErrorCode(ErrorCodes.UNSUPPORTED_COMMAND_EXCEPTION);
       }
     } else if (e instanceof WebDriverException) {
       setErrorMessage("Unable to perform specified action on current page - " + e.getMessage());
       setErrorCode(ErrorCodes.WEBDRIVER_EXCEPTION);
     } else {
       log.error("unhandled error occurred", e);
+      setErrorMessage("Unable to perform specified action on current page - " + e.getMessage());
+      setErrorCode(ErrorCodes.GENERIC_ERROR);
     }
   }
 }

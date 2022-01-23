@@ -63,7 +63,7 @@ public class WebTestcaseStepRunner extends TestcaseStepRunner {
 
     execute();
 
-    if (isAutomatorException() && settings.getHasSuggestionFeature()) {
+    if (isAutomatorException() && settings.getHasSuggestionFeature() && testcaseStep.getAddonNaturalTextActionEntity() == null) {
       diagnoseStepFailure();
     }
   }

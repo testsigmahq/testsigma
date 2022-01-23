@@ -37,7 +37,7 @@
   <cdk-virtual-scroll-viewport
     minBufferPx="10000" maxBufferPx="30000"
     #stepResultsViewPort itemSize="63" class="virtual-scroll-viewport"
-    [class.overflow-y-hidden]="!isStepsFetchComplete || (resultEntity?.isRunning)">
+    [class.overflow-y-hidden]="!isStepsFetchComplete">
     <div
       class="pb-40 pr-30 pt-10"
       *ngIf="testSteps && testStepResults?.totalElements && workspaceVersion && filteredTestStepResults?.content && resultEntity && (templates || kibbutzTemplates)">

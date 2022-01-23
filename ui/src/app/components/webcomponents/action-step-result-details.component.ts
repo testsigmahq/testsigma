@@ -100,10 +100,12 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
     if (this.testStepResult?.metadata?.preRequisite) {
       this.setPreRequisiteStep(this.testStepResult?.metadata?.preRequisite);
     }
-    this.environmentResultService.show(this.testStepResult.envRunId).subscribe(data => {
-      this.environmentResult = data;
-      this.getAppDetails();
-    })
+    if (this.testStepResult?.envRunId) {
+      this.environmentResultService.show(this.testStepResult?.envRunId).subscribe(data => {
+        this.environmentResult = data;
+        this.getAppDetails();
+      })
+    }
     let elementName = this.testStepResult?.stepDetails?.dataMap?.elementString
     if (elementName) {
       this.fetchElementByName(elementName)

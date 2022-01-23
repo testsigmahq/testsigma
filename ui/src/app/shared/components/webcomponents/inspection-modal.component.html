@@ -157,11 +157,8 @@
                 <button
                   (click)="openUploadForm()"
                   [class.mr-20]="!uploads?.content?.length"
-                  [class.w-100-60]="!uploads?.content?.length && showInlineLaunch"
-                  [class.w-100-60]="showInlineLaunch"
-                  [class.w-167p]="!showInlineLaunch"
                   [translate]="'agents.mobile.inspection.upload'"
-                  class="theme-btn-clear-default border-rds-4 bg-white fz-14">
+                  class="theme-btn-clear-default border-rds-4 bg-white fz-14 text-nowrap">
                 </button>
               </div>
               <ng-container *ngTemplateOutlet="launchbtn"></ng-container>

@@ -109,13 +109,13 @@
 
         </div>
           <div *ngIf="testStepResult?.isOpen && getFieldDefinitionDetails()" class="ts-col-100">
-            <div class="details-item mt-5 ts-col-100">
-              <span [translate]="'common.value'" class="details-title ts-col-25 rb-medium"></span>
-              <span class="details-info" [textContent]="fieldDefinitionDetails[0]?.locatorValue"></span>
+            <div class="details-item ts-col-100  align-item-center">
+              <span [translate]="'common.value'" class="details-title ts-col-30 rb-medium"></span>
+              <span class="details-info m-0 pl-5" [textContent]="fieldDefinitionDetails[0]?.locatorValue"></span>
             </div>
-            <div class="details-item mt-5 align-items-center">
-              <div [translate]="'ui_identifier.details.type'" class=" details-title ts-col-25 rb-medium"></div>
-              <div class="details-info mt-0" [textContent]="fieldDefinitionDetails[0]?.findByType"></div>
+            <div class="details-item align-item-center">
+              <div [translate]="'ui_identifier.details.type'" class=" details-title ts-col-30 rb-medium"></div>
+              <div class="details-info m-0 pl-5" [textContent]="fieldDefinitionDetails[0]?.findByType"></div>
             </div>
           </div>
 

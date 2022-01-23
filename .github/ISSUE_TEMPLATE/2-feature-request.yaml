@@ -1,0 +1,30 @@
+name: 🛠️ Feature request
+description: Suggest an idea to improve Testsigma
+title: "[Feature]: "
+labels: [enhancement]
+assignees:
+body:
+- type: checkboxes
+  attributes:
+    label: Is there an existing issue for this?
+    description: Please search to see if an issue related to this feature request already exists.
+    options:
+    - label: I have searched the existing issues
+      required: true
+- type: textarea
+  attributes:
+    label: What would you like to add?
+    description: A clear description of the feature or enhancement wanted in Testsigma.
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Why should this be worked on?
+    description: A concise description of the problems or use cases for this feature request. 
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Other details
+  validations:
+    required: false

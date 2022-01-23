@@ -3,6 +3,7 @@ description: Create a bug report to help us improve Testsigma
 title: "[Bug]: "
 labels: [bug, needs-triaging]
 assignees:
+- rukmangada
 body:
 - type: markdown
   attributes:

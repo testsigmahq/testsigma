@@ -2,17 +2,17 @@
   <a href="https://testsigma.com/signup?utm_source=github&utm_medium=social"><img src="http://docs.testsigma.com/images/github/overview.jpg" width="100%"></a>
 
 <p align="center">
-  <a href="https://testsigma.com/signup" target="_bank">Getting started</a>
+  <a href="https://testsigma.com/signup?utm_source=github&utm_medium=social" target="_bank">Getting started</a>
   &nbsp; &#8901; &nbsp;
-  <a href="https://testsigma.com/docs/" target="_bank">Docs</a>
+  <a href="https://testsigma.com/docs/?utm_source=github&utm_medium=social" target="_bank">Docs</a>
   &nbsp; &#8901; &nbsp;
-  <a href="https://testsigma.com/tutorials/" target="_bank">Tutorials</a>
+  <a href="https://testsigma.com/tutorials/?utm_source=github&utm_medium=social" target="_bank">Tutorials</a>
   &nbsp; &#8901; &nbsp;
   <a href="https://github.com/testsigmahq/testsigma/discussions" target="_bank">Discussions</a>
   &nbsp; &#8901; &nbsp;
   <a href="https://discord.com/invite/5caWS7R6QX" target="_bank">Discord</a>
   &nbsp; &#8901; &nbsp;
-  <a href="https://testsigma.com/docs/product-updates/roadmap/" target="_bank">Roadmap</a>
+  <a href="https://testsigma.com/docs/product-updates/roadmap/?utm_source=github&utm_medium=social" target="_bank">Roadmap</a>
   &nbsp; &#8901; &nbsp;
   <a href="https://www.youtube.com/testsigma" target="_bank">YouTube</a>
 </p>
@@ -28,17 +28,13 @@
   - Replace <ins>the broken test stack</ins> with a powerful open source platform
   - Deploy **end-to-end / unified /integrated** Test Automation for any application in minutes
 
-&emsp;
-
-<br><a href="https://www.youtube.com/watch?v=xfmEI6RMGg4" target="_blank"><img src="http://docs.testsigma.com/images/github/how-to-automate-with-testsigma-button.png" alt="How to automate testing with Testsigma" width="410px" /></a>
-
-&emsp;
+<a href="https://www.youtube.com/watch?v=xfmEI6RMGg4" target="_blank"><img src="http://docs.testsigma.com/images/github/how-to-automate-with-testsigma-button.png" alt="How to automate testing with Testsigma" width="410px" /></a>
 
 ## **Quick start: One click deployment on Testsigma Cloud**
 
 The easiest way to start your automation journey is with Testsigma Cloud.
 
-**CTA: Deploy Testsigma Cloud (Image take it from figma)**
+<a href="https://testsigma.com/signup?utm_source=github&utm_medium=social" target="_blank"><img src="http://docs.testsigma.com/images/github/deploy-to-testsigma-cloud.png" alt="How to automate testing with Testsigma" width="410px" /></a>
 
 Once you deploy, you can follow the below tutorials to get started
 - [Web application Automated testing](https://testsigma.com/tutorials/getting-started/automate-web-applications/)
@@ -46,14 +42,12 @@ Once you deploy, you can follow the below tutorials to get started
 - [iOS Apps Automated testing](https://testsigma.com/tutorials/getting-started/automate-android-applications/)
 - [Android Apps Automated testing](https://testsigma.com/tutorials/getting-started/automate-ios-applications/)
 
-&emsp;
 ## **Other deployment options**
 We have 2 more deployment options to choose from
 
 1. [Using Docker](https://testsigma.com/docs/getting-started/setup/docker/)
 2. [Using Downloadable Package](https://testsigma.com/docs/getting-started/setup/downloadable-package/) 
 
-&emsp;
 ## **Features**
 
 ### Test Development
@@ -78,10 +72,8 @@ We have 2 more deployment options to choose from
 
 - Integrate with any CI tool for continuous testing.
 
-
 [See more on our website](https://testsigma.com)
 
-&emsp;
 
 ## **Build & extend the platform with Add-ons**
 
@@ -99,8 +91,6 @@ You can build your own add-on using Testsigma SDK.
 
 - **While Loops:** You can create an action to execute a sequence of steps until the condition is matched. You can write your own logic for the conditional if. See: [How to add while actions.](https://testsigma.com/tutorials/addons/how-create-addons-while-loops/)
 
-&emsp;
-
 ## **Tutorials**
 
 Here are the latest tutorials and videos for you to learn more about Testsigma:
@@ -113,13 +103,9 @@ Here are the latest tutorials and videos for you to learn more about Testsigma:
 6. How to create custom data generators with add-ons
 7. How to automate Two-factor authentication testing (Email & SMS) 
 
-&emsp;
-
 ## **Roadmap**
 
 Check out our [roadmap](https://testsigma.com/docs/product-updates/roadmap/) to get informed on what we are currently working on, and what is coming in the next weeks, months and years.
-
-&emsp;
 
 ## **Support & Troubleshooting**
 
@@ -135,13 +121,10 @@ We are committed to fostering an open and welcoming environment in the community
 
 If you want to report a security issue, please [read this](SECURITY.md).
 
-&emsp;
-
 ## **Join our community**
 
 Engage with test automation Architects, SDETs, Testers, and Developers around the world. Get the latest product updates. Discuss testing philosophies and more. Join the [Testsigma Community on Discord](https://discord.com/invite/5caWS7R6QX).
 
-&emsp;
 
 ## **Stay up to date**
 
@@ -149,7 +132,6 @@ We release new features every month. Sign up for our newsletter by using the lin
 
 https://testsigma.com/whats-new
 
-&emsp;
 
 ## **Contribute**
 
@@ -160,7 +142,6 @@ We love our contributors! If you'd like to contribute anything from a bug fix to
 - 👾 Explore some [good first issues](https://github.com/testsigmahq/testsigma/issues?q=is%3Aissue+is%3Aopen+label%3A%good+first+issue%22)
 - 📕 Read our [Code of Conduct](​​CODE_OF_CONDUCT.md)
 
-&emsp;
 
 ## **License**
 

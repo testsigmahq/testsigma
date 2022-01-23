@@ -53,7 +53,7 @@ public class HybridDriverSettingsService extends DriverSettingsService {
 
     if (MobileOs.ANDROID == agentDevice.getOsName()) {
       capabilities.add(new WebDriverCapability(TSCapabilityType.SKIP_SERVER_INSTALLATION, Boolean.TRUE));
-      capabilities.add(new WebDriverCapability(TSCapabilityType.SKIP_DEVICE_INSTALLATION, Boolean.TRUE));
+      capabilities.add(new WebDriverCapability(TSCapabilityType.SKIP_DEVICE_INITIALIZATION, Boolean.TRUE));
     }
 
     if (MobileOs.IOS == agentDevice.getOsName()) {

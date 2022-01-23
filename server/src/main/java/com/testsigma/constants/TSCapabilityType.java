@@ -26,7 +26,7 @@ public interface TSCapabilityType {
   String KEY_MAX_IDLE_TIME = "idleTimeout";
   Integer MAX_DURATION = 10800;
   Integer MAX_IDLE_TIME = 300;
-  String SKIP_DEVICE_INSTALLATION = "skipDeviceInstallation";
+  String SKIP_DEVICE_INITIALIZATION = "skipDeviceInitialization";
   String SKIP_SERVER_INSTALLATION = "skipServerInstallation";
   String UDID = "udid";
   String OS_VERSION = "os_version";

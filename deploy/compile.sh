@@ -30,6 +30,9 @@ ROOT_FOLDER="$(
   pwd -P
 )"
 
+OS_TYPE=${OSTYPE:-"unknown"}
+
+
 cd "$ROOT_FOLDER"
 
 cd $ROOT_FOLDER/ui
@@ -47,9 +50,21 @@ mvn clean install
 cd $ROOT_FOLDER/agent-launcher
 mvn clean install
 
-sed -i "s/local.agent.download.tag=latest/local.agent.download.tag=$LOCAL_AGENT_TAG/g" $ROOT_FOLDER/server/src/main/resources/application.properties
+if [[ "$OS_TYPE" == "darwin"* ]]; then
+  sed -i'' -e "s/local.agent.download.tag=latest/local.agent.download.tag=$LOCAL_AGENT_TAG/g" $ROOT_FOLDER/server/src/main/resources/application.properties
+
+else
+  sed -i "s/local.agent.download.tag=latest/local.agent.download.tag=$LOCAL_AGENT_TAG/g" $ROOT_FOLDER/server/src/main/resources/application.properties  
+fi
 
 cd $ROOT_FOLDER/server
 mvn clean install
+
+if [[ "$OS_TYPE" == "darwin"* ]]; then
+  sed -i'' -e "s/local.agent.download.tag=$LOCAL_AGENT_TAG/local.agent.download.tag=latest/g" $ROOT_FOLDER/server/src/main/resources/application.properties
+
+else
+  sed -i "s/local.agent.download.tag=$LOCAL_AGENT_TAG/local.agent.download.tag=latest/g" $ROOT_FOLDER/server/src/main/resources/application.properties  
+fi
 
 cd $CURRENT_DIR

@@ -19,15 +19,20 @@
 &emsp;
 &emsp;
 
-  Rapidly automate web, mobile app, and API tests in plain English, on a single, extensible platform that works out of the box.
-  
-  - Powerful / OpenSource  Test Automation, deployed instantly. Create end-to end tests in minutes
-  - Open Source platform to automate tests for any application in minutes 
-  - An open source platform to bring test automation in one place
-  - Replace <ins>the broken test stack</ins> with a powerful open source platform
-  - Deploy **end-to-end / unified /integrated** Test Automation for any application in minutes
+**A powerful open source test automation platform for modern Dev/QA teams.**
 
-<a href="https://www.youtube.com/watch?v=xfmEI6RMGg4" target="_blank"><img src="http://docs.testsigma.com/images/github/how-to-automate-with-testsigma-button.svg" alt="How to automate testing with Testsigma" /></a>
+
+  Rapidly automate web, mobile app, and API tests in plain English, on a single, extensible platform that works out of the box. 
+  
+  - Eliminate complex setups, multiple tools and frameworks.
+  - Let everyone write tests 5X faster using plain English. 
+  - Smart test recorder auto-converts user actions into editable steps.
+  - Automate end-to-end testing for Web, Mobile apps & APIs.
+  - Minimal to no maintenance of tests and frameworks
+  - Built-in test data management for parameterized testing
+  - Seamless integrations with CI/CD, Bug Reporting, product management tools, & collaboration tools & Test Labs for continuous testing.
+  - Extend the platform with 100+ pre-built add-ons (for custom actions, data generators, integrations) or build your own with Testsigma SDKs.
+
 
 ## **Quick start: One click deployment on Testsigma Cloud**
 
@@ -37,10 +42,12 @@ The easiest way to start your automation journey is with Testsigma Cloud.
 <img src="http://docs.testsigma.com/images/github/deploy-to-testsigma-cloud.svg" alt="How to automate testing with Testsigma" /></a>
 
 Once you deploy, you can follow the below tutorials to get started
-- [Web application Automated testing](https://testsigma.com/tutorials/getting-started/automate-web-applications/)
-- [Mobile Web application Automated testing](https://testsigma.com/tutorials/getting-started/automate-mobile-web-applications/)
-- [iOS Apps Automated testing](https://testsigma.com/tutorials/getting-started/automate-android-applications/)
-- [Android Apps Automated testing](https://testsigma.com/tutorials/getting-started/automate-ios-applications/)
+
+- [Automating Web Applications](https://testsigma.com/tutorials/getting-started/automate-web-applications/)
+- [Automating Mobile Web Applications](https://testsigma.com/tutorials/getting-started/automate-mobile-web-applications/)
+- [Automating iOS Apps](https://testsigma.com/tutorials/getting-started/automate-android-applications/)
+- [Automating Android Apps](https://testsigma.com/tutorials/getting-started/automate-ios-applications/)
+- [Automating REST API Testing](https://testsigma.com/tutorials/getting-started/automate-rest-apis/)
 
 ## **Other deployment options**
 We have 2 more deployment options to choose from
@@ -51,69 +58,81 @@ We have 2 more deployment options to choose from
 ## **Features**
 
 ### Test Development
-- Write code-agnostic, human-readable tests in plain English with built-in NLP Grammar.
+- Write code-agnostic, human-readable tests in plain English.
 - Generate airtight test scripts for web and mobile apps using Test Recorder.
 - Integrate automated API calls within your functional/UI test steps.
 
 ### Data-Driven/Parameterized Testing
-- Upload test data sets as (file format) files.
-- Use built-in data generators for mock test data (what types of strings are supported).
+- Upload test data sets as (XLS) files or create within Testsigma.
+- Use built-in data generators for mock test data.
 - Create your own custom data generators as add-ons.
+
+### Results & Reports
+- Debug using screenshots, videos, text logs, and more. 
+- Generate custom reports at test, module, test suite, and device/system levels. 
+
+### Integrations
+- Integrate with any CI tool to run regression tests at every build.
+- Integrate with Collaboration tools,  Bug Reporting tools, Product Management tools, Cloud based Test Labs
+
+### Unified Platform
+- Automate Web, Mobile Web, Android, iOS apps, and API testing using one platform
 
 ### Visual Testing
 
 - Enable visual testing with a toggle while creating a test plan.
 
-### Run Results
-
-- Debug using screenshots, videos, text logs, and more. Generate custom reports at test, module, test suite, or device/system levels. 
-
-### Integrations
-
-- Integrate with any CI tool for continuous testing.
-
 [See more on our website](https://testsigma.com)
-
 
 ## **Build & extend the platform with Add-ons**
 
-Add-ons are custom extensions built and shared by the Testsigma Community at the [Add-ons Marketplace](https://testsigma.com/addons). Add-ons are built to automate unique user actions and test automation scenarios that are not possible with Testsigma’s default au actions. 
+Add-ons are custom extensions built and shared by the Testsigma Community at the [Add-ons Marketplace](https://testsigma.com/addons). Add-ons are built to automate unique user actions and test automation scenarios that are not possible with Testsigma’s default actions. 
 
 You can build your own add-on using Testsigma SDK.
 
-***Types of add-ons supported in Testsigma**
+### **Types of add-ons supported in Testsigma**
 
-- **Custom Actions:** Testsigma has a comprehensive, built-in actions that lets you automate most user actions in simple English. But sometimes you may need to automate actions unique to your AUT. You can build your own actions and automate those unique actions using add-ons. See: [How to build a custom action in add-ons.](https://testsigma.com/tutorials/addons/how-create-addons-actions/)
+- **Custom Actions:** Testsigma provides a set of comprehensive, built-in addons that lets you automate most user actions in simple English. But sometimes you may need to automate actions unique to your AUT. For this, you can build custom add-ons to automate unique actions. See: [How to build a custom action in add-ons.](https://testsigma.com/tutorials/addons/how-create-addons-actions/)
 
-- **Custom Data Generators:** Testsigma has [default Data Generators](https://testsigma.com/docs/test-data/data-generators/defalut-list/) to generate test data for your automation. You can also create your own data generators. See: [How to build a custom data generator.](https://testsigma.com/tutorials/addons/how-create-addons-test-data-generators/)
+- **Custom Data Generators:** Testsigma contains [default Data Generators](https://testsigma.com/docs/test-data/data-generators/defalut-list/) to generate instant test data for your automation scenarios. You can also build custom data generators. See: [How to build a custom data generator.](https://testsigma.com/tutorials/addons/how-create-addons-test-data-generators/)
 
-- **Conditional If:** You can create an action to execute a sequence of steps if the condition is matched. You can write your own logic for the conditional if. See: [How to add conditional if actions.](https://testsigma.com/tutorials/addons/how-create-addons-conditional-if/) 
+- **Conditional If:** You can create an action to execute a sequence of steps if the condition is matched. You can write your own logic for the conditional if. See: [How to add conditional if actions.](https://testsigma.com/tutorials/addons/how-create-addons-conditional-if/)
 
-- **While Loops:** You can create an action to execute a sequence of steps until the condition is matched. You can write your own logic for the conditional if. See: [How to add while actions.](https://testsigma.com/tutorials/addons/how-create-addons-while-loops/)
+
+- **While Loops:**  You can create an action to execute a sequence of steps until the condition is matched. You can write your own logic for the conditional if. See: [How to add while actions.](https://testsigma.com/tutorials/addons/how-create-addons-while-loops/)
 
 ## **Tutorials**
 
 Here are the latest tutorials and videos for you to learn more about Testsigma:
 
-1. How to build test cases for web apps using the Test Recorder
-2. How to build test cases for Android & iOS apps using Test Recorder
-3. Automating tests for Android apps using local devices
-4. How to perform Data-Driven Testing in Testsigma
-5. How to create add-ons for automation actions
-6. How to create custom data generators with add-ons
-7. How to automate Two-factor authentication testing (Email & SMS) 
+1. [Get Started with Automating Web Applications](https://testsigma.com/tutorials/getting-started/automate-web-applications/)
+2. [Get Started with Automating Mobile Web Applications](https://testsigma.com/tutorials/getting-started/automate-mobile-web-applications/)
+3. [Get Started with Automating Android Apps](https://testsigma.com/tutorials/getting-started/automate-android-applications/)
+4. [Get Started with Automating iOS Apps](https://testsigma.com/tutorials/getting-started/automate-ios-applications/)
+5. [Get Started with REST API Testing](https://testsigma.com/tutorials/getting-started/automate-rest-apis/)
+6. [How to create web application tests using Test Recorder](https://testsigma.com/tutorials/test-cases/web-apps/build-tests-using-recorder/)
+7. [How to create Android & iOS app tests using Test Recorder](https://testsigma.com/tutorials/test-cases/mobile-apps/build-tests-using-recorder/)
+8. [How to automate Android app tests using local devices](https://testsigma.com/tutorials/test-cases/mobile-apps/build-tests-using-local-android-devices/)
+9. [How to automate iOS app tests using local devices](https://testsigma.com/tutorials/test-cases/mobile-apps/build-tests-using-local-ios-devices/)
+10. [How to automate data driven testing](https://testsigma.com/tutorials/test-cases/data-driven-testing/)
+11. [How to create Addons for automated actions](https://testsigma.com/tutorials/addons/how-create-addons-actions/)
+12. [How to create a test data generator in Addons](https://testsigma.com/tutorials/addons/how-create-addons-test-data-generators/)
+13. How to automate Two-factor authentication testing (Email & SMS) 
+
+Visit our [tutorials](https://testsigma.com/tutorials/) to explore more.
+
 
 ## **Roadmap**
 
-Check out our [roadmap](https://testsigma.com/docs/product-updates/roadmap/) to get informed on what we are currently working on, and what is coming in the next weeks, months and years.
+Check out our [roadmap](https://testsigma.com/docs/product-updates/roadmap/) to see what we are or will be working on.
 
 ## **Support & Troubleshooting**
 
 The documentation and community will help you troubleshoot most issues. If you have encountered a bug, you can contact us using one of the following channels:
 
 - 💬 Support & feedback: [Discord](https://discord.com/invite/5caWS7R6QX)
-- 📄 Find a solution in our [Documentation](https://testsigma.com/docs/)
-- ⚠️ Issue & bug tracking: [GitHub issues](https://github.com/testsigmahq/testsigma/issues)
+- :books: Find a solution in our [Documentation](https://testsigma.com/docs/)
+- :bug: Issue & bug tracking: [GitHub issues](https://github.com/testsigmahq/testsigma/issues)
 - 👾 Ask for help on our [Forum](https://github.com/testsigmahq/testsigma/discussions)
 - 💬 Talk to us on our [website chat](https://testsigma.com/)
 
@@ -128,7 +147,7 @@ Engage with test automation Architects, SDETs, Testers, and Developers around th
 
 ## **Stay up to date**
 
-We release new features every month. Sign up for our newsletter by using the link below. We send newsletters only once a month.
+We release new features every month. Sign up for our newsletter by using the link below. We send newsletters only once a month. 
 
 https://testsigma.com/whats-new
 

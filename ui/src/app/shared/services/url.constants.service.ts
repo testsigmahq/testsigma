@@ -71,6 +71,8 @@ export class UrlConstantsService {
   public backupXmlUrl = this.apiBase+ "/settings/backups/xml" ;
 
   public onboardingURL = this.apiBase + '/onboarding';
+
+  public agentDownloadTagUrl = this.agentsUrl + "/download_tag";
   constructor() {
   }
 }

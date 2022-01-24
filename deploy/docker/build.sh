@@ -22,7 +22,7 @@ ROOT_FOLDER="$(
 
 cd "$ROOT_FOLDER" || exit 1
 
-sh $ROOT_FOLDER/deploy/compile.sh --UI_BUILD_CONF=docker
+sh $ROOT_FOLDER/deploy/compile.sh --UI_BUILD_CONF=docker --LOCAL_AGENT_TAG=$VERSION
 
 docker build -t server -f $ROOT_FOLDER/Dockerfile .
 

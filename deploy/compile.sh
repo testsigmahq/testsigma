@@ -3,11 +3,15 @@ set -x
 set -e
 
 UI_BUILD_CONF=dev
+LOCAL_AGENT_TAG=latest
 
 while [ $# -gt 0 ]; do
   case "$1" in
     --UI_BUILD_CONF=*)
       UI_BUILD_CONF="${1#*=}"
+      ;;
+    --LOCAL_AGENT_TAG=*)
+      LOCAL_AGENT_TAG="${1#*=}"
       ;;
     *)
       printf "***************************\n"
@@ -42,6 +46,8 @@ mvn clean install
 
 cd $ROOT_FOLDER/agent-launcher
 mvn clean install
+
+sed -i "s/local.agent.download.tag=latest/local.agent.download.tag=$LOCAL_AGENT_TAG/g" $ROOT_FOLDER/server/src/main/resources/application.properties
 
 cd $ROOT_FOLDER/server
 mvn clean install

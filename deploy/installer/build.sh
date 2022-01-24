@@ -12,7 +12,7 @@ cd "$ROOT_FOLDER"
 
 echo "Generating complete agent builds with web and mobile"
 
-sh "$ROOT_FOLDER/deploy/compile.sh" --UI_BUILD_CONF=docker 
+sh "$ROOT_FOLDER/deploy/compile.sh" --UI_BUILD_CONF=docker --LOCAL_AGENT_TAG=$VERSION
 
 sh "$ROOT_FOLDER/deploy/installer/create_zip.sh" Windows windows $VERSION
 sh "$ROOT_FOLDER/deploy/installer/create_zip.sh" Mac mac $VERSION

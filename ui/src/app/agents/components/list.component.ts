@@ -33,6 +33,7 @@ export class ListComponent extends BaseComponent implements OnInit {
   public filterByColumns = ['all', 'active', 'inactive'];
   public filteredBy = this.filterByColumns[0];
   public showVideo: boolean;
+  public agentDownloadTag: String;
 
   get getSource() {
     return "https://s3.amazonaws.com/assets.testsigma.com/videos/agents/setup.mp4";
@@ -55,6 +56,7 @@ export class ListComponent extends BaseComponent implements OnInit {
     this.fetchAgents();
     this.pushToParent(this.route, undefined);
     this.setSystemOSName();
+    this.fetchAgentDownloadTag();
   }
 
   fetchAgents(): void {
@@ -127,8 +129,21 @@ export class ListComponent extends BaseComponent implements OnInit {
   agentDownloadLink(os?: String) {
     os = os || this.osName;
     let camelizeOsName = os[0].toUpperCase() + os.substr(1).toLowerCase();
-    return "https://github.com/Testsigmahq/testsigma/releases/download/1.0.0-beta/TestsigmaAgent-" + camelizeOsName + ".zip";
+    return "https://github.com/Testsigmahq/testsigma/releases/download/" + this.agentDownloadTag
+      + "/TestsigmaAgent-" + camelizeOsName + ".zip";
   };
+
+  fetchAgentDownloadTag() {
+    this.agentService.downloadTag().subscribe(
+      (data) => {
+        this.agentDownloadTag = data["tag"];
+      },
+      (error) => {
+        console.log("Error while fetching download tag", error);
+        this.agentDownloadTag = "latest";
+      }
+    );
+  }
 
   private goToPreviousPageIfEmpty(res) {
     if (this.currentPage?.pageNumber > 0 && res.content.length == 0) {

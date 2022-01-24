@@ -108,5 +108,13 @@ export class AgentService {
       catchError((err) => throwError(err))
     );
   }
+
+  public downloadTag(): Observable<JSON> {
+    return this.http.get<JSON>(this.URLConstants.agentDownloadTagUrl, {headers: this.httpHeaders.contentTypeApplication}).pipe(
+      timeout(60000),
+      map(data => data),
+      catchError(() => throwError('Problem while fetching Agent download tag -'))
+    );
+  }
 }
 

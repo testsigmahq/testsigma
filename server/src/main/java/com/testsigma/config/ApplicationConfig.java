@@ -29,4 +29,7 @@ public class ApplicationConfig {
 
   @Value("${local.agent.url}")
   private String localAgentUrl;
+
+  @Value("${local.agent.download.tag}")
+  private String localAgentDownloadTag;
 }

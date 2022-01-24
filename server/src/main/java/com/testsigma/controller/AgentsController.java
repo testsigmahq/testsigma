@@ -7,6 +7,7 @@
 
 package com.testsigma.controller;
 
+import com.testsigma.config.ApplicationConfig;
 import com.testsigma.constants.MessageConstants;
 import com.testsigma.dto.AgentDTO;
 import com.testsigma.exception.ResourceNotFoundException;
@@ -21,6 +22,7 @@ import com.testsigma.specification.AgentSpecificationsBuilder;
 import com.testsigma.web.request.AgentRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -33,6 +35,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -45,6 +48,7 @@ public class AgentsController {
   private final AgentService agentService;
   private final TestDeviceService testDeviceService;
   private final JWTTokenService jwtTokenService;
+  private final ApplicationConfig applicationConfig;
 
   @RequestMapping(path = "/{id}", method = RequestMethod.GET)
   public AgentDTO show(@PathVariable("id") Long id) throws ResourceNotFoundException {
@@ -105,5 +109,12 @@ public class AgentsController {
       );
       return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
+  }
+
+  @RequestMapping(path = "/download_tag", method = RequestMethod.GET)
+  public Map<String, Object> downloadTag() {
+    JSONObject jsonObject = new JSONObject();
+    jsonObject.put("tag", applicationConfig.getLocalAgentDownloadTag());
+    return jsonObject.toMap();
   }
 }

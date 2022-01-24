@@ -32,7 +32,7 @@
   - Extend the platform with 100+ pre-built add-ons (for custom actions, data generators, integrations) or build your own with Testsigma SDKs.
 
 
-[![Testsigma Overview](https://docs.testsigma.com/images/github/banner-video.png)](docs.testsigma.com/videos/testsigma-overview.mp4)
+[![Testsigma Overview](https://docs.testsigma.com/images/github/banner-video.png)](https://docs.testsigma.com/videos/testsigma-overview.mp4)
 
 
 &emsp;

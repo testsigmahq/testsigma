@@ -18,14 +18,14 @@ body:
       required: true
 - type: textarea
   attributes:
-    label: What is the current behaviour?
-    description: A concise description what you're experiencing.
+    label: What is the current behavior?
+    description: Add a brief description of what you are experiencing.
   validations:
     required: true
 - type: textarea
   attributes:
-    label: What is the expected behaviour?
-    description: A concise description what you expect.
+    label: What is the expected behavior?
+    description: A brief description of what you expect.
   validations:
     required: true
 - type: textarea

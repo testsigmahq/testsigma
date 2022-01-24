@@ -23,19 +23,20 @@
   Rapidly automate web, mobile app, and API tests in plain English, on a single, extensible platform that works out of the box. 
   
   - Eliminate complex setups, multiple tools and frameworks.
+  
   - Let everyone write tests 5X faster using plain English. 
+
   - Smart test recorder auto-converts user actions into editable steps.
-  - Automate end-to-end testing for Web, Mobile apps & APIs.
+  - Automate end-to-end testing for web, mobile apps & APIs.
   - Minimal to no maintenance of tests and frameworks
   - Built-in test data management for parameterized testing
-  - Seamless integrations with CI/CD, Bug Reporting, product management tools, & collaboration tools & Test Labs for continuous testing.
+  - Seamless integrations with CI/CD, bug reporting, product management tools, & collaboration tools & test labs for continuous testing.
   - Extend the platform with 100+ pre-built add-ons (for custom actions, data generators, integrations) or build your own with Testsigma SDKs.
 
 
 [![Testsigma Overview](https://docs.testsigma.com/images/github/banner-video.png)](https://docs.testsigma.com/videos/testsigma-overview.mp4)
 
 
-&emsp;
 ## **Quick start: One click deployment on Testsigma Cloud**
 
 The easiest way to start your automation journey is with Testsigma Cloud.

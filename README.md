@@ -31,13 +31,15 @@
   - Seamless integrations with CI/CD, Bug Reporting, product management tools, & collaboration tools & Test Labs for continuous testing.
   - Extend the platform with 100+ pre-built add-ons (for custom actions, data generators, integrations) or build your own with Testsigma SDKs.
 
+
+
 &emsp;
 ## **Quick start: One click deployment on Testsigma Cloud**
 
 The easiest way to start your automation journey is with Testsigma Cloud.
 
 <a href="https://testsigma.com/signup?utm_source=github&utm_medium=social" target="_blank">
-<img src="http://docs.testsigma.com/images/github/deploy-to-testsigma-cloud.svg" alt="How to automate testing with Testsigma" /></a>
+<img src="https://docs.testsigma.com/images/github/deploy-2-testsigma-cloud.svg?1234" alt="How to automate testing with Testsigma" /></a>
 
 Once you deploy, you can follow the below tutorials to get started
 

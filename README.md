@@ -53,7 +53,6 @@ We have 2 more deployment options to choose from
 1. [Using Docker](https://testsigma.com/docs/getting-started/setup/docker/)
 2. [Using Downloadable Package](https://testsigma.com/docs/getting-started/setup/downloadable-package/) 
 
-&emsp;
 ## **Features**
 
 #### Test Development

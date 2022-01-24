@@ -1,0 +1,23 @@
+<div
+  *ngIf="authGuard.session.user"
+  class="bg-white border-rds-4 global-create-modal ng-scope p-15 shadow-all2-b4">
+  <div
+    class="text-uppercase text-list-header fz-11 pb-5"
+    [translate]="'global.add_title'"></div>
+  <li>
+    <a
+      [routerLink]="['/td', versionId, 'cases', 'create']"
+      class="pl-5 f-medium">
+      <i class="fa-test-cases-alt mr-5"></i>
+      <span [translate]="'global_add.testcase.title'"></span>
+    </a>
+  </li>
+<!--  <li>-->
+<!--    <a-->
+<!--      [routerLink]="['/td', versionId, 'requirements','new']"-->
+<!--      class="pl-5 f-medium">-->
+<!--      <i class="fa-requirements-alt mr-5"></i>-->
+<!--      <span [translate]="'global_add.requirement.title'"></span>-->
+<!--    </a>-->
+<!--  </li>-->
+</div>

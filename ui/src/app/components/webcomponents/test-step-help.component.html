@@ -1,0 +1,55 @@
+<div
+  class="d-flex align-items-center theme-gray-light pt-20 ts-col-100 pr-15 help-nav">
+  <ul class="tab-nav ml-10" role="tablist">
+    <li
+      *ngIf="isActionText"
+      class="nav-items" role="presentation">
+      <a
+        (click)="activeTab = 'sample'"
+        [class.active]="activeTab == 'sample'"
+        class="normal-text">
+        <i class="fa-sample"></i>
+        <span class="pl-10" [translate]="'test_step.help.hint.sample'"></span>
+      </a>
+    </li>
+    <li
+      *ngIf="isActionText"
+      class="nav-items" role="presentation">
+      <a
+        (click)="activeTab = 'example'"
+        [class.active]="activeTab == 'example'"
+        class="normal-text">
+        <i class="fa-example"></i>
+        <span class="pl-10" [translate]="'test_step.example.title'"></span>
+      </a>
+    </li>
+    <li class="nav-items" role="presentation">
+      <a
+        (click)="activeTab = 'help'"
+        [class.active]="activeTab == 'help'"
+        class="normal-text">
+        <i class="fa-help"></i>
+        <span class="pl-10" [translate]="'hint.message.common.help'"></span>
+      </a>
+    </li>
+  </ul>
+  <button
+    (click)="helpClose()"
+    [matTooltip]="'hint.message.common.close' | translate"
+    class="close"></button>
+</div>
+<div class="h-100">
+  <app-test-step-help-examples
+    *ngIf="activeTab == 'example' && templates && isActionText"
+    [templates]="templates"
+    (onSelectTemplate)="SelectTemplate($event)"
+  ></app-test-step-help-examples>
+  <app-test-step-help-document
+    *ngIf="activeTab == 'help'"
+    [stepType]="stepType"
+    [testcase]="testcase" [version]="version"></app-test-step-help-document>
+  <app-test-step-help-samples
+    *ngIf="activeTab == 'sample' && isActionText"
+    [version]="version"
+  ></app-test-step-help-samples>
+</div>

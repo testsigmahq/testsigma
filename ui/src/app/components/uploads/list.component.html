@@ -1,0 +1,133 @@
+<div class="page-header d-flex fz-20 align-items-center">
+  <div
+    class="ts-col-50 text-truncate rb-medium d-flex align-items-center">
+    <span
+      class="px-8"
+      [translate]="'uploads.list.title'"></span>
+  </div>
+
+  <div class="d-flex align-items-center ml-auto"
+       *ngIf="selectedUploads.length">
+    <button (click)="checkForLinkedEnvironments(null)"
+            [matTooltip]="'hint.message.common.delete_selected' | translate"
+            class="btn icon-btn border-rds-2 ml-14"
+            *ngIf="selectedUploads.length">
+      <i class="fa-trash-thin"></i>
+    </button>
+  </div>
+
+  <div class="align-items-center ml-auto"
+       [class.d-none]="hideHeaderToolBar"
+       [class.d-flex]="!hideHeaderToolBar">
+    <app-toggle-search-button
+      (searchAction)="search($event)"></app-toggle-search-button>
+    <button
+      (click)="openSaveUploadForm()"
+      class="theme-btn-primary ml-14 "
+      [translate]="'btn.common.upload'">
+    </button>
+    <app-sort-by-button
+      class="pr-15" *ngIf="uploads?.totalElements"
+      [sortByColumns]="sortByColumns"
+      [sortedBy]="sortedBy"
+      [direction]="direction"
+      [translatePreFix]="'environments.list.sort_by.'"
+      (sortAction)="sortBy($event.sortBy, $event.direction)"></app-sort-by-button>
+    <div class="pl-15 theme-border-l">
+      <app-pagination *ngIf="uploads?.totalElements" [paginationData]="uploads"
+                      [currentPage]="currentPage" (paginationAction)="fetchUploads()"></app-pagination>
+    </div>
+  </div>
+</div>
+<div class="page-content">
+  <div
+    *ngIf="uploads?.content.length != 0"
+    class="list-header" style="margin-bottom: 0px !important;">
+    <div class="ts-col-35 d-flex align-items-center">
+      <mat-checkbox
+        class="mat-checkbox"
+        [(ngModel)]="selectAll" [ngModelOptions]="{standalone: true}"
+        (change)="selectAllToggle(selectAll)"
+        [checked]="selectedUploads.length == uploads?.content?.length"></mat-checkbox>
+      <span
+        class="pl-15"
+        [translate]="'message.common.text.title'"></span>
+    </div>
+    <span class="ts-col-45 pl-5" [translate]="'uploads.list.header.file_path'"></span>
+    <span class="ts-col-20 pl-4" [translate]="'uploads.list.header.upload_status'"></span>
+  </div>
+  <app-placeholder-loader
+    *ngIf="!fetchingCompleted"></app-placeholder-loader>
+  <div class="list-container">
+    <div class="list-view green-highlight lg-pm pl-10 pointer align-items-center"
+         *ngFor="let upload of uploads?.content; let i = index">
+      <div class="ts-col-100 d-flex">
+        <div class="ts-col-35 list-title lh-2 text-truncate pr-10">
+            <mat-checkbox
+              class="mat-checkbox"
+              [(ngModel)]="upload.selected" [ngModelOptions]="{standalone: true}"
+              (change)="setSelectedList(upload.id,upload.selected)">
+              <span class="pl-7 list-title" [textContent]="upload.name"></span>
+            </mat-checkbox>
+        </div>
+        <div class="ts-col-45 pl-2 d-flex" [ngSwitch]="upload.isInProgress">
+          <div *ngSwitchCase="false"
+               class="text-truncate ts-col-55" [textContent]="'testsigma-storage:/.../'+upload.fName"></div>
+          <div class="rb-regular-i-d mr-auto ml-20 ts-col-20 ng-star-inserted fa-copy"
+               *ngSwitchCase="false"
+               [class.result-status-text-7]="upload.filePathCopied"
+               [class.text-link]="!upload.filePathCopied"
+               [matTooltip]="upload.filePathCopied ? ('uploads.list.message.copied' | translate) : ('uploads.list.copy_path' | translate) "
+               [cdkCopyToClipboard]="'testsigma-storage:/'+upload.appPath"
+               (click)="showCopyTooltip(upload)"></div>
+          <div *ngSwitchCase="true" [translate]="'(refresh)'" class="text-link" (click)="fetchUploads()"></div>
+        </div>
+        <div class="ts-col-20 d-flex">
+          <span [textContent]="upload.uploadStatus"></span>
+          <span class="ml-auto text-center action-icons mr-20"
+                *ngIf="!selectedUploads || !selectedUploads.length">
+            <a
+              data-placement="bottom"
+              [matTooltip]="'pagination.edit' | translate"
+              href="javascript:void(0)"
+              (click)="openSaveUploadForm(upload)"
+              class="fa-pencil-on-paper action-icon"></a>
+            <a
+              data-placement="bottom" (click)="checkForLinkedEnvironments(upload.id)"
+              [matTooltip]="'pagination.delete' | translate"
+              href="javascript:void(0)"
+              class="fa-trash-thin action-icon"></a>
+            <a
+              data-placement="bottom"
+              [matTooltip]="'hint.message.common.download' | translate"
+              [href]="'/uploads/'+upload.id+'/download'"
+              target="_blank"
+              class="fa-download-thin action-icon"></a>
+          </span>
+        </div>
+      </div>
+      <div class="text-t-secondary d-flex w-100 mt-0">
+        <div class="ts-col-35 pl-60 ml-3">
+
+        </div>
+        <div class="ts-col-45 d-flex" *ngIf="!upload.isInProgress">
+          <span [textContent]="upload.sizeInWords"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!uploads?.content.length" class="h-100">
+    <div *ngIf="fetchingCompleted"
+         class="empty-full-container">
+      <div class="empty-run-md"></div>
+      <div
+        class="empty-text"
+        [translate]="isFiltered ? 'message.common.search.not_found' : 'uploads.list.not_created'"></div>
+      <button *ngIf="!isFiltered"
+              (click)="openSaveUploadForm()"
+              class="theme-btn-primary ml-14 "
+              [translate]="'btn.common.upload'">
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,60 @@
+<div class="theme-overlay-container">
+  <div class="theme-overlay-header">
+    <div
+      class="theme-overlay-title"
+      [translate]="'testcase.details.step_create_group'| translate:{Name: 'Create'}">
+    </div>
+    <button
+      class="close"
+      type="button"
+      [matTooltip]="'hint.message.common.close' | translate"
+      mat-dialog-close>
+    </button>
+  </div>
+  <div class="theme-overlay-content" *ngIf="!containsStepGroup() && !canBtnDisable()">
+    <form
+      class="ts-form rb-regular pt-10"
+      (keydown.enter)="false"
+      novalidate="novalidate"
+      [formGroup]="stepGroupForm"
+      name="bulkUpdateForm">
+        <div class="form-group">
+          <div class="p-0 field">
+            <input
+              #nameInput
+              type="text"
+              id="name"
+              name="name"
+              placeholder=" "
+              class="form-control"
+              [autofocus]=true
+              [formControlName]="['name']"/>
+            <label
+              [translate]="'message.common.label.name'"
+              for="name" class="required"></label>
+          </div>
+        </div>
+    </form>
+  </div>
+  <div class="theme-overlay-content">
+    <div *ngIf="containsStepGroup()" [translate]="'testcase.details.step_create_group.step_group_error'"></div>
+    <div *ngIf="canBtnDisable()" [translate]="'testcase.details.step_create_group.conditional_error'"></div>
+  </div>
+  <div class="theme-overlay-footer">
+    <button
+      class="theme-btn-clear-default"
+      mat-dialog-close
+      [translate]="'btn.common.close'">
+    </button>
+    <button
+      [disabled]="!stepGroupForm.valid || containsStepGroup() || canBtnDisable()"
+      class="theme-btn-primary"
+      type="submit"
+      (click)="saveAsStepGroup()"
+      [isLoading]="saving"
+      [message]="'message.common.saving'"
+      appAsyncBtn
+      [textContent]="'btn.common.create' | translate">
+    </button>
+  </div>
+</div>

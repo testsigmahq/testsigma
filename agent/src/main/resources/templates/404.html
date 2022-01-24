@@ -1,0 +1,179 @@
+<!--
+  ~ /*
+  ~ *****************************************************************************
+  ~  * Copyright (C) 2019 Testsigma Technologies Inc.
+  ~  * All rights reserved.
+  ~  ****************************************************************************
+  ~  */
+  -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8"/>
+  <title>Page not found</title>
+</head>
+
+<body class="align-center">
+<style type="text/css">
+  :root {
+    --main-color: white;
+    --stroke-color: #5d862e;
+    --link-color: #29abe2;
+  }
+
+  body {
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+    width: 100%;
+  }
+
+  .align-center {
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: flex;
+    -ms-align-items: center;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .loading-dots {
+    color: #6a737d;
+    width: 40px;
+    display: inline-block;
+  }
+
+  .loading-dots:after {
+    content: "";
+    animation: dotsLoadLTR 2s linear infinite;
+  }
+
+  @keyframes dotsLoadLTR {
+    0% {
+      content: ".";
+    }
+
+    20% {
+      content: "..";
+    }
+
+    40% {
+      content: "...";
+    }
+
+    60% {
+      content: "....";
+    }
+
+    80% {
+      content: ".....";
+    }
+
+    100% {
+      content: "......";
+    }
+  }
+
+  .icon {
+    width: 200px;
+    height: 200px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .result-not-image, .loading-image {
+    flex: 0 0 100%;
+  }
+
+  .msg-text {
+    color: #6a737d;
+    font-size: 27px;
+    font-weight: 600;
+  }
+
+  .loading.completed,
+  .result-not-found, .result-not-image, .loading-image.completed {
+    display: none;
+  }
+
+  .result-not-found.completed, .result-not-image.completed {
+    display: block;
+  }
+</style>
+<div>
+  <div class="icon">
+    <div class="loading-image">
+      <?xml version="1.0" encoding="utf-8"?>
+      <svg viewBox="0 0 49 47.4" xmlns="http://www.w3.org/2000/svg">
+        <style>#A {
+          animation: dash 3s ease forwards infinite;
+          transform-origin: center
+        }
+
+        @keyframes dash {
+          to {
+            stroke-dashoffset: 0
+          }
+        }</style>
+        <path
+          d="M46 17.7c-.4-.6-1-1-1.7-1.1-.3 0-.7-.1-1-.2-.4-.1-.9-.1-1.3-.2-1.2-.1-1.9-.6-2.3-1.6-.3-.7-.3-1.2-.1-1.8l.2-.4.9-2.3c.2-.6.2-1.3-.2-2-.7-1.3-1.7-2.2-3-2.6-.8-.3-1.6-.2-2.3.2l-1 .6-1.4.9c-.3.2-.7.3-1.2.3h0c-1.1 0-2.2-.7-2.4-1.6-.1-.5-.3-1-.5-1.4-.1-.4-.3-.8-.4-1.2-.3-.9-.8-1.5-1.7-1.8-.2-.1-.5-.2-.8-.2-.1 0-.2-.1-.3-.1h-1.8c-1.4.3-2.3 1-2.6 2.3 0 .6-.2 1.2-.4 1.7l-.3.9c-.3.9-1.3 1.5-2.3 1.5-.4 0-.8-.1-1.1-.3l-1.8-1.1c-.3-.2-.6-.3-.8-.5-.5-.4-1.1-.5-1.7-.3-1.6.4-2.7 1.3-3.5 2.9-.2.6-.3 1.2 0 1.9.1.3.2.6.4.9l.6 1.4c.4 1 .4 1.8-.2 2.7-.4.6-.8.9-1.5 1-.9.2-1.9.3-2.9.4-.8.1-1.5.5-2 1.2-.6 1-.9 2.1-.8 3.4.1 1.1.6 2 1.6 2.4l1.1.6 1.2.6c.6.3 1 .9 1.2 1.7.2.9 0 1.7-.4 2.2-.7.7-1.3 1.5-1.9 2.2-.3.3-.5.8-.6 1.2-.3 1.7 1.1 4.1 2.6 4.7.4.1.9.2 1.3.1.8-.1 1.7-.3 2.6-.5 1-.2 1.7 0 2.4.7.5.5.8 1.1.8 1.8l-.1 2.9c0 .8.2 1.4.8 1.9.9.8 1.9 1.3 3.2 1.5h.4c1 0 1.8-.4 2.3-1.2.2-.3.5-.6.7-.9.3-.3.5-.7.8-1 .4-.6 1.2-1 2-1s1.6.4 2 .9a7.55 7.55 0 0 0 1.1 1.4c.2.3.4.6.7.8.4.5 1 .9 1.6.9 1.5.1 2.9-.3 4.1-1.4.6-.5.8-1.2.8-2v-1.1c0-.5 0-.9-.1-1.4-.1-1.1.3-1.9 1.1-2.5.5-.4 1.1-.5 1.6-.4l2.8.6c.9.2 1.7 0 2.5-.6.9-.8 1.5-1.8 1.8-3 .2-1 0-1.9-.7-2.6-.3-.3-.5-.6-.8-.9-.2-.3-.5-.6-.8-.9-.7-.8-1-1.6-.7-2.6.2-.7.5-1.2 1.1-1.5l2.6-1.4c.7-.3 1.1-.9 1.3-1.6.3-1.4.1-2.8-.8-4.1z"
+          fill="none"
+          id="A" stroke="#24292E" stroke-dasharray="360%" stroke-dashoffset="-360%" transform="rotate(284)"/>
+        <g fill="#40B84A">
+          <path
+            d="M24.8 18h0l.1-1.7v-.4c0-.8.1-.8.1-2.4 0-.1 0-.2-.1-.3h-.4c-.7.2-1.5.4-2.4.5-.2 0-.3.2-.3.4l-.2 1.8-.2 2-.1 1.8-.2 4v1.5l-.2 3.2v.7c0 1 .2 1.8.5 2.4s.8 1.1 1.5 1.3c.6.3 1.4.4 2.4.4.4 0 .8 0 1.2-.1.4 0 1-.2 1.7-.3.2 0 .3-.2.3-.3.1-.4.1-.9.2-1.4.1-.6.1-1.2.2-1.4 0-.2 0-.3-.1-.4s-.3-.1-.4 0c-.7.4-1.1.5-1.7.6h-.8a1.93 1.93 0 0 1-1-.3c-.3-.1-.4-.2-.4-.5-.1-.5-.1-.6-.1-1.1v-.9l.2-5.1.2-4z"/>
+          <path
+            d="M32.8 18.3l-.7-1.5c-.1-.2-.3-.4-.6-.5-.2-.1-.5-.1-.8 0l-5 2.5v-.1l-3.6 1.9-2.1 1.1-.8-1.8c-.1-.2-.3-.4-.6-.5-.2-.1-.5-.1-.8 0l-1.4.7c-.5.2-.7.8-.5 1.4l1.9 4.2c.1.2.3.4.6.5.1 0 .2.1.3.1s.3 0 .4-.1l2.7-1.3 3.7-1.8 6.8-3.3c.5-.4.7-1 .5-1.5z"/>
+        </g>
+      </svg>
+    </div>
+    <div class="result-not-image">
+      <svg fill-rule="evenodd" viewBox="0 0 339 214" xmlns="http://www.w3.org/2000/svg">
+        <g fill="#d9dadd">
+          <path d="M318.75 74h10.125v10.463H318.75zm0 20.538h10.125V105H318.75z"/>
+          <path d="M328.875 84.463H339v10.462h-10.125zm-19.875 0h10.125v10.462H309z"/>
+          <g transform="matrix(-1 0 0 1 82 87)">
+            <path d="M39 0h6v6h-6zm0 12h6v6h-6z"/>
+            <path d="M45 6h6v6h-6zM33 6h6v6h-6zm28.75 18h10.125v10.462H61.75zm0 20.538h10.125V55H61.75z"/>
+            <path
+              d="M71.875 34.463H82v10.462H71.875zm-19.875 0h10.125v10.462H52zM9 74h9v9H9v-9zm0 18h9v9H9v-9zm9-9h9v9h-9v-9zM0 83h9v9H0v-9z"/>
+          </g>
+          <path d="M252 40h6v6h-6zm0 12h6v6h-6z"/>
+          <path
+            d="M258 46h6v6h-6zm-12 0h6v6h-6zm50 59h6v6h-6v-6zm0 12h6v6h-6v-6zm6-6h6v6h-6v-6zm-12 0h6v6h-6v-6zm-67.333 65h7.667v7.667h-7.667zm0 15.333h7.667V199h-7.667z"/>
+          <path
+            d="M230.333 183.667H238v7.667h-7.667zm-15.333 0h7.667v7.667H215zM106.854 140h62.267v-5.492h-62.267c-4.6 0-8.313-3.688-8.313-8.237V28.728c0-4.55 3.722-8.237 8.313-8.237h111.3c4.593 0 8.313 3.687 8.313 8.237v34.58H232v-34.58C232 21.15 225.793 15.008 218.144 15h-111.3C99.208 15 93 21.15 93 28.728v97.544C93 133.85 99.208 140 106.854 140z"/>
+        </g>
+        <path d="M104.018 25.98h5.085v5.068h-5.085zm11.866 0h5.085v5.068h-5.085zm11.018 0h5.085v5.068h-5.085z"
+              fill="#a81543"/>
+        <path d="M104.018 41.182h122.896v5.068H104.018z" fill="#d9dadd"/>
+        <path
+          d="M203.66 61c22.97 0 41.66 18.688 41.66 41.66 0 9.342-3.13 17.946-8.342 24.904l7.18 7.18 3.146-3.146 34.65 34.648a10.34 10.34 0 0 1 3.044 7.352c0 5.736-4.666 10.402-10.4 10.402a10.32 10.32 0 0 1-7.354-3.047l-34.648-34.646 3.146-3.146-7.18-7.18c-6.958 5.213-15.562 8.342-24.904 8.342-22.97 0-41.66-18.688-41.66-41.66S180.7 61 203.66 61zm66.392 117.15a6.38 6.38 0 0 0 4.547 1.883c3.547 0 6.432-2.887 6.432-6.434 0-1.717-.668-3.332-1.883-4.55l-31.843-31.84-9.098 9.098 31.845 31.843zm-31.504-37.794l2.805-2.805-6.912-6.914c-.89.98-1.827 1.914-2.807 2.807l6.914 6.912zm-34.888-2.306c19.505 0 35.373-15.874 35.373-35.387s-15.867-35.387-35.373-35.387-35.373 15.874-35.373 35.387 15.867 35.387 35.373 35.387z"
+          fill="#96284b" fill-rule="nonzero"/>
+      </svg>
+    </div>
+  </div>
+  <div class="loading msg-text"> Please wait <span class="loading-dots"></span></div>
+  <div class="result-not-found msg-text"> can't find the page you are looking for...</div>
+</div>
+</body>
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function (event) {
+
+    setTimeout(
+      function () {
+        document.getElementsByClassName('loading')[0].classList.add('completed');
+        document.getElementsByClassName('result-not-found')[0].classList.add('completed');
+        document.getElementsByClassName('loading-image')[0].classList.add('completed');
+        document.getElementsByClassName('result-not-image')[0].classList.add('completed');
+
+      }, 7000);
+  })
+</script>
+
+</html>

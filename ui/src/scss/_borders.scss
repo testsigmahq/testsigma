@@ -1,0 +1,179 @@
+// stylelint-disable property-blacklist, declaration-no-important
+//
+// Border
+//
+@each $prop,
+$abbrev in (border: border) {
+    @each $size,
+    $length in $border-widths {
+	@each $color, $value in $border-colors {
+	        .#{$abbrev}-#{$color}-#{$size} {
+	            #{$prop}: $length solid $value !important;
+	        }
+	        .#{$abbrev}-#{$color}-t-#{$size},
+	        .#{$abbrev}-#{$color}-y-#{$size} {
+	            #{$prop}-top: $length solid $value !important;
+	        }
+	        .#{$abbrev}-#{$color}-r-#{$size},
+	        .#{$abbrev}-#{$color}-x-#{$size} {
+	            #{$prop}-right: $length solid $value !important;
+	        }
+	        .#{$abbrev}-#{$color}-b-#{$size},
+	        .#{$abbrev}-#{$color}-y-#{$size} {
+	            #{$prop}-bottom: $length solid $value !important;
+	        }
+	        .#{$abbrev}-#{$color}-l-#{$size},
+	        .#{$abbrev}-#{$color}-x-#{$size} {
+	            #{$prop}-left: $length solid $value !important;
+	        }
+		}
+    }
+}
+
+/*border none*/
+
+@each $prop,
+$abbrev in (border: border) {
+        .#{$abbrev}-0 {
+            #{$prop}: 0 !important;
+        }
+        .#{$abbrev}-t-0,
+        .#{$abbrev}-y-0 {
+            #{$prop}-top: 0 !important;
+        }
+        .#{$abbrev}-r-0,
+        .#{$abbrev}-x-0 {
+            #{$prop}-right: 0 !important;
+        }
+        .#{$abbrev}-b-0,
+        .#{$abbrev}-y-0 {
+            #{$prop}-bottom: 0 !important;
+        }
+        .#{$abbrev}-l-0,
+        .#{$abbrev}-x-0 {
+            #{$prop}-left: 0 !important;
+        }
+}
+
+//
+// Border-radius
+//
+@each $prop,
+$abbrev in (border-radius: border-rds) {
+    @each $size,
+    $length in $border-radiuses {
+        .#{$abbrev}-#{$size} {
+            #{$prop}: $length !important;
+        }
+        .#{$abbrev}-top-#{$size} {
+            border-top-left-radius: $length !important;
+            border-top-right-radius: $length !important;
+        }
+        .#{$abbrev}-right-#{$size} {
+            border-top-right-radius: $length !important;
+            border-bottom-right-radius: $length !important;
+        }
+        .#{$abbrev}-bottom-#{$size} {
+            border-bottom-right-radius: $length !important;
+            border-bottom-left-radius: $length !important;
+        }
+        .#{$abbrev}-left-#{$size} {
+            border-top-left-radius: $length !important;
+            border-bottom-left-radius: $length !important;
+        }
+    }
+}
+
+.rounded-circle {
+    border-radius: 50% !important;
+}
+
+.rounded-pill {
+    border-radius: 30px !important;
+}
+
+.rounded-0 {
+    border-radius: 0 !important;
+}
+
+.doted-border-bottom {
+  border-bottom-style: dotted !important;
+}
+
+.doted-border-top {
+  border-top-style: dotted !important;
+}
+
+.border-doted {
+  border-style: dotted!important;
+}
+
+.border-doted-1-gray {
+  border: 1px dotted $gray-500 !important;
+}
+
+
+@each $color,
+$value in $theme-colors {
+    .border-#{$color} {
+        border-color: $value !important;
+    }
+}
+
+.border-white {
+    border-color: $white !important;
+}
+
+
+//TODO This need to clean
+@each $prop,
+$abbrev in (border: border) {
+    @each $color, $value in (theme: $theme-separator-color) {
+      .#{$color}-#{$abbrev}-t,
+      .#{$color}-#{$abbrev}-y {
+        #{$prop}-top: 1px solid $value;
+      }
+      .#{$color}-#{$abbrev}-r,
+      .#{$color}-#{$abbrev}-x {
+        #{$prop}-right: 1px solid $value;
+      }
+      .#{$color}-#{$abbrev}-b,
+      .#{$color}-#{$abbrev}-y {
+        #{$prop}-bottom: 1px solid $value;
+      }
+      .#{$color}-#{$abbrev}-l,
+      .#{$color}-#{$abbrev}-x {
+        #{$prop}-left: 1px solid $value;
+      }
+      .#{$color}-#{$abbrev}-t-i-d,
+      .#{$color}-#{$abbrev}-y-i-d {
+        #{$prop}-top: 1px solid $value !important;
+      }
+      .#{$color}-#{$abbrev}-r-i-d,
+      .#{$color}-#{$abbrev}-x-i-d {
+        #{$prop}-right: 1px solid $value !important;
+      }
+      .#{$color}-#{$abbrev}-b-i-d,
+      .#{$color}-#{$abbrev}-y-i-d {
+        #{$prop}-bottom: 1px solid $value !important;
+      }
+      .#{$color}-#{$abbrev}-l-i-d,
+      .#{$color}-#{$abbrev}-x-i-d {
+        #{$prop}-left: 1px solid $value !important;
+      }
+      .#{$color}-#{$abbrev} {
+        #{$prop}: 1px solid $value;
+      }
+      .#{$color}-#{$abbrev}-i-d {
+        #{$prop}: 1px solid $value !important;
+      }
+    }
+}
+
+.border-img-none {
+  border-image: none;
+}
+
+.border-dashed-style {
+  border-style: dashed;
+}

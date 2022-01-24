@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59 (86127) - https://sketch.com -->
+    <title>clippy</title>
+    <desc>Created with Sketch.</desc>
+    <g id="clippy" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M11,48 L27,48 L27,52 L11,52 L11,48 Z M31,24 L11,24 L11,28 L31,28 L31,24 Z M39,36 L39,28 L27,40 L39,52 L39,44 L59,44 L59,36 L39,36 Z M21,32 L11,32 L11,36 L21,36 L21,32 Z M11,44 L21,44 L21,40 L11,40 L11,44 Z M47,48 L51,48 L51,56 C50.9375,57.125 50.5625,58.0625 49.8125,58.8125 C49.0625,59.5625 48.125,59.9375 47,60 L7,60 C4.8125,60 3,58.1875 3,56 L3,12 C3,9.8125 4.8125,8 7,8 L19,8 C19,3.5625 22.5625,0 27,0 C31.4375,0 35,3.5625 35,8 L47,8 C49.1875,8 51,9.8125 51,12 L51,32 L47,32 L47,20 L7,20 L7,56 L47,56 L47,48 Z M11,16 L43,16 C43,13.8125 41.1875,12 39,12 L35,12 C32.8125,12 31,10.1875 31,8 C31,5.8125 29.1875,4 27,4 C24.8125,4 23,5.8125 23,8 C23,10.1875 21.1875,12 19,12 L15,12 C12.8125,12 11,13.8125 11,16 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

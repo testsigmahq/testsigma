@@ -1,0 +1,209 @@
+<div class="d-flex align-items-center action-steps-list">
+  <div
+    #changeStep
+    id="changeStep"
+    class="dropdown section-title mouse-over d-inline-block p-2 pl-5"
+       [class.mouse-over]="!testStep?.id"
+       [class.mr-n10]="stepRecorderView"
+       [class.ml-25]="stepRecorderView">
+    <div
+      [class.disabled]="testStep?.id"
+      class="btn-group px-10 py-8 border-rds-4 theme-border pointer border-dashed-style change-step-icon"
+      [class.px-10]="!stepRecorderView"
+      [class.py-8]="!stepRecorderView"
+      [class.px-5]="stepRecorderView"
+      [class.py-4]="stepRecorderView">
+      <i
+        [class.fa-nlp-new]="isActionText"
+        [class.fa-step-group]="isStepGroup"
+        [class.fa-rest-new]="isRest"
+        [class.fa-power-loop]="isForLoop"
+        [class.fz-15]="!stepRecorderView"
+        class="section-action-icons"></i>
+    </div>
+    <div
+      class="dropdown-menu drop-down-transparent min-w">
+      <ul
+        class="step-type-selection">
+        <li
+          *ngIf="isIfType || isElseIfType"
+          class="step-type">
+          <i class="fa-conditional-if step-icon"></i>
+          <span
+            class="step-label"
+            [translate]="'step.conditional_if.label'"></span>
+          <mat-slide-toggle
+            [disableRipple]="true"
+            class="mat-slide-toggle ml-auto step-slide-toggle"
+            [checked]="isIfType || isElseIfType"
+            (change)="createConditionalIFStep(false)"
+            [disabled]="isElseIfType">
+          </mat-slide-toggle>
+        </li>
+        <li
+          *ngIf="isIfType || isElseIfType"
+          class="my-6 border-separator-b-1 line-height-none"></li>
+        <li *ngIf="!version?.workspace?.isRest"
+            [class.active]="isActionText"
+            class="step-type" (click)="changeStepType(testStepType.ACTION_TEXT)">
+          <i class="fa-nlp-new step-icon"></i>
+          <span
+            class="step-label"
+            [translate]="'step.action.label'"></span>
+        </li>
+        <li
+          *ngIf="!testCase?.isStepGroup"
+          (click)="changeStepType(testStepType.STEP_GROUP)"
+          [class.active]="isStepGroup"
+          class="step-type">
+          <i class="fa-step-group step-icon"></i>
+          <span
+            class="step-label"
+            [translate]="'step.group.label'"></span>
+        </li>
+        <li
+          [class.active]="isRest"
+          (click)="changeStepType(testStepType.REST_STEP)"
+          class="step-type">
+          <i class="fa-rest-new step-icon"></i>
+          <span
+            class="step-label"
+            [translate]="'step.rest.label'"></span>
+        </li>
+        <li
+          [class.active]="isForLoop"
+          *ngIf="!isWhileParentORCondition && !testStep?.isConditionalIf"
+          (click)="changeStepType(testStepType.FOR_LOOP)"
+          class="step-type">
+          <i class="fa-power-loop step-icon"></i>
+          <span
+            class="step-label"
+            [translate]="'step.for.label'"></span>
+        </li>
+        <li
+          *ngIf="!isWhileParentORCondition && !isParentForLoop && !testStep?.isConditionalIf"
+          (click)="changeStepType(testStepType.ACTION_TEXT, true)"
+          class="step-type">
+          <i class="fa-while-loop step-icon"></i>
+          <span
+            class="step-label"
+            [translate]="'step.while.label'"></span>
+        </li>
+        <li
+          *ngIf="!testStep?.isConditionalIf && !testStep.isConditionalElseIf"
+          class="my-6 border-separator-b-1 line-height-none"></li>
+        <li
+          *ngIf="!testStep?.isConditionalIf && !testStep.isConditionalElseIf"
+          class="step-type">
+          <i class="fa-conditional-if step-icon"></i>
+          <span
+            class="step-label"
+            [translate]="'step.conditional_if.label'"></span>
+          <mat-slide-toggle
+            [disableRipple]="true"
+            class="mat-slide-toggle ml-auto step-slide-toggle"
+            [checked]="testStep?.isConditionalIf"
+            (change)="createConditionalIFStep(true)">
+          </mat-slide-toggle>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div
+    [formGroup]="stepForm"
+    #naturalStep
+    id="naturalStep"
+    [class.theme-border-b]="!isActionText"
+    class=" py-15 ml-5 pl-7 form-group p-0 ts-col-auto d-flex align-items-baseline flex-nowrap">
+    <div
+      class="result-status-8 list-number ng-binding x-sm-size text-white"
+      [textContent]="indexPosition()"></div>
+    <div class="d-flex align-items-center">
+      <i
+        class="px-5 text-warning"
+        [class.fa-while-loop]="isConditionalWhileType"
+        [class.fa-conditional-if]="isIfType || isElseIfType"></i>
+      <span
+        *ngIf="isIfType || isElseIfType"
+        [class.content-else-if]="isElseIfType"
+        [class.content-if]="isIfType"
+        [translate]="'step.condition_type.'+(stepConditionType  ? stepConditionType : stepType)"
+        class="text-warning text-uppercase text-nowrap d-inline-block"></span>
+    </div>
+    <input
+      *ngIf="isRest && stepForm?.controls['action']"
+      [formControlName]="['action']"
+      (click)="showForm = true;formSubmitted=false"
+      [class.w-90]="stepConditionType"
+      [class.w-95]="!stepConditionType"
+      type="text" class="pl-14 border-0" [placeholder]="'step.title.place_holder' | translate"/>
+    <div
+      *ngIf="!isRest && !isConditionalWhileType"
+      class="d-inline-block w-100-60"
+      [class.show-else-if]="isElseIfType"
+      [class.show-while]="isConditionalWhileType"
+      [class.show-if]="isIfType"></div>
+    <div
+      *ngIf="canShowActionRequired"
+      class="error left position-absolute w-fit-content app-test-step-rest-form" style="left: 20px"
+      [translate]="'form.validation.common.required'| translate:{FieldName: 'Title'}"></div>
+    <i
+      *ngIf="testStep && (showForm || isActionText)"
+      (click)="showMoreOption(testStep)"
+      [matTooltip]="'hint.message.common.more' | translate"
+      class="bg-grey-x-light btn fa-ellipsis-h icon-btn mat-tooltip-trigger pointer text-muted text-t-secondary ml-auto">
+    </i>
+  </div>
+</div>
+<div class="pl-50">
+  <app-action-step-form
+    [class.has-else-if]="isElseIfType"
+    [class.has-if]="isIfType"
+    [class.has-while-loop]="isConditionalWhileType"
+    *ngIf="isActionText && testSteps"
+    [testStep]="testStep"
+    [testSteps]="testSteps"
+    [version]="version"
+    [stepForm]="stepForm"
+    [templates]="templates"
+    [kibbutzTemplates]="kibbutzTemplates"
+    [selectedTemplate]="selectedTemplate"
+    [testCase]="testCase"
+    [testStepsLength]="testSteps?.content?.length"
+    [testCaseResultId]="testCaseResultId"
+    [conditionTypeChange]="testStep.conditionType"
+    [isDryRun]="isDryRun"
+    [stepRecorderView]="stepRecorderView"
+    (onCancel)="hideForm()"
+    (onSave)="afterSaveStep($event)"
+  ></app-action-step-form>
+  <app-test-step-rest-form
+    [class.has-else-if]="isElseIfType"
+    [class.has-if]="isIfType"
+    [class.has-while-loop]="isConditionalWhileType"
+    *ngIf="isRest && showForm"
+    [testStep]="testStep"
+    [stepForm]="stepForm"
+    (onCancel)="hideForm()"
+    (onSave)="afterSaveStep($event)"
+    (onSubmitted)="setFormSubmitted()"
+    class="pb-40 d-block"></app-test-step-rest-form>
+
+  <app-test-step-for-loop-form
+    *ngIf="isForLoop && showForm"
+    [testStep]="testStep"
+    [version]="version"
+    [stepForm]="stepForm"
+    (onSave)="afterSaveStep($event)"
+    (onCancel)="hideForm()"></app-test-step-for-loop-form>
+  <app-test-step-group-form
+    [class.has-else-if]="isElseIfType"
+    [class.has-if]="isIfType"
+    [class.has-while-loop]="isConditionalWhileType"
+    [testStep]="testStep"
+    [version]="version"
+    [stepForm]="stepForm"
+    (onCancel)="hideForm()"
+    (onSave)="afterSaveStep($event)"
+    *ngIf="isStepGroup && showForm"></app-test-step-group-form>
+</div>

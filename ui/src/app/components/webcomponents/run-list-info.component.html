@@ -1,0 +1,66 @@
+<div
+  class="w-100 h-100">
+  <div class="theme-overlay-container">
+    <div class="theme-overlay-header" id="overlay-header">
+      <span class="theme-overlay-title" [translate]="'runs.details.summary.info_title'"></span>
+      <button class="theme-overlay-close"
+              type="button"
+              [matTooltip]="'hint.message.common.close' | translate"
+              mat-dialog-close>
+      </button>
+    </div>
+    <div class="theme-overlay-content without-footer only-content">
+      <div class="bg-default" style="padding: 27px 28px 29px 29px">
+        <div class="d-flex pt-20">
+          <div class="d-flex flex-wrap ts-col-100">
+            <app-run-list-bar-chart
+              class="ts-col-100"
+              [execution]="execution">
+            </app-run-list-bar-chart>
+          </div>
+        </div>
+      </div>
+      <div
+        *ngIf="execution"
+        class="details-container lg value-sm justify-content-between theme-border-t details-container-spacing">
+        <div class="details-items ts-col-30">
+          <label
+            class="details-title"
+            [translate]="'test_plan.type'"></label>
+          <div class="details-info"
+               [textContent]="('runs.list_view.automated') | translate">
+          </div>
+        </div>
+        <div
+          class="details-items ts-col-30">
+          <label
+            class="details-title"
+            [translate]="'test_plan.lab_type'"></label>
+          <div class="details-info" [textContent]="execution.testPlanLabType">
+          </div>
+        </div>
+        <div
+          class="details-items ts-col-30">
+          <label class="details-title" [translate]="'test_plan.capture_screenshots'"></label>
+          <div class="details-info"
+               [textContent]="execution.screenshot ? ('execution.capture.type.'+execution.screenshot | translate) : '-'"></div>
+        </div>
+        <div class="details-items ts-col-30">
+          <label class="details-title" [translate]="'message.common.created_at'"></label>
+          <div class="details-info"
+               [textContent]="execution.createdAt | date: 'MMM d,yyyy hh:mm:ss'"></div>
+        </div>
+        <div class="details-items ts-col-30">
+          <label class="details-title" [translate]="'test_plan.name'"></label>
+          <div class="details-info">
+            <a
+              mat-dialog-close
+              [routerLink]="['/td', 'plans', execution.id]"
+              class="theme-text text-decoration-none"
+              [textContent]="execution.name"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

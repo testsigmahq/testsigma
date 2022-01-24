@@ -1,0 +1,157 @@
+<div class="theme-overlay-container">
+  <div class="theme-overlay-header with-br-bottom">
+    <div
+      class="theme-overlay-title"
+      [translate]="'elements.title'">
+    </div>
+    <button
+      class="theme-overlay-close"
+      type="button"
+      [matTooltip]="'hint.message.common.close' | translate"
+      mat-dialog-close>
+    </button>
+  </div>
+
+  <div class="identifier-record text-center" *ngIf="elements?.isEmpty && !isQueryBased && !elements?.isFetching">
+    <div class="identifier-bg px-60 py-20">
+      <div [translate]="'create_element.record.title'" class="fz-20 rb-medium py-20"></div>
+      <div class="" *ngIf="workspaceVersion?.workspace?.isWebMobile">
+        <div
+          *ngIf="!showVideo"
+          class="d-flex align-items-center justify-content-center w-100 theme-border border-rds-12 bg-white pointer" style="height: 300px; color: red">
+          <i
+            (click)="showVideo= !showVideo"
+            class="fa-youtube fz-38"></i>
+        </div>
+        <iframe
+          *ngIf="showVideo && isWeb"
+          height="300" class="w-100 border-rds-6"
+          src="https://s3.amazonaws.com/assets.testsigma.com/videos/elements/web/record-elements.mp4" frameborder="0"
+          allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <iframe
+          *ngIf="showVideo && isMobileWeb"
+          height="300" class="w-100 border-rds-6"
+          src="https://s3.amazonaws.com/assets.testsigma.com/videos/elements/mobile-web/record-elements.mp4" frameborder="0"
+          allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <iframe
+          *ngIf="showVideo && isAndroidNative"
+          height="300" class="w-100 border-rds-6"
+          src="https://s3.amazonaws.com/assets.testsigma.com/videos/elements/android/record-elements.mp4" frameborder="0"
+          allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <iframe
+          *ngIf="showVideo && isIosNative"
+          height="300" class="w-100 border-rds-6"
+          src="https://s3.amazonaws.com/assets.testsigma.com/videos/elements/ios/record-elements.mp4" frameborder="0"
+          allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+      </div>
+    </div>
+    <div class="pt-20">
+      <div [translate]="'create_element.start.title'" class="fz-14 pb-10"></div>
+      <button class="btn theme-btn-primary" (click)="openElementForm(searchText)">
+        <span [textContent]="'+ ' +('elements.form.create_title' | translate)"></span>
+      </button>
+    </div>
+  </div>
+
+  <form
+    class="ts-form modal-full-view" id="testcaseStatusForm"
+    (keydown.enter)="false"
+    novalidate="novalidate">
+    <div
+      class="full-view-content pb-0" *ngIf="!elements?.isEmpty || isQueryBased || elements?.isFetching">
+      <div>
+        <div class="search-input ml-4">
+          <i
+            [matTooltip]="'hint.message.common.search' | translate"
+            class="fa-search fz-13 mr-5"></i>
+          <div
+            class="form-control border-0 ts-col-55 data-placeholder-content d-inline-block p-0"
+            #searchInput
+            (focus)="this.currentFocusedIndex=0"
+            (keydown.enter)="selectElement()"
+            (keydown.arrowup)="scrollUpElementFocus()"
+            (keydown.arrowDown)="scrollDownElementFocus()"
+            contenteditable="true"
+            [attr.data-placeholder]="'action.element.suggestion.placeholder' | translate"></div>
+          <div
+          class="form-control border-0 ts-col-40 data-placeholder-content d-inline-block p-0"
+          #searchScreenInput
+          (focus)="this.currentFocusedIndex=0"
+          (keydown.enter)="selectScreenElement()"
+          (keydown.arrowup)="scrollUpElementFocus()"
+          (keydown.arrowDown)="scrollDownElementFocus()"
+          contenteditable="true"
+          [attr.data-placeholder]="'action.element.screen.name.suggestion.placeholder' | translate"></div>
+        </div>
+        <div class="ml-auto d-flex align-items-center">
+        <span
+          #stepResultFilterBtn
+          class="filter-icon-with-reset text-t-secondary d-none">
+          <i
+            class="filter-icon fz-13"
+            [matTooltip]="'hint.message.common.filter' | translate">
+          </i>
+          <i
+            *ngIf="false"
+            class="reset sm"></i>
+        </span>
+        </div>
+      </div>
+      <div
+        class="list-header px-5 py-10">
+        <div
+          class="ts-col-50 pr-10 d-flex">
+          <span
+            class="pl-7"
+            [translate]="'elements.element_name'"></span>
+        </div>
+        <div
+          class="ts-col-40"
+          [translate]="'elements.screen_name'"></div>
+      </div>
+      <cdk-virtual-scroll-viewport
+        itemSize="30"
+        class="list-container virtual-scroll-viewport theme-details-scroll h-100-120">
+      <a
+          class="list-view green-highlight py-7 px-5 border-0 pointer align-items-center grey-on-hover"
+        *cdkVirtualFor='let element of elements; let index = index'
+          [class.h-active]="currentFocusedIndex == index"
+          (mouseover)="currentFocusedIndex = index">
+          <div
+            class="ts-col-50 overlay-text" (click)="selectElement()">
+            <span
+              class="pl-18 text-truncate"
+              [textContent]="element.name"></span>
+          </div>
+          <div
+            class="ts-col-40 overlay-text" (click)="selectElement()"
+            [textContent]="element.screenNameObj?.name">
+          </div>
+          <div
+            class="action-icons ts-col-10">
+            <i class="fa-pencil-on-paper action-icon"
+               [matTooltip]="'btn.common.edit' | translate"
+               (click)="openElementForm(element.name, element.id)"></i>
+          </div>
+        </a>
+        <div class="px-20 mt-50 "  *ngIf="isNew && !this.elementName && this.elementScreenName && elements.cachedItems.length==0">
+          <span
+                [translate]="'elements.not.available.screen.name'"></span>
+        </div>
+        <a
+          *ngIf="isNew && this.elementName"
+          [class.h-active]="currentFocusedIndex == elements?.cachedItems?.length || elements?.isEmpty"
+          (mouseover)="currentFocusedIndex = elements?.cachedItems?.length"
+          (click)="openElementForm(searchText)"
+          class="grey-on-hover green-highlight py-7 px-5 border-0 pointer align-items-center list-view">
+          <span
+            class="pl-18" [textContent]="searchText"></span>
+          <span
+            [translate]="'btn.common.new'"
+            class='border-rds-3 ml-10 p-2 px-5 text-white theme-btn-primary'></span>
+        </a>
+      </cdk-virtual-scroll-viewport>
+    </div>
+  </form>
+</div>

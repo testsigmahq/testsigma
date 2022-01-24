@@ -1,0 +1,1209 @@
+/*!
+ * *****************************************************************************
+ *  Copyright (C) 2020 Testsigma Technologies Inc.
+ *  All rights reserved.
+ *  ****************************************************************************
+ */
+
+.apple{
+  content: url("~assets/color_icons/apple.svg");
+  background-size: cover;
+  min-width: 18px;
+  &.sm {
+    min-width: 14px;
+  }
+  &.mr-4 {
+    min-width: 13px;
+    width: 13px;
+  }
+}
+
+.chat-icon{
+  content: url("~assets/color_icons/chat-icon.svg");
+  background-size: cover;
+  min-width: 18px;
+  &.sm {
+    min-width: 14px;
+  }
+  &.mr-4 {
+    min-width: 13px;
+    width: 13px;
+  }
+}
+
+.chat-icon-hollow{
+   content: url("~assets/images/fresh-chat.svg");
+   background-size: cover;
+   min-width: 18px;
+   &.sm {
+     min-width: 14px;
+   }
+   &.mr-4 {
+     min-width: 13px;
+     width: 13px;
+   }
+ }
+
+.android{
+  background-image: url("~assets/color_icons/android.svg");
+  background-size: cover;
+  min-width: 18px;
+  &.sm {
+    min-width: 13px;
+  }
+}
+
+.windows{
+  content: url("~assets/color_icons/windows.svg");
+  background-size: cover;
+  min-width: 18px;
+  &.sm {
+    min-width: 14px;
+  }
+}
+
+.linux{
+  content: url("~assets/color_icons/linux.svg");
+  background-size: cover;
+  min-width: 18px;
+  &.sm {
+    min-width: 14px;
+  }
+}
+
+.register-agent{
+  background-image: url("~assets/color_icons/registering-agent.svg");
+  background-size: cover;
+  min-width: 310px;
+  min-height: 260px;
+}
+
+.edge{
+  background-image: url("~assets/color_icons/edge.svg");
+  background-size: cover;
+  min-width: 17px;
+  &.sm {
+    min-width: 13px;
+  }
+}
+
+.chrome{
+  background-image: url("~assets/color_icons/chrome.svg");
+  background-size: cover;
+  min-width: 18px;
+  &.sm {
+    min-width: 14px;
+  }
+}
+
+.safari{
+  background-image: url("~assets/color_icons/safari.svg");
+  background-size: cover;
+  min-width: 18px;
+  &.sm {
+    min-width: 14px;
+  }
+}
+
+.firefox{
+  background-image: url("~assets/color_icons/firefox.svg");
+  background-size: cover;
+  min-width: 18px;
+  &.sm {
+    min-width: 14px;
+  }
+}
+
+.internet-explorer {
+  background-image: url("~assets/color_icons/internet-explorer.svg");
+  background-size: cover;
+  min-width: 18px;
+  &.sm {
+    min-width: 14px;
+  }
+}
+
+.testsigma-lab-logo{
+  background-image: url("~assets/color_icons/logo-icon.svg");
+  background-size: cover;
+  min-width: 18px;
+  &.sm {
+    min-width: 14px;
+  }
+  &.md {
+    min-width: 19px;
+  }
+}
+.testsigma-lab-logo-grey{
+  background-image: url("~assets/color_icons/logo-icon-grey.svg");
+  background-size: cover;
+  min-width: 18px;
+  margin-top: -2px;
+  &:hover{
+    background-image: url("~assets/color_icons/logo-icon-grey.svg")!important;
+    background-size: cover!important;
+    min-width: 18px;
+  }
+  &.sm {
+    min-width: 14px;
+  }
+}
+.lambda-test-logo-grey{
+  background-image: url("~assets/images/lambdatest.png");
+  background-size: cover;
+  min-width: 18px;
+  margin-top: -2px;
+  height: 18px!important;
+  filter: grayscale(400%);
+  &:hover{
+    background-image: url("~assets/images/lambdatest.png")!important;
+    background-size: cover!important;
+    min-width: 18px;
+    filter: grayscale(400%);
+  }
+  &.sm {
+    min-width: 14px;
+  }
+}
+.testsigma-local-devices-logo{
+  background-image: url("~assets/color_icons/local-devices.svg");
+  background-size: cover;
+  min-width: 18px;
+  &.sm {
+    min-width: 14px;
+  }
+  &.md {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+
+.testsigma-lab-logo{
+  background-image: url("~assets/color_icons/logo-icon.svg");
+  background-size: cover;
+  min-width: 19px;
+  &.sm {
+    min-width: 14px;
+  }
+  &.sm-h {
+    @extend .h-40p;
+    width:100px;
+  }
+  &:hover {
+    background-image: url("~assets/color_icons/logo-icon.svg")!important;
+    background-size: cover!important;
+    min-width: 18px;
+  }
+}
+
+.internet-explorer{
+  background-image: url("~assets/color_icons/internet-explorer.svg");
+  background-size: cover;
+  min-width: 18px;
+}
+
+.empty-log {
+  background-image: url("~assets/images/empty-log.svg");
+  background-size: cover;
+  width: 150px;
+  height: 130px;
+}
+
+.log-preparing {
+  background-image: url("~assets/images/log-preparing.svg");
+  background-size: cover;
+  width: 150px;
+  height: 130px;
+}
+
+.empty-video {
+  background-image: url("~assets/images/empty-video.svg");
+  background-size: cover;
+  width: 150px;
+  height: 130px;
+}
+
+.slack-logo {
+  background-image: url("~assets/images/slack-logo.svg");
+  background-size: cover;
+  width: 150px;
+  height: 130px;
+  &.sm-h {
+    width:80px;
+    height: 40px;
+  }
+}
+
+.lambda-test-logo {
+  background-image: url("~assets/images/lambdatest.png");
+  background-size: 45px;
+  background-repeat: no-repeat;
+  width: 150px;
+  height: 130px;
+  &.sm-h {
+    width:80px;
+    height: 50px;
+  }
+}
+
+.empty-attachment {
+  background-image: url("~assets/images/empty-attachments.svg");
+  background-size: cover;
+  width: 150px;
+  height: 130px;
+}
+.attachment-content-large{
+  .empty-attachment {
+    width: 230px;
+    height: 200px;
+  }
+}
+.empty-run {
+  background-image: url("~assets/images/empty-run.svg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+
+  &.lg-wh {
+    width: 209px;
+    height: 262px;
+  }
+
+  &.md-wh {
+    width: 290px;
+    height: 240px;
+  }
+
+  &.sm-wh {
+    width: 180px;
+    height: 150px;
+  }
+
+  &.xx-sm-wh {
+    width: 160px;
+    height: 130px;
+  }
+
+  &.x-sm-wh {
+    width: 120px;
+    height: 100px;
+  }
+}
+
+.jira-software {
+  background-image: url("~assets/images/jira-software-blue.svg");
+  background-size: contain;
+  background-repeat:   no-repeat;
+  &.bug-list-jira-software{
+    background-size: 50px;
+    background-position: center center;
+  }
+  &.sm-h {
+    height: 35px;
+  }
+}
+
+.azure{
+  background-image: url("~assets/images/azure-boards.png");
+  background-size: contain;
+  background-repeat:   no-repeat;
+  &.bug-list-azure{
+    background-size: 30px;
+    background-position: center center;
+  }
+  &.sm-h {
+    height: 50px;
+    width:100px;
+  }
+}
+
+.freshrelease {
+  background-image: url("~assets/images/freshrelease.svg");
+  background-size: contain;
+  background-repeat:   no-repeat;
+  &.bug-list-freshrelease{
+    background-size: 120px;
+    background-position: center center;
+  }
+  &.sm-h {
+    height: 35px;
+  }
+}
+
+.mantis {
+  background-image: url("~assets/images/mantis_logo_262x90.jpg");
+  background-size: contain;
+  background-repeat:  no-repeat;
+  &.bug-list-mantis{
+    background-size: 80px;
+    background-position: center center;
+  }
+  &.sm-h {
+    height: 60px;
+  }
+}
+
+.backLog{
+  background-image: url("~assets/images/backlog-300x220.png");
+  background-size: contain;
+  background-repeat:   no-repeat;
+  &.bug-list-backlog{
+    background-size: 70px;
+    background-position: center center;
+  }
+  &.sm-h {
+    height: 50px;
+  }
+  &.md-wh {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+.zepel{
+  background-image: url("~assets/images/zepel-logo.png");
+  background-size: contain;
+  background-repeat:   no-repeat;
+  &.bug-list-zepel{
+    background-size: 50px;
+    background-position: center center;
+  }
+  &.sm-h {
+    height: 50px;
+  }
+}
+.youtrack {
+  background-image: url("~assets/images/youtrack-logo.svg");
+  background-size: contain;
+  background-repeat:   no-repeat;
+  &.bug-list-youtrack{
+    background-size: 20px;
+    background-position: center center;
+  }
+  &.sm-h {
+    height: 35px; width:100px
+  }
+}
+
+.bugzilla {
+  background-image: url("~assets/images/bugzilla.png");
+  background-size: 50%;
+  background-repeat: no-repeat;
+  background-position: left center;
+  &.bug-list-bugzilla{
+    background-size: 80px;
+    @extend .mx-auto;
+    background-position: center center;
+  }
+  &.sm-h {
+    height: 50px;
+  }
+}
+.trello-report{
+  background: url("~assets/images/trello.svg") center center no-repeat;;
+  background-size: 60px;
+}
+.linear-report{
+  background: url("~assets/images/linear-logo.svg") center center no-repeat;;
+  background-size: 20px;
+}
+.loading-logo{
+  background-image: url("~assets/images/loading-logo-color.svg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 54px;
+  width: 54px;
+  @extend .mx-auto;
+}
+
+.help_icon {
+  background-image: url("~icons/help-2.svg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.why_scroll_img {
+  background-image: url("~assets/images/why_scroll_to_failed.svg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.why_watch_video_img {
+  background-image: url("~assets/images/why_watch_video.svg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.why_manually_img {
+  background-image: url("~assets/images/why_perform_manually.svg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.why_screen_short_img {
+  background-image: url("~assets/images/why_screen_short_check.svg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.testSigma-lab-logo{
+  background-image: url("~assets/color_icons/logo-icon.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 30px;
+  height: 30px;
+}
+.recorder-gif{
+  background-image: url("~assets/images/recorder_start.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  min-height: 150px;
+}
+.install-btn{
+  .chrome, .testSigma-lab-logo {
+    height: 26px;
+    width: 26px;
+    @extend .mr-10, .ml-6;
+  }
+}
+
+.generic-terminal {
+  background-image: url("~assets/images/terminal.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 30px;
+  height: 30px;
+}
+
+.microsoft-teams {
+  background-image: url("~assets/color_icons/microsoft-teams.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 30px;
+  height: 30px;
+  &.sm-h {
+    height: 35px; width:100px;
+  }
+}
+
+
+.click_up {
+  background-image: url("~assets/clickup-logo.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  &.sm-h {
+    height: 35px; width:100px;
+  }
+}
+
+.linear {
+  background-image: url("~assets/images/linear-logo.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  &.sm-h {
+    height: 35px; width:100px;
+  }
+}
+
+.trello{
+  background-image: url("~assets/images/trello.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  height: 60px;
+  &.md-w {
+    width: 150px;
+  }
+}
+
+.google_chat {
+  background-image: url("~assets/images/google_chat.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  height: 40px;
+  width: 80px
+}
+
+.circle_ci {
+  background-image: url("~assets/images/circleci.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 30px;
+  height: 30px;
+  &.xl-h{
+    width: 100px;
+    height: 50px;
+  }
+}
+
+.custom {
+  background-image: url("~assets/images/custom-function-new.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 30px;
+  height: 30px;
+  &.sm-h {
+    @extend .h-40p;
+    width:80px;
+  }
+}
+
+.code_ship {
+  background-image: url("~assets/images/codeship.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 30px;
+  height: 30px;
+  &.sm-h {
+    @extend .h-40p;
+    width:80px;
+  }
+}
+
+.bamboo {
+  background-image: url("~assets/images/bamboo.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 30px;
+  height: 30px;
+  &.xl-h{
+    width: 100px;
+    height: 50px;
+  }
+}
+
+.jenkins {
+  background-image: url("~assets/images/jenkins.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 30px;
+  height: 30px;
+  &.sm-h {
+    @extend .h-40p;
+    width:80px;
+  }
+}
+
+.aws {
+  background-image: url("~assets/images/aws.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 30px;
+  height: 30px;
+  &.xl-h{
+    width: 150px;
+    height: 50px;
+  }
+}
+.travis_ci {
+  background-image: url("~assets/images/travisci.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 30px;
+  height: 30px;
+  &.xl-h{
+    width: 200px;
+    height: 50px;
+  }
+}
+.WebApplication-app {
+  background-image: url("~assets/images/web-app.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 30px;
+  height: 30px;
+}
+.MobileWeb-app {
+  background-image: url("~assets/images/mobile-web.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 30px;
+  height: 30px;
+}
+.AndroidNative-app {
+  background-image: url("~assets/images/android.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 30px;
+  height: 30px;
+}
+.IOSNative-app {
+  background-image: url("~assets/images/iOS.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 30px;
+  height: 30px;
+}
+.Rest-app {
+  background-image: url("~assets/images/web-service.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 30px;
+  height: 30px;
+}
+.single-app {
+  background-image: url("~assets/images/single-app.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 30px;
+  height: 30px;
+}
+
+.multi-app {
+  background-image: url("~assets/images/multi-app.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 30px;
+  height: 30px;
+}
+
+.lg-icon {
+  width: 96px;
+  height: 54px;
+}
+
+.testsigma-logo-with-title{
+  background-image: url("~assets/color_icons/logo-testsigma-dark.svg");
+  background-size: contain;
+  height: 65px;
+  width: 220px;
+  background-repeat: no-repeat;
+  &.sm {
+    min-width: 14px;
+  }
+  &.left-align{
+    background-position: left;
+  }
+}
+
+.connect_image {
+  background-image: url("~assets/color_icons/connect.svg");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  height: 90px;
+}
+
+.create_image {
+  background-image: url("~assets/color_icons/create.svg");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  height: 90px;
+}
+
+.contribute_image{
+  background-image: url("~assets/color_icons/contribute.svg");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  height: 90px;
+}
+
+.join_community {
+  background-image: url("~assets/color_icons/join_community_bg.svg");
+  background-position: center center;
+  height: 16vw !important;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.activation-start {
+  background-image: url("~assets/images/activation_start.svg");
+  background-size: contain;
+  background-position: center;
+  width: 100%;
+  resize: both;
+  overflow: scroll;
+  background-repeat: no-repeat;
+
+  &.sm {
+    min-width: 14px;
+  }
+}
+.activation-agile-start {
+  background-image: url("~assets/images/agile-method.svg");
+  background-size: contain;
+  background-position: center;
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+
+  &.sm {
+    min-width: 14px;
+  }
+}
+
+.activation-start-logo {
+  background-image: url("~assets/images/logo.svg");
+  background-size: contain;
+  background-position: center;
+  width: 300px;
+  //height: 100%;
+  background-repeat: no-repeat;
+}
+
+.advance-sample {
+  background-image: url("~assets/images/advance_sample.svg");
+  background-size: contain;
+  min-width: 18px;
+  background-position: center center;
+  background-repeat: no-repeat;
+
+  &.sm {
+    min-width: 14px;
+  }
+}
+
+.WebApplication-sample {
+  background-image: url("~assets/images/web_sample.svg");
+  background-size: contain;
+  min-width: 18px;
+  background-position: center center;
+  background-repeat: no-repeat;
+
+  &.sm {
+    min-width: 14px;
+  }
+}
+
+.MobileWeb-sample {
+  background-image: url("~assets/images/mobile_web_sample.svg");
+  background-size: contain;
+  min-width: 18px;
+  background-position: center center;
+  background-repeat: no-repeat;
+
+  &.sm {
+    min-width: 14px;
+  }
+}
+
+.IOSNative-sample {
+  background-image: url("~assets/images/ios_sample.svg");
+  background-size: contain;
+  min-width: 18px;
+  background-position: center center;
+  background-repeat: no-repeat;
+
+  &.sm {
+    min-width: 14px;
+  }
+}
+
+.AndroidNative-sample {
+  background-image: url("~assets/images/andriod_sample.svg");
+  background-size: contain;
+  min-width: 18px;
+  background-position: center center;
+  background-repeat: no-repeat;
+
+  &.sm {
+    min-width: 14px;
+  }
+}
+
+.create-own {
+  background-image: url("~assets/images/own_project.svg");
+  background-size: contain;
+  min-width: 18px;
+  background-position: center center;
+  background-repeat: no-repeat;
+
+  &.sm {
+    min-width: 14px;
+  }
+}
+
+.explore-project {
+  background-image: url("~assets/images/sample_project.svg");
+  background-size: contain;
+  background-position: center center;
+  background-repeat: no-repeat;
+  min-width: 18px;
+
+  &.sm {
+    min-width: 14px;
+  }
+}
+
+.youtube-btn {
+  background-image: url("~assets/images/youtube.svg");
+  background-size: cover;
+  min-width: 18px;
+
+  &.sm {
+    min-width: 14px;
+  }
+}
+
+.natural-language {
+  background-image: url("~assets/images/use_natrual_language.svg");
+  background-size: contain;
+  min-width: 18px;
+  background-repeat: no-repeat;
+  background-position: center center;
+
+  &.sm {
+    min-width: 14px;
+  }
+}
+
+.navigate-url {
+  background-image: url("~assets/images/navigate_url.svg");
+  background-size: contain;
+  min-width: 18px;
+  background-repeat: no-repeat;
+  background-position: center center;
+
+  &.sm {
+    min-width: 14px;
+  }
+}
+
+.change-step-url {
+  background-image: url("~assets/images/change-step-type.svg");
+  height: 100%;
+  background-size: contain;
+  min-width: 18px;
+  background-repeat: no-repeat;
+  background-position: center center;
+
+  &.sm {
+    min-width: 14px;
+  }
+}
+
+.recorder-step {
+  background-image: url("~assets/images/recoder.svg");
+  background-size: cover;
+  min-width: 18px;
+
+  &.sm {
+    min-width: 14px;
+  }
+}
+
+.first-test-case {
+  background-image: url("~assets/images/first_test_case.svg");
+  background-size: contain;
+  min-width: 18px;
+  background-repeat: no-repeat;
+  background-position: center center;
+
+  &.sm {
+    min-width: 14px;
+  }
+}
+
+.step-create-poster {
+  background-image: url("~assets/images/create-step-poster.svg");
+  background-size: contain;
+  min-width: 18px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  &.onboard-chrome-logo{
+    background-position: center 30px;
+  }
+  &.sm {
+    min-width: 14px;
+  }
+}
+
+.chrome-with-logo {
+  background-image: url("~assets/images/chrome_with_logo.svg");
+  background-size: contain;
+  min-width: 18px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  &.onboard-chrome-logo{
+    background-position: center 30px;
+  }
+  &.sm {
+    min-width: 14px;
+  }
+}
+
+.agent-explore{
+  background-image: url("~assets/images/agent-icon.svg");
+  background-size: contain;
+  min-width: 18px;
+  background-repeat: no-repeat;
+  background-position: center center;
+ &.size-lg{
+   background-size: 80px;
+   background-position: center center;
+ }
+}
+
+.testsigma_logo {
+  background-image: url("~assets/color_icons/logo-testsigma-white.svg");
+  background-size: contain;
+  min-width: 18px;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.testsigma_title_logo {
+  background-image: url("~assets/color_icons/logo-testsigma-dark.svg");
+  background-size: contain;
+  min-width: 18px;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.all_products {
+  background-image: url("~assets/images/login-left.svg");
+  background-size: contain;
+  min-width: 18px;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.google-logo {
+  background-image: url("~assets/color_icons/google_logo.svg");
+  background-size: contain;
+  min-width: 18px;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.upgrade-flash-icon {
+  @extend .fa-bolt-solid;
+  @extend .ml-5;
+  &:before {
+    color: #ff7846;
+  }
+}
+
+.refer-icon {
+  background-image: url("~assets/images/refer-icon.svg");
+  background-size: contain;
+  background-position: center;
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  &.sm {
+    width: 25px;
+    height: 25px;
+  }
+}
+
+.refer-banner {
+  background-image: url("~assets/images/refer-firend.svg");
+  background-size: contain;
+  background-position: center  20px;
+  width: 100%;
+  height: 45%;
+  background-repeat: no-repeat;
+}
+
+.temp-user-profile {
+  background-image: url("~assets/images/temp-user.svg");
+  background-size: contain;
+  min-width: 18px;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.get-start-here {
+  background-image: url("~assets/images/start-here.svg");
+  background-size: contain;
+  min-width: 18px;
+  height: 18px;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.img-wh {
+  width: 14px;height: 14px;
+  &.sm-wh{
+    height: 10px;width: 10px
+  }
+  &.md-wh {
+    width:16px;height: 16px;
+  }
+  &.lg-wh {
+    width:24px;height: 24px
+  }
+  &.x-lg-wh {
+    width: 30px;height: 30px
+  }
+}
+.schedule-demo-bg {
+  background-image: url("~assets/images/schedule-demo.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 321px;
+}
+.invalid-selector{
+  background-image: url("~assets/color_icons/invalid-selector.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 62px;
+  width: 90px;
+}
+.presence-art{
+  background-image: url("~assets/color_icons/presense-of-alert.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 62px;
+  width: 90px;
+}
+.element-out{
+  background-image: url("~assets/color_icons/element-out-of-page.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 62px;
+  width: 90px;
+}
+.client-freshworks{
+  background-image: url("~assets/images/freshworks.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 62px;
+  width: 130px;
+  margin: auto;
+}
+.client-cuna{
+  background-image: url("~assets/images/cuna_mutal.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 62px;
+  width: 130px;
+  margin: auto;
+}
+.client-myyogateacher{
+  background-image: url("~assets/images/myyoga.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 62px;
+  width: 130px;
+  margin: auto;
+}
+.test_steps_image{
+  background-image: url("~assets/images/agile-method.svg");
+  background-size: contain;
+  background-position: center;
+  width: 100%;
+  background-repeat: no-repeat;
+}
+.combine_tests_image{
+  background-image: url("~assets/images/combine_tests.svg");
+  background-size: contain;
+  background-position: center;
+  width: 100%;
+  height: 245px;
+  background-repeat: no-repeat;
+}
+.elements_image{
+  background-image: url("~assets/images/agile-method.svg");
+  background-size: contain;
+  background-position: center;
+  width: 100%;
+  height: 245px;
+  background-repeat: no-repeat;
+}
+.test_suite_image{
+  background-image: url("~assets/images/test_suite.svg");
+  background-size: contain;
+  background-position: center;
+  width: 100%;
+  height: 245px;
+  background-repeat: no-repeat;
+}
+.test_data_profile_image{
+  background-image: url("~assets/images/test_data.svg");
+  background-size: contain;
+  background-position: center;
+  width: 100%;
+  height: 245px;
+  background-repeat: no-repeat;
+}
+
+
+.google {
+  background-image: url("~assets/images/google.svg");
+  background-size: 40%;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.github {
+  background-image: url("~assets/images/github.svg");
+  background-size: 40%;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.github-image{
+  background-image: url("~assets/images/github_ani.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: 10% center;
+  width: 35%;
+  height: 50px;
+}
+
+.twitter-image{
+  background-image: url("~assets/images/twitter.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: 10% center;
+  width: 25%;
+  height: 48px;
+}
+
+.resizeable-image{
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 3.8vh;
+}
+
+.testsigma-on-premise {
+  @extend .resizeable-image;
+  background-image: url("~assets/images/testsigma_on_premise.svg");
+}
+
+.testsigma-cloud {
+  @extend .resizeable-image;
+  background-image: url("~assets/images/testsigma_cloud.svg");
+}
+
+.amazon-s3 {
+  @extend .resizeable-image;
+  background-image: url("~assets/images/amazon_s3.svg");
+}
+
+.azure-cloud {
+  @extend .resizeable-image;
+  background-image: url("~assets/images/azure_cloud.svg");
+}
+
+.google-cloud {
+  @extend .resizeable-image;
+  background-image: url("~assets/images/google_cloud.svg");
+}

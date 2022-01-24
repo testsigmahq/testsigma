@@ -1,0 +1,112 @@
+<div class="page-header theme-border-b">
+  <div
+    class="page-title"  [translate]="'settings.ios_settings.title'">
+  </div>
+  <div class="short-hand-actions">
+    <app-toggle-search-button
+      (searchAction)="search($event)"></app-toggle-search-button>
+    <button [routerLink]="authGuard.openSource.isEnabled ? ['/settings', 'provisioning_profiles', 'new'] : ['/settings', 'testsigma']"
+      class="btn ml-15 mr-30 theme-btn-clear-default position-relative">
+      <span [translate]="'settings.ios_settings.create.new_profile'"></span>
+      <span class="recorder-beta-btn" [translate]="'message.common.beta_tag'"></span>
+    </button>
+  </div>
+  <div class="pl-15 theme-border-l" *ngIf="provisioningProfileList">
+    <app-pagination [currentPage]="currentPage" [paginationData]="provisioningProfileList">
+    </app-pagination>
+  </div>
+</div>
+<div class="page-content" *ngIf="authGuard.openSource.isEnabled">
+  <div class="h-100">
+    <div class="d-flex pt-20 flex-column">
+      <div class="ts-col-100">
+        <div class="help-wrapper">
+          <div class="help-title mr-10">
+            <i class="fa-help pr-5"></i>
+          </div>
+          <div>
+            <span [innerHTML]="'settings.ios_settings.help.description' | translate"></span>
+          </div>
+        </div>
+      </div>
+      <div class="ts-col-100 mt-50">
+        <div class="list-header min-height-set" *ngIf="provisioningProfileList?.content.length != 0">
+          <div [translate]="'settings.ios_settings.profile_name'" class="ts-col-15"></div>
+          <div [translate]="'settings.ios_settings.apple.team_id'" class="ts-col-15"></div>
+          <div [translate]="'settings.ios_settings.csr'" class="pr-10 d-flex ts-col-25"></div>
+          <div [translate]="'settings.ios_settings.provisioning_profile'" class="ts-col-25"></div>
+        </div>
+        <div class="list-container">
+          <a class="list-view green-highlight lg-pm pl-10 pointer align-items-center" [routerLink]="['/settings', 'provisioning_profiles', provisioningList.id]"
+              *ngFor="let provisioningList of provisioningProfileList?.content">
+            <div class="ts-col-15 list-title d-flex pl-0">
+              <div class="ts-col-100 rb-regular-i-d" [textContent]="provisioningList.name"></div>
+            </div>
+            <div class="ts-col-15 list-title d-flex">
+              <div class="ts-col-100 rb-regular-i-d" *ngIf="provisioningList.teamId != 'null'" [textContent]="provisioningList.teamId"></div>
+            </div>
+            <div class="ts-col-25 text-t-secondary d-flex align-items-center">
+              <div class="d-flex align-items-center" *ngIf="provisioningList.csrPresignedUrl">
+                <div class="rb-medium fz-15 mr-10">
+                  <a class="text-link text-decoration-none pointer" (click)="$event.stopPropagation()" target="_blank" href="{{provisioningList.csrPresignedUrl}}">
+                    <i class="fa-download-thin text-link pr-5"></i>
+                    <span [translate]="'btn.common.download'"></span>
+                  </a>
+                </div>
+                  <div class="fz-13 text-t-secondary">
+                    <span class="pr-5" [translate]="'message.common.created_at_on'"></span>
+                    <span [textContent]="provisioningList?.createdAt  | date:'MMM d, y'"></span>
+                  </div>
+              </div>
+            </div>
+            <div class="ts-col-25 text-t-secondary d-flex align-items-center">
+              <div class="d-flex align-items-center" *ngIf="provisioningList.certificateCrtPresignedUrl">
+                <div class="rb-medium fz-15 mr-10">
+                  <a class="text-link text-decoration-none pointer" target="_blank" (click)="$event.stopPropagation()" href="{{provisioningList.certificateCrtPresignedUrl}}">
+                    <i class="fa-download-thin text-link pr-5"></i>
+                    <span [translate]="'btn.common.download'"></span>
+                  </a>
+                </div>
+                <div class="fz-13 text-t-secondary">
+                  <span class="pr-5" [translate]="'message.common.created_at_on'"></span>
+                  <span [translate]="provisioningList?.updatedAt  | date:'MMM d, y'"></span>
+                </div>
+              </div>
+            </div>
+            <div class="ts-col-10 text-right action-icons">
+              <a
+                data-placement="bottom" (click)="openDeleteDialog(provisioningList.id);$event.preventDefault();$event.stopPropagation()"
+                [matTooltip]="'pagination.delete' | translate"
+                href="javascript:void(0)"
+                class="fa-trash-thin action-icon pointer"></a>
+            </div>
+          </a>
+        </div>
+        <app-placeholder-loader *ngIf="!fetchingCompleted"></app-placeholder-loader>
+        <div *ngIf="!provisioningProfileList?.content.length && fetchingCompleted" class="h-100">
+          <div class="empty-full-container">
+            <div class="empty-run-md"></div>
+            <div
+              class="empty-text"
+              [translate]="isFiltered ? 'message.common.search.not_found' : 'settings.provisioning.list.not_created'"></div>
+            <button *ngIf="!isFiltered"
+                    [routerLink]="['/settings', 'provisioning_profiles', 'new']"
+                    class="theme-btn-primary ml-14 "
+                    [translate]="'settings.ios_settings.create.new_profile'">
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="!authGuard?.openSource?.isEnabled" class="h-100 page-content">
+  <div class="empty-full-container">
+    <div
+      class="empty-text text-center">
+      <div class="fz-20 text-muted" [innerHTML]="'settings.ios_settings.register_msg' | translate"></div>
+      <div class="mt-10">
+      <a [routerLink]="['/settings/testsigma']" [translate]="'message.common.click_here'" class="text-link"></a> to register</div>
+    </div>
+  </div>
+</div>

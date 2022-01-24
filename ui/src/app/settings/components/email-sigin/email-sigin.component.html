@@ -1,0 +1,141 @@
+<div class="ts-col-100 h-100 d-flex justify-content-around" *ngIf="showEmailForm">
+  <div class="d-flex flex-column">
+    <div class="d-flex flex-column">
+      <div class="mt-20">
+        <a class="go-back-icon rb-light"
+           [matTooltip]="'hint.message.common.back' | translate" (click)="cancelRequest()" [textContent]="' '+('hint.message.common.back' | translate)"></a>
+      </div>
+      <div class="my-30 rb-bold" [translate]="'settings.testsigma_free_lab.email'" ></div>
+      <div class="d-flex flex-row pb-10">
+        <div class="ts-col-50 ts-form pr-20">
+          <div class="form-group ts-col-100">
+            <div class="p-0 field mb-0">
+              <input
+                type="text"
+                id="firstname"
+                name="firstname"
+                placeholder="Firstname"
+                class="form-control"
+                [formControl]="this.emailSigninForm.controls['firstName']"
+              />
+              <label
+                [translate]="'message.common.label.firstname'"
+                for="firstname" class="required"></label>
+            </div>
+          </div>
+        </div>
+        <div class="ts-col-50 ts-form pr-20">
+          <div class="form-group ts-col-100">
+            <div class="p-0 field mb-0">
+              <input
+                type="text"
+                id="lastname"
+                name="lastname"
+                placeholder="Lastname"
+                class="form-control"
+                [formControl]="this.emailSigninForm.controls['lastName']"
+              />
+              <label
+                [translate]="'message.common.label.lastname'"
+                for="lastname" class="required"></label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex">
+        <div class="ts-col-100 ts-form pr-20">
+          <div class="form-group ts-col-100">
+            <div class="p-1 field mb-1">
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Email"
+                class="form-control"
+                [formControl]="this.emailSigninForm.controls['email']"
+              />
+              <label
+                [translate]="'message.common.label.email'"
+                for="email" class="required"></label>
+            </div>
+            <div *ngIf="(!emailSigninForm.get('email').valid && emailSigninForm.get('email').touched)" class="help-block text-danger"
+                 [translate]="'message.common.enter_valid_email'"></div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex flex-row align-self-end">
+        <div class="ts-col-50 ts-form pr-20" *ngIf="!showActivationForm">
+          <div class="form-group ts-col-100">
+            <div class="p-1 field mb-1">
+              <button class="theme-btn-clear-default mt-10" [translate]="'btn.common.cancel'" (click)="cancelRequest()" ></button>
+            </div>
+          </div>
+        </div>
+        <div class="ts-col-50 ts-form pr-20" *ngIf="!showActivationForm">
+          <div class="form-group ts-col-100">
+            <div class="p-1 field mb-1">
+              <button class="theme-btn-primary mt-10" [translate]="'btn.common.register'" [disabled]="!emailSigninForm.valid" (click)="getOTP()" ></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-column" *ngIf="showActivationForm">
+      <div class="mb-20" *ngIf="!isResent">
+        <span [translate]="'message.common.verification_message'"></span><br>
+        <span [translate]="'message.common.code_infield'"></span>
+      </div>
+      <div class="mb-20" *ngIf="isResent">
+        <span [translate]="'message.common.resent_verification_message'"></span>
+      </div>
+      <div class="d-flex">
+        <div class="ts-col-100 ts-form pr-20">
+          <div class="form-group ts-col-100">
+            <div class="p-0 field mb-0">
+              <input
+                type="text"
+                id="otp"
+                name="otp"
+                placeholder="Verification code"
+                class="form-control"
+                [(ngModel)]="otp"
+                required="required"
+                #otpValidation = "ngModel"
+              />
+              <label
+                [translate]="'message.common.label.verificationcode'"
+                for="otp" class="required"></label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <span [translate]="'message.common.not_recieved_verification'"></span>
+        <a class="pl-5 text-link" [translate]="'message.common.get_another'" (click)="getOTP(); isResent=true"></a>
+        <span [translate]="'message.common.trouble'"></span>
+        <a class="pl-5 text-link" target="_blank" href="https://discord.com/invite/SjYKkSTUq9" [translate]="'message.common.contact_support_small'"></a>
+      </div>
+      <div class="d-flex flex-row align-self-end">
+        <div class="ts-col-50 ts-form pr-20">
+          <div class="form-group ts-col-100">
+            <div class="p-1 field mb-1">
+              <button class="theme-btn-clear-default mt-10" [translate]="'btn.common.cancel'" (click)="cancelRequest()"></button>
+            </div>
+          </div>
+        </div>
+        <div class="ts-col-50 ts-form pr-20">
+          <div class="form-group ts-col-100">
+            <div class="p-1 field mb-1">
+               <button class="theme-btn-primary mt-10" [translate]="'btn.common.verify'" [disabled]="!otpValidation.valid"  (click)="activate()" ></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="mt-10 mx-auto w-40" *ngIf="!showEmailForm">
+  <button (click)="signup('email')" *ngIf="!showEmailForm && !showActivationForm"
+          class="btn btn-clear-default fz-18 h-10 rb-medium-i-d text-dark w-100 py-15" [translate]="'settings.testsigma_free_lab.email'" ></button>
+</div>
+

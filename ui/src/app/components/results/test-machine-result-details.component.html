@@ -1,0 +1,255 @@
+<div class="details-header-container">
+  <app-placeholder-loader  class="ts-col-100" *ngIf="!isMachineFetchingCompleted" [isDetails]="true"></app-placeholder-loader>
+  <div
+    *ngIf="environmentResult"
+    class="ts-col-100 d-flex flex-wrap">
+    <div class="pt-15 d-flex align-items-start">
+      <app-td-overlay-menu-button
+        [versionId]="environmentResult?.testPlanResult?.testPlan?.workspaceVersionId"></app-td-overlay-menu-button>
+      <a class="go-back-icon pl-10"
+         [routerLink]="['/td/runs/', environmentResult.testPlanResult.id]"
+         [matTooltip]="'hint.message.common.back' | translate"
+      ></a>
+    </div>
+    <div
+      class="ts-col-100-77">
+      <div class="d-flex ts-col-100">
+        <div
+          class="ts-col-70 text-truncate">
+          <div class="theme-breadcrumb">
+            <a
+              class="theme-breadcrumb-item mw-75"
+              [routerLink]="['/td/runs/', environmentResult.testPlanResult.id]"
+              [matTooltip]="environmentResult.testPlanResult.testPlan.name"
+              [textContent]="environmentResult.testPlanResult.testPlan.name"></a>
+            <a
+              class="theme-breadcrumb-item"
+              [routerLink]="['/td/runs/', environmentResult.testPlanResult.id]"
+              [textContent]="'result.run_id' | translate: {id: environmentResult.testPlanResult.id}"></a>
+          </div>
+          <div class="theme-details-header">
+            <a
+              *ngIf="environmentResult?.testPlanResult"
+              class="title-name"
+              [routerLink]="['/td', 'plans', environmentResult.testPlanResult.testPlanId]"
+              [matTooltip]="environmentResult?.testDeviceSettings?.title"
+              [textContent]="environmentResult?.testDeviceSettings?.title"></a>
+          </div>
+        </div>
+        <div class="d-flex align-items-baseline pl-40 ml-auto">
+          <app-test-machine-result-details-pagination
+                  [testDeviceResult]="environmentResult"></app-test-machine-result-details-pagination>
+          <a
+            [routerLink]="['/td', 'plans', environmentResult.testPlanResult.testPlanId]"
+            [matTooltip]="'result.hint.details' | translate"
+            class="btn icon-btn border-rds-2 ml-14">
+            <i class="fa-info"></i>
+          </a>
+          <button
+            *ngIf="environmentResult.isQueued"
+            (click)="fetchEnvironmentResult()"
+            [matTooltip]="'result.hint.click.here.refresh' | translate"
+            class="btn icon-btn border-rds-2 ml-14">
+            <i class="fa-refresh-thick"></i>
+          </button>
+        </div>
+      </div>
+      <div class="ts-col-100 position-relative d-flex pt-18">
+        <div
+          class="details-container md value-lg">
+          <div>
+            <div class="details-items mb-5">
+              <div class="pb-4 details-info align-items-center d-flex mt-n5">
+                <app-result-status-label-info [result]="environmentResult"></app-result-status-label-info>
+              </div>
+            </div>
+            <div
+              class="details-items">
+              <div class="details-info">
+                <div class="d-flex justify-content-center">
+                  <div
+                    [textContent]="environmentResult.startTime | date:'d/M/y h:mm a'"></div>
+                  <div class="pl-10">
+                    <app-duration-format
+                      [duration]="environmentResult.duration"></app-duration-format>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            *ngIf="!environmentResult?.testPlanResult?.environment?.name == null"
+            class="details-items pl-50 mw-20 text-truncate">
+            <label class="details-title" [translate]="'runs.details.environment'"></label>
+            <div class="details-info text-truncate"
+                 [matTooltip]="environmentResult?.testPlanResult?.environment?.name"
+                 [textContent]="environmentResult?.testPlanResult?.environment?.name || '-'"></div>
+          </div>
+          <app-lab-environment-screen-short-info
+            [environmentResult]="environmentResult"
+            [executionEnvironment]="environmentResult?.testDevice"
+            [executionResult]="environmentResult?.testPlanResult"></app-lab-environment-screen-short-info>
+          <div class="details-items mt-30 mw-30">
+            <div class="align-items-center d-flex details-info text-truncate mt-2 pointer"
+                 [matTooltip]="environmentResult?.message"
+                 [textContent]="environmentResult?.message"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="d-flex theme-details-scroll-content">
+  <div [class.ts-col-100]="!(showQuickInfo || showFilter)"
+       [class.ts-col-75]="showQuickInfo || showFilter"
+       class="h-100">
+    <div class="d-flex align-items-center theme-border-y theme-filter-p pt-2">
+      <ul class="tab-nav" role="tablist"
+          [ngStyle]="{'min-width': isSearchEnable && (showFilter || showQuickInfo) ? '72%' : ''}">
+        <li class="nav-items" role="presentation">
+          <a
+            (click)="activeTab = 'steps'"
+            [class.active]="activeTab == 'steps'"
+            class="normal-text">
+            <i
+              [class.fa-test-cases-alt]="showTestCaseResults"
+              [class.fa-test-suite]="showTestSuiteResults"></i>
+            <div class="dropdown section-title mouse-over">
+              <div class="btn-group">
+              <span class="rb-medium" target="_blank">
+                <span
+                  [translate]="showTestCaseResults ? 'runs.details.test_case_result' : 'runs.details.test_suite_result'"></span>
+                <i class="fa-caret-down pl-6 fz-10" aria-hidden="true"></i>
+              </span>
+              </div>
+              <div
+                class="dropdown-menu drop-down-transparent min-w">
+                <ul
+                  class="bg-white border-rds-4 ng-scope p-15 shadow-all2-b4">
+                  <li
+                    class="border-rds-10 btn rb-medium grey-on-hover text-dark"
+                    (click)="toggleView('TCR')">
+                    <span [translate]="'runs.details.test_case_result'"></span>
+                    <i class="fa-tick pl-5" *ngIf="showTestCaseResults"></i>
+                  </li>
+                  <li
+                    (click)="toggleView('TSR')"
+                    class="border-rds-10 btn rb-medium grey-on-hover text-dark ml-0">
+                    <span [translate]="'runs.details.test_suite_result'"></span>
+                    <i class="fa-tick pl-5" *ngIf="showTestSuiteResults"></i>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </a>
+        </li>
+        <li class="nav-items" role="presentation">
+          <a
+            (click)="activeTab = 'attachment'"
+            [class.active]="activeTab == 'attachment'"
+            class="normal-text">
+            <i class="fa-pin-alt"></i>
+            <span [translate]="'message.common.attachments'"></span>
+          </a>
+        </li>
+      </ul>
+      <div class="ml-auto">
+        <div
+          *ngIf="activeTab == 'steps'"
+          class="theme-section-header border-0 align-items-center">
+          <app-auto-refresh
+            *ngIf="!isSearchEnable && !showFilter && !showQuickInfo && isMachineRunning"
+            [autoRefreshIntervalTime]="autoRefreshInterval"
+            (autoRefreshIntervalTime)="changeAutoRefreshTime($event)"
+            (autoRefreshToggle)="toggleAutoRefresh($event)"></app-auto-refresh>
+          <i
+            [class.fa-search]="!isSearchEnable"
+            [class.fa-search-right.pr-4]="isSearchEnable"
+            (click)="toggleSearch()"
+            class="section-action-icons"
+            [matTooltip]="'hint.message.common.search' | translate"></i>
+
+          <div *ngIf="isSearchEnable" class="search-form-group ts-form text-right" aria-hidden="false">
+            <input
+              #searchMachineInput [(ngModel)]="inputValue"
+              type="text"
+              class="form-control d-inline-block w-85"
+              [placeholder]="'agents.mobile.inspection.search_element' | translate" aria-invalid="false">
+            <i [ngClass]= "{'visibility-visible' : inputValue}"  [matTooltip]="'hint.message.common.clear' | translate"
+               class="fa-close-alt text-t-secondary fz-12 pt-2 mr-5 pointer visibility-hidden" (click)="clearSearch()"></i>
+          </div>
+          <div class="position-relative">
+            <span
+              [class.active]="showFilter"
+              [class.reset]="showTestSuiteResults ? isFilterAppliedTSR : isFilterAppliedTCR"
+              class="filter-icon-with-reset">
+              <i
+                [class.filtered]="showTestSuiteResults ? isFilterAppliedTSR : isFilterAppliedTCR"
+                [class.mr-n5]="showTestSuiteResults ? isFilterAppliedTSR : isFilterAppliedTCR"
+                class="filter-icon"
+                (click)="toggleFilter()"
+                [matTooltip]="'hint.message.common.filter' | translate">
+              </i>
+              <i
+                *ngIf="showTestSuiteResults ? isFilterAppliedTSR : isFilterAppliedTCR"
+                [matTooltip]="'btn.common.reset' | translate"
+                (click)="resetFilter()"
+                class="reset"></i>
+            </span>
+          </div>
+          <i
+            class="fa-info section-action-icons"
+            [class.active]="showQuickInfo"
+            (click)="toggleDetails()"
+            [matTooltip]="'hint.message.common.details' | translate"></i>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-wrap theme-w-o-h-scroll">
+      <div class="d-flex ts-col-100 h-100" *ngIf="activeTab == 'steps'">
+        <app-test-machine-test-case-results
+          *ngIf="showTestCaseResults"
+          class="d-flex ts-col-100 h-100"
+          [environmentResult]="environmentResult"></app-test-machine-test-case-results>
+        <app-test-machine-test-suite-results
+          *ngIf="showTestSuiteResults"
+          class="d-flex ts-col-100 h-100"
+          [environmentResult]="environmentResult"></app-test-machine-test-suite-results>
+        <app-placeholder-loader
+          class="ts-col-100"
+          *ngIf="!isMachineFetchingCompleted"></app-placeholder-loader>
+      </div>
+      <div class="ts-col-100 h-100 bg-default">
+          <app-result-attachment
+            *ngIf="activeTab == 'attachment' && !isCaseLevelExecution && !isParallelExecution"
+            [attachmentRow]="'ENVIRONMENT_RESULT'"
+            [attachmentRowId]="environmentResult.id"
+            class="h-100 d-flex"></app-result-attachment>
+
+
+      </div>
+    </div>
+  </div>
+  <div class="ts-col-25 results-page">action-step-result-workspace-details.component.html:36)
+    <app-test-machine-details-quick-info
+      [showList]="showList"
+      *ngIf="showQuickInfo"
+      [environmentResult]="environmentResult"
+      (filterAction)="filterAction($event)"
+      (toggleDetailsAction)="toggleDetails()"></app-test-machine-details-quick-info>
+
+    <app-test-case-result-filter
+      class="theme-filter-section"
+      *ngIf="showFilter && showTestCaseResults"
+      [execution]="environmentResult?.testPlanResult?.testPlan"
+      (filterAction)="filterAction($event)"
+      (toggleFilterAction)="toggleFilter()"></app-test-case-result-filter>
+
+    <app-test-suite-result-filter
+      class="theme-filter-section"
+      *ngIf="showFilter && showTestSuiteResultFilter"
+      (filterAction)="filterAction($event)"
+      (toggleFilterAction)="toggleFilter()"></app-test-suite-result-filter>
+  </div>
+</div>
+

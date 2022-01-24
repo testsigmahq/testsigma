@@ -1,0 +1,72 @@
+<div class="w-100 h-100">
+  <div class="theme-overlay-container">
+    <div class="theme-overlay-header">
+      <span class="theme-overlay-title" [translate]="'settings.auth.form_login'"></span>
+      <button class="theme-overlay-close" type="button"
+              [matTooltip]="'hint.message.common.close' | translate"
+              mat-dialog-close>
+      </button>
+    </div>
+
+    <div class="theme-overlay-content">
+      <form class="ts-form pt-30">
+        <div
+          class="form-group ts-col-100 combined-control">
+          <div class="p-0 field mb-0">
+            <input
+              type="text"
+              id="userName"
+              name="userName"
+              [value]="authConfig?.userName"
+              class="form-control"/>
+            <label
+              [translate]="'login_form.username'"
+              for="userName"></label>
+          </div>
+          <button
+            [cdkCopyToClipboard]="authConfig?.userName"
+            (click)="showCopied('name')"
+            [translate]="coping?.['name'] ? 'uploads.list.message.copied' : 'btn.common.copy'"
+            class="theme-btn-clear-default"></button>
+        </div>
+        <div
+          class="form-group ts-col-100 combined-control p-0">
+          <div class="p-0 field mb-0">
+            <input
+              type="text"
+              id="password"
+              name="password"
+              [value]="authConfig?.password"
+              class="form-control"/>
+            <label
+              [translate]="'login_form.password'"
+              for="password"></label>
+          </div>
+          <button
+            (click)="showCopied('password')"
+            [cdkCopyToClipboard]="authConfig?.password"
+            [translate]="coping?.['password'] ? 'uploads.list.message.copied' :'btn.common.copy'"
+            class="theme-btn-clear-default"></button>
+        </div>
+      </form>
+    </div>
+
+    <div class="theme-overlay-footer">
+      <button
+        type="button"
+        mat-dialog-close
+        class="theme-btn-clear-default" [translate]="'btn.common.cancel'">
+      </button>
+      <div class="ml-10 d-inline">
+        <button
+          type="submit"
+          appAsyncBtn
+          [isLoading]="saving"
+          [message]="'message.common.updating'"
+          [textContent]="'btn.common.update' | translate"
+          class="theme-btn-primary" (click)="update()">
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

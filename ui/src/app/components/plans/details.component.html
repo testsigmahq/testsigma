@@ -1,0 +1,93 @@
+<div class="d-flex flex-wrap pl-60 pr-20 py-20 ts-col-100 h-100 overflow-y-auto">
+  <div class="details-container lg value-lg ts-col-90 pt-20 ng-star-inserted flex-wrap">
+    <div class="details-items ts-col-20 pr-20">
+      <label class="details-title" [translate]="'test_plans.details.capture_screenshots'"></label>
+      <div class="details-info">
+        <div
+          [translate]="'execution.capture.type.'+execution?.screenshot"></div>
+      </div>
+    </div>
+
+    <div class="details-items ts-col-20 pr-20">
+      <label class="details-title" [translate]="'test_plans.details.testing_type'"></label>
+      <div class="details-info">
+        <div [translate]="'runs.list_view.automated'"></div>
+      </div>
+    </div>
+
+    <div class="details-items ts-col-20 pr-20">
+      <label class="details-title" [translate]="'test_plans.details.visual_testing'"></label>
+      <div class="details-info">
+        <div
+          [translate]="'execution.visual_testing.'+execution?.visualTestingEnabled"></div>
+      </div>
+    </div>
+
+    <div class="details-items ts-col-20 pr-20">
+      <label class="details-title" [translate]="'test_plans.details.page_timeout'"></label>
+      <div class="details-info">
+        <div
+          [textContent]="execution?.pageTimeOut"></div>
+      </div>
+    </div>
+
+    <div class="details-items ts-col-20">
+      <label class="details-title" [translate]="'test_plans.details.element_timeout'"></label>
+      <div class="details-info">
+        <div
+          [textContent]="execution?.elementTimeOut"></div>
+      </div>
+    </div>
+    <div class="details-items ts-col-20 pr-20">
+      <label class="details-title" [translate]="'test_plans.details.on_major_step_failure'"></label>
+      <div class="details-info">
+        <div
+          [translate]="'recovery_action.'+execution?.recoveryAction"></div>
+      </div>
+    </div>
+
+    <div class="details-items ts-col-20 pr-20">
+      <label class="details-title" [translate]="'test_plans.details.on_aborted_test_case'"></label>
+      <div class="details-info">
+        <div
+          [translate]="'on_abort_action.'+execution?.onAbortedAction"></div>
+      </div>
+    </div>
+
+    <div class="details-items ts-col-20 pr-20">
+      <label class="details-title" [translate]="'test_plans.details.on_test_suite_pre_requisite_failure'"></label>
+      <div class="details-info">
+        <div
+          [translate]="'on_pre_requisite_action.'+execution?.onSuitePreRequisiteFail"></div>
+      </div>
+    </div>
+
+    <div class="details-items ts-col-20 pr-20">
+      <label class="details-title" [translate]="'test_plans.details.on_test_case_pre_requisite_failure'"></label>
+      <div class="details-info">
+        <div
+          [translate]="'on_pre_requisite_action.'+execution?.onTestCasePreRequisiteFail"></div>
+      </div>
+    </div>
+    <div class="details-items ts-col-20">
+      <label class="details-title" [translate]="'test_plans.details.on_step_pre_requisite_failure'"></label>
+      <div class="details-info">
+        <div
+          [translate]="'recovery_action.'+execution?.onStepPreRequisiteFail"></div>
+      </div>
+    </div>
+<!--    <div class="details-items ts-col-20">-->
+<!--      <label class="details-title" [translate]="'test_plan.details.re_run_failure_action'"></label>-->
+<!--      <div class="details-info">-->
+<!--        <div-->
+<!--          [translate]="'execution.recover_actions.re_run_on_failure.'+(execution?.reRunType ? execution?.reRunType : 'NONE')"></div>-->
+<!--      </div>-->
+<!--    </div>-->
+    <div class="details-items ts-col-100 h-40">
+      <label class="details-title" [translate]="'test_plans.details.description'"></label>
+      <div class="details-info">
+        <div class="d-flex" [innerHTML]="execution?.description || '-'"></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,57 @@
+<cdk-virtual-scroll-viewport
+  itemSize="59"
+  class="mx-n20 theme-section-container card-container virtual-scroll-viewport overflow-y">
+  <div
+    *cdkVirtualFor='let testMachineResult of testMachineResults'>
+    <div
+      (click)="showTestMachineResult(testMachineResult)"
+      class="list-card bordered sm-pm pointer">
+      <div
+        class="d-flex flex-wrap ts-col-100">
+        <div class="ts-col-50 d-flex flex-wrap">
+          <div
+            class="ts-col-100 list-title text-break"
+            [textContent]="testMachineResult.testDevice?.title"></div>
+          <div class="ts-col-100 pt-4 text-t-secondary fz-12 d-flex align-items-center">
+            <div
+              class="text-nowrap ts-col-50">
+              <app-test-machine-info-column
+                [environmentResult]="testMachineResult?.environmentResult"
+                [executionResult]="testMachineResult?.environmentResult?.executionResult"
+                [executionEnvironment]="testMachineResult?.environmentResult?.executionEnvironment"></app-test-machine-info-column>
+            </div>
+          </div>
+        </div>
+        <div class="ts-col-50 d-flex">
+          <div class="ts-col-50 d-flex">
+            <app-result-pie-chart-column
+              class="ml-auto"
+              [width]="24"
+              [height]="24"
+              [resultEntity]="testMachineResult.childResult"></app-result-pie-chart-column>
+            <div class="text-right text-t-secondary fz-12 ml-auto mr-10">
+              <div [textContent]="testMachineResult.childResult.startTime | date:'MMM d, h:mm:ss'"></div>
+              <div class="pt-4">
+                <app-duration-format
+                  [duration]="testMachineResult.childResult.duration"></app-duration-format>
+              </div>
+            </div>
+          </div>
+          <div class="ts-col-50 d-flex theme-border-l pl-10">
+            <div class="text-t-secondary fz-12">
+              <div [translate]="'re_run.previous_result'"></div>
+              <app-result-status-label [resultEntity]="testMachineResult"></app-result-status-label>
+            </div>
+            <div class="text-right text-t-secondary fz-12 ml-auto">
+              <div [textContent]="testMachineResult.startTime | date:'MMM d, h:mm:ss'"></div>
+              <div class="pt-4">
+                <app-duration-format
+                  [duration]="testMachineResult.duration"></app-duration-format>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</cdk-virtual-scroll-viewport>

@@ -1,0 +1,101 @@
+<div
+  [class.d-none]="!metaData?.reqEntity">
+  <div (click)="requestDetailsShow = !requestDetailsShow"
+       class="rb-medium pb-5 pointer mb-10 fz-16">
+    <span
+      [class.fa-caret-down]="!requestDetailsShow"
+      [class.fa-caret-up]="requestDetailsShow">
+    </span>
+    <span
+      class="pl-10"
+      [translate]=" 'Request Details'"></span>
+  </div>
+  <div *ngIf="requestDetailsShow">
+    <div
+      class="json-detail-container"
+      *ngFor="let requestDetailsDisplay of metaData.reqEntity | keyvalue">
+      <div
+        class="json-item"
+        *ngIf="!(requestDetailsDisplay.key == 'id' ||
+        requestDetailsDisplay.key == 'stepId' ||
+        requestDetailsDisplay.key == 'expectedResultType' ||
+        requestDetailsDisplay.key == 'storeMetadata')">
+        <span
+          [textContent]=" requestDetailsDisplay.key"
+          class="key"></span>
+        <span class="separator">:</span>
+        <span
+          class="value"
+          [textContent]="requestDetailsDisplay.value"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="metaData.restResult?.statusCode" class="pb-5 mb-10 fz-16 pl-25">
+  <span  [translate]="'step_result.rest.status.code'" class="rb-medium"></span>
+  <span [textContent]="metaData.restResult?.statusCode" class="rb-regular-i-d"></span>
+</div>
+<div *ngIf="metaData.restResult?.headerRuntimeData" class="pb-5 mb-10 fz-16 pl-25">
+  <span  [translate]="'step_result.rest.header.data'" class="rb-medium"></span>
+  <span [textContent]="metaData.restResult?.headerRuntimeData" class="rb-regular-i-d"></span>
+</div>
+<div *ngIf="metaData.restResult?.bodyRuntimeData" class="pb-5 mb-10 fz-16 pl-25">
+  <span [translate]="'step_result.rest.body.data'" class="rb-medium"></span>
+  <span [textContent]="metaData.restResult?.bodyRuntimeData" class="rb-regular-i-d"></span>
+</div>
+
+<div *ngIf="metaData.restResult?.headers">
+  <div
+    (click)="resHeaderShow = !resHeaderShow"
+    class="rb-medium my-10 fz-16 pb-5 pointer">
+    <span
+      [class.fa-caret-down]="!resHeaderShow"
+      [class.fa-caret-up]="resHeaderShow">
+    </span>
+    <span
+      class="pl-10"
+      [translate]=" 'Response Headers'"></span>
+  </div>
+  <div *ngIf="resHeaderShow">
+    <div
+      class="json-detail-container"
+      *ngFor="let responseHeaders of metaData.restResult?.headers | keyvalue">
+      <div class="pt5 json-item">
+        <span
+          [textContent]="responseHeaders.key"
+          class="sub-header key"></span>
+        <span class="separator">:</span>
+        <span
+          class="value"
+          [textContent]="responseHeaders.value"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="metaData.restResult?.responseBody">
+
+  <div
+    (click)="resBodyShow = !resBodyShow"
+    class="rb-medium my-10 fz-16 pb-5 pointer">
+    <span
+      [class.fa-caret-down]="!resBodyShow"
+      [class.fa-caret-up]="resBodyShow">
+    </span>
+    <span
+      class="pl-10"
+      [translate]="'Response Body'"></span>
+  </div>
+  <ngx-json-viewer
+    class="custom-color custom-json-view"
+    *ngIf="resBodyShow && metaData.restResult.isJSONResponse"
+    [json]="data">
+  </ngx-json-viewer>
+  <div
+    *ngIf="resBodyShow && !metaData.restResult.isJSONResponse">
+    <iframe
+      class="theme-border-y theme-border-x border-rds-4 w-100 mh-40"
+      [srcdoc]="metaData.restResult.responseBody"></iframe>
+  </div>
+</div>

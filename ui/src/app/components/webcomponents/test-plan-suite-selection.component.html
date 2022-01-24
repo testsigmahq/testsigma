@@ -1,0 +1,248 @@
+<form
+  class="ts-form ts-col-100 pb-40">
+  <div class="d-flex py-15 align-items-center"></div>
+  <div
+    *ngIf="activeEnvironmentFormGroup">
+    <div class="align-items-center d-flex justify-content-between">
+      <div *ngIf="!isRest"
+           class="form-group ts-col-100 d-flex">
+        <label
+          class="rb-medium pr-20"
+          [translate]="'test_plan.environments.testing_type'"></label>
+        <div
+          class="d-flex align-items-center pr-20">
+          <input
+            id="cbt"
+            type="radio"
+            [value]="false"
+            [ngModelOptions]="{standalone: true}"
+            [(ngModel)]="advancedSettings"
+            [disabled]="hasDifferentSuites"
+            (change)="setFormStates()"/>
+          <label *ngIf="version?.workspace?.isWeb || version?.workspace?.isMobileWeb"
+                 for="cbt"
+                 class="pl-5 pointer"
+                 [translate]="'test_plan.environments.cross_browser_testing'">
+          </label>
+          <label *ngIf="version?.workspace.isMobileNative"
+                 for="cbt"
+                 class="pl-5 pointer"
+                 [translate]="'test_plan.environments.cross_device_testing'"></label>
+        </div>
+        <div
+          class="d-flex align-items-center pl-25">
+          <input
+            type="radio"
+            id="distributive"
+            [value]="true"
+            [ngModelOptions]="{standalone: true}"
+            [(ngModel)]="advancedSettings"
+            [disabled]="hasDifferentSuites"
+            (change)="setFormStates()"/>
+          <label
+            for="distributive"
+            class="pl-5 pointer"
+            [translate]="'test_plan.environments.distributed_testing'">
+          </label>
+
+          <div
+            class="dropdown mouse-over d-inline-block">
+            <div class="btn-group pointer">
+              <i class="fa-question-circle-solid text-t-secondary pl-7"></i>
+            </div>
+            <div
+              class="dropdown-menu drop-down-transparent min-sm left-xx-sm">
+              <div
+                class="bg-white border-rds-4 ng-scope p-25 shadow-all2-b4 d-flex">
+                <i class="fa-help fz-18 text-t-secondary"></i>
+                <p class="rb-regular-i-d theme-text mx-10 my-0" [innerHTML]="'test_plan.form.help.distributed_testing' | translate"></p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="ts-col-100 d-flex flex-wrap pb-15 px-5 add-plan-btn"
+    *ngIf="!!executionEnvironments.length">
+      <div
+        class="p-15 border-rds-5 mx-5 mb-10 position-relative pointer d-block mw-100"
+        [class.highlighter-bg-border]="environmentForm == activeEnvironmentFormGroup"
+        [class.bg-highlight]="environmentForm != activeEnvironmentFormGroup"
+        [class.hide]="!executionEnvironments[index]?.settings?.platform && !isRest && index > 0"
+        *ngFor="let environmentForm of environmentsFormControls; let index = index"
+        (click)="editEnvironment(environmentForm, index); isAdvanceAddToggle=true">
+        <a
+          class="text-decoration-none">
+          <app-test-plan-execution-environment-info
+            *ngIf="version"
+            [testPlanLabType]="testPlanLabType"
+            [version]="version"
+            [execution]="execution"
+            [executionEnvironment]="executionEnvironments[index]"
+            (onRemove)="removeEnvironment(index)"></app-test-plan-execution-environment-info>
+        </a>
+      </div>
+      <button *ngIf="showAddEnvButton()"
+              (click)="setFormStates(true,true);"
+              class="mb-10 mx-5 border-rds-5 execution-list-button">
+              <span class="fz-24">+</span><br>
+              <span class="fz-14">Add</span>
+      </button>
+    </div>
+    <br *ngIf="!advancedSettings">
+
+    <div class="pb-30" *ngIf="showAddEnvironmentForm || isEditEnvironmentActive">
+      <span [translate]="isEditEnvironmentActive?'test_plan.environments.configuration.title.edit':
+        'test_plan.environments.configuration.title.add'"></span>
+    </div>
+
+    <div *ngIf="!advancedSettings && showAddEnvironmentForm" class="step-tab">
+      <div class="step-tab-text" [translate]="'message.common.step_number' | translate : {Number: 1}"></div>
+    </div>
+    <div
+      *ngIf="showAddEnvironmentForm"
+      [class.bottom-combine]="advancedSettings"
+      class="bordered-combine-container">
+    <app-test-plan-test-machine-form
+      *ngIf="testPlanForm?.controls['testPlanLabType'] && (version?.workspace?.isWeb || (isHybrid && !version?.workspace?.isMobile)) && activeEnvironmentFormGroup"
+      [formGroup]="activeEnvironmentFormGroup"
+      [version]="version"
+      [isAvailableCheck]="false"
+      [testPlanLabType]="testPlanLabType"></app-test-plan-test-machine-form>
+    <app-test-plan-device-form
+      *ngIf="version?.workspace?.isMobile"
+      [formGroup]="activeEnvironmentFormGroup"
+      [version]="version"
+      [testPlanLabType]="testPlanLabType"></app-test-plan-device-form>
+    <app-test-plan-app-uploads-form
+      *ngIf="version?.workspace?.isMobileNative"
+      [formGroup] = "activeEnvironmentFormGroup"
+      [version]="version"
+      [isEdit]="true"
+      [executionForm]="testPlanForm"
+      [testPlanLabType]="testPlanLabType"></app-test-plan-app-uploads-form>
+    <app-desired-capabilities
+      *ngIf="activeEnvironmentFormGroup"
+      [capabilities]="activeExecutionEnvironment?.capabilities"
+      [formGroup]="activeEnvironmentFormGroup"></app-desired-capabilities>
+    <div class="text-right">
+      <button
+        *ngIf="!advancedSettings && !isEditEnvironmentActive"
+        [disabled]="isActiveEnvironmentInValid"
+        [translate]="'btn.common.add'"
+        class="theme-btn-primary pl-30 pr-30" (click)="saveEnvironment()"></button>
+    </div>
+      <div class="form-group" *ngIf="formSubmitted && !executionEnvironments.length">
+        <div class="error mt-n35" #machineValidationDiv
+             [textContent]="'validation.required.message' | translate: {field: version.workspace.isWeb?'Test Machine':'Test Device'}"></div>
+      </div>
+    </div>
+
+    <div *ngIf="!advancedSettings && showAddSuiteForm" class="step-tab">
+      <div class="step-tab-text" [translate]="'message.common.step_number' | translate : {Number: 2}"></div>
+    </div>
+    <div
+      *ngIf="showAddSuiteForm"
+      [class.top-combine]="advancedSettings"
+      class="form-group list-container drag-list bordered-combine-container"
+      cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListData]="activeExecutionEnvironment?.testSuites">
+
+      <div class="d-flex justify-content-between pb-10 theme-border-b">
+        <div
+          class="fz-14 rb-medium"
+          [translate]="'test_plan.environment.select_suite.title'"></div>
+        <div *ngIf="version?.workspace?.isWeb && false">
+          <button (click)="openCaseLevelParallelDialog()" type="button" cdkOverlayOrigin
+                  [class.d-none]="version?.workspace?.isWeb && activeExecutionEnvironment?.testSuites.length == 0"
+                  #trigger="cdkOverlayOrigin"
+                  class="ml-auto btn-clear border-0 pointer">
+            <i class="fa fa-settings-wrench"></i>
+          </button>
+
+          <ng-template #caseLevelParallelDialog="cdkConnectedOverlay"
+                       cdkConnectedOverlay
+                       [cdkConnectedOverlayOrigin]="trigger"
+                       [cdkConnectedOverlayOpen]="isOpen"
+                       cdkConnectedOverlayPanelClass="filter-dropdown">
+            <div class="d-flex flex-column px-20 py-10 overflow-hidden">
+              <div class="mb-10" *ngIf="version?.workspace?.isWeb && activeExecutionEnvironment?.testSuites.length > 1" [formGroup]="activeEnvironmentFormGroup">
+                <mat-checkbox
+                  class="mat-checkbox"
+                  (change)="setCaseLevelNdParallelFlags($event, 'runInParallel')"
+                  id="runInParallel" [formControlName]="['runInParallel']">
+                  <span [translate]="'test_plan.environment.select_suite.run_in_parallel'"></span></mat-checkbox>
+              </div>
+              <div *ngIf="version?.workspace?.isWeb && activeExecutionEnvironment?.testSuites.length > 0" [formGroup]="activeEnvironmentFormGroup">
+                <mat-checkbox
+                  class="mat-checkbox"
+                  (change)="setCaseLevelNdParallelFlags($event, 'createSessionAtCaseLevel')"
+                  id="createSessionAtCaseLevel" [formControlName]="['createSessionAtCaseLevel']">
+                  <span [translate]="'test_plan.environment.select_suite.run_at_testcase_level'"></span></mat-checkbox>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+
+      <div
+        cdkDrag
+        cdkDragBoundary=".cdk-drop-list.drag-list"
+        cdkDragLockAxis="y"
+        [cdkDragData]="suite"
+        class="p-10 theme-border-b align-items-center d-flex green-highlight list-view pointer" style="cursor: move"
+        [cdkDragDisabled]="activeExecutionEnvironment?.testSuites.indexOf(suite.parentSuite) > -1 || suite.preRequisiteSuite"
+        *ngFor="let suite of activeExecutionEnvironment?.testSuites; let index = index"
+        [ngSwitch]="activeExecutionEnvironment?.testSuites.indexOf(suite.parentSuite?.id) > -1 || activeExecutionEnvironment?.testSuites.length == 1">
+        <i class="fa-drag-n-drop mr-10"></i>
+        <span class="mr-10" [textContent]="index+1"></span>
+        <span [textContent]="suite.name" class="text-truncate mw-80 py-7"></span>
+        <span *ngSwitchCase="true"></span>
+        <i *ngSwitchCase="false" class="action-icons action-hover-icon fa-trash-thin pointer ml-auto"
+           (click)="removeSuite(suite)"></i>
+      </div>
+      <div class="align-items-center d-flex-wrap justify-content-between py-8 h-55p mb-n18">
+        <a
+          (click)="addSuites()"
+          class="text-link text-nowrap"
+          [textContent]="'+ '+('test_plan.environment.select_suite.add' | translate)"></a>
+        <div class="ts-col-100 pt-10" *ngIf="formSubmitted && isSuiteIdsInvalid && !activeExecutionEnvironment?.testSuites?.length" #suitesValidationDiv>
+          <div class="error left ml-15 mr-auto position-relative top-0"
+               [textContent]="'validation.required.message' | translate: {field:'Test Suite'}"></div>
+        </div>
+        <button
+          *ngIf="advancedSettings && !isEditEnvironmentActive"
+          [disabled]="isActiveEnvironmentInValid"
+          [translate]="'btn.common.add'"
+          class="theme-btn-primary ml-20 pl-30 pr-30" (click)="saveEnvironment()"></button>
+        <button
+          *ngIf="isEditEnvironmentActive"
+          [translate]="'btn.common.cancel'"
+          class="theme-btn-clear-default ml-auto" (click)="addNewExecutionEnvironment()"></button>
+        <button
+          *ngIf="isEditEnvironmentActive"
+          [disabled]="isActiveEnvironmentInValid"
+          [translate]="'btn.common.update'"
+          class="theme-btn-clear-default secondary-highlight" (click)="saveEnvironment()"></button>
+      </div>
+
+    </div>
+  </div>
+  <div
+    [class.d-none]="isEditEnvironmentActive"
+    class="theme-border-t ts-col-100 text-right bottom-0 position-sticky bg-white pb-15">
+    <a class="theme-btn-clear-default mt-15 mr-25"
+       (click)="previous()">
+      <i class="fa-left-arrow-thin mr-4 fz-11"></i>
+      <span [translate]="'pagination.previous'"></span>
+    </a>
+    <button
+      [disabled]="isInValid"
+      (click)="isInValid ? '' : next()"
+      class="theme-btn-primary mt-15">
+      <span [translate]="'pagination.next'"></span>
+      <i class="fa-right-arrow-thin ml-4 fz-11"></i>
+    </button>
+  </div>
+</form>

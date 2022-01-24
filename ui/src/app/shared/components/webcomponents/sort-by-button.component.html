@@ -1,0 +1,27 @@
+<button
+  cdkOverlayOrigin #trigger="cdkOverlayOrigin"
+  [class.mat-elevation-z3]="openSort"
+  (click)="openSortByOptions()"
+  [matTooltip]="'hint.message.common.sort' | translate"
+  class="btn icon-btn border-rds-2 ml-14">
+  <i class="fa-sort"></i>
+</button>
+<ng-template
+  #sortByOptions="cdkConnectedOverlay"
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="openSort">
+  <ul class="sort-list">
+    <li *ngFor="let sortByValue of sortByColumns " class="selected pointer"
+        (click)="sortBy(sortByValue, direction)"
+        [translate]="translatePreFix+ sortByValue"
+        [class.selected]=" sortByValue == sortedBy"></li>
+    <div class="w-100 theme-border-t mt-10 mb-10"></div>
+    <li (click)="sortBy(sortedBy, ',asc')" [class.selected]=" direction == ',asc'"
+        [translate]="sortedBy.includes('Date') ? 'message.common.sort_by.old' : 'message.common.sort_by.ascending'"
+        class="pointer"></li>
+    <li (click)="sortBy(sortedBy, ',desc')" [class.selected]=" direction == ',desc'"
+        [translate]="sortedBy.includes('Date') ? 'message.common.sort_by.new' : 'message.common.sort_by.descending'"
+        class="pointer"></li>
+  </ul>
+</ng-template>

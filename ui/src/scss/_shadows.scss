@@ -1,0 +1,27 @@
+// stylelint-disable declaration-no-important
+.shadow-sm {
+  box-shadow: $box-shadow-sm !important;
+}
+
+.shadow-all2-b4 {
+  box-shadow: $box-shadow-all2-b4 !important;
+}
+
+.shadow-bl {
+  box-shadow: $box-shadow-bottom-4 !important;
+}
+
+.shadow-all-b2 {
+  box-shadow: $box-shadow-all-bottom-2 !important;
+}
+
+.shadow-all-b10 {
+  box-shadow: $box-shadow-all-b10;
+}
+
+.shadow-none {
+    box-shadow: none !important;
+}
+.dropdown-shadow{
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.25);
+}

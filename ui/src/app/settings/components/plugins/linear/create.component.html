@@ -1,0 +1,39 @@
+<div class="w-100 h-100">
+  <div class="theme-overlay-container">
+    <div class="theme-overlay-header">
+      <span [translate]="plug.name?plug.name:'settings.plugins.linear'" ></span>
+      <span  ></span>
+      <button class="theme-overlay-close"
+              type="button"
+              [matTooltip]="'hint.message.common.close' | translate"
+              mat-dialog-close>
+      </button>
+    </div>
+
+    <div class="theme-overlay-content">
+      <form class="ts-form pt-30" [formGroup]="updateForm">
+        <div class="form-group ts-form" >
+          <label  class="control-label required">
+            <span [translate]="'settings.plugins.token'"></span>
+          </label>
+          <input type="text"
+                 formControlName="token"
+                 class="form-control "  required>
+          <span *ngIf="!updateForm.get('token').valid && updateForm.get('token').touched" class="help-block"
+                [translate]="'plugins.message.api'">
+          </span>
+        </div>
+      </form>
+    </div>
+
+    <div class="theme-overlay-footer">
+      <button
+        type="button"
+        mat-dialog-close
+        class="theme-btn-clear-default" [translate]="'btn.common.cancel'">
+      </button>
+      <button type="submit" [disabled]="!updateForm.valid || saving"
+              class="theme-btn-primary" (click)="onSubmit()" [translate]="saving ?  'message.common.saving' : 'btn.common.create'"></button>
+    </div>
+  </div>
+</div>

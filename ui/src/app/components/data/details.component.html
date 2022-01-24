@@ -1,0 +1,74 @@
+<div class="details-page-container">
+  <app-placeholder-loader class="ts-col-100" *ngIf="!isFetchCompleted" [isDetails]="true"></app-placeholder-loader>
+  <div
+    class="ts-col-100 d-flex-wrap" *ngIf="testData">
+    <div class="details-page-header">
+      <app-td-overlay-menu-button
+        [versionId]="versionId"></app-td-overlay-menu-button>
+      <a class="go-back-icon pl-10"
+         [matTooltip]="'hint.message.common.back' | translate"
+         [routerLink]="['/td', versionId , 'data']"></a>
+      <div
+           class="d-flex ts-col-100-67">
+        <div class="ts-col-100 d-flex align-items-center">
+            <div class="theme-details-header">
+              <a
+                class="title-name"
+                [textContent]="testData?.name"></a>
+            </div>
+          <div class="details-page-buttons">
+            <button
+              class="btn icon-btn"
+              [matTooltip]="'pagination.edit' | translate"
+              [routerLink]="['/td', 'data', testDataId, 'edit']">
+              <i class="fa-pencil-on-paper"></i>
+            </button>
+            <button
+              class="btn icon-btn" (click)="fetchLinkedCases()"
+              [matTooltip]="'pagination.delete' | translate">
+              <i class="fa-trash-thin"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="ml-auto ts-col-100-77">
+      <div class="details-page-sub-details">
+        <div class="details-page-sub-description">
+          <div
+            class="details-items pl-50" *ngIf="testData?.updatedAt">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="page-details-navigation-sm">
+  <ul class="tab-nav" role="tablist">
+    <li class="nav-items" role="presentation">
+      <a [routerLink]="['sets']"
+         [routerLinkActive]="'active'"
+         class="normal-text">
+        <i class="fa-list"></i>
+        <span [translate]="'test_data_profiles.test_data_tabs.title.data_list'"></span>
+      </a>
+    </li>
+    <li class="nav-items" role="presentation" [routerLink]="['cases']" [routerLinkActive]="'active'" [queryParams]="{v: versionId}">
+      <a [routerLink]="['cases']" [routerLinkActive]="'active'" [queryParams]="{v: versionId}"
+         class="normal-text">
+        <i class="fa-test-cases-alt"></i>
+        <span [translate]="'td_nav.test_case'"></span>
+      </a>
+    </li>
+  </ul>
+</div>
+<div class="d-flex ts-col-100 overflow-hidden"  style="
+    padding: 0 33px 33px 55px;
+    height: calc(100% - 170px);
+">
+<router-outlet></router-outlet>
+</div>
+
+

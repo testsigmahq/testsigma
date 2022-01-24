@@ -1,0 +1,51 @@
+<button type="button"
+        class="btn theme-border-i-d theme-text p-0 d-inline-flex">
+  <a
+    *ngIf="previousResults?.content?.length"
+    [routerLink]="['..', previousResults?.content[0]?.id || testCase?.id]"
+    [matTooltip]="'hint.message.common.previous.item' | translate"
+    class="fa-left-arrow-thin px-7 py-6  theme-border-r text-decoration-none text-t-highlight"></a>
+  <a
+    *ngIf="!previousResults?.content?.length"
+    class="fa-left-arrow-thin px-7 py-6  theme-border-r text-decoration-none not-allowed text-muted"></a>
+
+  <a
+    [matMenuTriggerFor]="menuTrigger"
+    class="fa-list px-7 py-6  theme-border-r"
+    [matTooltip]="'hint.message.common.list.item' | translate"
+    (click)="showList()"></a>
+  <a
+    *ngIf="nextResults?.content?.length && nextResults?.content[0]"
+    [routerLink]="['..', nextResults?.content[0]?.id || testCase?.id]"
+    [matTooltip]="'hint.message.common.next.item' | translate"
+    class="text-t-highlight fa-right-arrow-thin px-7 py-6 text-decoration-none"></a>
+  <a
+    *ngIf="!nextResults?.content?.length || !nextResults?.content[0]"
+    class="fa-right-arrow-thin px-7 py-6  text-muted not-allowed text-decoration-none"></a>
+</button>
+<mat-menu
+  #menuTrigger="matMenu" class=" theme-mat-menu h-100">
+  <cdk-virtual-scroll-viewport
+    #testCaseDetailsViewPort
+    itemSize="83"
+    minBufferPx="{{ 83 * 3 }}"
+    maxBufferPx="{{ 83 * 6 }}"
+    class="list-container virtual-scroll-viewport w-100 mat-menu-pagination">
+    <a
+      [routerLink]="['/td/test_case_results', testCase?.id]"
+      [routerLinkActive]="'active'"
+      [class.active]="isTestCaseActive(testCase?.id)"
+      class="list-view green-highlight sm-pm pointer"
+      *cdkVirtualFor='let testCase of testCaseList'>
+      <div
+        class="d-flex flex-wrap ml-auto text-truncate ts-col-100-35">
+        <div class="ts-col-100">
+          <div
+            class="list-title text-truncate"
+            [matTooltip]="testCase?.name"
+            [textContent]="testCase?.name"></div>
+        </div>
+      </div>
+    </a>
+  </cdk-virtual-scroll-viewport>
+</mat-menu>

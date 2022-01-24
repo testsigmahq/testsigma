@@ -1,0 +1,44 @@
+<div class="list-content overflow-x-hidden theme-only-items-scroll sm-h pt-30 px-40 pb-20">
+  <div class="list-header" *ngIf="dryTestCaseResults?.numberOfElements">
+    <div class="ts-col-15" [translate]="'dry_runs.list.header.status'"></div>
+    <div class="ts-col-50" [translate]="'dry_runs.list.header.name'"></div>
+    <div class="ts-col-15"
+         [translate]="'dry_runs.list.header.start_time'"></div>
+    <div class="ts-col-20 align-items-center d-flex">
+      <span [translate]="'dry_runs.list.header.duration'"></span>
+    </div>
+  </div>
+  <div *ngIf="dryTestCaseResults?.numberOfElements" class="list-container">
+    <div class="list-view lg-pm green-highlight" *ngFor="let dryTestCaseResult of dryTestCaseResults.content">
+      <div class="ts-col-15">
+        <a [routerLink]="['/td', 'test_case_results', dryTestCaseResult.id]"
+           class="d-flex pointer">
+          <app-result-pie-chart-column [resultEntity]="dryTestCaseResult"></app-result-pie-chart-column>
+        </a>
+      </div>
+      <div class="text-dark ts-col-50">
+        <a class="fz-14 text-break list-title"
+           [routerLink]="['/td', 'test_case_results', dryTestCaseResult.id]">
+          <span class="text-capitalize"
+                [textContent]="dryTestCaseResult.testCase.name"></span>
+        </a>
+      </div>
+      <div class="ts-col-15"
+           [textContent]="dryTestCaseResult?.testDeviceResult?.startTime | date:'hh:mm a MMM d, yyyy'">
+      </div>
+      <div class="ts-col-20">
+        <app-duration-format
+          [duration]="dryTestCaseResult.duration"></app-duration-format>
+      </div>
+    </div>
+  </div>
+  <app-pagination *ngIf="dryTestCaseResults?.totalElements" [paginationData]="dryTestCaseResults"
+                  [currentPage]="currentPage"
+                  (paginationAction)="fetchDryRuns()"></app-pagination>
+  <div *ngIf="!dryTestCaseResults?.totalElements" class="w-100">
+    <div class="no-content">
+      <loading-circle *ngIf="!fetchingCompleted"></loading-circle>
+      <h3 *ngIf="fetchingCompleted" [translate]="'agents.test_plans.dry.none'"></h3>
+    </div>
+  </div>
+</div>

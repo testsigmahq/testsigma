@@ -1,0 +1,47 @@
+<!--
+  ~ /******************************************************************************
+  ~ * Copyright (C) 2020 Testsigma Technologies Inc.
+  ~ * All rights reserved.
+  ~  *****************************************************************************/
+  -->
+
+<div
+  class="result-toggle-list-btn"
+  (click)="openSecondaryMenu()" #dataDrivenListBtn>
+  <div
+    class="toggle-list-container"
+    *ngIf="currentTestCaseDataDrivenResult">
+    <div class="trigger-title d-flex align-items-center">
+      <app-result-pie-chart-column
+        class="row-chart-status test123 mr-10"
+        [width]="20"
+        [height]="20"
+        [resultEntity]="currentTestCaseDataDrivenResult?.iterationResult?.childResult || currentTestCaseDataDrivenResult?.iterationResult"></app-result-pie-chart-column>
+      <span class="rb-medium" [textContent]="currentTestCaseDataDrivenResult?.iterationResult?.testDataSetName || currentTestCaseDataDrivenResult?.testData?.name"></span>
+      <span class="pl-7 fz-11">(
+        <i class="fa-info fz-9 mr-2" [matTooltip]="'hint.test_data.expected_to_fail'| translate"></i>
+        <span [translate]="'test_data.expected_to_fail.'+(currentTestCaseDataDrivenResult?.testData?.expectedToFail)"></span>
+        )
+      </span>
+    </div>
+<!--    <div class="ts-col-100 d-flex align-items-center pt-5 chart-flex-wrap">-->
+<!--      <app-result-pie-chart-column-->
+<!--        class="row-chart-status test123"-->
+<!--        [width]="20"-->
+<!--        [height]="20"-->
+<!--        [resultEntity]="currentTestCaseDataDrivenResult?.iterationResult?.childResult || currentTestCaseDataDrivenResult?.iterationResult"></app-result-pie-chart-column>-->
+<!--      <div class="ml-auto fz-12 text-t-secondary d-flex">-->
+<!--        <app-re-run-icon [resultEntity]="currentTestCaseDataDrivenResult?.iterationResult"></app-re-run-icon>-->
+<!--        <app-duration-format-->
+<!--          *ngIf="!currentTestCaseDataDrivenResult?.iterationResult?.isExecuting"-->
+<!--          [duration]="currentTestCaseDataDrivenResult?.iterationResult?.duration"></app-duration-format>-->
+<!--      </div>-->
+<!--    </div>-->
+  </div>
+
+  <span class="ml-auto pl-10">
+    <i class="theme-secondary-text"
+      [class.fa-down-arrow-filled]="!showDataList"
+      [class.fa-up-arrow-filled]="showDataList"></i>
+  </span>
+</div>

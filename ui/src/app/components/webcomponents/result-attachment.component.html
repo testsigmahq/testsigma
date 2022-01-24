@@ -1,0 +1,33 @@
+<div class="attachment-content-large d-flex flex-column">
+  <div
+    *ngIf="!attachmentsComponent?.attachmentList?.content.length"
+    class="attachment-content-large-container">
+    <div class="mt-n30">
+      <div
+        class="attachment-content-header"
+        [class.fz-13]="smallWidget"
+        [class.fz-24]="!smallWidget"
+        [translate]="'result.attachment.no_attachment'"></div>
+      <div class="input-upload">
+        <label
+          class="theme-btn-clear-default">
+          <i class="fa-pin-alt pr-7"></i>
+          <span
+            class="fz-12 text-t-secondary"
+            [translate]="'btn.common.upload_file'"></span>
+          <input
+            id="attachmentFile"
+            name="attachmentFile" type="file"
+            (change)="attachmentsComponent.uploadAttachment($event)"
+            style="display: none;">
+        </label>
+        <span
+          class="pl-8 text-t-secondary"
+          [translate]="'result.attachment.size'"></span>
+      </div>
+    </div>
+    <div class="empty-attachment"></div>
+  </div>
+  <app-list-attachments
+    [attachmentRow]="attachmentRow" [attachmentRowId]="attachmentRowId" class="w-100 h-100"></app-list-attachments>
+</div>

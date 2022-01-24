@@ -1,0 +1,62 @@
+<div class="h-100 overflow-height">
+  <div class="bg-white d-flex align-items-center rb-regular p-10 m-20 testcase-filter border-rds-4">
+    <div>
+      <i (click)="searchInput.focus();focusOnSearch()"
+         [matTooltip]="'hint.message.common.search' | translate"
+         class="fa-search fz-13 mr-5"></i>
+      <input
+        (focus)="focusOnSearch()" [(ngModel)]="inputValue"
+        #searchInput [placeholder]="'common.place_holder.search' | translate"
+             class="form-control border-0 w-85 d-inline-block p-0">
+    </div>
+    <button mat-dialog-close class="close" *ngIf="inputValue" [matTooltip]="'hint.message.common.close' | translate"
+            ></button>
+  </div>
+
+  <div class="h-100-40 testcase-filter-list">
+    <div class="overflow-x-hidden h-100">
+      <div class="filter-list-section mt-10">
+        <ul
+          *ngIf="!isEmptyDefault"
+          class="items-section">
+          <li mat-dialog-close *ngFor="let filter of defaultFilter | search : { name: searchInput.value }"
+              [routerLink]="['td', version.id, 'elements', 'filter', filter.id]" [routerLinkActive]="'selected'"
+              class="pointer">
+            <span class="filter-items" [routerLinkActive]="'selected'">
+              <span [textContent]="filter.name"></span>
+              <i *ngIf="filter.id == currentFilter.id"
+                 class="fa-tick ml-auto"></i>
+            </span>
+          </li>
+        </ul>
+        <ul class="items-section" *ngIf="isEmptyDefault">
+          <li
+            class="filter-items"
+            [translate]="'message.common.search.not_found'"></li>
+        </ul>
+      </div>
+      <div
+        *ngIf="nonDefaultFilters?.length"
+        class="filter-list-section">
+        <ul
+          *ngIf="!isEmptyNonDefault"
+          class="items-section">
+          <li mat-dialog-close *ngFor="let filter of nonDefaultFilters | search : { name: searchInput.value }"
+              [routerLink]="['td', version.id, 'elements', 'filter', filter.id]" [routerLinkActive]="'selected'"
+              class="pointer">
+            <span class="filter-items" [routerLinkActive]="'selected'">
+              <span [textContent]="filter.name"></span>
+              <i *ngIf="filter.id == currentFilter.id"
+                 class="fa-tick ml-auto"></i>
+            </span>
+          </li>
+        </ul>
+        <ul class="items-section" *ngIf="isEmptyNonDefault">
+          <li
+            class="filter-items"
+            [translate]="'message.common.search.not_found'"></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

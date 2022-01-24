@@ -1,0 +1,64 @@
+<div class="ts-col-100 h-100">
+  <cdk-virtual-scroll-viewport
+    itemSize="59"
+    *ngIf="isMachineSuiteFetchComplete"
+    class="bg-default theme-section-container card-container virtual-scroll-viewport viewport-height">
+    <a
+      [routerLink]="['/td/suite_results', testSuiteResult.id]"
+      class="list-card bordered sm-pm"
+      *cdkVirtualFor='let testSuiteResult of suiteResults'>
+      <div
+        class="d-flex fz-12 ts-col-15 align-items-center">
+        <app-re-run-icon [resultEntity]="testSuiteResult" class></app-re-run-icon>
+        <app-result-pie-chart-column
+          [width]="24"
+          [height]="24"
+          [resultEntity]="testSuiteResult.childResult || testSuiteResult"></app-result-pie-chart-column>
+      </div>
+      <div
+        class="d-flex flex-wrap ts-col-85">
+        <div
+          class="ts-col-100 list-title text-break"
+          [textContent]="testSuiteResult.testSuite.name"></div>
+        <div class="ts-col-100 pt-4 text-t-secondary fz-12 d-flex align-items-center">
+          <div
+            class="theme-breadcrumb ts-col-40">
+            <span
+              *ngIf="testSuiteResult.environmentResult?.testDeviceSettings?.platform ||
+              testSuiteResult.environmentResult?.testDeviceSettings?.osVersion"
+              class="theme-breadcrumb-item mw-100"
+              [matTooltip]="('platform.name.'+testSuiteResult.environmentResult.testDeviceSettings.platform | translate)  +
+           ' ' + testSuiteResult.environmentResult.testDeviceSettings.osVersion "
+              [textContent]="('platform.name.'+testSuiteResult.environmentResult.testDeviceSettings.platform | translate)  +
+           ' ' + testSuiteResult.environmentResult.testDeviceSettings.osVersion "></span>
+          </div>
+          <div
+            class="text-nowrap px-10 text-center ts-col-30">
+            <app-test-machine-info-column
+              [environmentResult]="testSuiteResult?.environmentResult"
+              [executionResult]="testSuiteResult?.environmentResult?.executionResult"
+              [executionEnvironment]="testSuiteResult?.environmentResult?.executionEnvironment"></app-test-machine-info-column>
+          </div>
+          <div
+            class="d-flex justify-content-end text-nowrap ts-col-30">
+            <div
+              [textContent]="testSuiteResult.startTime | date:'MMM d, h:mm:ss'"></div>
+            <div class="pl-8">
+              <app-duration-format
+                [duration]="testSuiteResult.duration"></app-duration-format>
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+    <div *ngIf="suiteResults.isEmpty" class="empty-full-container-transparent-bg">
+      <div class="empty-full-content">
+        <div class="empty-run-xs"></div>
+        <div
+          class="text-t-secondary pt-30 pb-18"
+          [translate]="'message.common.search.not_found'"></div>
+      </div>
+    </div>
+    <app-placeholder-loader *ngIf="suiteResults?.isFetching"></app-placeholder-loader>
+  </cdk-virtual-scroll-viewport>
+</div>

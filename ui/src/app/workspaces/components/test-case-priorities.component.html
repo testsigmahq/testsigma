@@ -1,0 +1,85 @@
+<div class="page-header">
+  <div class="page-title" [translate]="'test_case_priorities.title'"></div>
+  <div class="short-hand-actions">
+    <app-toggle-search-button
+      class="mr-20"
+      [class.visibility-hidden]="!testCasePriorities?.totalElements && !isFiltered"
+      (searchAction)="fetchTestCasePriorities($event)"></app-toggle-search-button>
+    <button
+      [class.visibility-hidden]="newRow || (!testCasePriorities?.totalElements && !isFiltered)"
+      (click)="addRow()"
+      class="theme-btn-clear-default">
+      + <span [translate]="'test_case_priorities.button.add'"></span></button>
+  </div>
+</div>
+<div class="page-content pb-0">
+  <app-placeholder-loader
+    *ngIf="testCasePriorities.isFetching"></app-placeholder-loader>
+  <cdk-virtual-scroll-viewport
+    *ngIf="testCasePriorities?.totalElements || newRow"
+    itemSize="59" class="list-container virtual-scroll-viewport  theme-border-t">
+    <a
+      class="list-view green-highlight sm-pm lh-1point5 py-16 pointer align-items-center"
+      *cdkVirtualFor='let testCasePriority of testCasePriorities;let i = index' [ngSwitch]="testCasePriority.isEdit">
+      <div class="ts-col-100 d-flex" *ngSwitchCase="undefined">
+        <div class="ts-col-90 d-flex text-truncate pl-7 rb-medium" [textContent]="testCasePriority.name"></div>
+        <div class="action-icons ts-col-10" *ngIf="!editMode">
+          <i
+            class="fa-pencil-on-paper action-icon" [matTooltip]="'btn.common.edit' | translate"
+            (click)="editTestCasePriority(i)"></i>
+          <i
+            class="fa-trash-thin action-icon" (click)="openDeleteDialog(testCasePriority.id)"
+            [matTooltip]="'btn.common.remove' | translate"></i>
+        </div>
+      </div>
+      <div class="inline-form-container" *ngSwitchCase="true">
+        <div class="inline-form-section">
+          <input
+            type="text" class="inline-form-control" autofocus
+            #priorityNameField
+            [formControl]="rowNameControl"
+            (keyup.escape)="testCasePriority.isEdit=undefined;editMode=false"
+            (keyup.enter)="updateTestCasePriority(testCasePriority)"
+            (blur)="testCasePriority.isEdit=undefined;editMode=false"
+            [value]="testCasePriority.name">
+          <span
+            class="input-control"
+            [translate]="'message.common.place_holder.enter_to_save'"></span>
+        </div>
+      </div>
+    </a>
+    <a class="list-view green-highlight sm-pm lh-1point5 py-16 pointer align-items-center" *ngIf="newRow">
+      <div class="inline-form-container">
+        <div class="inline-form-section">
+          <input
+            type="text" class="inline-form-control" autofocus
+            #priorityNameField
+            [formControl]="rowNameControl"
+            (keyup.escape)="newRow=false"
+            (keyup.enter)="createTestCasePriority()"
+            (blur)="newRow=false">
+          <span
+            class="input-control"
+            [translate]="'message.common.place_holder.enter_to_save'"></span>
+        </div>
+      </div>
+    </a>
+    <div class="pointer text-link pt-16 pl-18" *ngIf="!newRow"
+         (click)="addRow()">
+      + <span [translate]="'test_case_priorities.button.add'"></span></div>
+  </cdk-virtual-scroll-viewport>
+  <div *ngIf="!testCasePriorities?.totalElements">
+    <div
+      *ngIf="!testCasePriorities?.isFetching"
+      class="empty-full-container">
+      <div class="empty-run-md"></div>
+      <div
+        class="empty-text"
+        [translate]="isFiltered ? 'message.common.search.not_found' : 'test_case_priorities.not_created'"></div>
+      <button
+        *ngIf="!isFiltered" [class.visibility-hidden]="newRow"
+        (click)="addRow()" class="theme-btn-clear-default bg-white">
+        + <span [translate]="'test_case_priorities.button.add'"></span></button>
+    </div>
+  </div>
+</div>

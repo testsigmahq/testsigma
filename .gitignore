@@ -1,0 +1,7 @@
+**/.DS_Store
+.idea
+*.iml
+out/**
+bin/**
+logs/**
+*.zip

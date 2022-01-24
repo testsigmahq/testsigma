@@ -1,0 +1,119 @@
+<nav class="primary-nav-bar" id="leftNav">
+  <div
+    class="ts-logo">
+    <a [routerLink]="['']">
+    </a>
+  </div>
+  <div class="text-center dropright mouse-over" (mouseover)="displayGlobalAdd=true" (mouseleave)="displayGlobalAdd=false">
+    <a class="primary-icon primary-icon-padding" href="javascript:void(0)">
+      <div>
+        <i class="fa-plus-filled"></i>
+      </div>
+    </a>
+    <app-global-add
+      *ngIf="authGuard?.session?.user && displayGlobalAdd"
+      class="global-add-dropdown"></app-global-add>
+  </div>
+  <ul class="primary-nav mt-0" id="ul_primary_menu">
+    <li class="pt15 separator mb-30">
+    </li>
+    <li [routerLink]="['/dashboard']" [routerLinkActive]="'active'">
+      <a
+        [routerLink]="['/dashboard']" [routerLinkActive]="'active'"
+        [matTooltip]="'left_nav.dashboard' | translate"
+        placement="right">
+        <span>
+            <i class="fa-dashboard"></i>
+        </span>
+      </a>
+    </li>
+    <app-test-dev-icon class="d-block"></app-test-dev-icon>
+    <li [routerLink]="['/workspaces']" [routerLinkActive]="'active'">
+      <a [routerLink]="['/workspaces']" [routerLinkActive]="'active'"
+         [matTooltip]="'left_nav.workspace_settings' | translate" placement="right">
+        <span>
+            <i class="fa-suitcase"></i>
+        </span>
+      </a>
+    </li>
+    <li [routerLink]="['/agents']" [routerLinkActive]="'active'"
+        placement="right">
+      <a
+        [routerLink]="['/agents']" [routerLinkActive]="'active'"
+         [matTooltip]="'left_nav.agents' | translate" placement="right">
+        <span>
+            <i class="fa fa-desktop"></i>
+        </span>
+      </a>
+    </li>
+    <li
+      [routerLinkActive]="'active'" [routerLink]="['/addons']">
+      <a
+        [routerLinkActive]="'active'" [routerLink]="['/addons']" [matTooltip]="'td_nav.add_ons' | translate"
+        placement="right">
+        <span>
+         <i class="fa-addons"></i>
+        </span>
+      </a>
+    </li>
+    <li
+      [routerLink]="['/settings']" [routerLinkActive]="'active'">
+      <a [routerLink]="['/settings']" [routerLinkActive]="'active'" [matTooltip]="'left_nav.settings' | translate"
+         placement="right">
+        <span>
+            <i class="fa-settings-wrench"></i>
+        </span>
+      </a>
+    </li>
+  </ul>
+
+  <div class="profile-action-section">
+    <div
+      class="primary-nav mt-0" >
+      <app-help-actions
+        [authGuard]="authGuard"
+        [isNav]="true"
+        class="help-action-container"></app-help-actions>
+      <li [class.active]="moreAction" class="help-more-icon">
+        <a #moreActionTrigger="cdkOverlayOrigin" (click)="moreActionOptions()"
+           [style.pointer-events]="moreAction ?'none': 'all'"
+           [class.active]="moreAction" [matTooltip]="'hint.message.common.more_action' | translate" cdkOverlayOrigin
+           placement="right">
+          <span><i class="fa-ellipsis-h"></i></span>
+        </a>
+      </li>
+
+    <ng-template
+      #moreActionRef="cdkConnectedOverlay"
+      [cdkConnectedOverlayOffsetX]="50"
+      [cdkConnectedOverlayOffsetY]="-0"
+      [cdkConnectedOverlayOpen]="moreAction"
+      [cdkConnectedOverlayOrigin]="moreActionTrigger"
+      cdkConnectedOverlay
+      cdkConnectedOverlayHasBackdrop="false">
+      <div [@collapse]="moreAction"
+           [@expand]="moreAction"
+           class="profile-action-section">
+        <div (click)="moreAction=false" class="highlight-child-on-hover">
+          <app-help-actions [authGuard]="authGuard"   (onOpenChat)="openChat()" (onOpenHelpDropDown)="onCloseDropdown()"></app-help-actions>
+        </div>
+      </div>
+    </ng-template>
+    </div>
+    <ul class="primary-nav"
+    *ngIf="!isNoAuth"
+    >
+      <li
+        (click)="logout()">
+        <a
+          (click)="logout()"
+          [matTooltip]="'logout' | translate"
+          placement="right">
+        <span>
+         <i class="fa-sign-out-alt-solid"></i>
+        </span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>

@@ -1,0 +1,88 @@
+<div class="details-page-container">
+  <div
+    *ngIf="suite"
+    class="ts-col-100 d-flex-wrap">
+    <div class="details-page-header">
+      <app-td-overlay-menu-button
+        [versionId]="versionId"></app-td-overlay-menu-button>
+      <a [matTooltip]="'hint.message.common.back' | translate"
+         [routerLink]="['../../', versionId, 'suites']"
+         class="go-back-icon pl-10"></a>
+      <div class="d-flex-wrap ts-col-100-77">
+        <div class="ts-col-100 d-flex align-items-center">
+            <div class="theme-details-header">
+              <a
+                [matTooltip]="suite.name"
+                [textContent]="suite.name"
+                class="title-name"></a>
+            </div>
+          <div class="details-page-buttons">
+            <button
+              [matTooltip]="'pagination.edit' | translate"
+              [routerLink]="['/td', versionId,'suites',suite?.id,'edit']"
+              class="btn icon-btn">
+              <i class="fa-pencil-on-paper"></i>
+            </button>
+            <button
+              (click)="openDeleteDialog()" [matTooltip]="'pagination.delete' | translate"
+              class="btn icon-btn">
+              <i class="fa-trash-thin"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ml-auto ts-col-100-77">
+      <div class="details-page-sub-details">
+        <div class="details-page-sub-description">
+          <div class="details-items">
+            <label [translate]="'requirements.form.label.type'"
+                   class="details-title"></label>
+            <div
+              [translate]="'message.common.automated'"
+              class="page-details-status">
+            </div>
+          </div>
+          <div class="details-items pl-50 ts-col-40">
+            <label [translate]="'test_suites.details.label.prerequisite'"
+                   class="details-title"></label>
+            <div class="details-info">
+              <div
+                [routerLink]="suite.preRequisiteSuite ? ['/td', 'suites', suite.preRequisiteSuite?.id] : ''"
+                [matTooltip]="suite.preRequisiteSuite?.name"
+                class="d-flex text-truncate"
+                [textContent]="suite.preRequisiteSuite?.name || '-'">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="page-details-navigation-md">
+  <ul class="tab-nav pl-8" role="tablist">
+    <li [routerLink]="['cases']" class="nav-items"
+        role="presentation">
+      <a
+        [routerLinkActive]="'active'"
+        class="normal-text">
+        <i class="fa-test-cases-alt"></i>
+        <span [translate]="'test_suite.nav.test_case.count' | translate: {count: (testCases ? testCases?.totalElements : 0)}"></span>
+      </a>
+    </li>
+    <li [routerLink]="['plans']" class="nav-items"
+        role="presentation">
+      <a
+        [routerLinkActive]="'active'"
+        class="normal-text">
+        <i class="fa-play-filled"></i>
+        <span [translate]="'td_nav.test_plan'"></span>
+      </a>
+    </li>
+  </ul>
+</div>
+<div class="d-flex flex-wrap ts-col-100 theme-details-scroll">
+  <router-outlet></router-outlet>
+</div>

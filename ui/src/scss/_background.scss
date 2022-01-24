@@ -1,0 +1,99 @@
+.bg-highlight {
+  background: $light-hight-bgc;
+}
+.bg-alice-blue{
+  background: $alice-blue;
+}
+.bg-white{
+  background: $white!important;
+}
+
+.bg-default{
+  background: $default-bgc !important;
+}
+.bg-default-grey-light {
+  background: $theme-bg-gray-light-color;
+}
+.bg-grey-light{
+  background: $grey-light-bgc !important;
+}
+.bg-active{
+  background: linear-gradient(0deg, #F2F8F2, #F2F8F2);
+}
+
+.bg-grey-x-light{
+	background: $grey-x-light !important;
+}
+
+.bg-white-smoke{
+  background: $white-smoke !important;
+}
+.bg-transparent{
+  background: transparent!important;
+}
+
+.grey-on-hover{
+	transition: background 0.1s ease-in-out;
+	&:hover, &:active, &.h-active{
+	 background: $grey-x-light;
+	 fill: $grey-x-light;
+	}
+}
+/*
+.selection-on-hover{
+  transition: background 0.1s ease-in-out;
+  &:hover, &:active{
+    background: rgba($theme-pass-color, 0.1);
+    fill: rgba($theme-pass-color, 0.1);
+  }
+}
+
+.grey-on-hover{
+  transition: background 0.1s ease-in-out;
+  &:hover, &:active{
+   background: $grey-x-light;
+   fill: $grey-x-light;
+   @extend .border-rds-4;
+  }
+}
+
+.light-green-hover{
+	transition: background 0.1s ease-in-out;
+  &:hover, &:active{
+   background: $light-green-color;
+   fill: $light-green-color;
+   @extend .border-rds-4;
+  }
+
+}*/
+
+//TODO This need to clean
+@each $color, $value in ('theme-gray-highlight':$theme-bg-selected-gray-color,
+'theme-yellow':$school-bus-yellow,
+'theme-tomato':$theme-bg-selected-red-color,
+'theme-gray':$theme-bg-gray-color,
+'theme-gray-light':$theme-bg-gray-light-color,
+'theme-bright-gray': $bright-gray,
+'theme-info': $theme-info-bg-color,
+  'theme-info-light':$theme-info-bg-light-color,
+'theme-warning': $theme-warning-bg-color,
+'theme-hint': $theme-hint-bg-color,
+'theme-main-gradient': $theme-bg-main-gradient,
+'theme-emerald-green':$emerald-green){
+  .#{$color} {
+    background: $value;
+  }
+}
+
+.rating-block{
+  @extend .px-20, .py-10, .border-rds-4, .pointer;
+  background-color: $theme-separator-color;
+  i{color: white;}
+}
+.active-rating-block{
+  background-color: $highlight-yellow;
+  i{@extend .text-pale-orange;}
+}
+.cdk-overlay-backdrop-none {
+ @extend .d-none;
+}

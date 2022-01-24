@@ -1,0 +1,54 @@
+<div class="theme-overlay-container">
+  <div class="overlay-header rb-medium">
+    <span [translate]="'hint.message.common.filter'"></span>
+    <button class="theme-overlay-close"
+            type="button"
+            [matTooltip]="'hint.message.common.close' | translate"
+            mat-dialog-close>
+    </button>
+  </div>
+  <div class="overlay-body ts-form">
+    <div class="form-group">
+      <mat-form-field class="mat-select-custom w-100" appearance="fill">
+        <mat-select
+          disableOptionCentering panelClass="multiple"
+          (ngModelChange)="filterStepResult"
+          [(ngModel)]="filterStepResult" multiple>
+          <mat-option *ngFor="let result of resultConstant"
+                      [value]="result"
+                      [textContent]="'execution.result.'+result | translate"></mat-option>
+        </mat-select>
+      </mat-form-field>
+      <label class="control-label" [translate]="'result.result'"></label>
+    </div>
+    <div class="form-group p-0">
+      <mat-form-field class="mat-select-custom w-100" appearance="fill">
+        <mat-select
+          disableOptionCentering panelClass="multiple"
+          (ngModelChange)="filterStepPriority"
+          [(ngModel)]="filterStepPriority" multiple>
+          <mat-option *ngFor="let result of stepPriority"
+                      [value]="result"
+                      [textContent]="'test_step.priority.'+result | translate"></mat-option>
+        </mat-select>
+      </mat-form-field>
+      <label class="control-label" [translate]="'test_step.results.priority'"></label>
+    </div>
+  </div>
+  <div class="overlay-footer d-flex align-items-center justify-content-end">
+    <button
+      class="theme-btn-clear-default"
+      [translate]="'btn.common.close'"
+      mat-dialog-close></button>
+    <button
+      *ngIf="filterApplied"
+      class="theme-btn-clear-default"
+      [translate]="'btn.common.reset'"
+      (click)="reset()"></button>
+    <button class="theme-btn-primary"
+            (click)="filter()"
+            [disabled]="!isFilterChanged"
+            [translate]="'btn.common.filter'"></button>
+  </div>
+</div>
+

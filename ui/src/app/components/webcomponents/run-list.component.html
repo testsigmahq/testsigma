@@ -1,0 +1,133 @@
+<div class="theme-section-header py-15" style="padding-left: 20px;padding-right: 22px">
+  <div
+    *ngIf="!isSearch"
+    class="section-title"
+    [translate]="'runs.details.run_history'"></div>
+  <div [class.ml-auto]="!isSearch"
+       [class.d-flex]="isSearch"
+       [class.align-items-center]="isSearch"
+       [class.ts-col-100]="isSearch">
+    <div *ngIf="isSearch"
+         class="text-right p-0 ts-col-100-36">
+      <input
+        #searchInput
+        class="border-0 d-inline-block w-90 p-0 h-18p"
+        [placeholder]="'runs.details.hint.search_build_no' | translate">
+    </div>
+    <div *ngIf="isSearch" class="ml-auto">
+      <i (click)="toggleSearch()"
+         [matTooltip]="'hint.message.common.cancel' | translate"
+         class="fa-close-alt action-hover-icon pointer p-10"></i>
+    </div>
+    <i
+      (click)="toggleSearch()"
+      *ngIf="!isSearch"
+      class="fa-search section-action-icons pointer p-10"
+      [matTooltip]="'hint.message.common.search' | translate"></i>
+    <i
+      *ngIf="!isSearch"
+      class="fa-bar-chart_dock section-action-icons pointer p-10"
+      (click)="openRunInfo()"
+      [matTooltip]="'runs.details.hint.show_graph' | translate"></i>
+    <span
+      [class.active]="isFilterApplied"
+      [class.reset]="isFilterApplied"
+      class="filter-icon-with-reset p-10">
+      <i
+        *ngIf="!isSearch"
+        [class.filtered]="isFilterApplied"
+        [class.mr-n5]="isFilterApplied"
+        class="filter-icon"
+        (click)="openRunFilter()"
+        #runListFilterBtn
+        [matTooltip]="'hint.message.common.filter' | translate">
+      </i>
+      <i
+        *ngIf="isFilterApplied"
+        [matTooltip]="'btn.common.reset' | translate"
+        (click)="resetFilter()"
+        class="reset"></i>
+    </span>
+  </div>
+</div>
+<cdk-virtual-scroll-viewport
+  itemSize="70"
+  class="theme-section-container list-container virtual-scroll-viewport theme-w-o-h-scroll x-lg-h"
+  [style.pointer-events]="disableMouse ?'none': 'all'">
+  <a
+    class="list-view lg-pm pointer"
+    [class.list-highlight-0]="result?.isFailed"
+    [class.list-highlight-1]="result?.isPassed"
+    [class.list-highlight-2]="result?.isAborted"
+    [class.list-highlight-3]="result?.isNotExecuted"
+    [class.list-highlight-5]="result?.isQueued"
+    [class.list-highlight-6]="result?.isStopped"
+    *cdkVirtualFor='let result of executionResults'
+    [routerLink]="['/td/runs', result.id]"
+    [routerLinkActive]="'active'">
+    <div class="d-flex mr-10 ts-col-40">
+      <app-result-pie-chart-column
+        [resultEntity]="result.childResult || result"></app-result-pie-chart-column>
+    </div>
+    <div class="ts-col-30">
+      <div
+        class="rb-medium pb-5 fz-14 d-flex align-items-center justify-content-between pr-20">
+        <span [textContent]="'#'+result.id"></span>
+        <app-re-run-icon [resultEntity]="result" class="fz-11 ml-5"></app-re-run-icon>
+        <i (click)="deleteRun(result);$event.stopImmediatePropagation();$event.stopPropagation();$event.preventDefault()"
+           [matTooltip]="'runs.details.hint.delete_run' | translate"
+           class="fa-trash action-icons text-t-secondary ml-5 fz-11"
+           *ngIf="result.id != activeExecutionResult?.id && execution?.lastRunId != result.id && result.id != currentRunId"></i>
+      </div>
+      <div class="pt-2 text-t-secondary fz-12 d-flex justify-content-center"
+           [class.position-absolute]="result.id == activeExecutionResult?.id"
+           [class.bg-white]="result.id == activeExecutionResult?.id ">
+        <div *ngIf="result.id != activeExecutionResult?.id" class="d-flex ts-col-100 pr-20 justify-content-between">
+        <span
+          class="text-truncate pr-4"
+          [matTooltip]="result.buildNo? result.buildNo : ''"
+          [textContent]="('runs.details.build_no' | translate)+': ' + (result.buildNo? result.buildNo : '_')"></span>
+          <i
+            [matTooltip]="'runs.details.hint.update_build_no' | translate"
+            class="fa-pencil-on-paper pointer bg-transparent" (click)="showBuildNumberForm(result, $event)"></i>
+        </div>
+        <div
+          *ngIf="result.id == activeExecutionResult?.id"
+          class="d-flex ts-form ng-star-inserted">
+          <div class="align-items-center d-flex form-group p-0 theme-border-b">
+            <input
+              #buildNoInput
+              class="border-0 form-control p-0"
+              [(ngModel)]="activeExecutionResult.buildNo"
+              [placeholder]="'runs.details.build_no' | translate " style="background: none;">
+            <i
+              class="fa-tick pr-2 result-status-text-0"
+              (click)="updateBuildId($event)"
+              [matTooltip]="'hint.message.common.save' | translate"></i>
+            <i
+              class="fa-close-large result-status-text-1 pl-4 close-thick mt-n2"
+              (click)="hidBuildNumberForm($event)"
+              [matTooltip]="'hint.message.common.cancel' | translate"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-right text-t-secondary fz-12 ml-auto ts-col-30-10">
+      <div class="pb-5 text-truncate" [textContent]="result.startTime | date:'MMM d, h:mm'"
+           [matTooltip]="result.startTime | date:'MMM d, h:mm:ss'" ></div>
+      <div class="pt-4">
+        <app-duration-format
+          [duration]="result.duration"></app-duration-format>
+      </div>
+    </div>
+  </a>
+  <div *ngIf="executionResults.isEmpty" class="empty-full-container-transparent-bg">
+    <div class="empty-full-content">
+      <div class="empty-run-xs"></div>
+      <div
+        class="text-t-secondary pt-30 pb-18"
+        [translate]="'message.common.search.not_found'"></div>
+    </div>
+  </div>
+  <app-placeholder-loader *ngIf="executionResults?.isFetching" [isChartWith]="true"></app-placeholder-loader>
+</cdk-virtual-scroll-viewport>

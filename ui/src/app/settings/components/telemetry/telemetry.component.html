@@ -1,0 +1,39 @@
+<div class="page-header theme-border-b">
+  <div
+    class="page-title" [translate]="'page_title.settings.telemetry'">
+  </div>
+  <div class="short-hand-actions">
+  </div>
+</div>
+<div class="page-content">
+  <div class="ts-col-100 d-inline-flex">
+
+    <div class="ts-col-100 mt-50 d-inline">
+      <div class="bd-highlight mb-3">
+        <div class="rb-regular-i ts-col-60" [translate]="'settings.telemetry.message1'">
+        </div>
+        <div class="p-2 pt-10 bd-highlight ts-col-60" [innerHTML]="'settings.telemetry.message2' | translate">
+        </div>
+        <div class="p-2 pt-10 bd-highlight ts-col-60" [innerHTML]="'settings.telemetry.message3' | translate">
+        </div>
+
+        <div class="p-2 pt-10 mt-15 ts-col-50 d-flex align-items-baseline">
+          <mat-checkbox
+            class="pt-4"
+            (change)="showAction = !showAction"
+            [(ngModel)]="disableTelemetry">
+            <span [translate]="'settings.telemetry.disable'"></span>
+          </mat-checkbox>
+          <button
+            *ngIf="showAction"
+            class="theme-btn-primary ml-20"
+            (click)="submit()"
+            appAsyncBtn
+            [isLoading]="saving"
+            [message]="'message.common.saving'"
+            [textContent]="'btn.common.save' | translate"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

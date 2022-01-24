@@ -1,0 +1,21 @@
+<div class="d-flex flex-wrap pl-75 pr-20 py-20 theme-details-scroll">
+  <div class="ts-col-90 flex-wrap h-100 overflow-y-auto">
+    <div class="ts-col-100 details-container md value-lg">
+      <div class="details-items ts-col-100">
+        <label class="details-title" [translate]="'message.common.description'"></label>
+        <div class="details-info overflow-y-auto">
+          <div class="d-flex" [innerHTML]="environment?.description || '-'"></div>
+        </div>
+      </div>
+    </div>
+    <div class="ts-col-50">
+      <div *ngIf="environment">
+        <app-environments-table
+          class="environments-table-read-only"
+          [edit]="false"
+          [formGroup]="formGroup"
+          [environment]="environment"></app-environments-table>
+      </div>
+    </div>
+  </div>
+</div>

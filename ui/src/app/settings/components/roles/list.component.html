@@ -1,0 +1,20 @@
+<div class="page-header ts-col-75" *ngIf="hasDisplayPermission(PrivilegeTypes.PRIVILEGE_ROLES)">
+  <div
+    class="page-title"
+    [translate]="'settings.roles.title'">
+  </div>
+</div>
+<div class="page-content ts-col-75">
+  <div *ngIf="roles && hasDisplayPermission(PrivilegeTypes.PRIVILEGE_ROLES)" class="list-container ts-col-100">
+    <div
+      *ngFor="let role of roles.content"
+      class="list-view green-highlight lg-pm pl-18 cursor align-items-center">
+      <div [routerLink]="['/settings','roles',role.id]" class="ts-col-100 pointer">
+        <div [textContent]="role.name" class="text-truncate rb-medium"></div>
+        <div class="ts-col-100 d-flex mt-5">
+          <div [textContent]="role.description" class="ts-col-80 text-t-secondary"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,140 @@
+<div class="theme-sec-header">
+  <a [matTooltip]="'hint.message.common.close' | translate" class="go-back-icon pl-10 text-decoration-none" mat-dialog-close></a>
+  <div class="ts-col-90 d-flex align-items-center">
+    <div class="ts-col-50">
+      <div class="rb-medium mb-4 fz-18" *ngIf="activeTestCaseResult" [textContent]="activeTestCaseResult.testCase.name"></div>
+      <div class="rb-medium mb-4 fz-18" *ngIf="activeTestSuiteResult" [textContent]="activeTestSuiteResult.testSuite.name"></div>
+      <div class="rb-medium mb-4 fz-18" *ngIf="activeEnvironmentResult" [textContent]="activeEnvironmentResult.testDevice.title"></div>
+      <span
+        (click)="showExecutionResult()"
+        [class.rb-medium]="activeExecutionResult"
+        [class.fz-18]="activeExecutionResult"
+        [class.pointer]="!activeEnvironmentResult"
+        [textContent]="'re_run.details.title' | translate: {parentRunId: parentRunId} "></span>
+      <span
+        *ngIf="!activeTestCaseResult && !activeTestSuiteResult && !activeEnvironmentResult"
+        class="ml-5 rb-light text-t-secondary"
+        [textContent]="'('+ ('re_run.'+options.executionResult?.childResult?.reRunType | translate)+')'"></span>
+      <span  class="pointer"
+        *ngIf="activeTestCaseResult || activeTestSuiteResult"
+        (click)="showTestMachineResult(activeTestCaseResult?.testDeviceResult || activeTestSuiteResult?.testDeviceResult)"
+        [textContent]="' / '+(activeTestCaseResult?.testDeviceResult?.testDevice?.title || activeTestSuiteResult?.testDeviceResult?.testDevice?.title)"></span>
+      <span
+        class="pointer"
+        *ngIf="activeTestCaseResult"
+        (click)="showTestSuiteResultId(activeTestCaseResult.suiteResultId)"
+        [textContent]="' / '+(activeTestCaseResult.testSuite.name)"></span>
+      <span
+        *ngIf="activeTestCaseResult && activeTestCaseResult.iteration"
+        [textContent]="' / '+(activeTestCaseResult.iteration)"></span>
+    </div>
+
+    <div class="text-t-secondary fz-12 ml-auto pr-15">
+      <app-result-pie-chart-column
+        [width]="24"
+        [height]="24"
+        [resultEntity]="activeExecutionResult?.childResult || activeTestSuiteResult?.childResult || activeEnvironmentResult?.childResult || activeTestCaseResult?.childResult"></app-result-pie-chart-column>
+    </div>
+    <div class="text-right text-t-secondary fz-12 pr-20">
+      <div
+        class="text-nowrap"
+        [textContent]="(activeExecutionResult?.childResult || activeExecutionResult?.childResult || activeTestSuiteResult?.childResult || activeEnvironmentResult?.childResult || activeTestCaseResult?.childResult).startTime | date:'MMM d, h:mm:ss'"></div>
+      <div class="pt-4">
+        <app-duration-format
+          [duration]="(activeExecutionResult?.childResult || activeTestSuiteResult?.childResult || activeEnvironmentResult?.childResult || activeTestCaseResult?.childResult).duration"></app-duration-format>
+      </div>
+    </div>
+
+    <div class="text-right text-t-secondary fz-12 px-20 theme-border-l">
+      <div
+        class="text-nowrap"
+        [translate]="'re_run.previous_result'"></div>
+      <app-result-status-label [resultEntity]="activeExecutionResult || activeTestSuiteResult || activeEnvironmentResult || activeTestCaseResult"></app-result-status-label>
+    </div>
+    <div class="text-right text-t-secondary fz-12">
+      <div
+        class="text-nowrap"
+        [textContent]="(activeExecutionResult || activeExecutionResult || activeTestSuiteResult || activeEnvironmentResult || activeTestCaseResult).startTime | date:'MMM d, h:mm:ss'"></div>
+      <div class="pt-4">
+        <app-duration-format
+          [duration]="(activeExecutionResult || activeTestSuiteResult || activeEnvironmentResult || activeTestCaseResult).duration"></app-duration-format>
+      </div>
+    </div>
+  </div>
+  <button
+    class="text-t-secondary close"
+    type="button"
+    [matTooltip]="'hint.message.common.close' | translate"
+    mat-dialog-close>
+  </button>
+</div>
+<div style="height: calc(100% - 80px); padding: 23px 22px 20px 45px">
+  <div *ngIf="!activeTestCaseResult" class="h-100">
+    <div class="theme-section-header align-items-center"  style="padding: 0 24px 15px 0">
+      <div class="dropdown section-title mouse-over hover-dropdown">
+        <div class="btn-group  text-nowrap">
+          <a class="rb-medium" target="_blank">
+            <span [translate]="'runs.details.test_case_result'" *ngIf="view == 'TCR'"></span>
+            <span [translate]="'runs.details.test_suite_result'" *ngIf="view == 'TSR'"></span>
+            <span [translate]="'runs.details.test_machine_result'" *ngIf="view == 'TMR'"></span>
+            <i class="fa-caret-down pl-6 fz-10" aria-hidden="true"></i>
+          </a>
+        </div>
+        <div
+          class="dropdown-menu drop-down-transparent min-w">
+          <ul
+            class="bg-white border-rds-4 ng-scope p-15 shadow-all2-b4">
+            <li
+              class="border-rds-10 btn rb-medium grey-on-hover text-dark"
+              (click)="toggleView('TCR')">
+              <span [translate]="'runs.details.test_case_result'"></span>
+              <i class="fa-tick pl-5" *ngIf="view == 'TCR'"></i>
+            </li>
+            <li *ngIf="!activeTestSuiteResult"
+                (click)="toggleView('TSR')"
+                class="border-rds-10 btn rb-medium grey-on-hover text-dark ml-0">
+              <span [translate]="'runs.details.test_suite_result'"></span>
+              <i class="fa-tick pl-5" *ngIf="view == 'TSR'"></i>
+            </li>
+            <li *ngIf="!activeEnvironmentResult && !activeTestSuiteResult"
+                (click)="toggleView('TMR')"
+                class="border-rds-10 btn rb-medium grey-on-hover text-dark ml-0">
+              <span [translate]="'runs.details.test_machine_result'"></span>
+              <i class="fa-tick pl-5" *ngIf="view == 'TMR'"></i>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <app-re-run-test-case-results
+      *ngIf="view == 'TCR'"
+      (onTestCaseResultShow)="showTestCaseResult($event)"
+      (onTestSuiteResultShow)="showTestSuiteResult($event)"
+      (onTestMachineResultShow)="showTestMachineResult($event)"
+      [executionResult]="options.executionResult"
+      [environmentResult]="activeEnvironmentResult"
+      [testSuiteResult]="activeTestSuiteResult">
+    </app-re-run-test-case-results>
+    <app-re-run-test-suite-results
+      [executionResult]="options.executionResult"
+      [environmentResult]="activeEnvironmentResult"
+      (onTestMachineResultShow)="showTestMachineResult($event)"
+      (onTestSuiteResultShow)="showTestSuiteResult($event)"
+      *ngIf="view == 'TSR'"></app-re-run-test-suite-results>
+    <app-re-run-test-machine-results
+      [executionResult]="options.executionResult"
+      (onTestMachineResultShow)="showTestMachineResult($event)"
+      *ngIf="view == 'TMR'"></app-re-run-test-machine-results>
+  </div>
+  <app-re-run-data-driven-results
+    *ngIf="activeTestCaseResult && activeTestCaseResult.isDataDriven"
+    [testCaseResult]="activeTestCaseResult"
+    [executionResult]="options.executionResult"
+    (onTestCaseResultShow)="showTestCaseResult($event)">
+  </app-re-run-data-driven-results>
+  <app-re-run-test-step-result
+    *ngIf="activeTestCaseResult && !activeTestCaseResult.isDataDriven"
+    [testCaseResult]="activeTestCaseResult"
+    [executionResult]="options.executionResult">
+  </app-re-run-test-step-result>
+</div>

@@ -1,0 +1,174 @@
+<div class="h-100" [class.ts-col-100]="!(showRunDetails || showFilter)"
+     [class.ts-col-65]="showRunDetails || showFilter">
+  <div
+    class="theme-section-header align-items-center"
+    [style.padding]="isExecutionRunning ? '0px 24px 0px 20px'  : executionResult.canReRun ? '0px 24px 0px 20px': '0px 24px 0px 20px'">
+    <div class="dropdown section-title mouse-over hover-dropdown">
+      <div class="btn-group text-nowrap">
+        <a class="rb-medium" target="_blank">
+          <span [translate]="'runs.details.test_suite_result'"></span>
+          <i class="fa-caret-down pl-6 fz-10" aria-hidden="true"></i>
+        </a>
+      </div>
+      <div
+        class="dropdown-menu drop-down-transparent min-w">
+        <ul
+          class="bg-white border-rds-4 ng-scope p-15 shadow-all2-b4">
+          <li
+            class="border-rds-10 btn rb-medium grey-on-hover text-dark"
+            (click)="toggleView('TCR')">
+            <span [translate]="'runs.details.test_case_result'"></span>
+          </li>
+          <li
+            (click)="toggleView('TSR')"
+            class="border-rds-10 btn rb-medium grey-on-hover text-dark ml-0">
+            <span [translate]="'runs.details.test_suite_result'"></span>
+            <i class="fa-tick pl-5"></i>
+          </li>
+          <li
+            (click)="toggleView('TMR')"
+            class="border-rds-10 btn rb-medium grey-on-hover text-dark ml-0">
+            <span [translate]="'runs.details.test_machine_result'"></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="ml-auto d-flex align-items-center">
+      <app-auto-refresh
+        class="d-inline-block"
+        *ngIf="isExecutionRunning"
+        [autoRefreshIntervalTime]="autoRefreshInterval"
+        (autoRefreshIntervalTime)="changeAutoRefreshTime($event)"
+        (autoRefreshToggle)="toggleAutoRefresh($event)"></app-auto-refresh>
+      <div>
+        <i
+          [class.fa-search]="!isSearchEnable"
+          [class.fa-search-right.pr-4]="isSearchEnable"
+          (click)="toggleSearch()"
+          class="section-action-icons pointer"
+          [matTooltip]="'hint.message.common.search' | translate"></i>
+
+        <div
+          *ngIf="isSearchEnable"
+          class="search-form-group ts-form text-right p-0"
+          aria-hidden="false">
+          <input
+            #searchMachineInput [(ngModel)]="inputValue"
+            type="text"
+            class="form-control d-inline-block w-85 p-0"
+            [placeholder]="'agents.mobile.inspection.search_element' | translate" aria-invalid="false">
+          <i [ngClass]= "{'visibility-visible' : inputValue}"  [matTooltip]="'hint.message.common.clear' | translate"
+             class="fa-close-alt text-t-secondary fz-12 pt-2 mr-5 pointer visibility-hidden" (click)="clearSearch()"></i>
+        </div>
+      </div>
+<!--      <app-re-run-button-->
+<!--        *ngIf="executionResult.canReRun"-->
+<!--        [executionResult]="executionResult"></app-re-run-button>-->
+      <div class="position-relative">
+        <span
+          [class.active]="showFilter"
+          [class.reset]="isFilterApplied"
+          class="filter-icon-with-reset">
+          <i
+            [class.filtered]="isFilterApplied"
+            [class.mr-n5]="isFilterApplied"
+            class="filter-icon"
+            (click)="toggleFilter()"
+            [matTooltip]="'hint.message.common.filter' | translate">
+          </i>
+          <i
+            *ngIf="isFilterApplied"
+            [matTooltip]="'btn.common.reset' | translate"
+            (click)="resetFilter()"
+            class="reset"></i>
+        </span>
+      </div>
+      <div>
+        <i
+          class="fa-info section-action-icons pointer"
+          [class.active]="showRunDetails"
+          (click)="toggleDetails()"
+          [matTooltip]="'hint.message.common.details' | translate"></i>
+      </div>
+    </div>
+  </div>
+  <cdk-virtual-scroll-viewport
+    itemSize="59"
+    class="bg-default card-container virtual-scroll-viewport theme-w-o-h-scroll x-lg-h">
+    <div
+      *cdkVirtualFor='let testSuiteResult of suiteResults'>
+      <a
+        [routerLink]="['/td/suite_results', testSuiteResult?.id]"
+        *ngIf="testSuiteResult?.testSuite?.name"
+        class="list-card bordered sm-pm">
+        <div
+          class="d-flex fz-12 align-items-center"
+          [class.ts-col-20]="showFilter || showRunDetails"
+          [class.ts-col-13]="!(showFilter || showRunDetails)">
+          <app-re-run-icon [resultEntity]="testSuiteResult"></app-re-run-icon>
+          <app-result-pie-chart-column
+            [width]="24"
+            [height]="24"
+            [resultEntity]="testSuiteResult.childResult || testSuiteResult"></app-result-pie-chart-column>
+        </div>
+        <div
+          class="d-flex flex-wrap"
+          [class.ts-col-80]="showFilter || showRunDetails"
+          [class.ts-col-87]="!(showFilter || showRunDetails)">
+          <div
+            class="list-title ts-col-100 text-break"
+            [textContent]="testSuiteResult?.testSuite?.name"></div>
+          <div class="ts-col-100 pt-4 text-t-secondary fz-12 d-flex align-items-center">
+            <div
+              class="theme-breadcrumb"
+              [class.ts-col-20]="showFilter || showRunDetails"
+              [class.ts-col-25]="!(showFilter || showRunDetails)">
+              <a
+                class="theme-breadcrumb-item mw-100"
+                [routerLink]="['/td/machine_results', testSuiteResult?.environmentResultId]"
+                [matTooltip]="testSuiteResult?.testDeviceResult?.testDevice?.title"
+                [textContent]="testSuiteResult?.testDeviceResult?.testDevice?.title"></a>
+            </div>
+            <div
+              class="px-10 text-center ts-col-45">
+              <app-test-machine-info-column
+                [environmentResult]="testSuiteResult?.testDeviceResult"
+                [executionResult]="testSuiteResult?.testDeviceResult?.testPlanResult"
+                [executionEnvironment]="testSuiteResult?.testDeviceResult?.testDevice"></app-test-machine-info-column>
+            </div>
+            <div
+              class="d-flex position-absolute right-0">
+              <div class="text-nowrap"
+                [textContent]="testSuiteResult?.startTime | date:'MMM d, h:mm:ss'"></div>
+              <div class="pl-8">
+                <app-duration-format
+                  [duration]="testSuiteResult?.duration"></app-duration-format>
+              </div>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div *ngIf="suiteResults?.isEmpty" class="empty-full-container-transparent-bg">
+      <div class="empty-full-content">
+        <div class="empty-run-xs"></div>
+        <div
+          class="text-t-secondary pt-30 pb-18"
+          [translate]="'message.common.search.not_found'"></div>
+      </div>
+    </div>
+    <app-placeholder-loader *ngIf="suiteResults?.isFetching"></app-placeholder-loader>
+  </cdk-virtual-scroll-viewport>
+</div>
+<div *ngIf="showRunDetails" class="ts-col-35">
+  <app-run-details-quick-info
+    [showList]="'TSR'"
+    [executionResult]="executionResult"
+    (filterAction)="filter($event)"
+    (toggleDetailsAction)="toggleDetails()"></app-run-details-quick-info>
+</div>
+<div *ngIf="showFilter" class="ts-col-35">
+  <app-test-suite-result-filter
+    (filterAction)="filter($event)"
+    (toggleFilterAction)="toggleFilter()"></app-test-suite-result-filter>
+</div>

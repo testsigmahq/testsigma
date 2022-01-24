@@ -1,0 +1,114 @@
+<div class="d-flex ts-col-100 theme-border-b vi-container-p">
+  <div class="ts-col-60 text-truncate">
+    <div class="theme-details-header">
+      <a class="go-back-icon"
+         [matTooltip]="'hint.message.common.back' | translate"
+         mat-dialog-close></a>
+      <span
+        class="title-name"
+        [translate]="'visual_test.message.title'"></span>
+    </div>
+    <div
+      [innerHTML]="screenshotComparison?.testStepResult?.stepDetail?.action"
+      class="text-t-secondary pl-30 pt-4">
+    </div>
+  </div>
+  <div class="d-flex align-items-baseline ml-auto">
+    <app-visual-comparison-list
+      [filteredTestStepResult]="filteredTestStepResult"
+      [currentComparison]="screenshotComparisonId"
+      (selectedScreenComparison)="screenComparisonSelection($event)"
+    ></app-visual-comparison-list>
+
+    <button
+      (click)="highlightDifferences()"
+      [matTooltip]="'visual_test.hint.highlight_diff' | translate"
+      class="btn icon-btn border-rds-2 ml-14">
+      <i class="fa-highlight-diff"></i>
+    </button>
+    <button
+      (click)="toggleDifferences()"
+      [matTooltip]="showDifferences ? ('visual_test.hint.hide_visual_diff' | translate) : ('visual_test.hint.show_visual_diff' | translate)"
+      [class.icon-btn]="!showDifferences"
+      [class.theme-btn-primary]="showDifferences"
+      class="btn border-rds-2 ml-14 vi-btn">
+      <i class="fa-draw-highlight"></i>
+    </button>
+    <button
+      (click)="addIgnoreCoOrdinates()"
+      [matTooltip]="'visual_test.hint.ignore_region' | translate"
+      [class.icon-btn]="!isIgnoreRegion"
+      [class.theme-btn-primary]="isIgnoreRegion"
+      class="btn border-rds-2 ml-14 vi-btn">
+      <i class="fa-ignore-selection"></i>
+    </button>
+    <button
+      (click)="viewCombined()"
+      [matTooltip]="'visual_test.hint.combine' | translate"
+      [class.icon-btn]="!isCombinedView"
+      [class.theme-btn-primary]="isCombinedView"
+      class="btn border-rds-2 ml-14 mr-14 vi-btn">
+      <i class="fa-overlap"></i>
+    </button>
+    <button
+      class="text-t-secondary close ml-14"
+      type="button"
+      [matTooltip]="'hint.message.common.close' | translate"
+      mat-dialog-close>
+    </button>
+  </div>
+</div>
+<div class="vi-view-container">
+  <div
+    [class.vi-overlap-enabled]="isCombinedView"
+    class="vi-img-title">
+    <div
+      class="ts-col-100 d-flex vi-split-title">
+      <div
+        class="vi-text vi-title"
+        [translate]="'visual_test.title.base_image'"></div>
+      <div class="vi-split-br"></div>
+      <div
+        class="vi-text d-flex align-items-center">
+        <span
+          class="vi-title"
+          [translate]="'visual_test.title.current_image'"></span>
+        <div class="ml-auto" *ngIf="this.screenshotComparison.diffCoordinates?.length">
+          <mat-checkbox [(ngModel)]="isApproveBaseImage" (change)="setAsBaseImage()">{{'visual_test.message.make_base_image' | translate}}</mat-checkbox>
+        </div>
+      </div>
+    </div>
+    <div
+      class="vi-combine-title"
+      [translate]="'visual_test.title.combine_both'"></div>
+  </div>
+  <div
+    [class.overlay-enabled]="isCombinedView"
+    class="compare-container overflow-y-auto">
+    <div
+      class="compare-section" id="base_image_container">
+      <canvas id="base_image_canvas"></canvas>
+    </div>
+    <div
+      class="compare-border"></div>
+    <div
+      class="compare-section">
+      <canvas id="current_image_canvas"></canvas>
+    </div>
+    <div class="ignore-confirmation-model" *ngIf="isShowConfirm">
+      <div class="note" [translate]="'visual_test.message.already_ignore_hint'"></div>
+      <div class="p-5 text-t-highlight" [translate]="'visual_test.message.already_ignore_message'"></div>
+      <div class="text-right pt-20">
+        <button
+          (click)="resetIgnoreRegion()"
+          class="theme-btn-clear-default"
+          [translate]="'btn.common.cancel'"></button>
+        <button
+          (click)="saveIgnoreRegion()"
+          class="theme-btn-primary"
+          [translate]="'btn.common.save'"></button>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,80 @@
+<div class="page-content top-0 pt-10 pl-60 ml-5 mr-auto h-100">
+  <div
+    *ngIf="!testCases.isEmpty"
+    class="d-flex justify-content-end ml-10 pb-10">
+    <button
+      class="theme-btn-clear-default"
+      (click)="addSuites()"
+      [textContent]="'+ '+('test_suite.form.add_test_case' | translate)"></button>
+  </div>
+  <div
+    *ngIf="testCases"
+    class="list-header">
+    <div
+      class="ts-col-65 d-flex">
+      <span
+        [translate]="'message.common.text.title'"></span>
+    </div>
+    <div
+      class="ts-col-10"
+      [translate]="'message.common.text.result'"></div>
+    <div
+      [translate]="'message.common.text.status'"
+      class="ts-col-10"></div>
+  </div>
+  <cdk-virtual-scroll-viewport
+    class="list-container virtual-scroll-viewport theme-w-o-h-scroll"
+    itemSize="59">
+    <a
+      *cdkVirtualFor='let testCase of testCases; let index = index'
+      [routerLink]="['/td', 'cases',  testCase.id]"
+      class="list-view green-highlight align-items-center lg-pm pl-10 text-t-secondary">
+      <div
+        class="ts-col-65 d-flex">
+        <div class="d-flex flex-wrap text-break ts-col-100 align-items-center pr-60">
+            <div
+              class="align-items-center d-flex"
+              [style]="{'min-width':  '41px'}"
+              style="min-height: 22px;">
+              <div class="align-self-end result-status-8 list-number ng-binding x-sm-size text-white mr-10" [textContent]="index+1"></div>
+              <span
+                [textContent]="testCase?.name"
+                class="ts-col-100 list-title"></span>
+            </div>
+        </div>
+      </div>
+      <div class="ts-col-10">
+        <a *ngIf="testCase?.lastRun"
+           (click)="$event.preventDefault();$event.stopPropagation()"
+           [routerLink]="['/td', 'test_case_results', testCase?.lastRun?.id]">
+          <app-result-pie-chart-column
+            [height]="30"
+            [resultEntity]="testCase?.lastRun"
+            [width]="30"></app-result-pie-chart-column>
+        </a>
+      </div>
+      <div
+        class="ts-col-10"
+        [textContent]="'testcase.status_'+testCase?.status| translate"></div>
+    </a>
+    <div
+      *ngIf="testCases?.isEmpty && !testCases?.isFetching"
+      class="empty-full-container">
+      <div class="empty-full-content">
+        <div class="empty-run-sm"></div>
+        <div
+          class="empty-text"
+          [translate]="'message.common.empty_page' | translate : { categoryType: 'Test Case'}"></div>
+        <div
+          *ngIf="testCases.isEmpty"
+          class="d-flex justify-content-end ml-10 pb-10">
+          <button
+            class="theme-btn-clear-default"
+            (click)="addSuites()"
+            [textContent]="'+ '+('test_suite.form.add_test_case' | translate)"></button>
+        </div>
+      </div>
+    </div>
+    <app-placeholder-loader *ngIf="testCases.isFetching"></app-placeholder-loader>
+  </cdk-virtual-scroll-viewport>
+</div>

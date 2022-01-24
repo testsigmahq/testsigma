@@ -1,0 +1,112 @@
+.td-create-container {
+  @extend .pt-20, .pl-30, .d-flex, .flex-wrap;
+  padding-right: 45px;
+}
+
+.td-header-container {
+  @extend .d-flex, .align-items-center, .ts-col-100;
+
+  .title-container {
+    flex: 0 0 calc(100% - 67px);
+    max-width: calc(100% - 67px);
+    @extend .d-flex, .align-items-center;
+  }
+
+  .td-action-section {
+    @extend .d-flex, .align-items-baseline, .ml-auto;
+  }
+}
+
+.td-form-container {
+  @extend .ts-form, .d-flex, .flex-wrap, .pt-80, .ts-col-100, .ml-auto;
+  flex: 0 0 calc(100% - 67px);
+  max-width: calc(100% - 67px);
+}
+
+.add-data-grid {
+  @extend .d-flex, .ts-col-100, .pr-20, .ml-n20;
+  height: calc(100vh - 195px);
+}
+
+.edit-grid-container {
+  @extend .d-flex,.ts-col-100;
+  padding: 33px 55px;
+  height: calc(100% - 110px);
+}
+
+%header-bg, .header-bg {
+  @extend .d-flex, .theme-gray, .rb-medium, .text-t-secondary, .theme-border-y, .overflow-x-auto;
+}
+
+.td-grid-container {
+  @extend .ts-form, .fz-14, .h-100, .ts-col-100;
+  .cdk-virtual-scroll-content-wrapper{
+    contain: unset;
+  }
+  .header-row-container {
+    @extend .ts-col-100, .d-flex, .text-uppercase;
+
+    .name-header {
+      @extend .ts-col-35, .align-items-center;
+    }
+
+    .set-header {
+      @extend .ts-col-65, .theme-border-r, .pr-10, .py-4, .scroll-none;
+      @extend %header-bg;
+    }
+  }
+
+  .td-index {
+    min-width: 87px;
+  }
+
+  .td-cell {
+    min-width: 220px;
+    @extend .d-flex, .align-items-center;
+  }
+
+  .add-row {
+    @extend .add-icon, .d-inline-block, .ml-30, .my-10;
+
+    &.hidden {
+      visibility: hidden;
+    }
+  }
+
+  .encrypt-icon {
+    @extend .my-auto,.ml-5,.pointer;
+    z-index: 1
+  }
+
+  .add-column {
+    @extend .ml-auto, .position-absolute;
+    right: -41px;
+    top: -2px;
+  }
+
+  .data-set-container {
+    @extend .ts-col-100, .d-flex, .flex-wrap, .align-items-baseline, .py-10;
+    height: calc(100% - 72px);
+
+    .column-container {
+      @extend .d-flex, .align-items-center, .pl-10, .py-4, .row-hover, .ml-20, .position-relative;
+
+      .add-icon.row-hover-action {
+        left: -20px;
+        top: 22px;
+      }
+    }
+  }
+}
+
+.row-hover {
+  .row-hover-action {
+    display: none;
+  }
+
+  &:hover, &.row-hovering {
+    .row-hover-action {
+      display: block;
+    }
+  }
+}

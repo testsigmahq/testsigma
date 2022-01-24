@@ -1,0 +1,125 @@
+<div class="pb-lg">
+  <mat-accordion class="elements-panel inline-accordion" [togglePosition]="'before'">
+    <mat-expansion-panel
+      class="inline-panel"
+      [expanded]="panelOpenState"
+      (closed)="panelOpenState = false" (opened)="panelOpenState = true" hideToggle
+      style="overflow: visible;">
+      <mat-expansion-panel-header>
+        <mat-panel-title
+          class="fz-14 rb-medium pb-18">
+          <i
+            class="pr-7"
+            [class.fa-down-arrow-filled]="panelOpenState"
+            [class.fa-arrow-right-filled]="!panelOpenState"></i>
+          <span [translate]="'test_plan.environment.additional.settings.title'"></span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="form-group pb-lg d-flex align-items-center" style="overflow: visible;" *ngIf="!isRest">
+        <div class="d-flex ts-col-60 pr-30 align-items-center">
+          <div class="ts-col-50 pr-7">
+            <div class="p-0 field m-0">
+              <input
+                type="text"
+                id="pageTimeOut"
+                name="pageTimeOut"
+                placeholder=" "
+                [formControl]="testPlanFormGroup?.controls['pageTimeOut']"
+                class="form-control"/>
+              <label
+                [translate]="'test_plan.environment.settings.page_timeout'"
+                for="pageTimeOut" class="required"></label>
+            </div>
+          </div>
+
+          <div class="pl-7 ts-col-50">
+            <div class="p-0 field m-0">
+              <input
+                type="text"
+                id="elementTimeout"
+                name="elementTimeout"
+                [formControl]="testPlanFormGroup?.controls['elementTimeOut']"
+                placeholder=" "
+                class="form-control"/>
+              <label
+                [translate]="'test_plan.environment.settings.element_timeout'"
+                for="elementTimeout" class="required"></label>
+            </div>
+          </div>
+        </div>
+        <div class="ts-col-35 d-inline-block" *ngIf="visualTestingEnabledControl" >
+          <div class="ts-col-100 pl-10 d-flex">
+            <mat-slide-toggle
+              [disabled]="!authGuard.openSource.isEnabled"
+              (change)="setScreenshot()"
+              [formControl]="visualTestingEnabledControl">
+              <span class="md-title" [translate]="'test_plan.enable_visual_testing'"></span>
+            </mat-slide-toggle>
+            <div
+              class="dropdown mouse-over d-inline-block">
+              <div
+                *ngIf="!authGuard.openSource.isEnabled"
+                style="margin-top: 0.2em;"
+                class="btn-group pointer">
+                <i class="fa-question-circle-solid text-t-secondary pl-7"></i>
+              </div>
+              <div
+                class="dropdown-menu">
+                <div
+                  style="box-shadow: none;width:367px;Height :125px;margin-top: -28px;margin-left: 0px;"
+                  class="bg-white border-rds-4 ng-scope p-25 shadow-all2-b4 d-flex">
+                  <i class="fa-help fz-18 text-t-secondary"></i>
+                  <div class="rb-regular-i-d ts-col-90 ml-auto my-0 p-0 theme-text" style="list-style: none">
+                    <span [innerHTML]="'test_plan.test_plan_settings.additional_settings.visual_testing_hint' | translate"></span>
+                    <a class="rb-medium" [routerLink]="['/settings/testsigma']" [translate]="'message.common.click_here'" ></a>
+                    <span [innerHTML]="'test_plan.test_plan_settings.additional-seeting.visual_testing_hint_learn_more' | translate:{LINK_LEARN_MORE: 'https://testsigma.com/docs/getting-started/testsigma-community-cloud/'}"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group d-flex align-items-center">
+        <div class="d-flex ts-col-60 pr-30 align-items-center">
+          <app-environments-auto-complete
+            *ngIf="testPlanFormGroup?.controls['environmentId']"
+            class="ts-col-50 pr-7"
+            [hasNone]="true"
+            [formGroup]="testPlanFormGroup"
+            [value]="environment"
+            [environmentId]="environmentId"
+            (onValueChange)="setEnvironmentId($event)"
+            [formCtrl]="testPlanFormGroup?.controls['environmentId']"
+          ></app-environments-auto-complete>
+          <div
+            *ngIf="!isRest"
+            class="ts-col-50 pl-7 mt-4">
+            <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill">
+              <mat-select
+                [formControl]="testPlanFormGroup?.controls['screenshot']"
+                disableOptionCentering panelClass="single"
+                name="screenShort">
+                <mat-option
+                  *ngFor="let screenShort of screenShotTypes"
+                  [value]="screenShort"
+                  [textContent]="'execution.capture.type.'+screenShort | translate"></mat-option>
+              </mat-select>
+            </mat-form-field>
+            <label class="control-label required" [translate]="'test_plan.environment.settings.screen_short'"></label>
+          </div>
+        </div>
+        <div class="ts-col-35" *ngIf="isMobileNative">
+          <div class="ts-col-100 pl-10">
+            <mat-slide-toggle
+              *ngIf="retrySessionCreationControl"
+              (change)="setSessionCreationTimeout()"
+              [formControl]="retrySessionCreationControl">
+              <span [translate]="'test_plan.retry_device_allocation'"></span>
+            </mat-slide-toggle>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

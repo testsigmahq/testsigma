@@ -1,0 +1,69 @@
+<div class="theme-overlay-container pb-20">
+  <div class="theme-overlay-header">
+    <div
+      class="theme-overlay-title"
+      [translate]="testCase?.isStepGroup ?'copy.step_group.title':'copy.test_case.title'">
+    </div>
+    <button
+      class="close"
+      type="button"
+      [matTooltip]="'hint.message.common.close' | translate"
+      mat-dialog-close>
+    </button>
+  </div>
+
+  <form
+    *ngIf="stepGroupForm"
+    class="ts-form theme-overlay-content"
+    (keydown.enter)="false"
+    novalidate="novalidate"
+    [formGroup]="stepGroupForm"
+    name="testCaseCloneForm">
+
+      <div class="form-group d-flex">
+        <mat-radio-group
+          aria-labelledby="example-radio-group-label"
+          class="example-radio-group"
+          [formControlName]="['isStepGroup']">
+          <mat-radio-button
+            [value]="false">
+            <span [translate]="'testcase.label'"></span>
+          </mat-radio-button>
+          <mat-radio-button
+             class="ml-10" [value]="true">
+            <span [translate]="'step.group.label'"></span>
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div class="form-group">
+        <div class="p-0 field">
+          <input
+            #nameInput
+            type="text"
+            id="name"
+            name="name"
+            placeholder=" "
+            class="form-control"
+            [autofocus]=true
+            [formControlName]="['name']"/>
+          <label
+            [translate]="'message.common.label.name'"
+            for="name" class="required"></label>
+        </div>
+      </div>
+  </form>
+    <div class="theme-overlay-footer">
+      <button
+        class="theme-btn-clear-default"
+        mat-dialog-close
+        [translate]="'btn.common.close'">
+      </button>
+      <button
+        [disabled]="!stepGroupForm?.valid"
+        class="theme-btn-primary"
+        type="submit"
+        (click)="saveAsTestCase()"
+        [translate]="'btn.common.create'">
+      </button>
+    </div>
+</div>

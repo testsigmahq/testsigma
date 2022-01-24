@@ -1,0 +1,186 @@
+<div class="page-header d-flex fz-20 align-items-center">
+  <div class="align-items-center d-flex rb-medium text-truncate ts-col-50 filter-action" #filterListBtn>
+    <i class="fa menu-bar-icon pointer border-0 fz-20" [matTooltip]="'hint.message.common.switch_view' | translate"
+       (click)="openFiltersList()"></i>
+    <span class="pl-8 text-warning" *ngIf="!!query">*</span>
+    <span class="fz-18 text-truncate" [textContent]="currentFilter?.name"></span>
+    <i
+      *ngIf="!!query && !currentFilter?.isDefault"
+      (click)="saveView()"
+      class="fa-tick-thick pointer text-warning"
+      [matTooltip]="'hint.message.common.save' | translate"></i>
+    <i
+      (click)="saveViewAs()"
+      class="fa-save-as pointer px-8 text-warning"
+      [matTooltip]="'hint.message.common.save_as' | translate"
+      *ngIf="!!this.query"></i>
+    <i
+      (click)="discard()"
+      class="fa-close-alt fz-13 pointer text-warning"
+      [matTooltip]="'hint.message.common.discard' | translate"
+      *ngIf="!!this.query"></i>
+    <span *ngIf="!currentFilter?.isDefault">
+        <span
+          (click)="saveOrEditFilter()"
+          class="fa-pencil-on-paper pointer px-10 fz-13"
+          [matTooltip]="'hint.message.common.edit' | translate"></span>
+        <span
+          (click)="deleteFilter()"
+          class="fa-trash-thin pointer px-10 fz-13"
+          [matTooltip]="'hint.message.common.delete' | translate"></span>
+      </span>
+  </div>
+
+  <div class="align-items-baseline ml-auto filter-show"
+    [class.d-none]="selectedElements.length"
+    [class.d-flex]="!selectedElements.length"
+    [class.d-visible]="switch.classList.contains('filtered')">
+    <button
+      *ngIf="hasInspectorFeature()"
+      [routerLink]="['/agents', 'record', this.versionId]"
+      [queryParams]="{isRecord: true}"
+      class="theme-btn-clear-default ml-14"
+      [translate]="'elements.btn.record'"></button>
+    <div *ngIf="version?.workspace?.isWebMobile && chromeRecorderService.isChrome"
+         [matTooltip]="( !chromeRecorderService.isInstalled ?'elements.form.chrome_extension.not_have_info':'') | translate">
+      <button
+        [disabled]="!chromeRecorderService.isInstalled"
+        (click)="elementCapture? stopCapture() : startCapture()"
+        class="theme-btn-clear-default ml-14"
+        [translate]="(!elementCapture)?'elements.btn.record':'elements.btn.stop'"></button>
+    </div>
+    <button
+      (click)="openAddEditElement(null)"
+      class="theme-btn-primary ml-14  my-auto"
+      [translate]="'btn.common.create'"></button>
+    <app-sort-by-button
+      *ngIf="elements?.totalElements || !!query"
+      [sortByColumns]="sortByColumns"
+      [sortedBy]="sortedBy"
+      [direction]="direction"
+      [translatePreFix]="'element.list.sort_by.'"
+      (sortAction)="sortBy($event.sortBy, $event.direction)"></app-sort-by-button>
+    <button
+      [class.d-none-important]="!elements?.totalElements && !query"
+      (click)="openFilter()"
+            [matTooltip]="'hint.message.common.filter' | translate"
+            class="btn icon-btn border-rds-2 ml-14 filter-icon-with-reset">
+      <i class="filter-icon" #switch [class.filtered]="!!this.query"></i>
+    </button>
+  </div>
+</div>
+<div class="page-content page-virtual-scroll">
+  <div class="px-40">
+    <div
+      *ngIf="elements?.totalElements"
+      [ngSwitch]="selectedElements.length > 0"
+      class="list-header min-height-set">
+      <div
+        class="ts-col-40 pr-10 d-flex align-items-center">
+        <mat-checkbox
+          (change)="selectAllToggle(selectAll)"
+          [checked]="selectedElements.length == elements['cachedItems'].length"
+          [(ngModel)]="selectAll" [ngModelOptions]="{standalone: true}">
+        </mat-checkbox>
+        <div *ngSwitchCase="true" class="text-nowrap bg-light z-in-3">
+          <button
+            (click)="bulkUpdateDialog(selectedElements)"
+            class="theme-btn-clear-default py-6 text-nowrap ml-15">
+            <span [translate]="'btn.common.bulk_update'"></span>
+          </button>
+          <button
+            (click)="openDeleteDialog(null)"
+            [matTooltip]="'hint.message.common.delete_selected' | translate"
+            class="btn icon-btn border-rds-2 ml-14">
+            <i class="fa-trash-thin"></i>
+          </button>
+        </div>
+        <span
+          *ngSwitchCase="false"
+          class="pl-15"
+          [translate]="'elements.element_name'"></span>
+      </div>
+      <div
+        class="ts-col-10 d-flex align-items-center"
+        [translate]="'elements.created_type'"></div>
+      <div
+        class="ts-col-25 px-10 d-flex align-items-center"
+        [translate]="'elements.screen_name'"></div>
+      <div
+        class="ts-col-10 d-flex align-items-center"
+        [translate]="'elements.created_at'"></div>
+    </div>
+  </div>
+  <cdk-virtual-scroll-viewport
+    *ngIf="elements?.totalElements"
+    itemSize="59"
+    class="list-container virtual-scroll-viewport">
+    <a
+      class="list-view green-highlight sm-pm pointer align-items-center"
+      *cdkVirtualFor='let element of elements'>
+      <div
+        class="ts-col-40 d-flex pr-10">
+        <mat-checkbox
+          class="mat-checkbox"
+          [disableRipple]="true"
+          [(ngModel)]="element.isSelected" [ngModelOptions]="{standalone: true}"
+          (change)="setSelectedList(element.id,element.isSelected )">
+        </mat-checkbox>
+        <a class="d-flex ts-col-90" (click)="openDetails(element)">
+        <span class="pl-15 text-truncate"
+          [textContent]="element.name"></span>
+        </a>
+      </div>
+      <div
+        class="ts-col-10"
+        [textContent]="'element.locator_type.'+element.locatorType | translate"></div>
+      <div
+        class="ts-col-25 plr-10 text-truncate hover-text-underline">
+        <span
+          [textContent]="element.screenNameObj?.name"
+          (click)="filterByScreenName(element.screenNameObj?.name)"
+          [matTooltip]="'elements.filter.screen_name.tooltip' | translate"
+          [matTooltipPosition]="tooltipPositionLeft">
+        </span>
+      </div>
+      <div class="ts-col-10">
+        <span class="ml-n3" [matTooltip]="element?.createdDate  ? (element?.createdDate | date:'short') : ''"
+              [textContent]="element?.createdDate  ? humanizedDate(element?.createdDate) : '-'"></span>
+      </div>
+      <div
+        class="action-icons ml-auto" *ngIf="selectedElements.length<=0">
+        <i class="fa-tags-solid action-icon"
+           [matTooltip]="'elements.filter.form.label.labels' | translate"
+           (click)="addLabelsDialog(element.id)"></i>
+
+        <i class="fa-pencil-on-paper action-icon"
+           [matTooltip]="'btn.common.edit' | translate"
+           (click)="openAddEditElement(element.id)"></i>
+        <i class="fa-trash-thin action-icon" (click)="checkForLinkedTestCases(element)"
+           [matTooltip]="'hint.message.common.delete' | translate"></i>
+      </div>
+    </a>
+  </cdk-virtual-scroll-viewport>
+  <app-placeholder-loader
+    *ngIf="elements?.isFetching"></app-placeholder-loader>
+  <div *ngIf="!elements?.totalElements && !elements?.isFetching" class="h-100">
+    <div class="empty-full-container">
+      <div class="empty-run-md"></div>
+      <div [translate]="filterId == 1 && !query ?'elements.not_created':'message.common.search.not_found'" class="empty-text"></div>
+      <div class="d-flex" *ngIf="filterId == 1 && !query">
+        <button
+          *ngIf="hasInspectorFeature()"
+          [routerLink]="['/agents', 'record', this.versionId]"
+          [queryParams]="{isRecord: true}"
+          class="theme-btn-clear-default ml-14"
+          [translate]="'elements.btn.record'"></button>
+        <button
+          (click)="openAddEditElement(null)"
+          class="theme-btn-primary ml-14 my-auto"
+          [translate]="'btn.common.create'"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+

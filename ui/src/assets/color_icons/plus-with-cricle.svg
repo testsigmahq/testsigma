@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>Group 6</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Test-case-7-Copy-5" transform="translate(-686.000000, -169.000000)">
+            <g id="Group-6" transform="translate(686.000000, 169.000000)">
+                <circle id="Oval" stroke="#03A973" stroke-width="2" cx="12" cy="12" r="11"></circle>
+                <text id="+" font-family="SFUIText-Bold, SF UI Text" font-size="16" font-weight="bold" letter-spacing="-0.4444444" fill="#03A973">
+                    <tspan x="7" y="16">+</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>

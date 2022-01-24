@@ -1,0 +1,26 @@
+div.gs-short-hand {
+  @extend .border-active-1;
+  position: fixed;
+  z-index: 1040;
+  border-radius: 30px;
+  border: 1px #f9f9f9 solid;
+  right: -2.5%;
+  top: 105px;
+  background: $white;
+  cursor: pointer;
+  transform: rotate(90deg);
+  padding:unset;
+  font-size: unset;
+  >a {
+    display: block;
+    padding: 8px 15px;
+  }
+  i {
+     transform: rotate(-180deg);
+  }
+  
+  .gs-short-hand-text {
+      display: inline-block;
+      transform: rotate(-180deg);
+  }
+}

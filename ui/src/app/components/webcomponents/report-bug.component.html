@@ -1,0 +1,423 @@
+<div
+  class="warning-tip-label sm-z"
+  [translate]="'test_case_result.details.report_bug.non_failure_warning'"
+  *ngIf="options && showWarning">
+</div>
+<div class="d-flex align-items-center" style="padding: 10px 22px 20px 31px">
+  <div class="ts-col-90 d-flex">
+    <div
+      [translate]="'test_case_result.details.report_bug.title'"
+      class="fz-15 rb-medium ts-col-15">
+    </div>
+  </div>
+  <button class="text-t-secondary close"
+          type="button"
+          [matTooltip]="'hint.message.common.close' | translate"
+          mat-dialog-close>
+  </button>
+</div>
+<div class="d-flex theme-border-b report-bug-list" style="padding: 1em 40em 1em 1em;overflow-x:auto ">
+  <div *ngFor="let app of this.selectedList"
+    (click)="toggleView(app)"
+    [class.active]="this.showList(app)"
+    class="ts-col-15 bug-report-tab pt-4">
+    <div [class]="this.classList[app]"></div>
+  </div>
+  <div *ngFor="let app of this.unSelectedList"
+       (click)="toggleView(app)"
+       [class.active]="this.showList(app)"
+       class="ts-col-15 bug-report-tab pt-4">
+    <div [class]="this.classList[app]"></div>
+  </div>
+</div>
+
+<div
+  *ngIf="showJiraApplication"
+  class="list-container overflow-y-auto rb-regular" [ngStyle]="{height: options && showWarning ? 'calc(100% - 141px)': 'calc(100% - 105px)' }">
+  <div
+    *ngIf="!jiraApplication"
+    class="no-content">
+    <span
+      class="fz-14 text-t-secondary ts-col-15"
+      [translate]="'test_case_result.details.report_bug.external_application_not_enabled_info' | translate: {externalApplication: 'Jira'}"></span>
+  </div>
+
+  <div
+    *ngIf="jiraApplication && externalMappingIssueDetails.length && !externalMapping?.workspace?.isJira"
+    class="no-content">
+    <span
+      class="fz-14 text-t-secondary d-block note"
+      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.workspace?.name}"></span>
+  </div>
+  <div
+    class="h-100"
+    *ngIf="jiraApplication">
+    <app-jira-issue-form
+      class="h-100"
+      *ngIf="!externalMappingIssueDetails.length"
+      [testCaseResult]="options.testCaseResult"
+      (onCreate)="create($event)"
+      [application]="jiraApplication"></app-jira-issue-form>
+    <app-jira-issue-details
+      class="h-100 px-30 py-20 d-block"
+      [externalMapping]="externalMapping"
+      [application]="jiraApplication"
+      [jiraIssueId]="externalMappingIssueDetails[0].id"
+      (unLink)="destroy($event)"
+      *ngIf="externalMappingIssueDetails.length && externalMapping?.workspace?.isJira"></app-jira-issue-details>
+  </div>
+</div>
+
+<div
+  *ngIf="showYoutrackApplication"
+  class="list-container overflow-y-auto rb-regular" [ngStyle]="{height: options && showWarning ? 'calc(100% - 141px)': 'calc(100% - 105px)' }">
+  <div
+    *ngIf="!youtrackApplication"
+    class="no-content">
+    <span
+      class="fz-14 text-t-secondary ts-col-15"
+      [translate]="'test_case_result.details.report_bug.external_application_not_enabled_info' | translate: {externalApplication: 'Youtrack'}"></span>
+  </div>
+
+  <div
+    *ngIf="youtrackApplication && externalMappingIssueDetails.length && !externalMapping?.workspace?.isYoutrack"
+    class="no-content">
+    <span
+      class="fz-14 text-t-secondary d-block note"
+      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.workspace?.name}"></span>
+  </div>
+  <div
+    class="h-100"
+    *ngIf="youtrackApplication">
+    <app-youtrack-issue-form
+      class="h-100"
+      *ngIf="!externalMappingIssueDetails.length"
+      [testCaseResult]="options.testCaseResult"
+      (onCreate)="create($event)"
+      [application]="youtrackApplication"></app-youtrack-issue-form>
+    <app-youtrack-issue-details
+      class="h-100 px-30 py-20 d-block"
+      [externalMapping]="externalMapping"
+      [YTissueId]="externalMappingIssueDetails[0].id"
+      [application]="youtrackApplication"
+      (unLink)="destroy($event)"
+      *ngIf="externalMappingIssueDetails.length && externalMapping?.workspace?.isYoutrack"></app-youtrack-issue-details>
+  </div>
+</div>
+
+
+<div
+  *ngIf="showFreshReleaseApplication"
+  class="list-container overflow-y-auto rb-regular theme-details-scroll x-md-h">
+  <div
+    *ngIf="!freshreleaseApplication"
+    class="no-content">
+    <span
+      class="fz-14 text-t-secondary ts-col-15"
+      [translate]="'test_case_result.details.report_bug.external_application_not_enabled_info' | translate: {externalApplication: 'FreshRelease'}"></span>
+  </div>
+  <div
+    *ngIf="freshreleaseApplication && externalMappingIssueDetails.length && !externalMapping?.workspace?.isFreshrelease"
+    class="no-content">
+    <span
+      class="fz-14 text-t-secondary d-block note"
+      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.workspace?.name}"></span>
+  </div>
+  <div
+    class="h-100"
+    *ngIf="freshreleaseApplication">
+    <app-fresh-release-issue-form
+      class="h-100"
+      *ngIf="!externalMappingIssueDetails.length"
+      [testCaseResult]="options.testCaseResult"
+      (onCreate)="create($event)"
+      [application]="freshreleaseApplication"></app-fresh-release-issue-form>
+    <app-fresh-release-issue-details
+      class="h-100 px-30 py-20 d-block"
+      [externalMapping]="externalMapping"
+      [application]="freshreleaseApplication"
+      [freshReleaseIssueId]="externalMappingIssueDetails[0].id"
+      (unLink)="destroy($event)"
+      *ngIf="externalMappingIssueDetails.length && externalMapping?.workspace?.isFreshrelease"></app-fresh-release-issue-details>
+  </div>
+</div>
+<div
+  *ngIf="showMantisApplication"
+  class="list-container overflow-y-auto rb-regular theme-details-scroll x-md-h">
+  <div
+    *ngIf="!mantisApplication"
+    class="no-content">
+    <span
+      class="fz-14 text-t-secondary ts-col-15"
+      [translate]="'test_case_result.details.report_bug.external_application_not_enabled_info' | translate: {externalApplication: 'Mantis'}"></span>
+  </div>
+  <div
+    *ngIf="mantisApplication && externalMappingIssueDetails.length && !externalMapping?.workspace?.isMantis"
+    class="no-content">
+    <span
+      class="fz-14 text-t-secondary d-block note"
+      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.workspace?.name}"></span>
+  </div>
+  <div
+    class="h-100"
+    *ngIf="mantisApplication">
+    <app-mantis-issue-form
+      class="h-100"
+      *ngIf="!externalMappingIssueDetails.length  && !externalMapping"
+      [testCaseResult]="options.testCaseResult"
+      (onCreate)="create($event)"
+      [application]="mantisApplication"></app-mantis-issue-form>
+    <app-mantis-issue-details
+      class="h-100 px-30 py-20 d-block"
+      [externalMapping]="externalMapping"
+      [application]="mantisApplication"
+      (unLink)="destroy($event)"
+      *ngIf="externalMappingIssueDetails.length && externalMapping?.workspace?.isMantis"></app-mantis-issue-details>
+  </div>
+</div>
+<div
+  *ngIf="showAzureApplication"
+  class="list-container overflow-y-auto rb-regular theme-details-scroll x-md-h">
+  <div
+    *ngIf="!azureApplication"
+    class="no-content">
+    <span
+      class="fz-14 text-t-secondary ts-col-15"
+      [translate]="'test_case_result.details.report_bug.external_application_not_enabled_info' | translate: {externalApplication: 'Azure'}"></span>
+  </div>
+  <div
+    *ngIf="azureApplication && externalMappingIssueDetails.length && !externalMapping?.workspace?.isAzure"
+    class="no-content">
+    <span
+      class="fz-14 text-t-secondary d-block note"
+      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.workspace?.name}"></span>
+  </div>
+  <div
+    class="h-100"
+    *ngIf="azureApplication">
+    <app-azure-issue-form
+      *ngIf="!externalMappingIssueDetails.length"
+      [testCaseResult]="options.testCaseResult"
+      (onCreate)="create($event)"
+      [application]="azureApplication"></app-azure-issue-form>
+    <app-azure-issue-details
+      class="h-100 px-30 py-20 d-block"
+      [externalMapping]="externalMapping"
+      [application]="azureApplication"
+      [azureIssueId]="externalMappingIssueDetails[0].id"
+      (unLink)="destroy($event)"
+      *ngIf="externalMappingIssueDetails.length && externalMapping?.workspace?.isAzure">
+
+    </app-azure-issue-details>
+  </div>
+</div>
+
+<div
+  *ngIf="showBackLogApplication"
+  class="list-container overflow-y-auto rb-regular theme-details-scroll x-md-h">
+  <div
+    *ngIf="!backLogApplication"
+    class="no-content">
+    <span
+      class="fz-14 text-t-secondary ts-col-15"
+      [translate]="'test_case_result.details.report_bug.external_application_not_enabled_info' | translate: {externalApplication: 'BackLog'}"></span>
+  </div>
+  <div
+    *ngIf="backLogApplication && externalMappingIssueDetails.length && !externalMapping?.workspace?.isBackLog"
+    class="no-content">
+    <span
+      class="fz-14 text-t-secondary d-block note"
+      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.workspace?.name}"></span>
+  </div>
+  <div
+    class="h-100"
+    *ngIf="backLogApplication">
+    <app-backlog-issue-form
+      class="h-100"
+      *ngIf="!externalMappingIssueDetails.length"
+      [testCaseResult]="options.testCaseResult"
+      (onCreate)="create($event)"
+      [application]="backLogApplication"></app-backlog-issue-form>
+    <app-backlog-issue-details
+      class="h-100 px-30 py-20 d-block"
+      [externalMapping]="externalMapping"
+      [application]="backLogApplication"
+      (unLink)="destroy($event)"
+      *ngIf="externalMappingIssueDetails.length && externalMapping?.workspace?.isBackLog"></app-backlog-issue-details>
+  </div>
+</div>
+
+<div
+  *ngIf="showZepelApplication"
+  class="list-container overflow-y-auto rb-regular theme-details-scroll x-md-h">
+  <div
+    *ngIf="!zepelApplication"
+    class="no-content">
+    <span
+      class="fz-14 text-t-secondary ts-col-15"
+      [translate]="'test_case_result.details.report_bug.external_application_not_enabled_info' | translate: {externalApplication: 'Zepel'}"></span>
+  </div>
+  <div
+    *ngIf="zepelApplication && externalMappingIssueDetails.length && !externalMapping?.workspace?.isZepel"
+    class="no-content">
+    <span
+      class="fz-14 text-t-secondary d-block note"
+      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.workspace?.name}"></span>
+  </div>
+  <div
+    class="h-100"
+    *ngIf="zepelApplication">
+    <app-zepel-issue-form
+      class="h-100"
+      *ngIf="!externalMappingIssueDetails.length"
+      [testCaseResult]="options.testCaseResult"
+      (onCreate)="create($event)"
+      [application]="zepelApplication"></app-zepel-issue-form>
+    <app-zepel-issue-details
+      class="h-100 px-30 py-20 d-block"
+      [externalMapping]="externalMapping"
+      [application]="zepelApplication"
+      (unLink)="destroy($event)"
+      *ngIf="externalMappingIssueDetails.length && externalMapping?.workspace?.isZepel"></app-zepel-issue-details>
+  </div>
+</div>
+
+<div
+  *ngIf="showClickUpApplication"
+  class="list-container overflow-y-auto rb-regular theme-details-scroll x-md-h">
+  <div
+    *ngIf="!clickUpApplication"
+    class="no-content">
+    <span
+      class="fz-14 text-t-secondary ts-col-15"
+      [translate]="'test_case_result.details.report_bug.external_application_not_enabled_info' | translate: {externalApplication: 'ClickUp'}"></span>
+  </div>
+  <div
+    *ngIf="clickUpApplication && externalMappingIssueDetails.length && !externalMapping?.workspace?.isClickUp"
+    class="no-content">
+    <span
+      class="fz-14 text-t-secondary d-block note"
+      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.workspace?.name}"></span>
+  </div>
+  <div
+    class="h-100"
+    *ngIf="clickUpApplication">
+    <app-click-up-issue-form
+      class="h-100"
+      *ngIf="!externalMappingIssueDetails.length"
+      [testCaseResult]="options.testCaseResult"
+      (onCreate)="create($event)"
+      [workspace]="clickUpApplication"></app-click-up-issue-form>
+    <app-click-up-issue-details
+      class="h-100 px-30 py-20 d-block"
+      [externalMapping]="externalMapping"
+      [workspace]="clickUpApplication"
+      (unLink)="destroy($event)"
+      *ngIf="externalMappingIssueDetails.length && externalMapping?.workspace?.isClickUp"></app-click-up-issue-details>
+  </div>
+</div>
+
+<div
+  *ngIf="showBugZillaApplication"
+  class="list-container overflow-y-auto rb-regular theme-details-scroll x-md-h">
+  <div
+    *ngIf="!bugZillaApplication"
+    class="no-content">
+    <span
+      class="fz-14 text-t-secondary ts-col-15"
+      [translate]="'test_case_result.details.report_bug.external_application_not_enabled_info' | translate: {externalApplication: 'BugZilla'}"></span>
+  </div>
+  <div
+    *ngIf="bugZillaApplication && externalMappingIssueDetails.length && !externalMapping?.workspace?.isBugzilla"
+    class="no-content">
+    <span
+      class="fz-14 text-t-secondary d-block note"
+      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.workspace?.name}"></span>
+  </div>
+  <div
+    class="h-100"
+    *ngIf="bugZillaApplication">
+    <app-bugzilla-issue-form
+      class="h-100"
+      *ngIf="!externalMappingIssueDetails.length"
+      [testCaseResult]="options.testCaseResult"
+      (onCreate)="create($event)"
+      [application]="bugZillaApplication"></app-bugzilla-issue-form>
+    <app-bugzilla-issue-details
+      class="h-100 px-30 py-20 d-block"
+      [externalMapping]="externalMapping"
+      [application]="bugZillaApplication"
+      (unLink)="destroy($event)"
+      *ngIf="externalMappingIssueDetails.length && externalMapping?.workspace?.isBugzilla"></app-bugzilla-issue-details>
+  </div>
+</div>
+
+<div
+  *ngIf="showTrelloApplication"
+  class="list-container overflow-y-auto rb-regular theme-details-scroll x-md-h">
+  <div
+    *ngIf="!trelloApplication"
+    class="no-content">
+    <span
+      class="fz-14 text-t-secondary ts-col-15"
+      [translate]="'test_case_result.details.report_bug.external_application_not_enabled_info' | translate: {externalApplication: 'Trello'}"></span>
+  </div>
+  <div
+    *ngIf="trelloApplication && externalMappingIssueDetails.length && !externalMapping?.workspace?.isTrello"
+    class="no-content">
+    <span
+      class="fz-14 text-t-secondary d-block note"
+      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.workspace?.name}"></span>
+  </div>
+  <div
+    class="h-100"
+    *ngIf="trelloApplication">
+    <app-trello-issue-form
+      class="h-100"
+      *ngIf="!externalMappingIssueDetails.length"
+      [testCaseResult]="options.testCaseResult"
+      (onCreate)="create($event)"
+      [application]="trelloApplication"></app-trello-issue-form>
+    <app-trello-issue-details
+      class="h-100 px-30 py-20 d-block"
+      [externalMapping]="externalMapping"
+      [application]="trelloApplication"
+      (unLink)="destroy($event)"
+      *ngIf="externalMappingIssueDetails.length && externalMapping?.workspace?.isTrello"></app-trello-issue-details>
+  </div>
+</div>
+
+<div
+  *ngIf="showLinearApplication"
+  class="list-container overflow-y-auto rb-regular theme-details-scroll x-md-h">
+  <div
+    *ngIf="!linearApplication"
+    class="no-content">
+    <span
+      class="fz-14 text-t-secondary ts-col-15"
+      [translate]="'test_case_result.details.report_bug.external_application_not_enabled_info' | translate: {externalApplication: 'Linear'}"></span>
+  </div>
+  <div
+    *ngIf="linearApplication && externalMappingIssueDetails.length && !externalMapping?.workspace?.isLinear"
+    class="no-content">
+    <span
+      class="fz-14 text-t-secondary d-block note"
+      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.workspace?.name}"></span>
+  </div>
+  <div
+    class="h-100"
+    *ngIf="linearApplication">
+    <app-linear-issue-form
+      class="h-100"
+      *ngIf="!externalMappingIssueDetails.length"
+      [testCaseResult]="options.testCaseResult"
+      (onCreate)="create($event)"
+      [application]="linearApplication"></app-linear-issue-form>
+    <app-linear-issue-details
+      class="h-100 px-30 py-20 d-block"
+      [externalMapping]="externalMapping"
+      [application]="linearApplication"
+      (unLink)="destroy($event)"
+      *ngIf="externalMappingIssueDetails.length && externalMapping?.workspace?.isLinear"></app-linear-issue-details>
+  </div>
+</div>

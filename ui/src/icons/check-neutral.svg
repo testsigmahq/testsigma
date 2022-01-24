@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59 (86127) - https://sketch.com -->
+    <title>check-neutral</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M49.9115044,10.0884956 L49.9115044,49.9115044 L10.0884956,49.9115044 L10.0884956,10.0884956 L49.9115044,10.0884956 L49.9115044,10.0884956 Z M5.11061947,5.11061947 L5.11061947,54.8893805 L54.8893805,54.8893805 L54.8893805,5.11061947 L5.11061947,5.11061947 Z M18.1106195,27.1106195 L41.1106195,27.1106195 L41.1106195,32.1106195 L18.1106195,32.1106195 L18.1106195,27.1106195 Z" id="path-1"></path>
+    </defs>
+    <g id="check-neutral" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <mask id="mask-2" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <use id="Mask" fill="#000000" fill-rule="nonzero" xlink:href="#path-1"></use>
+    </g>
+</svg>

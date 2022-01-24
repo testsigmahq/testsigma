@@ -1,0 +1,117 @@
+<div>
+  <div
+    class="form-group d-flex pr-20" [formGroup]="form">
+    <div
+      class="rest-method-container position-relative">
+      <mat-form-field
+        class="mat-select-custom inline-no-border sm method-select m-5" appearance="fill">
+        <mat-select
+          disableOptionCentering panelClass="single"
+          [formControlName]="['method']">
+          <mat-option
+            *ngFor="let method of methods"
+            [value]="method"
+            [textContent]="'rest.step.method.'+method | translate">
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <input
+        class="form-control border-0 w-85 px-12 d-inline-block"
+        name="url"
+        [formControlName]="['url']"
+        [placeholder]="'rest.step.url_place_holder' | translate">
+      <div
+        *ngIf="formSubmitted && form?.invalid && form?.controls['url']?.errors?.required" style="left:108px"
+        [translate]="'form.validation.common.required' | translate:{FieldName: 'URL'}"
+        class="error left w-fit-content"></div>
+      <div
+        *ngIf="formSubmitted && form?.invalid && form?.controls['url']?.errors?.pattern" style="left:108px"
+        [translate]="'form.validation.common.invalid' | translate:{FieldName: 'URL'}"
+        class="error left w-fit-content"></div>
+    </div>
+    <button
+      [disabled]="form.controls.url.errors?.pattern || form.controls.url.errors?.required || isFetching
+      || isParameter()  "
+      (click)="fetchApiResponse()"
+      [translate]="isFetching?'rest.step.btn.sending': 'rest.step.btn.send'"
+      class="theme-btn-primary text-uppercase ml-auto"></button>
+  </div>
+  <div class="form-group">
+    <label
+      class="custom-label pb-sm"
+      [translate]="'rest.step.headers'"></label>
+    <app-rest-step-headers
+      [controlName]="'requestHeaders'"
+      [form]="form"
+      [headers]="restStep.requestHeaders"></app-rest-step-headers>
+  </div>
+  <div
+    class="form-group d-flex align-item-center flex-wrap pr-20" [formGroup]="form">
+    <label
+      class="custom-label pb-lg ts-col-100"
+      [translate]="'res.step.authorization.title'"></label>
+    <mat-form-field
+      class="mat-select-custom ts-col-25" appearance="fill">
+      <mat-select
+        disableOptionCentering panelClass="single"
+        [formControlName]="['authorizationType']">
+        <mat-option
+          *ngFor="let authorization of authorizations"
+          [value]="authorization"
+          [textContent]="'rest.step.authorization.'+authorization | translate">
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div
+      [formGroup]="form.controls['authorizationValue']"
+      *ngIf="isBasicAuthorization"
+      class="d-flex flex-auto">
+      <input
+        class="form-control px-12 ml-15 d-inline-block flex-auto"
+        name="username"
+        [formControlName]="['username']"
+        [placeholder]="'rest.step.place_holder.user_name' | translate">
+
+      <input
+        class="form-control px-12 ml-15 d-inline-block flex-auto"
+        name="password"
+        type="password"
+        [formControlName]="['password']"
+        [placeholder]="'rest.step.place_holder.password' | translate">
+    </div>
+    <div
+      *ngIf="isBearerAuthorization"
+      [formGroup]="form.controls['authorizationValue']"
+      class="d-flex flex-auto">
+      <input
+        class="form-control px-12 ml-15 d-inline-block flex-auto"
+        name="token"
+        [formControlName]="['token']"
+        [placeholder]="'rest.step.place_holder.token' | translate">
+    </div>
+  </div>
+
+  <div
+    *ngIf="canShowPayload"
+    class="form-group ts-col-100 pr-20"
+    [formGroup]="form">
+
+    <label
+      class="custom-label pb-lg"
+      for="payload"
+      [translate]="'rest.step.payload'"></label>
+    <div>
+        <textarea
+          class="form-control field flex-row"
+          id="payload"
+          name="payload"
+          [formControlName]="['payload']"></textarea>
+    </div>
+  </div>
+  <div [formGroup]="form">
+    <mat-slide-toggle
+      [formControlName]="['followRedirects']">
+      <span [translate]="'rest.step.allow_redirect'"></span>
+    </mat-slide-toggle>
+  </div>
+</div>

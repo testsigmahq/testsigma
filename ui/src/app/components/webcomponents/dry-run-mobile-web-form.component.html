@@ -1,0 +1,17 @@
+<app-select-test-lab
+  (closeDryRunDialog)="closeDialogTab()"
+  [version]="version"
+  [formGroup]="mobileWebForm"
+  [isDry]="true"></app-select-test-lab>
+<app-test-plan-device-form
+  *ngIf="isHybrid || (!isHybrid && authGuard.openSource.isEnabled)"
+  [version]="version"
+  [formGroup]="environmentFormGroup"
+  [testPlanLabType]="testPlanLabType"
+  [isAvailableCheck]="true"></app-test-plan-device-form>
+<app-test-plan-time-out-settings
+  *ngIf="isHybrid || (!isHybrid && authGuard.openSource.isEnabled)"
+  [formGroup]="mobileWebForm"
+  [environment]="environment"
+  [version]="version">
+</app-test-plan-time-out-settings>

@@ -1,0 +1,46 @@
+<div class="pb-20 pointer" [class.theme-border-b]="showCapabilities" (click)="showCapabilities=!showCapabilities">
+  <div
+    class="active d-inline pb-10 text-underline"
+    [class.theme-br-tab-selection]="showCapabilities"
+    [class.sm]="showCapabilities"
+    [translate]="'test_plan.environment.desired_capabilities.title'"></div>
+</div>
+<ul class="ts-form p-0 m-0 pb-20" *ngIf="showCapabilities">
+  <li class="d-flex align-items-center pb-5 mt-10"
+      [formGroup]="capability"
+      *ngFor="let capability of capabilitiesControls().controls; let isLast= last;let index = index;">
+    <input type="text"
+           [placeholder]="'common.key' | translate"
+           (blur)="andEmptyRowIfMissing();"
+           class="px-0 border-rds-1 theme-border-b border-t-0 border-x-0 form-control ts-col-30"
+           formControlName="name">
+    <mat-select formControlName="dataType" class="ts-col-30 ml-20 theme-border-b py-10">
+      <mat-select-trigger>
+        {{'test_plan.environment.desired_capabilities.type.'+capability.controls['dataType']?.value | translate}}
+      </mat-select-trigger>
+      <mat-option [value]="'int'">
+        <span [translate]="'test_plan.environment.desired_capabilities.type.int'"></span>
+      </mat-option>
+      <mat-option [value]="'java.lang.String'">
+        <span [translate]="'test_plan.environment.desired_capabilities.type.java.lang.String'"></span>
+      </mat-option>
+      <mat-option [value]="'boolean'">
+        <span [translate]="'test_plan.environment.desired_capabilities.type.boolean'"></span>
+      </mat-option>
+    </mat-select>
+    <input
+      type="text"
+      class="px-0 border-rds-1 theme-border-b border-t-0 border-x-0 form-control ts-col-30 ml-30"
+      [placeholder]="'common.value' | translate"
+      formControlName="value"
+      (blur)="andEmptyRowIfMissing();">
+    <i
+      *ngIf="!isLast"
+      (click)="remove(index)"
+      [matTooltip]="'btn.common.remove' | translate"
+      class="fa-trash-thin pl-5 fz-16 pointer"></i>
+    <i
+      *ngIf="isLast"
+      class="fa-trash-thin pl-5 fz-16 visibility-hidden"></i>
+  </li>
+</ul>

@@ -1,0 +1,26 @@
+<div>
+  <div class="pl-30">
+    <div class="d-flex justify-content-between py-10 align-items-center theme-border-b">
+      <h1 class="fz-18 m-0 ls-normal" [translate]="'message.common.versions'"></h1>
+      <button *ngIf="!getIsDemo()" type="button"
+              [routerLink]="['../new']" class="btn-lg btn-clear-default theme-text btn-lg mr-20 border-rds-2">
+        + <span [translate]="'project.versions.button.new'"></span></button>
+    </div>
+
+    <div class="d-flex mt-40 detail_view">
+      <cdk-virtual-scroll-viewport class="applications-navigator max-w-100" itemSize="57"
+                                   minBufferPx="{{ 57 * 1 }}"
+                                   maxBufferPx="{{ 57 * 7 }}">
+        <a class="app-items mr-4"
+           *cdkVirtualFor="let version of versions; index as i"
+           [routerLink]="[ '../',version?.id]"
+           [routerLinkActive]="'active border-active-2 text-primary rb-medium-i-d'">
+          <span class="text-truncate" [textContent]="version?.name"></span>
+        </a>
+      </cdk-virtual-scroll-viewport>
+      <div class="ts-col-75 pl-10">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</div>

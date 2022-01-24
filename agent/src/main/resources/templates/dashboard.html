@@ -1,0 +1,186 @@
+<!--
+  ~ /*
+  ~ *****************************************************************************
+  ~  * Copyright (C) 2019 Testsigma Technologies Inc.
+  ~  * All rights reserved.
+  ~  ****************************************************************************
+  ~  */
+  -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Testsigma Agent</title>
+</head>
+<body>
+<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+<style type="text/css">
+  body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ts-container {
+    background: #e3ecf0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .ts-agent-info {
+    border-radius: 4px;
+    border: 1px solid #E1E4E8;
+    min-width: 32vw;
+    max-width: 32vh;
+    background-color: #fff;
+    overflow: hidden;
+  }
+
+  .ts-white-logo {
+    background: url(https://website-static.testsigma.com/assets/common/testsigma-logo.svg);
+    padding: 30px;
+    display: block;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  .ts-drak-logo {
+    background: url(https://website-static.testsigma.com/assets/common/testsigma-logo.svg);
+    padding: 30px;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  .content_for_sidebar {
+    background: #282a42;
+    color: #fff;
+    border-radius: 4px;
+    padding: 30;
+  }
+
+  .ts-heading {
+    text-align: center;
+    padding-top: 20px;
+  }
+
+  .info-text {
+    text-align: center;
+    display: block;
+    padding-top: 5px;
+  }
+
+  .ts-agent-connecting {
+    background: url(./cloud-home-white.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 90px;
+  }
+
+  .ts-register-btn {
+    padding: 10px 30px;
+    border-radius: 50px;
+    background-image: linear-gradient(180deg, rgb(3 169 115) 0%, #03a973 100%);
+    display: block;
+    text-shadow: 1px #eee;
+    text-shadow: 0 1px 1px #0c862f;
+    cursor: pointer;
+  }
+
+  .btn-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+
+  .details-info {
+    transform: translateX(100%);
+  }
+
+  .details-item {
+    display: flex;
+    padding: 12px 22px;
+  }
+
+  .details-name {
+    color: #606060;
+  }
+
+  .details-value {
+    color: #24292E;
+    margin-left: auto;
+    font-weight: bold;
+  }
+
+  .details-header {
+    text-align: center;
+    padding: 20px;
+  }
+
+  div.ts-registered.details-info {
+    animation: slideRight ease-out 1s;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes slideRight {
+    0% {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateX(0px);
+    }
+  }
+
+
+</style>
+
+<script type="text/javascript">
+  function register() {
+    window.location = "/agent/register";
+  }
+</script>
+
+<div class="ts-container">
+  <div class="ts-agent-info">
+    <div class="content_for_sidebar" th:if="${registered == false}">
+      <span class="ts-white-logo"></span>
+      <div class="btn-container">
+        <span class="ts-register-btn" onclick="register()">Register </span>
+      </div>
+    </div>
+    <div class="details-info ts-registered" th:if="${registered == true}">
+      <div class="details-header">
+        <div class="ts-drak-logo"></div>
+        <div class="details-value">Agent Details</div>
+      </div>
+      <div class="details-item">
+        <span class="details-name">Agent Name</span>
+        <span class="details-value" th:text="${hostName}"></span>
+      </div>
+      <div class="details-item">
+        <span class="details-name">Operating System</span>
+        <span class="details-value" th:text="${osType}"></span>
+      </div>
+      <div class="details-item">
+        <span class="details-name">IP Address</span>
+        <span class="details-value" th:text="${ipAddress}"></span>
+      </div>
+      <div class="details-item">
+        <span class="details-name"> Agent Version </span>
+        <span class="details-value" th:text="${agentVersion}"></span>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

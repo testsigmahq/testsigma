@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🤔 Questions and Help | 💬 Chat With Us
+    url: https://discord.com/invite/5caWS7R6QX
+    about: Please ask and answer questions here.
+  - name: 🙋 Have a question to discuss?
+    url: https://github.com/testsigmahq/testsigma/discussions
+    about: Start a GitHub discussion
+  - name: ☁️ Dedicated Help & Support Center | Testsigma Cloud
+    url: https://app.testsigma.com
+    about: Dedicated suport for issues related to Testsigma Cloud ⚡️

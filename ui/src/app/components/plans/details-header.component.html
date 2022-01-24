@@ -1,0 +1,172 @@
+<div class="details-page-container">
+  <app-placeholder-loader *ngIf="!isFetchingCompleted"></app-placeholder-loader>
+  <div
+    class="ts-col-100 d-flex-wrap" *ngIf="testPlan">
+    <div class="details-page-header">
+      <app-td-overlay-menu-button
+        [versionId]="testPlan?.workspaceVersionId"></app-td-overlay-menu-button>
+      <a class="go-back-icon pl-10"
+         [matTooltip]="'hint.message.common.back' | translate"
+         [routerLink]="['/td', testPlan?.workspaceVersionId, 'plans']"></a>
+      <div
+        class="d-flex ts-col-100-67">
+          <div class="theme-details-header">
+            <a
+              class="title-name"
+              [matTooltip]="testPlan.name"
+              [textContent]="testPlan.name"></a>
+          </div>
+        <div class="details-page-buttons">
+          <button
+             *ngIf="testPlan?.lastRun?.isQueued"
+             (click)="fetchTestPlan()"
+             [matTooltip]="'result.hint.click.here.refresh' | translate"
+             class="btn icon-btn border-rds-2 mr-14">
+             <i class="fa-refresh-thick"></i>
+          </button>
+          <app-run-now-button
+            class="pr-10"
+            [displayText]="('runs.list_view.run_now' | translate)"
+            (onStart)="fetchTestPlan()"
+            (onStop)="fetchTestPlan()"
+            [execution]="testPlan"
+            [executionResult]="testPlan?.lastRun">
+          </app-run-now-button>
+          <app-schedule-form-button
+            class="pr-10"
+            [execution]="testPlan"></app-schedule-form-button>
+          <app-reports-button
+            class="pr-10"
+            [execution]="testPlan"></app-reports-button>
+          <button
+            [matTooltip]="'hint.message.common.edit' | translate"
+            [disabled]="testPlan?.lastRun?.isExecuting"
+            [routerLink]="['/td', 'plans', testPlan?.id, 'edit']"
+            class="btn icon-btn fa-pencil-on-paper text-t-secondary">
+          </button>
+          <button
+            [matTooltip]="'hint.message.common.delete' | translate"
+            [disabled]="testPlan?.lastRun?.isExecuting"
+            (click)="testPlan?.lastRun?.isExecuting? '' : deleteConfirmation()"
+            class="btn icon-btn fa-trash-thin text-t-secondary">
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="ml-auto ts-col-100-77">
+      <div class="details-page-sub-details">
+        <div class="details-page-sub-description">
+          <div
+            class="details-items">
+            <label
+              class="details-title"
+              [translate]="'test_plans.details.test_lab'"></label>
+            <div class="details-info">
+              <div class="d-flex">
+                <span class="mr-5 h-18p"
+                  [class.testsigma-lab-logo]="testPlan?.isTestsigmaLab || testPlan?.isHybrid">
+                </span>
+                <span [translate]="'execution.lab_type.'+ testPlan?.testPlanLabType"></span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="details-items pl-50 text-truncate mw-35">
+            <label
+              class="details-title"
+              [translate]="'test_plan.type'"></label>
+            <div class="details-info">
+              <div class="d-flex">
+                <div
+                  class="text-truncate" [translate]="'execution.test_plan_type.'+ testPlan?.testPlanType"></div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="details-items pl-50 text-truncate mw-35">
+            <label
+              class="details-title"
+              [translate]="'test_plans.details.environment'"></label>
+            <div class="details-info">
+              <div class="d-flex">
+                <div
+                  class="text-truncate"
+                  [matTooltip]="(testPlan?.environment?.name?.length>151) ? testPlan?.environment?.name : ''"
+                  [textContent]="testPlan?.environment?.name || '-'"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="page-details-navigation-md">
+  <ul class="tab-nav" role="tablist">
+    <li class="nav-items" role="presentation">
+      <a
+        [routerLink]="['details']"
+        [routerLinkActive]="'active'"
+        class="normal-text">
+        <i class="fa-list fz-15"></i>
+        <span [translate]="'test_plans.details.title'"></span>
+      </a>
+    </li>
+    <li class="nav-items" role="presentation" *ngIf="!testPlan?.isCustomPlan">
+      <a
+        [routerLink]="['suites']"
+        [routerLinkActive]="'active'"
+        class="normal-text">
+        <i class="fa-test-suite fz-15"></i>
+        <span [translate]="'test_plans.suites.title'"></span>
+      </a>
+    </li>
+    <li class="nav-items" role="presentation" *ngIf="!testPlan?.isCustomPlan">
+      <a
+        [routerLink]="['devices']"
+        [routerLinkActive]="'active'"
+        class="normal-text">
+        <i class="fz-15"
+          [class.fa-desktop]="!version?.workspace.isMobile"
+          [class.fa-mobile-alt-solid]="version?.workspace.isMobile"></i>
+        <span [translate]="'test_plans.test_devices.title'" *ngIf="version?.workspace.isMobile"></span>
+        <span [translate]="'test_plans.test_machines.title'" *ngIf="!version?.workspace.isMobile"></span>
+      </a>
+    </li>
+    <li class="nav-items" role="presentation" *ngIf="testPlan?.isCustomPlan">
+      <a
+        [routerLink]="['devices']"
+        [routerLinkActive]="'active'"
+        class="normal-text">
+        <i class="fa-device-suites fz-15"></i>
+        <span [translate]="'test_plan.environment.test_device_suites'" *ngIf="version?.workspace.isMobile"></span>
+        <span [translate]="'test_plan.environment.test_machine_suites'" *ngIf="!version?.workspace.isMobile"></span>
+      </a>
+    </li>
+    <li class="nav-items" role="presentation">
+      <a
+        [routerLink]="['plugs']"
+        [routerLinkActive]="'active'"
+        class="normal-text">
+        <i class="fa-plug fz-15"></i>
+        <span [translate]="'test_plans.ci_cd.title'"></span>
+      </a>
+    </li>
+    <li class="nav-items" role="presentation">
+      <a
+        [routerLink]="['schedules']"
+        [routerLinkActive]="'active'"
+        class="normal-text">
+        <i class="fa-schedule-with-tick fz-15"></i>
+        <span [translate]="'test_plans.schedules.title'"></span>
+      </a>
+    </li>
+  </ul>
+</div>
+
+<div
+  class="d-flex flex-wrap" style="height: calc(100% - 185px)">
+  <router-outlet></router-outlet>
+</div>

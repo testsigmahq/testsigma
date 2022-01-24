@@ -1,0 +1,71 @@
+<!--
+  ~ /*
+  ~  * *****************************************************************************
+  ~  *  Copyright (C) 2020 Testsigma Technologies Inc.
+  ~  *  All rights reserved.
+  ~  *  ****************************************************************************
+  ~  */
+  -->
+
+<div class="d-flex align-items-center rb-regular p-10 m-20 testcase-filter border-rds-4">
+  <div class="ts-col-90 d-flex align-items-center">
+    <i
+      [matTooltip]="'hint.message.common.search' | translate"
+      class="fa-search fz-13 mr-5"
+      (click)="focusOnSearch()"></i>
+    <input
+      class="form-control border-0 w-85 d-inline-block p-0"
+      #searchInput [(ngModel)]="inputValue"
+      [placeholder]="'common.place_holder.search' | translate">
+  </div>
+  <button
+    class="theme-overlay-close"
+    type="button" *ngIf="inputValue"
+    [matTooltip]="'hint.message.common.close' | translate"
+    mat-dialog-close>
+  </button>
+</div>
+
+<form
+  class="ts-form rb-regular h-90 testcase-filter-list" id="testCaseFiltersList"
+  (keydown.enter)="false"
+  novalidate="novalidate"
+  *ngIf="filters || stepGroupFilters"
+  name="testCaseFiltersList">
+  <div
+    class="overflow-x-hidden h-100">
+    <div class="filter-list-section mt-10">
+      <ul class="items-section">
+        <li class="pointer" mat-dialog-close *ngFor="let filter of defaultFilters"
+            [routerLink]="['/td', version.id, urlString, 'filter', filter.id]" [routerLinkActive]="'selected'">
+          <span
+            class="filter-items"
+            [routerLink]="['/td', version.id, urlString, 'filter', filter.id]" [routerLinkActive]="'selected'">
+            <span [textContent]="filter.name"></span>
+            <i
+              *ngIf="filter.id == currentFilter.id"
+              class="fa-tick ml-auto"></i>
+          </span>
+        </li>
+      </ul>
+    </div>
+    <div
+      *ngIf="nonDefaultFilters?.length"
+      class="filter-list-section">
+      <ul class="items-section">
+        <li class="pointer" mat-dialog-close *ngFor="let filter of nonDefaultFilters"
+            [routerLink]="['/td', version.id, urlString, 'filter', filter.id]" [routerLinkActive]="'selected'">
+          <span
+            class="filter-items"
+            [routerLink]="['/td', version.id, urlString, 'filter', filter.id]" [routerLinkActive]="'selected'">
+            <span [textContent]="filter.name"></span>
+            <i
+              *ngIf="filter.id == currentFilter.id"
+              class="fa-tick ml-auto"></i>
+          </span>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</form>

@@ -1,0 +1,81 @@
+<div
+  *ngIf="NotFilteredTestStepResult?.content?.length"
+  class="theme-section-header py-15 pl-30 pr-22">
+  <div class="w-75 d-flex align-items-center">
+    <i
+      [matTooltip]="'hint.message.common.search' | translate"
+      class="fa-search fz-13 mr-5"
+      (click)="focusOnSearch()"></i>
+    <input
+      class="form-control border-0 w-85 d-inline-block p-0"
+      #searchInput
+      [placeholder]="'common.place_holder.search' | translate">
+  </div>
+  <div class="ml-auto d-flex align-items-center">
+    <div>
+      <span
+        [class.active]="isFilterApplied"
+        [class.reset]="isFilterApplied"
+        #stepResultFilterBtn
+        class="filter-icon-with-reset">
+        <i
+          [class.filtered]="isFilterApplied"
+          [class.mr-n5]="isFilterApplied"
+          class="filter-icon fz-13"
+          (click)="openStepFilter()"
+          [matTooltip]="'hint.message.common.filter' | translate">
+        </i>
+        <i
+          *ngIf="isFilterApplied"
+          (click)="resetFilter()"
+          class="reset sm"></i>
+      </span>
+    </div>
+  </div>
+</div>
+<div class="list-container h-100 pb-30 pt-14">
+  <cdk-virtual-scroll-viewport
+    minBufferPx="10000" maxBufferPx="30000"
+    #stepResultsViewPort itemSize="63" class="virtual-scroll-viewport"
+    [class.overflow-y-hidden]="!isStepsFetchComplete">
+    <div
+      class="pb-40 pr-30 pt-10"
+      *ngIf="testSteps && testStepResults?.totalElements && workspaceVersion && filteredTestStepResults?.content && resultEntity && (templates || kibbutzTemplates)">
+      <span  *cdkVirtualFor='let testStepResult of filteredTestStepResults?.content; let stepNumber = index; trackBy: trackByIdx;'>
+        <app-test-step-result-list-item
+          class="w-100 scroll-item"
+          *ngIf="!testStepResult?.isWhileLoop"
+          (activeStepGroupAction)="fetchStepGroupResults($event)"
+          (stepUpdateAction)="navigateTestcase()"
+          [testcaseResult]="resultEntity"
+          [testSteps]="testSteps"
+          [activeStepGroup]="activeStepGroup"
+          [filteredTestStepResult]="filteredTestStepResults"
+          [templates]="templates"
+          [kibbutzTemplates]="kibbutzTemplates"
+          [workspaceVersion]="workspaceVersion"
+          [stepNumber]="stepNumber+1"
+          [isEditEnabled]="isEditEnabled"
+          (onStepDestroy)="onDestroySuccess()"
+          (onStepEditAction)="setEditAction($event)"
+          (onStepDetails)="triggerDetails()"
+          (onActiveStepGroup)="setActiveStepGroup()"
+          [isDryRun]="isDryRun"
+          [testStepResult]="testStepResult"
+          (click)="setFirstFailedStep(testStepResult)"
+          (onFirstFailedStep)="setFirstFailedStep($event)"></app-test-step-result-list-item>
+      </span>
+    </div>
+    <div
+      *ngIf="!filteredTestStepResults?.content?.length && !resultEntity?.isExecuting && isStepsFetchComplete && NotFilteredTestStepResult?.content?.length"
+      class="empty-full-container-transparent-bg">
+      <div class="empty-full-content">
+        <div class="empty-run-xs"></div>
+        <div
+          class="text-t-secondary pt-30 pb-18"
+          [translate]="'message.common.search.not_found'"></div>
+      </div>
+    </div>
+    <app-placeholder-loader *ngIf="!isStepsFetchComplete || (resultEntity?.isRunning)"></app-placeholder-loader>
+  </cdk-virtual-scroll-viewport>
+</div>

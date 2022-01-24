@@ -1,0 +1,88 @@
+<div class="theme-overlay-container">
+  <div class="theme-overlay-header">
+    <div
+      class="theme-overlay-title"
+      [translate]="'testcase.details.step_bulk_update'">
+    </div>
+    <button
+      class="theme-overlay-close"
+      type="button"
+      [matTooltip]="'hint.message.common.close' | translate"
+      mat-dialog-close>
+    </button>
+  </div>
+
+  <div class="theme-overlay-content">
+    <form
+      class="ts-form rb-regular pt-10" id="copyTestCaseForm"
+      (keydown.enter)="false"
+      novalidate="novalidate"
+      name="bulkUpdateForm"
+      [formGroup]="bulkUpdateForm">
+        <div class="form-group pb-10">
+          <div class="p-0 field m-0">
+            <input
+              type="number"
+              id="waitTime"
+              name="waitTime"
+              (focus)="formSubmitted=false"
+              [placeholder]="'bulk.update.as_it_is' | translate"
+              class="form-control"
+              [(ngModel)]="waitTime" [ngModelOptions]="{standalone: true}"
+              autofocus/>
+            <label
+              [translate]="'step_result.max.waitTime'"
+              for="waitTime" class="required"></label>
+          </div>
+          <label
+            class="d-flex fz-12 justify-content-end pt-2 text-right text-t-secondary"
+            [translate]="'test_step.max_wait_time.info'"></label>
+          <div
+            *ngIf="formSubmitted && waitTime>120"
+            class="error"
+            [translate]="'test_step.max_wait_time.error'"></div>
+        </div>
+        <div class="pb-10">
+          <mat-checkbox
+            #priorityCheckBox
+            name="priority"
+            [indeterminate]="bulkUpdateForm.get('priority')?.value==null"
+            (change)="changeTriStateCheckBox(priorityCheckBox, bulkUpdateForm.get('priority'))">
+            <span [translate]="'test_step.priority.MAJOR_STOP'"></span></mat-checkbox>
+        </div>
+<!--        <div class="pb-10">-->
+<!--          <mat-checkbox-->
+<!--            #isMandatoryCheckBox-->
+<!--            name="isMandatory"-->
+<!--            [indeterminate]="bulkUpdateForm.get('isMandatory')?.value==null"-->
+<!--            (change)="changeTriStateCheckBox(isMandatoryCheckBox,bulkUpdateForm.get('isMandatory'))">-->
+<!--            <span [translate]="'test_step.results.mandatory_label'"></span></mat-checkbox>-->
+<!--        </div>-->
+        <div class="pb-20">
+          <mat-checkbox
+            #disabledCheckBox
+            name="disabled"
+            [indeterminate]="bulkUpdateForm.get('disabled')?.value==null"
+            (change)="changeTriStateCheckBox(disabledCheckBox,bulkUpdateForm.get('disabled'))">
+            <span [translate]="'test_step.results.disable_label'"></span></mat-checkbox>
+        </div>
+    </form>
+  </div>
+  <div class="theme-overlay-footer">
+    <button
+      class="theme-btn-clear-default"
+      mat-dialog-close
+      [translate]="'btn.common.close'">
+    </button>
+    <button
+      [disabled]="waitTime>120"
+      class="theme-btn-primary"
+      type="submit"
+      (click)="save()"
+      [isLoading]="saving"
+      [message]="'message.common.updating'"
+      appAsyncBtn
+      [textContent]="'btn.common.update' | translate">
+    </button>
+  </div>
+</div>

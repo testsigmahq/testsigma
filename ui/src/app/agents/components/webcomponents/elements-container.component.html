@@ -1,0 +1,170 @@
+<div *ngIf="(inspectedElement || elements?.length>0)"
+     class="save-elements-section">
+  <fieldset class="theme-border p-0 w-100 overflow-y-auto">
+    <legend class="ml-12 position-absolute top-n5 bg-white">
+      <div *ngIf="element">
+        <div [translate]="'agents.mobile.inspection.element_form'"
+             class="text-secondary rb-medium pt-12"></div>
+      </div>
+      <div *ngIf="!element" class="mat-form-field-flex text-t-secondary lh-4">
+                  <span [translate]="'agents.mobile.inspection.elements'"
+                        class="rb-medium text-nowrap">
+                  </span>
+        <span class="mat-form-field-flex pl-14">
+                    <span class="result-status-1 rounded-circle btn mr-5 p-4 my-2 pluse"></span>
+                    <span [translate]="'agents.mobile.inspection.recording'" class="text-danger"></span>
+                  </span>
+      </div>
+    </legend>
+    <ng-container *ngTemplateOutlet="ElementForm"></ng-container>
+    <ng-container *ngTemplateOutlet="Elements"></ng-container>
+  </fieldset>
+</div>
+<div *ngIf="!inspectedElement"
+     [translate]="'agents.mobile.inspection.element_not_selected'"
+     class="fz-16 pt-20 text-center text-warning">
+</div>
+<ng-template #ElementForm>
+  <div *ngIf="inspectedElement && versionId && element"
+       class="ts-col-100 h-100">
+    <div class="selected-element-details h-100">
+      <div *ngIf="elementForm" [formGroup]="elementForm" class="ts-form pt-30 pb-20 px-15">
+        <div class="form-group">
+          <label [translate]="'agents.mobile.inspection.element_name'"
+                 class="control-label required"></label>
+          <input [(ngModel)]="element.name" [formControlName]="['name']"
+                 class="form-control" type="text">
+          <div *ngIf="elementForm.controls.name.errors?.pattern && formSubmitted"
+               [translate]="'element.message.name.invalid_characters'" class="error"></div>
+          <div
+            *ngIf="elementForm.controls.name.errors?.required && formSubmitted"
+            [translate]="'element.message.name.required'" class="error">
+          </div>
+          <div
+            *ngIf="elementForm.controls.name.errors?.minlength && formSubmitted"
+            [translate]="'element.message.name.minlength'" class="error">
+          </div>
+          <div
+            *ngIf="elementForm.controls.name.errors?.maxlength && formSubmitted "
+            class="error" [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'250'}">
+          </div>
+          <div
+            *ngIf="elementForm.controls.name.errors?.duplicate"
+            [translate]="'element.message.name.duplicate'" class="error">
+          </div>
+        </div>
+        <div class="form-group" matAutocompleteOrigin #origin="matAutocompleteOrigin">
+          <div class="p-0 field mb-0" appearance="fill">
+            <input id="screen_name" [matAutocomplete]="screename" [(ngModel)]="element.screenNameObj.name" type="text" class="form-control" [formControlName]="['screen_name']"
+                   (keyup)="filterData($event.target);">
+            <label for="screen_name"  class="required" [translate]="'elements.screen_name'"></label>
+            <mat-autocomplete #screename="matAutocomplete" disableOptionCentering panelClass="single">
+              <mat-option *ngFor="let option of screenNameOptions|async" [value]="option.id"  (click)="this.setScreenName(option)">
+                {{option.name}}
+              </mat-option>
+            </mat-autocomplete>
+            <div
+              *ngIf="formSubmitted && elementForm.get('screen_name').hasError('required')"
+              class="error" [translate]="'agents.mobile.inspection.screen_name.required'">
+            </div>
+            <div
+              *ngIf="elementForm.controls.screen_name.errors?.minlength && formSubmitted"
+              [translate]="'agents.mobile.inspection.screen_name.minlength'" class="error"></div>
+            <div
+              *ngIf="elementForm.controls.screen_name.errors?.maxlength && formSubmitted "
+              class="error" [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Screen Name' , max:'250'}">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label [translate]="'agents.mobile.inspection.type'"
+                 class="control-label required mat-proxy-label"></label>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-select
+              (selectionChange)="element.locatorValue = element.mobileElementRect.mobileElement[locatorTypes[$event.value].variableName]"
+              [(ngModel)]="element.locatorType"
+              [formControlName]="['locatorType']">
+              <mat-option *ngFor="let locatorType of availableLocatorTypes"
+                          [textContent]="('element.locator_type.' + locatorType)|translate"
+                          [value]="locatorType"></mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <label [textContent]=" (('element.locator_type.' + element.locatorType)|translate)+ ' '
+              + ('agents.mobile.inspection.value'|translate)"
+                 class="control-label required text-lowercase"></label>
+          <input [(ngModel)]="element.locatorValue" [formControlName]="['definition']"
+                 class="form-control"
+                 type="text">
+          <div *ngIf="elementForm.controls.definition.errors?.required && formSubmitted"
+               [textContent]="'element.message.locator_value.required'|
+                 translate: {locatorType :(('element.locator_type.' + element.locatorType )| translate) }"
+               class="error">
+          </div>
+        </div>
+      </div>
+      <div class="fixed-pos-with-br">
+        <button
+          (click)="(uiId)?getElement()
+                    :(isEdit?(element.locatorValue=null):backToListView())"
+          [translate]="'btn.common.cancel'"
+          class="btn btn-clear ts-col-50 border-0 pointer"></button>
+        <button
+          (click)="(uiId)?updateElement():((isEdit)?createElement():addToList())"
+          [disabled]="isEdit && elementForm?.pristine && (element?.locatorValue==fetchedElement?.locatorValue)"
+          [translate]="(uiId)?'agents.mobile.inspection.update_and_close':(isEdit)?'agents.mobile.inspection.save_and_close':'btn.common.done'"
+          class="theme-btn-primary ts-col-50 border-rds-1 m-0 border-0 pointer"></button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #Elements>
+  <div *ngIf="elements?.length>0 && !element && versionId && !isEdit"
+       class="ts-col-100 h-100">
+    <div class="selected-element-details">
+      <div class="field-list pt-5">
+        <li *ngFor="let element of elements;index as i"
+            class="align-items-baseline d-flex justify-content-start list-view pl-5 pt-8 list-style-none">
+          <div class="d-inline-block pr-5 pt-8">
+            <div [textContent]="i+1" class="result-status-3 list-number mx-5 x-sm-size text-white"></div>
+          </div>
+          <span [textContent]="element.name" class="field-name text-truncate pr-5"></span>
+          <div *ngIf="element.saving"
+               [class.mr-30]="element.errors"
+               [translate]="'message.common.saving'"
+               class="position-absolute right-10 text-right result-status-text-3">
+          </div>
+          <div *ngIf="element.saved"
+               [matTooltip]="'message.common.saved' | translate"
+               class="ts-col-5 text-right result-status-text-7 fa-tick-circle-filled pr-30">
+          </div>
+          <div *ngIf="element.errors"
+               [matTooltip]="((element.errors=='duplicate')?'element.message.name.duplicate':
+                  (element.errors=='specialCharacter')?'element.message.name.invalid_characters':
+                  'message.common.error_contact_support') | translate"
+               class="w-85p mr-15 text-right result-status-text-1 fa-exclamation-triangle-solid">
+          </div>
+          <div
+            *ngIf="!(element.saving || element.saved)"
+            [class.mr-25]="element.errors"
+            class="action-icons text-right position-absolute right-10 pt-8">
+            <i (click)="editElement(i)"
+               [matTooltip]="'btn.common.edit' | translate"
+               class="fa-pencil-on-paper action-icon pointer"></i>
+            <i (click)="removeFromList(i)"
+               [matTooltip]="'btn.common.remove' | translate"
+               class="fa-trash-thin action-icon pointer"></i>
+          </div>
+        </li>
+      </div>
+      <div class="fixed-pos-with-br">
+        <button
+          (click)="saveElements()"
+          [disabled]="formSubmitted"
+          [translate]="'btn.common.save'"
+          class="theme-btn-primary ts-col-100 border-rds-1 m-0 border-0"></button>
+      </div>
+    </div>
+  </div>
+</ng-template>

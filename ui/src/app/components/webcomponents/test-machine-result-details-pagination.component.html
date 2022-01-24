@@ -1,0 +1,81 @@
+<button type="button"
+        class="btn theme-border-i-d theme-text p-0 d-inline-flex">
+  <a
+    *ngIf="previousResults?.content?.length"
+    [routerLink]="['..', previousResults?.content[previousResults?.content?.length-1]?.id || testDeviceResult.id]"
+    [matTooltip]="'hint.message.common.previous.item' | translate"
+    class="fa-left-arrow-thin px-7 py-6  theme-border-r text-decoration-none text-t-highlight"></a>
+  <a
+    *ngIf="!previousResults?.content?.length"
+    class="fa-left-arrow-thin px-7 py-6  theme-border-r text-decoration-none not-allowed text-muted"></a>
+
+  <a
+    [matMenuTriggerFor]="menuTrigger"
+    class="fa-list px-7 py-6  theme-border-r"
+    [matTooltip]="'hint.message.common.list.item' | translate"
+    (click)="showList()"></a>
+  <a
+    *ngIf="nextResults?.content?.length && nextResults?.content[0]"
+    [routerLink]="['..', nextResults?.content[0]?.id || testDeviceResult?.id]"
+    [matTooltip]="'hint.message.common.next.item' | translate"
+    class="text-t-highlight fa-right-arrow-thin px-7 py-6 text-decoration-none"></a>
+  <a
+    *ngIf="!nextResults?.content?.length || !nextResults?.content[0]"
+    class="fa-right-arrow-thin px-7 py-6  text-muted not-allowed text-decoration-none"></a>
+</button>
+<mat-menu
+  #menuTrigger="matMenu" class="theme-mat-menu h-100">
+  <cdk-virtual-scroll-viewport
+    itemSize="83"
+    minBufferPx="{{ 83 * 3 }}"
+    maxBufferPx="{{ 83 * 6 }}"
+    #testMachineResultsViewPort
+    class="list-container virtual-scroll-viewport w-100 mat-menu-pagination">
+    <a
+      [routerLink]="['/td/machine_results', testDeviceResult.id]"
+      [routerLinkActive]="'active'"
+      [class.active]="isTestCaseActive(testDeviceResult?.id)"
+      class="list-view green-highlight sm-pm pointer"
+      *cdkVirtualFor='let testDeviceResult of environmentList'>
+      <div
+        class="d-flex fz-22">
+        <i
+          [class.fa-result-0]="testDeviceResult.isPassed"
+          [class.fa-result-1]="testDeviceResult.isFailed"
+          [class.fa-result-2]="testDeviceResult.isAborted"
+          [class.fa-result-3]="testDeviceResult.isNotExecuted"
+          [class.fa-result-5]="testDeviceResult.isQueued"
+          [class.fa-result-6]="testDeviceResult.isStopped"
+          class="pl-6 mt-4"></i>
+      </div>
+      <div
+        class="d-flex flex-wrap ml-auto text-truncate ts-col-100-35 pl-5">
+        <div class="ts-col-100">
+          <div
+            class="list-title text-truncate"
+            [matTooltip]="testDeviceResult?.testDevice?.title"
+            [textContent]="testDeviceResult?.testDevice?.title"></div>
+        </div>
+        <div class="pt-7 text-t-secondary fz-12 ts-col-100 d-flex">
+          <div
+            class="d-flex justify-content-end text-nowrap">
+            <div
+              [textContent]="testDeviceResult.startTime | date:'MMM d, h:mm:ss'"></div>
+            <div class="pl-8">
+              <app-duration-format
+                [haveFormatString]="false"
+                [duration]="testDeviceResult.duration"></app-duration-format>
+            </div>
+          </div>
+          <div
+            class="text-nowrap text-center testDeviceResult ml-auto pl-5 text-truncate">
+            <app-test-machine-info-column
+              [environmentResult]="testDeviceResult"
+              [executionResult]="testDeviceResult?.testPlanResult"
+              [executionEnvironment]="testDeviceResult?.testDevice"></app-test-machine-info-column>
+          </div>
+        </div>
+      </div>
+    </a>
+  </cdk-virtual-scroll-viewport>
+</mat-menu>

@@ -1,0 +1,259 @@
+<div class="form-page-header">
+  <div class="create-form-content">
+    <div
+      class="form-title"
+      [textContent]="isStepGroup ? ('testcase.details.step_create_group'| translate : {Name: (testCaseId? 'Edit' : 'Create')}) : ('testcase.form.title' | translate : {Action: (testCaseId? 'Edit' : 'Create') })"></div>
+    <div class="ml-auto">
+      <button
+        (click)="goBack()"
+        class="theme-btn-clear-default"
+        [translate]="'btn.common.cancel'"></button>
+      <button
+        *ngIf="testCaseId"
+        [isLoading]="testCaseForm?.valid && saving"
+        [message]="'message.common.updating'"
+        appAsyncBtn
+        (click)="updateTestCase()"
+        [translate]="'btn.common.update'"
+        class="theme-btn-primary"></button>
+      <button
+        *ngIf="!testCaseId"
+        [isLoading]="testCaseForm?.valid && saving"
+        [message]="'message.common.saving'"
+        appAsyncBtn
+        (click)="saveTestCase()"
+        [translate]="'btn.common.create'"
+        class="theme-btn-primary"></button>
+    </div>
+  </div>
+</div>
+<div class="form-field">
+  <div
+    *ngIf="testCase && testCaseForm"
+    class="ts-col-70 ts-form pr-20">
+    <div class="d-flex-wrap">
+      <div
+        [formGroup]="testCaseForm"
+        class="form-group ts-col-100">
+        <div class="p-0 field mb-0">
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder=" "
+            class="form-control"
+            [(ngModel)]="testCase.name"
+            [formControlName]="['name']"/>
+          <label
+            [translate]="'message.common.label.name'"
+            for="name" class="required"></label>
+        </div>
+        <div
+          *ngIf="formSubmitted && testCaseForm.get('name').hasError('required')"
+          class="error" [textContent]="'validation.required.message' | translate: {field:'Name'}">
+        </div>
+        <div class="error"
+             *ngIf="formSubmitted && testCaseForm.controls.name.errors?.maxlength"
+             [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'126'}"></div>
+      </div>
+      <div [formGroup]="testCaseForm" class="form-group ts-col-100">
+        <app-description [formCtrlName]="testCaseForm.controls.description"></app-description>
+      </div>
+      <mat-accordion class="test-case-form-details">
+        <!--toggle details-->
+        <a class="advance-option" (click)="showDetails=!showDetails">
+          <i class="more-btn bg-light text-t-secondary"></i>
+          <span
+            [translate]="!showDetails ? 'test_data_profiles.show_advance' : 'test_data_profiles.hide_advance'"
+            class="fz-14">
+          </span>
+        </a>
+        <!--details content-->
+        <mat-expansion-panel
+          class="details-content test-case-form-expansion mt-10"
+          [expanded]="showDetails" hideToggle
+          (opened)="showDetails = true" (closed)="showDetails = false">
+          <div
+            *ngIf="testCaseId"
+            [class.ts-col-100]="testCaseId"
+            [class.pt-10]="testCaseId"></div>
+
+          <div class="d-flex flex-wrap half-form-container ts-col-100 mt-10">
+<!--            <div-->
+<!--              *ngIf="requirementList?.content"-->
+<!--              class="form-group ts-col-50">-->
+
+<!--              <app-auto-complete-->
+<!--                class="pb-2 d-block"-->
+<!--                [items]="requirementList"-->
+<!--                [formGroup]="testCaseForm"-->
+<!--                [formCtrlName]="testCaseForm.controls['requirement']"-->
+<!--                [value]="getCurrentItem(requirementList, testCase?.requirementId)"-->
+<!--                (onSearch)="fetchRequirements($event)"-->
+<!--                (onValueChange)="setRequirements($event)"-->
+<!--              ></app-auto-complete>-->
+<!--              <label class="control-label" [translate]="'testcase.list.requirement'"></label>-->
+<!--            </div>-->
+            <div
+              *ngIf="testCasePrioritiesList?.content && !isStepGroup"
+              class="form-group ts-col-50">
+              <app-auto-complete
+                class="pb-2 d-block"
+                [formGroup]="testCaseForm"
+                [formCtrlName]="testCaseForm.controls['priority']"
+                [value]="getCurrentItem(testCasePrioritiesList, testCase?.priorityId)"
+                [items]="testCasePrioritiesList"
+                (onSearch)="fetchTestCasePriorities($event)"
+                (onValueChange)="setPriorityId($event)"
+              ></app-auto-complete>
+              <label class="control-label" [translate]="'testcase.summary.test_case_priority'"></label>
+            </div>
+            <div
+              *ngIf="testCaseTypeList?.content && !isStepGroup"
+              class="form-group ts-col-50">
+              <app-auto-complete
+                class="pb-2 d-block"
+                [formGroup]="testCaseForm"
+                [formCtrlName]="testCaseForm.controls['type']"
+                [value]="getCurrentItem(testCaseTypeList, testCase?.type)"
+                [items]="testCaseTypeList"
+                (onSearch)="fetchTestCaseTypes($event)"
+                (onValueChange)="setType($event)"
+              ></app-auto-complete>
+              <label class="control-label" [translate]="'testcase.summary.test_case_type'"></label>
+            </div>
+            <div
+              class="form-group ts-col-50">
+              <mat-form-field class="mat-select-custom w-100" appearance="fill">
+                <mat-select
+                  disableOptionCentering panelClass="single"
+                  [(ngModel)]="testCase.status"
+                  [placeholder]="'message.common.any' | translate">
+                  <mat-option
+                    *ngFor="let testcaseStatus of statuses"
+                    [value]="testcaseStatus"
+                    [textContent]="'testcase.status_'+testcaseStatus | translate"></mat-option>
+                </mat-select>
+              </mat-form-field>
+              <label class="control-label" [translate]="'testcase.summary.test_case_status'"></label>
+            </div>
+            <div
+              *ngIf="testCaseList?.content && !isStepGroup"
+              class="form-group ts-col-50">
+              <app-auto-complete
+                class="pb-2 d-block"
+                [formGroup]="testCaseForm"
+                [formCtrlName]="testCaseForm.controls['preRequisite']"
+                [value]="getCurrentItem(testCaseList, testCase?.preRequisite)"
+                [items]="testCaseList"
+                [hasNone]="true"
+                (onSearch)="fetchTestCases($event)"
+                (onValueChange)="setPreRequisite($event)"
+              ></app-auto-complete>
+              <label class="control-label" [translate]="'test_step.results.prerequisite'"></label>
+            </div>
+            <div
+              *ngIf="testDataList?.content && !isStepGroup && !associatedParametersPopupOpen"
+              class="form-group ts-col-50">
+              <app-auto-complete
+                class="pb-2 d-block"
+                [formGroup]="testCaseForm"
+                [formCtrlName]="testCaseForm.controls['testData']"
+                [value]="getCurrentItem(testDataList, testCase?.testDataId)"
+                [items]="testDataList"
+                [hasNone]="true"
+                [isDisabled]="isRunning"
+                (onSearch)="fetchTestDataProfile($event)"
+                (onValueChange)="checkForAssociatedParameters($event);"
+              ></app-auto-complete>
+              <label class="control-label" [translate]="'testcase.list.test_data'"></label>
+            </div>
+            <div
+              *ngIf="!testCase.isDataDriven && testCase.testDataId && !isStepGroup"
+              class="form-group ts-col-50">
+              <mat-form-field class="mat-select-custom w-100" appearance="fill">
+                <mat-select
+                  [placeholder]="'message.common.any' | translate"
+                  [(ngModel)]="testCase.testDataStartIndex"
+                  disableOptionCentering panelClass="single">
+                  <mat-option
+                    class="text-capitalize" *ngFor="let set of testDataSetList; let setIndex = index"
+                    [value]="setIndex"
+                    [textContent]="set.name"></mat-option>
+                </mat-select>
+              </mat-form-field>
+              <label class="control-label" [translate]="'testcase.form.data_set'"></label>
+            </div>
+
+            <div class="form-group p-0 ts-col-50">
+              <app-tags-chip-list
+                class="ts-col-100"
+                [entityId]="testCaseId"
+                [service]="tagService"
+                (onValueChange)="setTags($event)"
+              ></app-tags-chip-list>
+              <label class="control-label" [translate]="'testcase.list.tags'"></label>
+            </div>
+            <div
+              *ngIf="!testCase.isStepGroup || !isStepGroup"
+              class="form-group ts-col-50">
+              <div
+                [matTooltip]="!testCase.testDataId ? ('testcase.form.data_not_enable' | translate) : isRunning ? ('testcase.form.running' | translate) : ''">
+                <mat-slide-toggle
+                  [disabled]="!testCase.testDataId || isRunning"
+                  [(ngModel)]="testCase.isDataDriven"
+                  (change)="setTestDataStartIndex()"><span [translate]="'testcase.summary.data_driven'"></span>
+                </mat-slide-toggle>
+              </div>
+            </div>
+            <div class="ts-col-100 d-flex pt-20" *ngIf="testCase.isDataDriven" [formGroup]="testCaseForm">
+                <div class="form-group ts-col-50">
+                  <mat-form-field class="mat-select-custom w-100" appearance="fill">
+                    <mat-select
+                      disableOptionCentering panelClass="single"
+                      (selectionChange)="toggleStartIndex()"
+                      [formControlName]="['startIndex']"
+                      [(ngModel)]="testCase.testDataStartIndex">
+                      <mat-option [value]="-1" [textContent]="'testcase.form.iteration_from.option_start' | translate">
+                      </mat-option>
+                      <mat-option
+                        *ngFor="let startIndex of startArray"
+                        [value]="startIndex.index"
+                        [textContent]="startIndex.setName">
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <label class="control-label" [translate]="'testcase.form.iteration_from'"></label>
+                </div>
+                <div class="form-group ts-col-50">
+                  <mat-form-field class="mat-select-custom w-100" appearance="fill">
+                    <mat-select
+                      disableOptionCentering panelClass="single"
+                      [formControlName]="['endIndex']"
+                      [(ngModel)]="testCase.testDataEndIndex">
+                      <mat-option
+                        *ngFor="let endIndex of endArray"
+                        [value]="endIndex.index"
+                        [textContent]="endIndex.setName">
+                      </mat-option>
+                      <mat-option [value]="-1" [textContent]="'testcase.form.iteration_to.option_end' | translate">
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <label class="control-label" [translate]="'testcase.form.iteration_to'"></label>
+                </div>
+              </div>
+            </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+  <div
+    *ngIf="!testCaseId && testCase"
+    class="ts-col-30 pl-20 help-content">
+    <app-test-case-create-help
+      [detailsShowed]="showDetails"
+      [workspaceVersion]="version"
+      [testCase]="testCase"></app-test-case-create-help>
+  </div>
+</div>

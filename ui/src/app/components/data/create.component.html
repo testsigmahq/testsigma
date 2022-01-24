@@ -1,0 +1,69 @@
+<div class="td-create-container h-100">
+  <div
+    class="ts-col-100 d-flex-wrap">
+    <div class="td-header-container">
+      <a
+        [matTooltip]="'result.hint.menu_icon' | translate"
+        class="menu-bar-icon" [routerLink]="['/td', versionId , 'data']"></a>
+      <a
+        class="go-back-icon pl-10"
+        [matTooltip]="'hint.message.common.back' | translate"
+        [routerLink]="['/td', versionId , 'data']"></a>
+      <div
+        class="title-container">
+        <div class="text-truncate">
+          <a
+            class="form-title"
+            [translate]="'test_data_profiles.create.title'"></a>
+        </div>
+        <div class="td-action-section">
+          <button
+            class="theme-btn-clear-default"
+            [translate]="'btn.common.cancel'"
+            [routerLink]="['/td', versionId , 'data']">
+          </button>
+          <button
+            appAsyncBtn
+            [isLoading]="saving"
+            [message]="'message.common.saving'"
+            class="btn ml-14 theme-btn-primary"
+            [textContent]="'btn.common.create' | translate"
+            (click)="create()">
+          </button>
+          <i
+            class="fa-close-alt pointer ml-50"
+            [routerLink]="['/td', versionId , 'data']"
+            [matTooltip]="'hint.message.common.close' | translate"></i>
+        </div>
+      </div>
+    </div>
+    <form
+      class="td-form-container">
+      <div
+        class="form-group pb-20 pr-40 ts-col-100"
+        [formGroup]="testDataForm">
+        <input
+          class="form-control"
+          [formControlName]="['name']"
+          name="filterName"
+          autofocus>
+        <label class="control-label required" [translate]="'message.common.label.name'"></label>
+        <div class="error left"
+             *ngIf="formSubmitted && testDataForm.controls.name.errors?.required"
+             [textContent]="'validation.required.message' | translate: {field:'Name'}"></div>
+        <div class="error left"
+             *ngIf="formSubmitted && testDataForm.controls.name.errors?.minlength"
+             [textContent]="'form.validation.common.min_length' | translate: {FieldName:'Name' , min:'4'}"></div>
+        <div class="error left"
+             *ngIf="formSubmitted && testDataForm.controls.name.errors?.maxlength"
+             [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'126'}"></div>
+      </div>
+      <app-test-data-grid
+        class="add-data-grid"
+        [formSubmitted]="formSubmitted"
+        [testDataForm]="testDataForm"
+        [testData]="testData">
+      </app-test-data-grid>
+    </form>
+  </div>
+</div>

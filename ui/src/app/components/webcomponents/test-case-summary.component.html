@@ -1,0 +1,99 @@
+<div
+  class="w-100 h-100">
+  <div class="theme-overlay-container">
+    <div class="theme-overlay-header" id="overlay-header">
+      <span class="theme-overlay-title" [translate]="'testcase.summary.title'"></span>
+      <button class="close"
+              type="button"
+              [matTooltip]="'hint.message.common.close' | translate"
+              mat-dialog-close>
+      </button>
+    </div>
+
+    <div
+      *ngIf="testCase"
+      class="theme-overlay-content without-footer">
+      <div
+        class="details-container details-container-spacing">
+        <div
+          *ngIf="!testCase?.isStepGroup"
+          class="details-items ts-col-25">
+          <label
+            class="details-title"
+            [translate]="'testcase.summary.priority'"></label>
+          <div class="details-info"
+               [textContent]="testCase?.testCasePriority?.displayName ? testCase?.testCasePriority?.displayName : '-'"></div>
+        </div>
+        <div
+          class="details-items ts-col-75">
+          <label class="details-title" [translate]="'testcase.summary.labels'"></label>
+          <app-list-tags
+            [editable]="true"
+            [entityId]="testCase.id"
+            [service]="testCaseTagService"></app-list-tags>
+        </div>
+        <div
+          *ngIf="!testCase?.isStepGroup"
+          class="details-items ts-col-25">
+          <label
+            class="details-title"
+            [translate]="'testcase.summary.type'"></label>
+          <div class="details-info"
+               [textContent]="testCase?.testCaseType?.displayName ? testCase?.testCaseType?.displayName : '-'"></div>
+        </div>
+        <div
+          *ngIf="!testCase?.isStepGroup"
+          class="details-items ts-col-25">
+          <label
+            class="details-title"
+            [translate]="'test_step.results.prerequisite'"></label>
+          <div class="details-info"
+               [textContent]="testCase?.preRequisite ? testCase?.preRequisiteCase?.name : '-'"></div>
+        </div>
+        <div
+          *ngIf="!testCase?.isStepGroup"
+          class="details-items ts-col-25">
+          <label
+            class="details-title"
+            [translate]="'testcase.summary.data_profile'"></label>
+          <div class="details-info"
+               [textContent]="testCase?.testData?.name ? testCase?.testData?.name : '-'"></div>
+        </div>
+        <div
+          *ngIf="!testCase?.isStepGroup"
+          class="details-items ts-col-25">
+          <label
+            class="details-title"
+            [translate]="'testcase.summary.data_driven'"></label>
+          <div class="details-info"
+               [textContent]="(testCase?.isDataDriven ? 'common.yes' : 'common.no') | translate"></div>
+        </div>
+        <div class="details-items ts-col-25">
+          <label
+            class="details-title"
+            [translate]="'message.common.updated_at'"></label>
+          <div class="details-info"
+               [textContent]="testCase?.updatedAt  | date:'h:mm a MMM d, y'"></div>
+        </div>
+        <div class="details-items ts-col-25">
+          <label
+            class="details-title"
+            [translate]="'message.common.created_at'"></label>
+          <div class="details-info"
+               [textContent]="testCase?.createdAt  | date:'h:mm a MMM d, y'"></div>
+        </div>
+        <div class="details-items ts-col-100">
+          <label
+            class="details-title"
+            [translate]="'test_case_result.details.description'"></label>
+          <div class="details-info"
+               [innerHTML]="testCase?.description ? testCase?.description : '-'"></div>
+        </div>
+      </div>
+      <!--      <app-result-attachment-->
+      <!--        [attachmentRow]="'TESTCASE'"-->
+      <!--        [attachmentRowId]="testcase?.id"-->
+      <!--      ></app-result-attachment>-->
+    </div>
+  </div>
+</div>

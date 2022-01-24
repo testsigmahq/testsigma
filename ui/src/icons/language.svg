@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59 (86127) - https://sketch.com -->
+    <title>language copy</title>
+    <desc>Created with Sketch.</desc>
+    <g id="language-copy" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-2" transform="translate(1.000000, 5.500000)" stroke="#333333" stroke-width="2">
+            <rect id="Rectangle-Copy-10" x="8.28571429" y="0" width="49.7142857" height="30.3809524" rx="2.09999996"></rect>
+            <path d="M2.09999996,6.9047619 L50.3761905,6.9047619 C51.5359885,6.9047619 52.4761905,7.84496391 52.4761905,9.00476187 L52.4761905,38.5256922 C52.4761905,39.6854901 51.5359885,40.6256921 50.3761905,40.6256921 L42.2724868,40.6256921 L42.2724868,40.6256921 L37.4135802,48.3333333 L31.5828924,40.6256921 L2.09999996,40.6256921 C0.940202009,40.6256921 5.86123495e-16,39.6854901 0,38.5256922 L0,9.00476187 C-1.42034285e-16,7.84496391 0.940202009,6.9047619 2.09999996,6.9047619 Z" id="Rectangle-Copy-11"></path>
+            <line x1="12.6751701" y1="17.6428571" x2="39.8010204" y2="17.6428571" id="Line-9-Copy-10" stroke-linecap="round"></line>
+            <line x1="12.6751701" y1="22.1666667" x2="39.8010204" y2="22.1666667" id="Line-9-Copy-11" stroke-linecap="round"></line>
+            <line x1="12.5518707" y1="26.6904762" x2="26.1147959" y2="26.6904762" id="Line-9-Copy-12" stroke-linecap="round"></line>
+        </g>
+    </g>
+</svg>

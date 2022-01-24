@@ -1,0 +1,125 @@
+<div
+  *ngIf="attachmentList?.content?.length"
+  class="h-100 d-flex ts-col-100 pb-50">
+  <div
+    [class.ts-col-25]="isExpanded"
+    [class.ts-col-100]="!isExpanded"
+    [class.flex-column]="isExpanded"
+    [class.flex-wrap]="!isExpanded"
+    class="h-100 d-flex overflow-y-auto pb-30">
+    <div
+      [class.ts-col-75]="isExpanded"
+      [class.ml-30]="!isExpanded"
+      [class.mx-auto]="isExpanded"
+      [class.ts-col-15]="!isExpanded"
+      class="attachment-items-container"
+      *ngFor="let attachment of attachmentList?.content">
+      <div class="h-100 align-item-center justify-content-center d-flex">
+        <div
+          class="attachment-item-data"
+          [class.d-flex]="!value.test(attachment.name)"
+          [class.align-items-center]="!value.test(attachment.name)"
+          [class.justify-content-center]="!value.test(attachment.name)">
+          <img
+            *ngIf="value.test(attachment.name)" [src]="'/attachments/'+attachment.id+'/preview'" width="100%"
+            height="100%"/>
+          <i
+            *ngIf="!value.test(attachment.name)"
+            class="fa-google-docs fz-40 ng-star-inserted result-status-text-3"></i>
+        </div>
+      </div>
+      <div class="bottom-0 d-flex h-30 position-absolute ts-col-100">
+        <div
+          class="bg-white border-rds-bottom-4 d-flex flex-row align-items-center justify-content-between px-16 py-14 theme-border-t ts-col-100 position-relative">
+          <div
+            class="rb-medium text-truncate"
+            [matTooltip]="attachment.name"
+            [textContent]="attachment.name"></div>
+          <div
+            class="align-items-center d-flex pt-0 right-10 bg-white bottom-0">
+            <div [textContent]="attachment.type"></div>
+            <div class="ml-auto text-t-highlight text-nowrap">
+              <i
+                (click)="expandAttachment(attachment.id)"
+                [matTooltip]="(selectedAttachment?.id == attachment.id ? 'hint.message.common.collapse' : 'hint.message.common.extend') | translate"
+                [class.fa-collapse-alt]="selectedAttachment?.id == attachment.id"
+                [class.fa-expand-alt]="selectedAttachment?.id != attachment.id"
+                class="pr-15 pointer"></i>
+              <a
+                [href]="'/attachments/'+attachment.id+'/preview'"
+                [download]="'/attachments/'+attachment.id+'/preview'"
+                target="_blank"
+                [matTooltip]="'hint.message.common.download' | translate"
+                class="fa-download-alt text-t-highlight"></a>
+              <i
+                (click)="removeAttachment(attachment.id)"
+                [matTooltip]="'hint.message.common.delete' | translate"
+                class="fa-trash-thin pl-15 pointer"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <label
+      [class.ts-col-80]="isExpanded"
+      [class.ml-30]="!isExpanded"
+      [class.mx-auto]="isExpanded"
+      [class.ts-col-15]="!isExpanded"
+      class="attachment-upload-container">
+      <i class="fa-pin-alt fz-25 pb-7"></i>
+      <span
+        class="fz-14 rb-medium"
+        [translate]="'btn.common.upload_file'"></span>
+      <span
+        class="fz-12 pt-4"
+        [translate]="'result.attachment.size'"></span>
+
+      <input
+        class="d-none"
+        id="file"
+        name="file" type="file"
+        #upload
+        (change)="uploadAttachment($event)">
+    </label>
+  </div>
+
+  <div
+    *ngIf="isExpanded && selectedAttachment"
+    class="ts-col-70 h-100 ml-auto attachment-padding pt-40">
+    <div
+      class="ts-col-100 pb-2 d-flex align-items-center">
+        <span
+          class="fz-16 rb-medium"
+          [textContent]="selectedAttachment.name"></span>
+      <a
+        [href]="selectedAttachment.preSignedURL"
+        [download]="selectedAttachment.preSignedURL"
+        target="_blank"
+        [matTooltip]="'hint.message.common.download' | translate"
+        class="fa-download-thin text-t-highlight ml-auto pointer"></a>
+      <i
+        (click)="removeAttachment(selectedAttachment.id, true)"
+        [matTooltip]="'hint.message.common.delete' | translate"
+        class="fa-trash-thin pl-15 pointer"></i>
+      <i
+        (click)="toggleExpand(selectedAttachment.id)"
+        [matTooltip]="'hint.message.common.collapse' | translate"
+        class="fa-collapse-alt pl-15 pointer"></i>
+    </div>
+    <div
+      class="ts-col-100 mt-10 border-rds-4 h-100"
+      [ngSwitch]="attachmentType()">
+      <iframe
+        *ngSwitchCase="'Other'"
+        class="attachment-content-container"
+        [src]="attachmentUrl"></iframe>
+      <img
+        *ngSwitchCase="'Image'" class="attachment-content-container"
+        [src]="attachmentUrl">
+      <video
+        *ngSwitchCase="'Video'" controls
+        class="attachment-content-container"
+        [src]="attachmentUrl" autoplay></video>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,51 @@
+<div class="page-content">
+  <div class="h-100">
+    <div class="border-lightGray-1 border-rds-4 d-flex h-100 m-auto ts-col-90">
+      <div class="ts-col-50 my-auto" *ngIf="authGuard?.openSource?.isEnabled">
+        <div class="text-center fz-20 rb-light" [innerHTML]="'settings.testsigma_free_lab.already_registered' | translate"></div>
+      </div>
+      <div class="ts-col-50 h-100 overflow-y-auto" *ngIf="!authGuard?.openSource?.isEnabled">
+        <app-testsigma-signin [isAddon]=true></app-testsigma-signin>
+      </div>
+      <div class="ts-col-50 bg-light h-100 border-rds-right-3"
+           [ngStyle]="{'background-color': '#F2F8F2', 'padding': '5% 6%'}"
+           #cloudSection>
+        <div class="text-brand fz-28 rb-semi-bold z-in-3 lh-4 mt-6" [translate]="'settings.testsigma_community.title'">
+        </div>
+        <div class="d-flex flex-column w-85 lh-2point6 mh-90 overflow-y-auto scroll-none">
+          <div class="d-flex justify-content-center flex-row my-30 z-in-3" style="z-index: 4">
+            <div class="fz-48 ts-col-15">
+              <i class="fa-building-shop text-grey" ></i>
+            </div>
+            <div class="text-wrap leftPadding">
+              <div class="rb-medium fz-16 mb-5" [translate]="'settings.testsigma_community.heading1'"></div>
+              <div class="w-100 rb-light" [translate]="'settings.testsigma_community.message1'" [translateParams]="{heart: '&#10084;&#65039;'}" ></div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-center flex-row z-in-3" style="z-index: 4">
+            <div class="fz-48 ts-col-15">
+              <i class="fa-people-group text-grey"></i>
+            </div>
+            <div class="text-wrap leftPadding">
+              <div class="rb-medium fz-16 mb-5" [translate]="'settings.testsigma_community.heading2'"></div>
+              <div class="w-100 rb-light" [translate]="'settings.testsigma_community.message2'" ></div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-center flex-row my-30 z-in-3" style="z-index: 4">
+            <div class="fz-48 ts-col-15">
+              <i class="fa-user-tag text-grey"></i>
+            </div>
+            <div class="text-wrap leftPadding">
+              <div class="rb-medium fz-16 mb-5" [translate]="'settings.testsigma_community.heading3'"></div>
+              <div class="w-100 rb-light" [translate]="'settings.testsigma_community.message3'" ></div>
+            </div>
+          </div>
+        </div>
+        <app-testsigma-cloud [fillColor]="'#D9E8D9'"
+                             [offsetRight]="10"
+                             [width]="cloudSection.width/2"
+                             class="right-0 position-absolute bottom-0 overflow-hidden w-50 mb-n4"></app-testsigma-cloud>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="15px" viewBox="0 0 16 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 58 (84663) - https://sketch.com -->
+    <title>Group 2</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Test-case-11-Copy-7" transform="translate(-353.000000, -185.000000)" fill="#5E6060" fill-rule="nonzero">
+            <g id="Group-2" transform="translate(353.000000, 185.000000)">
+                <circle id="Oval" cx="1.5" cy="13.1" r="1.5"></circle>
+                <circle id="Oval" cx="1.5" cy="7.5" r="1.5"></circle>
+                <path d="M15.1028708,0.4 L6.73923445,0.4 C5.73650718,0.4 5.92105263,0.8485 5.92105263,1.4 C5.92105263,1.9515 5.73650718,2.4 6.73923445,2.4 L15.1028708,2.4 C16.1055981,2.4 15.9210526,1.9515 15.9210526,1.4 C15.9210526,0.8485 16.1055981,0.4 15.1028708,0.4 Z" id="Path-Copy"></path>
+                <path d="M15.1028708,6.2 L6.73923445,6.2 C5.73650718,6.2 5.92105263,6.6485 5.92105263,7.2 C5.92105263,7.7515 5.73650718,8.2 6.73923445,8.2 L15.1028708,8.2 C16.1055981,8.2 15.9210526,7.7515 15.9210526,7.2 C15.9210526,6.6485 16.1055981,6.2 15.1028708,6.2 Z" id="Path-Copy-2"></path>
+                <path d="M15.1028708,12 L6.73923445,12 C5.73650718,12 5.92105263,12.4485 5.92105263,13 C5.92105263,13.5515 5.73650718,14 6.73923445,14 L15.1028708,14 C16.1055981,14 15.9210526,13.5515 15.9210526,13 C15.9210526,12.4485 16.1055981,12 15.1028708,12 Z" id="Path-Copy-3"></path>
+                <circle id="Oval-Copy-2" cx="1.5" cy="1.5" r="1.5"></circle>
+            </g>
+        </g>
+    </g>
+</svg>

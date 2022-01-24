@@ -1,0 +1,92 @@
+/*!
+ *
+ *  * *****************************************************************************
+ *  *  Copyright (C) 2020 Testsigma Technologies Inc.
+ *  *  All rights reserved.
+ *  *  ****************************************************************************
+ *
+ */
+
+.virtual-scroll-viewport {
+  height: 100%;
+}
+
+.virtual-scroll-viewport.card-container {
+  .cdk-virtual-scroll-content-wrapper {
+    padding: 22px 24px 20px 23px;
+    @extend .ts-col-100;
+  }
+  &.outer-sm-pm {
+    .cdk-virtual-scroll-content-wrapper {
+      padding: 10px 15px 20px 15px;
+    }
+  }
+}
+
+.theme-details-scroll {
+  height: calc(100% - 192px);
+  &.sm-h {
+    height: calc(100% - 140px);
+  }
+  &.x-sm-h {
+    height: calc(100% - 100px);
+  }
+  &.x-md-h {
+    height: calc(100% - 155px);
+  }
+  &.md-h {
+    height: calc(100% - 164px);
+  }
+  &.xl-sm-h{
+    height: calc(100% - 80px);
+  }
+}
+
+.onboard-height {
+  height: calc(100vh - 155px);
+}
+
+.theme-w-o-h-scroll {
+  height: calc(100% - 41px);
+  &.lg-h {
+    height: calc(100% - 47px);
+  }
+  &.x-lg-h {
+    height: calc(100% - 50px);
+  }
+  &.sm-h {
+    height: calc(100% - 35px);
+  }
+  &.x-sm-h {
+    height: calc(100% - 16px);
+  }
+}
+
+.theme-only-items-scroll {
+  height: calc(100% - 70px);
+  &.md-h {
+    height: calc(100% - 62px);
+  }
+  &.sm-h {
+    height: calc(100% - 54px);
+  }
+}
+
+.theme-application-scroll {
+  height: calc(100vh - 415px);
+  &.sm-h {
+    height: calc(100vh - 350px);
+  }
+}
+.help-hint-showed {
+  .theme-application-scroll {
+    height: calc(100vh - 460px);
+    &.sm-h {
+      height: calc(100vh - 350px);
+    }
+  }
+}
+
+.theme-details-scroll-content{
+  height: calc(100% - 150px);
+}

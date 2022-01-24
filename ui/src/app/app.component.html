@@ -1,0 +1,16 @@
+<div class="d-flex">
+  <app-left-nav
+  *ngIf="authGuard.session?.user && !isOnboardingRoute"></app-left-nav>
+<div class="d-flex flex-wrap vh-100 ts-col-100-60" [class.ts-col-100]="isOnboardingRoute">
+  <app-route-loading class="ts-col-100"></app-route-loading>
+  <div
+    class="ts-col-100 h-100">
+    <router-outlet></router-outlet>
+  </div>
+  <div class="quick-start-btn-boundary">
+    <app-quick-start *ngIf="authGuard?.session?.user && !isOnboardingRoute"></app-quick-start>
+    <app-fresh-chat-widget *ngIf="authGuard?.session?.user && !isOnboardingRoute"></app-fresh-chat-widget>
+  </div>
+  <simple-notifications [options]="{preventDuplicates: true}"></simple-notifications>
+</div>
+</div>

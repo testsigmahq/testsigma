@@ -1,0 +1,167 @@
+
+<div class="theme-overlay-container onboarding-container d-flex">
+  <!--  row-->
+  <div class=" ts-col-100 h-100 mx-auto d-flex overflow-auto">
+    <div class="ts-col-50">
+      <section class="login-left-section ts-col-100 h-100 d-flex align-items-center justify-content-center">
+        <div class="ts-col-50 my-auto pb-80">
+          <div class="d-flex flex-column">
+            <div class="d-flex fz-30 justify-content-center text-center position-absolute mt-n35 w-100"
+                 @fade *ngIf="!showVerificationForm">
+              <span class="rb-light" [translate]="'onboarding.welcome_to'"></span>
+            </div>
+            <div class="d-flex justify-content-center text-center my-auto">
+              <span class="login-logo"></span>
+            </div>
+            <div class="d-flex justify-content-center pt-15 text-center position-absolute mt-60 w-100">
+              <span class="rb-light fz-20 text-nowrap"
+                    [translate]="'onboarding.setup_your_profile'"
+                    @fade *ngIf="!showVerificationForm"></span>
+              <span class="rb-light fz-15 text-nowrap"
+                    [innerHTML]="'onboarding.complete_your_registration' | translate"
+                    @fade *ngIf="!!showVerificationForm"></span>
+              </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="ts-col-50 d-flex">
+      <div class="onboarding-form">
+        <div class="bg-white border-rds-10 container mx-auto d-flex px-50 py-40 shadow-all-b10 hide-stepper-header">
+          <mat-stepper linear #stepper>
+            <mat-step>
+              <form [formGroup]="updateForm" class="ts-form mb-n25">
+                <div class="d-flex ts-col-100 form-group mb-10 justify-content-center text-nowrap">
+                  <span class="rb-medium fz-20" [translate]="'onboarding.create_your_profile'"></span>
+                </div>
+                <div class="d-flex justify-content-center ts-col-100 form-group pb-20">
+                  <div class="ts-col-50" >
+                    <label for="firstName" class="control-label required">
+                      <span [translate]="'message.common.label.firstname'"></span>
+                    </label>
+                    <input type="text"
+                           formControlName="firstName"
+                           id="firstName" class="form-control ">
+                  </div> <!--firstName-->
+                  <div class="ts-col-50 pl-20" >
+                    <label for="lastName" class="control-label required">
+                      <span [translate]="'message.common.label.lastname'"></span>
+                    </label>
+                    <input type="text"
+                           formControlName="lastName"
+                           id="lastName" class="form-control " >
+                  </div> <!--lastName-->
+                </div>
+
+                <div class="d-flex ts-col-100 form-group flex-column pb-20">
+                  <div class="ts-col-100">
+                    <label for="email" class="control-label required">
+                      <span [translate]="'message.common.label.email'"></span>
+                    </label>
+                    <input type="email"
+                           formControlName="email"
+                           id="email" class="form-control "  [required]="!!isCommunityAccess || !!isSendUpdates">
+                  </div>
+                  <div *ngIf="(!updateForm.get('email').valid && updateForm.get('email').touched && (!!isSendUpdates || !!isCommunityAccess))" class="help-block text-danger"
+                       [translate]="'message.common.enter_valid_email'"></div>
+                </div>
+
+                <div class="d-flex ts-col-100 form-group pb-20">
+                  <label for="username" class="control-label required">
+                    <span [translate]="'login_form.username'"></span>
+                  </label>
+                  <input type="text"
+                         formControlName="username"
+                         id="username" class="form-control " >
+                </div>
+
+                <div class="d-flex ts-col-100 form-group pb-20">
+                  <label for="password" class="control-label required">
+                    <span [translate]="'login_form.password'"></span>
+                  </label>
+                  <input type="password"
+                         formControlName="password"
+                         id="password" class="form-control ">
+                </div>
+
+                <div class="d-flex justify-content-center pt-10 ts-col-100">
+                  <div class="ts-col-10">
+                    <mat-checkbox checked = "isCommunityAccess" (click)="toggleCommunityUpdateFlag()"></mat-checkbox>
+                  </div>
+                  <div class="ts-col-90 text-wrap justify-content-start">
+                    <span class="rb-medium" [translate]="'onboarding.get_community_edition'"></span>
+                    <br>
+                    <span class="rb-light text-muted">
+                  {{'onboarding.community_features' | translate}}
+                      <a class="text-muted text-underline" target="_blank" href="https://testsigma.com/docs/getting-started/testsigma-community-cloud/" [translate]="'test_plan.testsigmalab.learn_more'"></a>.
+                </span>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-center pt-10 ts-col-100" *ngIf="isCommunityAccess">
+                  <div class="ts-col-10">
+                    <mat-checkbox checked = "isSendUpdates" (click)="toggleSendUpdatesFlag()" [disabled]="!isCommunityAccess" ></mat-checkbox>
+                  </div>
+                  <div class="ts-col-90 text-muted rb-light" [translate]="'onboarding.subscribe_to_updates'">
+                  </div>
+                </div>
+                <div class="d-flex justify-content-end pt-10">
+                  <button
+                    type="submit" (click)="verifyOrNavigate()"
+                    appAsyncBtn
+                    [isLoading]="isSaving"
+                    [message]="'btn.common.please_wait'"
+                    class="theme-btn-primary"
+                    [textContent]="(isCommunityAccess ? 'btn.common.next' : 'onboarding.go_to_dashboard') | translate"></button>
+                </div>
+
+              </form>
+            </mat-step>
+            <mat-step>
+              <div class="align-items-center d-flex form-group pb-25 ts-col-100">
+                <a (click)="navigateBack()" class="mr-10">
+                  <i class="fa-back-arrow"></i>
+                </a>
+                <span class="rb-medium fz-20" [translate]="'onboarding.verify_email'"></span>
+              </div>
+              <form class="ts-form">
+                <div class="d-flex fz-15 ts-col-100">
+                  <p *ngIf="otpCount<=1" [innerHTML]="'onboarding.sent_verification_code' | translate"></p>
+                  <p *ngIf="otpCount>1" [translate]="'onboarding.reset_verification_code'"></p>
+                </div>
+                <div class="d-flex pt-20 ts-col-100 form-group">
+                  <div class="ts-col-100">
+                    <label for="otp" class="control-label required">
+                      <span [translate]="'onboarding.verification_code'"></span>
+                    </label>
+                    <input type="text" id="otp"  [(ngModel)]="otp" class="form-control " >
+                  </div>
+                </div>
+
+                <div class="d-flex ts-col-100 form-group fz-12">
+                  <p>
+                    <span [translate]="'onboarding.havent_got_code_check_spam'"></span>
+                    <a class="text-link ml-2" (click)="isSaving ? '' : getOTP(true)" [translate]="(isSaving ? 'btn.common.please_wait' :'message.common.click_here')"></a>&nbsp;
+                    <span [translate]="'onboarding.havent_got_code_send_another'"></span>
+                    <span [translate]="'onboarding.still_having_problem'"></span>
+                    <a class="text-link ml-2" target="_blank" href="https://discord.com/invite/5caWS7R6QX" [translate]="'onboarding.contact_support'"></a>.
+                  </p>
+                </div>
+                <div class="d-flex justify-content-end form-group pb-0">
+                  <button
+                    class="theme-btn-primary"
+                    [disabled]="!otp"
+                    [translate]="'btn.common.submit'"
+                    appAsyncBtn
+                    [isLoading]="isActivating"
+                    [message]="'btn.common.please_wait'"
+                    (click)="activate()" ></button>
+                </div>
+              </form>
+            </mat-step>
+          </mat-stepper>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

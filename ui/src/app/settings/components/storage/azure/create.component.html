@@ -1,0 +1,55 @@
+<div class="w-100 h-100">
+  <div class="theme-overlay-container">
+    <div class="theme-overlay-header">
+      <span class="theme-overlay-title" [translate]="'settings.storage.azure'" ></span>
+      <button
+        type="button"
+        [matTooltip]="'hint.message.common.close' | translate"
+        mat-dialog-close
+        class="close">
+      </button>
+    </div>
+
+    <div class="theme-overlay-content">
+      <form class="ts-form pt-30" [formGroup]="updateForm">
+        <div class="form-group ts-form" >
+          <label for="containerName" class="control-label required">
+            <span [translate]="'settings.storage.azure.container_name'"></span>
+          </label>
+          <input
+            type="text"
+            formControlName="containerName"
+            id="containerName" class="form-control">
+          <span *ngIf="!updateForm.get('containerName').valid && updateForm.get('containerName').touched" class="help-block"
+                [translate]="'settings.message.azure.container_name'">
+          </span>
+        </div>
+
+        <div class="form-group ts-form" >
+          <label for="connectionString" class="control-label required">
+            <span [translate]="'settings.storage.azure.connection_string'"></span>
+          </label>
+          <input type="text"
+                 formControlName="connectionString"
+                 id="connectionString" class="form-control " >
+          <span *ngIf="!updateForm.get('connectionString').valid && updateForm.get('connectionString').touched" class="help-block"
+                [translate]="'settings.message.azure.connection_string'">
+          </span>
+        </div>
+
+
+      </form>
+    </div>
+
+    <div class="theme-overlay-footer">
+      <button
+        type="button"
+        mat-dialog-close
+        class="theme-btn-clear-default" [translate]="'btn.common.cancel'">
+      </button>
+      <button type="submit" [disabled]="!updateForm.valid"
+              class="theme-btn-primary" (click)="onSubmit()"
+              [translate]="saving? 'message.common.saving' : 'btn.common.create'"></button>
+    </div>
+  </div>
+</div>

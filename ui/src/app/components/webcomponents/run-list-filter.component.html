@@ -1,0 +1,76 @@
+<div class="theme-overlay-container">
+  <div class="theme-overlay-header">
+    <span class="theme-overlay-title" [translate]="'hint.message.common.filter'"></span>
+    <button class="theme-overlay-close"
+            type="button"
+            [matTooltip]="'hint.message.common.close' | translate"
+            mat-dialog-close>
+    </button>
+  </div>
+  <div class="theme-overlay-content ts-form pt-10">
+    <div class="form-group">
+      <mat-form-field
+        class="mat-select-custom w-100" appearance="fill">
+        <mat-select
+          disableOptionCentering panelClass="multiple"
+          (ngModelChange)="filterResult"
+          [(ngModel)]="filterResult" multiple [(value)]="filterResult">
+          <mat-option
+            *ngFor="let result of resultConstant"
+            [value]="result"
+            [textContent]="'execution.result.'+result | translate">
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <label class="control-label" [translate]="'result.result'"></label>
+    </div>
+    <div
+      class="form-group">
+      <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill">
+        <mat-select
+          disableOptionCentering panelClass="single"
+          [(ngModel)]="filterStartTime"
+          [(value)]="filterStartTime">
+          <mat-option
+            *ngFor="let period of startTimeFilterOptions"
+            [value]="period">
+            <span class="rb-medium" [textContent]="('runs.details.filter_by_'+period) | translate"></span>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <label class="control-label" [translate]="'run.details.filter_time_period'"></label>
+    </div>
+     <div class="form-group">
+      <mat-form-field
+        class="mat-select-custom w-100" appearance="fill">
+        <mat-select
+          disableOptionCentering panelClass="multiple"
+          (ngModelChange)="filterTriggeredType"
+          [(ngModel)]="filterTriggeredType" multiple [(value)]="filterTriggeredType">
+          <mat-option
+            *ngFor="let result of executionTriggeredTypes"
+            [value]="result"
+            [textContent]="'execution.triggered.'+result | translate">
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <label class="control-label" [translate]="'result.triggered'"></label>
+    </div>
+  </div>
+  <div class="theme-overlay-footer">
+    <button
+      class="theme-btn-clear-default"
+      [translate]="'btn.common.close'"
+      mat-dialog-close></button>
+    <button
+      *ngIf="filterApplied"
+      class="theme-btn-clear-default"
+      [translate]="'btn.common.reset'"
+      (click)="reset()"></button>
+    <button class="theme-btn-primary"
+            (click)="filter()"
+            [disabled]="!isFilterChanged"
+            [translate]="'btn.common.filter'"></button>
+  </div>
+</div>
+

@@ -1,0 +1,145 @@
+<div class="secondary-menu">
+  <ul id="ul_version_home" class="item-container">
+    <app-workspace-switcher
+      class="position-relative"
+      [leftNavPath]="detailsAliasName"
+      (onProjectSwitch)="closeDialog()"
+      [version]="version"></app-workspace-switcher>
+    <div class="secondary-nav-container">
+        <span
+          [textContent]="'td_nav.design_development' | translate"
+          class="category-header">
+        </span>
+      <li
+        (click)="closeDialog()"
+        [class.active]="detailsAliasName == 'cases' || detailsAliasName == 'step_groups'"
+        [routerLink]="['/td', versionId, 'cases']">
+        <a
+          [class.active]="detailsAliasName == 'cases' || detailsAliasName == 'step_groups'"
+          [routerLink]="['/td', versionId, 'cases']"
+          class="nav-items">
+          <i class="fa-test-cases-alt"></i>
+          <span [textContent]="'td_nav.test_case' | translate"></span>
+        </a>
+      </li>
+      <li
+        (click)="closeDialog()"
+        [class.active]="detailsAliasName == 'elements'"
+        *ngIf="!version?.workspace?.isRest"
+        [routerLink]="['/td', versionId, 'elements']"
+        [routerLinkActive]="'active'">
+        <a
+          [class.active]="detailsAliasName == 'elements'"
+          [routerLink]="['/td', versionId, 'elements']"
+          [routerLinkActive]="'active'"
+          class="nav-items">
+          <i class="fa-elements-alt"></i>
+          <span [textContent]="'td_nav.elements' | translate"></span>
+        </a>
+      </li>
+      <li
+        (click)="closeDialog()"
+        [class.active]="detailsAliasName == 'data'"
+        [routerLink]="['/td', versionId , 'data']" [routerLinkActive]="'active'">
+        <a
+          [class.active]="detailsAliasName == 'data'"
+          [routerLink]="['/td', versionId , 'data']" [routerLinkActive]="'active'"
+          class="nav-items">
+          <i class="fa-test-data-alt"></i>
+          <span [textContent]="'td_nav.test_data_profile' | translate"></span>
+        </a>
+      </li>
+      <li
+              (click)="closeDialog()"
+              *ngIf="!version?.workspace?.isRest" [routerLink]="['/td', versionId, 'uploads']"
+              [routerLinkActive]="'active'">
+        <a [routerLink]="['/td', versionId, 'uploads']"
+           [routerLinkActive]="'active'"
+           class="nav-items">
+          <i class="fa-uploads-alt"></i>
+          <span [textContent]="'td_nav.upload' | translate"></span>
+        </a>
+      </li>
+
+      <span [textContent]="'td_nav.test_plan_result' | translate"
+            class="category-header"></span>
+<!--      <li-->
+<!--        (click)="closeDialog()"-->
+<!--        [class.active]="detailsAliasName == 'requirements'"-->
+<!--        [routerLink]="['/td', versionId, 'requirements']" [routerLinkActive]="'active'">-->
+<!--        <a-->
+<!--          [class.active]="detailsAliasName == 'requirements'"-->
+<!--          [routerLink]="['/td', versionId, 'requirements']" [routerLinkActive]="'active'"-->
+<!--          class="nav-items">-->
+<!--          <i class="fa-requirements-alt"></i>-->
+<!--          <span [textContent]="'td_nav.requirement' | translate"></span>-->
+<!--        </a>-->
+<!--      </li>-->
+      <li
+        (click)="closeDialog()"
+        [class.active]="detailsAliasName == 'suites'"
+        [routerLinkActive]="'active'" [routerLink]="['/td', versionId, 'suites']">
+        <a
+          [class.active]="detailsAliasName == 'suites'"
+          [routerLinkActive]="'active'" [routerLink]="['/td', versionId, 'suites']"
+          class="nav-items">
+          <i class="fa-test-suites-alt"></i>
+          <span [textContent]="'td_nav.test_suite' | translate"></span>
+        </a>
+      </li>
+      <li
+        (click)="closeDialog()"
+        [class.active]="detailsAliasName == 'plans'"
+        [routerLink]="['/td', versionId, 'plans']" [routerLinkActive]="'active'">
+        <a
+          [class.active]="detailsAliasName == 'plans'"
+          [routerLink]="['/td', versionId, 'plans']" [routerLinkActive]="'active'"
+          class="nav-items">
+          <i class="fa-test-plan"></i>
+          <span [textContent]="'td_nav.test_plan' | translate"></span>
+        </a>
+      </li>
+      <li
+        (click)="closeDialog()"
+        [class.active]="detailsAliasName == 'runs' || detailsAliasName == 'test_case_results' || detailsAliasName == 'suite_results' || detailsAliasName == 'machine_results'"
+        [routerLink]="['/td', versionId, 'results']" [routerLinkActive]="'active'">
+        <a
+          [class.active]="detailsAliasName == 'runs' || detailsAliasName == 'test_case_results' || detailsAliasName == 'suite_results' || detailsAliasName == 'machine_results'"
+          class="nav-items"
+          [routerLink]="['/td', versionId,'results']"
+          [routerLinkActive]="'active'">
+          <i class="fa-run-results-alt"></i>
+          <span [textContent]="'td_nav.run_result' |translate"></span>
+        </a>
+      </li>
+      <li
+        (click)="closeDialog()"
+        [class.active]="detailsAliasName == 'environments'"
+        [routerLink]="['/td', versionId, 'environments']" [routerLinkActive]="'active'">
+        <a
+          [class.active]="detailsAliasName == 'environments'"
+          [routerLink]="['/td', versionId, 'environments']" [routerLinkActive]="'active'"
+          class="nav-items">
+          <i class="fa-globe-alt"></i>
+          <span [textContent]="'td_nav.environment' | translate"></span>
+        </a>
+      </li>
+
+      <span *ngIf="!version?.workspace?.isRest"
+            [textContent]="'td_nav.help' | translate"
+            class="category-header">
+        </span>
+      <li
+        (click)="closeDialog()"
+        *ngIf="!version?.workspace?.isRest">
+        <a
+          [routerLinkActive]="'active'" [routerLink]="['/td', versionId, 'actions']"
+          class="nav-items">
+          <i class="fa-action-text"></i>
+          <span [textContent]="'td_nav.nl_actions' | translate"></span>
+        </a>
+      </li>
+    </div>
+  </ul>
+</div>
+<router-outlet *ngIf="!data"></router-outlet>

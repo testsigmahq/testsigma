@@ -27,13 +27,13 @@
   - Replace <ins>the broken test stack</ins> with a powerful open source platform
   - Deploy **end-to-end / unified /integrated** Test Automation for any application in minutes
 
-<a href="https://www.youtube.com/watch?v=xfmEI6RMGg4" target="_blank"><img src="http://docs.testsigma.com/images/github/how-to-automate-with-testsigma-button.png" alt="How to automate testing with Testsigma" width="410px" /></a>
+<a href="https://www.youtube.com/watch?v=xfmEI6RMGg4" target="_blank"><img src="http://docs.testsigma.com/images/github/how-to-automate-with-testsigma-button.svg" alt="How to automate testing with Testsigma" width="410px" /></a>
 
 ## **Quick start: One click deployment on Testsigma Cloud**
 
 The easiest way to start your automation journey is with Testsigma Cloud.
 
-<a href="https://testsigma.com/signup?utm_source=github&utm_medium=social" target="_blank"><img src="http://docs.testsigma.com/images/github/deploy-to-testsigma-cloud.png" alt="How to automate testing with Testsigma" width="410px" /></a>
+<a href="https://testsigma.com/signup?utm_source=github&utm_medium=social" target="_blank"><img src="http://docs.testsigma.com/images/github/deploy-to-testsigma-cloud.svg" alt="How to automate testing with Testsigma" width="410px" /></a>
 
 Once you deploy, you can follow the below tutorials to get started
 - [Web application Automated testing](https://testsigma.com/tutorials/getting-started/automate-web-applications/)

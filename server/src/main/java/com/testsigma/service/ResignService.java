@@ -210,7 +210,7 @@ public class ResignService {
   private FileBody copyUrlToFile(URL url) throws IOException {
     String fileName = getFileName(url);
     File localFile = Paths.get(System.getProperty("java.io.tmpdir"), fileName).toFile();
-    FileUtils.copyURLToFile(url, localFile);
+    FileUtils.copyURLToFile(url, localFile, (60 * 1000), (60 * 1000));
     return new FileBody(localFile, ContentType.DEFAULT_BINARY);
   }
 

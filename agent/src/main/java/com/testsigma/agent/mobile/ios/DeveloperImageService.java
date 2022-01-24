@@ -118,12 +118,14 @@ public class DeveloperImageService {
       File deviceDeveloperImageFilePath = Paths.get(developerImageBaseDirectory(), deviceOsVersion,
         "DeveloperDiskImage.dmg").toFile();
       log.info("Copying from " + iosDeveloperImageDTO.getDeveloperImageUrl() + " to " + deviceDeveloperImageFilePath);
-      FileUtils.copyURLToFile(new URL(iosDeveloperImageDTO.getDeveloperImageUrl()), deviceDeveloperImageFilePath);
+      FileUtils.copyURLToFile(new URL(iosDeveloperImageDTO.getDeveloperImageUrl()), deviceDeveloperImageFilePath,
+              (60 * 1000), (60 * 1000));
 
       File deviceDeveloperImageSigFilePath = Paths.get(developerImageBaseDirectory(), deviceOsVersion,
         "DeveloperDiskImage.dmg.signature").toFile();
       log.info("Copying from " + iosDeveloperImageDTO.getDeveloperImageSignatureUrl() + " to " + deviceDeveloperImageSigFilePath);
-      FileUtils.copyURLToFile(new URL(iosDeveloperImageDTO.getDeveloperImageSignatureUrl()), deviceDeveloperImageSigFilePath);
+      FileUtils.copyURLToFile(new URL(iosDeveloperImageDTO.getDeveloperImageSignatureUrl()),
+              deviceDeveloperImageSigFilePath, (60 * 1000), (60 * 1000));
     } catch (Exception e) {
       throw new TestsigmaException(e.getMessage(), e);
     }

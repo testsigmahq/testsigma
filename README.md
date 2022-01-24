@@ -1,4 +1,4 @@
-<a href="https://testsigma.com/signup?utm_source=github&utm_medium=social"><img src="http://docs.testsigma.com/images/github/banner-new.svg" width="100%"></a>
+<a href="https://testsigma.com/signup?utm_source=github&utm_medium=social"><img src="http://docs.testsigma.com/images/github/testsigma-os-banner.svg" width="100%"></a>
 
 <p align="center">
   <a href="https://testsigma.com/signup?utm_source=github&utm_medium=social" target="_bank">Getting started</a>

@@ -136,7 +136,7 @@ public class AgentWebServer {
       if (agentWebServerConfigDTO.getCertificatePresignedURL() != null) {
         String fileName = FilenameUtils.getName(agentWebServerConfigDTO.getCertificatePresignedURL().getPath());
         File destinationFile = Paths.get(FileUtils.getTempDirectory().toString(), fileName).toFile();
-        FileUtils.copyURLToFile(agentWebServerConfigDTO.getCertificatePresignedURL(), destinationFile);
+        FileUtils.copyURLToFile(agentWebServerConfigDTO.getCertificatePresignedURL(), destinationFile, (60 * 1000), (60 * 1000));
         if (destinationFile.exists()) {
           return FileUtils.readFileToByteArray(destinationFile);
         } else {

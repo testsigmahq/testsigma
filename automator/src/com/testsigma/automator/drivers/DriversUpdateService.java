@@ -106,7 +106,7 @@ public class DriversUpdateService {
     String driverDownloadUrl = getDriverDownloadURL(osType, browser, zipFileName);
     File driverLocalPath = Paths.get(driversFolderPath, browser.getBrowserFolderName(), zipFileName).toFile();
     log.info(String.format("Copying Driver File From %s to %s", driverDownloadUrl, driverLocalPath));
-    FileUtils.copyURLToFile(new URL(driverDownloadUrl), driverLocalPath);
+    FileUtils.copyURLToFile(new URL(driverDownloadUrl), driverLocalPath, (60 * 1000), (60 * 1000));
     File driverVersionFolder = Paths.get(driversFolderPath, browser.getBrowserFolderName(), browserVersion).toFile();
     unzipDriver(driverLocalPath, driverVersionFolder);
   }

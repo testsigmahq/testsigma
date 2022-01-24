@@ -41,7 +41,7 @@ public class WdaService {
       log.info("Installing WDA on device - " + device.getUniqueId());
       String wdaPresignedUrl = fetchWdaUrl(device);
       downloadedWdaFile = File.createTempFile("wda_", ".ipa");
-      FileUtils.copyURLToFile(new URL(wdaPresignedUrl), downloadedWdaFile);
+      FileUtils.copyURLToFile(new URL(wdaPresignedUrl), downloadedWdaFile, (60 * 1000), (60 * 1000));
       log.info("Downloaded WDA to local file - " + downloadedWdaFile.getAbsolutePath());
       Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"-u", device.getUniqueId(), "install",
         downloadedWdaFile.getAbsolutePath()});

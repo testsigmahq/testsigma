@@ -1,4 +1,4 @@
-<a href="https://testsigma.com/signup?utm_source=github&utm_medium=social"><img src="http://docs.testsigma.com/images/github/banner.png" width="100%"></a>
+<a href="https://testsigma.com/signup?utm_source=github&utm_medium=social"><img src="http://docs.testsigma.com/images/github/testsigma-banner.svg" width="100%"></a>
 
 <p align="center">
   <a href="https://testsigma.com/signup?utm_source=github&utm_medium=social" target="_bank">Getting started</a>
@@ -40,9 +40,12 @@
 
 The easiest way to start your automation journey is with Testsigma Cloud.
 
-<a href="https://testsigma.com/signup?utm_source=github&utm_medium=social" target="_blank">
-<img src="https://docs.testsigma.com/images/github/deploy-2-testsigma-cloud.svg?1234" alt="How to automate testing with Testsigma" /></a>
 
+<a href="https://testsigma.com/signup?utm_source=github&utm_medium=social" target="_blank">
+<img src="https://docs.testsigma.com/images/github/deploy-2-testsigma-cloud.svg?1234" width="30%" alt="How to automate testing with Testsigma" /></a>
+
+<br/>
+<br/>
 Once you deploy, you can follow the below tutorials to get started
 
 - [Automating Web Applications](https://testsigma.com/tutorials/getting-started/automate-web-applications/)

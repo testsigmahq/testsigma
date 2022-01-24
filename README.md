@@ -24,7 +24,6 @@
   on a single, extensible platform that works out of the box. 
   
   - Eliminate complex setups, multiple tools and frameworks.
-  
   - Let everyone write tests 5X faster using plain English. 
   - Smart test recorder auto-converts user actions into editable steps.
   - Automate end-to-end testing for web, mobile apps & APIs.

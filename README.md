@@ -1,4 +1,4 @@
-<a href="https://testsigma.com/signup?utm_source=github&utm_medium=social"><img src="http://docs.testsigma.com/images/github/testsigma-banner.svg" width="100%"></a>
+<a href="https://testsigma.com/signup?utm_source=github&utm_medium=social"><img src="http://docs.testsigma.com/images/github/testsigma-git-banner.svg" width="100%"></a>
 
 <p align="center">
   <a href="https://testsigma.com/signup?utm_source=github&utm_medium=social" target="_bank">Getting started</a>
@@ -161,9 +161,9 @@ https://testsigma.com/whats-new
 We love our contributors! If you'd like to contribute anything from a bug fix to a feature update, start here:
 
 - 📖 Read our [Contribution Guide](CONTRIBUTING.md)
-- 🧩 [Set up your local environment](CONTRIBUTING.md)
-- 👾 Explore some [good first issues](https://github.com/testsigmahq/testsigma/issues?q=is%3Aissue+is%3Aopen+label%3A%good+first+issue%22)
-- 📕 Read our [Code of Conduct](​​CODE_OF_CONDUCT.md)
+- 🧩 [Set up your local environment](https://testsigma.com/docs/contributing/setup-dev-environment/)
+- 👾 Explore some [good first issues](https://github.com/testsigmahq/testsigma/issues)
+- 📕 Read our [Code of Conduct](CODE_OF_CONDUCT.md)
 
 
 ## **License**

@@ -19,8 +19,6 @@
 &emsp;
 &emsp;
 
-**A powerful open source test automation platform for modern Dev/QA teams.**
-
 
   Rapidly automate web, mobile app, and API tests in plain English, on a single, extensible platform that works out of the box. 
   
@@ -57,29 +55,28 @@ We have 2 more deployment options to choose from
 
 ## **Features**
 
-### Test Development
+#### Test Development
 - Write code-agnostic, human-readable tests in plain English.
 - Generate airtight test scripts for web and mobile apps using Test Recorder.
 - Integrate automated API calls within your functional/UI test steps.
 
-### Data-Driven/Parameterized Testing
+#### Data-Driven/Parameterized Testing
 - Upload test data sets as (XLS) files or create within Testsigma.
 - Use built-in data generators for mock test data.
 - Create your own custom data generators as add-ons.
 
-### Results & Reports
+#### Results & Reports
 - Debug using screenshots, videos, text logs, and more. 
 - Generate custom reports at test, module, test suite, and device/system levels. 
 
-### Integrations
+#### Integrations
 - Integrate with any CI tool to run regression tests at every build.
 - Integrate with Collaboration tools,  Bug Reporting tools, Product Management tools, Cloud based Test Labs
 
-### Unified Platform
+#### Unified Platform
 - Automate Web, Mobile Web, Android, iOS apps, and API testing using one platform
 
-### Visual Testing
-
+#### Visual Testing
 - Enable visual testing with a toggle while creating a test plan.
 
 [See more on our website](https://testsigma.com)
@@ -90,7 +87,7 @@ Add-ons are custom extensions built and shared by the Testsigma Community at the
 
 You can build your own add-on using Testsigma SDK.
 
-### **Types of add-ons supported in Testsigma**
+#### **Types of add-ons supported in Testsigma**
 
 - **Custom Actions:** Testsigma provides a set of comprehensive, built-in addons that lets you automate most user actions in simple English. But sometimes you may need to automate actions unique to your AUT. For this, you can build custom add-ons to automate unique actions. See: [How to build a custom action in add-ons.](https://testsigma.com/tutorials/addons/how-create-addons-actions/)
 

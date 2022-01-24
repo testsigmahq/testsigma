@@ -31,7 +31,7 @@
   </div>
   <form
     *ngIf="!testDataFunctionSuggestion?.isEmpty || isQueryBased || testDataFunctionSuggestion?.isFetching"
-    class="ts-form theme-overlay-content" id="testcaseStatusForm"
+    class="ts-form theme-overlay-content without-footer" id="testcaseStatusForm"
     (keydown.enter)="false"
     novalidate="novalidate">
     <div
@@ -54,7 +54,7 @@
         </div>
       </div>
       <div class="theme-w-o-h-scroll lg-h">
-        <div class="tab-navigation-inline h-100">
+        <div class="tab-navigation-inline h-100 mt-0-i">
           <ul class="tab-nav" role="tablist">
             <li class="nav-items" role="presentation" [class.active]="activeTab == 'custom_functions'">
               <a (click)="activeTab = 'custom_functions'"
@@ -65,18 +65,18 @@
             <li class="nav-items" role="presentation" [class.active]="activeTab == 'kibbutz_functions'">
               <a (click)="activeTab = 'kibbutz_functions'"
                  class="normal-text pb-10" [class.active]="activeTab == 'kibbutz_functions'">
-                <i class="fa-addon fz-16"></i>
+                <i class="fa-addon"></i>
                 <span [translate]="'action.custom_function.kibbutz_functions'"></span>
               </a>
             </li>
           </ul>
-          <div class="h-100">
+          <div class="theme-w-o-h-scroll lg-h">
             <div *ngIf="activeTab == 'kibbutz_functions'" class="h-90 mt-n30">
               <div
                 class="overflow-x-hidden h-100 pt-30">
                 <cdk-virtual-scroll-viewport
                   itemSize="29"
-                  class="list-container virtual-scroll-viewport theme-details-scroll x-sm-h">
+                  class="list-container virtual-scroll-viewport">
                   <a
                     class="list-view py-7 px-5 border-0 pointer align-items-center"
                     *cdkVirtualFor='let element of kibbutzCustomFunctionSuggestion; let index = index'
@@ -121,7 +121,7 @@
                 class="overflow-x-hidden h-100 pt-30">
                 <cdk-virtual-scroll-viewport
                   itemSize="29"
-                  class="list-container virtual-scroll-viewport theme-details-scroll x-sm-h">
+                  class="list-container virtual-scroll-viewport">
                   <a
                     class="list-view py-7 px-5 border-0 pointer align-items-center"
                     *cdkVirtualFor='let element of testDataFunctionSuggestion; let index = index'

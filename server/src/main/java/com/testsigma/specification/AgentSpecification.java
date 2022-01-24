@@ -17,8 +17,7 @@ public class AgentSpecification extends BaseSpecification<Agent> {
   protected Expression<String> getPath(SearchCriteria criteria, Root<Agent> root) {
     String key = criteria.getKey();
     if (key.equals("title")) {
-      Join s = root.join("agent", JoinType.INNER);
-      return s.get(key);
+      return root.get(key);
     } else if (key.equals("isActive")) {
       return root.get("updatedDate");
     } else {

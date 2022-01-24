@@ -49,6 +49,7 @@ export class TestPlanDeviceFormComponent extends TestPlanPlatformOsVersionFormCo
 
   public fetchDevices(setValue?: Boolean) {
     this.isDeviceListInProgress = true;
+    if (this.platform)
     this.platformService.findAllDevices(this.platform, this.platformOsVersion, this.version.workspace.workspaceType, this.testPlanLabType).subscribe(res => {
       this.cloudDevices = res;
       this.cloudDevices.forEach(device => {
@@ -67,11 +68,11 @@ export class TestPlanDeviceFormComponent extends TestPlanPlatformOsVersionFormCo
       let deviceId = this.environmentFormGroup?.controls['platformDeviceId']?.value;
       if (setValue || !deviceId) {
         this.cloudDevice = this.cloudDevicePage.content.find(device => device.isAvailable);
-        this.environmentFormGroup?.controls['platformDeviceId'].setValue(this.cloudDevice?.id);
+        this.environmentFormGroup?.controls?.['platformDeviceId']?.setValue(this.cloudDevice?.id);
       } else {
         this.cloudDevice = this.cloudDevices.find(device => device.id == deviceId);
       }
-      this.environmentFormGroup?.controls['deviceName'].setValue(this.cloudDevice?.name);
+      this.environmentFormGroup?.controls?.['deviceName']?.setValue(this.cloudDevice?.name);
       this.isDeviceListInProgress =false;
     });
   }

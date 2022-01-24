@@ -130,7 +130,7 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
 
   getFieldDefinitionDetails() {
     this.fieldDefinitionDetails = this.getElements(this.testStepResult?.fieldDefinitionDetails, true);
-    return this.fieldDefinitionDetails.length;
+    return this.fieldDefinitionDetails.length || this.element?.locatorValue;//TODO Fallback element details need to clean
   }
 
   isEmptyObject(obj){
@@ -310,6 +310,15 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
       })
     }
     return this.environmentResult?.testDeviceSettings?.capabilities;
+  }
+
+  //TODO Fallback element details need to clean
+  get elementValue() {
+    return this.fieldDefinitionDetails[0]?.locatorValue ? this.fieldDefinitionDetails[0]?.locatorValue : this.element.locatorValue;
+  }
+
+  get elementType() {
+    return this.fieldDefinitionDetails[0]?.findByType ? this.fieldDefinitionDetails[0]?.findByType : this.element.locatorType;
   }
 
 }

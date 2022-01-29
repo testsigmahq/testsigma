@@ -329,7 +329,7 @@ export class TestStepResult extends ResultBase implements PageObject {
   }
 
   get canShowConditionalStepActions() {
-    return (this.testStep?.isConditionalIf || this.testStep?.isConditionalElse || this.testStep?.isConditionalElseIf || this.testStep?.isConditionalWhileLoop)
+    return (this?.isConditionalIf || this?.isConditionalElse || this?.isConditionalElseIf || this?.isConditionalWhileLoop)
   }
 
   setResultStepDisplayNumber(testStepResults: TestStepResult[]) {

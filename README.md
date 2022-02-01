@@ -11,8 +11,6 @@
   &nbsp; &#8901; &nbsp;
   <a href="https://discord.com/invite/5caWS7R6QX" target="_bank">Discord</a>
   &nbsp; &#8901; &nbsp;
-  <a href="https://testsigma.com/docs/product-updates/roadmap/?utm_source=github&utm_medium=social" target="_bank">Roadmap</a>
-  &nbsp; &#8901; &nbsp;
   <a href="https://www.youtube.com/testsigma" target="_bank">YouTube</a>
 </p>
 &emsp;

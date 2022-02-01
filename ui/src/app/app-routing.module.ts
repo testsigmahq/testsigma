@@ -23,9 +23,6 @@ import {EditComponent as TestDataEditComponent} from "./components/data/edit.com
 import {DetailsComponent as TestDataDetailsComponent} from "./components/data/details.component";
 import {DataComponent as TestDataDataComponent} from "./components/data/data.component";
 import {TestCasesComponent as TestDataTestCasesComponent} from "./components/data/test-cases.component";
-import {ListComponent as RequirementsListComponent} from "./components/requirements/list.component";
-import {FormComponent as RequirementFormComponent} from "./components/requirements/form.component";
-import {DetailsComponent as RequirementDetailsComponent} from "./components/requirements/details.component";
 import {ListComponent as EnvironmentsListComponent} from "./components/environments/list.component";
 import {FormComponent as EnvironmentFormComponent} from "./components/environments/form.component";
 import {DetailsComponent as EnvironmentDetailsComponent} from "./components/environments/details.component";
@@ -48,8 +45,6 @@ import {TestCasesComponent as TestCasesListInTestSuiteComponent} from "./compone
 import {TestPlansComponent as TestPlansListInTestSuiteComponent} from "./components/suites/test-plans.component";
 import {FormComponent as TestSuiteFormComponent} from "./components/suites/form.component";
 import {DashboardComponent} from "./components/dashboard.component";
-import {DetailsHeaderComponent as RequirementDetailsHeaderComponent} from './components/requirements/details-header.component';
-import {TestCasesComponent as RequirementCases} from './components/requirements/test-cases.component';
 import {DetailsHeaderComponent as EnvironmentDetailsHeaderComponent} from './components/environments/details-header.component';
 import {TestPlansComponent as EnvironmentTestPlansComponent} from './components/environments/test-plans.component';
 import {LoginFormComponent} from "./components/login-form.component";
@@ -155,20 +150,6 @@ const routes: Routes = [
               {path: 'steps', component: StepsListComponent, data: {title: 'page_title.test_case_details'}},
               {path: 'dry_runs', component: DryRunsComponent},
               {path: 'dependents', component: StepGroupTestCasesComponent}
-            ]
-          },
-          {
-            path: 'requirements/:requirementId',
-            data: {legacyURL: '#/td/requirements/:requirementId/details', title: 'page_title.requirement_details'},
-            component: RequirementDetailsHeaderComponent,
-            children: [
-              {path: '', pathMatch: 'full', redirectTo: 'details'},
-              {
-                path: 'details',
-                component: RequirementDetailsComponent,
-                data: {title: 'page_title.requirement_details'}
-              },
-              {path: 'cases', component: RequirementCases}
             ]
           },
           {
@@ -321,26 +302,6 @@ const routes: Routes = [
                 path: 'data',
                 data: {legacyURL: '#/td/:versionId/data', title: 'page_title.test_data_profiles'},
                 component: TestDataProfilesListComponent
-              },
-              {
-                path: 'requirements',
-                data: {legacyURL: '#/td/:versionId/requirements', title: 'page_title.requirements'},
-                children: [
-                  {path: '', data: {legacyURL: '#/td/:versionId/requirements'}, component: RequirementsListComponent},
-                  {
-                    path: 'new',
-                    data: {legacyURL: '#/td/:versionId/requirements/new', title: 'page_title.create_requirement'},
-                    component: RequirementFormComponent
-                  },
-                  {
-                    path: ':requirementId/edit',
-                    data: {
-                      legacyURL: '#/td/:versionId/requirements/:requirementId/edit',
-                      title: 'page_title.edit_requirement'
-                    },
-                    component: RequirementFormComponent
-                  }
-                ]
               },
               {
                 path: 'environments',

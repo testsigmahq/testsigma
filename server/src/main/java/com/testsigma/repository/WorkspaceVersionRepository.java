@@ -24,15 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface WorkspaceVersionRepository extends JpaSpecificationExecutor<WorkspaceVersion>, PagingAndSortingRepository<WorkspaceVersion, Long>, JpaRepository<WorkspaceVersion, Long> {
 
   @Modifying
-  @Query(value = "INSERT INTO requirements(created_date, workspace_version_id, description, name, copied_from) SELECT " +
-    "now(), " +
-    ":newVersionId, " +
-    "description, name, id from requirements " +
-    "WHERE workspace_version_id = :versionId", nativeQuery = true)
-  void copyRequirementDetails(@Param("newVersionId") Long newVersionId, @Param("versionId") Long versionId);
-
-  @Modifying
-  @Query(value = "insert into test_cases (created_date, start_time, end_time, is_data_driven, is_step_group, priority_id, requirement_id, description, name, status, type, test_data_id, workspace_version_id, pre_requisite, deleted, test_data_start_index, copied_from)  select now(), tcase.start_time, tcase.end_time, tcase.is_data_driven, tcase.is_step_group,tcase.priority_id, (select req.id from requirements req where req.copied_from=tcase.requirement_id), tcase.description, tcase.name, tcase.status, tcase.type, tcase.test_data_id, :newVersionId, tcase.pre_requisite, deleted, test_data_start_index, tcase.id from test_cases tcase where tcase.workspace_version_id=:versionId", nativeQuery = true)
+  @Query(value = "insert into test_cases (created_date, start_time, end_time, is_data_driven, is_step_group, priority_id, description, name, status, type, test_data_id, workspace_version_id, pre_requisite, deleted, test_data_start_index, copied_from)  select now(), tcase.start_time, tcase.end_time, tcase.is_data_driven, tcase.is_step_group,tcase.priority_id, tcase.description, tcase.name, tcase.status, tcase.type, tcase.test_data_id, :newVersionId, tcase.pre_requisite, deleted, test_data_start_index, tcase.id from test_cases tcase where tcase.workspace_version_id=:versionId", nativeQuery = true)
   void copyTestCaseDetails(@Param("newVersionId") Long newVersionId, @Param("versionId") Long versionId);
 
   @Modifying

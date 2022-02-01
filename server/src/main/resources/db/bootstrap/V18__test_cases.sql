@@ -7,7 +7,6 @@ CREATE TABLE `test_cases`
   `is_data_driven`         BIT(1)     NOT NULL DEFAULT 0,
   `is_step_group`      BIT(1)     NOT NULL DEFAULT 0,
   `priority_id`            BIGINT(20)          DEFAULT NULL,
-  `requirement_id`         BIGINT(20)          DEFAULT NULL,
   `description`            TEXT                DEFAULT NULL,
   `name`                   VARCHAR(250)        DEFAULT NULL,
   `status`                 VARCHAR(100)        DEFAULT NULL,
@@ -26,16 +25,13 @@ CREATE TABLE `test_cases`
   `created_date`           DATETIME            DEFAULT CURRENT_TIMESTAMP,
   `updated_date`           DATETIME            DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `index_on_test_cases_requirement_id` (`requirement_id`),
   KEY `index_on_test_cases_priority_id` (`priority_id`),
   KEY `index_on_test_cases_type` (`type`),
   KEY `index_on_test_cases_workspace_version_id` (`workspace_version_id`),
   KEY `index_on_test_cases_status` (`status`),
   KEY `index_on_test_cases_is_step_group` (`is_step_group`),
-  CONSTRAINT `index_on_test_cases_requirement_id_and_name` UNIQUE (requirement_id, name),
   CONSTRAINT `fk_priority_id_in_test_cases_to_test_case_priorities` FOREIGN KEY (`priority_id`) REFERENCES `test_case_priorities` (`id`),
   CONSTRAINT `fk_type_in_test_cases_to_test_case_types` FOREIGN KEY (`type`) REFERENCES `test_case_types` (`id`),
-  CONSTRAINT `fk_requirement_id_in_test_cases_to_requirements` FOREIGN KEY (`requirement_id`) REFERENCES `requirements` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `fk_test_data_id_in_test_cases_to_test_data` FOREIGN KEY (`test_data_id`) REFERENCES `test_data` (`id`) ON UPDATE NO ACTION
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 35

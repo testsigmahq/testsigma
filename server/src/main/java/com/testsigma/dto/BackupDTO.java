@@ -24,7 +24,6 @@ public class BackupDTO {
   private Boolean isTestDataEnabled;
   private Boolean isAttachmentEnabled;
   private Boolean isAgentEnabled;
-  private Boolean isRequirementEnabled;
   private Boolean isTestPlanEnabled;
   private Boolean isTestDeviceEnabled;
   private Boolean isSuitesEnabled;

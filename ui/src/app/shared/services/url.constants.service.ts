@@ -52,7 +52,6 @@ export class UrlConstantsService {
   public testStepsUlr = this.apiBase + '/test_steps';
   public suggestionEngineUrl = this.apiBase + "/suggestion_results";
   public testDataFunctionsUrl = this.apiBase + "/default_data_generators";
-  public requirementsUrl = this.apiBase +"/requirements";
   public testSuitesUrl= this.apiBase+"/test_suites";
   public adhocRunConfigurationsUrl = this.apiBase+"/adhoc_run_configurations";
   public loginUrl = '/login' ;

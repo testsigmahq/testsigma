@@ -45,7 +45,6 @@ public class BackupDetailService extends XMLExportService<BackupDetail> {
   private final AttachmentService attachmentService;
   private final TestDeviceService testDeviceService;
   private final TestPlanService testPlanService;
-  private final RequirementService requirementService;
   private final RestStepService reststepService;
   private final TestCaseService testcaseService;
   private final TestCasePriorityService testCasePriorityService;
@@ -125,7 +124,6 @@ public class BackupDetailService extends XMLExportService<BackupDetail> {
         attachmentService.export(backupDTO);
         agentService.export(backupDTO);
         uploadService.export(backupDTO);
-        requirementService.export(backupDTO);
         testcaseService.export(backupDTO);
         teststepService.export(backupDTO);
         reststepService.export(backupDTO);

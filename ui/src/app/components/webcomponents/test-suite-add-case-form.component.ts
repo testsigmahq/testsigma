@@ -7,12 +7,10 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {TestCase} from "../../models/test-case.model";
 import {TestCaseService} from "../../services/test-case.service";
 import {Page} from "../../shared/models/page";
-import {Requirement} from "../../models/requirement.model";
 import {TestCaseType} from "../../models/test-case-type.model";
 import {TestCasePriority} from "../../models/test-case-priority.model";
 import {TestCaseTypesService} from "../../services/test-case-types.service";
 import {TestCasePrioritiesService} from "../../services/test-case-priorities.service";
-import {RequirementsService} from "../../services/requirements.service";
 import {TestCaseTagService} from "../../services/test-case-tag.service";
 import {TestCaseTag} from "../../models/test-case-tag.model";
 import {InfiniteScrollableDataSource} from "../../data-sources/infinite-scrollable-data-source";
@@ -30,8 +28,6 @@ export class TestSuiteAddCaseFormComponent implements OnInit {
   public checkedSelectedCases: TestCase[] = [];
   public filterTestCaseNameControl = new FormControl();
   public filterTagIds = [];
-  public filterRequirementIds: any;
-  public requirements = new Page<Requirement>();
   public filterTestCaseTypes: any;
   public testCaseTypesList = new Page<TestCaseType>();
   public testCasePrioritiesList = new Page<TestCasePriority>();
@@ -58,7 +54,6 @@ export class TestSuiteAddCaseFormComponent implements OnInit {
     private dialogRef: MatDialogRef<TestPlanAddSuiteFormComponent>,
     private testCaseTagService: TestCaseTagService,
     private testCaseService: TestCaseService,
-    private requirementsService: RequirementsService,
     private testCasePrioritiesService: TestCasePrioritiesService,
     private testCaseTypesService: TestCaseTypesService) {
   }
@@ -73,7 +68,6 @@ export class TestSuiteAddCaseFormComponent implements OnInit {
     let versionQuery = this.options.versionFilter.split(':');
     this.versionId = versionQuery[1];
     this.testCaseFilter = this.options.allTestCasesFilter;
-    this.fetchRequirementNames();
     this.fetchTestCasePriorities();
     this.fetchTestCaseTypes();
     this.fetchTestCaseTags();
@@ -91,9 +85,6 @@ export class TestSuiteAddCaseFormComponent implements OnInit {
     }
     this.checkAllAvailable = false;
   }
-
-  private fetchRequirementNames = () =>
-    this.requirementsService.findAll(this.options.versionFilter).subscribe(res => this.requirements = res);
 
   private fetchTestCaseTypes = () =>
     this.testCaseTypesService.findAll(this.options.applicationFilter).subscribe(res => this.testCaseTypesList = res);
@@ -208,9 +199,6 @@ export class TestSuiteAddCaseFormComponent implements OnInit {
     if (this.filterTagIds?.length)
       queryString += ",tagId@" + this.filterTagIds.join("#");
 
-    if (this.filterRequirementIds?.length)
-      queryString += ",requirementId@" + this.filterRequirementIds.join("#")
-
     this.filterApplied = (queryString.length || this.filterTestCaseNameControl.value?.length || this.customFieldsQueryHash.filter(filter => filter.key!="caseId")?.length) > 0;
 
     if(this.availableInputValue)
@@ -228,7 +216,6 @@ export class TestSuiteAddCaseFormComponent implements OnInit {
     this.filterTestCasePriorities = [];
     this.filterTestCaseTypes = [];
     this.filterTagIds = [];
-    this.filterRequirementIds = [];
     this.filterTestCaseNameControl.setValue(null)
     this.constructQueryString();
   }

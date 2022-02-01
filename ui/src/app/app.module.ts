@@ -120,9 +120,6 @@ import {OverlayModule} from "@angular/cdk/overlay";
 import {TestDataGridComponent} from './components/webcomponents/test-data-grid.component';
 import {TestStepMoreActionFormComponent} from './components/webcomponents/test-step-more-action-form.component';
 import {TestCaseCloneFormComponent} from './components/webcomponents/test-case-clone-form.component';
-import {ListComponent as RequirementsListComponent} from "./components/requirements/list.component";
-import {FormComponent as RequirementFormComponent} from "./components/requirements/form.component";
-import {DetailsComponent as RequirementDetailsComponent} from "./components/requirements/details.component";
 import {TestCaseFormComponent} from './components/cases/test-case-form.component';
 import {TestCaseCreateHelpComponent} from './components/webcomponents/test-case-create-help.component';
 import {ListTagsComponent} from './components/webcomponents/list-tags.component';
@@ -192,8 +189,6 @@ import {BySummaryDonutChartComponent} from './components/webcomponents/by-summar
 import {Ng9OdometerModule} from 'ng9-odometer';
 import {DryRunSavedConfigFormComponent} from './components/webcomponents/dry-run-saved-config-form.component';
 import {DryRunSavedConfigListComponent} from "./components/webcomponents/dry-run-saved-config-list.component";
-import {DetailsHeaderComponent} from './components/requirements/details-header.component';
-import {TestCasesComponent} from './components/requirements/test-cases.component';
 import {DetailsHeaderComponent as EnvironmentDetailsHeaderComponent} from './components/environments/details-header.component';
 import {TestPlansComponent as EnvironmentTestPlansComponent} from './components/environments/test-plans.component';
 import {TagsChipListComponent} from './components/webcomponents/tags-chip-list.component';
@@ -365,9 +360,6 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     TestDataTestCasesComponent,
     TestStepMoreActionFormComponent,
     TestCaseCloneFormComponent,
-    RequirementsListComponent,
-    RequirementFormComponent,
-    RequirementDetailsComponent,
     TestCaseFormComponent,
     TestCaseCreateHelpComponent,
     ListTagsComponent,
@@ -431,8 +423,6 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     BySummaryDonutChartComponent,
     DryRunSavedConfigFormComponent,
     DryRunSavedConfigListComponent,
-    DetailsHeaderComponent,
-    TestCasesComponent,
     EnvironmentDetailsHeaderComponent,
     EnvironmentTestPlansComponent,
     TagsChipListComponent,

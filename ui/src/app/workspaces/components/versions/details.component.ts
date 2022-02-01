@@ -9,7 +9,6 @@ import {WorkspaceVersion} from "../../../models/workspace-version.model";
 import {WorkspaceVersionService} from "../../../shared/services/workspace-version.service";
 import {ConfirmationModalComponent} from "../../../shared/components/webcomponents/confirmation-modal.component";
 import {MatDialog} from '@angular/material/dialog';
-import {RequirementsService} from "../../../services/requirements.service";
 import {TestCaseService} from "../../../services/test-case.service";
 import {CloneVersionComponent} from "../webcomponents/clone-version.component";
 
@@ -20,7 +19,6 @@ import {CloneVersionComponent} from "../webcomponents/clone-version.component";
 })
 export class DetailsComponent extends BaseComponent implements OnInit {
   public totalTestCaseCount: number;
-  public totalRequirementsCount: number;
   public versionId: number;
   public version: WorkspaceVersion;
   public fullScreenDetails: Boolean;
@@ -37,7 +35,6 @@ export class DetailsComponent extends BaseComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private versionService: WorkspaceVersionService,
-    private requirementsService: RequirementsService,
     private testCaseService: TestCaseService) {
     super(authGuard, notificationsService, translate, toastrService);
   }
@@ -55,16 +52,11 @@ export class DetailsComponent extends BaseComponent implements OnInit {
         }
       });
       this.fetchTestCasesCount();
-      this.fetchRequirementsCount();
     });
   }
 
   fetchTestCasesCount() {
     this.testCaseService.findAll("workspaceVersionId:"+this.versionId).subscribe(res => this.totalTestCaseCount = res.totalElements)
-  }
-
-  fetchRequirementsCount() {
-    this.requirementsService.findAll("workspaceVersionId:"+this.versionId).subscribe(res => this.totalRequirementsCount = res.totalElements)
   }
 
   deleteVersion(id) {

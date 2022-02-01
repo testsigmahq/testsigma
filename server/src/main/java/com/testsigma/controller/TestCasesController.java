@@ -60,7 +60,6 @@ public class TestCasesController {
   private final AttachmentService attachmentService;
   private final TestCaseFilterService testCaseFilterService;
   private final WorkspaceVersionService versionService;
-  private final RequirementService requirementService;
   private final StepGroupFilterService stepGroupFilterService;
   private final HttpClient httpClient;
 

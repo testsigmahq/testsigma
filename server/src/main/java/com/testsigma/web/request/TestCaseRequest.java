@@ -29,8 +29,6 @@ public class TestCaseRequest {
 
   private Integer priority;
 
-  private Long requirementId;
-
   private Timestamp reviewedAt;
 
   private Timestamp reviewSubmittedAt;

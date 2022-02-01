@@ -20,9 +20,9 @@
         class="ts-form form-field-scroll" [formGroup]="environmentForm">
     <div class="form-group">
       <input class="form-control" formControlName="name" [(ngModel)]="environment.name">
-      <label class="control-label required" [translate]="'requirements.form.label.name'"></label>
+      <label class="control-label required" [translate]="'message.common.label.name'"></label>
       <div class="error" *ngIf="formSubmitted && environmentForm.controls.name.errors?.required"
-           [translate]="'requirements.form.name.required'"></div>
+           [translate]="'validation.required.message' | translate: {field: 'Name'}"></div>
       <div class="error"
            *ngIf="formSubmitted && environmentForm.controls.name.errors?.minlength"
            [textContent]="'form.validation.common.min_length' | translate: {FieldName:'Name' , min:'4'}"></div>

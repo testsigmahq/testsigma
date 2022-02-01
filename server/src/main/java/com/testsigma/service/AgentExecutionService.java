@@ -397,7 +397,6 @@ public class AgentExecutionService {
     testCaseDetails.setTestData(testCaseResult.getIteration());
     testCaseDetails.setTestDataSetName(testCaseResult.getTestDataSetName());
     testCaseDetails.setPrerequisite(testCase.getPreRequisite());
-    testCaseDetails.setRequirementId(testCase.getRequirementId());
     return testCaseDetails;
   }
 

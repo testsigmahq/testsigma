@@ -25,8 +25,6 @@ import {TestCaseTag} from "../../models/test-case-tag.model";
 import {TestCaseTagService} from "../../services/test-case-tag.service";
 import {FilterQuery} from "../../models/filter-query";
 import {FilterOperation} from "../../enums/filter.operation.enum";
-import {Requirement} from "../../models/requirement.model";
-import {RequirementsService} from "../../services/requirements.service";
 import {FormControl, FormGroup} from "@angular/forms";
 import * as moment from "moment";
 
@@ -50,10 +48,8 @@ export class TestCasesFilterComponent implements OnInit {
   public filterWorkspaceVersionId: number;
   public filterDeleted: boolean;
   public filterTagIds: number[];
-  public filterRequirementIds: number[];
   public testCasePrioritiesList: Page<TestCasePriority>;
   public testCaseTypesList: Page<TestCaseType>;
-  public requirementList: Page<Requirement>;
   public tags: TestCaseTag[];
   public customFieldsQueryHash: FilterQuery[] = [];
   public today: Date = new Date();
@@ -76,8 +72,7 @@ export class TestCasesFilterComponent implements OnInit {
     private testCaseTypeService: TestCaseTypesService,
     private testCasePriorityService: TestCasePrioritiesService,
     private authGuard: AuthenticationGuard,
-    private testCaseTagService: TestCaseTagService,
-    private requirementsService: RequirementsService) {
+    private testCaseTagService: TestCaseTagService) {
     this.isStepGroup = data.isStepGroup;
   }
   get resultConstant() {
@@ -109,7 +104,6 @@ export class TestCasesFilterComponent implements OnInit {
     this.fetchTestCaseTypes();
     this.fetchTestCasePriorities();
     this.fetchTags();
-    this.fetchRequirements();
   }
 
   constructQueryString() {
@@ -136,8 +130,6 @@ export class TestCasesFilterComponent implements OnInit {
       queryString += ",type@" + this.filterTestCaseTypes.join("#")
     if (this.filterTagIds?.length)
       queryString += ",tagId@" + this.filterTagIds.join("#")
-    if (this.filterRequirementIds?.length)
-      queryString += ",requirementId@" + this.filterRequirementIds.join("#")
     if(queryString)
     queryString += ",workspaceVersionId:" + this.filterWorkspaceVersionId
       + ",deleted:" + this.filterDeleted + ",isStepGroup:" + !!this.filterStepGroup;
@@ -157,7 +149,6 @@ export class TestCasesFilterComponent implements OnInit {
     this.filterDeleted = undefined;
     this.filterStatuses = undefined;
     this.filterByResult = undefined;
-    this.filterRequirementIds = undefined;
     this.updatedDateRange.controls['start'].setValue(undefined);
     this.updatedDateRange.controls['end'].setValue(undefined);
     this.createdDateRange.controls['start'].setValue(undefined);
@@ -194,8 +185,6 @@ export class TestCasesFilterComponent implements OnInit {
       this.filterTestCaseTypes = <number[]>this.data.filter.normalizedQuery.find(query => query.key == "type").value;
     if (this.data.filter.normalizedQuery.find(query => query.key == "tagId"))
       this.filterTagIds = <number[]>this.data.filter.normalizedQuery.find(query => query.key == "tagId").value;
-    if (this.data.filter.normalizedQuery.find(query => query.key == "requirementId"))
-      this.filterRequirementIds = <number[]>this.data.filter.normalizedQuery.find(query => query.key == "requirementId").value;
     if (this.data.filter.normalizedQuery.find(query => query.key == "createdDate" && query.operation == FilterOperation.LESS_THAN))
       this.createdDateRange.controls['end'].setValue(moment(<number>this.data.filter.normalizedQuery.find(query => query.key == "createdDate" && query.operation == FilterOperation.LESS_THAN).value).format("YYYY-MM-DD"));
     if (this.data.filter.normalizedQuery.find(query => query.key == "createdDate" && query.operation == FilterOperation.GREATER_THAN))
@@ -221,12 +210,6 @@ export class TestCasesFilterComponent implements OnInit {
   private fetchTags(): void {
     this.testCaseTagService.findAll(undefined).subscribe(res => {
       this.tags = res;
-    });
-  }
-
-  private fetchRequirements(): void {
-    this.requirementsService.findAll("workspaceVersionId:" + this.data.version.id).subscribe(res => {
-      this.requirementList = res;
     });
   }
 

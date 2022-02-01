@@ -26,8 +26,6 @@ export class BackupVersionModel extends Base implements PageObject {
   @serializable
   public isAgentEnabled: Boolean = false;
   @serializable
-  public isRequirementEnabled: Boolean = false;
-  @serializable
   public isTestPlanEnabled: Boolean = false;
   @serializable
   public isSuitesEnabled: Boolean = false;

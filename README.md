@@ -1,4 +1,4 @@
-<a href="https://testsigma.com/signup?utm_source=github&utm_medium=social">![testsigma-os-banner](https://user-images.githubusercontent.com/89924986/151966893-ba52f8a6-052e-4721-99f2-738e5074773a.svg)</a>
+<a href="https://testsigma.com/signup?utm_source=github&utm_medium=social">![testsigma-os-banner](https://docs.testsigma.com/images/github/testsigma-opensource-banner.svg)</a>
 
 <p align="center">
   <a href="https://testsigma.com/signup?utm_source=github&utm_medium=social" target="_bank">Getting started</a>

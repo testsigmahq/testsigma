@@ -1,0 +1,215 @@
+<div class="theme-overlay-container add-test-suite">
+  <div class="theme-overlay-header">
+    <div
+      class="theme-overlay-title"
+      [translate]="'test_plan.environment.select_suite.title'">
+    </div>
+    <button
+      class="theme-overlay-close"
+      type="button"
+      [matTooltip]="'hint.message.common.close' | translate"
+      mat-dialog-close>
+    </button>
+  </div>
+  <div *ngIf="testSuitesNotCreated(); else elseBlock" class="h-90">
+    <div
+      class="empty-full-container">
+      <div class="empty-run-md"></div>
+      <div
+        class="empty-text"
+        [textContent]="'message.common.empty_page' | translate : { categoryType:'Test Suites'}"></div>
+      <a
+        [routerLink]="['/td', options.version.id, 'suites', 'new']"
+        [translate]="'btn.common.create'" mat-dialog-close
+        class="theme-btn-primary"></a>
+    </div>
+  </div>
+  <ng-template #elseBlock>
+    <div class="theme-overlay-content theme-border-t only-content">
+      <div class="ts-form h-100">
+        <div class="d-flex px-30 py-25 justify-content-between align-items-center bg-grey-x-light">
+          <div class="ts-col-45 pl-18 d-flex align-items-center">
+            <div class="ts-col-10 rb-medium" [translate]="'testcase.list.filter.title'"></div>
+            <div class="form-group pb-0 pl-20 flex-grow-1">
+              <input name="suiteName" id="suiteName" class="form-control"
+                     [formControl]="filterSuiteNameControl"
+                     [placeholder]="'message.common.place_holder.search_name' | translate"/>
+              <label for="suiteName" [translate]="'message.common.label.name'"
+                     class="control-label bg-grey-x-light"></label>
+            </div>
+          </div>
+          <div
+            *ngIf="tags"
+            class="ts-col-45 pr-18 form-group pb-0">
+            <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill">
+              <mat-select
+                [placeholder]="'message.common.any' | translate"
+                (selectionChange)="filterSelected($event)"
+                disableOptionCentering panelClass="multiple"
+                multiple>
+                <mat-option class="text-capitalize" *ngFor="let tag of tags"
+                            [value]="tag.id"
+                            [textContent]="tag.name"></mat-option>
+              </mat-select>
+            </mat-form-field>
+            <label class="control-label bg-grey-x-light" [translate]="'testcase.list.tags'"></label>
+          </div>
+        </div>
+        <div class="d-flex p-30 pt-35 mx-18 justify-content-between align-items-center h-100-90">
+          <div class="ts-col-45 theme-border border-rds-4 h-100 overflow-x-hidden overflow-y-auto">
+            <div class="d-flex theme-border-b rb-medium align-items-center" style="background: #E9F7FF">
+              <div class="d-flex align-items-center py-15 pl-18">
+                <mat-checkbox
+                  class="mat-checkbox"
+                  [class.visibility-hidden]="!(availableSuites?.totalElements - excludedSuitesCount)"
+                  [(ngModel)]="checkAllAvailable"
+                  [checked]="checkedAvailableSuites.length == availableSuites?.cachedItems?.length && availableSuites?.cachedItems?.length"
+                  [ngModelOptions]="{standalone: true}"
+                  (change)="toggleCheckAll(checkAllAvailable, checkedAvailableSuites)"></mat-checkbox>
+                <div class="text-nowrap pl-8"
+                     [textContent]="(availableSuites?.totalElements - excludedSuitesCount) ?
+                    ('test_plan.environment.available_suites' |
+                    translate: {loadedCount: (availableSuites?.cachedItems?.length- excludedSuitesCount),
+                                    count: (availableSuites?.totalElements - excludedSuitesCount) || 0 }) :
+                    ('test_plan.environment.no_available_suites' |
+                    translate: {count: availableSuites?.cachedItems?.length })"></div>
+              </div>
+            </div>
+            <cdk-virtual-scroll-viewport
+              *ngIf="!availableSuites?.isEmpty"
+              [class.d-none-important]="zeroSuites()"
+              itemSize="47"
+              [minBufferPx]="47*6"
+              [maxBufferPx]="47*6"
+              class="list-container virtual-scroll-viewport max-w-100 theme-only-items-scroll sm-h">
+              <div
+                class="list-view green-highlight lg-pm p-15"
+                *cdkVirtualFor='let testSuite of filterAvailableSuites'>
+                <mat-checkbox
+                  class="mat-checkbox"
+                  [checked]="checkedAvailableSuites.indexOf(testSuite) > -1"
+                  (change)="toggleCheck(testSuite, checkedAvailableSuites)"></mat-checkbox>
+                <div [textContent]="testSuite.name" class="w-80 text-truncate pl-8" [matTooltip]="testSuite.name"></div>
+                <div (click)="tooltip.ngOnDestroy();selectSuite(testSuite)"
+                     class="fa-circle-plus-alt pointer ml-auto text-t-secondary"
+                     #tooltip="matTooltip"
+                     [matTooltip]="'hint.message.common.add' | translate"></div>
+              </div>
+            </cdk-virtual-scroll-viewport>
+            <div *ngIf="zeroSuites()" class="w-100 h-100-50">
+              <div class="empty-full-container sm-pm">
+                <div class="empty-run-sm"></div>
+                <div class="text-t-secondary fz-15 py-12"
+                     [translate]="filterSuiteNameControl?.value?.length || filterTagIds?.length ?
+                     'message.common.search.not_found':'test_plan.available_suites.all_selected'"></div>
+              </div>
+            </div>
+          </div>
+          <div class="ts-col-10 text-center flex-column d-flex align-items-center">
+            <button
+              [disabled]="!checkedAvailableSuites.length"
+              (click)="selectBulk()"
+              class="btn icon-btn p-10"
+              [matTooltip]="'hint.message.common.add_selected' | translate">
+              <i class="fa-double-arrow-right"></i>
+            </button>
+            <button
+              [disabled]="!checkedSelectedSuites.length"
+              (click)="deSelectBulk()"
+              class="btn icon-btn ml-0 p-10 mt-10"
+              [matTooltip]="'hint.message.common.remove_selected' | translate">
+              <i class="fa-double-arrow-left"></i>
+            </button>
+          </div>
+          <div class="ts-col-45 theme-border border-rds-4 h-100 rb-medium overflow-x-hidden overflow-y-auto">
+            <div class="d-flex theme-border-b rb-medium align-items-center" style="background: #E9F7FF">
+              <div class="d-flex align-items-center py-15 pl-15 ts-col-45">
+                <mat-checkbox
+                  [class.visibility-hidden]="!selectedSuites.length"
+                  [(ngModel)]="checkAllSelected"
+                  [checked]="checkedSelectedSuites.length == selectedSuites.length"
+                  [ngModelOptions]="{standalone: true}"
+                  (change)="toggleCheckAll(checkAllSelected, checkedSelectedSuites)"
+                  class="mat-checkbox"></mat-checkbox>
+                <div class="ts-col-85 pl-8 text-nowrap" [textContent]="'test_plan.environment.selected_suites' | translate: {count: selectedSuites.length || 0}"></div>
+              </div>
+              <app-toggle-search-button
+                *ngIf="selectedSuites?.length"
+                class="ml-auto py-10 pr-15 mw-40"
+                (searchAction)="searchSelectSuite($event)"></app-toggle-search-button>
+            </div>
+            <cdk-virtual-scroll-viewport
+              *ngIf="!isSearched"
+              [class.d-none-important]="!filterCheckAllSelectedSuites?.length"
+              itemSize="63"
+              class="list-container virtual-scroll-viewport d-flex max-w-100 theme-only-items-scroll sm-h"
+              cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListData]="selectedSuites">
+              <div class="list-view green-highlight lg-pm p-12 pt-15 pb-15 d-flex"
+                   cdkDrag
+                   cdkDragBoundary=".cdk-drop-list.drag-list"
+                   cdkDragLockAxis="y"
+                   [cdkDragData]="testSuite"
+                   [cdkDragDisabled]="selectedSuites.indexOf(testSuite.parentSuite) > -1 || testSuite.preRequisiteSuite"
+                   *ngFor='let testSuite of selectedSuites'
+                   [ngSwitch]="selectedSuiteIds.indexOf(testSuite.parentSuite?.id) > -1">
+                <mat-checkbox
+                  *ngSwitchCase="false"
+                  [checked]="checkedSelectedSuites.indexOf(testSuite) > -1"
+                  (change)="toggleCheck(testSuite, checkedSelectedSuites)"
+                  class="mat-checkbox pr-8"></mat-checkbox>
+                <span *ngSwitchCase="true"
+                      class="bg-grey-light border-rds-3 fz-10 p-4 mr-4" [textContent]="'PreReq'"></span>
+                <div [textContent]="testSuite.name" class="w-80 text-truncate"></div>
+                <a (click)="deSelectSuite(testSuite)" *ngSwitchCase="false"
+                   [matTooltip]="'hint.message.common.remove' | translate"
+                   class="fa-circle-minus-alt text-t-secondary ml-auto"></a>
+              </div>
+              <div *ngIf="submitted && !selectedSuites.length" [translate]="'test_suite.form.test_cased.required'"
+                   class="rb-regular-i-d ts-col-100 text-center pt-80"></div>
+            </cdk-virtual-scroll-viewport>
+            <cdk-virtual-scroll-viewport
+              *ngIf="isSearched && filterCheckAllSelectedSuites?.length"
+              [class..d-none-important]="!filterCheckAllSelectedSuites?.length"
+              itemSize="63"
+              class="list-container virtual-scroll-viewport d-flex max-w-100 theme-only-items-scroll sm-h">
+              <div class="list-view green-highlight lg-pm p-15 d-flex"
+                   *ngFor='let testSuite of filterCheckAllSelectedSuites'
+                   [ngSwitch]="selectedSuiteIds.indexOf(testSuite.parentSuite?.id) > -1">
+                <mat-checkbox
+                  *ngSwitchCase="false"
+                  [checked]="checkedSelectedSuites.indexOf(testSuite) > -1"
+                  (change)="toggleCheck(testSuite, checkedSelectedSuites)"
+                  class="mat-checkbox pr-8"></mat-checkbox>
+                <span *ngSwitchCase="true"
+                      class="bg-grey-light border-rds-3 fz-10 p-4 mr-4" [textContent]="'PreReq'"></span>
+                <div [textContent]="testSuite.name" class="w-80 text-truncate"></div>
+                <a (click)="deSelectSuite(testSuite)" *ngSwitchCase="false"
+                   [matTooltip]="'hint.message.common.remove' | translate"
+                   class="fa-circle-minus-alt text-t-secondary ml-auto"></a>
+              </div>
+              <div *ngIf="submitted && !selectedSuites.length" [translate]="'test_suite.form.test_cased.required'"
+                   class="rb-regular-i-d ts-col-100 text-center pt-80"></div>
+            </cdk-virtual-scroll-viewport>
+            <div *ngIf="!filterCheckAllSelectedSuites?.length" class="w-100 h-100-50">
+              <div class="empty-full-container sm-pm">
+                <div class="empty-run-sm"></div>
+                <div class="text-t-secondary fz-15 py-12 rb-regular-i-d" [translate]="isSearched?'message.common.search.not_found':'test_plan.selected_suites.empty'"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="theme-overlay-footer pt-0 pb-30">
+      <button
+        [translate]="'btn.common.cancel'"
+        class="theme-btn-clear-default" mat-dialog-close></button>
+      <button
+        (click)="save()"
+        class="theme-btn-primary"
+        type="button"
+        [translate]="'btn.common.add'">
+      </button>
+    </div>
+  </ng-template>
+</div>

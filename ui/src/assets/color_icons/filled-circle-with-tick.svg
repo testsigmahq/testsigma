@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 58 (84663) - https://sketch.com -->
+    <title>Group 6</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Test-case-4-Copy" transform="translate(-146.000000, -190.000000)">
+            <g id="Group-6" transform="translate(146.000000, 190.000000)">
+                <circle id="Oval" fill="#03A973" cx="8" cy="8" r="8"></circle>
+                <path d="M4.93887897,7.39485427 L6.86411232,9.58589916 L11.0803734,5.16207518 C11.292149,4.93253714 11.638691,4.95340424 11.8504667,5.18294228 C12.0622424,5.41248031 12.04299,5.78808801 11.8312144,6.01762605 L7.21065433,10.8379248 C6.99887866,11.0674629 6.65233665,11.0465958 6.44056099,10.8170577 L4.1495333,8.18780385 C3.93775763,7.95826581 3.95700996,7.58265811 4.16878563,7.35312008 C4.39981363,7.14444914 4.7271033,7.14444914 4.93887897,7.39485427 Z" id="Mask" stroke="#FFFFFF" stroke-width="0.8" fill="#FFFFFF" fill-rule="nonzero"></path>
+            </g>
+        </g>
+    </g>
+</svg>

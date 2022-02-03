@@ -1,0 +1,109 @@
+<div class="pl-60 pr-20 py-20 ts-col-100 h-100 overflow-y-auto">
+  <div class="py-40">
+    <div class="fz-18 pb-20"
+         [translate]="'test_plans.details.ci_cd.default_title'"></div>
+    <div class="d-flex justify-content-between">
+      <a
+        href="https://testsigma.com/docs/continuous-integration/azure-devops/"
+        target="_blank"
+        class="plug-container" role="button" tabindex="0">
+        <span class="plug-img azure"></span>
+        <span class="pl-10 fz-16 f-semi-bold"
+              [translate]="'test_plans.details.ci_cd.azure'"></span>
+      </a>
+      <a
+        href="https://testsigma.com/docs/continuous-integration/circle-ci/"
+        target="_blank"
+        class="plug-container" role="button" tabindex="0">
+        <span class="plug-img circle_ci"></span>
+        <span class="pl-10 fz-16 f-semi-bold"
+              [translate]="'test_plans.details.ci_cd.circle_ci'"></span>
+      </a>
+      <a
+        href="https://testsigma.com/docs/continuous-integration/codeship-ci/"
+        target="_blank"
+        class="plug-container"
+        role="button" tabindex="0">
+        <span class="plug-img code_ship"></span>
+        <span class="pl-10 fz-16 f-semi-bold" [translate]="'test_plans.details.ci_cd.code_ship'"></span>
+      </a>
+      <a
+        href="https://testsigma.com/docs/continuous-integration/bamboo-ci/"
+        target="_blank"
+        class="plug-container" role="button" tabindex="0">
+        <span class="plug-img bamboo"></span>
+        <span class="pl-10 fz-16 f-semi-bold"
+              [translate]="'test_plans.details.ci_cd.bamboo'"></span>
+      </a>
+      <a
+        href="https://testsigma.com/docs/continuous-integration/jenkins/"
+        target="_blank"
+        class="plug-container" role="button" tabindex="0">
+        <span class="plug-img jenkins"></span>
+        <span class="pl-10 fz-16 f-semi-bold"
+              [translate]="'test_plans.details.ci_cd.jenkins'"></span>
+      </a>
+      <a
+        href="https://testsigma.com/docs/continuous-integration/aws-devops/"
+        target="_blank"
+        class="plug-container" role="button" tabindex="0">
+        <span class="plug-img aws"></span>
+      </a>
+      <a
+        href="https://testsigma.com/docs/continuous-integration/travis-ci/"
+        target="_blank"
+        class="plug-container" role="button" tabindex="0">
+        <span class="plug-img travis_ci"></span>
+        <span class="pl-8 fz-16 f-semi-bold"
+              [translate]="'test_plans.details.ci_cd.travis_ci'"></span>
+      </a>
+      <a
+        href="https://testsigma.com/docs/continuous-integration/rest-api/"
+        target="_blank"
+        class="plug-container" role="button" tabindex="0">
+        <span class="plug-img generic-terminal"></span>
+        <span class="pl-10 fz-16 f-semi-bold"
+              [translate]="'test_plans.details.ci_cd.others'"></span>
+      </a>
+    </div>
+  </div>
+  <div
+    class="fz-18 pb-8"
+    [translate]="'test_plans.details.ci_cd.other_tools'"></div>
+  <div class="plug-ci-container">
+    <div class="ci-section">
+      <div class="f-semi-bold rb-medium-i-d"
+           [translate]="'test_plans.details.ci_cd.start_api.title'"></div>
+      <pre class="pre-view">
+        <span>
+          {{'curl -X POST -H "Content-type: application/json"  -H "Accept:application/json" -H "Authorization: Bearer &lt;API_KEY&gt;" '+this.authGuard.session.serverUrl+'/api/v1/test_plan_results -d "{\\"testPlanId\\": \\"'+testPlanId+'\\"}"'}}
+        </span>
+      </pre>
+      <span
+        [translate]="'test_plans.details.ci_cd.start_api.description'"
+        class="des-info"></span>
+      <a
+        class="text-link"
+        href="https://testsigma.com/docs/api/test-plans/"
+        [translate]="'test_plans.details.ci_cd.start_api.article_title'"
+        target="_blank"></a>
+    </div>
+    <div class="ci-section border-0 pl-40 pr-15">
+      <div
+        class="f-semi-bold rb-medium-i-d"
+        [translate]="'test_plans.details.ci_cd.status_api.title'"></div>
+      <pre class="pre-view">
+        <span>
+          {{'curl -X GET -H "Content-type: application/json" -H "Accept:application/json" -H "Authorization: Bearer &lt;API_KEY&gt;" '+this.authGuard.session.serverUrl+'/api/v1/test_plan_results/RUN-ID'}}
+        </span>
+      </pre>
+      <span class="des-info"
+            [translate]="'test_plans.details.ci_cd.status_api.description'"></span>
+      <a
+        class="text-link"
+        [translate]="'test_plans.details.ci_cd.status_api.article_title'"
+        href="https://testsigma.com/docs/api/test-plans/"
+        target="_blank"></a>
+    </div>
+  </div>
+</div>

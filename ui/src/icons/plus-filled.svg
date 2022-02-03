@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>plus-filled</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M10,0 C4.4765625,0 0,4.4765625 0,10 C0,15.5234375 4.4765625,20 10,20 C15.5234375,20 20,15.5234375 20,10 C20,4.4765625 15.5234375,0 10,0 Z M14.0625,10.78125 L10.625,10.78125 L10.625,14.21875 L8.984375,14.21875 L8.984375,10.78125 L5.546875,10.78125 L5.546875,9.21875 L8.984375,9.21875 L8.984375,5.78125 L10.625,5.78125 L10.625,9.21875 L14.0625,9.21875 L14.0625,10.78125 Z" id="path-1"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Test-case-5-Copy-2" transform="translate(-20.000000, -78.000000)">
+            <g id="plus-filled" transform="translate(20.000000, 78.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="Mask" fill="#FFFFFF" fill-rule="nonzero" xlink:href="#path-1"></use>
+            </g>
+        </g>
+    </g>
+</svg>

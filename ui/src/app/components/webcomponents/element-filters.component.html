@@ -1,0 +1,118 @@
+<div class="theme-overlay-container">
+  <div class="theme-overlay-header">
+    <div
+      class="theme-overlay-title"
+      [translate]="'testcase.list.filter.title'">
+    </div>
+    <button
+      class="close"
+      [matTooltip]="'hint.message.common.close' | translate"
+      mat-dialog-close>
+    </button>
+  </div>
+  <div class="theme-overlay-filter-content theme-overlay-content">
+    <form
+      class="ts-form pt-30">
+      <div class="form-group">
+        <input class="form-control" (keyup)="constructQueryString()" [(ngModel)]="filterName"
+               [ngModelOptions]="{standalone: true}"
+               [placeholder]="'elements.filter.form.placeholder.name' | translate">
+        <label class="control-label" [translate]="'elements.filter.form.label.name'"></label>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field class="mat-select-custom w-100" appearance="fill">
+          <mat-select
+            (selectionChange)="constructQueryString()"
+            [(value)]="filterLocatorTypes"
+            [placeholder]="'message.common.any' | translate"
+            multiple disableOptionCentering panelClass="multiple">
+            <mat-option *ngFor="let type of elementLocatorType | keyvalue"
+                        [value]="type.value"
+                        [textContent]="'element.locator_type.'+ type.key | translate"></mat-option>
+          </mat-select>
+        </mat-form-field>
+        <label class="control-label" [translate]="'elements.filter.form.label.locatorType'"></label>
+      </div>
+
+      <div class="form-group">
+        <input class="form-control" (keyup)="constructQueryString()" [(ngModel)]="filterScreenName"
+               [ngModelOptions]="{standalone: true}"
+               [placeholder]="'elements.filter.form.placeholder.screen_name' | translate">
+        <label class="control-label" [translate]="'elements.filter.form.label.screenName'"></label>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field class="mat-date-custom w-100" appearance="fill">
+          <mat-label [translate]="'testcase.list.created_date_placeholder'"></mat-label>
+          <mat-date-range-input [rangePicker]="createdDateRangePicker" [formGroup]="createdDateRange" [max]="maxDate">
+            <input matStartDate formControlName="start" placeholder="Start date" [max]="maxDate" required>
+            <input matEndDate formControlName="end" placeholder="End date" [max]="maxDate" required>
+          </mat-date-range-input>
+          <mat-datepicker-toggle matSuffix [for]="createdDateRangePicker"></mat-datepicker-toggle>
+          <mat-date-range-picker #createdDateRangePicker></mat-date-range-picker>
+        </mat-form-field>
+        <label class="control-label" [translate]="'message.common.createdDate'"></label>
+        <div class="error"
+             *ngIf="dateInvalid(createdDateRange) && !createdDateRangePicker.opened"
+             [translate]="'form.validation.common.invalid' | translate:{FieldName: 'Created Date'}" ></div>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="mat-date-custom w-100" appearance="fill">
+          <mat-label [translate]="'testcase.list.updated_date_placeholder'"></mat-label>
+          <mat-date-range-input [rangePicker]="updatedDateRangePicker" [formGroup]="updatedDateRange" [max]="maxDate">
+            <input matStartDate formControlName="start" placeholder="Start date" [max]="maxDate" required>
+            <input matEndDate formControlName="end" placeholder="End date" [max]="maxDate" required>
+          </mat-date-range-input>
+          <mat-datepicker-toggle matSuffix [for]="updatedDateRangePicker"></mat-datepicker-toggle>
+          <mat-date-range-picker #updatedDateRangePicker></mat-date-range-picker>
+        </mat-form-field>
+        <label class="control-label" [translate]="'message.common.updatedDate'"></label>
+        <div class="error"
+             *ngIf="dateInvalid(updatedDateRange) && !updatedDateRangePicker.opened"
+             [translate]="'form.validation.common.invalid' | translate:{FieldName: 'Updated Date'}" ></div>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="mat-select-custom w-100" appearance="fill">
+          <mat-select
+            (selectionChange)="constructQueryString()"
+            [placeholder]="'message.common.any' | translate"
+            [(value)]="filterTagIds"
+            multiple disableOptionCentering panelClass="multiple">
+            <mat-option *ngFor="let tag of tags" [value]="tag.id" [textContent]="tag.name"></mat-option>
+          </mat-select>
+        </mat-form-field>
+        <label class="control-label" [translate]="'elements.filter.form.label.labels'"></label>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field class="mat-select-custom w-100" appearance="fill">
+          <mat-select
+            (selectionChange)="constructQueryString()"
+            [placeholder]="'message.common.any' | translate"
+            [(value)]="filterByUsage" disableOptionCentering>
+            <mat-option *ngFor="let elementUsage of usageStates" [value]="elementUsage" [textContent]="elementUsage"></mat-option>
+          </mat-select>
+        </mat-form-field>
+        <label class="control-label" [translate]="'elements.filter.form.label.unused_elements'"></label>
+      </div>
+
+    </form>
+  </div>
+  <div class="theme-overlay-footer">
+    <button
+      class="theme-btn-clear-default"
+      mat-dialog-close
+      [translate]="'btn.common.close'"></button>
+    <button
+      *ngIf="filterApplied"
+      class="theme-btn-clear-default"
+      [translate]="'btn.common.reset'"
+      (click)="reset()"></button>
+    <button
+      class="theme-btn-primary"
+      [disabled]="disableFilter()"
+      [translate]="'btn.common.filter'"
+      (click)="filter()"></button>
+  </div>
+</div>

@@ -1,0 +1,32 @@
+
+<div class="page-container w-100 p-30 h-100">
+  <div class="h-100" *ngIf="workspace">
+    <div class="d-flex justify-content-between align-items-baseline ts-col-100">
+      <h1 class="fz-18 m-0 text-truncate" [textContent]="workspace?.name"></h1>
+      <span
+        [matTooltip]="workspace.workspaceType"
+        class="{{workspace.workspaceType}}-app app-icon my-auto ml-10 mr-auto"></span>
+      <div class="align-items-center d-flex ml-20">
+
+      </div>
+    </div>
+
+    <div
+      class="d-flex pt-20 pb-15 ts-col-100 details-container value-lg">
+      <div class="details-items ts-col-70">
+        <label class="details-title text-t-secondary" [translate]="'project.applications.details.description'"></label>
+        <div class="details-info mw-100 overflow-y-auto text-nowrap">
+          <div [innerHTML]="workspace?.description || '-' "></div>
+        </div>
+      </div>
+      <div
+        class="ts-form form-group position-relative right-10 z-in-2 top-65"
+        *ngIf="activeTabIndex==0">
+        <i class="fa-search-left search-icon text-t-secondary fz-16"></i>
+        <input
+          type="text" class="form-control pl-45 border-0" #versionsSearch
+          [placeholder]="'project.versions.search_placeholder' | translate">
+      </div>
+    </div>
+  </div>
+</div>

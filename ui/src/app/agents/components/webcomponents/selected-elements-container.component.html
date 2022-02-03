@@ -1,0 +1,220 @@
+<div *ngIf="inspectedElement" class="attributes-section">
+  <div class="btn-group-row">
+    <div>
+      <button (click)="tap(inspectedElement.mobileElement)">
+        <i class="fa-tap fz-19"></i>
+        <span [translate]="'mobile_recorder.button.tap'" class="mr-2"></span>
+      </button>
+      <button (click)="sendKeyDialog(inspectedElement.mobileElement)">
+        <i class="fa-sendkeys fz-14"></i>
+        <span [translate]="'mobile_recorder.button.send_keys'"></span>
+      </button>
+      <button (click)="clear(inspectedElement.mobileElement)"
+              [disabled]="textEditable()">
+        <i class="fa-eraser-outline fz-18"></i>
+        <span [translate]="'mobile_recorder.button.clear'"></span>
+      </button>
+    </div>
+  </div>
+  <div class="selected-element-table">
+    <div *ngIf="currentPageSource?.contextNames?.length && isNativeAppEnabled" class="note p-20 border-rds-1">
+      <i class="fa fa-question-circle-solid"></i><br>
+      {{'agents.mobile.inspection.has_web_view_context_warn' | translate}}
+    </div>
+    <div *ngIf="inspectedElement.mobileElement.webViewName && !isNativeAppEnabled" class="note p-20 border-rds-1">
+      <i class="fa fa-question-circle-solid"></i><br>
+      {{'agents.mobile.inspection.switch_to_web_view_context_while_using' | translate: ({name: inspectedElement.mobileElement.webViewName})}}
+    </div>
+    <div class="details-item rb-medium">
+      <div
+        [translate]="'agents.mobile.inspection.attribute'"
+        class="ts-col-35"></div>
+      <div
+        [translate]="'agents.mobile.inspection.value'"
+        class="item-data"></div>
+    </div>
+    <div *ngIf="inspectedElement.mobileElement.accessibilityId" class="details-item">
+      <div
+        [translate]="'agents.mobile.inspection.accessibility_id'"
+        class="item-label"></div>
+      <div
+        [textContent]="inspectedElement.mobileElement.accessibilityId"
+        class="item-data"></div>
+    </div>
+    <div *ngIf="inspectedElement.mobileElement.id" class="details-item">
+      <div
+        [translate]="'agents.mobile.inspection.id'"
+        class="item-label"></div>
+      <div
+        [textContent]="inspectedElement.mobileElement.id"
+        class="item-data"></div>
+    </div>
+    <div *ngIf="inspectedElement.mobileElement.name" class="details-item">
+      <div
+        [translate]="'agents.mobile.inspection.name'"
+        class="item-label"></div>
+      <div
+        [textContent]="inspectedElement.mobileElement.name"
+        class="item-data"></div>
+    </div>
+    <div *ngIf="inspectedElement.mobileElement.type" class="details-item">
+      <div
+        [translate]="isNativeAppEnabled ? 'agents.mobile.inspection.class' : 'agents.mobile.inspection.tag_name'"
+        class="item-label"></div>
+      <div
+        [textContent]="inspectedElement.mobileElement.type"
+        class="item-data"></div>
+    </div>
+    <div *ngIf="inspectedElement.mobileElement.type" class="details-item">
+      <div
+        [translate]="'agents.mobile.inspection.bounds'"
+        class="item-label"></div>
+      <div [textContent]="bounds" class="item-data">
+      </div>
+    </div>
+    <div *ngIf="inspectedElement.mobileElement.xpath" class="details-item flex-wrap">
+      <div
+        [translate]="'agents.mobile.inspection.xpath'"
+        class="item-label"></div>
+      <div
+        [textContent]="inspectedElement.mobileElement.xpath"
+        class="item-data"></div>
+      <div class="fz-10 bg-alice-blue theme-border border-rds-4 position-relative p-3 pr-20" *ngIf="optimisingXpath">
+        <span [translate]="'agents.mobile.inspection.optimising_xpath'" class="text-brand rb-regular-i-d"></span>
+        <mat-progress-spinner class="search-spinner top-0 mr-n8 mt-2" mode="indeterminate" diameter="13"></mat-progress-spinner>
+      </div>
+      <div class="note p-15 mt-10">
+        <i class="fa-question-circle-solid"></i><br>
+        {{'agents.mobile.inspection.fragile_warn' | translate}}
+      </div>
+    </div>
+    <div *ngIf="inspectedElement.mobileElement.enabled" class="details-item">
+      <div
+        [translate]="'agents.mobile.inspection.enabled'"
+        class="item-label"></div>
+      <div
+        [textContent]="inspectedElement.mobileElement.enabled"
+        class="item-data"></div>
+    </div>
+    <div *ngIf="inspectedElement.mobileElement.visible" class="details-item">
+      <div
+        [translate]="'agents.mobile.inspection.visible'"
+        class="item-label"></div>
+      <div
+        [textContent]="inspectedElement.mobileElement.visible"
+        class="item-data"></div>
+    </div>
+    <div *ngIf="inspectedElement.mobileElement.clickable" class="details-item">
+      <div
+        [translate]="'agents.mobile.inspection.clickable'"
+        class="item-label"></div>
+      <div
+        [textContent]="inspectedElement.mobileElement.clickable"
+        class="item-data"></div>
+    </div>
+    <div *ngIf="inspectedElement.mobileElement.checked" class="details-item">
+      <div
+        [translate]="'agents.mobile.inspection.checked'"
+        class="item-label"></div>
+      <div
+        [textContent]="inspectedElement.mobileElement.checked"
+        class="item-data"></div>
+    </div>
+    <div *ngIf="inspectedElement.mobileElement.longClickable" class="details-item">
+      <div
+        [translate]="'agents.mobile.inspection.long_clickable'"
+        class="item-label"></div>
+      <div
+        [textContent]="inspectedElement.mobileElement.longClickable"
+        class="item-data"></div>
+    </div>
+    <div *ngIf="inspectedElement.mobileElement.selected" class="details-item">
+      <div
+        [translate]="'agents.mobile.inspection.selected'"
+        class="item-label"></div>
+      <div
+        [textContent]="inspectedElement.mobileElement.selected"
+        class="item-data"></div>
+    </div>
+    <div *ngIf="inspectedElement.mobileElement.scrollable" class="details-item">
+      <div
+        [translate]="'agents.mobile.inspection.scrollable'"
+        class="item-label"></div>
+      <div
+        [textContent]="inspectedElement.mobileElement.scrollable"
+        class="item-data"></div>
+    </div>
+    <div *ngIf="inspectedElement.mobileElement.checkable" class="details-item">
+      <div
+        [translate]="'agents.mobile.inspection.checkable'"
+        class="item-label"></div>
+      <div
+        [textContent]="inspectedElement.mobileElement.checkable"
+        class="item-data"></div>
+    </div>
+    <div *ngIf="inspectedElement.mobileElement.focusable" class="details-item">
+      <div
+        [translate]="'agents.mobile.inspection.focusable'"
+        class="item-label"></div>
+      <div
+        [textContent]="inspectedElement.mobileElement.focusable"
+        class="item-data"></div>
+    </div>
+    <div *ngIf="inspectedElement.mobileElement.text" class="details-item">
+      <div
+        [translate]="'agents.mobile.inspection.text'"
+        class="item-label"></div>
+      <div
+        [textContent]="inspectedElement.mobileElement.text"
+        class="item-data"></div>
+    </div>
+    <div *ngIf="inspectedElement.mobileElement.packageName" class="details-item">
+      <div
+        [translate]="'agents.mobile.inspection.package_name'"
+        class="item-label"></div>
+      <div
+        [textContent]="inspectedElement.mobileElement.packageName"
+        class="item-data"></div>
+    </div>
+    <div *ngIf="inspectedElement.mobileElement.label" class="details-item">
+      <div
+        [translate]="'agents.mobile.inspection.label'"
+        class="item-label"></div>
+      <div
+        [textContent]="inspectedElement.mobileElement.label"
+        class="item-data"></div>
+    </div>
+    <div *ngIf="inspectedElement.mobileElement.valid" class="details-item">
+      <div
+        [translate]="'agents.mobile.inspection.valid'"
+        class="item-label"></div>
+      <div
+        [textContent]="inspectedElement.mobileElement.valid"
+        class="item-data"></div>
+    </div>
+
+    <div *ngIf="inspectedElement.mobileElement.attributes">
+      <div *ngFor="let item of inspectedElement.mobileElement.attributes | keyvalue" class="details-item">
+        <div
+          [textContent]="item.key"
+          class="item-label"></div>
+        <div
+          [textContent]="item.value"
+          class="item-data"></div>
+      </div>
+    </div>
+    <div *ngIf="inspectedElement.mobileElement.webViewName" class="details-item">
+      <div
+        [translate]="'agents.mobile.inspection.web_view_context_name'"
+        class="item-label"></div>
+      <div
+        [textContent]="inspectedElement.mobileElement.webViewName"
+        class="item-data"></div>
+    </div>
+    <div class="mt-20"></div>
+  </div>
+</div>
+<div *ngIf="!inspectedElement"
+     [translate]="'agents.mobile.inspection.element_not_selected'"
+     class="fz-16 pt-20 text-center text-warning">
+</div>

@@ -1,0 +1,181 @@
+  <div
+  class="page-details-navigation-md">
+  <ul class="tab-nav" role="tablist" *ngIf="!canDrag">
+    <li class="nav-items" role="presentation">
+      <a
+        [routerLink]="['/td', 'cases', testCase?.id, 'steps']"
+        [routerLinkActive]="'active'"
+        class="normal-text active">
+        <i class="fa-list"></i>
+        <span [textContent]="('result.test_step'  | translate) + (stepLength ?  ' (' + stepLength + ')' : '')"></span>
+      </a>
+    </li>
+    <li
+      *ngIf="testCase?.isStepGroup"
+      class="nav-items" role="presentation">
+      <a
+        [routerLink]="['/td', 'cases', testCase?.id, 'dependents']"
+        [routerLinkActive]="'active'"
+        class="normal-text">
+        <i class="fa-test-cases-alt"></i>
+        <span [translate]="'testcase.details.step_group.test_cases'"></span>
+      </a>
+    </li>
+    <li
+      *ngIf="canShowRunResult && stepLength"
+      class="nav-items" role="presentation">
+      <a
+        [routerLink]="['/td', 'cases', testCase?.id, 'dry_runs']"
+        [routerLinkActive]="'active'"
+        class="normal-text">
+        <i class="fa-step-group"></i>
+        <span [translate]="'testcase.details.dry_runs'"></span>
+      </a>
+    </li>
+  </ul>
+  <div class="d-flex align-items-center ts-col-15 ml-25" *ngIf="!canDrag && (stepLength > 1 || searchTerm)">
+      <i
+        [matTooltip]="'hint.message.common.search' | translate"
+        class="fa-search fz-13 mr-5"
+        (click)="focusOnSearch()"></i>
+      <input
+        class="form-control border-0 w-90 d-inline-block p-0 mr-15"
+        (focus)="focusOnSearch()" [(ngModel)]="inputValue"
+        #searchInput
+        [placeholder]="'testcase.details.search_action_action' | translate">
+      <i [ngClass]= "{'visibility-visible' : inputValue}"  [matTooltip]="'hint.message.common.clear' | translate"
+         class="fa-close-alt text-t-secondary fz-12 pt-2 mr-5 pointer visibility-hidden" (click)="clearSearch()"></i>
+    </div>
+  <span *ngIf="canDrag" [translate]="'testcase.details.steps.re-oder'" class="p-20 fz-14"></span>
+  <div class="ml-auto d-flex ts-col-45 justify-content-end">
+    <button
+      *ngIf="(!canDrag && !canShowBulkActions && stepLength > 1) || searchTerm"
+      (click)="canDrag=true"
+      [disabled]="searchTerm"
+      class="theme-btn-clear-default ml-auto" [translate]="'testcase.details.steps.re-oder'">
+    </button>
+    <div *ngIf="canDrag">
+      <button
+        (click)="cancelDragging()"
+        class="theme-btn-clear-default" [translate]="'btn.common.cancel'">
+      </button>
+      <button
+        [disabled]="!draggedSteps || draggedSteps.length == 0"
+        [isLoading]="saving"
+        [message]="'message.common.saving'"
+        appAsyncBtn
+        (click)="updateSorting()"
+        class="theme-btn-primary" [textContent]="'btn.common.update' | translate">
+      </button>
+    </div>
+  </div>
+</div>
+
+<div
+  class="d-flex flex-wrap theme-w-o-h-scroll">
+  <div
+    [class.ts-col-100]="version?.workspace?.isRest || isRest || canDrag || !isHelpWidgetShowed"
+    class="ts-col-70 h-100 overflow-hidden">
+    <div
+      [class.showed]="canShowBulkActions"
+      class="bulk-action-container">
+      <button
+        (click)="openBulkUpdate()"
+        class="theme-btn-clear-default"
+      >
+        <i class="fa-bulk-update pr-10 result-status-text-0"></i>
+        <span class="dark-light-text" [translate]="'testcase.details.step_bulk_update'"></span>
+      </button>
+      <button
+        (click)="createStepGroupFrom()"
+        class="theme-btn-clear-default"
+      >
+        <span class="result-status-text-0 pr-10 fz-16">+</span>
+        <span class="dark-light-text"
+          [translate]="'testcase.details.step_create_group' | translate:{Name: 'Create'}"></span>
+      </button>
+      <button
+        (click)="bulkDeleteConfirm()"
+        [matTooltip]="'hint.message.common.delete' | translate"
+        class="theme-btn-clear-default fa-trash-thin">
+      </button>
+    </div>
+    <app-test-case-action-steps
+      *ngIf="testCase && templates"
+      [ngStyle]="{'height': isRibbonShowed ? 'calc(100% - 38px)': '100%'}"
+      class="d-flex pt-14"
+      [testCase]="testCase"
+      [searchTerm]="searchTerm"
+      [version]="version"
+      [templates]="templates"
+      [kibbutzTemplates]="kibbutzAction"
+      [selectedTemplate]="selectedTemplate"
+      [isDragEnabled]="canDrag"
+      [isSearchEnabled]="inputValue"
+      (onStepsFetch)="setStepLength($event)"
+      (onStepSelection)="selectedSteps($event)"
+      (onStepDrag)="onPositionChange($event)"
+      (onSelectedStepType)="onStepType($event)"
+    ></app-test-case-action-steps>
+    <app-placeholder-loader *ngIf="!templates"></app-placeholder-loader>
+    <div
+      [class.show]="isRibbonShowed"
+      class="step-help-ribbon">
+      <div class="d-flex align-items-center pr-20">
+        <div
+          class="align-items-center d-flex fa-fr-chat justify-content-center p-5 rounded-circle theme-border"></div>
+        <span
+          class="pl-10"
+          [translate]="'step.create.help.expert'"></span>
+        <a
+          href='https://discord.com/invite/5caWS7R6QX'
+          class="text-t-secondary pl-4 text-underline"
+          [translate]="'step.create.help.expert_msg'"></a>
+      </div>
+      <div class="d-flex align-items-center">
+        <div
+          class="align-items-center d-flex fa-library justify-content-center p-5 rounded-circle theme-border"></div>
+        <a
+          class="pl-10 pr-20 text-t-secondary"
+          [href]="stepArticleUrl"
+          target="_blank"
+          [translate]="'common.knowledge_base'"></a>
+      </div>
+      <div class="d-flex align-items-center">
+        <div
+          class="align-items-center d-flex fa-youtube-thin justify-content-center p-5 rounded-circle theme-border"></div>
+        <a
+          class="pl-10 pr-20 text-t-secondary"
+          [href]="stepVideoUrl"
+          target="_blank"
+          [translate]="'common.video_tour'"></a>
+      </div>
+      <i class="fa-times-circle-regular ml-auto fz-16 pointer" (click)="isRibbonShowed= false"></i>
+    </div>
+  </div>
+  <div
+    *ngIf="!version?.workspace?.isRest  || !isRest || canDrag || !isHelpWidgetShowed"
+    [class.ts-col-30]="isHelpWidgetShowed"
+    class="h-100">
+    <app-test-step-help
+      [class.show]="isHelpWidgetShowed"
+      class="action-help-widget"
+      [templates]="templates"
+      [testcase]="testCase"
+      [version]="version"
+      [stepType]="currentStepType"
+      (onClose)="isHelpWidgetShowed =false"
+      (onSelectTemplate)="onSelectTemplate($event)"
+      *ngIf="testCase"></app-test-step-help>
+    <span
+      *ngIf="!isHelpWidgetShowed"
+      (click)="isHelpWidgetShowed=true"
+      class="action-help-short-trigger mt-n5">
+      <i class="fa-help text-t-secondary pr-7"></i>
+      <span
+        class="text-t-secondary"
+        [translate]="'hint.message.common.help'"></span>
+    </span>
+  </div>
+</div>
+

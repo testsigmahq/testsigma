@@ -1,0 +1,93 @@
+<div class="pl-60 pr-20 py-20 ts-col-100 h-100">
+  <div class="py-4 ts-form d-flex align-items-baseline schedule-section">
+    <i class="fa-search"
+       [class.visibility-hidden]="emptySchedules()"></i>
+    <input
+      [class.visibility-hidden]="emptySchedules()"
+      #searchInput class="form-control border-0"
+      [placeholder]="'common.place_holder.search' | translate"/>
+    <app-schedule-form-button
+      class="w-15"
+      (onClose)="fetchSchedules()"
+      [displayText]="('test_plans.schedules.new' | translate)"
+      [execution]="execution"></app-schedule-form-button>
+  </div>
+  <div
+    *ngIf="!schedules.isEmpty && !schedules.isFetching"
+    class="list-header flex-wrap mt-15">
+    <div
+      class="pr-10 d-flex ts-col-45">
+<!--        <mat-checkbox-->
+<!--          class="mat-checkbox"></mat-checkbox>-->
+      <span
+        [translate]="'schedule.title.name'"></span>
+    </div>
+    <div
+      class="ts-col-25 px-10"
+      [translate]="'schedule.title.frequency'"
+    ></div>
+    <div
+      class="ts-col-20 d-flex"
+    >
+      <span
+        [translate]="'schedule.title.schedule_on'"></span>
+    </div>
+  </div>
+  <div class="list-container lg-h theme-w-o-h-scroll" *ngIf="!schedules?.isEmpty">
+    <cdk-virtual-scroll-viewport class="virtual-scroll-viewport outer-sm-pm"
+      itemSize="90">
+      <div
+        class="list-view green-highlight lg-pm pl-10 pointer align-items-center"
+        *cdkVirtualFor="let schedule of schedules; let i = index">
+        <div class="pr-10 d-flex ts-col-45 flex-wrap">
+<!--          <div class="pr-30">-->
+<!--        <mat-checkbox-->
+<!--          class="mat-checkbox"></mat-checkbox>-->
+<!--          </div>-->
+          <div>
+            <div>
+              <a
+                class="list-title"
+                [textContent]="schedule?.name"></a>
+            </div>
+            <div
+              class="pt-4 text-t-secondary"
+              [translate]="schedule?.description">
+            </div>
+          </div>
+        </div>
+        <div
+          class="ts-col-25 px-10 text-t-secondary"
+          [textContent]="('schedule.repeat_'+schedule?.scheduleType) |translate : {Day: getDisplayDay(schedule?.scheduleType, schedule?.scheduleTime, getTime(schedule?.scheduleTime))}"        ></div>
+        <div
+          *ngIf="!getCanShowNextInterval(schedule)"
+          class="ts-col-20 text-t-secondary">
+          <div [textContent]="getCurrentTime(schedule.scheduleTime) | date : 'EEE d MMM'"></div>
+          <div [textContent]="'message.common.at_a_time'| translate: {time: (getCurrentTime(schedule.scheduleTime) | date : 'hh:mm a')}"></div>
+        </div>
+        <div class="ts-col-20 text-t-secondary" *ngIf="getCanShowNextInterval(schedule)" [translate]="'-'"></div>
+        <div class="ts-col-10 text-center action-icons my-auto">
+          <a
+            [matTooltip]="'pagination.edit' | translate"
+            (click)="editSchedule(schedule)"
+            class="fa-pencil-on-paper action-icon"></a>
+          <a
+            data-placement="bottom" (click)="deleteConfirmation(schedule.id)"
+            [matTooltip]="'pagination.delete' | translate"
+            class="fa-trash-thin action-icon"></a>
+        </div>
+      </div>
+    </cdk-virtual-scroll-viewport>
+    <app-placeholder-loader
+      *ngIf="schedules.isFetching"></app-placeholder-loader>
+  </div>
+  <div *ngIf="schedules.isEmpty" class="h-100">
+    <div
+      class="empty-full-container">
+      <div class="empty-run-md"></div>
+      <div
+        class="empty-text"
+        [translate]="isFiltered ? 'message.common.search.not_found' : 'test_plans.no_associated_schedules'"></div>
+    </div>
+  </div>
+</div>

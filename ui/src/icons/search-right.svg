@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>search-right</title>
+    <desc>Created with Sketch.</desc>
+    <g id="search-right" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M60,55.758 L55.758,60 L43.029,47.274 L47.271,43.029 L60,55.758 Z M24,42 C14.076,42 6,33.927 6,24 C6,14.076 14.076,6 24,6 C33.924,6 42,14.076 42,24 C42,33.927 33.924,42 24,42 L24,42 Z M24,0 C10.746,0 0,10.746 0,24 C0,37.254 10.746,48 24,48 C37.254,48 48,37.254 48,24 C48,10.746 37.254,0 24,0 L24,0 Z" id="search_left-[#1504]" fill="#333333" transform="translate(30.000000, 30.000000) scale(-1, 1) translate(-30.000000, -30.000000) "></path>
+    </g>
+</svg>

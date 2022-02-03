@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>test data ts</title>
+    <desc>Created with Sketch.</desc>
+    <g id="test-data-ts" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M12,0 L48,0 C51.3137085,-6.08718376e-16 54,2.6862915 54,6 L54,16 L6,16 L6,6 C6,2.6862915 8.6862915,6.08718376e-16 12,0 Z M6,22 L54,22 L54,38 L6,38 L6,22 Z M6,44 L54,44 L54,54 C54,57.3137085 51.3137085,60 48,60 L12,60 C8.6862915,60 6,57.3137085 6,54 L6,44 Z" id="Combined-Shape" fill="#000000"></path>
+    </g>
+</svg>

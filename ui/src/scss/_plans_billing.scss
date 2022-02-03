@@ -1,0 +1,92 @@
+.plan-features-list {
+  @extend .px-30;
+
+  li {
+    @extend .pb-10;
+  }
+}
+
+.plan-detail-title {
+  @extend .fz-16, .ts-col-100;
+}
+.plan-detail-info {
+  @extend .rb-medium, .fz-16, .pt-5, .ts-col-100, .pb-4;
+}
+
+.plan-status {
+  @extend .ts-col-100, .d-flex, .pt-10, .pb-4, .align-items-center;
+  .status-info {
+    @extend .border-rds-2, .px-10, .py-5, .ml-10;
+  }
+}
+
+.current-plan-container {
+  @extend .border-rds-6, .theme-border, .p-40, .d-flex, .flex-wrap;
+
+  .plan-section {
+    @extend .d-flex, .flex-wrap, .ts-col-50, .theme-border-r, .pr-40;
+    .plan-detail-items {
+      @extend .ts-col-50, .d-flex, .flex-wrap, .align-content-start;
+    }
+    .plan-detail-break {
+      @extend .ts-col-100, .p-20;
+    }
+  }
+}
+.plan-list-container {
+  @extend .d-flex, .justify-content-between;
+  .plan-items {
+    @extend .border-rds-2, .theme-border, .ts-col-30;
+    .plan-price-info {
+      @extend .theme-border-b, .bg-white-smoke, .border-rds-top-2, .ts-col-100, .p-15;
+      .price-section {
+        @extend .d-flex;
+        .plan-item-title {
+          @extend .fz-26;
+        }
+        .plan-item-price {
+          @extend .ml-auto, .align-content-start, .d-flex;
+          .plan-currency-symbol {
+            @extend .fz-19, .pr-10;
+          }
+          .plan-amount {
+            @extend .fz-40;
+          }
+        }
+      }
+      .plan-change-section {
+        @extend .d-flex, .align-items-center;
+        .plan-cycle {
+          @extend .ts-col-40;
+        }
+        .plan-choose-section {
+          @extend .form-group, .pb-0, .ts-col-60;
+        }
+      }
+
+      .plan-choose-section-md {
+        @extend .form-group, .pb-0, .ts-col-100, .pt-10;
+      }
+    }
+    .plan-btn {
+      @extend .theme-btn-clear-default, .ml-20, .mb-20, .text-nowrap;
+    }
+  }
+}
+
+.allowed-run-details {
+  @extend .bg-light, .px-18, .py-10, .mr-25, .border-rds-4, .d-flex;
+  .allowed-count {
+    @extend .text-purplish-blue, .fz-32, .pr-10;
+  }
+}
+
+.plan-allowed-details-section {
+  @extend .d-flex, .flex-wrap, .ts-col-50, .pl-40, .align-content-start;
+  .allowed-items {
+    @extend .d-flex, .ts-col-100;
+    .allowed-parallel {
+      @extend .ts-col-35, .allowed-run-details;
+    }
+  }
+}

@@ -1,0 +1,185 @@
+// stylelint-disable declaration-no-important
+// Width and height
+@each $prop,
+$abbrev in (width: w, height: h) {
+    @each $size,
+    $length in $sizes {
+        .#{$abbrev}-#{$size} {
+            #{$prop}: $length !important;
+        }
+        .m#{$abbrev}-#{$size} {
+            max-#{$prop}: $length !important;
+        }
+    }
+}
+
+// Viewport additional helpers
+.min-vw-100 {
+    min-width: 100vw !important;
+}
+
+.min-vh-100 {
+    min-height: 100vh !important;
+}
+.min-vh-95 {
+    min-height: 95vh !important;
+}
+
+.vw-100 {
+    width: 100vw !important;
+}
+
+.vw-50 {
+  width: 50vw !important;
+}
+
+.vh-100 {
+    height: 100vh !important;
+}
+
+.vh-60 {
+  height: 60vh !important;
+}
+
+.vh-50 {
+  height: 50vh !important;
+}
+
+.h-unset {
+  height: unset!important;
+}
+.h-fit-content{
+  height: fit-content!important;
+}
+.h-18p {
+  height: 18px!important;
+}
+
+.h-30p {
+  height: 30px!important;
+}
+
+.h-31p {
+  height: 31px!important;
+}
+
+.h-32p {
+  height: 32px!important;
+}
+
+.h-40p {
+  height: 40px!important;
+}
+
+.h-47p {
+  height: 47px!important;
+}
+
+.h-155p {
+  height: 115px!important;
+}
+
+.h-80p {
+  height: 80px!important;
+}
+
+.h-50p {
+  height: 50px!important;
+}
+.h-55p {
+  height: 55px!important;
+}
+
+.h-139p{
+  height: 139px!important;
+}
+
+.h-100-150 {
+  height: calc(100% - 150px)!important;
+}
+
+.h-100-190 {
+  height: calc(100% - 190px)!important;
+}
+
+.h-100-91 {
+  height: calc(100% - 130px)!important;
+}
+
+.h-100-90 {
+  height: calc(100% - 90px)!important;
+}
+
+.h-100-103 {
+  height: calc(100% - 103px)!important;
+}
+
+.h-100-120 {
+  height: calc(100% - 120px)!important;
+}
+
+.h-100-50 {
+  height: calc(100% - 50px)!important;
+}
+
+.h-100-40 {
+  height: calc(100% - 40px)!important;
+}
+
+.h-100-250 {
+  height: calc(100% - 250px)!important;
+}
+
+.h-100-82 {
+  height: calc(100% - 82px)!important;
+}
+
+.h-300p{
+  height: 300px;
+}
+
+.w-100-60 {
+  width: calc(100% - 60px);
+}
+.w-85p {
+  width: 85px!important;
+}
+.w-50p {
+  width: 50px!important;
+}
+.w-31p {
+  width: 31px!important;
+}
+.w-32p {
+  width: 32px!important;
+}
+.w-33p {
+  width: 33px!important;
+}
+.w-167p {
+  width: 167px
+}
+.w-min-60{
+ min-width: 62px;
+}
+.h-100-64{
+  height: calc(100% - 64px);
+}
+.w-600{
+  width:600px;
+}
+.min-h-62{
+  min-height: 62px;
+}
+
+.tutorial-video-section {
+  flex: 4 0 100% !important;
+  min-width: 80% !important;
+  max-width: 80% !important;
+}
+
+.tutorial-video-links {
+  flex: 1 0 100% !important;
+  min-width: 20% !important;
+  max-width: 20% !important;
+}

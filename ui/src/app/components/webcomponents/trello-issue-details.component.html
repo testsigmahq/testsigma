@@ -1,0 +1,60 @@
+<app-placeholder-loader  *ngIf="!externalApplicationDetails || !issueDetails"></app-placeholder-loader>
+<div
+  *ngIf="externalApplicationDetails && issueDetails"
+  class="d-flex align-items-center text-t-secondary fz-15 pb-30">
+  <a
+    class="text-t-secondary"
+    target="_blank"
+    [translate]="'test_case_result.details.board'"></a>
+  <span class="px-5">/</span>
+  <a
+    [href]="'https://trello.com/b/'+getBoardLink(issueDetails.idBoard)"
+    class="text-t-secondary d-flex"
+    target="_blank">
+    <span
+      class="pl-5" [translate]="'test_case_result.details.list'"></span>
+  </a>
+  <span class="px-5">/</span>
+  <a
+    [href]="'https://trello.com/c/'+issueDetails.shortLink"
+    target="_blank"
+    class="text-t-secondary d-flex">
+    <span
+      class="pl-5"
+      [translate]="'test_case_result.details.card'"></span>
+  </a>
+  <button
+    (click)="unLinkIssue(externalApplicationDetails)"
+    class="ml-auto theme-btn-clear-default"
+    [translate]="'test_case_result.details.btn.unlink'"></button>
+</div>
+<div
+  *ngIf="externalApplicationDetails && issueDetails"
+  class="d-flex">
+  <div class="ts-col-70">
+    <div
+      class="fz-24 rb-medium text-t-highlight pb-20"
+      [textContent]="issueDetails?.name">
+    </div>
+    <div class="pb-20">
+      <label
+        class="rb-medium fz-14 pb-4"
+        [translate]="'test_case_result.details.description'"></label>
+      <div
+        class="rb-medium text-t-secondary pt-7"
+        [textContent]="issueDetails?.desc? htmlToPlaintext(issueDetails.desc) : 'message.common.none' | translate ">
+      </div>
+    </div>
+  </div>
+  <div class="ts-col-30">
+    <div class="pb-20">
+      <div
+        class="rb-medium pb-4 pl-7"
+        [translate]="'message.common.created_at'"></div>
+      <div
+        class="rb-medium text-t-secondary fz-14 grey-on-hover p-7 d-flex align-items-center"
+        [textContent]="issueDetails?.dateLastActivity | date:'MMM d, y  h:mm a'">
+      </div>
+    </div>
+  </div>
+</div>

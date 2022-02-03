@@ -1,0 +1,100 @@
+<div class="list-content overflow-x-hidden theme-only-items-scroll sm-h pt-30 px-40 pb-20">
+  <div class="list-header" *ngIf="devices.length>0">
+    <div class="ts-col-35 pl-20" [translate]="'agents.devices.actions.name'"></div>
+    <div class="ts-col-30" [translate]="'agents.devices.actions.unique_id'"></div>
+    <div class="ts-col-15" [translate]="'agents.devices.actions.model'"></div>
+    <div class="ts-col-20 align-items-center d-flex">
+      <span [translate]="'agents.devices.actions.info'"></span>
+      <div id="pagination" class="pagination-inline" *ngIf="devices.length">
+        <i class="previous text-muted"
+           *ngIf=deviceData.first
+           data-placement="bottom"
+           [matTooltip]="'pagination.previous'|translate">
+        </i>
+        <i class="previous"
+           *ngIf=!deviceData.first
+           (click)="previousPage()"
+           data-placement="bottom"
+           [matTooltip]="'pagination.previous' | translate">
+        </i>
+        <div>
+            <span [textContent]="(devicePageable.pageNumber * devicePageable.pageSize) +1" class="rb-medium mr-2">
+            </span>
+          -
+          <span class="rb-medium"
+                [textContent]="(devicePageable.pageSize * (devicePageable.pageNumber + 1)) >= deviceData.totalElements
+                  ? deviceData.totalElements : (devicePageable.pageSize * (devicePageable.pageNumber + 1))"></span>
+          <span *ngIf="(devicePageable.pageSize * (devicePageable.pageNumber + 1)) <= deviceData.totalElements"
+                [textContent]="'OF '+ deviceData.totalElements" class="d-inline-flex pr-10"></span>
+        </div>
+        <i class="next"
+           *ngIf=!deviceData.last
+           (click)="nextPage()"
+           data-placement="bottom"
+           [matTooltip]="'pagination.next' | translate">
+        </i>
+        <i class="next text-muted"
+           *ngIf=deviceData.last
+           data-placement="bottom"
+           [matTooltip]="'pagination.next' | translate">
+        </i>
+      </div>
+    </div>
+  </div>
+  <div class="list-container" *ngIf="devices.length>0">
+    <div class="list-view lg-pm green-highlight" *ngFor="let device of devices">
+      <div class="ts-col-35">
+          <span class="text-break d-flex">
+            <i class="fa-circle-filled text-brand"
+               [matTooltip]="'device.connected'|translate" data-placement="top"
+               *ngIf="device.isOnline && agent.isOnline()"></i>
+            <i class="fa-circle-filled text-danger"
+               [matTooltip]="'device.disconnected'|translate" data-placement="top"
+               *ngIf="!device.isOnline || !agent.isOnline()"></i>
+            <span [textContent]="device.name" class="px-8 fz-14 text-dark"></span>
+          </span>
+      </div>
+      <div class="ts-col-30" [textContent]="device.uniqueId"></div>
+      <div class="ts-col-15" [textContent]="device.productModel"></div>
+      <div class="ts-col-15 d-flex align-items-center">
+        <span
+          class="mr-4 android sm"
+          data-placement="bottom"
+          [matTooltip]="'Android' | translate" *ngIf="device.osName == 'ANDROID'"></span>
+        <span
+          class="mr-4 apple"
+          data-placement="bottom"
+          [matTooltip]="'iOS' | translate"
+          *ngIf="device.osName == 'IOS'"></span>
+        (<span [textContent]="device.osVersion"></span>)&nbsp;
+        <span [textContent]="device.screenWidth"></span>x
+        <span [textContent]="device.screenHeight"></span>
+      </div>
+<!--      <div class="ts-col-5 action-icons">-->
+<!--        <a-->
+<!--          href="javascript:void(0)" data-placement="bottom"-->
+<!--          [matTooltip]="'agents.devices.actions.view_device' | translate"-->
+<!--          (click)="startInspector(device)"-->
+<!--          *ngIf="agent.isLocalAgent && device.inspectorStartAllowed() &&  !hasMirroredDevice"-->
+<!--          class="fa-mirroring action-icon text-brand"></a>-->
+<!--        <a-->
+<!--          href="javascript:void(0)" data-placement="bottom"-->
+<!--          [matTooltip]="'agents.devices.actions.stop_device_view' | translate"-->
+<!--          (click)="stopInspector(device)"-->
+<!--          *ngIf="agent.isLocalAgent && device.inspectorStopAllowed() &&-->
+<!--          (hasMirroredDevice && (mirroredDevice.id == device.id))"-->
+<!--          class="fa-mirroring action-icon text-brand"></a>-->
+<!--        <i [class.disabled]="device.osName == 'IOS'"-->
+<!--           [matTooltip]="'agents.devices.actions.mirroring.not_supported' | translate"-->
+<!--           *ngIf="agent.isLocalAgent && device.inspectorDisabled()"-->
+<!--           class="pointer fa-mirroring action-icon"></i>-->
+<!--      </div>-->
+    </div>
+  </div>
+  <div *ngIf="devices?.length==0" class="w-100">
+    <div class="no-content">
+      <loading-circle *ngIf="!fetchingCompleted"></loading-circle>
+      <h3 *ngIf="fetchingCompleted" [translate]="'agents.no_devices'"></h3>
+    </div>
+  </div>
+</div>

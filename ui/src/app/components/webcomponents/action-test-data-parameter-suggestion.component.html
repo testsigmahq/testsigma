@@ -1,0 +1,124 @@
+<div class="theme-overlay-container">
+<div class="theme-overlay-header with-br-bottom">
+  <div
+    class="theme-overlay-title"
+    [translate]="('action.data_profile.suggestion.title'| translate)+(testDataName? '(' +testDataName +')': '') ">
+  </div>
+  <button
+    class="theme-overlay-close"
+    type="button"
+    [matTooltip]="'hint.message.common.close' | translate"
+    mat-dialog-close>
+  </button>
+</div>
+  <div class="identifier-record text-center h-100-64 overflow-y-auto" *ngIf="!dataProfileSuggestion?.length && !isQueryBased">
+    <div class="pt-20 px-35 pb-20">
+      <div [translate]="'test_data_profile_suggestion.not_found.start_title'" class="fz-14 pb-10 text-left line-height-large"></div>
+      <div *ngIf="option.stepRecorderView" class="d-flex justify-content-between">
+        <a class="btn theme-btn-primary" [routerLink]="['/td', versionId, 'data', 'new']" target="_blank">
+          <span [textContent]="'+ '+('test_data_profiles.create.title' | translate)"></span>
+        </a>
+        <a class="btn theme-btn-primary" [routerLink]="['/td', versionId, 'cases', testCaseId, 'edit']" target="_blank">
+          <span [translate]="'test_data_profile_suggestion.not_found.associate'"></span>
+        </a>
+      </div>
+      <div *ngIf="!option.stepRecorderView">
+        <a class="btn theme-btn-primary" [routerLink]="['/td', versionId, 'data', 'new']" target="_blank"
+           mat-dialog-close>
+          <span [textContent]="'+ '+('test_data_profiles.create.title' | translate)"></span>
+        </a>
+        <a class="btn theme-btn-primary" [routerLink]="['/td', versionId, 'cases', testCaseId, 'edit']" target="_blank"
+           mat-dialog-close>
+          <span [translate]="'test_data_profile_suggestion.not_found.associate'"></span>
+        </a>
+      </div>
+    </div>
+    <div class="identifier-bg px-60">
+      <div [translate]="'test_data_profile_suggestion.not_found.title'" class="fz-20 rb-medium py-20"></div>
+      <div>
+        <div
+          *ngIf="!showVideo"
+          class="d-flex align-items-center justify-content-center w-100 theme-border border-rds-12 bg-white pointer" style="height: 200px; color: red">
+          <i
+            (click)="showVideo= !showVideo"
+            class="fa-youtube fz-38"></i>
+        </div>
+        <iframe
+          *ngIf="showVideo"
+          height="250" class="w-100 border-rds-6"
+          src="https://s3.amazonaws.com/assets.testsigma.com/videos/test-data/create-profile.mp4" frameborder="0"
+          allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </div>
+      <a class="btn btn-lg btn-clear-default border-rds-4 my-20" href="https://testsigma.com/docs/test-data/create-data-profiles/" target="_blank">
+        <i class="text-purplish-blue fa-article pr-6 fz-15"></i>
+        <span class="text-dark" [translate]="'test_data_profile_suggestion.not_found.know_more'"></span>
+      </a>
+    </div>
+  </div>
+<form
+  class="ts-form theme-overlay-content" id="testcaseStatusForm"
+  (keydown.enter)="false"
+  novalidate="novalidate">
+  <div
+    *ngIf="dataProfileSuggestion?.length || isQueryBased"
+    class="overflow-x-hidden h-100 pt-30">
+    <div
+      class="d-flex text-t-secondary pb-30">
+      <div class="w-85 d-flex align-items-center">
+        <i
+          [matTooltip]="'hint.message.common.search' | translate"
+          class="fa-search fz-13 mr-5"></i>
+        <div
+          class="form-control border-0 w-85 data-placeholder-content d-inline-block p-0"
+          #searchInput
+          (focus)="this.currentFocusedIndex=0"
+          (keydown.enter)="selectedSuggestion()"
+          (keydown.arrowup)="scrollUpParameterFocus()"
+          (keydown.arrowDown)="scrollDownParameterFocus()"
+          contenteditable="true"
+          [attr.data-placeholder]="'common.place_holder.search_field' | translate: {fieldName: 'Parameter Name'}"></div>
+      </div>
+    </div>
+    <div
+      *ngIf="filteredSuggestion?.length"
+      class="list-header px-5 py-10">
+      <div
+        class="ts-col-100 pr-10 d-flex">
+        <span
+          class="pl-7"
+          [translate]="'elements.column_name'"></span>
+      </div>
+    </div>
+    <cdk-virtual-scroll-viewport
+      itemSize="59"
+      class="list-container virtual-scroll-viewport theme-details-scroll x-sm-h">
+      <a
+        class="list-view green-highlight py-7 px-5 border-0 pointer align-items-center grey-on-hover"
+        *ngFor='let element of filteredSuggestion; let index = index'
+        [class.h-active]="currentFocusedIndex == index"
+        (mouseover)="currentFocusedIndex = index"
+        (click)="selectedSuggestion(element)">
+        <div
+          class="ts-col-100 d-flex text-truncate pr-10 pl-16" [matTooltip]="element"
+            [textContent]="element">
+        </div>
+      </a>
+      <div
+        *ngIf="!filteredSuggestion?.length"
+        class="p-50 d-flex align-items-center justify-content-center h-100 flex-column">
+        <div
+          class="text-t-secondary pt-30 pb-18"
+          [translate]="'message.common.search.not_found'"></div>
+      </div>
+    </cdk-virtual-scroll-viewport>
+  </div>
+  <div *ngIf="!dataProfileSuggestion?.length"
+       class="w-100 h-100">
+    <div class="p-50 d-flex align-items-center justify-content-center h-100 flex-column">
+      <div
+        class="text-t-secondary pt-30 pb-18"
+        [translate]="'test_case.data_profile_not_linked'"></div>
+    </div>
+  </div>
+</form>
+</div>

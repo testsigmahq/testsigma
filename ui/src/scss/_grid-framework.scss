@@ -1,0 +1,162 @@
+// Framework grid generation
+//
+// Used only by Bootstrap to generate the correct number of grid classes given
+// any value of `$grid-columns`.
+
+@mixin make-grid-columns($columns: $grid-columns, $gutter: $grid-gutter-width, $breakpoints: $grid-breakpoints) {
+  // Common properties for all breakpoints
+  %grid-column {
+    position: relative;
+    width: 100%;
+    padding-right: $gutter / 2;
+    padding-left: $gutter / 2;
+  }
+
+  @each $breakpoint in map-keys($breakpoints) {
+    $infix: breakpoint-infix($breakpoint, $breakpoints);
+
+    // Allow columns to stretch full width below their breakpoints
+    @for $i from 1 through $columns {
+      .col#{$infix}-#{$i} {
+        @extend %grid-column;
+      }
+    }
+    .col#{$infix},
+    .col#{$infix}-auto {
+      @extend %grid-column;
+    }
+
+    @include media-breakpoint-up($breakpoint, $breakpoints) {
+      // Provide basic `.col-{bp}` classes for equal-width flexbox columns
+      .col#{$infix} {
+        flex-basis: 0;
+        flex-grow: 1;
+        max-width: 100%;
+      }
+      .col#{$infix}-auto {
+        flex: 0 0 auto;
+        width: auto;
+        max-width: 100%; // Reset earlier grid tiers
+      }
+
+      @for $i from 1 through $columns {
+        .col#{$infix}-#{$i} {
+          @include make-col($i, $columns);
+        }
+      }
+
+      .order#{$infix}-first { order: -1; }
+
+      .order#{$infix}-last { order: $columns + 1; }
+
+      @for $i from 0 through $columns {
+        .order#{$infix}-#{$i} { order: $i; }
+      }
+
+      // `$columns - 1` because offsetting by the width of an entire row isn't possible
+      @for $i from 0 through ($columns - 1) {
+        @if not ($infix == "" and $i == 0) { // Avoid emitting useless .offset-0
+          .offset#{$infix}-#{$i} {
+            @include make-col-offset($i, $columns);
+          }
+        }
+      }
+    }
+  }
+  @for $i from 1 through 20 {
+    .ts-col-#{$i * 5} {
+      position: relative;
+      @include make-col($i, 20);
+    }
+  }
+  .ts-col-23 {
+    position: relative;
+    flex: 0 0 23%;
+    max-width: 23%;
+  }
+  .ts-col-27{
+    position: relative;
+    flex: 0 0 27%;
+    max-width: 27%;
+  }
+  .ts-col-auto {
+    position: relative;
+    flex: auto;
+    max-width: 100%;
+  }
+}
+
+@each $color, $value in (
+  "15":15px,
+  "67":67px,
+  "61":61px,
+  "38":38px,
+  "25":25px,
+  "4":4px,
+  "35":35px,
+  "36":36px,
+  "60": 60px) {
+  .ts-col-100-#{$color} {
+    position: relative;
+    flex: 0 0 calc(100% - #{$value});
+    max-width: calc(100% - #{$value});
+  }
+}
+.ts-col-100-63 {
+  position: relative;
+  flex: 0 0 calc(100% + 63px);
+  max-width: calc(100% + 63px);
+}
+
+.ts-col-25-1 {
+  position: relative;
+  flex: 0 0 calc(25% - 1px);
+  max-width: calc(25% - 1px);
+}
+
+.ts-col-30-10 {
+  position: relative;
+  flex: 0 0 calc(30% - 10px);
+  max-width: calc(30% - 10px);
+}
+
+.ts-col-50-50 {
+  position: relative;
+  flex: 0 0 calc(50% - 50px);
+  max-width: calc(50% - 50px);
+}
+
+.ts-col-50-45 {
+  position: relative;
+  flex: 0 0 calc(50% - 45px);
+  max-width: calc(50% - 45px);
+}
+
+.ts-col-37-45 {
+  position: relative;
+  flex: 0 0 calc(37% - 45px);
+  max-width: calc(37% - 45px);
+}
+
+.ts-col-50-20 {
+  position: relative;
+  flex: 0 0 calc(50% - 20px);
+  max-width: calc(50% - 20px);
+}
+
+.ts-col-18 {
+  flex: 0 0 18%;max-width: 18%;
+}
+
+.ts-col-13 {
+  position: relative;
+  flex: 0 0 13%;
+  max-width: 13%;
+}
+
+.ts-col-87 {
+  position: relative;
+  flex: 0 0 87%;
+  max-width: 87%;
+}
+

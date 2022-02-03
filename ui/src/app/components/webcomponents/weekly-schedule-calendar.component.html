@@ -1,0 +1,61 @@
+<div class="d-flex align-items-center">
+  <div
+    class="dashboard-section-title"
+    [translate]="'dashboard.test_plan.schedules'"></div>
+  <div
+  class="btn-group mb-10 pl-20">
+  <i
+    mwlCalendarPreviousView
+    [view]="view"
+    [(viewDate)]="viewDate"
+    class="sm-pm fa-left-arrow-thin circle-icon"></i>
+  <span
+    mwlCalendarToday
+    [(viewDate)]="viewDate"
+    class="text-t-secondary pointer px-10 text-uppercase">
+    {{ viewDate | calendarDate: view + 'ViewTitle':'en' }}
+  </span>
+  <i
+    mwlCalendarNextView
+    [view]="view"
+    [(viewDate)]="viewDate"
+    class="sm-pm fa-right-arrow-thin circle-icon"></i>
+</div>
+</div>
+<div class="border-rds-4 p-4 theme-border theme-w-o-h-scroll x-sm-h" >
+  <mwl-calendar-week-view
+    class="custom-calender in-days"
+    [hourSegments]="0"
+    [viewDate]="viewDate"
+    [eventTemplate]="weekViewEventTemplate"
+    [events]="calendarEvents"
+    (eventClicked)="showEventDetails($event.sourceEvent, $event.event)"
+    (beforeViewRender)="updateCalendarEvents($event)">
+  </mwl-calendar-week-view>
+</div>
+<ng-template
+  #weekViewEventTemplate
+  let-weekEvent="weekEvent"
+  let-eventClicked="eventClicked"
+  let-tooltipPlacement="tooltipPlacement"
+  let-tooltipTemplate="tooltipTemplate"
+  let-tooltipAppendToBody="tooltipAppendToBody"
+  let-daysInWeek="daysInWeek">
+
+  <div *ngIf="weekEvent?.event" #eventPopupRef="cdkOverlayOrigin" cdkOverlayOrigin>
+    <div
+      class="cal-events"
+      [ngClass]="weekEvent?.event?.cssClass"
+      (mwlClick)="eventClicked.emit({sourceEvent: $event, event:weekEvent?.event})"
+      [mwlCalendarTooltip]="weekEvent?.event.title | calendarEventTitle
+      : (daysInWeek === 1 ? 'dayTooltip' : 'weekTooltip')
+      : weekEvent.tempEvent || weekEvent.event"
+      [tooltipPlacement]="tooltipPlacement" [tooltipEvent]="weekEvent?.event" [tooltipTemplate]="tooltipTemplate"
+      [tooltipAppendToBody]="tooltipAppendToBody"
+      data-title="{{'evn_title'+weekEvent?.event.title}}">
+      <span
+        class="px-10 py-7 ts-col-100-4 text-truncate"
+        [translate]="weekEvent?.event.title"></span>
+    </div>
+  </div>
+</ng-template>

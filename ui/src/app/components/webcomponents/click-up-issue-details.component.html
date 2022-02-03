@@ -1,0 +1,90 @@
+<div
+  *ngIf="externalApplicationDetails && issueDetails"
+  class="d-flex align-items-center text-t-secondary fz-15 pb-30">
+  <a
+    class="text-t-secondary"
+    target="_blank"
+    [translate]="'test_case_result.report_bug.click_up.team'"></a>
+  <span class="px-5">/</span>
+  <a
+    [href]="'https://app.clickup.com/'+issueDetails?.team_id+'/v/l/s/'+issueDetails?.space?.id"
+    class="text-t-secondary d-flex"
+    target="_blank">
+    <span
+      class="pl-5" [translate]="'test_case_result.report_bug.click_up.space'"></span>
+  </a>
+  <span class="px-5">/</span>
+  <a
+    [href]="'https://app.clickup.com/'+issueDetails?.team_id+'/v/l/f/'+issueDetails?.folder?.id"
+    class="text-t-secondary d-flex"
+    target="_blank">
+    <span
+      class="pl-5" [translate]="'test_case_result.report_bug.click_up.folder'"></span>
+  </a>
+  <span class="px-5">/</span>
+  <a
+    [href]="'https://app.clickup.com/'+issueDetails?.team_id+'/v/l/li/'+issueDetails?.list?.id"
+    target="_blank" *ngIf="issueDetails"
+    class="text-t-secondary d-flex">
+    <span
+      class="pl-5"
+      [translate]="'test_case_result.report_bug.click_up.list'"></span>
+  </a>
+  <span class="px-5">/</span>
+  <a
+    [href]="'https://app.clickup.com/t/'+issueDetails?.id"
+    target="_blank" *ngIf="issueDetails"
+    class="text-t-secondary d-flex">
+    <span
+      class="pl-5"
+      [translate]="'test_case_result.report_bug.click_up.task'"></span>
+  </a>
+  <button
+    (click)="unLinkIssue(externalApplicationDetails)"
+    class="ml-auto theme-btn-clear-default"
+    [translate]="'test_case_result.details.btn.unlink'"></button>
+</div>
+<div *ngIf="externalApplicationDetails && issueDetails"
+     class="d-flex">
+  <div class="ts-col-70">
+    <div
+      class="fz-24 rb-medium text-t-highlight pb-20"
+      [textContent]="issueDetails?.name">
+    </div>
+    <div class="pb-20">
+      <label
+        class="rb-medium fz-14 pb-4"
+        [translate]="'test_case_result.details.description'"></label>
+      <div
+        class="rb-medium text-t-secondary pt-7"
+        [textContent]="issueDetails?.description? htmlToPlaintext(issueDetails.description) : 'message.common.none' | translate ">
+      </div>
+    </div>
+  </div>
+  <div class="ts-col-30">
+    <div class="pb-20">
+      <div
+        class="ml-7 px-10 py-6 d-inline-flex rb-medium fz-14 bg-grey-light border-rds-4 pr-50">
+        <span [translate]="'test_case_result.report_bug.zepel.todo'"></span>
+      </div>
+    </div>
+    <div class="pb-20">
+      <div
+        class="rb-medium pb-4 pl-7"
+        [translate]="'message.common.created_at'"></div>
+      <div
+        class="rb-medium text-t-secondary fz-14 grey-on-hover p-7 d-flex align-items-center"
+        [textContent]="issueDetails?.date_created| date:'MMM d, y  h:mm a'">
+      </div>
+    </div>
+    <div class="pb-20">
+      <div
+        class="rb-medium pb-4 pl-7"
+        [translate]="'message.common.updated_at'"></div>
+      <div
+        class="rb-medium text-t-secondary fz-14 grey-on-hover p-7 d-flex align-items-center"
+        [textContent]="issueDetails?.date_updated | date:'MMM d, y  h:mm a'">
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,70 @@
+<div class="pl-60 pr-20 py-20 ts-col-100 h-100">
+  <div class="py-4 ts-form d-flex align-items-baseline">
+    <i class="fa-search"></i>
+    <input #searchInput class="form-control border-0 ts-col-85"
+           [placeholder]="'common.place_holder.search' | translate"/>
+    <button class="theme-btn-clear-default"
+            [translate]="isMobile ? 'test_plan.environment.device.title' : 'test_plan.environment.machine.title'"
+            (click)="openSelectTestMachineForm(executionEnvironments?.cachedItems[0])"></button>
+  </div>
+  <div class="list-container theme-w-o-h-scroll lg-h" *ngIf="!executionEnvironments.isEmpty">
+    <cdk-virtual-scroll-viewport class="virtual-scroll-viewport outer-sm-pm"
+                                 itemSize="90">
+      <div
+        class="list-view green-highlight lg-pm pl-10 pointer align-items-center"
+        *cdkVirtualFor="let environment of executionEnvironments">
+        <mat-slide-toggle
+          [disabled]="!isEnvironmentAvailable && !environment.disable"
+          [matTooltip]="!isEnvironmentAvailable && !environment.disable ? ('environment.disable_info'| translate) : ''"
+          (change)="isEnvironmentAvailable || environment.disable ? toggleMachineEnable(environment) : ''"
+          class="ts-col-5 z-in-2" [ngModel]="!environment.disable"></mat-slide-toggle>
+        <div class="pr-10 ts-col-50 text-decoration-none rb-medium">
+          <span [textContent]="environment.title"></span>
+          <a
+            *ngIf="isCustomPlan"
+            (click)="expand(environment)" class="pl-20 text-decoration-none text-t-secondary"
+            [textContent]="(environment?.testSuites?.length ? environment?.testSuites?.length : '')+' '+('test_plans.details.suites'|translate)"></a>
+        </div>
+        <div class="ts-col-40 text-t-secondary d-flex align-items-center ml-auto">
+          <app-test-machine-info-column
+            *ngIf="testPlan"
+            [execution]="testPlan"
+            [executionEnvironment]="environment"></app-test-machine-info-column>
+        </div>
+        <div class="ts-col-20 action-icons text-right position-absolute right-10 top-10 mr-60 mt-10">
+          <a class="action-icon"
+             data-placement="bottom" (click)="openSelectTestMachineForm(environment, true)"
+             [matTooltip]="'pagination.edit' | translate">
+            <i class="fa-pencil-on-paper"></i>
+          </a>
+          <a class="action-icon" *ngIf="executionEnvironments.totalElements > 1"
+             (click)="deleteEnvironment(environment)"
+             data-placement="bottom"
+             [matTooltip]="'pagination.delete' | translate">
+            <i class="fa-trash-thin"></i>
+          </a>
+        </div>
+        <div class="mt-10 pt-10 pl-60 ts-col-100 overflow-x-hidden theme-tree"
+             *ngIf="environment.testSuites && (activeEnvironment?.id == environment.id)">
+          <a class="align-items-center green-highlight lg-pm list-view pl-0 pointer ts-col-100 child"
+             [class.theme-border-t]="first"
+             *ngFor="let suite of environment.testSuites; let first= first; let last = last"
+             [routerLink]="['/td', 'suites', suite.id]">
+            <i class="fa-drag-n-drop pr-10"></i>
+            <span [textContent]="suite.name"></span></a>
+        </div>
+      </div>
+      <app-placeholder-loader
+        *ngIf="executionEnvironments.isFetching"></app-placeholder-loader>
+    </cdk-virtual-scroll-viewport>
+  </div>
+  <div *ngIf="executionEnvironments.isEmpty" class="h-100">
+    <div
+      class="empty-full-container">
+      <div class="empty-run-md"></div>
+      <div
+        class="empty-text"
+        [translate]="'message.common.search.not_found'"></div>
+    </div>
+  </div>
+</div>

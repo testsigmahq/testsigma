@@ -1,0 +1,36 @@
+name: 📖 Docs & Tutorials Improvement
+description: Suggest improvements to our docs and tutorials 
+title: "[Docs & Tutorials]: "
+labels: [docs-tutorials]
+assignees:
+- rukmangada
+body:
+- type: markdown
+  attributes:
+    value: |
+      Thanks for taking the time to fill out this docs/tutorials improvement request!
+- type: checkboxes
+  attributes:
+    label: Is there an existing issue for this?
+    description: Please search to see if an issue realated to this already exists.
+    options:
+    - label: I have searched the existing issues
+      required: true
+- type: input
+  attributes:
+    label: Doc/tutorial link 
+    description: Add a link to the page which needs improvement (optional)
+  validations:
+    required: false
+- type: textarea
+  attributes:
+    label: Explain the problem
+    description: Is the documentation/tutorial missing? Or is it not clear? What is not clear?
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Your inputs to improve
+    description: Your inputs to improve/add new documentation or tutorial.  
+  validations:
+    required: true

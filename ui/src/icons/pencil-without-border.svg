@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 58 (84663) - https://sketch.com -->
+    <title>Shape</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Test-case-5-Copy" transform="translate(-1314.000000, -289.000000)" fill="#656565" fill-rule="nonzero">
+            <path d="M1315.453,297.297 C1314.754,297.996 1314,301.703 1314,302 C1314,302.521 1314.406,303 1315,303 C1315.297,303 1319.004,302.246 1319.703,301.547 L1325.425,295.825 L1321.175,291.575 L1315.453,297.297 Z M1325,289 C1324.398,289 1323.551,289.199 1322.859,289.891 L1322.575,290.175 L1326.825,294.425 L1327.109,294.141 C1327.746,293.504 1328,292.695 1328,292 C1328,290.343 1326.656,289 1325,289 Z" id="Shape"></path>
+        </g>
+    </g>
+</svg>

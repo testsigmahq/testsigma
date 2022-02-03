@@ -1,0 +1,216 @@
+<div
+  class="ts-col-100 h-100">
+  <div class="page-header d-flex">
+
+    <div class="tab-navigation pb-2 h-40p">
+      <ul class="tab-nav mb-n2 fz-18" role="tablist">
+        <li class="nav-items" role="presentation">
+          <a
+            [routerLink]="['/td', versionId, 'cases']"
+            [routerLinkActive]="'active'"
+            [class.active]="!isStepGroup"
+            class="normal-text px-0 py-6 border-image-none">
+            <span class="theme-text" [translate]="'td_nav.test_case'"></span>
+          </a>
+        </li>
+        <li
+          class="nav-items" role="presentation">
+          <a
+            [routerLink]="['/td', versionId, 'step_groups']"
+            [routerLinkActive]="'active'"
+            [class.active]="isStepGroup"
+            class="normal-text py-6">
+            <span class="theme-text" [translate]="'test_case_groups.title'"></span>
+          </a>
+        </li>
+      </ul>
+      <div class="ml-auto d-flex align-items-center pb-5">
+        <div *ngIf="testCases?.content?.length" class="dropdown section-title mouse-over d-inline-block">
+          <div class="btn-group">
+            <button
+              class="btn icon-btn border-rds-2 ml-14 mr-14">
+              <i class="fa-export-thin"></i>
+            </button>
+          </div>
+          <div
+            class="dropdown-menu drop-down-transparent min-w left-md">
+            <ul
+              class="bg-white border-rds-4 ng-scope p-15 shadow-all2-b4">
+              <li class="border-rds-10 btn rb-medium grey-on-hover text-dark ml-0">
+                <span (click)="openBackupForm()" [translate]="isStepGroup?'testgroups.details.export_as_xml': 'testcases.details.export_as_xml'"></span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <a
+          [routerLink]="['/td', versionId, isStepGroup? 'step_groups':'cases', 'create']" [queryParams]="{ isGroup: isStepGroup}"
+          class="theme-btn-primary  ml-10"
+          [translate]="'btn.common.create'"></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-content">
+  <div class="d-flex fz-20 align-items-center mt-10 mb-15">
+    <div
+      #filterListBtn
+      class="text-truncate rb-medium d-flex align-items-center fz-16 ml-14 filter-action">
+      <i
+        (click)="openFiltersList()"
+        class="fa menu-bar-icon pointer border-0"
+        [matTooltip]="'hint.message.common.switch_view' | translate"></i>
+      <span
+        class="pl-8 text-warning" *ngIf="!!query">*</span>
+      <span
+        [matTooltip]="currentFilter?.name"
+        class="text-truncate ml-4"
+        [textContent]="currentFilter?.name"></span>
+      <i
+        *ngIf="!query?.includes(',name:*') && !!query && !currentFilter?.isDefault"
+        (click)="saveView()"
+        class="fa-tick-thick fz-17 pl-7 pointer pt-5 text-warning"
+        [matTooltip]="'hint.message.common.save' | translate"></i>
+      <i
+        (click)="saveViewAs()"
+        class="fa-save-as pointer px-8 text-warning"
+        [matTooltip]="'hint.message.common.save_as' | translate"
+        *ngIf="!query?.includes(',name:*') && !!query"></i>
+      <i
+        (click)="discard()"
+        class="fa-close-alt fz-13 pointer text-warning"
+        [matTooltip]="'hint.message.common.discard' | translate"
+        *ngIf="!query?.includes(',name:*') && !!query"></i>
+      <span *ngIf="!query">
+      <span
+        (click)="saveView()" *ngIf="!currentFilter?.isDefault"
+        class="fa-pencil-on-paper pointer px-10 fz-13"
+        [matTooltip]="'hint.message.common.edit' | translate"></span>
+      <span
+        (click)="deleteView()" *ngIf="!currentFilter?.isDefault"
+        class="fa-trash-thin pointer px-10 fz-13"
+        [matTooltip]="'hint.message.common.delete' | translate"></span>
+    </span>
+    </div>
+    <div
+      *ngIf="((testCases?.content?.length && !!!query) || !!query)"
+      class="d-flex align-items-baseline ml-auto">
+      <app-toggle-search-button
+        [class.visibility-hidden]="!((testCases?.content?.length && !!!query) || !!query)"
+        (searchAction)="searchWithName($event)"></app-toggle-search-button>
+      <app-pagination class="ml-14"
+        *ngIf="testCases?.totalElements"
+        [paginationData]="testCases"
+        [currentPage]="currentPage"
+        (paginationAction)="fetchTestCases()"
+      ></app-pagination>
+      <app-sort-by-button
+        [sortByColumns]="sortByColumns"
+        [sortedBy]="sortedBy"
+        [direction]="direction"
+        [translatePreFix]="'test_case.list.sort_by.'"
+        (sortAction)="sortBy($event.sortBy, $event.direction)"></app-sort-by-button>
+      <button
+        *ngIf="!isDeletedFilter"
+        (click)="openFilter()"
+        [matTooltip]="'hint.message.common.filter' | translate"
+        class="btn icon-btn border-rds-2 ml-14 filter-icon-with-reset">
+        <i class="filter-icon" [class.filtered]="!!this.query"></i>
+      </button>
+    </div>
+  </div>
+    <div
+      *ngIf="testCases?.content?.length"
+      class="list-header align-items-center min-height-set">
+      <div class="ts-col-70 pr-10 d-flex align-items-center">
+        <mat-checkbox
+          *ngIf="!isDeletedFilter"
+          class="mat-checkbox"
+          [(ngModel)]="selectAll" [ngModelOptions]="{standalone: true}"
+          (change)="selectAllToggle(selectAll)"
+          [checked]="selectedTestCases.length == testCases?.content?.length"></mat-checkbox>
+        <i
+          [class.d-none]="isDeletedFilter"
+          [textContent]="' '"
+          [class.pl-15]="!isDeletedFilter"></i>
+
+        <div
+          class="d-flex align-items-baseline ts-col-100-61"
+          *ngIf="selectedTestCases.length">
+          <button
+            (click)="openDeleteDialog()"
+            [matTooltip]="'hint.message.common.delete_selected' | translate"
+            class="btn icon-btn border-rds-2"
+            *ngIf="selectedTestCases.length">
+            <i class="fa-trash-thin pr-7"></i>
+            <span [translate]="'btn.common.delete'"></span>
+          </button>
+        </div>
+        <span
+          *ngIf="!selectedTestCases.length"
+          class="ts-col-100-61"
+          [translate]="'message.common.text.title'"></span>
+      </div>
+      <div *ngIf="!isStepGroup"
+        class="ts-col-15"
+        [translate]="'message.common.text.result'"></div>
+      <div
+        class="ts-col-15 px-25"
+        [translate]="'message.common.text.status'"></div>
+    </div>
+    <div
+      class="list-container h-90">
+      <a
+        class="list-view green-highlight lg-pm pl-10 text-t-secondary align-items-center min-h-62"
+        [routerLink]="['/td', 'cases',  testCase.id]"
+        *ngFor='let testCase of testCases?.content'>
+        <div class="ts-col-70 d-flex align-items-center">
+          <mat-checkbox
+            *ngIf="!isDeletedFilter"
+            [(ngModel)]="testCase.isSelected" [ngModelOptions]="{standalone: true}"
+            (click)="setSelectedList($event,testCase.id)"
+            class="mat-checkbox"></mat-checkbox>
+          <i
+            [class.pl-15]="!isDeletedFilter"
+            [class.d-none]="isDeletedFilter && !testCase?.isStepGroup"
+            [matTooltip]="testCase?.isStepGroup ? ('testcase.list.hint.step_group' | translate) : ''"
+            [textContent]="testCase?.isStepGroup ? '' : ' '"></i>
+          <div class="d-flex flex-wrap text-break  ts-col-100-61">
+              <span
+                class="ts-col-100 pb-0 list-title"
+                [textContent]="testCase?.name"></span>
+          </div>
+        </div>
+        <div class="ts-col-15" *ngIf="!isStepGroup">
+          <a (click)="$event.preventDefault();$event.stopPropagation()"
+             [routerLink]="['/td', 'test_case_results', testCase?.lastRun?.id]" *ngIf="testCase?.lastRun">
+            <app-result-pie-chart-column
+              [width]="30"
+              [height]="30"
+              [resultEntity]="testCase?.lastRun"></app-result-pie-chart-column>
+          </a>
+        </div>
+        <div class="ts-col-15 px-25"
+             [textContent]="'testcase.status_'+testCase?.status| translate"></div>
+      </a>
+      <div
+        *ngIf="!testCases?.content?.length && !isFetching && (!!!query || !!query)"
+        class="empty-full-container">
+        <div class="empty-full-content">
+          <div class="empty-run-md"></div>
+          <div
+            class="empty-text"
+            [translate]="!!query ? 'message.common.search.not_found' : 'testcase.list.not_found' | translate : { categoryType: isStepGroup? 'Step Groups' : 'Test Cases'}"></div>
+          <div *ngIf="!!!query && currentFilter?.isAllCases">
+            <a
+              [routerLink]="['/td', versionId, isStepGroup? 'step_groups':'cases', 'create']" [queryParams]="{ isGroup: isStepGroup}"
+              class="theme-btn-primary">
+              +
+              <span [translate]="isStepGroup?'btn.create.test_group':'btn.create.test_case'"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <app-placeholder-loader *ngIf="isFetching"></app-placeholder-loader>
+    </div>
+  </div>
+</div>

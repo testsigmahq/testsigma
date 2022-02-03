@@ -1,0 +1,346 @@
+/* theme color */
+@import "_color_variables";
+
+$component-active-color: $white !default;
+$component-active-bg: theme-color("primary") !default;
+
+// font varibles
+$RB_Regular: Roboto-Regular;
+$RB_Medium: Roboto-Medium;
+$RB_Bold: Roboto-Black;
+$RB_Semi_Bold: Roboto-Bold;
+$RB_Light: Roboto-Light;
+$font_families: ()!default;
+//$font_families: map-merge(("rb-regular": $RB_Regular, "rb-medium": $RB_Medium, "rb-bold": $RB_Bold, "rb-semi-bold": $RB_Semi_Bold, "rb-light": $RB_Light), $font_families);
+
+.rb-light{
+  font-weight: 300;
+}
+.rb-regular{
+  font-weight: 400;
+}
+
+.rb-semi-medium {
+  font-weight: 500;
+}
+
+.rb-regular-i-d{
+  @extend .default-font;
+  font-weight: 400!important;
+}
+.rb-medium{
+  font-weight: 500;
+}
+.rb-medium-i-d{
+  @extend .default-font;
+  font-weight: 500!important;
+}
+.rb-semi-bold{
+  font-weight: 700;
+}
+.rb-bold{
+  font-weight: 800;
+}
+
+
+/* box shadow */
+
+$box-shadow-all2-b4: 0 0 2px 0 rgba($black, .15),
+0 2px 4px 0 rgba($black, .17);
+$box-shadow-all-bottom-2: 0 0 .1rem 0 rgba($black, .15),
+0 .2rem .2rem 0 rgba($black, .1);
+$box-shadow-bottom-4: 0 .2rem .4rem 0 rgba($black, .09);
+$box-shadow-sm: 0 0 .1rem 0 rgba($black, .15);
+$box-shadow-all-b10: 0 10px 16px 0 rgba($black, .15), 0 2px 4px 0 rgba($black, .17);
+// Typography
+//
+// Font, line-height, and color for body text, headings, and more.
+$font-size-base: 1rem * .625 !default; // Assumes the browser default, typically `10px`
+$fontsizes: () !default;
+$font-size-lg: $font-size-base * 1.25 !default;
+$font-size-sm: $font-size-base * .875 !default;
+$fontsizes: map-merge( (5: ($font-size-base*0.5) , 9: ($font-size-base*0.9) , 10: $font-size-base , 11: ($font-size-base * 1.1), 12: ($font-size-base * 1.2), 13: ($font-size-base * 1.3), 14: ($font-size-base * 1.4), 15: ($font-size-base * 1.5), 16: ($font-size-base * 1.6), 17: ($font-size-base * 1.7), 18: ($font-size-base * 1.8), 19: ($font-size-base * 1.9), 20: ($font-size-base * 2), 22: ($font-size-base * 2.2), 24: ($font-size-base * 2.4), 26: ($font-size-base * 2.6), 28: ($font-size-base * 2.8), 30: ($font-size-base * 3.0), 32: ($font-size-base * 3.2), 34: ($font-size-base * 3.4), 36: ($font-size-base * 3.6), 38: ($font-size-base * 3.8), 40: ($font-size-base * 4.0), 48: 48px) , $fontsizes);
+$font-weight-lighter: lighter !default;
+$font-weight-light: 300 !default;
+$font-weight-normal: 400 !default;
+$font-weight-lable: 500 !default;
+$font-weight-bold: 700 !default;
+$font-weight-bolder: bolder !default;
+$font-weight-base: $font-weight-normal !default;
+$line-height-base: 1.5 !default;
+$line-height-lg: 1.5 !default;
+$line-height-sm: 1.5 !default;
+$letterspacing: () !default;
+$letterspacing: map-merge( ( 0: 0, 16:-0.16px, 19: -0.19px, 22: -0.22px, 33: -0.33px, 36: -0.36px, 39: -0.39px, 44: -0.44px, 56: -0.56px), $letterspacing);
+$grid-breakpoints: ( xs: 0, sm: 576px, md: 768px, lg: 992px, xl: 1200px) !default;
+@include _assert-ascending($grid-breakpoints, "$grid-breakpoints");
+@include _assert-starts-at-zero($grid-breakpoints, "$grid-breakpoints");
+// Spacing
+$spacer: $font-size-base;
+$spacers: () !default;
+// stylelint-disable-next-line scss/dollar-variable-default
+$spacers: map-merge( ( 0: 0, 2: ($spacer * .2), 3: ($spacer * .3), 4: ($spacer * .4), 5: ($spacer * .5), 6: ($spacer * .6), 7: ($spacer * .7), 8: ($spacer * .8), 10: $spacer, 12: ($spacer * 1.2), 14: ($spacer * 1.4), 16:($spacer * 1.6), 18: ($spacer * 1.8), 15: ($spacer * 1.5), 20: ($spacer * 2), 25: ($spacer * 2.5), 30: ($spacer * 3),35: ($spacer * 3.5), 40: ($spacer * 4), 45: ($spacer * 4.5),  50: ($spacer * 5), 60: ($spacer * 6), 75: ($spacer * 7.5), 80: ($spacer * 8)), $spacers);
+// This variable affects the `.h-*` and `.w-*` classes.
+$sizes: () !default;
+// stylelint-disable-next-line scss/dollar-variable-default
+$sizes: map-merge( ( 10: 10%, 15: 15%, 20: 20%, 25: 25%, 30: 30%, 35: 35%, 40: 40%, 45: 45%, 50: 50%, 60: 60%, 65:60%, 70:70%, 75: 75%, 80: 80%, 85: 85%, 90: 90%, 95:95%, 100: 100%, auto: auto), $sizes);
+$border-widths: () !default;
+$border-widths: map-merge((1:1px, 2:2px, 3:3px, 4:4px, 5:5px), $border-widths);
+$border-width: 1px !default;
+$border-radius : .25rem !default;
+$border-radiuses: () !default;
+$border-radiuses: map-merge((0:0px, 1:1px, 2:2px, 3:3px, 4:4px, 5:5px, 6:6px, 7:7px), $border-radiuses);
+$border-color: $gray-300 !default;
+$border-radius-lg: .3rem !default;
+$border-radius-sm: .2rem !default;
+// Utilities
+$displays: (none, inline, inline-block, block, flex, inline-flex) !default;
+$overflows: (auto, hidden) !default;
+$text-align: (justify, left, right, center) !default;
+$text-transform: (lowercase, uppercase, capitalize) !default;
+$positions: (static, relative, absolute, fixed, sticky) !default;
+$nav-divider-color: $separator !default;
+$nav-divider-margin-y: $spacer / 2 !default;
+$emphasized-link-hover-darken-percentage: 15% !default;
+// Z-index master list
+//
+// Warning: Avoid customizing these values. They're used for a bird's eye view
+// of components dependent on the z-axis and are designed to all work together.
+$zindex-dropdown: 2002 !default;
+$zindex-sticky: 1020 !default;
+$zindex-fixed: 1030 !default;
+$zindex-modal-backdrop: 1040 !default;
+$zindex-modal: 1050 !default;
+$zindex-popover: 1060 !default;
+$zindex-tooltip: 1070 !default;
+// Modals
+// Padding applied to the modal body
+$modal-inner-padding: 12px 20px 12px 30px !default;
+$modal-dialog-margin: .5rem !default;
+$modal-dialog-margin-y-sm-up: 5rem !default;
+$modal-title-line-height: $line-height-base !default;
+$modal-content-color: null !default;
+$modal-content-bg: $white !default;
+$modal-content-border-color: rgba($black, .2) !default;
+$modal-content-border-width: $border-width !default;
+$modal-content-border-radius: $border-radius-lg !default;
+$modal-content-box-shadow-xs: 0 .25rem .5rem rgba($black, .5) !default;
+$modal-content-box-shadow-sm-up: 0 .5rem 1rem rgba($black, .5) !default;
+$modal-content-box-shadow-default: 0 2px 15px 0 $box-shadow-modal;
+$modal-backdrop-bg: $modal-background !default;
+$modal-backdrop-opacity: .5 !default;
+$modal-header-border-color: $border-color !default;
+$modal-footer-border-color: $modal-header-border-color !default;
+$modal-header-border-width: $modal-content-border-width !default;
+$modal-footer-border-width: $modal-header-border-width !default;
+$modal-header-padding-y: 1rem !default;
+$modal-header-padding-x: 1rem !default;
+$modal-header-padding: $modal-header-padding-y $modal-header-padding-x !default; // Keep this for backwards compatibility
+$modal-xl: 1140px !default;
+$modal-lg: 800px !default;
+$modal-md: 500px !default;
+$modal-sm: 300px !default;
+$modal-fade-transform: translate(0, -50px) !default;
+$modal-show-transform: none !default;
+$modal-transition: transform .3s ease-out !default;
+// Options
+//
+// Quickly modify global styling by enabling or disabling optional features.
+$enable-caret: true !default;
+$enable-rounded: true !default;
+$enable-shadows: false !default;
+$enable-gradients: false !default;
+$enable-transitions: true !default;
+$enable-prefers-reduced-motion-media-query: true !default;
+$enable-hover-media-query: false !default; // Deprecated, no longer affects any compiled CSS
+$enable-grid-classes: true !default;
+$enable-pointer-cursor-for-buttons: true !default;
+$enable-print-styles: true !default;
+$enable-responsive-font-sizes: true !default;
+$enable-validation-icons: true !default;
+$enable-deprecation-messages: true !default;
+
+
+// Buttons + Forms
+//
+// Shared variables that are reassigned to `$input-` and `$btn-` specific variables.
+$input-btn-padding-y: .375rem !default;
+$input-btn-padding-x: .75rem !default;
+$input-btn-font-family: null !default;
+$input-btn-font-size: $font-size-base !default;
+$input-btn-line-height: $line-height-base !default;
+$input-btn-focus-width: .2rem !default;
+$input-btn-focus-color: rgba($component-active-bg, .25) !default;
+$input-btn-focus-box-shadow: 0 0 0 $input-btn-focus-width $input-btn-focus-color !default;
+$input-btn-padding-y-sm: .25rem !default;
+$input-btn-padding-x-sm: .5rem !default;
+$input-btn-font-size-sm: $font-size-sm !default;
+$input-btn-line-height-sm: $line-height-sm !default;
+$input-btn-padding-y-lg: .5rem !default;
+$input-btn-padding-x-lg: 1rem !default;
+$input-btn-font-size-lg: $font-size-lg !default;
+$input-btn-line-height-lg: $line-height-lg !default;
+$input-btn-border-width: $border-width !default;
+// Buttons
+//
+// For each of Bootstrap's buttons, define text, background, and border color.
+$btn-padding-y: 6px !default;
+$btn-padding-x: 10px !default;
+$btn-font-family: $input-btn-font-family !default;
+$btn-font-size: $input-btn-font-size !default;
+$btn-line-height: $input-btn-line-height !default;
+$btn-padding-y-sm: $input-btn-padding-y-sm !default;
+$btn-padding-x-sm: $input-btn-padding-x-sm !default;
+$btn-font-size-sm: $input-btn-font-size-sm !default;
+$btn-line-height-sm: $input-btn-line-height-sm !default;
+$btn-padding-y-lg: $input-btn-padding-y-lg !default;
+$btn-padding-x-lg: $input-btn-padding-x-lg !default;
+$btn-font-size-lg: $input-btn-font-size-lg !default;
+$btn-line-height-lg: $input-btn-line-height-lg !default;
+$btn-border-width: $input-btn-border-width !default;
+$btn-font-weight: $font-weight-normal !default;
+$btn-box-shadow: inset 0 1px 0 rgba($white, .15),
+0 1px 1px rgba($black, .075) !default;
+$btn-focus-width: $input-btn-focus-width !default;
+$btn-focus-box-shadow: $input-btn-focus-box-shadow !default;
+$btn-disabled-opacity:  0.4 !default;
+$btn-active-box-shadow: inset 0 3px 5px rgba($black, .125) !default;
+$btn-link-disabled-color: $gray-600 !default;
+$btn-block-spacing-y: .5rem !default;
+// Allows for customizing button radius independently from global border radius
+$btn-border-radius: 2px !default;
+$btn-border-radius-lg: $border-radius-lg !default;
+$btn-border-radius-sm: $border-radius-sm !default;
+$btn-transition: color .15s ease-in-out,
+background-color .15s ease-in-out,
+border-color .15s ease-in-out,
+box-shadow .15s ease-in-out !default;
+// Forms
+$label-margin-bottom: .5rem !default;
+$input-padding-y: $input-btn-padding-y !default;
+$input-padding-x: $input-btn-padding-x !default;
+$input-font-family: $input-btn-font-family !default;
+$input-font-size: $input-btn-font-size !default;
+$input-font-weight: $font-weight-base !default;
+$input-line-height: $input-btn-line-height !default;
+$input-padding-y-sm: $input-btn-padding-y-sm !default;
+$input-padding-x-sm: $input-btn-padding-x-sm !default;
+$input-font-size-sm: $input-btn-font-size-sm !default;
+$input-line-height-sm: $input-btn-line-height-sm !default;
+$input-padding-y-lg: $input-btn-padding-y-lg !default;
+$input-padding-x-lg: $input-btn-padding-x-lg !default;
+$input-font-size-lg: $input-btn-font-size-lg !default;
+$input-line-height-lg: $input-btn-line-height-lg !default;
+$input-bg: $white !default;
+$input-disabled-bg: $gray-200 !default;
+$input-color: $gray-700 !default;
+$input-border-color: $form-border-color !default;
+$input-border-width: $input-btn-border-width !default;
+$input-box-shadow: inset 0 1px 1px rgba($black, .075) !default;
+$input-border-radius: $border-radius !default;
+$input-border-radius-lg: $border-radius-lg !default;
+$input-border-radius-sm: $border-radius-sm !default;
+$input-focus-bg: $input-bg !default;
+$input-focus-border-color: lighten($component-active-bg, 25%) !default;
+$input-focus-color: $input-color !default;
+$input-focus-width: $input-btn-focus-width !default;
+$input-focus-box-shadow: $input-btn-focus-box-shadow !default;
+$input-placeholder-color: $gray-600 !default;
+$input-plaintext-color: $body-color !default;
+$input-height-border: $input-border-width * 2 !default;
+$input-height-inner: calc(#{$input-line-height * 1em} + #{$input-padding-y * 2}) !default;
+$input-height-inner-half: calc(#{$input-line-height * .5em} + #{$input-padding-y}) !default;
+$input-height-inner-quarter: calc(#{$input-line-height * .25em} + #{$input-padding-y / 2}) !default;
+$input-height: calc(#{$input-line-height * 1em} + #{$input-padding-y * 2} + #{$input-height-border}) !default;
+$input-height-sm: calc(#{$input-line-height-sm * 1em} + #{$input-btn-padding-y-sm * 2} + #{$input-height-border}) !default;
+$input-height-lg: calc(#{$input-line-height-lg * 1em} + #{$input-btn-padding-y-lg * 2} + #{$input-height-border}) !default;
+$input-transition: border-color .15s ease-in-out,
+box-shadow .15s ease-in-out !default;
+$form-text-margin-top: .25rem !default;
+$form-check-input-gutter: 1.25rem !default;
+$form-check-input-margin-y: .3rem !default;
+$form-check-input-margin-x: .25rem !default;
+$form-check-inline-margin-x: .75rem !default;
+$form-check-inline-input-margin-x: .3125rem !default;
+$form-grid-gutter-width: 10px !default;
+$form-group-margin-bottom: 1rem !default;
+$input-group-addon-color: $input-color !default;
+$input-group-addon-bg: $gray-200 !default;
+$input-group-addon-border-color: $input-border-color !default;
+$custom-forms-transition: background-color .15s ease-in-out,
+border-color .15s ease-in-out,
+box-shadow .15s ease-in-out !default;
+$custom-select-padding-x: $input-padding-x !default;
+$custom-select-indicator-padding: 1rem !default;
+$yiq-contrasted-threshold: 150 !default;
+$yiq-text-dark: $gray-900 !default;
+$yiq-text-light: $white !default;
+// Links
+//
+// Style anchor elements.
+$link-color: theme-color("primary") !default;
+$link-decoration: none !default;
+$link-hover-color: darken($link-color,
+15%) !default;
+$link-hover-decoration: underline !default;
+// Breadcrumbs
+$breadcrumb-padding-y: .75rem !default;
+$breadcrumb-separator-padding: $font-size-base * .8 !default;
+$breadcrumb-item-padding: $font-size-base !default;
+$breadcrumb-margin-bottom: 1rem !default;
+$breadcrumb-bg: $gray-200 !default;
+$breadcrumb-divider-color: $bread-separator-color !default;
+$breadcrumb-active-color: $success-text !default;
+$breadcrumb-divider: quote(">") !default;
+$breadcrumb-border-radius: $border-radius !default;
+// Grid columns
+//
+// Set the number of columns and specify the width of the gutters.
+
+$grid-columns:                12 !default;
+$grid-gutter-width:           30px !default;
+
+
+$caret-width:                 .3em !default;
+$caret-vertical-align:        $caret-width * .85 !default;
+$caret-spacing:               $caret-width * .85 !default;
+
+// Dropdowns
+//
+// Dropdown menu container and contents.
+
+$dropdown-min-width:                10rem !default;
+$dropdown-padding-y:                .5rem !default;
+$dropdown-spacer:                   1.6rem !default;
+$dropdown-font-size:                ($font-size-base * 1.4) !default;
+$dropdown-color:                    $body-color !default;
+$dropdown-bg:                       $white !default;
+$dropdown-border-color:             rgba($black, .15) !default;
+$dropdown-border-radius:            $border-radius !default;
+$dropdown-border-width:             $border-width !default;
+$dropdown-inner-border-radius:      calc(#{$dropdown-border-radius} - #{$dropdown-border-width}) !default;
+$dropdown-divider-bg:               $gray-200 !default;
+$dropdown-divider-margin-y:         $nav-divider-margin-y !default;
+$dropdown-box-shadow:               0 .5rem 1rem rgba($black, .175) !default;
+
+$dropdown-link-color:               $gray-900 !default;
+$dropdown-link-hover-color:         darken($gray-900, 5%) !default;
+$dropdown-link-hover-bg:            $gray-100 !default;
+
+$dropdown-link-active-color:        $component-active-color !default;
+$dropdown-link-active-bg:           $component-active-bg !default;
+
+$dropdown-link-disabled-color:      $gray-600 !default;
+
+$dropdown-item-padding-y:           .25rem !default;
+$dropdown-item-padding-x:           1.5rem !default;
+
+$dropdown-header-color:             $gray-600 !default;
+
+
+$transition-base:             all .2s ease-in-out !default;
+$transition-fade:             opacity .15s linear !default;
+$transition-collapse:         height .35s ease !default;
+
+$line-heights: () !default;
+$line-heights: map-merge((1:10px, 1point5: 15px, 2:20px, 2point6: 26px, 3:30px, 4:40px) ,$line-heights);

@@ -1,0 +1,45 @@
+<div class="details-info" *ngIf="!editing">
+  <span *ngFor="let tag of tags; let last = last"
+        [textContent]="tag.name + (last?'' :',')"></span>
+  <span *ngIf="!tags?.length && !editing" class="details-info"> -</span>
+  <i *ngIf="editable" (click)="edit()"
+     class="fa-pencil-on-paper ml-5 pointer text-t-secondary" [matTooltip]="'hint.message.common.edit' | translate"></i>
+</div>
+<div class="details-info d-flex align-items-center" *ngIf="editing">
+  <mat-form-field class="w-80 mat-custom-chip-container">
+    <mat-chip-list #tagList class="mat-custom-chip-list">
+      <mat-chip *ngFor="let tag of editTags" [selectable]="false"
+                [removable]="true" (removed)="removeTag(tag)">
+        <span [textContent]="tag.name"></span>
+        <mat-icon matChipRemove class="fa-close-large fz-10 mat-icon"></mat-icon>
+      </mat-chip>
+      <input #searchTag
+             [formControl]="searchAutoComplete"
+             [matChipInputFor]="tagList"
+             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+             (matChipInputTokenEnd)="addNewTag(searchAutoComplete.value)"
+             [matAutocomplete]="auto">
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let tag of filteredList"
+                    [textContent]="tag.name" [value]="tag" (click)="addExistingTag(tag)"></mat-option>
+        <mat-option *ngIf="searchAutoComplete.value && !searchAutoComplete.value?.name && isNotAdded(searchAutoComplete.value)"
+                    class="pointer" [value]="searchAutoComplete.value"
+                    (click)="addNewTag(searchAutoComplete.value)">
+          <div>{{searchAutoComplete.value}}<span class="new-option-pill" [translate]="'btn.common.new'"></span></div>
+        </mat-option>
+        <mat-option *ngIf="!searchAutoComplete.value && !filteredList?.length"
+                    [disabled]="true" [textContent]="'labels.select.no_tags_msg' | translate"></mat-option>
+      </mat-autocomplete>
+    </mat-chip-list>
+  </mat-form-field>
+  <div class="pl-7">
+    <i
+      [matTooltip]="'hint.message.common.discard' | translate"
+      class="fa-circled-close pointer text-t-secondary fz-20 pr-7" (click)="editing=false"></i>
+    <i *ngIf="!saving" (click)="save()"
+       class="fa-tick-circle-filled text-success pointer fz-20"
+       [matTooltip]="'hint.message.common.save' | translate"></i>
+    <span *ngIf="saving" [translate]="'message.common.saving'"></span>
+  </div>
+</div>
+

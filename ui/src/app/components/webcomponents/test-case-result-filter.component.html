@@ -1,0 +1,74 @@
+<div class="theme-section-header theme-border-l theme-section-header-spacing">
+  <div
+    class="section-title" [translate]="'hint.message.common.filter'"></div>
+  <div class="ml-auto">
+    <i
+      class="fa-close-alt  action-hover-icon"
+      (click)="toggleFilter()"
+      [matTooltip]="'btn.common.close' | translate"></i>
+  </div>
+</div>
+<div class="theme-w-o-h-scroll theme-border-l position-relative">
+  <div class="ts-form overflow-x-hidden" style="height: calc(100% - 55px);padding: 30px 30px
+20px 22px">
+    <div class="form-group">
+      <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill">
+        <mat-select
+          disableOptionCentering panelClass="multiple"
+          (ngModelChange)="filterResult"
+          [(ngModel)]="filterResult"
+          multiple [(value)]="filterResult">
+          <mat-option *ngFor="let result of resultConstant"
+                      [value]="result"
+                      [textContent]="'execution.result.'+result | translate"></mat-option>
+        </mat-select>
+      </mat-form-field>
+      <label class="control-label" [translate]="'result.result'"></label>
+    </div>
+    <div class="form-group">
+      <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill">
+        <mat-select
+          disableOptionCentering panelClass="multiple"
+          (ngModelChange)="filterTestCaseTypes"
+          [(ngModel)]="filterTestCaseTypes"
+          multiple [(value)]="filterTestCaseTypes">
+          <mat-option *ngFor="let type of testCaseTypesList?.content"
+                      [value]="type.id"
+                      [textContent]="type.displayName"></mat-option>
+        </mat-select>
+      </mat-form-field>
+      <label class="control-label" [translate]="'testcase.summary.test_case_type'"></label>
+    </div>
+    <div class="form-group">
+      <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill">
+        <mat-select
+          disableOptionCentering panelClass="multiple"
+          (ngModelChange)="filterTestCasePriorities"
+          [(ngModel)]="filterTestCasePriorities"
+          multiple [(value)]="filterTestCasePriorities">
+          <mat-option *ngFor="let result of testcasePrioritiesList?.content"
+                      [value]="result.id"
+                      [textContent]="result.displayName"></mat-option>
+        </mat-select>
+      </mat-form-field>
+      <label class="control-label" [translate]="'testcase.summary.test_case_priority'"></label>
+    </div>
+  </div>
+  <div class="position-absolute theme-border-t text-right py-10 pr-20 fixed-full-pos mb-2 hide-get-started">
+    <button
+      class="theme-btn-clear-default"
+      [translate]="'btn.common.close'"
+      (click)="toggleFilter()"></button>
+    <button
+      *ngIf="filterApplied"
+      class="theme-btn-clear-default"
+      [translate]="'btn.common.reset'"
+      (click)="reset();"></button>
+    <button
+      class="theme-btn-primary"
+      [translate]="'btn.common.filter'"
+      [disabled]="!isFilterChanged"
+      (click)="filter()"></button>
+  </div>
+</div>
+

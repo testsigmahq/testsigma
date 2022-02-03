@@ -1,0 +1,15 @@
+<div class="h-100 steps-spacing">
+  <cdk-virtual-scroll-viewport
+    itemSize="59"
+    class="mx-n20 theme-section-container list-container virtual-scroll-viewport overflow-y">
+    <div class="list-view mr-4"
+         *ngFor='let testStepResult of testStepResults?.content;let stepNumber = index;trackBy: trackByIdx'>
+      <app-re-run-test-step-result-item
+        (activeStepGroupAction)="fetchStepGroupResults($event)"
+        [testcaseResult]="testCaseResult"
+        [activeStepGroup]="activeStepGroup"
+        [stepNumber]="stepNumber+1"
+        [testStepResults]="testStepResult"></app-re-run-test-step-result-item>
+    </div>
+  </cdk-virtual-scroll-viewport>
+</div>

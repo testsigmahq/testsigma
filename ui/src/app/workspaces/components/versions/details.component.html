@@ -1,0 +1,42 @@
+<div
+  class="px-30 h-100" *ngIf="version">
+  <div class="d-flex justify-content-between align-items-center">
+    <h1 class="fz-16 m-0 text-truncate" [textContent]="version.name"></h1>
+    <span
+      [matTooltip]="version.workspace.workspaceType"
+      class="{{version.workspace.workspaceType}}-app app-icon my-auto ml-10 mr-auto"></span>
+    <div class="d-flex">
+      <button *ngIf="!isDemo" class="btn icon-btn border-rds-2 ml-14" (click)="clone()"
+              [matTooltip]="'version.copy.title'|translate">
+        <i class="fa-copy-new"></i></button>
+      <button class="btn icon-btn border-rds-2 ml-14" [routerLink]="[fullScreenDetails?'../edit':'edit']"
+              [matTooltip]="'hint.message.common.edit'|translate">
+        <i class="fa-pencil-on-paper"></i></button>
+      <button *ngIf="!isDemo" class="btn icon-btn border-rds-2 ml-14" (click)="deleteIfMoreThanOne(version.id)"
+              [matTooltip]="'hint.message.common.delete' | translate">
+        <i class="fa-trash-thin"></i></button>
+    </div>
+  </div>
+
+  <div
+    class="d-flex justify-content-between py-20"
+    [class.ts-col-50]="fullScreenDetails">
+<!--    <div>-->
+<!--      <div class="text-t-secondary pb-10" [translate]="'version.details.label.requirements'"></div>-->
+<!--      <div class="rb-medium" [textContent]="totalRequirementsCount"></div>-->
+<!--    </div>-->
+    <div>
+      <div class="text-t-secondary pb-10" [translate]="'version.details.label.test_cases'"></div>
+      <div class="rb-medium" [textContent]="totalTestCaseCount"></div>
+    </div>
+  </div>
+
+  <div class="mat-content pt-30 pr-10 h-100 overflow-y-auto flex-column">
+    <div class="text-t-secondary pb-10 fz-15 rb-regular-i-d" [translate]="'message.common.description'"></div>
+    <div class="fz-13 lh-2 rb-medium text-break" [innerHTML]="version.description"></div>
+    <app-list-attachments
+      class="ts-col-100 h-50"
+      [attachmentRowId]="version.id"
+      [attachmentRow]="'WORKSPACE_VERSION'"></app-list-attachments>
+  </div>
+</div>

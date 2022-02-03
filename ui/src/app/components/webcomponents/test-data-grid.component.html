@@ -1,0 +1,171 @@
+<div class="form-group ts-col-100 pl-4 pt-25">
+  <div class="error noarrow position-relative top-0 mb-18 ml-30"
+       *ngIf="formSubmitted && datasetControls().invalid && !duplicateSetNames"
+       [translate]="'test_data_grid.validation.set_name.required'"></div>
+  <div class="error noarrow position-relative top-0 mb-18 ml-30"
+       *ngIf="formSubmitted && duplicateSetNames"
+       [translate]="'test_data_grid.validation.set_name.duplicate'"></div>
+  <div class="error noarrow position-relative top-0 mb-18 ml-30"
+       *ngIf="formSubmitted && parameterControls().invalid && !duplicateParametersName"
+       [translate]="'test_data_grid.validation.parameter_name.required'"></div>
+  <div class="error noarrow position-relative top-0 mb-18 ml-30"
+       *ngIf="formSubmitted && duplicateParametersName"
+       [translate]="'test_data_grid.validation.parameter_name.duplicate'"></div>
+</div>
+<form
+  class="td-grid-container" [formGroup]="testDataForm">
+  <div class="header-row-container">
+    <div
+      class="overflow-y-auto ts-col-35 d-flex rb-medium text-t-secondary">
+      <div
+        class="align-items-center d-flex theme-gray theme-border-l theme-border-y ml-20 pl-10 py-10 position-relative">
+        <span
+          class="pl-10 text-nowrap td-index"
+          [translate]="'test_data_profiles.table.header.serial_number'"></span>
+      </div>
+      <div
+        class="align-items-center d-flex theme-gray theme-border-y td-cell flex-auto"
+        [translate]="'test_data_profiles.table.header.set_name'"></div>
+    </div>
+    <div
+      class="set-header"
+      #parametersHeader
+      (scroll)="onHeaderScroll()"
+      (mouseenter)="activeScrollingElement=parametersHeader">
+<!--      <div-->
+<!--        class="td-cell"-->
+<!--        [translate]="'test_data_profiles.table.header.set_description'"></div>-->
+      <div
+        class="td-cell justify-content-around"
+        [translate]="'test_data_profiles.table.header.expected_to_fail'"></div>
+      <div
+        class="pr-25 pt-2 pl-0 align-items-center d-flex td-cell"
+        *ngFor="let columnControl of parameterControls().controls;let index = index;"
+        [matTooltip]="isReadOnly?  columnControl.value :''"
+        [matTooltipPosition]="'left'">
+        <div
+          class="form-group d-flex my-auto pb-0 w-100">
+<!--          <i-->
+<!--            [matTooltip]="'hint.message.common.encrypt' | translate"-->
+<!--            *ngIf="!isParameterEncrypted(index)"-->
+<!--            class="fa-lock-open-solid encrypt-icon"-->
+<!--            (click)="encrypt(index)"></i>-->
+<!--          <i-->
+<!--            [matTooltip]="'hint.message.common.decrypt' | translate"-->
+<!--            *ngIf="isParameterEncrypted(index)"-->
+<!--            class="fa-lock-solid encrypt-icon"-->
+<!--            (click)="decrypt(index)"></i>-->
+          <input
+            class="form-control py-7" required
+            [formControl]="columnControl"
+            [class.text-truncate]="isReadOnly"
+            [class.border-fail-1]="formSubmitted && (columnControl.errors?.required || columnControl.errors?.duplicate)">
+          <i
+            class="fa-close-large right-10 position-absolute pointer ml-auto top-5"
+            [matTooltip]="'hint.message.common.delete_column'| translate"
+            *ngIf="parameterControls().controls.length > 1"
+            (click)="removeParameter(index)"></i>
+        </div>
+      </div>
+    </div>
+    <div class="add-column">
+      <i
+        class="add-icon ml-4 mt-5 d-block"
+        (click)="addParameter()"
+        [matTooltip]="'hint.message.common.add_column'| translate"></i>
+    </div>
+  </div>
+  <div class="data-set-container">
+    <div class="overflow-y-auto ts-col-35 h-100">
+      <cdk-virtual-scroll-viewport
+        #setNameScrollable
+        (scroll)="onSetNameScroll()"
+        (mouseenter)="activeScrollingElement=setNameScrollable.elementRef"
+        class="list-container virtual-scroll-viewport scroll-none no-max-100"
+        itemSize="39">
+        <div
+          (mouseover)="onHoverRow(index)"
+          (mouseleave)="onLeaveRow()"
+          [formGroup]="datasetControl"
+          *cdkVirtualFor="let datasetControl of datasetControls()?.controls; let index = index; let isLast=last;"
+          [class.row-hovering]="datasetControl['ishover']"
+          class="column-container">
+          <i *ngIf="!isLast"
+             class="add-icon row-hover-action position-absolute"
+             [matTooltip]="'hint.message.common.add_row'| translate"
+             (click)="addDataSet(index)"></i>
+          <div class="d-flex align-items-center">
+            <span
+              class="pl-15 td-index">
+              <span *ngIf="index < 9">0</span>{{index + 1}}
+            </span>
+          </div>
+          <div class="d-flex"
+               [matTooltip]="isReadOnly?  datasetControl.controls.name.value :''"
+               [matTooltipPosition]="'left'">
+            <div
+              class="form-group pb-0 w-100 my-auto td-cell">
+              <input class="form-control py-7" formControlName="name" required
+                [class.text-truncate]="isReadOnly"
+                [class.border-fail-1]="formSubmitted &&
+                ( datasetControl.controls.name.errors?.required || datasetControl.controls.name.errors?.duplicate )"
+                />
+            </div>
+          </div>
+        </div>
+        <i
+          class="add-row"
+          [matTooltip]="'hint.message.common.add_row'| translate"
+          (click)="addDataSet()"></i>
+      </cdk-virtual-scroll-viewport>
+    </div>
+    <div class="overflow-x-auto overflow-y-auto h-100 ts-col-65">
+      <cdk-virtual-scroll-viewport
+        #dataScrollable
+        (scroll)="onDataSetScroll()"
+        (mouseenter)="activeScrollingElement=dataScrollable.elementRef"
+        class="list-container virtual-scroll-viewport no-max-100"
+        itemSize="39">
+        <div
+          (mouseover)="onHoverRow(index)"
+          (mouseleave)="onLeaveRow()"
+          [formGroup]="datasetControl"
+          *cdkVirtualFor="let datasetControl of datasetControls()?.controls; let index = index;"
+          [class.row-hovering]="datasetControl['ishover']"
+          class="d-flex align-items-center py-4 row-hover position-relative">
+<!--          <div-->
+<!--            class="d-flex td-cell">-->
+<!--            <div class="form-group pb-0 w-100 my-auto"-->
+<!--                 [matTooltip]="isReadOnly?  datasetControl.controls.description.value :''"-->
+<!--                 [matTooltipPosition]="'left'">-->
+<!--              <input class="form-control py-7" formControlName="description"-->
+<!--                     [class.text-truncate]="isReadOnly"/>-->
+<!--            </div>-->
+<!--          </div>-->
+          <div
+            class="d-flex justify-content-center td-cell">
+            <mat-slide-toggle formControlName="expectedToFail"></mat-slide-toggle>
+          </div>
+          <div
+            class="d-flex pr-25 td-cell"
+            *ngFor="let columnControl of datasetControl.controls['data'].controls; let columnIndex = index;">
+            <div class="form-group pb-0 w-100 my-auto"
+                 [matTooltip]="isReadOnly?  columnControl.value :''"
+                 [matTooltipPosition]="'left'">
+              <input [class.text-truncate]="isReadOnly"
+                autocomplete="false" class="form-control py-7"
+                [type]="isParameterEncrypted(columnIndex) ? 'password' : 'text'" [formControl]="columnControl">
+            </div>
+          </div>
+          <i class="fa-trash-thin pointer row-hover-action ml-auto position-sticky right-0 top-10 text-t-secondary"
+             [matTooltip]="hideToolTip ? '' : ('hint.message.common.remove_row'| translate)"
+             *ngIf="datasetControls().controls.length > 1" (click)="removeDataSet(index)"></i>
+        </div>
+        <i
+          class="add-row hidden"
+          [matTooltip]="'hint.message.common.add_row'| translate"
+          (click)="addDataSet()"></i>
+      </cdk-virtual-scroll-viewport>
+    </div>
+  </div>
+</form>

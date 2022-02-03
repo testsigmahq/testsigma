@@ -1,0 +1,59 @@
+<cdk-virtual-scroll-viewport
+  itemSize="59"
+  class="mx-n20 theme-section-container card-container virtual-scroll-viewport">
+  <div
+    *cdkVirtualFor='let testCaseDataDrivenResult of testCaseDataDrivenResults'>
+    <div
+      (click)="showTestCaseResult(testCaseDataDrivenResult?.iterationResult)"
+      class="list-card bordered sm-pm pointer">
+      <div
+        class="d-flex flex-wrap ts-col-100">
+        <div class="ts-col-50 d-flex flex-wrap">
+          <div
+            class="ts-col-100 list-title text-break"
+            [textContent]="testCaseDataDrivenResult?.testData?.name"></div>
+          <div class="ts-col-100 pt-4 text-t-secondary fz-12 d-flex align-items-center">
+            <div
+              class="theme-breadcrumb ts-col-50">
+              <div
+                class="theme-breadcrumb-item">(
+                <i class="fa-info fz-9 mr-2" [matTooltip]="'hint.test_data.expected_to_fail'| translate"></i>
+                <span [translate]="'test_data.expected_to_fail.'+testCaseDataDrivenResult?.testData?.expectedToFail"></span>
+                )
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ts-col-50 d-flex">
+          <div class="ts-col-50 d-flex">
+            <app-result-pie-chart-column
+              class="ml-auto"
+              [width]="24"
+              [height]="24"
+              [resultEntity]="testCaseDataDrivenResult?.iterationResult?.childResult"></app-result-pie-chart-column>
+            <div class="text-right text-t-secondary fz-12 ml-auto mr-10">
+              <div [textContent]="testCaseDataDrivenResult?.iterationResult?.childResult?.startTime | date:'MMM d, h:mm:ss'"></div>
+              <div class="pt-4">
+                <app-duration-format
+                  [duration]="testCaseDataDrivenResult?.iterationResult?.childResult?.duration"></app-duration-format>
+              </div>
+            </div>
+          </div>
+          <div class="ts-col-50 d-flex theme-border-l pl-10">
+            <div class="text-t-secondary fz-12">
+              <div [translate]="'re_run.previous_result'"></div>
+              <app-result-status-label [resultEntity]="testCaseDataDrivenResult?.iterationResult"></app-result-status-label>
+            </div>
+            <div class="text-right text-t-secondary fz-12 ml-auto">
+              <div [textContent]="testCaseDataDrivenResult?.iterationResult?.startTime | date:'MMM d, h:mm:ss'"></div>
+              <div class="pt-4">
+                <app-duration-format
+                  [duration]="testCaseDataDrivenResult?.iterationResult?.duration"></app-duration-format>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</cdk-virtual-scroll-viewport>

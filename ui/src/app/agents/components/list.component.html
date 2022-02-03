@@ -1,0 +1,189 @@
+<div class="page-header">
+    <agents-filter
+      [isEmpty]="!hasAgents && !(this.filteredBy != 'all')"
+      [filterByColumns]="filterByColumns"
+      [filteredBy]="filteredBy"
+      [translatePreFix]="'agents.list.sort_by.'"
+      (filterAction)="filterBy($event.filterBy)"></agents-filter>
+  <div class="short-hand-actions">
+
+    <app-toggle-search-button
+      [class.visibility-hidden]="!hasAgents"
+      (searchAction)="search($event)"></app-toggle-search-button>
+
+    <div class="dropdown mouse-over mx-20 d-inline-block">
+      <div class="btn-group">
+        <a class="theme-btn-clear-default rb-medium text-dark"
+           href="{{agentDownloadLink()}}" target="_blank">
+          <i class="fa-download-thin pr-5" aria-hidden="true"></i> <span
+          [translate]="'agents.download'"></span>
+        </a>
+      </div>
+      <div
+        class="dropdown-menu drop-down-transparent md-p left-x-sm">
+        <ul
+          class="d-flex bg-white border-rds-4 ng-scope p-15 shadow-all2-b4">
+          <li class="border-rds-10 btn btn-outline-light grey-on-hover"
+              [class.bg-grey-x-light]="osName=='mac'">
+            <a href="{{agentDownloadLink('mac')}}" target="_blank"
+               class="grey-on-hover">
+              <img class="apple" width="28px" height="28px"/>
+            </a>
+          </li>
+          <li class="border-rds-10 btn btn-outline-light grey-on-hover"
+              [class.bg-grey-x-light]="osName=='windows'">
+            <a href="{{agentDownloadLink('windows')}}" target="_blank"
+               class="grey-on-hover">
+              <img class="windows" width="28px" height="28px"/>
+            </a>
+          </li>
+          <li class="border-rds-10 btn btn-outline-light grey-on-hover"
+              [class.bg-grey-x-light]="osName=='linux'">
+            <a href="{{agentDownloadLink('linux')}}" target="_blank"
+               class="grey-on-hover">
+              <img class="linux" width="28px" height="28px"/>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <button class="theme-btn-primary" [routerLink]="['new']">
+      + <span [translate]="'agents.header.add_new_agent'"></span>
+    </button>
+  </div>
+</div>
+<div class="page-content">
+  <app-placeholder-loader *ngIf="isFetching"></app-placeholder-loader>
+  <div class="w-100 h-100" *ngIf="!isFetching">
+    <div *ngIf="agents?.content?.length">
+      <div class="list-header">
+        <div class="ts-col-40">
+          <span [translate]="'agents.list_view.title'"></span>
+        </div>
+        <div class="ts-col-10 text-uppercase">
+          <span [translate]="'agents.list_view.os'"></span>
+        </div>
+        <div class="ts-col-25">
+          <span [translate]="'agents.list_view.available_browsers'"></span>
+        </div>
+        <div class="ts-col-15">
+          <span [translate]="'agents.list_view.Last_successful_ping'"></span>
+        </div>
+      </div>
+      <div class="card-container">
+        <div class="list-card bordered lg-pm with" *ngFor="let agent of agents?.content">
+          <div class="ts-col-40 my-auto">
+            <a [routerLink]="['/agents', agent.id]"
+               [textContent]="agent.title" class="list-title"></a>
+            <br>
+            <button class="btn live-btn" *ngIf="agentIsActive(agent);">
+              <div class="rounded-circle btn mr-5 p-4 my-2 result-status-0"></div>
+              <span [translate]="'message.common.live'" class="fz-12"></span>
+            </button>
+            <span *ngIf="agent.isOutOfSync()"
+                  class="pt-5 text-t-secondary d-inline-block"
+                  [matTooltip]="'agents.list_view.version_out_of_sync' |
+                    translate: {agentVersion: agent.agentVersion, latestVersion:
+                    agent.currentAgentVersion}">
+                <i class="fa-exclamation-triangle-solid text-pale-orange pr-6"></i>
+              {{'agents.list_view.out_of_sync'|translate}}
+              <a href='https://testsigma.com/docs/agent/troubleshooting/setup-issues/' target='_blank' style='text-decoration:none' class='text-link text-secondary pl-4' [translate]="'agents.devices_troubleshoot'" >  </a>
+              </span>
+            <span *ngIf="!agent.isOnline()"
+                  class="pl-5 pt-5 text-t-secondary d-inline-block"
+                  [matTooltip]="'agents.list_view.unable_to_contact_agent_tool_tip' |
+                    translate: {updatedAt: (agent.updatedAt | amTimeAgo)}">
+                  <i class="fa-exclamation-triangle-solid text-pale-orange pr-6"></i>
+                  {{'agents.unable_to_reach'|translate}}
+              <a href='https://testsigma.com/docs/agent/troubleshooting/setup-issues/' target='_blank' style='text-decoration:none' class='text-link text-secondary pl-4' [translate]="'agents.devices_troubleshoot'" >  </a>
+
+                </span>
+          </div>
+          <div class="ts-col-10">
+            <div class="row-icons">
+              <i [class.fa-apple]="agent.isMac"
+                 [class.fa-windows-brands]="agent.isWindows"
+                 [class.fa-linux-2]="agent.isLinux"></i>
+              <div>
+                  <span>
+                    {{agent?.osVersion}}
+                  </span>
+              </div>
+            </div>
+          </div>
+          <div class="ts-col-25 d-flex">
+            <div class="mr-25 row-icons"
+                 *ngFor="let browser of agent.browsers"
+                 [matTooltip]="browser.version">
+              <i class="fa-edge"
+                 *ngIf="browser.name=='Edge'"></i>
+              <i class="fa-chrome"
+                 *ngIf="browser.name=='Chrome'"></i>
+              <i class="fa-safari-brands"
+                 *ngIf="browser.name=='Safari'"></i>
+              <i class="fa-firefox"
+                 *ngIf="browser.name=='Firefox'"></i>
+              <div [textContent]="'V'+browser.majorVersion"></div>
+            </div>
+          </div>
+          <div class="ts-col-15">
+            <div class="fz-12">
+              <span [textContent]="agent.updatedDate | date : ' h:mm:ss a MMMM d, y'"></span>
+              <div class="details-value text-uppercase mt-8">
+                <app-duration-format
+                  [duration]="(today.valueOf() - agent.updatedDate.valueOf())"></app-duration-format>
+              </div>
+            </div>
+          </div>
+          <div class="ts-col-10 text-center action-icons my-auto">
+            <a
+              data-placement="bottom"
+              [matTooltip]="'pagination.edit' | translate"
+              [routerLink]="['/agents', agent?.id,'edit']"
+              class="fa-pencil-on-paper action-icon mr-10"></a>
+            <a
+              data-placement="bottom"
+              [matTooltip]="'pagination.delete' | translate"
+              (click)="deleteAgent(agent)"
+              class="fa-trash-thin action-icon"></a>
+          </div>
+        </div>
+      </div>
+<!--      <div class="no-content"-->
+<!--           *ngIf="searchControl.value && agents?.content?.length==0 "-->
+<!--           [translate]="'search.notfound'"></div>-->
+    </div>
+    <app-pagination *ngIf="agents?.totalElements" [paginationData]="agents"
+                    [currentPage]="currentPage"
+                    (paginationAction)="fetchAgents()"></app-pagination>
+<!--    <div class="no-content" *ngIf="!hasAgents">-->
+<!--      <div [translate]="'agents.none'"></div>-->
+<!--      <button class="theme-btn-primary mt-10" [routerLink]="['new']">-->
+<!--        + <span [translate]="'agents.header.add_new_agent'"></span>-->
+<!--      </button>-->
+<!--    </div>-->
+
+    <div
+      *ngIf="!hasAgents || isFiltered && agents?.content?.length==0 "
+      class="empty-full-container mt-0 w-100">
+      <div class="empty-full-content">
+        <div class="empty-run-md" *ngIf="isFiltered || filteredBy!= 'all'"></div>
+        <div *ngIf="!isFiltered && filteredBy=='all'; else showEmptyMessage">
+          <a href="https://testsigma.com/docs/agent/faqs/" target="_blank" class="fz-24 d-block text-black text-decoration-none pb-15 lh-2point6 ts-col-45 mx-auto text-center" [translate]="'agents.know_more'"></a>
+          <div
+            class="ts-col-100 mx-auto"
+            (click)="showVideo= !showVideo"
+            [class.player]="showVideo">
+            <video [src]="getSource" controls class="d-flex ts-col-45 mx-auto fixed-video" ></video>
+          </div>
+        </div>
+        <ng-template #showEmptyMessage>
+          <div class="empty-text"
+               [textContent]="getEmptyMessage()"></div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
+<router-outlet></router-outlet>

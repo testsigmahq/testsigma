@@ -1,0 +1,34 @@
+<h2 mat-dialog-title [translate]="'edit_comment_modal.title'" class="fz-17"></h2>
+<mat-dialog-content>
+  <div class="border-rds-6 ml-14 theme-border ts-col-100 mt-30 mb-40">
+    <textarea
+      (focus)="true"
+      #commentBox
+      [(ngModel)]="modelComment"
+      [ngModelOptions]="{standalone: true}"
+      name="comment"
+      class="resize-none border-0 border-rds-6 w-100 p-15"
+      [placeholder]="'message.common.mandatory' | translate"></textarea>
+    <div class="theme-border-t px-15 py-10 d-flex justify-content-end">
+      <button
+        mat-dialog-close
+        class="theme-btn-clear-default"
+        [translate]="'btn.common.cancel'"></button>
+      <button
+        [disabled]="!commentBox.value"
+        class="theme-btn-primary"
+        ng-click="this.modalData.comment.comment=modelComment"
+        [mat-dialog-close]="true"
+        [translate]="'btn.common.update'"></button>
+    </div>
+  </div>
+</mat-dialog-content>
+<!--<mat-dialog-actions class="confirm-actions">
+  <button class="theme-btn-primary"
+          mat-dialog-close
+          [translate]="'btn.common.update'"></button>
+  <button class="border-0 btn btn-delete text-white theme-btn-clear-default"
+          [disabled]="modalData.disabled"
+          [translate]="'btn.common.update'"
+          [mat-dialog-close]="true"></button>
+</mat-dialog-actions>-->

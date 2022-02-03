@@ -1,0 +1,65 @@
+<div class="w-100 h-100">
+  <div class="theme-overlay-container">
+    <div class="theme-overlay-header">
+      <span class="theme-overlay-title" [translate]="'settings.auth.form_login'" ></span>
+      <button
+        type="button"
+        [matTooltip]="'hint.message.common.close' | translate"
+        mat-dialog-close
+        class="close">
+      </button>
+    </div>
+
+    <div class="theme-overlay-content">
+      <form class="ts-form pt-30" [formGroup]="updateForm">
+        <div class="form-group ts-form" >
+          <label for="username" class="control-label required">
+            <span [translate]="'login_form.username'"></span>
+          </label>
+          <input
+            type="text"
+            formControlName="username"
+            id="username" class="form-control">
+          <span *ngIf="!updateForm.get('username').valid && updateForm.get('username').touched" class="help-block"
+                [translate]="'login_form.username'">
+          </span>
+        </div>
+
+        <div class="form-group ts-form" >
+          <label for="password" class="control-label required">
+            <span [translate]="'login_form.password'"></span>
+          </label>
+          <input type="password"
+                 formControlName="password"
+                 id="password" class="form-control " >
+          <span *ngIf="!updateForm.get('password').valid && updateForm.get('password').touched" class="help-block"
+                [translate]="'login_form.password'">
+          </span>
+        </div>
+        <div class="form-group ts-form" >
+          <label for="confirmPassword" class="control-label required">
+            <span [translate]="'login_form.confirm_password'"></span>
+          </label>
+          <input type="password"
+                 formControlName="confirmPassword"
+                 id="confirmPassword" class="form-control "  >
+          <span *ngIf="updateForm.get('confirmPassword').value !== updateForm.get('password').value && updateForm.get('confirmPassword').touched" class="help-block"
+                [translate]="'login_form.confirm_password'">
+          </span>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="theme-overlay-footer">
+      <button
+        type="button"
+        mat-dialog-close
+        class="theme-btn-clear-default" [translate]="'btn.common.cancel'">
+      </button>
+      <button type="submit" [disabled]="!updateForm.valid || updateForm.get('confirmPassword').value !== updateForm.get('password').value"
+              class="theme-btn-primary" (click)="onSubmit()"
+              [translate]="saving? 'message.common.saving' : 'btn.common.save'"></button>
+    </div>
+  </div>
+</div>

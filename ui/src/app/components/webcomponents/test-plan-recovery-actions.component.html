@@ -1,0 +1,126 @@
+<div class="pb-lg">
+  <mat-accordion class="elements-panel inline-accordion" [togglePosition]="'before'">
+    <mat-expansion-panel
+      class="inline-panel"
+      [expanded]="panelOpenState"
+      (closed)="panelOpenState = false" (opened)="panelOpenState = true" hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title
+          class="fz-14 rb-medium pb-18">
+          <i
+            class="pr-7"
+            [class.fa-down-arrow-filled]="panelOpenState"
+            [class.fa-arrow-right-filled]="!panelOpenState"></i>
+          <span [translate]="'test_plan.environment.recover_actions.title'"></span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="form-group d-flex justify-content-between flex-wrap btn-radio-group">
+        <div class="d-flex flex-column ts-col-100 justify-content-between form-group pb-0">
+          <div class="radio-wrapper">
+            <div class="ts-col-50 text-right">
+              <label class="fz-14 text-black pb-18 pr-30" [translate]="'test_plan.environment.recover_actions.on_major_step_failure'"></label>
+            </div>
+            <div class="ts-col-50 separator-line">
+              <mat-radio-group
+                [formControl]="testPlanFormGroup.controls['recoveryAction']"
+                name="recoveryAction"
+                aria-labelledby="recoveryAction"
+                class="example-radio-group">
+                <mat-radio-button class="pl-30"
+                  *ngFor="let recoverAction of recoverActions"
+                  [value]="recoverAction">
+                  <div [textContent]="'execution.major_test_step.failure.'+recoverAction | translate"></div>
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+          <div class="radio-wrapper">
+            <div class="ts-col-50 text-right">
+              <label class="fz-14 text-black pb-18 pr-30" [translate]="'test_plan.environment.recover_actions.on_test_step_pre_requisite_failure'"></label>
+            </div>
+            <div class="ts-col-50 separator-line">
+              <mat-radio-group
+                [formControl]="testPlanFormGroup.controls['onStepPreRequisiteFail']"
+                name="onStepPreRequisiteFail"
+                aria-labelledby="onStepPreRequisiteFail">
+                <mat-radio-button class="pl-30"
+                  *ngFor="let recoverAction of recoverActions"
+                  [value]="recoverAction">
+                  <div [textContent]="'execution.major_test_step.failure.'+recoverAction | translate"></div>
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex flex-column ts-col-100 justify-content-between form-group pb-0">
+          <div class="radio-wrapper">
+            <div class="ts-col-50 text-right">
+              <label class="fz-14 text-black pb-18 pr-30" [translate]="'test_plan.environment.recover_actions.on_test_case_pre_requisite_failure'"></label>
+            </div>
+            <div class="ts-col-50 separator-line">
+              <mat-radio-group
+                [formControl]="testPlanFormGroup.controls['onTestCasePreRequisiteFail']"
+                name="onTestCasePreRequisiteFail" aria-labelledby="onTestCasePreRequisiteFail">
+                <mat-radio-button class="pl-30"
+                  *ngFor="let preRequisiteAction of preRequisiteActions"
+                  [value]="preRequisiteAction">
+                  <div [textContent]="'execution.test_case.pre_requisite_failure.'+preRequisiteAction | translate"></div>
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+          <div class="radio-wrapper">
+            <div class="ts-col-50 text-right">
+              <label class="fz-14 text-black pb-18 pr-30" [translate]="'test_plan.environment.recover_actions.on_aborted'"></label>
+            </div>
+            <div class="ts-col-50 separator-line">
+              <mat-radio-group
+                [formControl]="testPlanFormGroup.controls['onAbortedAction']"
+                name="onAbortedAction" aria-labelledby="onAbortedAction">
+                <mat-radio-button class="pl-30"
+                  *ngFor="let abortedAction of abortActions"
+                  [value]="abortedAction">
+                  <div [textContent]="'execution.test-case.on_aborted.'+abortedAction | translate"></div>
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex flex-column ts-col-100 justify-content-between form-group pb-0">
+          <div class="radio-wrapper">
+            <div class="ts-col-50 text-right">
+              <label class="fz-14 text-black pb-18 pr-30" [translate]="'test_plan.environment.recover_actions.on_test_suite_pre_requisite_failure'"></label>
+            </div>
+            <div class="ts-col-50 separator-line">
+              <mat-radio-group
+                [formControl]="testPlanFormGroup.controls['onSuitePreRequisiteFail']"
+                name="onSuitePreRequisiteFail" aria-labelledby="onSuitePreRequisiteFail">
+                <mat-radio-button class="pl-30"
+                  *ngFor="let preRequisiteAction of preRequisiteActions"
+                  [value]="preRequisiteAction">
+                  <div [textContent]="'execution.test_suite.pre_requisite_failure.'+preRequisiteAction | translate"></div>
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+<!--          <div class="radio-wrapper">-->
+<!--            <div class="ts-col-50 text-right">-->
+<!--              <label class="fz-14 text-black pb-18 pr-30" [translate]="'test_plan.environment.recover_actions.re_run_failure_action'"></label>-->
+<!--            </div>-->
+<!--            <div class="ts-col-50 separator-line">-->
+<!--              <mat-radio-group-->
+<!--                [formControl]="testPlanFormGroup.controls['reRunType']"-->
+<!--                name="reRunType" aria-labelledby="reRunType">-->
+<!--                <mat-radio-button class="pl-30"-->
+<!--                  *ngFor="let reRunOn of reRunType"-->
+<!--                  [value]="reRunOn">-->
+<!--                  <div [textContent]="'execution.recover_actions.re_run_on_failure.'+reRunOn | translate"></div>-->
+<!--                </mat-radio-button>-->
+<!--              </mat-radio-group>-->
+<!--            </div>-->
+<!--          </div>-->
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

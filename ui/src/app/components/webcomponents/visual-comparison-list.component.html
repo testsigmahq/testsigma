@@ -1,0 +1,55 @@
+<button type="button"
+        class="btn theme-border-i-d theme-text p-0 d-inline-flex">
+  <a
+    *ngIf="previousResult"
+    [routerLink]="['..', previousResult?.id]"
+    [style.pointer-events]="!!!previousResult ?'none':'auto'"
+    (click)="selectList(previousResult?.stepResultScreenshotComparison?.id)"
+    [matTooltip]="'hint.message.common.previous.item' | translate"
+    class="fa-left-arrow-thin px-7 py-6  theme-border-r text-t-highlight text-decoration-none"></a>
+  <a
+    *ngIf="!!!previousResult"
+    class="fa-left-arrow-thin px-7 py-6  theme-border-r text-decoration-none not-allowed text-muted"></a>
+  <a
+    [matMenuTriggerFor]="menuTrigger"
+    [matTooltip]="'hint.message.common.list.item' | translate"
+    class="fa-list px-7 py-6  theme-border-r"></a>
+  <a
+    *ngIf="nextResult"
+    [routerLink]="['..', nextResult?.id]"
+    [matTooltip]="'hint.message.common.next.item' | translate"
+    (click)="selectList(nextResult?.stepResultScreenshotComparison?.id)"
+    class="fa-right-arrow-thin px-7 py-6  text-decoration-none text-t-highlight"></a>
+  <a
+    *ngIf="!!!nextResult"
+    class="fa-right-arrow-thin px-7 py-6  text-muted not-allowed text-decoration-none"></a>
+</button>
+  <mat-menu
+    backdropClass="theme-mat-menu-center"
+    panelClass="my-panel-class"
+    #menuTrigger="matMenu" class="list-container theme-mat-menu">
+    <a
+      [class.active]="testStepResult?.stepResultScreenshotComparison?.id == currentComparison"
+      class="list-view green-highlight sm-pm pointer align-items-center"
+      *ngFor="let testStepResult of filteredTestStepResult?.content"
+      (click)="selectList(testStepResult?.stepResultScreenshotComparison?.id)"
+    >
+      <i
+        *ngIf="testStepResult?.stepResultScreenshotComparison"
+        [matTooltip]="(testStepResult.isVisualFailed ? 'visual_test.hint.differences' : 'visual_test.hint.no_differences') | translate"
+        class="fa-camera pl-10 fz-22"
+        [class.result-status-text-1]="testStepResult.isVisualFailed"
+        [class.result-status-text-0]="!testStepResult.isVisualFailed">
+      </i>
+      <div
+        class="d-flex flex-wrap ml-auto ts-col-100-35">
+        <div class="ts-col-100">
+          <span *ngIf="testStepResult.template" [innerHTML]="testStepResult.parsedStep"></span>
+          <span *ngIf="testStepResult.isStepGroup" [textContent]="testStepResult.stepGroup?.name"></span>
+          <span *ngIf="testStepResult.isRestStep || !testStepResult.template"
+                [textContent]="testStepResult?.stepDetail?.action"></span>
+        </div>
+      </div>
+    </a>
+  </mat-menu>
+

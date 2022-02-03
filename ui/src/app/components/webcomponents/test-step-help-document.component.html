@@ -1,0 +1,110 @@
+<div
+  class="form-group overflow-x-hidden p-30 theme-only-items-scroll sm-h theme-gray-light">
+  <div class="pb-15" *ngIf="version?.workspace">
+    <div
+      *ngIf="!showVideo"
+      class="d-flex align-items-center justify-content-center w-100 theme-border border-rds-12 theme-gray-highlight pointer" style="height: 200px; color: red">
+      <i
+        (click)="showVideo= !showVideo"
+        class="fa-youtube fz-38"></i>
+    </div>
+    <iframe
+      *ngIf="showVideo"
+      height="300" class="w-100 border-rds-6"
+      [src]="videoUrlString" frameborder="0"
+      allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  </div>
+  <div
+    *ngIf="isActionText&&!isRestApp">
+    <p>Select this option to use natural language based action text.
+      As you start entering the Test Step in natural language, you will get suggestions from the list of action
+      texts.
+      <span *ngIf="isActionText"> Click on Examples tab to see how to use this.</span>
+    </p>
+    <span class="rb-medium">Action Text:</span>
+    <p>You can find a list of action text
+      <a class="rb-medium text-link" [routerLink]="['/td', version?.id, 'actions']">here</a>.
+      Based on your requirement, start typing part of action text to get full list of available action texts for the
+      input provided.
+      Select the appropriate action text from the suggested list.
+      Based on the action text you may need to fill one or more of the following details in the selected action text.
+    </p>
+    <span class="rb-medium">Test Data:</span>
+    <p>Test Data corresponds to the data to be used to execute this step.
+      Testsigma supports multiple test data types.
+      Refer this <a
+        href="https://testsigma.com/docs/test-data/types/"
+        target="_blank" class="rb-medium text-link">help document</a> to know more details about Test Data Types.
+    </p>
+    <span class="rb-medium">Element:</span>
+    <p> UI Object Identifier is used to identify an element in the web page to be automated.
+      By typing in Element section, you will get already added Elements in the suggestion list or you can
+      add one here and implement it later.</p>
+    <span class="rb-medium">Attribute:</span>
+    <p> Name of the html element attribute.</p>
+    <span class="rb-medium">Priority:</span>
+    <p> Select the priority level that you want to set for this Test Step.</p>
+    <span class="rb-medium">Prerequisite:</span>
+    <p> Select a previously created Test Step if that is a prerequisite to execute this Test Step.
+  </div>
+  <div
+    *ngIf="isStepGroup&&!isRestApp">
+    <p>Select this option if you want to use the existing reusable step groups. Refer this <a
+      href="https://testsigma.com/docs/test-cases/step-types/step-group/"
+      target="_blank" class="rb-medium text-link">help document</a> for more details on Step Groups.</p>
+    <span class="rb-medium">Step Group:</span>
+    <p> Enter a name for the step group to be created.</p>
+    <span class="rb-medium">Priority:</span>
+    <p> Select the priority level that you want to set for this step group.</p>
+    <span class="rb-medium">Mandatory:</span>
+    <p> Select this option if this step group is critical in the execution flow.</p>
+    <span class="rb-medium">Prerequisite:</span>
+    <p> Select a previously created Test Step if that is a prerequisite to execute this Test Step.
+  </div>
+  <div *ngIf="isActionText&&isRestApp">
+    <span class="rb-medium">Title:</span>
+    <p> Enter a title for the Test Step.</p>
+    <span class="rb-medium">URL:</span>
+    <p> The web address endpoint of the RESTful Web Service to perform testing on.</p>
+    <span class="rb-medium">Http Methods:</span>
+    <p> Select from one of the http request types to perform:
+      GET, POST, PUT, DELETE, or HEAD</p>
+    <span class="rb-medium">Header:</span>
+    <p> Select the JSON data format in which Request Header is to be provided
+      JSON String - Enter the Request as a JSON String
+      JSON Key-Value pair - Enter the Request as a pair of JSON key and value</p>
+    <span class="rb-medium">Add Row:</span>
+    <p> Add additional request data rows to enter more data.</p>
+    <span class="rb-medium">Payload:</span>
+    <p> Enter the Request Body to be sent for POST, PUT and DELETE request types.</p>
+    <span class="rb-medium">Test:</span>
+    <p> Select one of the test types to perform:
+      Status Code, Header Test, Body Test or All</p>
+    <span class="rb-medium">Expected Status Code:</span>
+    <p> Enter the status code expected in response.</p>
+    <p>Header Compare Type: Select any one of the following header comparison methods:
+      Strict, Lenient, Non extensible, or Strict order</p>
+    <span class="rb-medium">Header Test:</span>
+    <p> Enter the expected Response Header content.</p>
+    <p>Body Content Type: Select any one of the following options to specify the Response Body content type:
+      Strict, Lenient, Non extensible, Strict order, JSON Schema, or JSON path</p>
+    <span class="rb-medium">Body Test:</span>
+    <p> Enter the expected Response Body content.</p>
+    <span class="rb-medium">Store Metadata:</span>
+    <p> Check this option to store the Response as metadata for debugging purposes.</p>
+    <span class="rb-medium">Priority:</span>
+    <p> Select the priority level that you want to set for this Test Case.</p>
+    <span class="rb-medium">Prerequisite:</span>
+    <p> Select a previously created Test Step if that is a prerequisite for this Test Step.</p>
+  </div>
+  <div
+    *ngIf="isStepGroup&&isRestApp">
+    <p>Select the existing step group to be added as Test Step here.</p>
+    <span class="rb-medium">Note:</span>
+    <p> You need to add a step group under Test Cases before selecting this option.
+      Refer this <a
+        href="https://testsigma.com/docs/test-cases/step-types/step-group/"
+        target="_blank" class="rb-medium text-link">help document</a> for more details on creation of step group.
+    </p>
+  </div>
+</div>

@@ -1,0 +1,116 @@
+
+:root {
+  --header-color: #1A202C;
+  --form-label-color: #4A5568;
+  --primary-btn-color: #04C45C;
+  --google-btn-color: #2D3748;
+  --left-info-color: #6C7886
+}
+
+.onboarding-container {
+  background-image: url("~assets/color_icons/registeration-bg.svg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  .login-left-section {
+    .login-logo {
+      @extend .testsigma_title_logo;
+      height: 65px;
+      width: 320px;
+    }
+
+    .cross-platform-logo {
+      @extend .all_products, .w-100, .d-block, .position-absolute;
+      height: 350px;
+      margin: 20px auto;
+    }
+  }
+}
+.onboarding-form {
+  @extend .ts-col-60, .my-auto, .d-flex;
+}
+
+.text-login-left-info {
+  color: var(--left-info-color);
+}
+
+.login-primary-btn {
+  @extend .btn,.theme-btn-primary,.w-100, .rb-semi-bold;
+  background-color: var(--primary-btn-color);
+  padding: 13px 20px;
+}
+
+.login-google-btn {
+  @extend .btn,.d-flex,.justify-content-center,.align-items-center, .rb-semi-bold;
+  width: 350px;
+  padding: 13px 20px;
+  background: var(--google-btn-color);
+  .login-google-logo {
+    @extend .google-logo,.mr-10,.mt-n2;
+    width: 18px;height: 18px
+  }
+}
+.login-label {
+  @extend .d-block,.pb-4,.fz-16;
+  color: var(--form-label-color)
+}
+
+.login-header {
+  @extend .fz-30, .lh-4, .rb-medium;
+  color: var(--header-color);
+}
+
+/*Change text in autofill textbox*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-animation: autofill 0s forwards;
+  animation: autofill 0s forwards;
+}
+
+@keyframes autofill {
+  100% {
+    background: transparent;
+    color: inherit;
+  }
+}
+
+@-webkit-keyframes autofill {
+  100% {
+    background: transparent;
+    color: inherit;
+  }
+}
+
+.grecaptcha-badge {
+  visibility: hidden;
+  height: 1px !important;
+  width: 1px !important;
+}
+
+.login-container {
+  @extend .bg-white, .border-rds-12, .d-flex, .flex-row, .shadow-all-b10, .ts-col-85, .px-40;
+}
+
+@media only screen and (min-width: 1281px) {
+  .login-container {
+    position: relative;
+    flex: 0 0 75%;
+    max-width: 75%;
+  }
+  .onboarding-form {
+    position: relative;
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+
+@media only screen and (min-width: 1601px) {
+  .login-container {
+    position: relative;
+    flex: 0 0 65%;
+    max-width: 65%;
+  }
+}

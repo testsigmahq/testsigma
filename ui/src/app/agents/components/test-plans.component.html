@@ -1,0 +1,42 @@
+<div class="list-content overflow-x-hidden theme-only-items-scroll sm-h pt-30 px-40 pb-20">
+  <div class="list-header" *ngIf="environmentResults?.totalElements">
+    <div class="ts-col-15" [translate]="'test_plans.list.header.status'"></div>
+    <div class="ts-col-50" [translate]="'test_plans.list.header.name'"></div>
+    <div class="ts-col-15"
+         [translate]="'test_plans.list.header.start_time'"></div>
+    <div class="ts-col-20 align-items-center d-flex">
+      <span [translate]="'test_plans.list.header.duration'"></span>
+    </div>
+  </div>
+  <div *ngIf="environmentResults?.totalElements" class="list-container">
+    <div class="list-view lg-pm green-highlight" *ngFor="let environmentResult of environmentResults.content">
+      <div class="ts-col-15 d-flex">
+        <a class=" d-flex pointer"
+           [routerLink]="['/td', 'machine_results', environmentResult.id]">
+          <app-result-pie-chart-column [resultEntity]="environmentResult"></app-result-pie-chart-column>
+        </a>
+      </div>
+      <div class="text-dark ts-col-50">
+        <a class="list-title"
+           [routerLink]="['/td', 'machine_results', environmentResult.id]">
+          <span class="text-capitalize pr-10" [textContent]="environmentResult.testDevice.title"></span>
+        </a>
+      </div>
+      <div class="ts-col-15"
+           [textContent]="environmentResult.startTime | date:'hh:mm a MMM d, yyyy'"></div>
+      <div class="ts-col-20">
+        <app-duration-format
+          [duration]="environmentResult.duration"></app-duration-format>
+      </div>
+    </div>
+  </div>
+  <app-pagination *ngIf="environmentResults?.totalElements" [paginationData]="environmentResults"
+                  [currentPage]="currentPage"
+                  (paginationAction)="fetchTestPlans()"></app-pagination>
+  <div *ngIf="!environmentResults?.totalElements" class="w-100">
+    <div class="no-content">
+      <loading-circle *ngIf="!fetchingCompleted"></loading-circle>
+      <h3 *ngIf="fetchingCompleted" [translate]="'agents.test_plans.none'"></h3>
+    </div>
+  </div>
+</div>

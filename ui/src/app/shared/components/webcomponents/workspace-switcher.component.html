@@ -1,0 +1,256 @@
+<!--
+  ~ /*
+  ~  * *****************************************************************************
+  ~  *  Copyright (C) 2020 Testsigma Technologies Inc.
+  ~  *  All rights reserved.
+  ~  *  ****************************************************************************
+  ~  */
+  -->
+<div class="project-switch-wrapper">
+  <div
+    #changeStep
+    class="project-info flex-column"
+    (click)="toggle()" [matMenuTriggerFor]="menu"
+    *ngIf="version">
+    <div
+      class="project-switch-container"
+      [class.active]="show">
+      <div class="w-90">
+        <div class="application-info d-flex flex-column">
+          <div
+            class="application-title ts-col-100"
+            [matTooltip]="version?.workspace?.name">
+            <span
+              class="mr-5"
+              [class.mb-n4]="version?.workspace?.isWeb"
+              [class.fa-project-website]="version?.workspace?.isWeb"
+              [class.fa-project-ios]="version?.workspace?.isIosNative"
+              [class.fa-project-andriod]="version?.workspace?.isAndroidNative"
+              [class.fa-project-mobile]="version?.workspace?.isMobileWeb"
+              [class.fa-project-api]="version?.workspace?.isRest">
+            </span>
+            <span [textContent]="version?.workspace?.name"></span>
+          </div>
+          <div
+            class="version-label mr-5 ts-col-100">
+            <span [textContent]="version?.versionName" [matTooltip]="version?.versionName"></span>
+            <span
+              class="save_as_active"
+              *ngIf="userPreference?.versionId != version?.id"
+              [matTooltip]="'project_switcher.save_as_active' | translate">*</span>
+          </div>
+        </div>
+      </div>
+      <span class="w-10 text-right">
+          <i class="fa-arrow-down"></i>
+      </span>
+    </div>
+  </div>
+  <mat-menu #menu="matMenu" class="project-dropdown vw-100 vh-100">
+    <div class="w-100 d-flex">
+      <div class="ts-col-15">
+        <div
+          class="project-info flex-column mt-n2"
+          (click)="toggleModal()"
+          *ngIf="version"
+          id="project_div">
+          <div
+            class="project-switch-container">
+            <div class="w-90">
+              <div class="application-info d-flex flex-column">
+                <div
+                  class="application-title ts-col-100"
+                  [matTooltip]="version?.workspace?.name">
+                  <span
+                    class="mr-5"
+                    [class.mb-n4]="version?.workspace?.isWeb"
+                    [class.fa-project-website]="version?.workspace?.isWeb"
+                    [class.fa-project-ios]="version?.workspace?.isIosNative"
+                    [class.fa-project-andriod]="version?.workspace?.isAndroidNative"
+                    [class.fa-project-mobile]="version?.workspace?.isMobileWeb"
+                    [class.fa-project-api]="version?.workspace?.isRest">
+                  </span>
+                  <span [textContent]="version?.workspace?.name"></span>
+                </div>
+                <div
+                  class="version-label mr-5 ts-col-100">
+                  <span [textContent]="version?.versionName" [matTooltip]="version?.versionName"></span>
+                  <span
+                    class="save_as_active"
+                    *ngIf="userPreference?.versionId != version?.id"
+                    [matTooltip]="'project_switcher.save_as_active' | translate">*</span>
+                </div>
+              </div>
+            </div>
+            <span class="w-10 text-right">
+              <i class="fa-arrow-right"></i>
+            </span>
+          </div>
+        </div>
+        <ul id="ul_version_home" class="project-nav item-container w-100">
+          <div class="secondary-nav-container">
+            <li>
+              <a
+                [routerLink]="['/workspaces', applications?.content[0].id, 'test_case_types']"
+                [routerLinkActive]="'active'"
+                (click)="menuHide()"
+                class="nav-items">
+                <i class="fa-test-case-types"></i>
+                <span [translate]="'application_settings.left_nav.test_case_types'"></span>
+              </a>
+            </li>
+            <li>
+              <a
+                [routerLink]="['/workspaces', applications?.content[0].id, 'test_case_priorities']"
+                [routerLinkActive]="'active'"
+                (click)="menuHide()"
+                class="nav-items">
+                <i class="fa-test-case-priorities"></i>
+                <span [translate]="'application_settings.left_nav.test_case_priorities'"></span>
+              </a>
+            </li>
+          </div>
+        </ul>
+      </div>
+      <div class="ts-col-85">
+        <div class="px-40 py-15" style="overflow-y: scroll;height: 100vh;">
+          <div class="d-flex fz-20 rb-medium w-95 mb-30">
+            <div [translate]="'work_space.switcher.title'"></div>
+            <div [matTooltip]="'hint.message.common.close' | translate"
+                 class="fz-30 mat-tooltip-trigger ml-auto pointer rb-light" (click)="toggle()">&times;
+            </div>
+          </div>
+
+          <div
+            class="align-items-center border-lightGray-1 border-lightgrey border-rds-7 d-flex mb-30 p-30 w-80 workspace_card">
+            <div>
+              <i class="bg-active border-rds-26 fa-bi_window fz-26 p-10"></i>
+            </div>
+            <div class="d-flex flex-column justify-content-around pl-20 ts-col-75">
+              <div [translate]="'work_space.switcher.web_app.title'" class="fz-18 mb-8 rb-medium"></div>
+              <div [translate]="'work_space.switcher.web_app.description'"></div>
+            </div>
+            <div class="d-flex flex-column justify-content-around ts-col-25">
+              <a class="live_btn live_dropdown_container">
+                <span [translate]="'work_space.switcher.live'"></span> <i class="ml-20 fa-arrow-right"></i>
+                <div class="drop-menu">
+                  <div class="inner-menu">
+                    <div class="item theme-border-b rb-medium header"
+                         [translate]="'work_space.switcher.select_version'"></div>
+                    <div class="item-max-height">
+                      <div class="item" *ngFor="let version of liveWebVersions" (click)="go(version)">
+                        <span [textContent]="version.name"></span>
+                        <i class="fa-arrow-right ml-20"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+              <button class="bg-grey-light border-0 btn btn-clear-default py-10 rb-medium mb-10 ml-0 text-green w-80"
+                      (click)="go(sampleWebApplicationVersion)">
+                <span [translate]="'work_space.switcher.sample'"></span> <i class="ml-30 fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="align-items-center border-lightGray-1 border-lightgrey border-rds-7 d-flex mb-30 p-30 w-80 workspace_card">
+            <div>
+              <i class="bg-active border-rds-26 fa-mobile-line fz-26 p-10"></i>
+            </div>
+            <div class="d-flex flex-column justify-content-around pl-20 ts-col-75">
+              <div [translate]="'work_space.switcher.mobile_web.title'" class="fz-18 mb-8 rb-medium"></div>
+              <div [translate]="'work_space.switcher.mobile_web.description'"></div>
+            </div>
+            <div class="d-flex flex-column justify-content-around ts-col-25">
+              <a class="live_btn live_dropdown_container">
+                <span [translate]="'work_space.switcher.live'"></span> <i class="ml-20 fa-arrow-right"></i>
+                <div class="drop-menu">
+                  <div class="inner-menu">
+                    <div class="item theme-border-b rb-medium header"
+                         [translate]="'work_space.switcher.select_version'"></div>
+                    <div class="item-max-height">
+                      <div class="item" *ngFor="let version of liveMobileWebVersions" (click)="go(version)">
+                        <span [textContent]="version.name"></span>
+                        <i class="fa-arrow-right ml-20"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+              <button class="bg-grey-light border-0 btn btn-clear-default py-10 rb-medium mb-10 ml-0 text-green w-80"
+                      (click)="go(sampleMobileWebApplicationVersion)">
+                <span [translate]="'work_space.switcher.sample'"></span> <i class="ml-30 fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="align-items-center border-lightGray-1 border-lightgrey border-rds-7 d-flex mb-30 p-30 w-80 workspace_card">
+            <div>
+              <i class="bg-active border-rds-26 fa-app-store-ios fz-26 p-10"></i>
+            </div>
+            <div class="d-flex flex-column justify-content-around pl-20 ts-col-75">
+              <div [translate]="'work_space.switcher.ios.title'" class="fz-18 mb-8 rb-medium"></div>
+              <div [translate]="'work_space.switcher.ios.description'"></div>
+            </div>
+            <div class="d-flex flex-column justify-content-around ts-col-25">
+              <a class="live_btn live_dropdown_container">
+                <span [translate]="'work_space.switcher.live'"></span> <i class="ml-20 fa-arrow-right"></i>
+                <div class="drop-menu">
+                  <div class="inner-menu">
+                    <div class="item theme-border-b rb-medium header"
+                         [translate]="'work_space.switcher.select_version'"></div>
+                    <div class="item-max-height">
+                      <div class="item" *ngFor="let version of liveiOSVersions" (click)="go(version)">
+                        <span [textContent]="version.name"></span>
+                        <i class="fa-arrow-right ml-20"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+              <button class="bg-grey-light border-0 btn btn-clear-default py-10 rb-medium mb-10 ml-0 text-green w-80"
+                      (click)="go(sampleiOSApplicationVersion)">
+                <span [translate]="'work_space.switcher.sample'"></span> <i class="ml-30 fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="align-items-center border-lightGray-1 border-lightgrey border-rds-7 d-flex mb-30 p-30 w-80 workspace_card">
+            <div>
+              <i class="bg-active border-rds-26 fa-android-outlined fz-26 p-10"></i>
+            </div>
+            <div class="d-flex flex-column justify-content-around pl-20 ts-col-75">
+              <div [translate]="'work_space.switcher.android.title'" class="fz-18 mb-8 rb-medium"></div>
+              <div [translate]="'work_space.switcher.android.description'"></div>
+            </div>
+            <div class="d-flex flex-column justify-content-around ts-col-25">
+              <a class="live_btn live_dropdown_container">
+                <span [translate]="'work_space.switcher.live'"></span> <i class="ml-20 fa-arrow-right"></i>
+                <div class="drop-menu">
+                  <div class="inner-menu">
+                    <div class="item theme-border-b rb-medium header"
+                         [translate]="'work_space.switcher.select_version'"></div>
+                    <div class="item-max-height">
+                      <div class="item" *ngFor="let version of liveAndroidVersions" (click)="go(version)">
+                        <span [textContent]="version.name"></span>
+                        <i class="fa-arrow-right ml-20"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+              <button class="bg-grey-light border-0 btn btn-clear-default py-10 rb-medium mb-10 ml-0 text-green w-80"
+                      (click)="go(sampleAndroidApplicationVersion)">
+                <span [translate]="'work_space.switcher.sample'"></span> <i class="ml-30 fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-menu>
+</div>
+

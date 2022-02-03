@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+  <Properties>
+    <Property name="APP_PATTERN">%d{yyyy-MM-dd HH:mm:ss} %X{X-Request-Id} %-5p %c{1}:%M:%L %t %m%n</Property>
+  </Properties>
+  <Appenders>
+    <Console name="ConsoleAppender" target="SYSTEM_OUT" follow="true">
+      <PatternLayout pattern="${APP_PATTERN}"/>
+    </Console>
+
+    <RollingFile name="AppFileAppender" fileName="./logs/application.log" filePattern="./logs/application-%i.log">
+      <PatternLayout>
+        <Pattern>${APP_PATTERN}</Pattern>
+      </PatternLayout>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="10MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="10"/>
+    </RollingFile>
+
+    <RollingFile name="AutomatorFileAppender" fileName="./logs/automator.log"
+                 filePattern="./logs/automator-%i.log">
+      <PatternLayout>
+        <Pattern>${APP_PATTERN}</Pattern>
+      </PatternLayout>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="10MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="10"/>
+    </RollingFile>
+  </Appenders>
+
+  <Loggers>
+    <AsyncLogger name="com.testsigma.automator" level="ALL" additivity="false" includeLocation="true">
+      <AppenderRef ref="ConsoleAppender"/>
+      <AppenderRef ref="AutomatorFileAppender"/>
+    </AsyncLogger>
+
+    <AsyncLogger name="com.testsigma" level="ALL" additivity="false" includeLocation="true">
+      <AppenderRef ref="ConsoleAppender"/>
+      <AppenderRef ref="AppFileAppender"/>
+    </AsyncLogger>
+
+    <AsyncLogger name="org.springframework" level="INFO" additivity="false"
+                 includeLocation="true">
+      <AppenderRef ref="AppFileAppender"/>
+    </AsyncLogger>
+
+    <AsyncLogger name="org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter"
+                 level="INFO" additivity="false" includeLocation="true">
+      <AppenderRef ref="AppFileAppender"/>
+    </AsyncLogger>
+
+    <Root level="WARN">
+      <AppenderRef ref="ConsoleAppender"/>
+      <AppenderRef ref="AutomatorFileAppender"/>
+      <AppenderRef ref="AppFileAppender"/>
+    </Root>
+  </Loggers>
+</Configuration>

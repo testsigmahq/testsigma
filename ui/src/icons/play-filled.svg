@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>Executions ts</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Executions-ts" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M6,0 L54,0 C57.3137085,-6.08718376e-16 60,2.6862915 60,6 L60,54 C60,57.3137085 57.3137085,60 54,60 L6,60 C2.6862915,60 4.05812251e-16,57.3137085 0,54 L0,6 C-4.05812251e-16,2.6862915 2.6862915,6.08718376e-16 6,0 Z M40.9667934,34.132077 C43.6777355,32.2867253 43.6777355,28.2969552 40.9667934,26.4516035 L28.2790558,17.8163321 C25.1874375,15.7117893 21,17.9204515 21,21.6554612 L21,38.9282193 C21,42.6610136 25.1874375,44.8718912 28.2790558,42.7673484 L40.9667934,34.132077 Z" id="Combined-Shape" fill="#000000"></path>
+    </g>
+</svg>

@@ -1,0 +1,72 @@
+<cdk-virtual-scroll-viewport
+  itemSize="59"
+  class="mx-n20 theme-section-container card-container virtual-scroll-viewport overflow-y">
+  <div
+    *cdkVirtualFor='let testCaseResult of testCaseResultsDataSource'>
+    <div
+      (click)="showTestCaseResult(testCaseResult)"
+      *ngIf="testCaseResult?.testCase?.name"
+      class="list-card bordered sm-pm pointer">
+      <div
+        class="d-flex flex-wrap ts-col-100">
+        <div class="ts-col-50 d-flex flex-wrap">
+          <div
+            class="ts-col-100 list-title text-break"
+            [textContent]="testCaseResult?.testCase?.name"></div>
+          <div class="ts-col-100 pt-4 text-t-secondary fz-12 d-flex align-items-center">
+            <div
+              class="theme-breadcrumb ts-col-50">
+              <div
+                *ngIf="testCaseResult?.environmentResult?.executionEnvironment?.title"
+                class="theme-breadcrumb-item"
+                (click)="showTestMachineResult(testCaseResult?.environmentResult);$event.stopImmediatePropagation();$event.stopPropagation();$event.preventDefault()"
+                [matTooltip]="testCaseResult?.environmentResult?.executionEnvironment?.title"
+                [textContent]="testCaseResult?.environmentResult?.executionEnvironment?.title "></div>
+              <div
+                (click)="showTestSuiteResult(testCaseResult.suiteResultId);$event.stopImmediatePropagation();$event.stopPropagation();$event.preventDefault()"
+                class="theme-breadcrumb-item"
+                [matTooltip]="testCaseResult?.testSuite?.name"
+                [textContent]="testCaseResult?.testSuite?.name"></div>
+            </div>
+            <div
+              class="text-nowrap px-10 text-center ts-col-50">
+              <app-test-machine-info-column
+                [environmentResult]="testCaseResult?.environmentResult"
+                [executionResult]="testCaseResult?.environmentResult?.executionResult"
+                [executionEnvironment]="testCaseResult?.environmentResult?.executionEnvironment"></app-test-machine-info-column>
+            </div>
+          </div>
+        </div>
+        <div class="ts-col-50 d-flex">
+          <div class="ts-col-50 d-flex">
+            <app-result-pie-chart-column
+              class="ml-auto"
+              [width]="24"
+              [height]="24"
+              [resultEntity]="testCaseResult.childResult"></app-result-pie-chart-column>
+            <div class="text-right text-t-secondary fz-12 ml-auto mr-10">
+              <div [textContent]="testCaseResult.childResult.startTime | date:'MMM d, h:mm:ss'"></div>
+              <div class="pt-4">
+                <app-duration-format
+                  [duration]="testCaseResult.childResult.duration"></app-duration-format>
+              </div>
+            </div>
+          </div>
+          <div class="ts-col-50 d-flex theme-border-l pl-10">
+            <div class="text-t-secondary fz-12">
+              <div [translate]="'re_run.previous_result'"></div>
+              <app-result-status-label [resultEntity]="testCaseResult"></app-result-status-label>
+            </div>
+            <div class="text-right text-t-secondary fz-12 ml-auto">
+              <div [textContent]="testCaseResult.startTime | date:'MMM d, h:mm:ss'"></div>
+              <div class="pt-4">
+                <app-duration-format
+                  [duration]="testCaseResult.duration"></app-duration-format>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</cdk-virtual-scroll-viewport>

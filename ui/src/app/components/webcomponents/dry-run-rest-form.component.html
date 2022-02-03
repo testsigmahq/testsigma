@@ -1,0 +1,32 @@
+<app-select-test-lab
+  (closeDryRunDialog)="closeDialogTab()"
+  *ngIf="restForm"
+  [version]="version"
+  [formGroup]="restForm"
+  [isDry]="true"></app-select-test-lab>
+<div class="d-flex pt-10 form-group flex-wrap">
+  <app-agents-auto-complete
+    class="ts-col-40 mr-10 pr-15 pb-20" *ngIf="restForm?.controls['testPlanLabType'] && isHybrid"
+    [formGroup]="restForm"
+    [version]="version"
+    [formCtrl]="restForm?.controls['environments'].controls[0].controls['agentId']"
+    [labelText]="'test_plan.environment.test_machine' | translate"
+    [isAvailableCheck]="true">
+  </app-agents-auto-complete>
+  <app-environments-auto-complete
+    *ngIf="restForm"
+    class="ts-col-40 pr-10"
+    [class.pr-30]="isHybrid"
+    [hasNone]="true"
+    [formGroup]="restForm"
+    [formCtrl]="restForm?.controls['environmentId']">
+  </app-environments-auto-complete>
+  <div
+    *ngIf="restForm"
+    [class.pl-10]="!isHybrid"
+    class="ts-col-60 d-flex align-items-center">
+    <mat-slide-toggle >
+      <span [translate]="'test_plan.mandatory_steps_only'"></span>
+    </mat-slide-toggle>
+  </div>
+</div>

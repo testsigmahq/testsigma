@@ -1,0 +1,226 @@
+.selected-element-table{
+  @extend .overflow-y-auto;
+}
+.element-tree, .attributes-section, .selected-element-table, .selected-element-details{
+  @extend .h-100;
+}
+.inspection-details-section{
+  @extend .pl-12, .pb-12, .d-flex, .border-dark-separator-l-1, .w-70;
+}
+.element-tree{
+  @extend .theme-border, .overflow-x-auto, .overflow-y-auto;
+  ul{ @extend .list-style-none;}
+}
+.inspector-tools{
+  @extend .d-flex, .w-fit-content ;
+  button{@extend .h-32p, .w-32p;}
+  > button ,  .btn-group-column button, .btn-group-row button{
+    &[disabled]{ @extend .disabled};
+    &.active { @extend .bg-selected-gray-color-important;}
+  }
+  > button {
+    @extend .mt-10, .theme-border, .border-rds-4, .border-box, .pointer, .bg-white;
+  }
+  .btn-group-column{
+    @extend .d-flex, .flex-column, .theme-border, .bg-white , .border-rds-4, .border-box;
+    button {@extend .h-31p, .w-31p, .border-w-0, .pointer, .bg-white;}
+    :not(:first-child){@extend .theme-border-t;}
+    :first-child{@extend .border-rds-top-3;}
+    :last-child{@extend .border-rds-bottom-3;}
+  }
+  .btn-group-row{
+    @extend .d-flex, .flex-row, .theme-border, .bg-white-important , .border-rds-4, .align-items-center, .w-fit-content, .border-box, .h-fit-content;
+    button { @extend .h-30p, .w-33p, .border-w-0, .pointer, .bg-white;}
+    :not(:first-child){@extend .theme-border-l;}
+    :first-child{@extend .border-rds-left-3;}
+    :last-child{@extend .border-rds-right-3;}
+  }
+  &.flex-row{
+    button{
+      @extend .mt-0;
+    }
+  }
+}
+.mirroring-container{
+  @extend .border-dark-separator-1, .d-flex, .flex-column, .border-rds-7, .theme-main-gradient;
+  loading-circle{ @extend .m-auto, .ts-col-100;}
+}
+.mirror-loading-screen{
+  @extend .text-center, .ts-col-100, .d-flex, .flex-column, .text-white, .rb-medium;
+}
+.app-source-section, .attributes-section, .mirroring-container{
+  @extend .transition-common;
+}
+.selected-element-table {
+  top: -51px;
+  @extend .ts-col-100, .theme-border;
+  .note{
+    @extend .text-t-secondary;
+    i{ @extend .text-pale-orange;}
+  }
+}
+
+.details-item {
+  @extend .d-flex, .py-16, .border-separator-b-1, .mx-20;
+  .item-label{
+    @extend .text-t-secondary, .ts-col-35;
+  }
+  .item-data {
+    @extend  .ts-col-65, .pl-5;
+    word-break: break-all;
+  }
+}
+.mat-dialog-container {
+  @extend .p-0;
+}
+.selected-element-details {
+  @extend .position-relative;
+}
+
+.mat-dialog-title {
+  @extend .modal-header, .m-0, .d-flex;
+}
+.mat-dialog-actions {
+  justify-content: flex-end;
+  padding: 12px 20px 12px 30px!important;
+  border-top: 1px solid #dee2e6;
+  border-bottom-right-radius: 0.3rem;
+  border-bottom-left-radius: 0.3rem;
+  @extend .m-0;
+}
+
+.mobile-ins-close-recording {
+  @extend .border-0, .position-absolute, .fz-26, .pointer, .line-height-none, .p-20, .right-0, .top-0, .z-in-2, .h-30p, .mt-10;
+}
+
+.device-connect-container, .agent-connect-container {
+  @extend .align-items-center, .d-flex, .fz-14, .text-hight-text;
+  .device-item {
+    @extend .pointer, .py-8, .pr-14, .pl-10;
+    .fa-tick{
+      @extend .pr-10, .position-relative, .fz-15;
+      top: 3px;
+    }
+    &.active-selection {
+      background: rgba(26, 168, 116, 0.1);
+      border: 1px solid rgba(26, 168, 116, 0.3);
+      @extend .border-rds-4, .text-brand, .rb-medium;
+    }
+    span{
+      line-height: 26px;
+    }
+    &:hover {
+      @extend .text-brand;
+    }
+  }
+}
+
+.loading-actions{
+  @extend .w-100, .h-100, .d-flex, .position-absolute, .z-in-2;
+  > div{
+    @extend .p-16, .border-rds-4, .m-auto;
+    background: #827e7e78;
+    max-width:180px;
+  }
+  .mat-spinner{
+    @extend .mx-auto, .my-25;
+  }
+}
+.field-list{
+  @extend .overflow-y-auto;
+  .field-name { @extend .w-80;}
+}
+.bg-light {
+  background: #FAFBFC;
+}
+.form-group {
+  .fixed-help-icon {
+    @extend .pointer, .ml-14, .text-icon, .fz-14, .position-absolute;
+    top: 15px;
+  }
+}
+.inspector-section-header {
+  @extend .text-t-secondary, .text-nowrap, .overflow-x-hidden, .rb-medium, .pb-16, .pt-14;
+}
+
+.mat-dialog-content {
+  .fa-question-circle-solid {
+    width: 14px;
+    height: 14px;
+  }
+}
+.mobile-inspector-dialog, .inspection-launcher-dialog {
+  .mat-dialog-container {
+    border-radius: 0px !important;
+  }
+}
+.send-key-dialog{
+  .mat-dialog-container {
+    @extend .border-rds-6;
+    .mat-dialog-title {@extend .border-rds-top-6;}
+    .mat-dialog-actions {@extend .border-rds-bottom-6;}
+  }
+}
+
+.fixed-pos-with-br {
+  @extend .theme-border-t,.d-flex,.position-absolute, .fixed-full-pos;
+}
+
+.fixed-full-pos {
+  @extend .bottom-0, .left-0, .right-0;
+}
+.rounded-back-btn {
+  @extend .btn, .icon-btn, .btn-sm, .bg-grey-x-light, .border-0;
+}
+.save-elements-section {
+  @extend .d-flex, .overflow-x-auto, .attributes-section;
+}
+.hide-get-started {
+  z-index: 9999;
+  @extend .bg-white;
+}
+.inspector-mat-tab{
+  @extend .tab-group-row, .theme-border-t, .h-fit-content;
+  .mat-tab-label{@extend .h-30p, .theme-border-r, .theme-border-y;}
+  .mat-tab-label:last-child{@extend .border-rds-right-4, .theme-border-r;}
+  .mat-tab-label:first-child{@extend .border-rds-left-4, .theme-border-l;}
+  .mat-tab-header{ @extend .w-100-60, .border-0;}
+  &:not(.show-close){
+    .mat-tab-header{@extend .w-100;}
+  }
+  .mat-tab-label-active{
+    background-color: $theme-secondary-text-color!important;
+    border-color: $theme-secondary-text-color!important;
+    .mat-tab-label-content{
+      span, i{
+        color: white!important;
+        @extend .rb-regular-i-d;
+      }
+    }
+  }
+  .mat-ink-bar{
+    @extend .h-100, .bg-selected-gray-color-important, .border-rds-4;
+    z-index: -1;
+  }
+  .mat-tab-body-content{
+    height: calc(100vh - 44px);
+    @extend .pt-14, .pb-15;
+  }
+  .mat-tab-label {
+    button { @extend .d-none;}
+    button:hover {background-color: #585e63;}
+  }
+  .mat-tab-label-active{
+    button{@extend .d-block;}
+  }
+  &.disabled {
+    .mat-tab-label-container {
+      @extend .disabled-pointer-events;
+      cursor: not-allowed !important;
+    }
+  }
+}
+.bg-selected-gray-color-important { background-color: $theme-bg-selected-gray-color !important;}
+.bg-white-important{ background-color: white !important;}
+.border-box{ box-sizing: border-box};
+.border-w-0{border-width: 0;}

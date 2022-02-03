@@ -1,0 +1,24 @@
+<button
+  cdkOverlayOrigin #trigger="cdkOverlayOrigin"
+  (click)="isEmpty? '' : openFilterByOptions();$event.preventDefault();$event.stopPropagation()"
+  class="dropdown-btn pointer">
+  <span [translate]="translatePreFix + filteredBy" class="fz-18"></span>
+  <i
+    [class.d-none-important]="isEmpty"
+    class="fa fa-caret-down my-auto"></i>
+</button>
+<ng-template
+  #sortByOptions="cdkConnectedOverlay"
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="openFilter"
+  cdkConnectedOverlayPanelClass="filter-dropdown">
+  <div [@collapse]="openFilter" class="overflow-hidden">
+    <ul>
+      <li *ngFor="let filterByValue of filterByColumns" class="selected pointer"
+          (click)="filterBy(filterByValue)"
+          [translate]="translatePreFix+ filterByValue"
+          [class.selected]=" filterByValue == filteredBy"></li>
+    </ul>
+  </div>
+</ng-template>

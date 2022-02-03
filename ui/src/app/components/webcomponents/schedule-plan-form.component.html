@@ -1,0 +1,140 @@
+<!--
+  ~ /*
+  ~  * *****************************************************************************
+  ~  *  Copyright (C) 2020 Testsigma Technologies Inc.
+  ~  *  All rights reserved.
+  ~  *  ****************************************************************************
+  ~  */
+  -->
+
+<div class="theme-overlay-container">
+  <div class="theme-overlay-header">
+    <div
+      class="theme-overlay-title"
+      [translate]="options.scheduledPlan? 'schedule.edit.title':'schedule.plan.title'">
+    </div>
+    <button
+      class="theme-overlay-close"
+      type="button"
+      [matTooltip]="'hint.message.common.close' | translate"
+      mat-dialog-close>
+    </button>
+  </div>
+  <div class="theme-overlay-content">
+    <form
+      class="ts-form rb-regular" id="scheduleForm"
+      (keydown.enter)="false"
+      novalidate="novalidate"
+      [formGroup]="scheduleForm"
+      *ngIf="scheduledPlan"
+      name="scheduleForm">
+      <div
+        *ngIf="scheduleList?.content?.length && !scheduledPlanId"
+        class="d-flex align-items-center border-rds-4 px-15 py-5 mb-10" style="background: #f7f7f7">
+        <i class="fa-info fz-18 text-t-highlight pr-7"></i>
+        <div>
+          <span [translate]="'schedule.plan.note_prefix'"></span>
+          <a
+            [textContent]="'schedule.plan.note_count' | translate : {Count: scheduleList?.content?.length}"
+            [routerLink]="['/td', 'plans', execution?.id, 'schedules']"
+            class="text-t-highlight px-4"></a>
+          <span [translate]="'schedule.plan.note_suffix'"></span>
+        </div>
+      </div>
+      <div class="form-group ts-col-100 pb-20 pt-10">
+        <div class="p-0 field">
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder=" "
+            class="form-control"
+            [(ngModel)]="scheduledPlan.name"
+            [formControlName]="['name']"/>
+          <label
+            [translate]="'message.common.label.name'"
+            for="name" class="required"></label>
+        </div>
+        <div
+          *ngIf="formSubmitted && scheduleForm.get('name').hasError('required')"
+          class="error" [translate]="'agents.message.title.required'">
+        </div>
+        <div
+          *ngIf="formSubmitted && scheduleForm.controls.name.errors?.maxlength" class="error"
+          [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'126'}">
+        </div>
+      </div>
+      <div class="form-group ts-col-100 pb-20">
+        <div class="p-0 field">
+        <textarea
+          type="text"
+          id="description"
+          name="name"
+          placeholder=" "
+          class="form-control"
+          [(ngModel)]="scheduledPlan.description"
+          [formControlName]="['description']"></textarea>
+          <label
+            [translate]="'schedule.plan.description'"
+            for="description"></label>
+        </div>
+      </div>
+      <div class="d-flex justify-content-between">
+        <div class="form-group pb-20 ts-col-45">
+          <div>
+            <input
+              class="form-control field flex-row"
+              type="date"
+              id="date"
+              name="date"
+              [min]="today|date:'yyyy-MM-dd'"
+              (change)="setDayValue()"
+              [formControlName]="['date']">
+          </div>
+        </div>
+        <div class="form-group pb-20 ts-col-45">
+          <input
+            class="form-control field flex-row"
+            type="time"
+            id="time"
+            name="time"
+            (change)="setDayValue();isScheduleTimeInvalid= false"
+            [formControlName]="['time']">
+          <div
+            *ngIf="formSubmitted && isScheduleTimeInvalid"
+            [translate]="'schedule.plan.invalid_time'"
+            class="error"></div>
+        </div>
+      </div>
+      <div
+        class="form-group ts-col-45">
+        <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill">
+          <mat-select
+            disableOptionCentering panelClass="single"
+            name="scheduleType"
+            [formControlName]="['scheduleType']"
+            [(value)]="scheduledPlan.scheduleType">
+            <mat-option
+              *ngFor="let scheduleType of ScheduleType"
+              [value]="scheduleType"
+              [innerHTML]="('schedule.plan.repeat_'+scheduleType) | translate : {Day: getDisplayDay(scheduleType) }"></mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
+  <div class="theme-overlay-footer">
+    <button
+      class="theme-btn-clear-default"
+      mat-dialog-close
+      [translate]="'btn.common.cancel'"></button>
+    <button
+      [disabled]="!scheduleForm.valid"
+      (click)="scheduledPlanId ? update() : create()"
+      appAsyncBtn
+      [isLoading]="saving"
+      [message]="scheduledPlanId ? 'message.common.updating' : 'message.common.saving'"
+      [textContent]="(scheduledPlanId ? 'btn.common.update' : 'schedule.plan.btn') | translate"
+      class="theme-btn-primary"></button>
+  </div>
+</div>

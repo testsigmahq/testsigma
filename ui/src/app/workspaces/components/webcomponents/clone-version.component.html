@@ -1,0 +1,28 @@
+<div class="shadow-none theme-border-b" mat-dialog-title>
+  <span [translate]="'version.copy.title'" class="rb-medium fz-15"></span>
+  <button [matTooltip]="'hint.message.common.close' | translate" class="theme-overlay-close"
+          mat-dialog-close></button>
+</div>
+<mat-dialog-content class="pt-30 pb-14 mx-2">
+  <form *ngIf="versionForm" [formGroup]="versionForm"
+        class="ts-form">
+    <div class="form-group">
+      <label [translate]="'version.copy.name'" class="control-label required"></label>
+      <input [formControlName]="['versionName']" [(ngModel)]="version.versionName" class="form-control" type="text"/>
+      <div class="error" *ngIf="versionForm.controls.versionName.errors?.required"
+           [textContent]="'form.validation.common.required' | translate:{FieldName: 'Name'}"></div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions class="confirm-actions">
+  <button [translate]="'btn.common.cancel'" class="theme-btn-clear-default" mat-dialog-close></button>
+  <button [disabled]="true"
+          *ngIf="versionForm?.valid && saving"
+          class="theme-btn-primary d-flex">
+    <mat-spinner color="accent" diameter="15"></mat-spinner>
+    <span class="pl-5" [translate]="'message.common.copying'"></span>
+  </button>
+  <button (click)="clone()"
+          *ngIf="!saving"
+          [translate]="'btn.common.create'" class="theme-btn-primary"></button>
+</mat-dialog-actions>

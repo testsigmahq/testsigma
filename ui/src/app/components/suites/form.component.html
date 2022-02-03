@@ -1,0 +1,160 @@
+<form
+  *ngIf="testSuiteForm"
+  class="ts-form create-form-full-view w-100 px-0"
+  [formGroup]="testSuiteForm">
+  <div class="create-form-content-full-view px-0">
+    <div class="content-view">
+      <div class="d-flex">
+        <a
+          class="form-title"
+          [translate]="testSuite.id ? 'test_suites.form.edit.title' : 'test_suites.form.create.title'"></a>
+        <i
+          class="ml-auto fa-close-alt pointer ml-50"
+          (click)="goBack()"
+          [matTooltip]="'hint.message.common.close' | translate"></i>
+      </div>
+      <div
+        class="create-form-title mb-8 pt-30"
+        [translate]="'test_suites.form.enter_name'"></div>
+      <div class="form-group pb-14 ml-auto">
+        <input
+          class="form-control"
+          required
+          name="name"
+          formControlName="name"
+          autofocus/>
+        <div class="error"
+             *ngIf="testSuiteForm.controls.name.errors?.maxlength"
+             [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'126'}"></div>
+      </div>
+      <div class="form-group">
+        <span
+          class="text-dark pointer"
+          [translate]="'message.common.description_optional'"
+          [class.text-underline]="!showDescription"
+          (click)="showDescription=!showDescription"></span>
+        <div
+          class="mt-15" @fade
+          *ngIf="showDescription">
+          <app-description class="without-label" [formCtrlName]="testSuiteForm.controls.description"></app-description>
+        </div>
+      </div>
+
+      <div
+        *ngIf="suiteList?.content"
+        class="form-group ts-col-50">
+        <app-auto-complete
+          class="pb-2 d-block"
+          [formGroup]="testSuiteForm"
+          [formCtrlName]="testSuiteForm.controls['preRequisite']"
+          [value]="getCurrentItem(suiteList, testSuite?.preRequisite)"
+          [items]="suiteList"
+          [hasNone]="true"
+          (onSearch)="fetchSuites($event)"
+          (onValueChange)="setPreRequisite($event)"
+        ></app-auto-complete>
+        <label class="control-label" [translate]="'test_step.results.prerequisite'"></label>
+      </div>
+      <div class="theme-border border-rds-4 p-25 mb-25">
+        <div
+          *ngIf="activeTestCases?.length"
+          class="form-title-medium pb-10"
+          [class.theme-border-b]="activeTestCases?.length"
+          [textContent]="'test_suites.form.selected_cases'| translate: {count: activeTestCases.length}"></div>
+        <div
+          *ngIf="!activeTestCases?.length"
+          class="form-title-medium pb-10"
+          [translate]="'test_suites.form.select_case.title'"></div>
+        <div
+          class="form-group list-container ts-col-100 overflow-y-auto mb-20"
+          [class.hide]="!activeTestCases?.length" style="height: 300px;"
+          cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListData]="testCases">
+          <div
+            class="p-10 theme-border-b align-items-center d-flex green-highlight list-view pointer" style="cursor: move"
+            cdkDrag
+            cdkDragBoundary=".cdk-drop-list.drag-list"
+            cdkDragLockAxis="y"
+            [cdkDragData]="testCase"
+            [cdkDragDisabled]="activeTestCases.indexOf(testCase.parentCase) > -1 || testCase.preRequisiteCase"
+            *ngFor="let testCase of activeTestCases; let index = index"
+            [ngSwitch]="selectedCaseIds.indexOf(testCase.parentCase?.id) > -1">
+            <i class="fa-drag-n-drop mr-10"></i>
+            <span class="mr-10" [textContent]="index+1"></span>
+            <span [textContent]="testCase.name" class="text-truncate mw-80 py-7"></span>
+            <span
+              class="action-icons action-hover-icon pointer ml-auto"
+              *ngSwitchCase="false">
+              <i
+                *ngIf="activeTestCases.length>1"
+                class=" fa-trash-thin"
+                (click)="removeCase(testCase)"></i>
+            </span>
+            <span *ngSwitchCase="true"></span>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between mt-10">
+          <button
+            class="theme-btn-clear-default"
+            (click)="addSuites()"
+            [textContent]="'+ '+('test_suite.form.add_test_case' | translate)"></button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label
+          class="control-label mat-proxy-label"
+          [translate]="'add_labels.form.label'"></label>
+        <mat-form-field class="w-100 mat-custom-chip-container"
+                        (click)="searchAutoComplete.setValue('')">
+          <mat-chip-list #tagList class="mat-custom-chip-list">
+            <mat-chip
+              *ngFor="let tag of editTags" [selectable]="false"
+              [removable]="true" (removed)="removeTag(tag)">
+              <span [textContent]="tag.name"></span>
+              <mat-icon matChipRemove class="fa-close-large fz-10 mat-icon"></mat-icon>
+            </mat-chip>
+            <input
+              #searchTag
+              [formControl]="searchAutoComplete"
+              [matChipInputFor]="tagList"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              (matChipInputTokenEnd)="addNewTag(searchAutoComplete.value)"
+              [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete" searchAutoComplete>
+              <mat-option
+                *ngFor="let tag of filteredList" [textContent]="tag.name"
+                [value]="tag" (click)="addExistingTag(tag)"></mat-option>
+              <mat-option
+                class="pointer" *ngIf="searchAutoComplete.value && !searchAutoComplete.value?.name && this.isNotAdded(searchAutoComplete.value)"
+                [value]="searchAutoComplete.value" (click)="addNewTag(searchAutoComplete.value)">
+                <div>{{searchAutoComplete.value}}<span class="new-option-pill" [translate]="'btn.common.new'"></span>
+                </div>
+              </mat-option>
+              <mat-option
+                *ngIf="noTagsCreated()"
+                [disabled]="true" [textContent]="'labels.select.no_tags_msg' | translate"></mat-option>
+            </mat-autocomplete>
+          </mat-chip-list>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="theme-border-t ts-col-70 mx-auto text-right py-15">
+    <a
+      [translate]="'btn.common.cancel'"
+      class="theme-btn-clear-default"
+      (click)="goBack()"></a>
+    <button
+      [disabled]="testSuiteForm?.invalid || !activeTestCases?.length || formSubmitted"
+      class="theme-btn-primary"
+      appAsyncBtn
+      [isLoading]="formSubmitted"
+      [message]="'message.common.saving'"
+      [textContent]="(testSuite?.id ?  'btn.common.update' : 'btn.common.create') | translate"
+      (click)=" testSuite?.id ? update() : create()">
+    </button>
+  </div>
+</form>
+
+

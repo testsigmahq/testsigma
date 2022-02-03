@@ -1,0 +1,49 @@
+<div class="theme-overlay-container">
+  <div class="theme-overlay-header">
+    <div
+      class="theme-overlay-title">
+      <i class="fa-warning text-danger fz-20"></i>
+      <span [translate]="'message.common.confirmation.title'" class="pl-8 fz-16 rb-medium"></span>
+    </div>
+    <button
+      class="theme-overlay-close"
+      type="button"
+      [matTooltip]="'hint.message.common.close' | translate"
+      mat-dialog-close>
+    </button>
+  </div>
+
+  <div class="theme-overlay-content">
+    <div
+      [innerHTML]="modalData.description"
+      class="text-t-secondary pb-15 lh-2"></div>
+    <div class="list-content overflow-x-hidden  theme-only-items-scroll">
+      <cdk-virtual-scroll-viewport
+        class="list-container virtual-scroll-viewport"
+        itemSize="27"
+        style="max-height:261px;height:261px">
+        <div
+          *cdkVirtualFor="let linkedEntity of modalData.linkedEntityList ; let index=index; let first=first"
+          [class.border-separator-t-1]="first"
+          class="list-view md-pm green-highlight">
+          <div (click)="openLinkedEntity(linkedEntity.executionId)" class="ts-col-100 pointer d-flex" target="_blank">
+            <div class="text-truncate">
+              <span
+                [textContent]="linkedEntity.title"
+                [matTooltip]="linkedEntity.title">
+              </span>
+            </div>
+            <i class="fa-external-link-alt-solid ml-auto pl-5"></i>
+          </div>
+        </div>
+      </cdk-virtual-scroll-viewport>
+    </div>
+  </div>
+
+  <div class="theme-overlay-footer">
+    <button
+      [translate]="'btn.common.done'"
+      class="btn icon-btn border-rds-2"
+      mat-dialog-close></button>
+  </div>
+</div>

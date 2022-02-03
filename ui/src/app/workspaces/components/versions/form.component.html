@@ -1,0 +1,50 @@
+<div class="d-flex ts-col-100 h-100">
+  <div class="ts-col-65 h-100">
+    <div class="d-flex align-items-center p-30">
+      <div class="rb-medium fz-18">
+        <a [routerLink]="[ '../']" [matTooltip]="'hint.message.common.back' | translate">
+          <i class="fa-back-arrow theme-text mr-15"></i></a>
+        <span [translate]="version.id ? 'version.form.edit.title' : 'version.form.new.title'"></span>
+      </div>
+      <div class="d-flex align-items-baseline ml-auto">
+        <button
+          class="theme-btn-clear-default"
+          [routerLink]="[ '../']" [matTooltip]="'hint.message.common.cancel' | translate"
+          [translate]="'btn.common.cancel'"></button>
+        <button
+          class="theme-btn-primary"
+          appAsyncBtn
+          [isLoading]="saving"
+          [message]="version.id ? 'message.common.updating' : 'message.common.saving'"
+          (click)="onSubmit()"
+          [textContent]="(!version.id ? 'btn.common.create' : 'btn.common.update') | translate">
+        </button>
+      </div>
+    </div>
+    <form
+      *ngIf="versionForm" [formGroup]="versionForm" (ngSubmit)="onSubmit()"
+      class="ts-form overflow-y-auto px-30 pb-30 h-100-91">
+      <div class="form-group">
+        <label class="label fz-14 rb-medium" [translate]="'version.form.label.version_name'"></label>
+        <input type="text" class="form-control mt-10" [formControlName]="['versionName']"/>
+        <div
+          class="error mt-30" *ngIf="versionForm.controls.versionName.errors?.required && submitted"
+          [textContent]="'form.validation.common.required' | translate:{FieldName: 'Name'}"></div>
+        <div
+          class="error mt-30" *ngIf="versionForm.controls.versionName.errors?.minLength && submitted"
+          [textContent]="'form.validation.common.min_length' | translate: {FieldName:'Name' , min:'4'}"></div>
+      </div>
+      <div class="form-group mb-10">
+        <app-description [formCtrlName]="versionForm.controls.description"></app-description>
+        <div
+          class="error" *ngIf="versionForm.controls.description.errors?.required && submitted"
+          [textContent]="'form.validation.common.required' | translate:{FieldName: 'Description'}"></div>
+      </div>
+    </form>
+  </div>
+  <div class="ts-col-35 theme-border-l bg-light px-30 pt-45" style="height: 100vh">
+    <app-version-help></app-version-help>
+  </div>
+</div>
+
+

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>close-large</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M33.7,30 L50.2,13.5 C51.2,12.5 51.2,10.8 50.2,9.8 C49.2,8.8 47.5,8.8 46.5,9.8 L30,26.3 L13.5,9.8 C12.5,8.8 10.8,8.8 9.8,9.8 C8.8,10.8 8.8,12.5 9.8,13.5 L26.3,30 L9.8,46.5 C8.8,47.5 8.8,49.2 9.8,50.2 C10.8,51.2 12.5,51.2 13.5,50.2 L30,33.7 L46.5,50.2 C47.5,51.2 49.2,51.2 50.2,50.2 C51.2,49.2 51.2,47.5 50.2,46.5 L33.7,30 Z" id="path-1"></path>
+    </defs>
+    <g id="close-large" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <mask id="mask-2" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <use id="Mask" fill="#000000" fill-rule="nonzero" xlink:href="#path-1"></use>
+    </g>
+</svg>

@@ -1,0 +1,100 @@
+<div class="theme-overlay-container ts-form">
+  <div class="theme-overlay-header theme-gray-light">
+    <div
+      class="theme-overlay-title">
+      <span [translate]="'search_elements.title'" class="fz-16 rb-medium"></span>
+      <span *ngIf="mobileElements.length>0" [textContent]="'('+mobileElements.length+')'" class="pl-5 fz-16"></span>
+    </div>
+    <button
+      class="theme-overlay-close"
+      type="button"
+      [matTooltip]="'hint.message.common.close' | translate"
+      mat-dialog-close>
+    </button>
+  </div>
+  <div class="theme-overlay-content theme-gray-light">
+    <div>
+      <div class="form-group mt-10 ts-col-30">
+        <label class="control-label required mat-proxy-label"
+               [translate]="'agents.mobile.inspection.type'"></label>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-select [formControl]="findByTypeControl" [(ngModel)]="selectedType" disableOptionCentering>
+            <mat-option *ngFor="let locatorType of availableLocatorTypes"
+                        [value]="locatorType" [textContent]="('element.locator_type.' + locatorType)|translate"></mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <textarea
+          class="form-control resize-none"
+          name="byValue"
+          [placeholder]="'search_elements.placeholder'|translate"
+          [formControl]="byValueControl"
+          [(ngModel)]="byValue"
+          rows="4"></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="theme-overlay-footer theme-gray-light">
+    <button
+      [translate]="'btn.common.cancel'"
+      class="btn icon-btn border-rds-2" mat-dialog-close></button>
+    <button (click)="searchElement()"
+            [disabled]="byValueControl.invalid || isFetching"
+            [translate]="!isFetching ? 'btn.common.search' : 'search_elements.btn.searching'"
+            class="btn btn-primary"></button>
+  </div>
+
+
+  <div class="theme-overlay-content pb-25 pt-20"
+       *ngIf="mobileElements?.length" @collapse>
+    <div class="form-group">
+      <mat-form-field class="w-100 mat-custom-chip-container">
+        <mat-chip-list #idList class="mat-custom-chip-list">
+          <mat-chip *ngFor="let mobileElement of mobileElements;let i = index" [selectable]="true" class="ids-chip"
+                    (click)="highlightSelectedElement(mobileElement)" [class.selected]="selectedElement == mobileElement">
+            {{i+1}}
+          </mat-chip>
+          <input [matChipInputFor]="idList" readonly/>
+        </mat-chip-list>
+      </mat-form-field>
+    </div>
+    <div class="d-flex text-center text-nowrap">
+      <div class="pr-10">
+        <button class="btn icon-btn pt-10 pb-8"
+                [cdkCopyToClipboard]="selectedElement.id"
+                (click)="showCopiedTooltip()"
+                [matTooltip]="idCopied ? ('search_elements.id.copied' | translate) : ('search_elements.label.copy_id' | translate) ">
+          <i class="fa fa-copy-outline fz-18"></i>
+        </button>
+        <div [translate]="'search_elements.label.copy_id'" class="mt-10"></div>
+      </div>
+      <div class="px-10">
+        <button class="btn icon-btn pb-10" (click)="tap()">
+          <i class="fa fa-tap fz-20"></i>
+        </button>
+        <div [translate]="'search_elements.label.tap_element'" class="mt-10"></div>
+      </div>
+      <div class="px-10">
+        <button class="btn icon-btn pt-10" (click)="clear()" [disabled]="textEditable()">
+          <i class="fa fa-eraser-outline fz-20"></i>
+        </button>
+        <div [translate]="'message.common.clear'" class="mt-10"></div>
+      </div>
+      <div class="text-left ml-30" style="width: -webkit-fill-available">
+        <div class="form-group d-flex pb-10" [matTooltip]="'mobile_recorder.button.send_keys'|translate">
+          <input class="form-control border-rds-left-2 border-rds-right-0 border-dark-separator-1"
+                 [formControl]="dataControl" [(ngModel)]="enteredData">
+          <button class="btn icon-btn border-rds-right-2 border-l-0 border-rds-left-0"
+                  [disabled]="dataControl.invalid"
+                  (click)="sendKeys()">
+            <i class="fa fa-forward"></i></button>
+        </div>
+        <span [translate]="'mobile_recorder.button.send_keys'"></span>
+      </div>
+    </div>
+  </div>
+  <span [translate]="'search_elements.search.empty'"
+        class="empty-full-container" @collapse
+        *ngIf="noElementsFound"></span>
+</div>

@@ -1,0 +1,113 @@
+<div class="dashboard-section-title" [translate]="'dashboard.latest_runs.title'"></div>
+<div class="d-flex theme-border border-rds-5 h-100 flex-wrap">
+  <div
+    style="height: 75px; overflow:hidden;"
+    class="d-flex ts-col-100 px-20">
+    <a class="filter-group"
+       [class.active]="period == filterTimePeriod.TODAY"
+       (click)="filter(filterTimePeriod.TODAY)">
+      <div class="filter-group-inner">
+        <div class="filter-name" [translate]="'dashboard.latest_runs.filter_by_TODAY'"></div>
+        <div>
+          <ng9-odometer class="fz-24" [number]="0" *ngIf="dayResults?.totalElements < 10"></ng9-odometer>
+          <ng9-odometer class="fz-24" [number]="dayResults?.totalElements"></ng9-odometer>
+        </div>
+      </div>
+    </a>
+    <a class="filter-group"
+       [class.active]="period == filterTimePeriod.LAST_SEVEN_DAYS"
+       (click)="filter(filterTimePeriod.LAST_SEVEN_DAYS)">
+      <div class="filter-group-inner">
+        <div class="filter-name" [translate]="'dashboard.latest_runs.filter_by_LAST_SEVEN_DAYS'"></div>
+        <div>
+          <ng9-odometer class="fz-24" [number]="0" *ngIf="weekResults?.totalElements < 10"></ng9-odometer>
+          <ng9-odometer class="fz-24" [number]="weekResults?.totalElements"></ng9-odometer>
+        </div>
+      </div>
+    </a>
+    <a class="filter-group"
+       [class.active]="period == filterTimePeriod.LAST_30_DAYS"
+       (click)="filter(filterTimePeriod.LAST_30_DAYS)">
+      <div class="filter-group-inner">
+        <div class="filter-name" [translate]="'dashboard.latest_runs.filter_by_LAST_30_DAYS'"></div>
+        <div>
+          <ng9-odometer class="fz-24" [number]="0" *ngIf="monthResults?.totalElements < 10"></ng9-odometer>
+          <ng9-odometer class="fz-24" [number]="monthResults?.totalElements"></ng9-odometer>
+        </div>
+      </div>
+    </a>
+    <a class="filter-group"
+       [class.active]="period == filterTimePeriod.LAST_90_DAYS"
+       (click)="filter(filterTimePeriod.LAST_90_DAYS)">
+      <div class="filter-group-inner">
+        <div class="filter-name" [translate]="'dashboard.latest_runs.filter_by_LAST_90_DAYS'"></div>
+        <div>
+          <ng9-odometer class="fz-24" [number]="0" *ngIf="quarterResults?.totalElements < 10"></ng9-odometer>
+          <ng9-odometer class="fz-24" [number]="quarterResults?.totalElements"></ng9-odometer>
+        </div>
+      </div>
+    </a>
+    <div class="ml-auto d-flex align-items-end justify-content-end fz-12 pb-10">
+      <a *ngIf="activeExecutionResult"
+        class="pr-20 text-t-secondary text-decoration-none"
+         target="_blank"
+        [routerLink]="['/td', 'runs', activeExecutionResult?.id]">
+        <span [translate]="'dashboard.latest_runs.view_report'"></span>
+        <i class="fa-external-link-alt-solid pl-7"></i>
+      </a>
+      <i
+        [matTooltip]="'dashboard.latest_runs.share_report' | translate"
+        class="fa-share theme-border-l pl-20 text-t-secondary pointer"></i>
+    </div>
+  </div>
+  <div class="ts-col-100 d-flex theme-border-t px-8 pb-8 overflow-hidden"
+       style="height: calc(100% - 75px)">
+    <div class="ts-col-50" [class.ts-col-100]="executionResults?.isEmpty">
+      <app-placeholder-loader *ngIf="executionResults?.isFetching"></app-placeholder-loader>
+      <cdk-virtual-scroll-viewport
+      *ngIf="executionResults?.totalElements"
+      itemSize="43"
+      class="theme-section-container list-container virtual-scroll-viewport viewport-height" [class.ts-col-100]="executionResults?.isEmpty">
+      <a
+        class="list-view md-pm pointer green-highlight"
+        (click)="setActiveResult(result)"
+        [class.active]="result.id == activeExecutionResult?.id"
+        *cdkVirtualFor='let result of executionResults'>
+        <div class="ts-col-100 d-flex align-items-center">
+        <span class="border-rds-12 d-inline-block p-4 mr-10 img-wh sm-wh"
+              [matTooltip]="(result.isRunning ? 'execution.result.running': 'execution.result.'+result.result) | translate"
+              [class.result-status-7]="result.isRunning"
+              [class.result-status-0]="result.isPassed"
+              [class.result-status-6]="result.isStopped"
+              [class.result-status-2]="result.isAborted"
+              [class.result-status-3]="result.isNotExecuted"
+              [class.result-status-5]="result.isQueued"
+              [class.result-status-1]="result.isFailed">&nbsp;</span>
+          <span class="text-truncate" [textContent]="result.testPlan.name+' #'+result.id"></span>
+        </div>
+      </a>
+      <app-placeholder-loader *ngIf="executionResults?.isFetching" [isChartWith]="true"></app-placeholder-loader>
+    </cdk-virtual-scroll-viewport>
+
+    <div *ngIf="executionResults?.isEmpty" class="empty-full-container-transparent-bg">
+      <div class="empty-full-content">
+        <div class="empty-run-xs"></div>
+        <div
+          class="text-t-secondary pt-30 pb-18"
+          [translate]="'dashboard.latest_runs.'+period+'.empty'"></div>
+      </div>
+    </div>
+    </div>
+    <div class="ts-col-50" *ngIf="!executionResults?.isEmpty" >
+      <div
+        class="highChart ts-col-100 d-flex h-100 theme-gray-light border-rds-b-4"
+        id="run-details-bar">
+        <app-run-details-bar-chart
+          class="ts-col-100 d-flex"
+          [id]="'run-details-bar'"
+          *ngIf="environmentResults"
+          [results]="environmentResults"></app-run-details-bar-chart>
+      </div>
+    </div>
+  </div>
+</div>

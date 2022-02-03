@@ -1,0 +1,89 @@
+<div class="list-container w-100 mt-n14" *ngIf="refreshedView">
+  <cdk-virtual-scroll-viewport
+    minBufferPx="10000" maxBufferPx="30000"
+    itemSize="63" class="virtual-scroll-viewport list-container"
+    *ngIf="!isDragEnabled">
+    <div
+      *ngIf="testSteps?.content?.length"
+      class="drag-list pr-45 py-10">
+      <app-action-test-step-list-item
+        class="w-100 scroll-item flex-wrap"
+        *cdkVirtualFor='let testStep of testSteps?.content; let stepNumber = index; trackBy: trackByIdx'
+        (onStepDestroy)="onStepDestroy($event)"
+        (onStepBulkDestroy)="onStepBulkDestroy($event)"
+        (onStepSelection)="selectStep(testStep)"
+        (onStepDeselection)="deselectStep(testStep)"
+        (onStepClone)="onStepClone($event)"
+        (OnElseStep)="OnElseStep($event)"
+        (onSuccessfulStepSave)="onSuccessfulStepSave($event)"
+        (onSelectedStepType)="onStepChangeAction($event)"
+        [version]="workspaceVersion"
+        [testCase]="testCase"
+        [testStep]="testStep"
+        [testSteps]="testSteps"
+        [templates]="templates"
+        [kibbutzTemplates]="kibbutzTemplates"
+        [isSearchEnabled]="isSearchEnabled"
+        [stepNumber]="stepNumber+1"
+        [stepRecorderView]="stepRecorderView"
+        [stepForm]="stepForm"></app-action-test-step-list-item>
+    </div>
+    <div *ngIf="!testSteps?.content?.length && isStepFetchComplete && searchTerm"
+         class="empty-full-container-transparent-bg">
+      <div class="empty-full-content">
+        <div class="empty-run-xs"></div>
+        <div
+          class="text-t-secondary pt-30 pb-18"
+          [translate]="'message.common.search.not_found'"></div>
+      </div>
+    </div>
+    <app-placeholder-loader *ngIf="!isStepFetchComplete"></app-placeholder-loader>
+    <app-test-step-form-container
+      class="pr-45 d-block mt-n10"
+      *ngIf="workspaceVersion && testSteps && !isAnyStepEditing && !hideFormContainer && !isAnyStepAfter && !isDragEnabled && !isSearchEnabled"
+      (onSuccessfulStepSave)="onSuccessfulStepSave($event)"
+      (onStepType)="onStepChangeAction($event)"
+      [testCase]="testCase"
+      [testSteps]="testSteps"
+      [templates]="templates"
+      [stepRecorderView]="stepRecorderView"
+      [kibbutzTemplates]="kibbutzTemplates"
+      [selectedTemplate]="selectedTemplate"
+      [(stepForm)]="stepForm"
+      [version]="workspaceVersion"></app-test-step-form-container>
+    <div
+      *ngIf="workspaceVersion && testSteps && !isAnyStepEditing && !hideFormContainer && !isAnyStepAfter"
+      style="min-height: 300px"></div>
+  </cdk-virtual-scroll-viewport>
+  <cdk-virtual-scroll-viewport
+    *ngIf="isDragEnabled"
+    minBufferPx="10000" maxBufferPx="30000"
+    itemSize="63" class="virtual-scroll-viewport">
+    <div
+      class="drag-list pr-25" cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListData]="testSteps?.content">
+      <app-action-test-step-list-item
+        cdkDrag
+        [cdkDragDisabled]="!testStep.draggable"
+        cdkDragBoundary=".cdk-drop-list.drag-list"
+        cdkDragLockAxis="y"
+        [cdkDragData]="testStep"
+        class="w-100 scroll-item selected-box"
+        *ngFor='let testStep of testSteps?.content; let stepNumber = index; trackBy: trackByIdx'
+        (onStepDestroy)="onStepDestroy($event)"
+        (onStepSelection)="selectStep(testStep)"
+        (onStepDeselection)="deselectStep(testStep)"
+        (onStepClone)="onStepClone($event)"
+        (onSuccessfulStepSave)="onSuccessfulStepSave($event)"
+        [isDragEnable]="isDragEnabled"
+        [testStep]="testStep"
+        [testSteps]="testSteps"
+        [testCase]="testCase"
+        [stepNumber]="stepNumber+1"
+        [stepRecorderView]="stepRecorderView"
+        ></app-action-test-step-list-item>
+    </div>
+  </cdk-virtual-scroll-viewport>
+</div>
+<div class="list-container w-100 mt-n10 d-flex align-items-center justify-content-center" *ngIf="!refreshedView">
+  <app-placeholder-loader [isLogoLoader]="true" [displayText]="('loading_text' | translate)"></app-placeholder-loader>
+</div>

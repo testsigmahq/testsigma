@@ -1,0 +1,60 @@
+<div class="details-page-container" style="height: 73px">
+  <app-placeholder-loader class="ts-col-100" *ngIf="!isFetchingCompleted" [isDetails]="true"></app-placeholder-loader>
+  <div
+    class="ts-col-100 d-flex-wrap"
+    *ngIf="environment">
+    <div class="details-page-header">
+      <app-td-overlay-menu-button
+        [versionId]="versionId"></app-td-overlay-menu-button>
+      <a
+        class="go-back-icon pl-10"
+        [matTooltip]="'hint.message.common.back' | translate"
+        [routerLink]="['/td', versionId, 'environments']"></a>
+      <div
+        class="d-flex-wrap ts-col-100-77">
+        <div class="ts-col-100 d-flex align-items-center">
+            <div class="theme-details-header my-auto">
+              <a class="title-name" [textContent]="environment?.name"></a>
+            </div>
+          <div class="d-flex align-items-baseline ml-auto">
+            <button
+              class="btn icon-btn"
+              [matTooltip]="'pagination.edit' | translate"
+              [routerLink]="['/td', this.versionId, 'environments', environment?.id, 'edit']">
+              <i class="fa-pencil-on-paper"></i>
+            </button>
+            <button
+              class="btn icon-btn"
+              (click)="openDeleteDialog()"
+              [matTooltip]="'pagination.delete' | translate">
+              <i class="fa-trash-thin"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="page-details-navigation-md">
+  <ul class="tab-nav pl-8" role="tablist">
+    <li class="nav-items" role="presentation">
+      <a
+        [routerLink]="['details']" [routerLinkActive]="'active'"
+        class="normal-text">
+        <i class="fa-list"></i>
+        <span [translate]="'environments.details.title'"></span>
+      </a>
+    </li>
+    <li class="nav-items" role="presentation" [routerLink]="['plans']" [routerLinkActive]="'active'"
+        [queryParams]="{v: versionId}">
+      <a
+        [routerLink]="['plans']" [routerLinkActive]="'active'" [queryParams]="{v: versionId}"
+        class="normal-text">
+        <i class="fa-test-plan"></i>
+        <span [translate]="'td_nav.test_plan'"></span>
+      </a>
+    </li>
+  </ul>
+</div>
+<router-outlet></router-outlet>

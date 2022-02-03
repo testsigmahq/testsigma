@@ -1,0 +1,52 @@
+<div class="w-100 h-100">
+  <div class="theme-overlay-container">
+    <div class="theme-overlay-header">
+      <span class="theme-overlay-title" [translate]="'settings.auth.api'" ></span>
+      <button
+        type="button"
+        [matTooltip]="'hint.message.common.close' | translate"
+        mat-dialog-close
+        class="close">
+      </button>
+    </div>
+
+    <div class="theme-overlay-content">
+      <form class="ts-form pt-30" [formGroup]="updateForm">
+        <div class="form-group ts-form" >
+          <label for="key" class="control-label required">
+            <span [translate]="'settings.auth.api.key'"></span>
+          </label>
+          <input type="text"
+                 formControlName="key"
+                 id="key" class="form-control " >
+          <span *ngIf="!updateForm.get('key').valid && updateForm.get('key').touched" class="help-block"
+                [translate]="'settings.auth.api.key'">
+          </span>
+        </div>
+        <div class="form-group ts-form" >
+          <label for="confirmKey" class="control-label required">
+            <span [translate]="'settings.auth.api.confirm_key'"></span>
+          </label>
+          <input type="text"
+                 formControlName="confirmKey"
+                 id="confirmKey" class="form-control "  >
+          <span *ngIf="updateForm.get('confirmKey').value !== updateForm.get('key').value && updateForm.get('confirmKey').touched" class="help-block"
+                [translate]="'settings.auth.api.confirm_key'">
+          </span>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="theme-overlay-footer">
+      <button
+        type="button"
+        mat-dialog-close
+        class="theme-btn-clear-default" [translate]="'btn.common.cancel'">
+      </button>
+      <button type="submit" [disabled]="!updateForm.valid || updateForm.get('confirmKey').value !== updateForm.get('key').value"
+              class="theme-btn-primary" (click)="onSubmit()"
+              [translate]="saving? 'message.common.saving' : 'btn.common.save'"></button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,152 @@
+<div class="page-header theme-border-b">
+  <a class="go-back-icon pl-10"
+     [matTooltip]="'hint.message.common.back' | translate"
+     [routerLink]="['/settings', 'provisioning_profiles']"></a>
+  <div
+    class="page-title"  [translate]="'settings.ios_settings.title'">
+  </div>
+</div>
+<div class="page-content">
+  <div class="h-100">
+    <div class="d-flex pt-40">
+      <app-placeholder-loader class="ts-col-65" [isDetails]="true" *ngIf="fetching"></app-placeholder-loader>
+      <div class="ts-col-65 connection-line" *ngIf="!fetching">
+        <div class="ios-setting-list mb-30 align-items-center">
+          <div class="d-flex fz-13 ts-col-40 justify-content-end">
+            <span [translate]="'settings.ios_settings.profile_name'"></span>
+            <div class="ios-pointer" [class.active]="provisioningProfile?.name">
+              <span></span>
+            </div>
+          </div>
+          <div class="ts-col-60" *ngIf="!showNameInput">
+            <span [textContent]="provisioningProfile.name"></span>
+            <button (click)="enableInputForm()" class="btn-clear border-0 pointer icon-btn fa-pencil-on-paper" [matTooltip]="'hint.message.common.edit' | translate" >
+            </button>
+          </div>
+          <div class="ts-col-60" *ngIf="showNameInput">
+            <input type="text" #name [formControl]="nameFormControl" class="form-control theme-border border-rds-4 py-8 w-70"/>
+            <button (click)="saveProvisioningProfile()" *ngIf="provisioningProfile?.id && nameFormControl.valid" class="btn-clear border-0 ml-20 pointer fa-tick icon-btn" [matTooltip]="'hint.message.common.save' | translate" >
+            </button>
+            <button (click)="hideInputForm()" *ngIf="provisioningProfile?.id" class="btn-clear border-0 pointer icon-btn fa-close-alt fz-11" [matTooltip]="'hint.message.common.discard' | translate">
+            </button>
+          </div>
+        </div>
+        <div class="ios-setting-list mb-30 align-items-center">
+          <div class="d-flex fz-13 ts-col-40 justify-content-end">
+            <span [translate]="'settings.ios_settings.csr_request'"></span>
+            <i class="fa-info pl-6 light-green"
+               [matTooltip]="'settings.ios_settings.csr_request.info' | translate"></i>
+            <div class="ios-pointer" [class.active]="provisioningProfile.isAwaitingCertificate">
+              <span></span>
+            </div>
+          </div>
+          <div class="ts-col-60 d-flex">
+            <button class="theme-btn-primary" [disabled]="!nameFormControl.valid || provisioningProfile.isAwaitingCertificate" (click)="generateCsr()" [translate]="'settings.ios_settings.apple_id.generate'"></button>
+            <div class="pl-20" *ngIf="provisioningProfile.status !== 'CSR_REQUESTED'">
+              <div class="rb-medium fz-15">
+                <a class="text-link text-decoration-none" href="{{provisioningProfile.csrPresignedUrl}}">
+                  <span [translate]="'btn.common.download'"></span>
+                  <i class="fa-download-thin text-link pl-15"></i>
+                </a>
+              </div>
+              <div class="fz-13 text-t-secondary">
+                <span class="pr-5" [translate]="'provision.profile.certificate.generate'"></span>
+                <span [translate]="provisioningProfile?.createdAt  | date:'MMM d, y'"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ios-setting-list mb-30 align-items-center">
+          <div class="d-flex fz-13 ts-col-40 justify-content-end">
+            <span [translate]="'settings.ios_settings.csr_certificate'"></span>
+            <i class="fa-info pl-6 light-green visibility-hidden"
+               [matTooltip]="'settings.ios_settings.csr_certificate.info' | translate"
+               [class.visibility-visible]="provisioningProfile.isAwaitingCertificate"></i>
+            <div class="ios-pointer" [class.active]="provisioningProfile.isAwaitingCertificate">
+              <span></span>
+            </div>
+          </div>
+          <div class="ts-col-60 d-flex">
+            <div class="input-upload">
+              <button class="theme-btn-primary position-relative" [disabled]="provisioningProfile.isAwaitingProfile">
+                <span [translate]="'btn.common.upload'"></span>
+                <input type="file" accept="application/x-x509-ca-cert" class="input-file-hidden" [disabled]="provisioningProfile.isAwaitingProfile" (change)="certificateUpload($event)">
+              </button>
+            </div>
+            <div class="pl-20" *ngIf="provisioningProfile.isProvisionReadyUpload">
+              <div class="rb-medium fz-15">
+                <a class="text-link text-decoration-none" href="{{provisioningProfile.certificateCrtPresignedUrl}}">
+                  <span [translate]="'btn.common.download'"></span>
+                  <i class="fa-download-thin text-link pl-15"></i>
+                </a>
+              </div>
+              <div class="fz-13 text-t-secondary">
+                <span class="pr-5" [translate]="'provision.profile.certificate.generate'"></span>
+                <span [translate]="provisioningProfile.createdAt  | date:'MMM d, y'"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ios-setting-list mb-30 align-items-center">
+          <div class="d-flex fz-13 ts-col-40 justify-content-end">
+            <span [translate]="'settings.ios_settings.csr_profile'"></span>
+            <i class="fa-info pl-6 light-green visibility-hidden"
+               [matTooltip]="'settings.ios_settings.csr_profile.info' | translate"
+               [class.visibility-visible]="provisioningProfile.isProvisioningProfile"></i>
+            <div class="ios-pointer" [class.active]="provisioningProfile.isProvisioningProfile">
+              <span></span>
+            </div>
+          </div>
+          <div class="ts-col-60 d-flex">
+            <div class="input-upload">
+              <button class="theme-btn-primary position-relative" [disabled]="provisioningProfile.isAwaitingReady">
+                <span [translate]="'btn.common.upload'"></span>
+                <input type="file" accept=".mobileprovision" class="input-file-hidden" [disabled]="provisioningProfile.isAwaitingReady" (change)="profileUpload($event)">
+              </button>
+            </div>
+            <div class="pl-20" *ngIf="provisioningProfile.isReady">
+              <div class="rb-medium fz-15">
+                <a class="text-link text-decoration-none" href="{{provisioningProfile.provisioningProfilePresignedUrl}}">
+                  <span [translate]="'btn.common.download'"></span>
+                  <i class="fa-download-thin text-link pl-15"></i>
+                </a>
+              </div>
+              <div class="fz-13 text-t-secondary">
+                <span class="pr-5" [translate]="'provision.profile.certificate.generate'"></span>
+                <span [translate]="provisioningProfile.createdAt  | date:'MMM d, y'"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ios-setting-list align-items-start" *ngIf="provisioningProfile.isReady">
+          <div class="d-flex fz-13 ts-col-30 justify-content-end">
+            <span [translate]="'settings.ios_settings.provisioned_devices'"></span>
+          </div>
+          <div class="ts-col-60">
+            <div class="ts-col-100 d-flex pb-10" *ngFor="let provisioningDeviceUDIDs of provisioningProfile.deviceUDIDs">
+              <div class="pl-80">
+                <div><i class="fa-tick pr-6 custom-color"></i><span [translate]="provisioningDeviceUDIDs"></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="ts-col-35">
+        <div class="help-wrapper fz-13 p-40 text-t-secondary flex-column">
+          <div class="help-title">
+            <i class="fa-help pr-5"></i>
+            <span [translate]="'hint.message.common.help'"></span>
+          </div>
+
+          <div class="pt-20">
+            <span [innerHTML]="'settings.ios_settings.help.description' | translate"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

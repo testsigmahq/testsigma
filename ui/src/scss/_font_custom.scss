@@ -1,0 +1,1331 @@
+//
+// Icon Font: font_custom
+//
+
+@font-face {
+  font-family: "font_custom";
+  src: url("~/assets/font_icons/font_custom_6bad57e907db737cf18b43c71b8db5a8.eot");
+  src: url("~/assets/font_icons/font_custom_6bad57e907db737cf18b43c71b8db5a8.eot?#iefix") format("embedded-opentype"),
+       url("~/assets/font_icons/font_custom_6bad57e907db737cf18b43c71b8db5a8.woff2") format("woff2"),
+       url("~/assets/font_icons/font_custom_6bad57e907db737cf18b43c71b8db5a8.woff") format("woff"),
+       url("~/assets/font_icons/font_custom_6bad57e907db737cf18b43c71b8db5a8.ttf") format("truetype"),
+       url("~/assets/font_icons/font_custom_6bad57e907db737cf18b43c71b8db5a8.svg#font_custom") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: "font_custom";
+    src: url("~/assets/font_icons/font_custom_6bad57e907db737cf18b43c71b8db5a8.svg#font_custom") format("svg");
+  }
+}
+
+[data-icon]:before { content: attr(data-icon); }
+
+[data-icon]:before,
+.fa-4-quabs:before,
+.fa-action-text:before,
+.fa-add:before,
+.fa-add-next:before,
+.fa-add-previous:before,
+.fa-addon:before,
+.fa-addons:before,
+.fa-alert:before,
+.fa-alert-exists:before,
+.fa-all-items:before,
+.fa-android-outlined:before,
+.fa-android-solid:before,
+.fa-api:before,
+.fa-apk-file:before,
+.fa-app-store-ios:before,
+.fa-apple:before,
+.fa-application-new:before,
+.fa-archieve:before,
+.fa-arrow-down:before,
+.fa-arrow-down-filled:before,
+.fa-arrow-right:before,
+.fa-arrow-up:before,
+.fa-article:before,
+.fa-attachment:before,
+.fa-award:before,
+.fa-award-solid:before,
+.fa-back-arrow:before,
+.fa-bar-chart:before,
+.fa-bar-chart_dock:before,
+.fa-bars:before,
+.fa-bars-solid:before,
+.fa-bell:before,
+.fa-bi_shield-lock-fill:before,
+.fa-bi_window:before,
+.fa-bolt-solid:before,
+.fa-book-mark:before,
+.fa-book-solid:before,
+.fa-boolean:before,
+.fa-broom-clear:before,
+.fa-bug:before,
+.fa-building-shop:before,
+.fa-bulk-update:before,
+.fa-calendar:before,
+.fa-calendar-alt:before,
+.fa-calendar-dot:before,
+.fa-camera:before,
+.fa-candidates:before,
+.fa-caret-down:before,
+.fa-caret-left-solid:before,
+.fa-caret-right-solid:before,
+.fa-caret-up:before,
+.fa-chart-line-solid:before,
+.fa-chat:before,
+.fa-chat-alt:before,
+.fa-chat-sm:before,
+.fa-chat-square-dots:before,
+.fa-chat-with-experts:before,
+.fa-chat_bubble:before,
+.fa-check-circle-regular:before,
+.fa-check-circle-solid:before,
+.fa-check-error:before,
+.fa-check-neutral:before,
+.fa-check-on:before,
+.fa-check-on-filled:before,
+.fa-check-screenshot:before,
+.fa-check-solid:before,
+.fa-checkbox_list:before,
+.fa-chrome:before,
+.fa-chrome-plain:before,
+.fa-circle-filled:before,
+.fa-circle-minus-alt:before,
+.fa-circle-plus-alt:before,
+.fa-circled-close:before,
+.fa-circled-info:before,
+.fa-circled-play:before,
+.fa-circled-play-filled:before,
+.fa-circled-plus:before,
+.fa-circled-plus-filled:before,
+.fa-class:before,
+.fa-clippy:before,
+.fa-clock:before,
+.fa-clone:before,
+.fa-close:before,
+.fa-close-alt:before,
+.fa-close-large:before,
+.fa-cloud:before,
+.fa-code-format:before,
+.fa-code-struture:before,
+.fa-code-view:before,
+.fa-collapse:before,
+.fa-collapse-alt:before,
+.fa-comment:before,
+.fa-conditional-if:before,
+.fa-config-fix:before,
+.fa-config-list:before,
+.fa-copy:before,
+.fa-copy-new:before,
+.fa-copy-outline:before,
+.fa-copy-regular:before,
+.fa-cross-up-arrow:before,
+.fa-crosshairs:before,
+.fa-crown:before,
+.fa-css:before,
+.fa-current-page-url:before,
+.fa-cursor-click-flash:before,
+.fa-dashboard:before,
+.fa-data-grid:before,
+.fa-database-solid:before,
+.fa-delete-icon:before,
+.fa-deselect:before,
+.fa-desktop:before,
+.fa-desktop-play:before,
+.fa-device-suites:before,
+.fa-diff:before,
+.fa-disable:before,
+.fa-docs:before,
+.fa-double-arrow-left:before,
+.fa-double-arrow-right:before,
+.fa-dowload:before,
+.fa-down-arrow:before,
+.fa-down-arrow-filled:before,
+.fa-down-sort:before,
+.fa-down_sort:before,
+.fa-download-alt:before,
+.fa-download-solid:before,
+.fa-download-thin:before,
+.fa-download-with-cut-border:before,
+.fa-drag-and-drop:before,
+.fa-drag-lines:before,
+.fa-drag-n-drop:before,
+.fa-drag-n-drop-sm:before,
+.fa-draw-highlight:before,
+.fa-duration:before,
+.fa-edge:before,
+.fa-edit-with-border:before,
+.fa-edit-with-borther:before,
+.fa-element-alt:before,
+.fa-element-is-hidden:before,
+.fa-element-is-in-diffrent-frame:before,
+.fa-elements:before,
+.fa-elements-alt:before,
+.fa-ellipsis-h:before,
+.fa-email:before,
+.fa-email-box:before,
+.fa-equals-solid:before,
+.fa-eraser:before,
+.fa-eraser-outline:before,
+.fa-example:before,
+.fa-exclamation-circle-solid:before,
+.fa-exclamation-triangle-solid:before,
+.fa-exit-thick:before,
+.fa-expand:before,
+.fa-expand-alt:before,
+.fa-expand-horizontal:before,
+.fa-export:before,
+.fa-export-thin:before,
+.fa-external-link-alt-solid:before,
+.fa-eye:before,
+.fa-file-invoice:before,
+.fa-file-invoice-dollar-solid:before,
+.fa-filled-circled-play:before,
+.fa-filter:before,
+.fa-filter-alt:before,
+.fa-filter-outline:before,
+.fa-filtered-dot:before,
+.fa-fingerprint-solid:before,
+.fa-firefox:before,
+.fa-firefox-brands:before,
+.fa-flag:before,
+.fa-flash-straight:before,
+.fa-forward:before,
+.fa-fr-chat:before,
+.fa-frame-list:before,
+.fa-funnel:before,
+.fa-funnel-thin:before,
+.fa-gear:before,
+.fa-gear-filled:before,
+.fa-gear-with-wrench:before,
+.fa-get-start:before,
+.fa-gift-solid:before,
+.fa-github_outline:before,
+.fa-globe:before,
+.fa-globe-alt:before,
+.fa-google-docs:before,
+.fa-hand-point-up-solid:before,
+.fa-hands-helping:before,
+.fa-headset:before,
+.fa-help:before,
+.fa-help-2:before,
+.fa-hierarchy:before,
+.fa-highlight-diff:before,
+.fa-hightlight:before,
+.fa-home:before,
+.fa-hourglass:before,
+.fa-html:before,
+.fa-idea:before,
+.fa-idea-glow:before,
+.fa-ie:before,
+.fa-iframe:before,
+.fa-ignore-selection:before,
+.fa-import:before,
+.fa-infinity:before,
+.fa-info:before,
+.fa-info-with-cricle:before,
+.fa-internet-explorer:before,
+.fa-invalid-selector:before,
+.fa-invalid-selector-selection:before,
+.fa-investigation:before,
+.fa-invite:before,
+.fa-ipa-file:before,
+.fa-json-file:before,
+.fa-key:before,
+.fa-key-access:before,
+.fa-key-solid:before,
+.fa-key-up-right:before,
+.fa-language:before,
+.fa-launch:before,
+.fa-layer:before,
+.fa-layer-group-solid:before,
+.fa-left-arrow-thin:before,
+.fa-library:before,
+.fa-lightbulb-regular:before,
+.fa-lightbulb-solid:before,
+.fa-line_chart_up:before,
+.fa-lined-arrow-right:before,
+.fa-linux-2:before,
+.fa-list:before,
+.fa-list-alt:before,
+.fa-list-of-frames:before,
+.fa-location:before,
+.fa-lock-open-solid:before,
+.fa-lock-solid:before,
+.fa-logos_ios:before,
+.fa-long-arrow-alt-right-solid:before,
+.fa-love:before,
+.fa-members:before,
+.fa-menu-bar:before,
+.fa-messager:before,
+.fa-minus:before,
+.fa-minus-square-regular:before,
+.fa-minus-square-solid:before,
+.fa-mirroring:before,
+.fa-mobile-alt-solid:before,
+.fa-mobile-line:before,
+.fa-more:before,
+.fa-mouse-drag:before,
+.fa-new-project:before,
+.fa-nlp:before,
+.fa-nlp-2:before,
+.fa-nlp-grammar:before,
+.fa-nlp-new:before,
+.fa-not-equal-solid:before,
+.fa-nlp-grammar-alt:before,
+.fa-object-ungroup-regular:before,
+.fa-open-book:before,
+.fa-outline-cloudy:before,
+.fa-overlap:before,
+.fa-page-element:before,
+.fa-page-loading:before,
+.fa-paper-flight:before,
+.fa-pdf-file:before,
+.fa-pencil-on-paper:before,
+.fa-pencil-thick:before,
+.fa-pencil-without-border:before,
+.fa-people-group:before,
+.fa-perform-manually:before,
+.fa-pi-chart:before,
+.fa-pie-chart:before,
+.fa-pin:before,
+.fa-pin-alt:before,
+.fa-play:before,
+.fa-play-circle:before,
+.fa-play-filled:before,
+.fa-plug:before,
+.fa-plus:before,
+.fa-plus-filled:before,
+.fa-plus-square-regular:before,
+.fa-plus-square-solid:before,
+.fa-power:before,
+.fa-power-bulb:before,
+.fa-power-flash:before,
+.fa-power-loop:before,
+.fa-productivity:before,
+.fa-profile:before,
+.fa-project-andriod:before,
+.fa-project-api:before,
+.fa-project-ios:before,
+.fa-project-mobile:before,
+.fa-project-website:before,
+.fa-pulse:before,
+.fa-puzzle-piece-solid:before,
+.fa-question:before,
+.fa-question-circle-solid:before,
+.fa-radio_with_lable:before,
+.fa-re-run:before,
+.fa-record:before,
+.fa-record-circle:before,
+.fa-record-new:before,
+.fa-refresh:before,
+.fa-refresh-new:before,
+.fa-refresh-thick:before,
+.fa-reorder:before,
+.fa-reports:before,
+.fa-requirement-type:before,
+.fa-requirements:before,
+.fa-requirements-alt:before,
+.fa-rest-cloud:before,
+.fa-rest-new:before,
+.fa-restful-api:before,
+.fa-restful-api-icon:before,
+.fa-result-0:before,
+.fa-result-1:before,
+.fa-result-1-dashboard:before,
+.fa-result-2:before,
+.fa-result-3:before,
+.fa-result-4:before,
+.fa-result-5:before,
+.fa-result-6:before,
+.fa-results:before,
+.fa-results-2:before,
+.fa-rev-brands:before,
+.fa-review:before,
+.fa-right-arrow:before,
+.fa-right-arrow-filled:before,
+.fa-right-arrow-thin:before,
+.fa-right-large-arrow:before,
+.fa-run-results:before,
+.fa-run-results-alt:before,
+.fa-safari-brands:before,
+.fa-sample:before,
+.fa-save:before,
+.fa-save-as:before,
+.fa-save-regular:before,
+.fa-schedule:before,
+.fa-schedule-demo:before,
+.fa-schedule-with-tick:before,
+.fa-screen-rotation:before,
+.fa-scroll:before,
+.fa-search:before,
+.fa-search-element:before,
+.fa-search-left:before,
+.fa-search-new:before,
+.fa-search-right:before,
+.fa-search-thick:before,
+.fa-search_left:before,
+.fa-selection:before,
+.fa-sendkeys:before,
+.fa-setting-outlined:before,
+.fa-settings-wrench:before,
+.fa-sheduled:before,
+.fa-shield:before,
+.fa-show:before,
+.fa-shrink-horizontal:before,
+.fa-sign-out-alt-solid:before,
+.fa-sort:before,
+.fa-source-code:before,
+.fa-star:before,
+.fa-step-group:before,
+.fa-stop:before,
+.fa-stop-circle-solid:before,
+.fa-storage-outline:before,
+.fa-suitcase:before,
+.fa-suitcase-2:before,
+.fa-suitecase-filled:before,
+.fa-support:before,
+.fa-swipe-horizontal:before,
+.fa-table:before,
+.fa-tags-solid:before,
+.fa-tap:before,
+.fa-test-case-alt:before,
+.fa-test-case-priorities:before,
+.fa-test-case-types:before,
+.fa-test-cases-alt:before,
+.fa-test-data:before,
+.fa-test-data-alt:before,
+.fa-test-plan:before,
+.fa-test-suite:before,
+.fa-test-suites-alt:before,
+.fa-testcase:before,
+.fa-testcase-new:before,
+.fa-testsigma-logo:before,
+.fa-textbox-placeholder:before,
+.fa-th-list:before,
+.fa-th-list--another-copy-:before,
+.fa-th-list--copy-:before,
+.fa-thumbs-up-regular:before,
+.fa-tick:before,
+.fa-tick-circle-filled:before,
+.fa-tick-thick:before,
+.fa-tick-white:before,
+.fa-ticket-alt-solid:before,
+.fa-time-alt:before,
+.fa-times-circle-regular:before,
+.fa-timmer:before,
+.fa-top-arrow:before,
+.fa-trash:before,
+.fa-trash-thin:before,
+.fa-triangle-down:before,
+.fa-up-arrow-filled:before,
+.fa-up-sort:before,
+.fa-update:before,
+.fa-uploads:before,
+.fa-uploads-alt:before,
+.fa-usage-badge:before,
+.fa-user:before,
+.fa-user-filled:before,
+.fa-user-plus-solid:before,
+.fa-user-profile-with-border:before,
+.fa-user-role:before,
+.fa-user-shield:before,
+.fa-user-tag:before,
+.fa-user-tie:before,
+.fa-users-solid:before,
+.fa-v-ellipsis:before,
+.fa-versions:before,
+.fa-verticle-more:before,
+.fa-video:before,
+.fa-video-hollow:before,
+.fa-views:before,
+.fa-visual:before,
+.fa-warning:before,
+.fa-watch-tv:before,
+.fa-watch-video:before,
+.fa-web-page:before,
+.fa-while-loop:before,
+.fa-windows-brands:before,
+.fa-wranning-star:before,
+.fa-wrench:before,
+.fa-youtube:before,
+.fa-youtube-thin:before {
+  display: inline-block;
+  font-family: "font_custom";
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  line-height: 1;
+  text-decoration: inherit;
+  text-rendering: optimizeLegibility;
+  text-transform: none;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+}
+
+.fa-4-quabs:before { content: "\f100"; }
+.fa-action-text:before { content: "\f2cb"; }
+.fa-add:before { content: "\f2b1"; }
+.fa-add-next:before { content: "\f102"; }
+.fa-add-previous:before { content: "\f103"; }
+.fa-addon:before { content: "\f291"; }
+.fa-addons:before { content: "\f2c8"; }
+.fa-alert:before { content: "\f104"; }
+.fa-alert-exists:before { content: "\f29a"; }
+.fa-all-items:before { content: "\f21f"; }
+.fa-android-outlined:before { content: "\f2c4"; }
+.fa-android-solid:before { content: "\f105"; }
+.fa-api:before { content: "\f106"; }
+.fa-apk-file:before { content: "\f24a"; }
+.fa-app-store-ios:before { content: "\f2c0"; }
+.fa-apple:before { content: "\f107"; }
+.fa-application-new:before { content: "\f27d"; }
+.fa-archieve:before { content: "\f108"; }
+.fa-arrow-down:before { content: "\f109"; }
+.fa-arrow-down-filled:before { content: "\f10a"; }
+.fa-arrow-right:before { content: "\f10b"; }
+.fa-arrow-up:before { content: "\f10c"; }
+.fa-article:before { content: "\f225"; }
+.fa-attachment:before { content: "\f10d"; }
+.fa-award:before { content: "\f10e"; }
+.fa-award-solid:before { content: "\f10f"; }
+.fa-back-arrow:before { content: "\f1ee"; }
+.fa-bar-chart:before { content: "\f110"; }
+.fa-bar-chart_dock:before { content: "\f226"; }
+.fa-bars:before { content: "\f111"; }
+.fa-bars-solid:before { content: "\f112"; }
+.fa-bell:before { content: "\f113"; }
+.fa-bi_shield-lock-fill:before { content: "\f2b9"; }
+.fa-bi_window:before { content: "\f2c5"; }
+.fa-bolt-solid:before { content: "\f114"; }
+.fa-book-mark:before { content: "\f26b"; }
+.fa-book-solid:before { content: "\f115"; }
+.fa-boolean:before { content: "\f210"; }
+.fa-broom-clear:before { content: "\f1f2"; }
+.fa-bug:before { content: "\f116"; }
+.fa-building-shop:before { content: "\f2be"; }
+.fa-bulk-update:before { content: "\f23b"; }
+.fa-calendar:before { content: "\f117"; }
+.fa-calendar-alt:before { content: "\f22d"; }
+.fa-calendar-dot:before { content: "\f257"; }
+.fa-camera:before { content: "\f211"; }
+.fa-candidates:before { content: "\f118"; }
+.fa-caret-down:before { content: "\f119"; }
+.fa-caret-left-solid:before { content: "\f11a"; }
+.fa-caret-right-solid:before { content: "\f11b"; }
+.fa-caret-up:before { content: "\f11c"; }
+.fa-chart-line-solid:before { content: "\f11d"; }
+.fa-chat:before { content: "\f11e"; }
+.fa-chat-alt:before { content: "\f258"; }
+.fa-chat-sm:before { content: "\f2b0"; }
+.fa-chat-square-dots:before { content: "\f277"; }
+.fa-chat-with-experts:before { content: "\f273"; }
+.fa-chat_bubble:before { content: "\f2ba"; }
+.fa-check-circle-regular:before { content: "\f11f"; }
+.fa-check-circle-solid:before { content: "\f120"; }
+.fa-check-error:before { content: "\f292"; }
+.fa-check-neutral:before { content: "\f121"; }
+.fa-check-on:before { content: "\f122"; }
+.fa-check-on-filled:before { content: "\f123"; }
+.fa-check-screenshot:before { content: "\f293"; }
+.fa-check-solid:before { content: "\f124"; }
+.fa-checkbox_list:before { content: "\f29b"; }
+.fa-chrome:before { content: "\f125"; }
+.fa-chrome-plain:before { content: "\f126"; }
+.fa-circle-filled:before { content: "\f127"; }
+.fa-circle-minus-alt:before { content: "\f24e"; }
+.fa-circle-plus-alt:before { content: "\f23a"; }
+.fa-circled-close:before { content: "\f128"; }
+.fa-circled-info:before { content: "\f129"; }
+.fa-circled-play:before { content: "\f12a"; }
+.fa-circled-play-filled:before { content: "\f249"; }
+.fa-circled-plus:before { content: "\f12b"; }
+.fa-circled-plus-filled:before { content: "\f12c"; }
+.fa-class:before { content: "\f12d"; }
+.fa-clippy:before { content: "\f12e"; }
+.fa-clock:before { content: "\f12f"; }
+.fa-clone:before { content: "\f130"; }
+.fa-close:before { content: "\f131"; }
+.fa-close-alt:before { content: "\f232"; }
+.fa-close-large:before { content: "\f132"; }
+.fa-cloud:before { content: "\f20f"; }
+.fa-code-format:before { content: "\f297"; }
+.fa-code-struture:before { content: "\f298"; }
+.fa-code-view:before { content: "\f299"; }
+.fa-collapse:before { content: "\f133"; }
+.fa-collapse-alt:before { content: "\f22c"; }
+.fa-comment:before { content: "\f134"; }
+.fa-conditional-if:before { content: "\f2ca"; }
+.fa-config-fix:before { content: "\f212"; }
+.fa-config-list:before { content: "\f242"; }
+.fa-copy:before { content: "\f135"; }
+.fa-copy-new:before { content: "\f136"; }
+.fa-copy-outline:before { content: "\f280"; }
+.fa-copy-regular:before { content: "\f137"; }
+.fa-cross-up-arrow:before { content: "\f2aa"; }
+.fa-crosshairs:before { content: "\f138"; }
+.fa-crown:before { content: "\f26c"; }
+.fa-css:before { content: "\f139"; }
+.fa-current-page-url:before { content: "\f29c"; }
+.fa-cursor-click-flash:before { content: "\f1f3"; }
+.fa-dashboard:before { content: "\f13d"; }
+.fa-data-grid:before { content: "\f244"; }
+.fa-database-solid:before { content: "\f13e"; }
+.fa-delete-icon:before { content: "\f13f"; }
+.fa-deselect:before { content: "\f140"; }
+.fa-desktop:before { content: "\f141"; }
+.fa-desktop-play:before { content: "\f142"; }
+.fa-device-suites:before { content: "\f251"; }
+.fa-diff:before { content: "\f143"; }
+.fa-disable:before { content: "\f144"; }
+.fa-docs:before { content: "\f2bb"; }
+.fa-double-arrow-left:before { content: "\f24c"; }
+.fa-double-arrow-right:before { content: "\f24d"; }
+.fa-dowload:before { content: "\f145"; }
+.fa-down-arrow:before { content: "\f146"; }
+.fa-down-arrow-filled:before { content: "\f147"; }
+.fa-down-sort:before { content: "\f148"; }
+.fa-down_sort:before { content: "\f149"; }
+.fa-download-alt:before { content: "\f233"; }
+.fa-download-solid:before { content: "\f14a"; }
+.fa-download-thin:before { content: "\f1fb"; }
+.fa-download-with-cut-border:before { content: "\f14b"; }
+.fa-drag-and-drop:before { content: "\f14c"; }
+.fa-drag-lines:before { content: "\f14d"; }
+.fa-drag-n-drop:before { content: "\f24f"; }
+.fa-drag-n-drop-sm:before { content: "\f287"; }
+.fa-draw-highlight:before { content: "\f21c"; }
+.fa-duration:before { content: "\f1fc"; }
+.fa-edge:before { content: "\f14e"; }
+.fa-edit-with-border:before { content: "\f14f"; }
+.fa-edit-with-borther:before { content: "\f150"; }
+.fa-element-alt:before { content: "\f2b4"; }
+.fa-element-is-hidden:before { content: "\f2b5"; }
+.fa-element-is-in-diffrent-frame:before { content: "\f2b6"; }
+.fa-elements:before { content: "\f2b7"; }
+.fa-elements-alt:before { content: "\f2b8"; }
+.fa-ellipsis-h:before { content: "\f227"; }
+.fa-email:before { content: "\f151"; }
+.fa-email-box:before { content: "\f296"; }
+.fa-equals-solid:before { content: "\f152"; }
+.fa-eraser:before { content: "\f253"; }
+.fa-eraser-outline:before { content: "\f281"; }
+.fa-example:before { content: "\f238"; }
+.fa-exclamation-circle-solid:before { content: "\f153"; }
+.fa-exclamation-triangle-solid:before { content: "\f154"; }
+.fa-exit-thick:before { content: "\f26d"; }
+.fa-expand:before { content: "\f155"; }
+.fa-expand-alt:before { content: "\f156"; }
+.fa-expand-horizontal:before { content: "\f2b2"; }
+.fa-export:before { content: "\f157"; }
+.fa-export-thin:before { content: "\f1ff"; }
+.fa-external-link-alt-solid:before { content: "\f1ec"; }
+.fa-eye:before { content: "\f28a"; }
+.fa-file-invoice:before { content: "\f158"; }
+.fa-file-invoice-dollar-solid:before { content: "\f159"; }
+.fa-filled-circled-play:before { content: "\f15a"; }
+.fa-filter:before { content: "\f15b"; }
+.fa-filter-alt:before { content: "\f234"; }
+.fa-filter-outline:before { content: "\f15c"; }
+.fa-filtered-dot:before { content: "\f235"; }
+.fa-fingerprint-solid:before { content: "\f15d"; }
+.fa-firefox:before { content: "\f21d"; }
+.fa-firefox-brands:before { content: "\f21e"; }
+.fa-flag:before { content: "\f2ae"; }
+.fa-flash-straight:before { content: "\f1f4"; }
+.fa-forward:before { content: "\f15f"; }
+.fa-fr-chat:before { content: "\f276"; }
+.fa-frame-list:before { content: "\f2a0"; }
+.fa-funnel:before { content: "\f160"; }
+.fa-funnel-thin:before { content: "\f161"; }
+.fa-gear:before { content: "\f162"; }
+.fa-gear-filled:before { content: "\f163"; }
+.fa-gear-with-wrench:before { content: "\f164"; }
+.fa-get-start:before { content: "\f259"; }
+.fa-gift-solid:before { content: "\f285"; }
+.fa-github_outline:before { content: "\f2bc"; }
+.fa-globe:before { content: "\f165"; }
+.fa-globe-alt:before { content: "\f25c"; }
+.fa-google-docs:before { content: "\f221"; }
+.fa-hand-point-up-solid:before { content: "\f166"; }
+.fa-hands-helping:before { content: "\f167"; }
+.fa-headset:before { content: "\f279"; }
+.fa-help:before { content: "\f168"; }
+.fa-help-2:before { content: "\f169"; }
+.fa-hierarchy:before { content: "\f16a"; }
+.fa-highlight-diff:before { content: "\f219"; }
+.fa-hightlight:before { content: "\f16b"; }
+.fa-home:before { content: "\f282"; }
+.fa-hourglass:before { content: "\f201"; }
+.fa-html:before { content: "\f222"; }
+.fa-idea:before { content: "\f213"; }
+.fa-idea-glow:before { content: "\f214"; }
+.fa-ie:before { content: "\f20d"; }
+.fa-iframe:before { content: "\f16c"; }
+.fa-ignore-selection:before { content: "\f21a"; }
+.fa-import:before { content: "\f16d"; }
+.fa-infinity:before { content: "\f245"; }
+.fa-info:before { content: "\f16e"; }
+.fa-info-with-cricle:before { content: "\f16f"; }
+.fa-internet-explorer:before { content: "\f20e"; }
+.fa-invalid-selector:before { content: "\f2a1"; }
+.fa-invalid-selector-selection:before { content: "\f2a2"; }
+.fa-investigation:before { content: "\f170"; }
+.fa-invite:before { content: "\f286"; }
+.fa-ipa-file:before { content: "\f24b"; }
+.fa-json-file:before { content: "\f223"; }
+.fa-key:before { content: "\f171"; }
+.fa-key-access:before { content: "\f26e"; }
+.fa-key-solid:before { content: "\f172"; }
+.fa-key-up-right:before { content: "\f1f5"; }
+.fa-language:before { content: "\f173"; }
+.fa-launch:before { content: "\f203"; }
+.fa-layer:before { content: "\f174"; }
+.fa-layer-group-solid:before { content: "\f175"; }
+.fa-left-arrow-thin:before { content: "\f176"; }
+.fa-library:before { content: "\f23f"; }
+.fa-lightbulb-regular:before { content: "\f177"; }
+.fa-lightbulb-solid:before { content: "\f178"; }
+.fa-line_chart_up:before { content: "\f269"; }
+.fa-lined-arrow-right:before { content: "\f179"; }
+.fa-linux-2:before { content: "\f17a"; }
+.fa-list:before { content: "\f17b"; }
+.fa-list-alt:before { content: "\f17c"; }
+.fa-list-of-frames:before { content: "\f2a3"; }
+.fa-location:before { content: "\f17d"; }
+.fa-lock-open-solid:before { content: "\f17e"; }
+.fa-lock-solid:before { content: "\f17f"; }
+.fa-logos_ios:before { content: "\f2c6"; }
+.fa-long-arrow-alt-right-solid:before { content: "\f180"; }
+.fa-love:before { content: "\f181"; }
+.fa-members:before { content: "\f243"; }
+.fa-menu-bar:before { content: "\f2a8"; }
+.fa-messager:before { content: "\f229"; }
+.fa-minus:before { content: "\f182"; }
+.fa-minus-square-regular:before { content: "\f183"; }
+.fa-minus-square-solid:before { content: "\f184"; }
+.fa-mirroring:before { content: "\f1ef"; }
+.fa-mobile-alt-solid:before { content: "\f185"; }
+.fa-mobile-line:before { content: "\f2c7"; }
+.fa-more:before { content: "\f186"; }
+.fa-mouse-drag:before { content: "\f187"; }
+.fa-new-project:before { content: "\f288"; }
+.fa-nlp:before { content: "\f188"; }
+.fa-nlp-2:before { content: "\f189"; }
+.fa-nlp-grammar:before { content: "\f18a"; }
+.fa-nlp-new:before { content: "\f18b"; }
+.fa-not-equal-solid:before { content: "\f18c"; }
+.fa-nlp-grammar-alt:before { content: "\f2c9"; }
+.fa-object-ungroup-regular:before { content: "\f18d"; }
+.fa-open-book:before { content: "\f2ab"; }
+.fa-outline-cloudy:before { content: "\f2c1"; }
+.fa-overlap:before { content: "\f21b"; }
+.fa-page-element:before { content: "\f2a4"; }
+.fa-page-loading:before { content: "\f2a5"; }
+.fa-paper-flight:before { content: "\f18e"; }
+.fa-pdf-file:before { content: "\f224"; }
+.fa-pencil-on-paper:before { content: "\f18f"; }
+.fa-pencil-thick:before { content: "\f270"; }
+.fa-pencil-without-border:before { content: "\f190"; }
+.fa-people-group:before { content: "\f2bd"; }
+.fa-perform-manually:before { content: "\f294"; }
+.fa-pi-chart:before { content: "\f200"; }
+.fa-pie-chart:before { content: "\f218"; }
+.fa-pin:before { content: "\f191"; }
+.fa-pin-alt:before { content: "\f236"; }
+.fa-play:before { content: "\f22f"; }
+.fa-play-circle:before { content: "\f27a"; }
+.fa-play-filled:before { content: "\f192"; }
+.fa-plug:before { content: "\f250"; }
+.fa-plus:before { content: "\f193"; }
+.fa-plus-filled:before { content: "\f194"; }
+.fa-plus-square-regular:before { content: "\f195"; }
+.fa-plus-square-solid:before { content: "\f196"; }
+.fa-power:before { content: "\f197"; }
+.fa-power-bulb:before { content: "\f198"; }
+.fa-power-flash:before { content: "\f220"; }
+.fa-power-loop:before { content: "\f199"; }
+.fa-productivity:before { content: "\f26a"; }
+.fa-profile:before { content: "\f19a"; }
+.fa-project-andriod:before { content: "\f28c"; }
+.fa-project-api:before { content: "\f28d"; }
+.fa-project-ios:before { content: "\f28e"; }
+.fa-project-mobile:before { content: "\f28f"; }
+.fa-project-website:before { content: "\f290"; }
+.fa-pulse:before { content: "\f246"; }
+.fa-puzzle-piece-solid:before { content: "\f19b"; }
+.fa-question:before { content: "\f2ac"; }
+.fa-question-circle-solid:before { content: "\f19c"; }
+.fa-radio_with_lable:before { content: "\f19d"; }
+.fa-re-run:before { content: "\f271"; }
+.fa-record:before { content: "\f19e"; }
+.fa-record-circle:before { content: "\f19f"; }
+.fa-record-new:before { content: "\f1a0"; }
+.fa-refresh:before { content: "\f1a1"; }
+.fa-refresh-new:before { content: "\f1f7"; }
+.fa-refresh-thick:before { content: "\f1a2"; }
+.fa-reorder:before { content: "\f1a3"; }
+.fa-reports:before { content: "\f1a4"; }
+.fa-requirement-type:before { content: "\f27e"; }
+.fa-requirements:before { content: "\f1a5"; }
+.fa-requirements-alt:before { content: "\f25e"; }
+.fa-rest-cloud:before { content: "\f1a6"; }
+.fa-rest-new:before { content: "\f1a7"; }
+.fa-restful-api:before { content: "\f1a8"; }
+.fa-restful-api-icon:before { content: "\f1a9"; }
+.fa-result-0:before { content: "\f204"; }
+.fa-result-1:before { content: "\f205"; }
+.fa-result-1-dashboard:before { content: "\f25a"; }
+.fa-result-2:before { content: "\f206"; }
+.fa-result-3:before { content: "\f207"; }
+.fa-result-4:before { content: "\f208"; }
+.fa-result-5:before { content: "\f209"; }
+.fa-result-6:before { content: "\f20a"; }
+.fa-results:before { content: "\f1aa"; }
+.fa-results-2:before { content: "\f1ab"; }
+.fa-rev-brands:before { content: "\f1ac"; }
+.fa-review:before { content: "\f2af"; }
+.fa-right-arrow:before { content: "\f23d"; }
+.fa-right-arrow-filled:before { content: "\f1ae"; }
+.fa-right-arrow-thin:before { content: "\f1af"; }
+.fa-right-large-arrow:before { content: "\f23e"; }
+.fa-run-results:before { content: "\f1b0"; }
+.fa-run-results-alt:before { content: "\f25f"; }
+.fa-safari-brands:before { content: "\f1b1"; }
+.fa-sample:before { content: "\f239"; }
+.fa-save:before { content: "\f1b2"; }
+.fa-save-as:before { content: "\f1b3"; }
+.fa-save-regular:before { content: "\f1b4"; }
+.fa-schedule:before { content: "\f1fe"; }
+.fa-schedule-demo:before { content: "\f274"; }
+.fa-schedule-with-tick:before { content: "\f247"; }
+.fa-screen-rotation:before { content: "\f289"; }
+.fa-scroll:before { content: "\f1b5"; }
+.fa-search:before { content: "\f1b6"; }
+.fa-search-element:before { content: "\f1f0"; }
+.fa-search-left:before { content: "\f1b7"; }
+.fa-search-new:before { content: "\f28b"; }
+.fa-search-right:before { content: "\f1b8"; }
+.fa-search-thick:before { content: "\f1b9"; }
+.fa-search_left:before { content: "\f1ba"; }
+.fa-selection:before { content: "\f1bb"; }
+.fa-sendkeys:before { content: "\f20b"; }
+.fa-setting-outlined:before { content: "\f266"; }
+.fa-settings-wrench:before { content: "\f1bc"; }
+.fa-sheduled:before { content: "\f1bd"; }
+.fa-shield:before { content: "\f1be"; }
+.fa-show:before { content: "\f1bf"; }
+.fa-shrink-horizontal:before { content: "\f2b3"; }
+.fa-sign-out-alt-solid:before { content: "\f1c0"; }
+.fa-sort:before { content: "\f241"; }
+.fa-source-code:before { content: "\f1f6"; }
+.fa-star:before { content: "\f275"; }
+.fa-step-group:before { content: "\f1c1"; }
+.fa-stop:before { content: "\f284"; }
+.fa-stop-circle-solid:before { content: "\f1c2"; }
+.fa-storage-outline:before { content: "\f2c2"; }
+.fa-suitcase:before { content: "\f1ed"; }
+.fa-suitcase-2:before { content: "\f1c3"; }
+.fa-suitecase-filled:before { content: "\f1c5"; }
+.fa-support:before { content: "\f23c"; }
+.fa-swipe-horizontal:before { content: "\f1f9"; }
+.fa-table:before { content: "\f1c6"; }
+.fa-tags-solid:before { content: "\f1c7"; }
+.fa-tap:before { content: "\f1fa"; }
+.fa-test-case-alt:before { content: "\f268"; }
+.fa-test-case-priorities:before { content: "\f254"; }
+.fa-test-case-types:before { content: "\f255"; }
+.fa-test-cases-alt:before { content: "\f260"; }
+.fa-test-data:before { content: "\f1c8"; }
+.fa-test-data-alt:before { content: "\f261"; }
+.fa-test-plan:before { content: "\f262"; }
+.fa-test-suite:before { content: "\f1c9"; }
+.fa-test-suites-alt:before { content: "\f263"; }
+.fa-testcase:before { content: "\f1ca"; }
+.fa-testcase-new:before { content: "\f256"; }
+.fa-testsigma-logo:before { content: "\f20c"; }
+.fa-textbox-placeholder:before { content: "\f1cb"; }
+.fa-th-list:before { content: "\f1cc"; }
+.fa-th-list--another-copy-:before { content: "\f1cd"; }
+.fa-th-list--copy-:before { content: "\f1ce"; }
+.fa-thumbs-up-regular:before { content: "\f1cf"; }
+.fa-tick:before { content: "\f1d0"; }
+.fa-tick-circle-filled:before { content: "\f1d1"; }
+.fa-tick-thick:before { content: "\f215"; }
+.fa-tick-white:before { content: "\f2ad"; }
+.fa-ticket-alt-solid:before { content: "\f1d2"; }
+.fa-time-alt:before { content: "\f22e"; }
+.fa-times-circle-regular:before { content: "\f1d3"; }
+.fa-timmer:before { content: "\f202"; }
+.fa-top-arrow:before { content: "\f1d4"; }
+.fa-trash:before { content: "\f1d5"; }
+.fa-trash-thin:before { content: "\f1d6"; }
+.fa-triangle-down:before { content: "\f1d7"; }
+.fa-up-arrow-filled:before { content: "\f1d9"; }
+.fa-up-sort:before { content: "\f1da"; }
+.fa-update:before { content: "\f228"; }
+.fa-uploads:before { content: "\f1db"; }
+.fa-uploads-alt:before { content: "\f265"; }
+.fa-usage-badge:before { content: "\f272"; }
+.fa-user:before { content: "\f1dc"; }
+.fa-user-filled:before { content: "\f1dd"; }
+.fa-user-plus-solid:before { content: "\f1de"; }
+.fa-user-profile-with-border:before { content: "\f1df"; }
+.fa-user-role:before { content: "\f1e0"; }
+.fa-user-shield:before { content: "\f1e1"; }
+.fa-user-tag:before { content: "\f2bf"; }
+.fa-user-tie:before { content: "\f1e2"; }
+.fa-users-solid:before { content: "\f1e3"; }
+.fa-v-ellipsis:before { content: "\f1e4"; }
+.fa-versions:before { content: "\f1e5"; }
+.fa-verticle-more:before { content: "\f1e6"; }
+.fa-video:before { content: "\f1e7"; }
+.fa-video-hollow:before { content: "\f2a9"; }
+.fa-views:before { content: "\f22a"; }
+.fa-visual:before { content: "\f2c3"; }
+.fa-warning:before { content: "\f230"; }
+.fa-watch-tv:before { content: "\f1e8"; }
+.fa-watch-video:before { content: "\f295"; }
+.fa-web-page:before { content: "\f1e9"; }
+.fa-while-loop:before { content: "\f283"; }
+.fa-windows-brands:before { content: "\f1ea"; }
+.fa-wranning-star:before { content: "\f216"; }
+.fa-wrench:before { content: "\f1eb"; }
+.fa-youtube:before { content: "\f237"; }
+.fa-youtube-thin:before { content: "\f240"; }
+
+$font-font_custom-4-quabs: "\f100";
+$font-font_custom-action-text: "\f2cb";
+$font-font_custom-add: "\f2b1";
+$font-font_custom-add-next: "\f102";
+$font-font_custom-add-previous: "\f103";
+$font-font_custom-addon: "\f291";
+$font-font_custom-addons: "\f2c8";
+$font-font_custom-alert: "\f104";
+$font-font_custom-alert-exists: "\f29a";
+$font-font_custom-all-items: "\f21f";
+$font-font_custom-android-outlined: "\f2c4";
+$font-font_custom-android-solid: "\f105";
+$font-font_custom-api: "\f106";
+$font-font_custom-apk-file: "\f24a";
+$font-font_custom-app-store-ios: "\f2c0";
+$font-font_custom-apple: "\f107";
+$font-font_custom-application-new: "\f27d";
+$font-font_custom-archieve: "\f108";
+$font-font_custom-arrow-down: "\f109";
+$font-font_custom-arrow-down-filled: "\f10a";
+$font-font_custom-arrow-right: "\f10b";
+$font-font_custom-arrow-up: "\f10c";
+$font-font_custom-article: "\f225";
+$font-font_custom-attachment: "\f10d";
+$font-font_custom-award: "\f10e";
+$font-font_custom-award-solid: "\f10f";
+$font-font_custom-back-arrow: "\f1ee";
+$font-font_custom-bar-chart: "\f110";
+$font-font_custom-bar-chart_dock: "\f226";
+$font-font_custom-bars: "\f111";
+$font-font_custom-bars-solid: "\f112";
+$font-font_custom-bell: "\f113";
+$font-font_custom-bi_shield-lock-fill: "\f2b9";
+$font-font_custom-bi_window: "\f2c5";
+$font-font_custom-bolt-solid: "\f114";
+$font-font_custom-book-mark: "\f26b";
+$font-font_custom-book-solid: "\f115";
+$font-font_custom-boolean: "\f210";
+$font-font_custom-broom-clear: "\f1f2";
+$font-font_custom-bug: "\f116";
+$font-font_custom-building-shop: "\f2be";
+$font-font_custom-bulk-update: "\f23b";
+$font-font_custom-calendar: "\f117";
+$font-font_custom-calendar-alt: "\f22d";
+$font-font_custom-calendar-dot: "\f257";
+$font-font_custom-camera: "\f211";
+$font-font_custom-candidates: "\f118";
+$font-font_custom-caret-down: "\f119";
+$font-font_custom-caret-left-solid: "\f11a";
+$font-font_custom-caret-right-solid: "\f11b";
+$font-font_custom-caret-up: "\f11c";
+$font-font_custom-chart-line-solid: "\f11d";
+$font-font_custom-chat: "\f11e";
+$font-font_custom-chat-alt: "\f258";
+$font-font_custom-chat-sm: "\f2b0";
+$font-font_custom-chat-square-dots: "\f277";
+$font-font_custom-chat-with-experts: "\f273";
+$font-font_custom-chat_bubble: "\f2ba";
+$font-font_custom-check-circle-regular: "\f11f";
+$font-font_custom-check-circle-solid: "\f120";
+$font-font_custom-check-error: "\f292";
+$font-font_custom-check-neutral: "\f121";
+$font-font_custom-check-on: "\f122";
+$font-font_custom-check-on-filled: "\f123";
+$font-font_custom-check-screenshot: "\f293";
+$font-font_custom-check-solid: "\f124";
+$font-font_custom-checkbox_list: "\f29b";
+$font-font_custom-chrome: "\f125";
+$font-font_custom-chrome-plain: "\f126";
+$font-font_custom-circle-filled: "\f127";
+$font-font_custom-circle-minus-alt: "\f24e";
+$font-font_custom-circle-plus-alt: "\f23a";
+$font-font_custom-circled-close: "\f128";
+$font-font_custom-circled-info: "\f129";
+$font-font_custom-circled-play: "\f12a";
+$font-font_custom-circled-play-filled: "\f249";
+$font-font_custom-circled-plus: "\f12b";
+$font-font_custom-circled-plus-filled: "\f12c";
+$font-font_custom-class: "\f12d";
+$font-font_custom-clippy: "\f12e";
+$font-font_custom-clock: "\f12f";
+$font-font_custom-clone: "\f130";
+$font-font_custom-close: "\f131";
+$font-font_custom-close-alt: "\f232";
+$font-font_custom-close-large: "\f132";
+$font-font_custom-cloud: "\f20f";
+$font-font_custom-code-format: "\f297";
+$font-font_custom-code-struture: "\f298";
+$font-font_custom-code-view: "\f299";
+$font-font_custom-collapse: "\f133";
+$font-font_custom-collapse-alt: "\f22c";
+$font-font_custom-comment: "\f134";
+$font-font_custom-conditional-if: "\f2ca";
+$font-font_custom-config-fix: "\f212";
+$font-font_custom-config-list: "\f242";
+$font-font_custom-copy: "\f135";
+$font-font_custom-copy-new: "\f136";
+$font-font_custom-copy-outline: "\f280";
+$font-font_custom-copy-regular: "\f137";
+$font-font_custom-cross-up-arrow: "\f2aa";
+$font-font_custom-crosshairs: "\f138";
+$font-font_custom-crown: "\f26c";
+$font-font_custom-css: "\f139";
+$font-font_custom-current-page-url: "\f29c";
+$font-font_custom-cursor-click-flash: "\f1f3";
+$font-font_custom-dashboard: "\f13d";
+$font-font_custom-data-grid: "\f244";
+$font-font_custom-database-solid: "\f13e";
+$font-font_custom-delete-icon: "\f13f";
+$font-font_custom-deselect: "\f140";
+$font-font_custom-desktop: "\f141";
+$font-font_custom-desktop-play: "\f142";
+$font-font_custom-device-suites: "\f251";
+$font-font_custom-diff: "\f143";
+$font-font_custom-disable: "\f144";
+$font-font_custom-docs: "\f2bb";
+$font-font_custom-double-arrow-left: "\f24c";
+$font-font_custom-double-arrow-right: "\f24d";
+$font-font_custom-dowload: "\f145";
+$font-font_custom-down-arrow: "\f146";
+$font-font_custom-down-arrow-filled: "\f147";
+$font-font_custom-down-sort: "\f148";
+$font-font_custom-down_sort: "\f149";
+$font-font_custom-download-alt: "\f233";
+$font-font_custom-download-solid: "\f14a";
+$font-font_custom-download-thin: "\f1fb";
+$font-font_custom-download-with-cut-border: "\f14b";
+$font-font_custom-drag-and-drop: "\f14c";
+$font-font_custom-drag-lines: "\f14d";
+$font-font_custom-drag-n-drop: "\f24f";
+$font-font_custom-drag-n-drop-sm: "\f287";
+$font-font_custom-draw-highlight: "\f21c";
+$font-font_custom-duration: "\f1fc";
+$font-font_custom-edge: "\f14e";
+$font-font_custom-edit-with-border: "\f14f";
+$font-font_custom-edit-with-borther: "\f150";
+$font-font_custom-element-alt: "\f2b4";
+$font-font_custom-element-is-hidden: "\f2b5";
+$font-font_custom-element-is-in-diffrent-frame: "\f2b6";
+$font-font_custom-elements: "\f2b7";
+$font-font_custom-elements-alt: "\f2b8";
+$font-font_custom-ellipsis-h: "\f227";
+$font-font_custom-email: "\f151";
+$font-font_custom-email-box: "\f296";
+$font-font_custom-equals-solid: "\f152";
+$font-font_custom-eraser: "\f253";
+$font-font_custom-eraser-outline: "\f281";
+$font-font_custom-example: "\f238";
+$font-font_custom-exclamation-circle-solid: "\f153";
+$font-font_custom-exclamation-triangle-solid: "\f154";
+$font-font_custom-exit-thick: "\f26d";
+$font-font_custom-expand: "\f155";
+$font-font_custom-expand-alt: "\f156";
+$font-font_custom-expand-horizontal: "\f2b2";
+$font-font_custom-export: "\f157";
+$font-font_custom-export-thin: "\f1ff";
+$font-font_custom-external-link-alt-solid: "\f1ec";
+$font-font_custom-eye: "\f28a";
+$font-font_custom-file-invoice: "\f158";
+$font-font_custom-file-invoice-dollar-solid: "\f159";
+$font-font_custom-filled-circled-play: "\f15a";
+$font-font_custom-filter: "\f15b";
+$font-font_custom-filter-alt: "\f234";
+$font-font_custom-filter-outline: "\f15c";
+$font-font_custom-filtered-dot: "\f235";
+$font-font_custom-fingerprint-solid: "\f15d";
+$font-font_custom-firefox: "\f21d";
+$font-font_custom-firefox-brands: "\f21e";
+$font-font_custom-flag: "\f2ae";
+$font-font_custom-flash-straight: "\f1f4";
+$font-font_custom-forward: "\f15f";
+$font-font_custom-fr-chat: "\f276";
+$font-font_custom-frame-list: "\f2a0";
+$font-font_custom-funnel: "\f160";
+$font-font_custom-funnel-thin: "\f161";
+$font-font_custom-gear: "\f162";
+$font-font_custom-gear-filled: "\f163";
+$font-font_custom-gear-with-wrench: "\f164";
+$font-font_custom-get-start: "\f259";
+$font-font_custom-gift-solid: "\f285";
+$font-font_custom-github_outline: "\f2bc";
+$font-font_custom-globe: "\f165";
+$font-font_custom-globe-alt: "\f25c";
+$font-font_custom-google-docs: "\f221";
+$font-font_custom-hand-point-up-solid: "\f166";
+$font-font_custom-hands-helping: "\f167";
+$font-font_custom-headset: "\f279";
+$font-font_custom-help: "\f168";
+$font-font_custom-help-2: "\f169";
+$font-font_custom-hierarchy: "\f16a";
+$font-font_custom-highlight-diff: "\f219";
+$font-font_custom-hightlight: "\f16b";
+$font-font_custom-home: "\f282";
+$font-font_custom-hourglass: "\f201";
+$font-font_custom-html: "\f222";
+$font-font_custom-idea: "\f213";
+$font-font_custom-idea-glow: "\f214";
+$font-font_custom-ie: "\f20d";
+$font-font_custom-iframe: "\f16c";
+$font-font_custom-ignore-selection: "\f21a";
+$font-font_custom-import: "\f16d";
+$font-font_custom-infinity: "\f245";
+$font-font_custom-info: "\f16e";
+$font-font_custom-info-with-cricle: "\f16f";
+$font-font_custom-internet-explorer: "\f20e";
+$font-font_custom-invalid-selector: "\f2a1";
+$font-font_custom-invalid-selector-selection: "\f2a2";
+$font-font_custom-investigation: "\f170";
+$font-font_custom-invite: "\f286";
+$font-font_custom-ipa-file: "\f24b";
+$font-font_custom-json-file: "\f223";
+$font-font_custom-key: "\f171";
+$font-font_custom-key-access: "\f26e";
+$font-font_custom-key-solid: "\f172";
+$font-font_custom-key-up-right: "\f1f5";
+$font-font_custom-language: "\f173";
+$font-font_custom-launch: "\f203";
+$font-font_custom-layer: "\f174";
+$font-font_custom-layer-group-solid: "\f175";
+$font-font_custom-left-arrow-thin: "\f176";
+$font-font_custom-library: "\f23f";
+$font-font_custom-lightbulb-regular: "\f177";
+$font-font_custom-lightbulb-solid: "\f178";
+$font-font_custom-line_chart_up: "\f269";
+$font-font_custom-lined-arrow-right: "\f179";
+$font-font_custom-linux-2: "\f17a";
+$font-font_custom-list: "\f17b";
+$font-font_custom-list-alt: "\f17c";
+$font-font_custom-list-of-frames: "\f2a3";
+$font-font_custom-location: "\f17d";
+$font-font_custom-lock-open-solid: "\f17e";
+$font-font_custom-lock-solid: "\f17f";
+$font-font_custom-logos_ios: "\f2c6";
+$font-font_custom-long-arrow-alt-right-solid: "\f180";
+$font-font_custom-love: "\f181";
+$font-font_custom-members: "\f243";
+$font-font_custom-menu-bar: "\f2a8";
+$font-font_custom-messager: "\f229";
+$font-font_custom-minus: "\f182";
+$font-font_custom-minus-square-regular: "\f183";
+$font-font_custom-minus-square-solid: "\f184";
+$font-font_custom-mirroring: "\f1ef";
+$font-font_custom-mobile-alt-solid: "\f185";
+$font-font_custom-mobile-line: "\f2c7";
+$font-font_custom-more: "\f186";
+$font-font_custom-mouse-drag: "\f187";
+$font-font_custom-new-project: "\f288";
+$font-font_custom-nlp: "\f188";
+$font-font_custom-nlp-2: "\f189";
+$font-font_custom-nlp-grammar: "\f18a";
+$font-font_custom-nlp-new: "\f18b";
+$font-font_custom-not-equal-solid: "\f18c";
+$font-font_custom-nlp-grammar-alt: "\f2c9";
+$font-font_custom-object-ungroup-regular: "\f18d";
+$font-font_custom-open-book: "\f2ab";
+$font-font_custom-outline-cloudy: "\f2c1";
+$font-font_custom-overlap: "\f21b";
+$font-font_custom-page-element: "\f2a4";
+$font-font_custom-page-loading: "\f2a5";
+$font-font_custom-paper-flight: "\f18e";
+$font-font_custom-pdf-file: "\f224";
+$font-font_custom-pencil-on-paper: "\f18f";
+$font-font_custom-pencil-thick: "\f270";
+$font-font_custom-pencil-without-border: "\f190";
+$font-font_custom-people-group: "\f2bd";
+$font-font_custom-perform-manually: "\f294";
+$font-font_custom-pi-chart: "\f200";
+$font-font_custom-pie-chart: "\f218";
+$font-font_custom-pin: "\f191";
+$font-font_custom-pin-alt: "\f236";
+$font-font_custom-play: "\f22f";
+$font-font_custom-play-circle: "\f27a";
+$font-font_custom-play-filled: "\f192";
+$font-font_custom-plug: "\f250";
+$font-font_custom-plus: "\f193";
+$font-font_custom-plus-filled: "\f194";
+$font-font_custom-plus-square-regular: "\f195";
+$font-font_custom-plus-square-solid: "\f196";
+$font-font_custom-power: "\f197";
+$font-font_custom-power-bulb: "\f198";
+$font-font_custom-power-flash: "\f220";
+$font-font_custom-power-loop: "\f199";
+$font-font_custom-productivity: "\f26a";
+$font-font_custom-profile: "\f19a";
+$font-font_custom-project-andriod: "\f28c";
+$font-font_custom-project-api: "\f28d";
+$font-font_custom-project-ios: "\f28e";
+$font-font_custom-project-mobile: "\f28f";
+$font-font_custom-project-website: "\f290";
+$font-font_custom-pulse: "\f246";
+$font-font_custom-puzzle-piece-solid: "\f19b";
+$font-font_custom-question: "\f2ac";
+$font-font_custom-question-circle-solid: "\f19c";
+$font-font_custom-radio_with_lable: "\f19d";
+$font-font_custom-re-run: "\f271";
+$font-font_custom-record: "\f19e";
+$font-font_custom-record-circle: "\f19f";
+$font-font_custom-record-new: "\f1a0";
+$font-font_custom-refresh: "\f1a1";
+$font-font_custom-refresh-new: "\f1f7";
+$font-font_custom-refresh-thick: "\f1a2";
+$font-font_custom-reorder: "\f1a3";
+$font-font_custom-reports: "\f1a4";
+$font-font_custom-requirement-type: "\f27e";
+$font-font_custom-requirements: "\f1a5";
+$font-font_custom-requirements-alt: "\f25e";
+$font-font_custom-rest-cloud: "\f1a6";
+$font-font_custom-rest-new: "\f1a7";
+$font-font_custom-restful-api: "\f1a8";
+$font-font_custom-restful-api-icon: "\f1a9";
+$font-font_custom-result-0: "\f204";
+$font-font_custom-result-1: "\f205";
+$font-font_custom-result-1-dashboard: "\f25a";
+$font-font_custom-result-2: "\f206";
+$font-font_custom-result-3: "\f207";
+$font-font_custom-result-4: "\f208";
+$font-font_custom-result-5: "\f209";
+$font-font_custom-result-6: "\f20a";
+$font-font_custom-results: "\f1aa";
+$font-font_custom-results-2: "\f1ab";
+$font-font_custom-rev-brands: "\f1ac";
+$font-font_custom-review: "\f2af";
+$font-font_custom-right-arrow: "\f23d";
+$font-font_custom-right-arrow-filled: "\f1ae";
+$font-font_custom-right-arrow-thin: "\f1af";
+$font-font_custom-right-large-arrow: "\f23e";
+$font-font_custom-run-results: "\f1b0";
+$font-font_custom-run-results-alt: "\f25f";
+$font-font_custom-safari-brands: "\f1b1";
+$font-font_custom-sample: "\f239";
+$font-font_custom-save: "\f1b2";
+$font-font_custom-save-as: "\f1b3";
+$font-font_custom-save-regular: "\f1b4";
+$font-font_custom-schedule: "\f1fe";
+$font-font_custom-schedule-demo: "\f274";
+$font-font_custom-schedule-with-tick: "\f247";
+$font-font_custom-screen-rotation: "\f289";
+$font-font_custom-scroll: "\f1b5";
+$font-font_custom-search: "\f1b6";
+$font-font_custom-search-element: "\f1f0";
+$font-font_custom-search-left: "\f1b7";
+$font-font_custom-search-new: "\f28b";
+$font-font_custom-search-right: "\f1b8";
+$font-font_custom-search-thick: "\f1b9";
+$font-font_custom-search_left: "\f1ba";
+$font-font_custom-selection: "\f1bb";
+$font-font_custom-sendkeys: "\f20b";
+$font-font_custom-setting-outlined: "\f266";
+$font-font_custom-settings-wrench: "\f1bc";
+$font-font_custom-sheduled: "\f1bd";
+$font-font_custom-shield: "\f1be";
+$font-font_custom-show: "\f1bf";
+$font-font_custom-shrink-horizontal: "\f2b3";
+$font-font_custom-sign-out-alt-solid: "\f1c0";
+$font-font_custom-sort: "\f241";
+$font-font_custom-source-code: "\f1f6";
+$font-font_custom-star: "\f275";
+$font-font_custom-step-group: "\f1c1";
+$font-font_custom-stop: "\f284";
+$font-font_custom-stop-circle-solid: "\f1c2";
+$font-font_custom-storage-outline: "\f2c2";
+$font-font_custom-suitcase: "\f1ed";
+$font-font_custom-suitcase-2: "\f1c3";
+$font-font_custom-suitecase-filled: "\f1c5";
+$font-font_custom-support: "\f23c";
+$font-font_custom-swipe-horizontal: "\f1f9";
+$font-font_custom-table: "\f1c6";
+$font-font_custom-tags-solid: "\f1c7";
+$font-font_custom-tap: "\f1fa";
+$font-font_custom-test-case-alt: "\f268";
+$font-font_custom-test-case-priorities: "\f254";
+$font-font_custom-test-case-types: "\f255";
+$font-font_custom-test-cases-alt: "\f260";
+$font-font_custom-test-data: "\f1c8";
+$font-font_custom-test-data-alt: "\f261";
+$font-font_custom-test-plan: "\f262";
+$font-font_custom-test-suite: "\f1c9";
+$font-font_custom-test-suites-alt: "\f263";
+$font-font_custom-testcase: "\f1ca";
+$font-font_custom-testcase-new: "\f256";
+$font-font_custom-testsigma-logo: "\f20c";
+$font-font_custom-textbox-placeholder: "\f1cb";
+$font-font_custom-th-list: "\f1cc";
+$font-font_custom-th-list--another-copy-: "\f1cd";
+$font-font_custom-th-list--copy-: "\f1ce";
+$font-font_custom-thumbs-up-regular: "\f1cf";
+$font-font_custom-tick: "\f1d0";
+$font-font_custom-tick-circle-filled: "\f1d1";
+$font-font_custom-tick-thick: "\f215";
+$font-font_custom-tick-white: "\f2ad";
+$font-font_custom-ticket-alt-solid: "\f1d2";
+$font-font_custom-time-alt: "\f22e";
+$font-font_custom-times-circle-regular: "\f1d3";
+$font-font_custom-timmer: "\f202";
+$font-font_custom-top-arrow: "\f1d4";
+$font-font_custom-trash: "\f1d5";
+$font-font_custom-trash-thin: "\f1d6";
+$font-font_custom-triangle-down: "\f1d7";
+$font-font_custom-up-arrow-filled: "\f1d9";
+$font-font_custom-up-sort: "\f1da";
+$font-font_custom-update: "\f228";
+$font-font_custom-uploads: "\f1db";
+$font-font_custom-uploads-alt: "\f265";
+$font-font_custom-usage-badge: "\f272";
+$font-font_custom-user: "\f1dc";
+$font-font_custom-user-filled: "\f1dd";
+$font-font_custom-user-plus-solid: "\f1de";
+$font-font_custom-user-profile-with-border: "\f1df";
+$font-font_custom-user-role: "\f1e0";
+$font-font_custom-user-shield: "\f1e1";
+$font-font_custom-user-tag: "\f2bf";
+$font-font_custom-user-tie: "\f1e2";
+$font-font_custom-users-solid: "\f1e3";
+$font-font_custom-v-ellipsis: "\f1e4";
+$font-font_custom-versions: "\f1e5";
+$font-font_custom-verticle-more: "\f1e6";
+$font-font_custom-video: "\f1e7";
+$font-font_custom-video-hollow: "\f2a9";
+$font-font_custom-views: "\f22a";
+$font-font_custom-visual: "\f2c3";
+$font-font_custom-warning: "\f230";
+$font-font_custom-watch-tv: "\f1e8";
+$font-font_custom-watch-video: "\f295";
+$font-font_custom-web-page: "\f1e9";
+$font-font_custom-while-loop: "\f283";
+$font-font_custom-windows-brands: "\f1ea";
+$font-font_custom-wranning-star: "\f216";
+$font-font_custom-wrench: "\f1eb";
+$font-font_custom-youtube: "\f237";
+$font-font_custom-youtube-thin: "\f240";

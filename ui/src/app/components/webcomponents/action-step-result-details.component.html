@@ -1,0 +1,369 @@
+<div
+  #stepDetailsRef
+  class="overflow-y-auto step-details-container action-step-details w-100"
+  id="step-result-nav">
+
+  <div
+    *ngIf="!testStepResult"
+    class="details-container ts-col-100">
+    <div
+      class="ml-30 mw-20 ts-col-auto"
+      *ngFor="let two of [1,2]">
+      <div class="text-line-loader"></div>
+      <div class="text-line-loader mw-75"></div>
+    </div>
+  </div>
+
+  <div
+    id="step_data"
+    class="pb-40">
+    <div class="d-flex pb-15">
+    <div
+      [translate]="'result.result'"
+      class="fz-16 theme-text ts-col-25 rb-medium"></div>
+      <div class="d-flex ts-col-auto fz-16  ">
+      <i
+        [class.fa-result-0]="testStepResult?.isPassed"
+        [class.fa-result-1]="testStepResult?.isFailed"
+        [class.fa-result-2]="testStepResult?.isAborted"
+        [class.fa-result-3]="testStepResult?.isNotExecuted"
+        [class.fa-result-5]="testStepResult?.isQueued"
+        [class.fa-result-6]="testStepResult?.isStopped"
+        class="pr-6"></i>
+      <span
+        [translate]="'execution.result.'+testStepResult?.result"
+        [class.result-status-text-0]="testStepResult?.isPassed"
+        [class.result-status-text-1]="testStepResult?.isFailed"
+        [class.result-status-text-2]="testStepResult?.isAborted"
+        [class.result-status-text-3]="testStepResult?.isNotExecuted"
+        [class.result-status-text-5]="testStepResult?.isQueued"
+        [class.result-status-text-6]="testStepResult?.isStopped"></span>
+      </div>
+    </div>
+    <div>
+      <div class="details-container">
+        <div *ngIf="!testStepResult?.isRestStep &&  testStepResult?.testDataDetails" class="ts-col-100">
+          <div class="details-items ts-col-100 mb-15"
+               *ngFor="let testData of testStepResult?.testDataDetails| keyvalue; let index=index">
+            <div class="ts-col-100 d-flex" *ngIf="testData?.value.testDataValue">
+              <label class="details-title ts-col-25" [translate]="'test_step.results.test_data'"></label>
+              <div class="details-info mt-0"
+                   [textContent]="testData?.value?.testDataValue" *ngIf="!testData?.value?.testDataFunctionEntity"></div>
+              <div class="details-info mt-0"
+                   [textContent]="testData?.value?.testDataName" *ngIf="testData?.value?.testDataFunctionEntity"></div>
+            </div>
+            <div class="d-flex" *ngIf="testData?.value?.testDataFunctionEntity">
+              <label class="details-title ts-col-25"></label>
+              <div class="mt-10">
+                <div class="ts-col-100" *ngIf="!isEmptyObject(testData?.value?.testDataFunctionEntity?.arguments)">
+                  <span [translate]="'natural_text_action.custom_function.suggestion.input'" class="rb-medium"></span>
+                  <div *ngFor="let args of testData?.value?.testDataFunctionEntity?.arguments | keyvalue; let index=index" class="pl-5 pt-5">
+                    <!--                    <span [textContent]="index+1" class="rb-medium"></span>-->
+                    <span [textContent]="args.key+ ' = '" class="pl-5" *ngIf="!args.key.startsWith('arg')"></span>
+                    <span [textContent]="args.value" class="pl-5"></span>
+                  </div>
+                </div>
+
+                <div class="mt-5">
+                  <span [translate]="'natural_text_action.custom_function.suggestion.output'" class="rb-medium"></span>
+                  <span class="pl-5" [textContent]="testData?.value?.testDataValue"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="details-items ts-col-100 md-15 mb-15 d-flex" *ngIf="testStepResult?.errorCode">
+          <label class="details-title ts-col-25" [translate]="'test_step.results.error_code'"></label>
+          <div class="details-info mt-0" [textContent]="testStepResult?.errorCode">
+          </div>
+        </div>
+        <div
+          class="details-items ts-col-100 mb-25"
+          *ngIf="!testStepResult?.isRestStep && testStepResult?.stepDetails?.dataMap?.elementString && !testStepResult?.kibbutzElements">
+          <div class="ts-col-100 d-flex">
+            <div
+              (click)="testStepResult.isOpen= !testStepResult.isOpen"
+              class="details-title ts-col-25">
+              <i
+                class="fz-12"
+                [class.fa-arrow-down-filled]="testStepResult.isOpen"
+                [class.pr-7]="testStepResult.isOpen"
+                [class.fa-arrow-right-filled]="!testStepResult.isOpen">
+              </i>
+              <label class="" [translate]="'test_step.results.ui_identifier'"></label>
+            </div>
+
+            <div class="details-info d-flex align-items-center flex-wrap mt-0">
+              <div
+                [matTooltip]="testStepResult?.isElementChanged ? '' : 'step_result.hint.edit_element' | translate"
+                class="pointer"
+                (click)="testStepResult?.isElementChanged ? '' :  openEditElement(testStepResult?.stepDetails?.dataMap?.elementString)">
+            <span
+              class="text-link rb-medium"
+              [textContent]="testStepResult?.stepDetails?.dataMap?.elementString"></span>
+              <i class="fa-pencil-on-paper px-4" *ngIf="!testStepResult.isElementChanged"></i>
+              </div>
+            </div>
+
+
+        </div>
+          <div *ngIf="testStepResult?.isOpen && getFieldDefinitionDetails()" class="ts-col-100">
+            <div class="details-item ts-col-100  align-item-center">
+              <span [translate]="'common.value'" class="details-title ts-col-30 rb-medium"></span>
+              <span class="details-info m-0 pl-5" [textContent]="elementValue"></span>
+            </div>
+            <div class="details-item align-item-center">
+              <div [translate]="'ui_identifier.details.type'" class=" details-title ts-col-30 rb-medium"></div>
+              <div class="details-info m-0 pl-5" [textContent]="elementType"></div>
+            </div>
+          </div>
+
+        <div class="ts-col-100" *ngIf="!testStepResult?.isRestStep &&  testStepResult?.kibbutzElements">
+          <div
+            class="details-items ts-col-100 mb-25" *ngFor="let kibbutzElement of kibbutzElements; let index=index">
+            <div class="ts-col-100 d-flex">
+              <div
+                (click)="kibbutzElement.showInfo= !kibbutzElement?.showInfo"
+                class="details-title ts-col-25">
+                <i
+                  class="fz-12"
+                  [class.fa-arrow-down-filled]="kibbutzElement?.showInfo"
+                  [class.pr-7]="kibbutzElement?.showInfo"
+                  [class.fa-arrow-right-filled]="!kibbutzElement?.showInfo">
+                </i>
+                <label class="" [translate]="'test_step.results.ui_identifier'"></label>
+              </div>
+              <div class="details-info d-flex align-items-center flex-wrap mt-0">
+                <div
+                  [matTooltip]="kibbutzElement?.isElementChanged ? '' : 'step_result.hint.edit_element' | translate"
+                  class="pointer"
+                  (click)="kibbutzElement?.isElementChanged ? '' : openEditElement(kibbutzElement.name, true)">
+                <span
+                  class="text-link rb-medium"
+                  [textContent]="kibbutzElement.name"></span>
+                  <i class="fa-pencil-on-paper px-4" *ngIf="!kibbutzElement?.isElementChanged"></i>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        *ngIf="ShowFixElementCheck"
+        class="d-flex justify-content-between">
+        <div class="step-container">
+          <div
+            class="align-items-center d-flex p-0
+         text-t-secondary pointer text-nowrap step-detail-p"
+            (click)="testStepResult?.isElementChanged ? '' : openEditElement(testStepResult?.stepDetails?.dataMap?.elementString)">
+            <i class="fa-config-fix fz-18"></i>
+            <div
+              [translate]="'step_result.fix_element'"
+              class="rb-medium text-primary fz-14 pl-10">
+            </div>
+            <i class="fa-help fz-14 ml-10"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+        <div class="details-items ts-col-100 mb-15 d-flex" *ngIf="testStepResult?.stepDetails?.dataMap?.attribute">
+          <label class="details-title ts-col-25" [translate]="'test_step.results.attribute'"></label>
+          <div class="details-info mt-0"
+               [textContent]="testStepResult?.stepDetails?.dataMap?.attribute">
+          </div>
+        </div>
+        <div class="details-items ts-col-100 mt-10">
+          <label class="rb-medium"
+                 [translate]="testStepResult?.isPassed || testStepResult?.isQueued ? 'message.common.msg' : 'step_result.error_message'"></label>
+          <div class="details-info rb-regular-i-d line-height-large"
+               [innerHTML]="testStepResult?.message"></div>
+        </div>
+  </div>
+
+
+      <div
+        *ngIf="showScreenShort"
+        class="pb-40" id="screenShort">
+        <div
+          [translate]="'step_result.screen_short'" class="fz-16 pb-10 theme-text rb-medium"></div>
+        <div
+          *ngIf="testStepResult?.screenShotURL && !isScreenshotBroken && !isScreenshotExpired"
+          class="theme-border theme-screen-short" [class.mobile-screen-short]="this.version?.workspace?.isMobile">
+          <div class="action-section">
+            <a
+              target="_self"
+              [href]="testStepResult.screenShotURL"
+              [matTooltip]="'hint.message.common.download' | translate"
+              class="fa-download-thin btn icon-btn"
+              [download]="testStepResult.screenShotURL"></a>
+            <i
+              (click)="openScreenShort()"
+              [matTooltip]="'hint.message.common.extend' | translate"
+              class="fa-expand-alt btn icon-btn ml-14"></i>
+          </div>
+          <img
+            class="screen-short"
+            [src]="testStepResult?.screenShotURL"
+            (error)="setBrokenImage()">
+        </div>
+        <div
+          class="theme-border theme-screen-short d-flex
+           justify-content-center pt-30 rb-medium text-t-highlight"
+          *ngIf="isScreenshotBroken && !isScreenshotExpired && testStepResult?.screenShotURL">
+          <div
+            class="text-center">
+            <span [innerHTML]="'step_result.broken.screen_short' | translate"></span><br>
+            <a class='text-link px-4' (click)="setRefreshImage()" [translate]="'result.hint.click.here'"></a>
+            <span [translate]="'result.hind.to_refresh_the_page'"></span>
+          </div>
+        </div>
+        <div
+          class="theme-border theme-screen-short d-flex justify-content-center pt-30 rb-medium text-t-highlight"
+          *ngIf="isScreenshotExpired && !isScreenshotBroken && testStepResult?.screenShotURL">
+          <span
+            class="text-center px-20"
+            [innerHTML]="'step_result.expiry.screen_short' | translate"></span>
+        </div>
+        <div
+          class="theme-border theme-screen-short d-flex justify-content-center pt-30 rb-medium text-t-highlight"
+          *ngIf="!(testStepResult?.screenShotURL)">
+            <span
+              class="text-center px-20"
+              [innerHTML]="'step_result.not_capture.screen_short' | translate"></span>
+        </div>
+      </div>
+
+      <div
+        id="metaData">
+        <div
+          [translate]="'step_result.step.details.title'"
+          class="fz-16 pb-20 theme-text rb-medium"></div>
+        <div class="details-container value-md md">
+          <div class="details-items ts-col-30">
+            <label class="details-title" [translate]="'step_result.max.waitTime'"></label>
+            <div class="details-info"
+                 [textContent]="'step_result.waitTime' | translate: {waitTime: testStepResult?.waitTime || 0}">
+            </div>
+          </div>
+          <div class="details-items ts-col-30">
+            <label class="details-title" [translate]="'test_step.results.prerequisite'"></label>
+            <div>
+              <a
+                class="details-info"
+                *ngIf="testStepResult?.metadata?.preRequisite || preRequestStep"
+                [routerLink]="['/td','test_case_results', testStepResult.testCaseResultId, 'step_results', preRequestStep?.id]"
+                [textContent]="'#' + preRequisiteStep">
+              </a>
+            </div>
+            <div
+              class="details-info"
+              *ngIf="!testStepResult?.metadata?.preRequisite"
+              [textContent]="'-'">
+            </div>
+          </div>
+          <div class="details-items ts-col-100">
+            <label class="details-title" [translate]="'test_step.priority.MAJOR_STOP'"></label>
+            <div
+              class="details-info"
+              [translate]="testStepResult?.stepDetails?.isMajor ? 'common.yes': 'common.no'">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        *ngIf="testStepResult && !(testStepResult.isStepGroup || testStepResult.isForLoop || testStepResult.isRestStep || testStepResult.stepGroup) || testStepResult?.template">
+        <div
+          (click)="toggleMetadata()"
+          class="fz-16 pb-2 theme-text pointer mat-body-2">
+          <i
+            class="fz-12"
+            [class.fa-arrow-down-filled]="isShowMetaData"
+            [class.pr-7]="isShowMetaData"
+            [class.fa-arrow-right-filled]="!isShowMetaData">
+          </i>
+          <span class="rb-medium" [translate]="'step_result.metadata'"></span>
+        </div>
+        <ngx-json-viewer
+          class="custom-json-view custom-stature"
+          [json]="testStepResult.metadata" *ngIf="isShowMetaData">
+        </ngx-json-viewer>
+      </div>
+      <div
+        *ngIf="testStepResult?.kibbutzTestData && testStepResult?.kibbutzActionLogs">
+        <div
+          (click)="toggleKibbutzLogs()"
+          class="fz-16 pt-2 mt-5 theme-text pointer">
+          <i
+            class="fz-12"
+            [class.fa-arrow-down-filled]="isShowKibbutzLogs"
+            [class.pr-7]="isShowKibbutzLogs"
+            [class.fa-arrow-right-filled]="!isShowKibbutzLogs">
+          </i>
+          <span class="rb-medium" [translate]="'step_result.desired.kibbutz_action_logs'" ></span>
+        </div>
+        <div *ngIf="isShowKibbutzLogs" class="mt-5 p-10 fz-15 kibbutz_logs ">
+          <span [innerHTML]="testStepResult?.parseKibbutzLogs" ></span>
+        </div>
+      </div>
+      <div
+        *ngIf="environmentResult?.testDeviceSettings?.capabilities.length">
+        <div
+          (click)="toggleCapabilities()"
+          class="fz-16 pb-2 theme-text pointer">
+          <i
+            class="fz-12"
+            [class.fa-arrow-down-filled]="isCapabilities"
+            [class.pr-7]="isCapabilities"
+            [class.fa-arrow-right-filled]="!isCapabilities">
+          </i>
+          <span class="rb-medium" [translate]="'step_result.desired.capabilities'"></span>
+        </div>
+        <ngx-json-viewer
+          class="custom-json-view custom-stature"
+          [json]="this.processJsonCapabilities()" *ngIf="isCapabilities">
+        </ngx-json-viewer>
+      </div>
+      <div>
+        <div *ngIf="canShowDetails()"
+          (click)="toggleShowDetails()"
+          class="fz-16 pb-2 theme-text pointer">
+          <i
+            class="fz-12"
+            [class.fa-arrow-down-filled]="showDetails"
+            [class.pr-7]="showDetails"
+            [class.fa-arrow-right-filled]="!showDetails">
+          </i>
+          <span class="rb-medium" [translate]="'step_result.app_activity'"></span>
+        </div>
+        <ngx-json-viewer
+          class="custom-json-view custom-stature"
+          [json]="this.appDetails" *ngIf="showDetails">
+        </ngx-json-viewer>
+      </div>
+      <div class="pb-50"
+        *ngIf="testStepResult && !(testStepResult.isStepGroup || testStepResult.isForLoop || testStepResult.isRestStep || testStepResult.stepGroup) || testStepResult?.template"
+        id="attachment">
+        <div
+          (click)="toggleAttachment()"
+          class="fz-16 theme-text pt-40 pb-2 pointer">
+          <i
+            class="fz-12"
+            [class.fa-arrow-down-filled]="isShowAttachment"
+            [class.pr-7]="isShowAttachment"
+            [class.fa-arrow-right-filled]="!isShowAttachment">
+          </i>
+          <span class="rb-medium" [translate]="'message.common.attachments'"></span>
+        </div>
+        <div *ngIf="isShowAttachment">
+          <app-result-attachment
+            [attachmentRow]="'TESTCASE_STEP_RESULT'"
+            [smallWidget]="true"
+            [attachmentRowId]="testStepResult.id">
+          </app-result-attachment>
+        </div>
+      </div>
+      <app-rest-step-result-details
+        [metaData]="testStepResult?.metadata"
+        *ngIf="testStepResult?.isRestStep && testStepResult?.metadata">
+      </app-rest-step-result-details>
+</div>

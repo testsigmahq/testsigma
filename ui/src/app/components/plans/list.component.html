@@ -1,0 +1,141 @@
+<div class="page-header d-flex fz-20 align-items-center">
+  <ul class="tab-nav" role="tablist">
+    <li class="nav-items" role="presentation">
+      <a
+        [routerLink]="['/td', versionId, 'plans']"
+        [routerLinkActive]="'active'"
+        class="normal-text">
+        <span class="theme-text fz-18" [translate]="'test_plan.title'"></span>
+      </a>
+    </li>
+    <li
+      *ngIf="testPlans?.content?.length"
+      class="nav-items" role="presentation">
+      <a
+        [routerLink]="['/td', versionId, 'plans', 'schedules']"
+        [routerLinkActive]="'active'"
+        class="normal-text">
+        <span class="theme-text fz-18" [translate]="'test_plan.schedule.title'"></span>
+      </a>
+    </li>
+  </ul>
+  <div
+    *ngIf="testPlans?.content?.length || searchQuery.length"
+    class="align-items-center ml-auto d-flex flex-row">
+    <app-toggle-search-button
+      (searchAction)="search($event)"></app-toggle-search-button>
+    <button
+      (click)="fetchTestPlans(searchQuery)"
+      [matTooltip]="'result.hint.click.here.refresh' | translate"
+      class="btn icon-btn border-rds-2 ml-14">
+      <i class="fa-refresh-thick"></i>
+    </button>
+    <button
+      [routerLink]="['/td', versionId, 'plans','new']"
+      class="theme-btn-primary ml-14"
+      [textContent]="'+ '+('test_plan.title'| translate)">
+    </button>
+    <div class="pl-15 theme-border-l">
+      <app-pagination
+        *ngIf="testPlans?.totalElements" [paginationData]="testPlans"
+        [currentPage]="currentPage" (paginationAction)="fetchTestPlans()"></app-pagination>
+    </div>
+  </div>
+</div>
+<div class="page-content">
+  <div
+    *ngIf="testPlans?.content.length != 0"
+    class="list-header flex-wrap">
+    <div
+      class="pr-10 d-flex ts-col-50">
+      <input
+        class="d-none"
+        type="checkbox"/>
+      <span
+        class="pl-10"
+        [translate]="'message.common.label.name'"></span>
+    </div>
+    <div
+      class="ts-col-25 px-10"
+      [translate]="'test_plan.lab_type'">
+    </div>
+    <div
+      class="ts-col-20 d-flex">
+    </div>
+  </div>
+  <div class="list-container">
+
+    <div
+      class="list-view green-highlight lg-pm pl-10 pointer align-items-center"
+      *ngFor="let testPlan of testPlans?.content; let i = index">
+      <a class="d-flex w-100" [routerLink]="['/td', 'plans', testPlan.id]">
+        <div class="ts-col-50 text-break d-flex">
+          <div class="pr-30 d-none">
+            <input
+              type="checkbox"
+              [(ngModel)]="testPlan.selected" [ngModelOptions]="{standalone: true}"/>
+          </div>
+          <div class="pl-10 ts-col-100">
+            <span
+              class="list-title"
+              [textContent]="testPlan.name"></span>
+            <div
+              class="pt-4 text-t-secondary description-ellipsis"
+              [innerHTML]="testPlan?.description ||
+                ('results.list_view.no_description' | translate) "></div>
+          </div>
+        </div>
+        <div class="ts-col-20 px-10">
+          <app-lab-environments-info
+            *ngIf="testPlan.environments"
+            [execution]="testPlan"
+            [executionEnvironments]="testPlan.environments"></app-lab-environments-info>
+          <span [ngSwitch]="testPlan.testPlanType==getCrossBrowser() && testPlan?.workspaceVersion?.workspace?.isMobile">
+            <div
+              class="pt-4 text-t-secondary"  *ngSwitchCase="true"
+              [textContent]="'execution.test_plan_type.CROSS_DEVICE'| translate"></div>
+            <div
+              class="pt-4 text-t-secondary" *ngSwitchCase="false"
+              [textContent]="'execution.type.'+testPlan.testPlanType | translate"></div>
+          </span>
+        </div>
+        <div class="ts-col-30 d-flex align-items-center ml-auto justify-content-end execution-list">
+          <app-schedule-form-button class=""
+            [displayText]="('schedule.plan.btn' | translate)"
+            [execution]="testPlan"></app-schedule-form-button>
+          <app-reports-button
+            class="ml-10"
+            [displayText]="('btn.common.reports' | translate)"
+            [execution]="testPlan"></app-reports-button>
+          <app-run-now-button
+            class="ml-10"
+            [displayText]="('btn.common.run' | translate)"
+            [execution]="testPlan"
+            (onStart)="fetchTestPlans()"
+            (onStop)="fetchTestPlans()">
+          </app-run-now-button>
+        </div>
+      </a>
+    </div>
+
+    <app-placeholder-loader
+      *ngIf="!fetchingCompleted"></app-placeholder-loader>
+  </div>
+  <div *ngIf="!testPlans?.content.length" class="h-100">
+    <div
+      *ngIf="fetchingCompleted"
+      class="empty-full-container">
+      <div class="empty-run-md"></div>
+      <div
+        class="empty-text"
+        [translate]="searchQuery ? 'message.common.search.not_found' : 'message.common.empty_page'| translate: {categoryType: 'Test Plans'}"></div>
+      <button
+        *ngIf="!searchQuery"
+        [routerLink]="['new']" target="_parent"
+        class="theme-btn-primary">
+        +
+        <span [translate]="'test_plan.run_results.create_test_plan'"></span>
+      </button>
+    </div>
+  </div>
+</div>

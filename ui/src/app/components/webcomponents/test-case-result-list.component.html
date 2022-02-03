@@ -1,0 +1,42 @@
+<div class="list-container">
+  <div
+    [routerLink]="['/td/test_case_results', testCaseResult?.id]"
+    class="list-view green-highlight sm-pm"
+    *ngFor='let testCaseResult of testCaseResults?.content'>
+    <div class="pr-14 pt-5">
+      <i class="fz-24 fa-result-{{indexOfResult(testCaseResult.result)}}"></i>
+    </div>
+    <div class="d-flex flex-wrap ts-col-100-38">
+      <div class="ts-col-100">
+        <div
+          class="rb-medium"
+          [textContent]="testCaseResult?.testCase?.name"></div>
+        <div class="pt-2 text-t-secondary text-truncate">
+          <a
+            class="theme-link fz-12"
+            [routerLink]="['/td/machine_result', testCaseResult?.testDeviceResult?.id]"
+            [matTooltip]="(testCaseResult?.testDeviceResult?.testDevice?.title > 25 ? testCaseResult?.testDeviceResult?.testDevice?.title: '')"
+            [textContent]="testCaseResult?.testDeviceResult.testDevice?.title?.length > 25 ? (testCaseResult?.testDeviceResult?.testDevice?.title | slice:0:25)+'...' : testCaseResult?.testDeviceResult?.testDevice?.title "></a>
+          /
+          <a
+            class="theme-link fz-12"
+            [routerLink]="['/td/suite_results', testCaseResult?.suiteResultId]"
+            [matTooltip]="(testCaseResult?.testSuite?.name > 25 ? testCaseResult?.testSuite?.name:'')"
+            [textContent]="testCaseResult?.testSuite?.name?.length > 25 ? (testCaseResult?.testSuite?.name | slice:0:15)+'...' : testCaseResult?.testSuite?.name "></a>
+        </div>
+      </div>
+      <div class="ts-col-100 d-flex text-t-secondary justify-content-end text-nowrap fz-12 pt-8">
+        <div
+          [textContent]="testCaseResult?.startTime | date:'MMM d, h:mm:ss'"></div>
+        <div class="pl-8">
+          <app-duration-format [duration]="testCaseResult?.duration"></app-duration-format>
+        </div>
+        <app-test-machine-info-column
+          class="ml-auto"
+          [environmentResult]="testCaseResult?.testDeviceResult"
+          [executionResult]="testCaseResult?.testDeviceResult?.testPlanResult"
+          [executionEnvironment]="testCaseResult?.testDeviceResult?.testDevice"></app-test-machine-info-column>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,175 @@
+.text-wrap {
+  white-space: normal !important;
+}
+
+.text-nowrap {
+  white-space: nowrap !important;
+}
+
+.text-truncate {
+  @include text-truncate;
+}
+
+.text-underline {
+  text-decoration: underline;
+}
+
+.text-truncate-d-block {
+  @include text-truncate;
+  display: inline-block;
+  width: 6rem;
+  vertical-align: bottom;
+}
+
+// Responsive alignment
+
+.text-left {
+    text-align: left !important;
+}
+.text-right {
+    text-align: right !important;
+}
+.text-center {
+    text-align: center !important;
+}
+
+// Transformation
+.text-lowercase {
+    text-transform: lowercase !important;
+}
+
+.text-uppercase {
+    text-transform: uppercase !important;
+}
+
+.text-capitalize {
+    text-transform: capitalize !important;
+}
+
+@each $value in $overflows {
+  .overflow-y-#{$value} {
+    overflow-y: $value;
+  }
+  .overflow-x-#{$value} {
+    overflow-x: $value
+  }
+  .overflow-#{$value} {
+    overflow: $value;
+  }
+}
+
+//@each $value in $text-align {
+//  .text-#{value} {
+//    text-align: $value;
+//  }
+//}
+
+@each $color,
+$value in $theme-colors {
+  @include text-emphasis-variant(".text-#{$color}", $value);
+}
+
+@each $color, $value in $theme-sub-colors {
+  @include text-emphasis-variant(".text-#{$color}", $value);
+}
+
+.text-icon {
+  color: $icon-text-color;
+}
+.button-text {
+  color: $button-text-color;
+}
+.text-black{
+  color: $black;
+ }
+.text-grey{
+  color: #2D5467;
+}
+.text-decoration-none {
+  text-decoration: none !important;
+}
+
+.text-break {
+  word-break: break-word !important; // IE & < Edge 18
+  overflow-wrap: break-word !important;
+}
+
+// Reset
+.text-reset {
+    color: inherit !important;
+}
+.dark-light-text{
+  color: $dark-light-text;
+}
+
+
+a {
+  cursor: pointer;
+  color: $link-color;
+  text-decoration: $link-decoration;
+  background-color: transparent; // Remove the gray background on active links in IE 10.
+
+  @include hover {
+    color: $link-hover-color;
+    text-decoration: $link-hover-decoration;
+  }
+}
+
+
+a:not([href]):not([tabindex]), a.normal-text {
+  color: inherit;
+  text-decoration: none;
+
+  @include hover-focus {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  &:focus {
+    outline: 0;
+  }
+}
+
+@each $prop,
+$value in $line-heights {
+  .lh-#{$prop} {
+    line-height: $value !important;
+  }
+}
+
+.lh-1point4 {
+  line-height: 1.44;
+}
+
+.hover-text-underline:hover {
+  text-decoration: underline !important;
+}
+
+.ls-normal {
+  letter-spacing: normal;
+}
+.rb-regular-i{
+  @extend .rb-regular;
+}
+
+.light-text-color{
+  color: $light-text-color!important;
+}
+.step-background{
+  background-color: $light-text-color;
+}
+.invalid-text{
+  color: $theme-selected-green-color;
+}
+.text-secondary{
+  color: $theme-secondary-text-color
+}
+.failed-color{
+  color: $theme-failed-color;
+}
+.desaturated-blue{
+  color: $desaturated-blue;
+}
+.failed-popup-bg{
+  background-color: rgba(105, 97, 255, 0.05);
+}

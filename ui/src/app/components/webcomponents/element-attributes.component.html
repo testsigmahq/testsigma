@@ -1,0 +1,35 @@
+<form class="py-20 expansion-table">
+  <div class="d-flex bg-light px-20 py-10">
+    <span [translate]="'elements.form.label.target_element'" class="my-auto pr-30 rb-medium"></span>
+    {{elementDetails.type}}
+  </div>
+  <div>
+    <table class="attributes-table bg-white">
+      <thead>
+      <th></th>
+      <th [translate]="'elements.form.label.attribute'"></th>
+      <th [translate]="'elements.form.label.operator'"></th>
+      <th [translate]="'elements.form.label.value'"></th>
+      </thead>
+      <tbody>
+      <tr *ngFor="let attribute of elementDetails.attributes; let i=index">
+        <td>
+        <mat-checkbox
+          class="mat-checkbox"
+          [value]="attribute.selected">
+        </mat-checkbox>
+        </td>
+        <td [textContent]="attribute.name">
+
+        </td>
+        <td [translate]="'elements.form.attributes.operator.'+attribute.operator">
+
+        </td>
+        <td class="d-flex">
+          <input [value]="attribute.value" type="text" matInput>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</form>

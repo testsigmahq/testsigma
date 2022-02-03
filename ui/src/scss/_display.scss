@@ -1,0 +1,25 @@
+// stylelint-disable declaration-no-important
+//
+// Utilities for common `display` values
+//
+
+@each $value in $displays {
+    .d-#{$value} {
+        display: $value !important;
+    }
+}
+
+.hide {
+	@extend .d-none;
+}
+
+.visibility-hidden {
+  visibility: hidden;
+}
+.visibility-visible {
+  visibility: visible;
+}
+
+.flex-auto{
+  flex: auto;
+}

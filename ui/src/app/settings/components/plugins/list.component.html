@@ -1,0 +1,351 @@
+<div class="page-header theme-border-b ml-40 pl-0 plugins-list ml-50">
+  <ul class="tab-nav" role="tablist">
+    <li class="nav-items" role="presentation">
+      <a
+        class="normal-text"
+        [routerLinkActive]="'active'"
+        [routerLinkActiveOptions]="{ exact: true }"
+        [routerLink]="['../plugs']">
+        <span [translate]="'settings.plugins.all'" ></span>
+      </a>
+    </li>
+    <li class="nav-items" role="presentation">
+      <a
+        [routerLinkActive]="'active'"
+        [routerLink]="['./bug_report']"
+        class="normal-text">
+        <span [translate]="'settings.plugins.bug_report'"></span>
+      </a>
+    </li>
+    <li class="nav-items" role="presentation" style="display: none">
+      <a
+        [routerLinkActive]="'active'"
+        [routerLink]="['./test_lab']"
+        class="normal-text">
+        <span [translate]="'settings.plugins.test_lab'"></span>
+      </a>
+    </li>
+    <li class="nav-items" role="presentation">
+      <a
+        [routerLinkActive]="'active'"
+        [routerLink]="['./product_management']"
+        class="normal-text">
+        <span [translate]="'settings.plugins.product_management'"></span>
+      </a>
+    </li>
+    <li class="nav-items" role="presentation">
+      <a
+        [routerLinkActive]="'active'"
+        [routerLink]="['./ci_cd']"
+        class="normal-text">
+        <span [translate]="'settings.plugins.ci'"></span>
+      </a>
+    </li>
+  </ul>
+</div>
+
+<div class="page-content mt-20">
+  <div class="d-flex-wrap ts-col-100 pt-4">
+
+    <div class="white-border-container" *ngIf="bugReport || all">
+      <div class="item-content">
+        <div class="ts-col-100 jira-software sm-h"></div>
+        <div class="item-text" [translate]="'plugins.jira.description'"></div>
+        <div class="item-action">
+          <a
+            class="text-link"
+            *ngIf="!!jiraApplication"
+            (click)="viewDetails(Integration.Jira, jiraApplication)" [translate]="'message.common.view_details'"></a>
+          <mat-slide-toggle
+            class="mat-slide-toggle ml-auto slide-with-text"
+            [checked]="!!jiraApplication"
+            (change)="toggleApplication($event, Integration.Jira, jiraApplication)">
+          </mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+
+    <div class="white-border-container" *ngIf="bugReport || productManagement || all">
+      <div class="item-content">
+        <div class="ts-col-100 freshrelease sm-h"></div>
+        <div class="item-text" [translate]="'plugins.freshrelease.description'"></div>
+        <div class="item-action">
+          <a class="text-link"
+             *ngIf="!!freshReleaseApplication"
+             (click)="viewDetails(Integration.Freshrelease, freshReleaseApplication)"
+             [translate]="'message.common.view_details'"></a>
+          <mat-slide-toggle
+            class="mat-slide-toggle ml-auto slide-with-text"
+            [checked]="!!freshReleaseApplication"
+            (change)="toggleApplication($event, Integration.Freshrelease, freshReleaseApplication)">
+          </mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+    <div class="white-border-container" *ngIf="bugReport || all">
+      <div class="item-content">
+        <div class="d-flex align-items-center">
+          <div class="ts-col-20 youtrack sm-h"></div>
+          <div class="item-title-text" [translate]="'plugins.youtrack'"></div>
+        </div>
+        <div class="item-text" [translate]="'plugins.youtrack.description'"></div>
+        <div class="item-action">
+          <a class="text-link"
+             *ngIf="!!youtrackApplication"
+             (click)="viewDetails(Integration.Youtrack, youtrackApplication)"
+             [translate]="'message.common.view_details'"></a>
+          <mat-slide-toggle
+            class="mat-slide-toggle ml-auto slide-with-text"
+            [checked]="!!youtrackApplication"
+            (change)="toggleApplication($event, Integration.Youtrack, youtrackApplication)">
+          </mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="white-border-container" *ngIf="bugReport || all">
+      <div class="item-content">
+        <div class="ts-col-100 mantis sm-h"></div>
+        <div class="item-text mt-15" [translate]="'plugins.mantis.description'"></div>
+        <div class="item-action">
+          <a class="text-link"
+             *ngIf="!!mantisApplication"
+             (click)="viewDetails(Integration.Mantis, mantisApplication)"
+             [translate]="'message.common.view_details'"></a>
+          <mat-slide-toggle
+            class="mat-slide-toggle ml-auto slide-with-text"
+            [checked]="!!mantisApplication"
+            (change)="toggleApplication($event, Integration.Mantis, mantisApplication)">
+          </mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+
+    <div class="white-border-container" *ngIf="bugReport || productManagement || all">
+      <div class="item-content">
+        <div class="d-flex align-items-center">
+          <div class="ts-col-20 azure sm-h"></div>
+          <div class="item-title-text" [translate]="'plugins.azure'"></div>
+        </div>
+        <div class="item-text" [translate]="'plugins.azure.description'"></div>
+        <div class="item-action">
+          <a
+            class="text-link"
+            *ngIf="!!azureApplication"
+            (click)="viewDetails(Integration.Azure, azureApplication)" [translate]="'message.common.view_details'"></a>
+          <mat-slide-toggle
+            class="mat-slide-toggle ml-auto slide-with-text"
+            [checked]="!!azureApplication"
+            (change)="toggleApplication($event, Integration.Azure, azureApplication)">
+          </mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+
+    <div class="white-border-container" *ngIf="ciCd">
+      <div class="item-content">
+        <div class="d-flex align-items-center">
+          <div class="ts-col-20 azure sm-h"></div>
+          <div class="item-title-text" [translate]="'plugins.azure.cicd'"></div>
+        </div>
+        <div class="item-text" [translate]="'plugins.description.azureDevOps'"></div>
+      </div>
+    </div>
+
+    <div class="white-border-container" *ngIf="ciCd">
+      <div class="item-content">
+        <div class="d-flex align-items-center">
+          <div class="ts-col-20 circle_ci xl-h"></div>
+          <div class="item-title-text" [translate]="'plugins.azure.circleCI'"></div>
+        </div>
+        <div class="item-text" [translate]="'plugins.description.circleCI'"></div>
+      </div>
+    </div>
+
+    <div class="white-border-container" *ngIf="ciCd">
+      <div class="item-content">
+        <div class="d-flex align-items-center">
+          <div class="ts-col-20 bamboo xl-h"></div>
+          <div class="item-title-text" [translate]="'plugins.azure.bamboo'"></div>
+        </div>
+        <div class="item-text" [translate]="'plugins.description.bamboo'"></div>
+      </div>
+    </div>
+
+    <div class="white-border-container" *ngIf="ciCd">
+      <div class="item-content">
+        <div class="d-flex align-items-center">
+          <div class="ts-col-20 aws xl-h"></div>
+          <div class="item-title-text" [translate]="'plugins.azure.aws'"></div>
+        </div>
+        <div class="item-text" [translate]="'plugins.description.aws'"></div>
+      </div>
+    </div>
+
+    <div class="white-border-container" *ngIf="ciCd">
+      <div class="item-content">
+        <div class="d-flex align-items-center">
+          <div class="ts-col-20 travis_ci xl-h"></div>
+          <div class="item-title-text" [translate]="'plugins.azure.travisCI'"></div>
+        </div>
+        <div class="item-text" [translate]="'plugins.description.travisCI'"></div>
+      </div>
+    </div>
+
+    <div class="white-border-container" *ngIf="bugReport || all">
+      <div class="item-content">
+        <div class="ts-col-100 backLog sm-h"></div>
+        <div class="item-text" [translate]="'plugins.backLog.description'"></div>
+        <div class="item-action">
+          <a class="text-link"
+             *ngIf="!!backLogApplication"
+             (click)="viewDetails(Integration.BackLog, backLogApplication)"
+             [translate]="'message.common.view_details'"></a>
+          <mat-slide-toggle
+            class="mat-slide-toggle ml-auto slide-with-text"
+            [checked]="!!backLogApplication"
+            (change)="toggleApplication($event, Integration.BackLog, backLogApplication)">
+          </mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+
+    <div class="white-border-container" *ngIf="bugReport || all">
+      <div class="item-content">
+        <div class="ts-col-100 zepel sm-h"></div>
+        <div class="item-text mt-15" [translate]="'plugins.zepel.description'"></div>
+        <div class="item-action">
+          <a class="text-link"
+             *ngIf="!!zepelApplication"
+             (click)="viewDetails(Integration.Zepel, zepelApplication)"
+             [translate]="'message.common.view_details'"></a>
+          <mat-slide-toggle
+            class="mat-slide-toggle ml-auto slide-with-text"
+            [checked]="!!zepelApplication"
+            (change)="toggleApplication($event, Integration.Zepel, zepelApplication)">
+          </mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+
+    <div class="white-border-container" *ngIf="bugReport || all">
+      <div class="item-content">
+        <div class="ts-col-100 bugzilla sm-h"></div>
+        <div class="text-muted ts-col-100 lh-2 mt-15" [translate]="'plugins.bugzilla.description'"></div>
+        <div class="item-action">
+          <a class="text-link"
+             *ngIf="!!bugZillaApplication"
+             (click)="viewDetails(Integration.BugZilla, bugZillaApplication)"
+             [translate]="'message.common.view_details'"></a>
+          <mat-slide-toggle
+            class="mat-slide-toggle ml-auto slide-with-text"
+            [checked]="!!bugZillaApplication"
+            (change)="toggleApplication($event, Integration.BugZilla, bugZillaApplication)">
+          </mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+
+    <div class="white-border-container" *ngIf="bugReport || productManagement || all">
+      <div class="item-content">
+        <div class="d-flex align-items-center">
+          <div class="ts-col-100 trello md-w"></div>
+        </div>
+        <div class="text-t-secondary ts-col-100 llh-2 mt-15" [translate]="'plugins.trello.description'"></div>
+        <div class="item-action">
+          <a class="text-link"
+             *ngIf="!!trelloApplication"
+             (click)="viewDetails(Integration.Trello, trelloApplication)"
+             [translate]="'message.common.view_details'"></a>
+          <mat-slide-toggle
+            class="mat-slide-toggle ml-auto slide-with-text"
+            [checked]="!!trelloApplication"
+            (change)="toggleApplication($event, Integration.Trello, trelloApplication)">
+          </mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+
+    <div class="white-border-container" *ngIf="bugReport || productManagement || all">
+      <div class="item-content">
+        <div class="d-flex align-items-center">
+          <div class="ts-col-20 linear sm-h"></div>
+          <div class="item-title-text" [translate]="'plugins.linear'"></div>
+        </div>
+        <div class="item-text mt-15" [translate]="'plugins.linear.description'"></div>
+        <div class="item-action">
+          <a class="text-link"
+             *ngIf="!!linearApplication"
+             (click)="viewDetails(Integration.Linear, linearApplication)"
+             [translate]="'message.common.view_details'"></a>
+          <mat-slide-toggle
+            class="mat-slide-toggle ml-auto slide-with-text"
+            [checked]="!!linearApplication"
+            (change)="toggleApplication($event, Integration.Linear, linearApplication)">
+          </mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+
+    <div class="white-border-container" *ngIf="bugReport || productManagement || all">
+      <div class="item-content">
+        <div class="d-flex align-items-center">
+          <div class="ts-col-20 click_up sm-h"></div>
+          <div class="item-title-text" [translate]="'plugins.click_up'"></div>
+        </div>
+        <div class="item-text mt-15" [translate]="'plugins.click_up.description'"></div>
+        <div class="item-action">
+          <a class="text-link"
+             *ngIf="!!clickUpApplication"
+             (click)="viewDetails(Integration.ClickUp, clickUpApplication)"
+             [translate]="'message.common.view_details'"></a>
+          <mat-slide-toggle
+            [disabled]="false"
+            [matTooltip]="true? ('message.common.access_denied'|translate) : ''"
+            class="mat-slide-toggle ml-auto slide-with-text"
+            [checked]="!!clickUpApplication"
+            (change)="toggleApplication($event, Integration.ClickUp, clickUpApplication)">
+          </mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+
+    <div class="white-border-container" *ngIf="testLab || all">
+      <div class="item-content">
+        <div class="d-flex align-items-center">
+          <div class="ts-col-20 testsigma-lab-logo sm-h"></div>
+          <div class="item-title-text" [translate]="'plugins.testsigma_lab'"></div>
+        </div>
+        <div class="item-text" [translate]="'plugins.testsigma_lab.description'"></div>
+        <div class="item-action">
+          <mat-slide-toggle
+            class="mat-slide-toggle ml-auto slide-with-text"
+            [checked]="!!testsigmaLabApplication"
+            (change)="toggleApplication($event, Integration.TestsigmaLab, testsigmaLabApplication)">
+          </mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+
+    <div class="white-border-container" *ngIf="ciCd || all">
+      <div class="item-content">
+        <div class="d-flex align-items-center">
+          <div class="ts-col-20 jenkins sm-h"></div>
+          <div class="item-title-text" [translate]="'plugins.jenkins'"></div>
+        </div>
+        <div class="item-text" [translate]="'plugins.description.jenkins'"></div>
+      </div>
+    </div>
+
+    <div class="white-border-container" *ngIf="ciCd || all">
+      <div class="item-content">
+        <div class="d-flex align-items-center">
+          <div class="ts-col-20 code_ship sm-h"></div>
+          <div class="item-title-text" [translate]="'plugins.code_ship'"></div>
+        </div>
+        <div class="item-text" [translate]="'plugins.description.code_ship'"></div>
+      </div>
+    </div>
+  </div>
+</div>

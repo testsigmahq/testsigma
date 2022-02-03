@@ -1,0 +1,55 @@
+<div *ngIf="!schedules?.isEmpty" class="h-100 pt-30">
+  <div class="list-header flex-wrap mt-20">
+    <div class="pr-10 d-flex ts-col-55">
+      <span class="pl-10" [translate]="'schedule.title.name'"></span>
+    </div>
+    <div class="ts-col-25 px-10" [translate]="'schedule.title.frequency'"></div>
+    <div class="ts-col-20 d-flex">
+      <span [translate]="'schedule.title.schedule_on'"></span>
+    </div>
+  </div>
+  <cdk-virtual-scroll-viewport
+    itemSize="59"
+    class="list-container virtual-scroll-viewport theme-only-items-scroll sm-h" >
+    <div
+      class="list-view green-highlight lg-pm pl-10 pointer"
+      *cdkVirtualFor="let schedule of schedules; let i = index">
+      <div class="px-10 d-flex ts-col-55 flex-wrap">
+        <div>
+          <div>
+            <a
+              class="list-title"
+              [textContent]="schedule?.name"></a>
+          </div>
+          <div
+            class="pt-4 text-t-secondary"
+            [translate]="schedule?.description">
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="ts-col-25 px-10 text-t-secondary"
+        [textContent]="'schedule.repeat_'+schedule?.scheduleType | translate"
+      ></div>
+      <div
+        *ngIf="!getCanShowNextInterval(schedule)"
+        class="ts-col-20 text-t-secondary">
+        <div class="pb-4" [textContent]="getCurrentTime(schedule.scheduleTime) | date : 'EEE d MMM'"></div>
+        <div [textContent]="'message.common.at_a_time'| translate: {time: (getCurrentTime(schedule.scheduleTime) | date : 'hh:mm a')}"></div>
+      </div>
+      <div class="ts-col-20 text-t-secondary" *ngIf="getCanShowNextInterval(schedule)" [translate]="'-'"></div>
+    </div>
+    <app-placeholder-loader
+      *ngIf="schedules.isFetching"></app-placeholder-loader>
+  </cdk-virtual-scroll-viewport>
+</div>
+<div *ngIf="schedules?.isEmpty" class="h-100">
+  <div
+    class="empty-full-container">
+    <div class="empty-run-md"></div>
+    <div
+      class="empty-text"
+      [translate]="'message.common.empty_page'| translate: {categoryType: 'Schedules'}"></div>
+  </div>
+</div>

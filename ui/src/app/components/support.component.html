@@ -1,0 +1,110 @@
+<div class="d-flex flex-wrap" xmlns="http://www.w3.org/1999/html">
+  <div class="dashboard-header">
+    <app-workspace-switcher
+      class="ts-col-15"
+      [version]="version"></app-workspace-switcher>
+    <div class="header-quick-link-container position-relative">
+      <app-refer-friend></app-refer-friend>
+      <a
+        class="link-item"
+        [routerLink]="['/support']">
+        <i class="fa-question-circle-solid link-icon"></i>
+        <span [translate]="'hint.message.common.help'"></span>
+      </a>
+      <div class="dashboard-global-love">
+        <span>&#10084;&#65039;</span>
+        <app-testsigma-love
+          *ngIf="authGuard?.session?.user"
+          class="gl-drop-menu-love"></app-testsigma-love>
+      </div>
+      <div class="dashboard-global-add">
+        <div class="btn-group d-flex">
+          <button class="border-rds-left-2 py-7 pl-14 pr-14 btn-primary mr-0 fz-13">
+            <span [translate]="'btn.common.create_new'"></span>
+          </button>
+          <button class="drop-down-icon-container">
+            <i class="fa-down-arrow dr-icon"></i>
+          </button>
+        </div>
+        <app-global-add
+          *ngIf="authGuard?.session?.user"
+          class="gl-drop-menu"></app-global-add>
+      </div>
+    </div>
+  </div>
+  <div class="dashboard-content">
+    <div class="d-flex flex-column">
+      <div [translate]="'support.heading.support'" class="rb-medium fz-18 mb-20">
+      </div>
+      <div class="d-flex flex-column">
+        <div class="d-flex flex-row justify-content-between mb-30">
+          <div class="ts-col-50">
+            <a href="https://discord.com/invite/5caWS7R6QX" target="_blank" class="text-dark text-decoration-none">
+              <div class="bg-alice-blue border-rds-4  px-40 py-20">
+                <div class="d-flex flex-row justify-content-between">
+                  <div class="align-self-center ts-col-10">
+                    <i class="fa-people-group fz-48 text-grey"></i>
+                  </div>
+                  <div class="ts-col-85">
+                    <div class="fz-18 mb-5 rb-medium" [translate]="'support.heading.discord'"></div>
+                    <span [translate]="'support.discord.message'"></span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="ts-col-45">
+            <a href="https://testsigma.com/docs" target="_blank"  class="text-dark text-decoration-none">
+              <div class="bg-alice-blue border-rds-4  px-40 py-20">
+                <div class="d-flex flex-row justify-content-between">
+                  <div class="align-self-center ts-col-10">
+                    <i class="fa-docs fz-48 text-grey"></i>
+                  </div>
+                  <div class="ts-col-85">
+                    <div class="fz-18 mb-5 rb-medium" [translate]="'support.heading.docs'"></div>
+                    <span [translate]="'support.docs.message'"></span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="d-flex flex-row justify-content-between mb-30">
+          <div class="ts-col-50">
+            <a (click)="openChat()" class="text-dark text-decoration-none">
+              <div class="bg-alice-blue border-rds-4  px-40 py-20" >
+                <div class="d-flex flex-row justify-content-between">
+                  <div class="align-self-center ts-col-10">
+                    <i class="fa-chat_bubble fz-48 text-grey"></i>
+                  </div>
+                  <div class="ts-col-85">
+                    <div class="fz-18 mb-5 rb-medium" [translate]="'support.heading.chat'"></div>
+                    <span [translate]="'support.chat.message'"></span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="ts-col-45">
+            <a href="https://github.com/testsigmahq/testsigma" target="_blank"  class="text-dark text-decoration-none">
+              <div class="bg-alice-blue border-rds-4  px-40 py-20">
+                <div class="d-flex flex-row justify-content-between">
+                  <div class="align-self-center">
+                    <span><i class="fa-github_outline fz-48 text-grey"></i></span>
+                  </div>
+                  <div class="ts-col-85">
+                    <div class="fz-18 mb-5 rb-medium" [translate]="'support.heading.github'"></div>
+                    <span [translate]="'support.github.message'"></span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div>
+          <span [translate]="'dashboard.like_to_talk_product_expert'"></span><a class="text-link" target="_blank" href="https://calendly.com/testsigma/demo" [translate]="'dashboard.setup_call'"></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

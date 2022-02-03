@@ -1,0 +1,40 @@
+
+
+@each $prop,
+$abbrev in (font-size: fz) {
+    @each $size,
+    $length in $fontsizes {
+        .#{$abbrev}-#{$size} {
+            #{$prop}: $length !important;
+        }
+    }
+}
+
+@each $prop,
+$abbrev in (letter-spacing: lsp) {
+    @each $size,
+    $length in $letterspacing {
+        .#{$abbrev}-#{$size} {
+            #{$prop}: $length !important;
+        }
+    }
+}
+
+
+
+@each $prop,
+$value in $font_families {
+  .#{$prop}-i-d {
+    font-family: $value !important;
+  }
+  .#{$prop} {
+     font-family: $value;
+   }
+}
+
+.white-space-nowrap {
+  white-space: nowrap;
+}
+
+@import "_font_custom";
+

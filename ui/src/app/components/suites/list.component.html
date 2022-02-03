@@ -1,0 +1,121 @@
+<div class="page-header d-flex fz-20 align-items-center">
+  <div
+    class="ts-col-60 text-truncate rb-medium d-flex align-items-center">
+    <span
+      [translate]="'test_suites.list.title'"
+      class="px-8"></span>
+  </div>
+
+  <div *ngIf="selectedSuites.length"
+       class="d-flex align-items-center ml-auto">
+    <button (click)="openDeleteDialog()"
+            *ngIf="selectedSuites.length"
+            [matTooltip]="'hint.message.common.delete_selected' | translate"
+            class="btn icon-btn border-rds-2 ml-14">
+      <i class="fa-trash-thin"></i>
+    </button>
+  </div>
+
+  <div class="align-items-center ml-auto"
+       [class.d-none]="hideHeaderToolBar"
+       [class.d-flex]="!hideHeaderToolBar">
+    <app-toggle-search-button
+      (searchAction)="search($event)"></app-toggle-search-button>
+    <button
+      [routerLink]="['new']"
+      [translate]="'btn.common.create'"
+      class="theme-btn-primary ml-14 ">
+    </button>
+    <app-sort-by-button
+      class="pr-15" *ngIf="testSuites?.totalElements"
+      [sortByColumns]="sortByColumns"
+      [sortedBy]="sortedBy"
+      [direction]="direction"
+      [translatePreFix]="'test_suites.list.sort_by.'"
+      (sortAction)="sortBy($event.sortBy, $event.direction)"></app-sort-by-button>
+    <div class="pl-15 theme-border-l">
+      <app-pagination (paginationAction)="fetchTestSuites()" *ngIf="testSuites?.totalElements"
+                      [currentPage]="currentPage" [paginationData]="testSuites"></app-pagination>
+    </div>
+  </div>
+</div>
+<div class="page-content">
+  <div
+    *ngIf="testSuites?.content.length != 0"
+    class="list-header">
+    <div
+      class="pr-10 d-flex ts-col-75 align-items-center">
+      <mat-checkbox
+        [(ngModel)]="selectAll" [ngModelOptions]="{standalone: true}"
+        (change)="selectAllToggle(selectAll)"
+        [checked]="selectedSuites.length == testSuites?.content?.length"
+        class="mat-checkbox"></mat-checkbox>
+      <span
+        [translate]="'message.common.text.title'"
+        class="pl-15"></span>
+    </div>
+    <div
+      class="ts-col-25 pl-40"
+      [translate]="'message.common.text.status'"></div>
+  </div>
+  <app-placeholder-loader
+    *ngIf="!fetchingCompleted"></app-placeholder-loader>
+  <div class="list-container">
+    <div *ngFor="let testSuite of testSuites?.content; let i = index"
+         class="list-view green-highlight lg-pm pl-10 pointer align-items-center">
+      <div class="ts-col-75 my-auto text-truncate">
+        <div class="pb-7 list-title d-flex">
+          <mat-checkbox
+            (change)="setSelectedList(testSuite.id,testSuite.isSelected)" [(ngModel)]="testSuite.isSelected"
+            [ngModelOptions]="{standalone: true}" name="checkBox"
+            class="mat-checkbox"></mat-checkbox>
+          <span [routerLink]="['/td', 'suites', testSuite.id]" [textContent]="testSuite.name"
+                class="pl-15"></span>
+        </div>
+        <div class="text-t-secondary pl-15 ml-16 d-flex">
+          <span [translate]="'message.common.automated'"></span>
+        </div>
+      </div>
+      <div class="ts-col-25 d-flex">
+        <div class="ts-col-50 pl-40">
+          <a [routerLink]="['/td', 'suite_results', testSuite.lastRun?.id]" *ngIf="testSuite?.lastRun">
+            <app-result-pie-chart-column
+              [width]="30"
+              [height]="30"
+              [resultEntity]="testSuite.lastRun"></app-result-pie-chart-column>
+          </a>
+        </div>
+        <div class="ts-col-50 text-center action-icons my-auto">
+          <a
+            [matTooltip]="'pagination.edit' | translate"
+            [routerLink]="['/td', versionId, 'suites', testSuite.id, 'edit']"
+            class="fa-pencil-on-paper action-icon"
+            data-placement="bottom"
+            href="javascript:void(0)"></a>
+          <a
+            (click)="fetchLinkedPlans(testSuite.id)" [matTooltip]="'pagination.delete' | translate"
+            class="fa-trash-thin action-icon"
+            data-placement="bottom"
+            href="javascript:void(0)"></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!testSuites?.content?.length" class="h-100">
+    <div *ngIf="fetchingCompleted"
+         class="empty-full-container">
+      <div class="empty-run-md"></div>
+      <div
+        [translate]="isFiltered ? 'message.common.search.not_found' : 'test_suites.list.not_created'"
+        class="empty-text"></div>
+      <button
+        *ngIf="!isFiltered"
+        [routerLink]="['new']" class="theme-btn-primary"
+        target="_parent">
+        +
+        <span [translate]="'btn.create.test_suite'"></span>
+      </button>
+    </div>
+  </div>
+</div>
+

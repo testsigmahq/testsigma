@@ -1,0 +1,106 @@
+.simple-notification-wrapper, .toast-container {
+  left: 20px;
+  right: unset;
+  z-index: $zindex-dropdown !important;
+
+  .ngx-toastr {
+    &:hover {
+      -webkit-box-shadow: rgba(139, 154, 159, .15) 0 0 5px 0, rgba(139, 154, 159, .5) 0 0 20px 2px;
+      box-shadow: rgba(139, 154, 159, .15) 0 0 5px 0, rgba(139, 154, 159, .5) 0 0 20px 2px;
+    }
+  }
+}
+
+.simple-notification, .ngx-toastr {
+  display: block;
+  overflow-x: hidden;
+  text-align: left;
+  border: 0;
+  min-height: 70px;
+  max-width: 500px;
+  border-radius: 6px;
+  -webkit-box-shadow: rgba(139, 154, 159, .15) 0 0 5px 0, rgba(139, 154, 159, .5) 0 0 20px 2px;
+  box-shadow: rgba(139, 154, 159, .15) 0 0 5px 0, rgba(139, 154, 159, .5) 0 0 20px 2px;
+  background: $white !important;
+
+  .icon {
+    right: unset !important;
+    left: 0px;
+    @extend .fz-36, .p-16;
+
+    > svg {
+      display: none;
+    }
+  }
+
+  .sn-title, .sn-content {
+    padding-right: 0 !important;
+    padding-left: 50px !important;;
+  }
+
+  .sn-title {
+    @extend .text-dark, .fz-14;
+    line-height: 19px !important;
+    padding-top: 7px !important;
+  }
+
+  .sn-content, .toast-message {
+    @extend .text-t-secondary, .fz-12, .text-break;
+  }
+
+  .toast-progress {
+    opacity: 1;
+    bottom: unset;
+    top: 0;
+    height: 5px;
+  }
+
+  &:before {
+    position: absolute;
+    left: 10px;
+    font-size: 30px;
+    top: 15px;
+  }
+
+  &.success {
+    .icon, &:before {
+      @extend .fa-check-circle-solid;
+      color: $theme-pass-color;
+    }
+
+    .sn-progress-loader {
+      > span {
+        background: $theme-pass-color !important;
+      }
+    }
+
+    .toast-progress {
+      background: $theme-pass-color !important;
+    }
+  }
+
+  &.error {
+    .icon, &:before {
+      @extend .fa-result-1;
+    }
+
+    .sn-progress-loader {
+      > span {
+        background: $theme-failed-color !important;
+      }
+    }
+
+    .toast-progress {
+      background: $theme-failed-color !important;
+    }
+  }
+}
+
+.message-inline-style {
+  @extend .pt-7, .rb-medium;
+  line-height: 1.4;
+}
+
+.project-notification {
+  background: #6C63FF;
+}

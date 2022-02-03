@@ -1,0 +1,155 @@
+.loader-section {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  margin-bottom: 30px;
+  .chart-loader {
+    height: 60px;
+    width: 60px;
+    @extend .rounded-circle;
+    @extend .animated-background;
+    &.sm {
+      height: 30px;
+      width: 30px;
+    }
+    &.md {
+      height: 45px;
+      width: 45px;
+    }
+    &.lg {
+      height: 60px;
+      width: 60px;
+    }
+  }
+  .text-loader {
+    margin-left: 20px
+  }
+  .text-line-loader {
+    height: 10px;
+    margin: 4px 0;
+    @extend .animated-background;
+    &.thin-sm {
+      height: 7px;
+    }
+    &.thin-md {
+      height: 10px;
+    }
+    &.thin-lg {
+      height: 14px;
+    }
+  }
+}
+
+@keyframes placeHolderShimmer {
+  0% {
+    background-position: -468px 0
+  }
+  100% {
+    background-position: 468px 0
+  }
+}
+
+.animated-background {
+  animation-duration: 1.5s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: placeHolderShimmer;
+  animation-timing-function: linear;
+  background: #e2e2e2;
+  background: linear-gradient(to right, #e2e2e2 8%, #F0F0F0 18%, #e2e2e2 33%);
+  background-size: 800px 104px;
+  position: relative;
+}
+
+.loader.for-icon-replace {
+    margin: 0 8px 0 0;
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    border-width: 1px;
+    vertical-align: middle;
+    overflow: hidden
+}
+
+.blocks-content .loader {
+    margin-top: 0
+}
+
+.fb-page-loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255,255,255,.8);
+    padding-top: 150px
+}
+
+.route-loading {
+    position: fixed;
+    top: 11px;
+    left: calc(50% - 50px);
+    z-index: 99999;
+    color: #333;
+    font-weight: 600;
+    @extend .fz-13;
+    background-color: $theme-pass-color;
+    padding: 4px 10px;
+    border-radius: 4px;
+    color: $white;
+    text-shadow: 0 1px 1px #0c862f;
+}
+
+.route-loading .loader {
+    margin: 0 2px 0 0;
+    border-color: $theme-pass-color $white $white;
+    margin:auto;
+}
+
+.loading-blur {
+    opacity: .5;
+    filter: blur(2px);
+    pointer-events: none;
+    transition: opacity 150ms linear;
+}
+
+.loading-dots {
+  font-size: 22px;
+  width: 40px;
+  display: inline-block;
+  @extend .text-left;
+}
+
+.loading-dots:after {
+  content: "";
+  animation: dotsLoadLTR 2s linear infinite;
+}
+@keyframes dotsLoadLTR {
+  0% {
+    content: ".";
+  }
+
+  30% {
+    content: "..";
+  }
+
+  60% {
+    content: "...";
+  }
+
+  100% {
+    content: "....";
+  }
+}
+.logo-loader-container {
+  @extend .align-items-center, .d-flex, .justify-content-center, .theme-gray-highlight, .ts-col-100, .h-100;
+}
+.loading-overlay {
+  @extend .position-absolute, .w-100;
+  z-index: 3;
+  bottom:25vh;
+}
+.loading{
+  opacity: 25%;
+  pointer-events: none;
+}

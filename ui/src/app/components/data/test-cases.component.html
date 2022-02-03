@@ -1,0 +1,53 @@
+<div class="list-content overflow-x-hidden h-100 mt-30">
+  <app-placeholder-loader
+    *ngIf="testCases.isFetching"></app-placeholder-loader>
+  <div *ngIf="!testCases.isFetching && testCases.isEmpty" class="h-100">
+    <div class="empty-full-container">
+      <div class="empty-run-md"></div>
+      <div
+        class="empty-text"
+        [translate]="'test_data_profiles.test_cases.empty.list'"></div>
+    </div>
+  </div>
+  <div *ngIf="!testCases?.isEmpty && !testCases.isFetching"
+       class="list-header">
+    <div class="ts-col-65 pr-10 d-flex align-items-center" [translate]="'message.common.text.title'">
+    </div>
+    <div
+      class="ts-col-10"
+      [translate]="'message.common.text.result'"></div>
+    <div
+      class="ts-col-10"
+      [translate]="'message.common.text.status'"></div>
+  </div>
+  <cdk-virtual-scroll-viewport
+    itemSize="59"
+    class="list-container virtual-scroll-viewport theme-w-o-h-scroll sm-h" >
+    <a
+      class="list-view green-highlight lg-pm pl-10 text-t-secondary"
+      [routerLink]="['/td', 'cases',  testCase?.id]"
+      *cdkVirtualFor='let testCase of testCases'>
+      <div class="ts-col-65 d-flex">
+        <div class="d-flex flex-wrap text-break">
+          <span
+            class="ts-col-100 pb-10 list-title"
+            [textContent]="testCase.name"></span>
+          <div
+            [translate]="'message.common.automation'"></div>
+
+        </div>
+      </div>
+      <div class="ts-col-10">
+        <a [routerLink]="['/td', 'test_case_results', testCase?.lastRun?.id]" *ngIf="testCase?.lastRun">
+          <app-result-pie-chart-column
+            [width]="30"
+            [height]="30"
+            [resultEntity]="testCase?.lastRun"></app-result-pie-chart-column>
+        </a>
+      </div>
+      <div
+        class="ts-col-10"
+        [textContent]="'testcase.status_'+testCase?.status| translate"></div>
+    </a>
+  </cdk-virtual-scroll-viewport>
+</div>

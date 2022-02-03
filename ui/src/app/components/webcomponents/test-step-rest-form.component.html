@@ -1,0 +1,136 @@
+<div class="d-flex flex-wrap" style="min-height: 450px">
+  <form
+    *ngIf="restStep"
+    name="form"
+    class="ts-form ts-col-50 h-100 pl-40 rest-form">
+
+    <div class="ts-col-100 d-flex mb-10 pb-10 ml-n10">
+      <div
+        class="tab-label"
+        [class.active]="activeTab == 'Request'"
+        (click)="activeTab = 'Request'"
+        id="request-section">
+        <label
+          class="label-container"
+          for="request-section">
+          <span
+            class="tab-number"
+            [class.rest-api-active-bg]="activeTab == 'Request'">1</span>
+          <span
+            class="tab-label-text"
+            [translate]="'rest.step.request_details'"></span>
+        </label>
+      </div>
+      <div
+        class="tab-label"
+        [class.active]="activeTab == 'Verify'"
+        (click)="activeTab = 'Verify'"
+        id="verify-section">
+        <label
+          class="label-container"
+          for="verify-section">
+          <span
+            class="tab-number"
+            [class.rest-api-active-bg]="activeTab == 'Verify'">2</span>
+          <span
+            class="tab-label-text"
+            [translate]="'rest.step.verify_response'"></span>
+        </label>
+      </div>
+      <div
+        class="tab-label"
+        [class.active]="activeTab == 'Store'"
+        (click)="activeTab = 'Store'"
+        id="store-section">
+        <label
+          class="label-container"
+          for="store-section">
+          <span
+            class="tab-number"
+            [class.rest-api-active-bg]="activeTab == 'Store'">3</span>
+          <span
+            class="tab-label-text"
+            [translate]="'rest.step.store_response'"></span>
+        </label>
+      </div>
+    </div>
+    <div
+      style="width: 90% !important;"
+      *ngIf="activeTab == 'Request'">
+      <app-rest-form-request-details
+        [form]="restStepForm"
+        [formSubmitted]="formSubmitted"
+        [restStep]="restStep"
+      (apiResponse)="setResponse($event)"></app-rest-form-request-details>
+    </div>
+    <div *ngIf="activeTab == 'Verify'">
+      <app-rest-form-response-details
+        [form]="restStepForm"
+        [formSubmitted]="formSubmitted"
+        [restStep]="restStep"></app-rest-form-response-details>
+    </div>
+    <div *ngIf="activeTab == 'Store'">
+      <app-rest-form-store-details
+        [form]="restStepForm"
+        [formSubmitted]="formSubmitted"
+        [restStep]="restStep"></app-rest-form-store-details>
+    </div>
+  </form>
+  <div
+    class="rest-response-view pb-30">
+    <div
+      class="sub-title"
+      [translate]="'rest.step.preview'"></div>
+    <div
+      class="response-container">
+      <ngx-codemirror
+        [(ngModel)]="response"
+        [options]="{
+          lineNumbers: true,
+          lineWrapping: true,
+          foldGutter: true,
+          gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter', 'CodeMirror-lint-markers'],
+          mode: {
+            name: 'javascript', json: true
+          }
+        }"
+      ></ngx-codemirror>
+      <iframe
+        *ngIf="!isJSONResponse && false"
+        class="response-iframe"
+        [srcdoc]="response"></iframe>
+    </div>
+  </div>
+</div>
+<div class="action-btn-container">
+  <i class="fa-help text-t-secondary pr-7"></i>
+  <a
+    class=" text-t-secondary"
+    href="https://testsigma.com/docs/test-cases/step-types/rest-api/"
+    target="_blank"
+    [translate]="'step.create.help.note'"></a>
+
+  <div class="ml-auto">
+    <button
+      (click)="cancel()"
+      class="theme-btn-clear-default"
+      [translate]="'btn.common.cancel'"></button>
+    <button
+      *ngIf="!testStep.id"
+      [isLoading]="saving"
+      [message]="'message.common.saving'"
+      appAsyncBtn
+      (click)="save()"
+      class="theme-btn-primary"
+      [textContent]="'btn.common.create' | translate"></button>
+    <button
+      *ngIf="testStep.id"
+      [isLoading]="saving"
+      [message]="'message.common.updating'"
+      appAsyncBtn
+      (click)="update()"
+      class="theme-btn-primary"
+      [textContent]="'btn.common.update' | translate"></button>
+  </div>
+</div>
+

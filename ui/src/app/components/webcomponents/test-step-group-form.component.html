@@ -1,0 +1,74 @@
+<form
+  class="ts-form p-30 mt-n80"
+  [formGroup]="stepGroupForm">
+  <div
+    *ngIf="stepGroups?.content?.length || searchQuery?.length"
+    class="px-5 pt-14 pb-15 step-container-section">
+    <app-auto-complete
+      class="pb-2 ts-col-100 d-block mt-n4"
+      [formGroup]="stepGroupForm"
+      [formCtrlName]="stepGroupForm.controls['stepGroupId']"
+      [value]="testStep?.stepGroup"
+      [items]="stepGroups"
+      [inline]="true"
+      (onSearch)="fetchStepGroups($event)"
+      (onValueChange)="setStepGroup($event)"
+    ></app-auto-complete>
+  </div>
+  <div
+    *ngIf="stepGroups?.content?.length || searchQuery?.length"
+    class="action-cf-btn-container">
+    <i class="fa-help text-t-secondary pr-7"></i>
+    <a
+      class=" text-t-secondary"
+      href="https://testsigma.com/docs/test-cases/step-types/step-group/"
+      target="_blank"
+      [translate]="'step.create.help.note'"></a>
+
+    <div class="ml-auto">
+      <button
+        (click)="cancel()"
+        class="theme-btn-clear-default"
+        [translate]="'btn.common.cancel'"></button>
+      <button
+        *ngIf="!testStep.id"
+        [isLoading]="saving"
+        [message]="'message.common.saving'"
+        appAsyncBtn
+        (click)="save()"
+        class="theme-btn-primary"
+        [textContent]="'btn.common.create' | translate"></button>
+      <button
+        *ngIf="testStep.id"
+        (click)="update()"
+        [isLoading]="saving"
+        [message]="'message.common.updating'"
+        appAsyncBtn
+        class="theme-btn-primary"
+        [textContent]="'btn.common.update' | translate"></button>
+    </div>
+  </div>
+  <div
+    *ngIf="!stepGroups?.content?.length && !searchQuery && !isFetching"
+    class="result-status-text-2 pl-5 bg-white ts-col-100-15 pt-14">
+    <i class="fa-warning px-7  bg-white"></i>
+    <span
+      class="bg-white"
+      [translate]="'test_step.re_usable.none'"></span>
+    <a
+      [routerLink]="['/td', version?.id,  'step_groups', 'create']"
+      [queryParams]="{isGroup: true}"
+      target="_blank"
+      class="result-status-text-0 px-2  bg-white"
+      [translate]="'message.common.click_here'"></a>
+    <span [translate]="'test_step.re_usable_none.msg'"></span>
+    <a
+      [routerLink]="['/td', version?.id, 'step_groups']"
+      target="_blank"
+      class="result-status-text-0 px-2  bg-white"
+      [translate]="'message.common.click_here'"></a>
+    <span
+      class="bg-white"
+      [translate]="'test_step.re_usable.none_msg'"></span>
+  </div>
+</form>

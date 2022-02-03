@@ -1,0 +1,105 @@
+<div class="theme-overlay-container">
+  <div class="theme-overlay-header">
+    <div
+      class="theme-overlay-title"
+      [translate]="'test_plan.environment.'+( workspace.isWeb ? 'machine' : 'device' )+ ( isEdit ? '.edit.title' : '.title')">
+    </div>
+    <button
+      class="close"
+      type="button"
+      [matTooltip]="'hint.message.common.close' | translate"
+      mat-dialog-close>
+    </button>
+  </div>
+  <div class="theme-overlay-content">
+    <div *ngIf="activeEnvironmentFormGroup" class="ts-form pt-30">
+      <div
+        class="pb-30 d-flex justify-content-end"
+        *ngIf="version?.workspace?.isWeb && advancedSettings && activeExecutionEnvironment"
+        [formGroup]="activeEnvironmentFormGroup">
+        <mat-checkbox class="mat-checkbox" id="runInParallel" [formControlName]="['runInParallel']">
+          <span [translate]="'test_plan.environment.select_suite.run_in_parallel'"></span></mat-checkbox>
+      </div>
+      <div
+        class="pb-30 d-flex justify-content-end"
+        *ngIf="version?.workspace?.isWeb && advancedSettings && activeExecutionEnvironment"
+        [formGroup]="activeEnvironmentFormGroup">
+        <mat-checkbox class="mat-checkbox" id="createSessionAtCaseLevel" [formControlName]="['createSessionAtCaseLevel']">
+          <span [translate]="'test_plan.environment.select_suite.run_at_testcase_level'"></span></mat-checkbox>
+      </div>
+      <app-test-plan-test-machine-form
+        class="column"
+        *ngIf="workspace?.isWeb && activeEnvironmentFormGroup && execution"
+        [testPlanLabType]="execution?.testPlanLabType"
+        [formGroup]="activeEnvironmentFormGroup"
+        [isAvailableCheck]="false"
+        [version]="version"
+        [isEdit]="isEdit"></app-test-plan-test-machine-form>
+      <app-test-plan-device-form
+        class="column"
+        *ngIf="workspace?.isMobile && activeEnvironmentFormGroup && execution"
+        [formGroup]="activeEnvironmentFormGroup"
+        [version]="version"
+        [isEdit]="isEdit"
+        [testPlanLabType]="execution?.testPlanLabType"></app-test-plan-device-form>
+      <app-test-plan-app-uploads-form
+        *ngIf="workspace?.isMobileNative && environmentControl"
+        [formGroup] = "activeEnvironmentFormGroup"
+        [testPlanLabType]="this.execution?.testPlanLabType"
+        [version]="version"
+        [isEdit]="isEdit"
+        [testPlanLabType]="execution?.testPlanLabType"></app-test-plan-app-uploads-form>
+      <app-desired-capabilities
+        *ngIf="environmentControl"
+        [capabilities]="activeExecutionEnvironment?.capabilities"
+        [formGroup]="activeEnvironmentFormGroup"></app-desired-capabilities>
+
+      <div
+        (cdkDropListDropped)="drop($event)"
+        *ngIf="advancedSettings && activeExecutionEnvironment"
+        [cdkDropListData]="activeExecutionEnvironment?.testSuites" cdkDropList
+        class="form-group border-rds-4 list-container">
+        <div
+          [translate]="'test_plan.environment.select_suite.title'"
+          class="fz-14 rb-medium pb-10"
+          [class.theme-border-b]="activeExecutionEnvironment?.testSuites?.length"></div>
+        <div
+          *ngFor="let suite of activeExecutionEnvironment?.testSuites; let index = index"
+          [cdkDragData]="suite"
+          cdkDrag
+          cdkDragBoundary=".cdk-drop-list.drag-list"
+          cdkDragLockAxis="y"
+          class="p-10 theme-border-b align-items-center d-flex green-highlight list-view">
+          <i class="fa-drag-n-drop mr-10"></i>
+          <span [textContent]="index+1" class="mr-10"></span>
+          <span [textContent]="suite.name" class="text-truncate mw-80 py-7"></span>
+          <i *ngIf="originalExecutionEnvironment?.testSuites?.length>1"
+             (click)="removeSuite(suite)"
+             class="action-icons action-hover-icon fa-trash-thin pointer ml-auto"></i>
+        </div>
+        <div class="d-flex justify-content-end w-fit-content mr-60 position-relative">
+          <button
+            (click)="addSuites()"
+            [textContent]="'+ '+('test_plan.environment.select_suite.add' | translate)"
+            class="theme-btn-clear-default mt-20 mr-60"></button>
+          <div
+            *ngIf="!originalExecutionEnvironment?.testSuites?.length && submitted"
+            [translate]="'test_plan.environment.test_suites.required'"
+            class="error left mt-10"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="theme-overlay-footer">
+    <button
+      [translate]="'btn.common.cancel'"
+      class="theme-btn-clear-default"
+      mat-dialog-close></button>
+    <button
+      [disabled]="activeEnvironmentFormGroup?.invalid"
+      (click)="saveEnvironment()"
+      [translate]=" isEdit ? 'btn.common.update' : 'btn.common.create' "
+      class="btn ml-14 theme-btn-primary"></button>
+  </div>
+</div>

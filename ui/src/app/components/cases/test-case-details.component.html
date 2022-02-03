@@ -1,0 +1,107 @@
+<div class="details-page-container">
+  <app-placeholder-loader class="ts-col-100" *ngIf="!isTestCaseFetchingCompleted" [isDetails]="true"></app-placeholder-loader>
+  <div
+    class="ts-col-100 d-flex-wrap"
+    *ngIf="testCase">
+    <div class="details-page-header">
+      <app-td-overlay-menu-button
+        [versionId]="testCase?.workspaceVersionId"></app-td-overlay-menu-button>
+      <a class="go-back-icon pl-10"
+         [matTooltip]="'hint.message.common.back' | translate"
+         [routerLink]="['/td', testCase?.workspaceVersionId, 'cases']"></a>
+      <div
+           class="d-flex ts-col-100-67">
+          <div class="theme-details-header">
+            <a
+              class="title-name"
+              [matTooltip]="testCase.name"
+              [textContent]="testCase.name"></a>
+          </div>
+        <div class="details-page-buttons">
+          <div>
+            <button
+              *ngIf="stepsLength && canShowRunResult && !canShowBulkActions"
+              (click)="openDryRun()"
+              class="theme-btn-primary">
+              <i class="fa-filled-circled-play pr-7"></i>
+              <span
+                [translate]="'test_plan.btn.run'"></span></button>
+          </div>
+          <div *ngIf="version?.workspace?.isMobileNative && !testCase?.deleted">
+            <button
+              *ngIf="hasInspectorFeature()"
+              [routerLink]="['/agents', 'record', testCase.workspaceVersionId]"
+              [queryParams]="{isRecord: true, isStepRecord: true, testCaseId: testCaseId}"
+              class="theme-btn-clear-default  ml-14"
+              [translate]="'elements.btn.record'"></button>
+          </div>
+          <app-test-case-detail-pagination
+            *ngIf="!testCase?.deleted && false"
+            [versionId]="testCase?.workspaceVersionId"
+            [testCase]="testCase"></app-test-case-detail-pagination>
+          <div *ngIf="version?.workspace?.isWeb && !testCase?.deleted">
+            <app-chrome-record-button></app-chrome-record-button>
+          </div>
+          <button
+            *ngIf="!testCase?.deleted"
+            (click)="openTestCaseClone()"
+            [matTooltip]="'hint.message.common.clone' | translate"
+            class="btn icon-btn border-rds-2 ml-14">
+            <i class="fa-copy-new"></i>
+          </button>
+          <a
+            *ngIf="!testCase?.deleted"
+            [routerLink]="['/td', testCase.workspaceVersionId, testCase.isStepGroup? 'step_groups':'cases', testCaseId, 'edit']"
+            [matTooltip]="'hint.message.common.edit' | translate"
+            class="btn icon-btn border-rds-2 ml-14">
+            <i class="fa-pencil-on-paper"></i>
+          </a>
+          <button
+            *ngIf="!testCase?.deleted"
+            (click)="deleteTestCase()"
+            [matTooltip]="'hint.message.common.delete' | translate"
+            class="btn icon-btn border-rds-2 ml-14">
+            <i class="fa-trash-thin"></i>
+          </button>
+          <button
+            *ngIf="testCase?.deleted"
+            (click)="restore()"
+            class="btn icon-btn border-rds-2 ml-14 text-success">
+            <i class="fa-rev-brands mr-10"></i>
+            <span [translate]="'btn.common.restore'"></span>
+          </button>
+          <button
+            *ngIf="testCase?.deleted"
+            (click)="fetchLinkedCases()"
+            class="btn icon-btn border-rds-2 ml-14 text-danger">
+            <i class="fa-trash mr-10"></i>
+            <span [translate]="'btn.common.delete_permanently'"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="ml-auto ts-col-100-77">
+      <div class="details-page-sub-details">
+        <div class="details-page-sub-description">
+          <div class="details-items">
+            <label
+              class="details-title"
+              [translate]="'result.status'"></label>
+            <div class="page-details-status">
+              <div [translate]="'testcase.status_'+testCase?.status"></div>
+            </div>
+          </div>
+          <div class="details-items pl-40 mw-20 text-nowrap">
+            <div class="align-items-center d-flex details-info mt-20 text-link pointer">
+              <span class="text-truncate" (click)="openDetails()" [translate]="'hint.message.common.more'"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="theme-details-scroll sm-h">
+  <router-outlet></router-outlet>
+</div>

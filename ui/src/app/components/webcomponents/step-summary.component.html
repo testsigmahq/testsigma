@@ -1,0 +1,193 @@
+<div
+  class="h-100">
+  <div class="theme-overlay-container">
+    <div class="theme-overlay-header">
+      <div
+        class="theme-overlay-title">
+        <span [translate]="'test.step.details.modal.title'"></span>
+        <span [textContent]="'(' + (testStep.stepDisplayNumber) + ')'"></span>
+        <span class="pl-4" [translate]="'test.step.details.modal.title.details'"></span>
+      </div>
+      <button
+        class="close"
+        type="button"
+        [matTooltip]="'hint.message.common.close' | translate"
+        mat-dialog-close>
+      </button>
+    </div>
+
+    <div class="theme-overlay-content without-footer mt-30"
+         *ngIf="testStep">
+      <div class="details-container value-md md">
+        <div class="details-items ts-col-100"
+             *ngIf="!testStep?.isRestStep && testStep?.testDataValue && !testStep?.kibbutzTestData">
+          <div class="ts-col-100 d-flex">
+            <label class="details-title ts-col-25" [translate]="'test_step.results.test_data'"></label>
+            <div class="rb-medium"
+                 [class.pointer]="(testStep?.kibbutzTestData && !testStep?.testDataValue.includes('::'))"
+                 (click)="(testStep?.kibbutzTestData && !testStep?.testDataValue.includes('::')) ? openAddonDetails(testStep?.kibbutzTestData?.testDataFunctionId) : ''"
+                 [translate]="testStep?.testDataValue">
+            </div>
+          </div>
+
+          <div class="ts-col-100 mt-10">
+            <div *ngIf="testStep?.testDataFunctionId">
+              <div class="d-flex" *ngIf="canShowCustomFunctionsParameters(testStep?.testDataFunctionArgs)">
+                <label class="details-title ts-col-25"></label>
+                <div class="mt-10">
+                  <span [translate]="'natural_text_action.custom_function.suggestion.input'" class="rb-medium"></span>
+                  <div *ngFor="let item of testStep?.testDataFunctionArgs | keyvalue; let index=index" class="pl-5 pt-5">
+                    <span [textContent]="item.key" class="pl-5 rb-medium" *ngIf="!item.key.startsWith('arg')"></span>
+                    <span [textContent]="item.value" class="pl-5"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="testStep?.kibbutzTestData" class="d-flex">
+              <label class="details-title ts-col-25"></label>
+              <div class="ts-col-100">
+                <div  *ngIf="canShowCustomFunctionsParameters(testStep?.kibbutzTestData.testDataFunctionArguments)">
+                  <span [translate]="'natural_text_action.custom_function.suggestion.input'" class="rb-medium"></span>
+                  <div *ngFor="let item of testStep?.kibbutzTestData?.testDataFunctionArguments | keyvalue; let index=index" class="pl-5 pt-5">
+                    <span [textContent]="item.key" class="pl-5 rb-medium" *ngIf="!item.key.startsWith('arg')"></span>
+                    <span [textContent]="item.value" class="pl-5"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="details-items ts-col-100"
+             *ngIf="!testStep?.isRestStep && canShowKibbutzDetails(testStep?.kibbutzTestData)">
+          <div *ngFor="let testData of getKibbutzTestDataAndElements(testStep?.kibbutzTestData)" class="pt-8">
+            <div class="ts-col-100 d-flex">
+              <label class="details-title ts-col-25" [translate]="'test_step.results.test_data'"></label>
+              <div class="rb-medium"
+                   [class.pointer]="!testData.value.includes('::')"
+                   (click)="!testData.value.includes('::') ? openAddonDetails(testData?.testDataFunctionId): ''"
+                   [translate]="testData.value">
+              </div>
+            </div>
+            <div class="d-flex" *ngIf="canShowCustomFunctionsParameters(testData?.testDataFunctionArguments)">
+              <label class="details-title ts-col-25"></label>
+              <div class="mt-10">
+                <span [translate]="'natural_text_action.custom_function.suggestion.input'" class="rb-medium"></span>
+                <div *ngFor="let item of testData?.testDataFunctionArguments | keyvalue; let index=index" class="pl-5 pt-5">
+                  <span [textContent]="item.key+' = '" class="pl-5" *ngIf="!item.key.startsWith('arg')"></span>
+                  <span [textContent]=" item.value" class="pl-5"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="details-items ts-col-100"
+          *ngIf="!testStep?.isRestStep && testStep?.element">
+          <div class="ts-col-100 d-flex">
+            <label class="details-title ts-col-25" [translate]="'test_step.results.ui_identifier'"></label>
+            <div class="d-flex align-items-center flex-wrap">
+              <div
+                [matTooltip]="'step_result.hint.edit_element' | translate"
+                class="pointer pb-5 pr-5"
+                (click)="openEditElement(testStep.element)">
+              <span
+                class="text-link rb-medium"
+                [textContent]="testStep.element"></span>
+                <i class="fa-pencil-on-paper px-4"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!testStep?.isRestStep && canShowKibbutzDetails(testStep?.kibbutzElements)" class="ts-col-100">
+          <div
+            class="details-items ts-col-100"
+            *ngFor="let kibbutzElement of getKibbutzTestDataAndElements(testStep?.kibbutzElements)">
+            <div class="ts-col-100 d-flex">
+              <label class="details-title ts-col-25" [translate]="'test_step.results.ui_identifier'"></label>
+              <div class="d-flex align-items-center flex-wrap">
+                <div
+                  [matTooltip]="'step_result.hint.edit_element' | translate"
+                  class="pointer pb-5 pr-5"
+                  (click)="openEditElement(kibbutzElement.name, true)">
+                <span class="text-link rb-medium"
+                      [textContent]="kibbutzElement.name"></span>
+                  <i class="fa-pencil-on-paper px-4"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="details-items ts-col-100" *ngIf="testStep?.attribute">
+          <label class="details-title" [translate]="'test_step.results.attribute'"></label>
+          <div
+            class="details-info"
+            [textContent]="testStep?.attribute">
+          </div>
+        </div>
+      </div>
+
+      <div class="details-container value-md md">
+        <div class="details-items ts-col-30">
+          <label class="details-title" [translate]="'step_result.max.waitTime'"></label>
+          <div
+            class="details-info"
+            [textContent]="'step_result.waitTime' | translate: {waitTime: testStep?.waitTime || 0}">
+          </div>
+        </div>
+        <div class="details-items ts-col-30">
+          <label class="details-title" [translate]="'test_step.results.prerequisite'"></label>
+          <div>
+            <a
+              class="details-info pt-5"
+              *ngIf="testStep?.preRequisiteStepId && testStep?.preRequisiteStep?.stepDisplayNumber"
+              [textContent]="'#' + (testStep?.preRequisiteStep?.stepDisplayNumber)">
+            </a>
+          </div>
+          <div
+            class="details-info pt-5"
+            *ngIf="!testStep?.preRequisiteStepId || !testStep?.preRequisiteStep?.stepDisplayNumber"
+            [textContent]="'-'">
+          </div>
+        </div>
+        <div class="details-items ts-col-100">
+          <label class="details-title" [translate]="'test_step.priority.MAJOR_STOP'"></label>
+          <div
+            class="details-info"
+            [translate]="testStep?.isMajor? 'common.yes': 'common.no'">
+          </div>
+        </div>
+        <div class="details-items ts-col-100">
+          <label class="details-title" [translate]="'test_step.results.disable_label'"></label>
+          <div
+            class="details-info"
+            [translate]="testStep?.disabled ? 'common.yes': 'common.no'">
+          </div>
+        </div>
+        <div class="details-items ts-col-100" *ngIf="testStep.isConditionalElseIf || testStep.isConditionalIf">
+          <label
+            class="details-title" [translate]="'testcase.details.steps.conditional_if'"
+            *ngIf="testStep.isConditionalIf"></label>
+          <label
+            class="details-title" [translate]="'testcase.details.steps.conditional_else_if'"
+            *ngIf="testStep.isConditionalElseIf"></label>
+          <div class="details-info pt-5">
+            <span
+              [class.ml-10]="!isFirst"
+              [class.d-none]="testStep.conditionIf.indexOf(result) == -1"
+              *ngFor="let result of conditionIf; let isFirst=first;"
+              class="border-rds-4 px-10 py-5 pointer bg-grey-light">
+              <span [translate]="'execution.result.'+result"></span>
+              <i
+                class="fz-11 pl-10 fa-tick-circle-filled result-status-text-7"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

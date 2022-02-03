@@ -1,0 +1,96 @@
+<div class="secondary-menu">
+  <ul id="ul_settings_left_nav" class="item-container">
+    <div class="secondary-nav-container">
+        <span
+          class="pb-20"
+          [translate]="'settings.left_nav.title'"></span>
+        <li
+            [routerLinkActive]="'active'"
+            [routerLink]="['/settings', 'plugs']">
+          <a
+            [routerLinkActive]="'active'"
+            [routerLink]="['/settings', 'plugs']"
+             class="nav-items">
+            <i class="fa-plug"></i>
+            <span [translate]="'settings.plugins.title'"></span>
+          </a>
+        </li>
+        <li
+            [routerLinkActive]="'active'"
+            [routerLink]="['/settings', 'provisioning_profiles']">
+          <a
+             [routerLinkActive]="'active'"
+             [routerLink]="['/settings', 'provisioning_profiles']" class="nav-items">
+            <i class="fa-apple"></i>
+            <span [translate]="'settings.ios_settings.title'"></span>
+          </a>
+        </li>
+      <li
+        [routerLinkActive]="'active'"
+        [routerLink]="['/settings', 'testsigma']">
+        <a
+          [routerLinkActive]="'active'"
+          [routerLink]="['/settings', 'testsigma']"
+          class="nav-items">
+          <i class="fa-cloud"></i>
+          <span [translate]="'settings.testsigma_free_lab'"></span>
+        </a>
+      </li>
+      <li
+        [routerLinkActive]="'active'"
+        [routerLink]="['/settings', 'storage']">
+        <a
+          [routerLinkActive]="'active'"
+          [routerLink]="['/settings', 'storage']"
+          class="nav-items">
+          <i class="fa-database-solid"></i>
+          <span [translate]="'settings.storage'"></span>
+        </a>
+      </li>
+      <li
+        [routerLinkActive]="'active'"
+        [routerLink]="['/settings', 'auth']">
+        <a
+          [routerLinkActive]="'active'"
+          [routerLink]="['/settings', 'auth']"
+          class="nav-items">
+          <i class="fa-key-access"></i>
+          <span [translate]="'settings.auth_config'"></span>
+        </a>
+      </li>
+      <li
+        [routerLinkActive]="'active'"
+        [routerLink]="['/settings', 'telemetry']">
+        <a
+          [routerLinkActive]="'active'"
+          [routerLink]="['/settings','telemetry']"
+          class="nav-items">
+          <i class="fa fa-bi_shield-lock-fill"></i>
+          <span [translate]="'page_title.settings.telemetry'"></span>
+        </a>
+      </li>
+      <li
+        [routerLinkActive]="'active'"
+        [routerLink]="['/settings', 'backups']">
+        <a
+          [routerLinkActive]="'active'"
+          [routerLink]="['/settings','backups']"
+          class="nav-items">
+          <i class="fa-database-solid"></i>
+          <span [translate]="'page_title.settings.backups'"></span>
+        </a>
+      </li>
+      <li
+        [routerLinkActive]="'active'"
+        [routerLink]="['/settings', 'about']">
+        <a
+          [routerLinkActive]="'active'"
+          [routerLink]="['/settings','about']"
+          class="nav-items">
+          <i class="fa-cloud"></i>
+          <span [translate]="'page_title.settings.about'"></span>
+        </a>
+      </li>
+    </div>
+  </ul>
+</div>

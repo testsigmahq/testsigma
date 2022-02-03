@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>
+  <span class="modal-title" [translate]="'mobile_recorder.button.send_keys'"></span>
+  <button type="button" class="close" mat-dialog-close data-placement="bottom"
+          [matTooltip]="'pagination.delete' | translate">
+  </button>
+</h2>
+<mat-dialog-content class="mat-typography p-40 w-100 mx-auto">
+  <div class="ts-form">
+    <div class="form-group">
+      <label
+        class="control-label"
+        [translate]="'mobile_recorder.button.send_keys'"></label>
+      <input type="text" class="form-control" [(ngModel)]="keys">
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="p-40">
+  <button class="theme-btn-clear-default"
+          mat-dialog-close
+          [translate]="'btn.common.cancel'"></button>
+  <button class="btn btn-primary"
+          [translate]="'mobile_recorder.button.send_keys'"
+          [disabled]="!keys"
+          [mat-dialog-close]="keys"
+          [matTooltip]="((!keys)?('mobile_recorder.message.sendkeys.required'|translate ):'')"
+          cdkFocusInitial></button>
+</mat-dialog-actions>
+

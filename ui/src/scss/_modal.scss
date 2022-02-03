@@ -1,0 +1,496 @@
+// .modal-open      - body class for killing the scroll
+// .modal           - container to scroll within
+// .modal-dialog    - positioning shell for the actual modal
+// .modal-content   - actual modal w/ bg and corners and stuff
+
+
+.modal-open {
+  // Kill the scroll on the body
+  overflow: hidden;
+
+  .modal {
+    overflow: hidden;
+    @extend .pl-0;
+  }
+}
+
+// Container that the modal scrolls within
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: $zindex-modal;
+  display: none;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  // Prevent Chrome on Windows from adding a focus outline. For details, see
+  // https://github.com/twbs/bootstrap/pull/10951.
+  outline: 0;
+  // We deliberately don't use `-webkit-overflow-scrolling: touch;` due to a
+  // gnarly iOS Safari bug: https://bugs.webkit.org/show_bug.cgi?id=158342
+  // See also https://github.com/twbs/bootstrap/issues/17695
+}
+
+// Shell div to position the modal with bottom padding
+.modal-dialog {
+  position: relative;
+  width: auto;
+  margin: $modal-dialog-margin;
+  // allow clicks to pass through for custom click handling to close modal
+  pointer-events: none;
+
+  // When fading in the modal, animate it to slide down
+  .modal.fade & {
+    @include transition($modal-transition);
+    transform: $modal-fade-transform;
+  }
+  .modal.show & {
+    transform: $modal-show-transform;
+  }
+}
+
+.modal-dialog-scrollable {
+  display: flex; // IE10/11
+  max-height: calc(100% - #{$modal-dialog-margin * 2});
+
+  .modal-content {
+    max-height: calc(100vh - #{$modal-dialog-margin * 2}); // IE10/11
+    overflow: hidden;
+  }
+
+  .modal-header,
+  .modal-footer {
+    flex-shrink: 0;
+  }
+
+  .modal-body {
+    overflow-y: auto;
+  }
+}
+
+.modal-dialog-centered {
+  display: flex;
+  align-items: center;
+  min-height: calc(100% - #{$modal-dialog-margin * 2});
+
+  // Ensure `modal-dialog-centered` extends the full height of the view (IE10/11)
+  &::before {
+    display: block; // IE10
+    height: calc(100vh - #{$modal-dialog-margin * 2});
+    content: "";
+  }
+
+  // Ensure `.modal-body` shows scrollbar (IE10/11)
+  &.modal-dialog-scrollable {
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+
+    .modal-content {
+      max-height: none;
+    }
+
+    &::before {
+      content: none;
+    }
+  }
+}
+
+// Actual modal
+.modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%; // Ensure `.modal-content` extends the full width of the parent `.modal-dialog`
+  // counteract the pointer-events: none; in the .modal-dialog
+  color: $modal-content-color;
+  pointer-events: auto;
+  background-color: $modal-content-bg;
+  background-clip: padding-box;
+  border: $modal-content-border-width solid $modal-content-border-color;
+  @include border-radius($modal-content-border-radius);
+  box-shadow: $modal-content-box-shadow-default;
+  // Remove focus outline from opened modal
+  outline: 0;
+}
+
+// Modal background
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: $zindex-modal-backdrop;
+  width: 100vw;
+  height: 100vh;
+  background-color: $modal-backdrop-bg;
+
+  // Fade for backdrop
+  &.fade { opacity: 0; }
+  &.show { opacity: $modal-backdrop-opacity; }
+}
+
+// Modal header
+// Top section of the modal w/ title and dismiss
+.modal-header {
+  display: flex;
+  align-items: center; // so the close btn always stays on the upper right corner
+  justify-content: space-between; // Put modal header elements (title and dismiss) on opposite ends
+  padding: $modal-inner-padding;
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.09);
+  @include border-top-radius($modal-content-border-radius);
+
+  .close {
+    padding: $modal-header-padding;
+  }
+}
+
+// Title text within header
+.modal-title {
+  margin: 0;
+  line-height: $modal-title-line-height;
+	@extend .lsp-22;
+	@extend .rb-medium;
+	@extend .fz-16;
+}
+
+// Modal body
+// Where all modal content resides (sibling of .modal-header and .modal-footer)
+.modal-body {
+  position: relative;
+  // Enable `flex-grow: 1` so that the body take up as much space as possible
+  // when should there be a fixed height on `.modal-dialog`.
+  flex: 1 1 auto;
+  padding: 30px 30px 30px 30px;
+}
+
+// Footer (for actions)
+.modal-footer {
+  display: flex;
+  align-items: center; // vertically center
+  justify-content: flex-end; // Right align buttons with flex property because text-align doesn't work on flex items
+  padding: $modal-inner-padding;
+  border-top: $modal-footer-border-width solid $modal-footer-border-color;
+  @include border-bottom-radius($modal-content-border-radius);
+
+  // Easily place margin between footer elements
+  > :not(:first-child) { margin-left: .25rem; }
+  > :not(:last-child) { margin-right: .25rem; }
+}
+
+// Measure scrollbar width for padding body during modal show/hide
+.modal-scrollbar-measure {
+  position: absolute;
+  top: -9999px;
+  width: 50px;
+  height: 50px;
+  overflow: scroll;
+}
+
+// Scale up the modal
+@include media-breakpoint-up(sm) {
+  // Automatically set modal's width for larger viewports
+  .modal-dialog {
+    max-width: $modal-md;
+    margin: $modal-dialog-margin-y-sm-up auto;
+  }
+
+  .modal-dialog-scrollable {
+    max-height: calc(100% - #{$modal-dialog-margin-y-sm-up * 2});
+
+    .modal-content {
+      max-height: calc(100vh - #{$modal-dialog-margin-y-sm-up * 2});
+    }
+  }
+
+  .modal-dialog-centered {
+    min-height: calc(100% - #{$modal-dialog-margin-y-sm-up * 2});
+
+    &::before {
+      height: calc(100vh - #{$modal-dialog-margin-y-sm-up * 2});
+    }
+  }
+
+  .modal-content {
+    @include box-shadow($modal-content-box-shadow-sm-up);
+  }
+
+  .modal-sm { max-width: $modal-sm; }
+}
+
+@include media-breakpoint-up(lg) {
+  .modal-lg,
+  .modal-xl {
+    max-width: $modal-lg;
+  }
+}
+
+@include media-breakpoint-up(xl) {
+  .modal-xl { max-width: $modal-xl; }
+}
+
+
+@media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {
+      font-size: 18px;
+    }
+}
+
+
+
+//.overlay-header {
+//  height: 60px;
+//  line-height: 60px;
+//  padding: 0 30px 0 33px;
+//  @extend .position-relative;
+//  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.09);
+//  @extend .fz-16;
+//  @extend .d-flex;
+//  @extend .align-items-center;
+//  color:inherit;
+//  z-index: 10;
+//  @extend .rb-medium;
+//}
+//
+//.overlay-body {
+//    height: calc(100% - 120px);
+//	height: -moz-calc(100% - 120px);
+//    height: -webkit-calc(100% - 120px);
+//	width: 100%;
+//	overflow-y: auto;
+//	__<<ngThemingMigrationEscapedComment0>>__
+//    padding: 30px;
+//  .legend-item{
+//    width: 254px;
+//    span{
+//      transition: 0.5s;
+//    }
+//  }
+//  .legend-icon{
+//    width: 17px;
+//  }
+//}
+//.overlay-content {
+//    height:100%;
+//}
+//
+//.overlay-footer {
+//	height:60px;
+//    padding:10px 35px;
+//	@extend .text-right;
+//    border-top: 1px solid #e5e5e5;
+//}
+
+
+.theme-custom-overlay {
+    position: fixed;
+    right: -600px;
+    top: 0;
+    bottom: 0;
+    min-width: 50%;
+    height:100%;
+    background-color: $white;
+    -webkit-box-shadow: 0 2px 20px 0 #2c4d51;
+    box-shadow: 0 2px 20px 0 #2c4d51;
+    -webkit-animation: slide-in-from-right .2s forwards;
+    -o-animation: slide-in-from-right .2s forwards;
+    animation: slide-in-from-right .2s forwards;
+    overflow: hidden;
+    display: block;
+    width:50%;
+    z-index:1041;
+
+}
+
+//.custom_overlay .jstree a {
+//    text-decoration: initial;
+//    font-size: inherit;
+//    display: initial;
+//    padding: inherit !important;
+//}
+
+
+
+
+//.fancybox-inner {
+//    height: auto !important;
+//    width: 500px !important;
+//    box-shadow: 0 2px 20px 0 #2c4d51;
+//    border-radius: 4px;
+//}
+//
+//.fancybox-inner  .modal-content {
+//    z-index: 1;
+//    background: $white;
+//    min-height: 200px;
+//}
+//
+//.fancybox-outer {
+//    margin: auto;
+//}
+
+//.fancybox-overlay {
+//    width: 100vw !important;
+//    height: 100vh !important;
+//    background: #384d4d7f;
+//    position: absolute;
+//    z-index: 8030;
+//}
+
+.filter-overlay {
+    height: 100%;
+    min-width: 25%;
+    width: 25%;
+    z-index: 2000
+}
+
+.global-create-modal {
+	list-style: none;
+	color: #2d4a60;
+	> li a {
+		@extend .d-flex;
+		@extend .align-items-center;
+		color: #2d4a60;
+		@extend .fz-13;
+	    padding: 10px;
+	    display: block;
+		@extend .border-rds-2;
+	    text-decoration: none;
+	    line-height: 16px;
+	 	&:hover	{
+		    background-color: $light-green-color;
+		    fill: $light-green-color;
+		}
+		i {
+			padding-right: 5px;
+		}
+	}
+}
+
+.global-love-modal {
+  color: #2d4a60;
+  width: 35vw;
+  .custom-div-button{
+    background-color:#E7F7FA;
+    border-radius: 10px;
+    padding: 10px;
+  }
+}
+
+
+.mat-overlay {
+  @extend .shadow-none;
+  .mat-dialog-container {
+    border-radius: 0;
+    box-shadow: 2px 6px 20px rgba(0, 0, 0, 0.25);
+    .overlay-header {
+      @extend .shadow-none;
+      @extend .theme-border-b;
+      padding: 0 21px 0 24px;
+    }
+    .overlay-body {
+      padding: 32px 21px 30px 24px;
+    }
+  }
+}
+
+.mat-dialog {
+  @extend .shadow-none;
+  .mat-dialog-container {
+    border-radius: 6px;
+    box-shadow: 2px 6px 20px rgba(0, 0, 0, 0.25);
+    .overlay-header {
+      @extend .shadow-none;
+      @extend .theme-border-b;
+    }
+    .dialog-header {
+      @extend .px-45, .pt-30, .pb-10, .d-flex, .align-items-center;
+      .title {
+        @extend .fz-16, .rb-medium;
+      }
+    }
+    .dialog-body {
+      @extend .overflow-x-hidden, .px-45, .py-25;
+      height: calc(100% - 140px);
+    }
+    .dialog-footer {
+      @extend .px-45, .pb-45;
+    }
+  }
+  &.full-width {
+    max-width: 100vw!important;
+  }
+  &.rds-none {
+    .mat-dialog-container {
+      border-radius: 0;
+    }
+  }
+}
+
+.full-width-highcharts {
+  .highcharts-container {
+    @extend .w-100;
+    overflow-x: auto!important;
+    svg.highcharts-root {
+      @extend .w-100;
+    }
+  }
+}
+
+.cdk-overlay-pane .theme-mat-menu {
+  width: 360px;
+  border-radius: 0;
+  box-shadow: rgba(0, 0, 0, 0.25) 2px 6px 20px;
+  .mat-menu-content {
+    padding: 0!important;
+  }
+}
+.theme-mat-menu-center + .cdk-overlay-connected-position-bounding-box {
+  width: unset!important;
+  right: unset!important;
+}
+
+.ignore-confirmation-model {
+  @extend .position-fixed, .border-rds-4, .bg-white, .theme-border-x, .theme-border-y, .p-15, .ml-10;
+  left: 50%;
+  top: 30%;
+  z-index: 24801;
+  max-width: 400px;
+}
+
+.delete-confirm {
+  delete-dialog, app-warning-modal {
+    @extend .p-30, .d-block;
+    .mat-dialog-content {
+      @extend .p-0;
+    }
+    .confirm-message {
+      @extend .rb-medium, .fz-18, .p-15;
+    }
+
+    .confirm-note {
+      @extend .fz-14, .pt-14, .pl-15;
+    }
+
+    .confirm-actions {
+      @extend .pt-25, .d-flex, .justify-content-end, .border-0;
+      box-sizing: inherit;
+    }
+  }
+}
+
+.feedback-modal {
+  .mat-dialog-content {
+    //@extend .rds-none;
+  }
+  .mat-dialog-container{
+    //@extend .border-separator-1;
+    height: fit-content;
+  }
+}
+.modal-shadow-none{
+  .mat-dialog-container{
+    @extend .shadow-none;
+  }
+}

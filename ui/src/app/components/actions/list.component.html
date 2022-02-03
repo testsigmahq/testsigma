@@ -1,0 +1,115 @@
+<div class="page-header d-flex fz-20 align-items-center">
+  <div
+    class="ts-col-60 text-truncate rb-medium d-flex align-items-center">
+    <span
+      class="px-8"
+      [translate]="'nl_action.list.title'"></span>
+  </div>
+
+  <div class="d-flex align-items-center ml-auto">
+    <app-toggle-search-button
+      class="mr-30"
+      (searchAction)="search($event)"></app-toggle-search-button>
+    <div class="pl-15 theme-border-l">
+      <button
+        cdkOverlayOrigin #trigger="cdkOverlayOrigin"
+        [class.mat-elevation-z3]="filterIsOpen"
+        (click)="openFilter()"
+        [matTooltip]="'hint.message.common.filter' | translate"
+        class="btn icon-btn border-rds-2 ml-14">
+        <i class="fa-filter-outline"></i>
+      </button>
+      <ng-template
+        cdkConnectedOverlayPanelClass="w-25"
+        cdkConnectedOverlayHasBackdrop="true"
+        cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+        #filter="cdkConnectedOverlay"
+        cdkConnectedOverlay
+        [cdkConnectedOverlayOrigin]="trigger"
+        [cdkConnectedOverlayOpen]="filterIsOpen">
+        <ul class="sort-list overflow-y-auto flex-wrap d-flex" style="max-height: 500px">
+          <li *ngFor="let action of actions; let index = index"
+              [class.ts-col-100]="!index"
+              [class.rb-medium]="!index"
+              [class.fz-15]="!index"
+              class="selected pointer text-capitalize ts-col-50"
+              (click)="filterBy(action)"
+              [translate]="'nl_actions.list.action.' + (action.includes(' ')? removeSpaces(action):action )"
+              [class.selected]=" action == filteredBy"></li>
+        </ul>
+      </ng-template>
+    </div>
+  </div>
+</div>
+<div class="page-content page-virtual-scroll">
+  <div class="px-40">
+    <div
+      *ngIf="nlActions?.content.length != 0"
+      class="list-header">
+      <div class="ts-col-10 pl-16">
+        <span [translate]="'nl_actions.list.header.action'"></span>
+      </div>
+      <div class="ts-col-90">
+        <span [translate]="'nl_actions.list.header.naturalText'"></span>
+      </div>
+    </div>
+  </div>
+  <app-placeholder-loader
+    *ngIf="!fetchingCompleted"></app-placeholder-loader>
+  <div class="d-flex flex-row-reverse flex-wrap h-100" *ngIf="nlActions?.content.length">
+    <div class="ts-col-40 bg-light p-40" *ngIf="selectedTemplate" @fade>
+      <div class="rb-medium" [translate]="'nl_actions.list.header.naturalText'"></div>
+      <p [innerHTML]="selectedTemplate.template.htmlGrammar"></p>
+      <div class="rb-medium" [translate]="'message.common.description'"></div>
+      <p class="text-break" [textContent]="selectedTemplate.description"></p>
+      <div class="rb-medium pt-10" [translate]="'nl_actions.list.label.example'"></div>
+      <p class="text-break" [textContent]="selectedTemplate.example"></p>
+      <div class="rb-medium pt-10" [translate]="'nl_actions.list.label.example_application'"></div>
+      <p>
+        <a [href]="selectedTemplate.workspace" target="_blank" class="text-link d-flex">
+          <span [textContent]="selectedTemplate.workspace" class="mw-90 text-truncate"></span>
+          <i class="fa-external-link-alt-solid text-dark pl-10"></i>
+        </a>
+      </p>
+      <div class="rb-medium pt-10" [translate]="'nl_actions.list.label.example_data'"></div>
+      <p class="text-break" [textContent]="selectedTemplate.data"></p>
+    </div>
+    <div class="ts-col-60 d-flex flex-column" [class.ts-col-100]="!selectedTemplate">
+      <cdk-virtual-scroll-viewport
+        [class.scroll-content-wrapper-right-none]="selectedTemplate"
+        [class.scroll-none]="selectedTemplate"
+        itemSize="48" class="virtual-scroll-viewport">
+        <div *ngFor="let template of nlActions?.content; let i = index"
+             class="d-flex ts-col-100 flex-wrap justify-content-end">
+          <div class="ts-col-10 my-auto rb-medium mr-auto text-center text-capitalize fz-16"
+               [class.ts-col-15]="selectedTemplate">
+            <span *ngIf="template.action != nlActions?.content[i-1]?.action"
+                  [translate]="'nl_actions.list.action.'+ (template.action.includes(' ')? removeSpaces(template.action):template.action )"></span>
+          </div>
+          <div *ngIf="template.action != nlActions?.content[i-1]?.action"
+               class="ts-col-85 lh-4 py-25 theme-border-b {{ selectedTemplate ? 'theme-border-r':'ts-col-90'}}"
+          ></div>
+          <div class="ts-col-85 list-container" [class.ts-col-90]="!selectedTemplate">
+            <div (click)="fetchTemplateDetails(template)"
+                 [class.theme-border-r]="selectedTemplate && template.id != selectedTemplate?.naturalTextActionId">
+              <div
+                class="lh-1point5 py-16 pr-14 list-view pointer {{template.id == selectedTemplate?.naturalTextActionId ? 'active-template':'pl-14'}}">
+                <span [innerHTML]="template.htmlGrammar"></span>
+                <i class="fa-right-arrow-thin ml-auto"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </cdk-virtual-scroll-viewport>
+    </div>
+  </div>
+  <div *ngIf="!nlActions?.content.length" class="h-100">
+    <div *ngIf="fetchingCompleted"
+         class="empty-full-container">
+      <div class="empty-run-md"></div>
+      <div
+        class="empty-text"
+        [translate]="'message.common.search.not_found'"></div>
+    </div>
+  </div>
+</div>

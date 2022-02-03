@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+  <Properties>
+    <Property name="LOG_PATTERN">
+      %d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%M:%L - %t - %m%n
+    </Property>
+    <property name="LOG_FOLDER">${sys:TS_DATA_DIR}/logs</property>
+  </Properties>
+  <Appenders>
+    <Console name="ConsoleAppender" target="SYSTEM_OUT" follow="true">
+      <PatternLayout pattern="${LOG_PATTERN}"/>
+    </Console>
+
+    <RollingFile name="wrapperLog" fileName="${TS_DATA_DIR}/logs/wrapper.log"
+                 filePattern="${TS_DATA_DIR}/logs/wrapper-%i.log">
+      <PatternLayout>
+        <Pattern>${LOG_PATTERN}</Pattern>
+      </PatternLayout>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="10MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="10"/>
+    </RollingFile>
+  </Appenders>
+
+  <Loggers>
+    <AsyncLogger name="com.wrapper" level="ALL" additivity="false" includeLocation="true">
+      <AppenderRef ref="ConsoleAppender"/>
+      <AppenderRef ref="wrapperLog"/>
+    </AsyncLogger>
+
+    <Root level="ALL">
+      <AppenderRef ref="ConsoleAppender"/>
+      <AppenderRef ref="wrapperLog"/>
+    </Root>
+  </Loggers>
+</Configuration>

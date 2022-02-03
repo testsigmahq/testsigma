@@ -1,0 +1,94 @@
+<div
+  class="page-details-navigation-md">
+  <ul class="tab-nav" role="tablist">
+    <li class="nav-items" role="presentation">
+      <a
+        [routerLink]="['/td', 'cases', testCaseId, 'steps']"
+        [routerLinkActive]="'active'"
+        class="normal-text">
+        <i class="fa-list"></i>
+        <span [textContent]="'result.test_step'  | translate"></span>
+      </a>
+    </li>
+    <li
+      class="nav-items" role="presentation">
+      <a
+        [routerLink]="['/td', 'cases', testCaseId, 'dependents']"
+        [routerLinkActive]="'active'"
+        class="normal-text">
+        <i class="fa-test-cases-alt"></i>
+        <span [translate]="'testcase.details.step_group.test_cases'"></span>
+      </a>
+    </li>
+  </ul>
+</div>
+<div class="list-content overflow-x-hidden theme-only-items-scroll sm-h pt-30 px-40 pb-20">
+  <div
+    *ngIf="testCases"
+    class="list-header">
+    <div
+      class="ts-col-65 pr-10 d-flex">
+      <i
+        [textContent]="' '"
+        class="px-25 w-min-60"></i>
+      <span
+        [translate]="'message.common.text.title'"></span>
+    </div>
+    <div
+      class="ts-col-20 px-40"
+      [translate]="'testcase.list.test_data'"></div>
+    <div
+      class="ts-col-15 pl-40"
+      [translate]="'message.common.text.status'"></div>
+  </div>
+  <cdk-virtual-scroll-viewport
+    itemSize="59"
+    class="list-container virtual-scroll-viewport theme-only-items-scroll sm-h" >
+    <a
+      class="list-view green-highlight lg-pm pl-10 text-t-secondary"
+      [routerLink]="['/td', 'cases',  testCase?.id]"
+      *cdkVirtualFor='let testCase of testCases'>
+      <div
+        class="ts-col-65 d-flex">
+        <i
+          [class.fa-step-group]="testCase?.isStepGroup"
+          [matTooltip]="testCase?.isStepGroup ? ('testcase.list.hint.step_group' | translate) : ''"
+          [textContent]="testCase?.isStepGroup ? '' : ' '"
+          class="px-25 w-min-60"></i>
+        <div class="d-flex flex-wrap text-break">
+          <span
+            class="ts-col-100 pb-10 list-title"
+            [textContent]="testCase.name"></span>
+          <div
+            [translate]="'message.common.automation'"></div>
+          <div
+            class="pl-50"
+            [textContent]="('message.common.text.status' | translate)+ ': '+ ('testcase.status_'+testCase?.status| translate)"></div>
+        </div>
+      </div>
+      <div class="ts-col-20 px-40">
+        <span [textContent]="testCase?.testData?.name || '-'"></span>
+      </div>
+      <div class="ts-col-15 pl-40">
+        <a [routerLink]="['/td', 'test_case_results', testCase?.lastRun?.id]" *ngIf="testCase?.lastRun">
+          <app-result-pie-chart-column
+
+            [width]="30"
+            [height]="30"
+            [resultEntity]="testCase?.lastRun"></app-result-pie-chart-column>
+        </a>
+      </div>
+    </a>
+    <div
+      *ngIf="testCases?.isEmpty"
+      class="empty-full-container">
+      <div class="empty-full-content">
+        <div class="empty-run-md"></div>
+        <div
+          class="empty-text"
+          [translate]="'testcase.details.step_group.no_test_case'"></div>
+      </div>
+    </div>
+    <app-placeholder-loader *ngIf="testCases?.isFetching"></app-placeholder-loader>
+  </cdk-virtual-scroll-viewport>
+</div>

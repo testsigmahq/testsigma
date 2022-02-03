@@ -1,0 +1,87 @@
+<div class="ts-col-65 h-100">
+  <div class="form-page-header">
+    <div class="form-title"
+         [translate]="environment?.id ? 'environments.form.edit.title' : 'environments.form.create.title'"></div>
+    <div class="ml-auto">
+      <button class="theme-btn-clear-default" [translate]="'btn.common.cancel'"
+              [routerLink]="[ environment?.id ? '../../' : '../' ]"></button>
+      <button
+        class="btn ml-14 theme-btn-primary"
+        appAsyncBtn
+        [isLoading]="saving"
+        [message]="environment?.id ? 'message.common.updating' : 'message.common.saving'"
+        (click)=" environment?.id ? update() : create()"
+        [textContent]="( environment?.id ? 'btn.common.update':'btn.common.create') | translate"
+        [disabled]="environmentForm?.invalid"></button>
+    </div>
+  </div>
+  <form *ngIf="environmentForm"
+        [ngSwitch]="showJSON"
+        class="ts-form form-field-scroll" [formGroup]="environmentForm">
+    <div class="form-group">
+      <input class="form-control" formControlName="name" [(ngModel)]="environment.name">
+      <label class="control-label required" [translate]="'requirements.form.label.name'"></label>
+      <div class="error" *ngIf="formSubmitted && environmentForm.controls.name.errors?.required"
+           [translate]="'requirements.form.name.required'"></div>
+      <div class="error"
+           *ngIf="formSubmitted && environmentForm.controls.name.errors?.minlength"
+           [textContent]="'form.validation.common.min_length' | translate: {FieldName:'Name' , min:'4'}"></div>
+      <div class="error"
+           *ngIf="formSubmitted && environmentForm.controls.name.errors?.maxlength"
+           [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'126'}"></div>
+    </div>
+    <div class="form-group">
+      <app-description [formCtrlName]="environmentForm.controls.description"></app-description>
+    </div>
+    <div class="d-flex w-100">
+      <div
+        class="ml-10 pb-2 pointer ml-auto"
+        (click)="showTable()"
+        [class.rb-medium]="!showJSON"
+        [class.border-active-b-2]="!showJSON"
+        [translate]="'environments.form.label.enable_table'"></div>
+      <div
+        (click)="showJSONFormat()"
+        class="ml-10 pb-2 pointer"
+        [class.rb-medium]="showJSON"
+        [class.border-active-b-2]="showJSON"
+        [translate]="'environments.form.label.enable_json'"></div>
+    </div>
+    <div *ngSwitchCase="true">
+      <div class="form-group pb-10"
+           *ngIf="environmentForm.controls.paramsJson.errors || parametersInvalid()">
+        <div class="error noarrow top-0 position-relative ml-14"
+             [translate]="environmentForm.controls.paramsJson.errors?.invalidJson ?
+               'environments.form.message.not_json':'environments.form.message.no_parameters'"></div>
+      </div>
+      <div class="form-group mt-15">
+        <label for="parametersJSON" class="control-label required"
+               [translate]="'environments.form.label.params_json'"></label>
+        <ngx-codemirror formControlName="paramsJson" id="parametersJSON"
+                        [(ngModel)]="environment.parametersJson" class="custom-code-mirror min-100"
+                        [options]="codeMirrorOptions"></ngx-codemirror>
+      </div>
+    </div>
+    <div *ngSwitchCase="false">
+      <div class="form-group ml-16 pb-0" *ngIf="formSubmitted && !hasEmptyParameterNames() && hasEmptyParameterValues()">
+        <div class ="error noarrow position-relative mb-15 top-0" [translate]="'environments.form.message.parameter_value_empty'"></div>
+      </div>
+      <div class="form-group ml-16 pb-0" *ngIf="formSubmitted && !hasEmptyParameterValues() && !hasEmptyParameterNames() && parametersInvalid()">
+        <div class ="error noarrow position-relative mb-15 top-0" [translate]="'environments.form.message.no_parameters'"></div>
+      </div>
+      <div class="form-group ml-16 pb-0" *ngIf="formSubmitted && hasDuplicateParameters() && !hasEmptyParameters() && !parametersInvalid()">
+        <div class ="error noarrow position-relative mb-15 top-0" [translate]="'environments.form.message.duplicate_parameter_name'"></div>
+      </div>
+      <div class="form-group ml-16 pb-0" *ngIf="formSubmitted && hasEmptyParameterNames()">
+        <div class ="error noarrow position-relative mb-15 top-0" [translate]="'environments.form.message.parameter_name_empty'"></div>
+      </div>
+      <app-environments-table
+        (onEncryptedNames)="setEncryptedNames($event)"
+        [edit]="true"
+        [encryptedNames]="encryptedNames"
+        [formGroup]="environmentForm"
+        [environment]="environment"
+        [formSubmitted]="formSubmitted"></app-environments-table>
+    </div>
+  </form>
+</div>

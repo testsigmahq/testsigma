@@ -1,0 +1,26 @@
+<div class="page-header">
+  <div class="page-title" [translate]="'page_title.settings.about'"></div>
+</div>
+<div class="page-content">
+  <div class="d-flex-wrap py-40 w-100 theme-border border-rds-6 h-100 position-relative" #cloudSection>
+    <div class="activation-start-logo ts-col-20 h-80p mr-20 ml-80"></div>
+    <div class="flex-auto theme-border-l pl-20 h-100 overflow-y-auto">
+      <div>
+        <p class="text-secondary" [translate]="'settings.about.server_version'"></p>
+        <p *ngIf="serverVersion" class="rb-bold" [textContent]="'v'+ serverVersion +' - Cloud'"></p>
+      </div>
+      <div class="pt-5">
+        <p class="text-secondary" [translate]="'settings.about.server_ip'"></p>
+        <p class="rb-bold" [textContent]="serverIP"></p>
+      </div>
+      <div class="pt-5">
+        <p class="text-secondary" [translate]="'settings.about.testsigma_lab_ip'"></p>
+        <p *ngFor="let ip of testsigmaLabIP" class="rb-bold" [textContent]="ip"></p>
+      </div>
+    </div>
+    <app-testsigma-cloud [fillColor]="'#f2f2f2'"
+                         [width]="cloudSection.width/2"
+                         class="right-0 position-absolute bottom-0 overflow-hidden w-50 p-30"></app-testsigma-cloud>
+  </div>
+</div>
+

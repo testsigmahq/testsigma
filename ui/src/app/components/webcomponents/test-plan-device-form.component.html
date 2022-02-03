@@ -1,0 +1,114 @@
+<div
+  *ngIf="environmentFormGroup"
+  class="form-group pb-lg">
+  <div
+    class="fz-14 rb-medium pb-30"
+    [translate]="'test_plan.environment.device.title'"></div>
+  <div class="d-flex align-items-center" *ngIf="testPlanLabType && !isHybrid">
+    <div
+      class="ts-col-20 pr-14" *ngIf="version?.workspace?.isMobileWeb">
+      <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill">
+        <span
+          matPrefix
+          [class.fa-apple]="platform?.isIOS"
+          [class.fa-android-solid]="platform?.isAndroid"
+          class="mr-10 text-t-secondary"></span>
+        <mat-select
+          disableOptionCentering panelClass="single"
+          (selectionChange)="setPlatform($event.value)"
+          name="platform" [formControl]="environmentFormGroup?.controls['platform']">
+          <mat-option [value]="platform.id" *ngFor="let platform of platforms">
+            <i class="text-t-secondary pr-5"
+               [class.fa-apple]="platform?.isIOS"
+               [class.fa-android-solid]="platform?.isAndroid"></i>
+            <span [textContent]="platform.name"></span>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <label class="control-label" [translate]="'test_plan.environment.selected_os'"></label>
+    </div>
+    <div
+      class="ts-col-30 pr-14" *ngIf="platformOsVersions">
+      <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill">
+        <mat-select
+          disableOptionCentering panelClass="single"
+          [formControl]="environmentFormGroup?.controls['platformOsVersionId']"
+          (selectionChange)="setOsVersion($event.value)"
+          name="osVersion">
+          <mat-option
+            *ngFor="let osVersion of platformOsVersions"
+            [value]="osVersion.id" [textContent]="osVersion.displayName"></mat-option>
+        </mat-select>
+      </mat-form-field>
+      <label class="control-label required" [translate]="'test_plan.environment.os_version'"></label>
+    </div>
+    <div
+      class="ts-col-30 pr-5 ml-18">
+      <app-auto-complete
+        *ngIf="cloudDevicePage"
+        disabled="!this.isDeviceListInProgress"
+        class="pb-2 d-block"
+        [formGroup]="environmentFormGroup"
+        [formCtrlName]="environmentFormGroup.controls['platformDeviceId']"
+        [value]="cloudDevice"
+        [items]="cloudDevicePage"
+        (onSearch)="fetchCloudDevices($event)"
+        (onValueChange)="setCloudDevice($event)"></app-auto-complete>
+      <label class="control-label required" [translate]="'test_plan.environment.device.name'"></label>
+      <mat-progress-spinner
+        class="search-spinner" mode="indeterminate" style="margin-left: -10px" diameter="20" *ngIf="this.isDeviceListInProgress">
+      </mat-progress-spinner>
+    </div>
+    <div *ngIf="version.workspace.isMobileWeb"
+         class="align-items-center d-flex justify-content-around pr-14 ts-col-15">
+      <div class="px-30 py-8 border-rds-4" style="border: 1px solid #B6CBD8 !important">
+        <i class="fz-18 text-t-secondary"
+           [class.fa-safari-brands]="platform?.isIOS"
+           [class.fa-chrome]="platform?.isAndroid"></i>
+      </div>
+      <label class="control-label" [translate]="'test_plan.environment.browser'"></label>
+    </div>
+  </div>
+  <div
+    class="d-flex pt-10"
+    *ngIf="testPlanLabType && isHybrid">
+    <div
+      *ngIf="environmentFormGroup?.controls['agentId']"
+      [class.ts-col-100]="agentsEmpty"
+      [class.ts-col-30]="!agentsEmpty"
+      class="ts-col-30 pr-5">
+      <app-agents-auto-complete
+        (onAgentChange)="setAgent($event)"
+        (onAgents)="setAgents($event)"
+        [value]="agent"
+        [version]="version"
+        [formGroup]="environmentFormGroup"
+        [formCtrl]="environmentFormGroup.controls['agentId']"
+        [labelText]="'test_plan.environment.test_machine' | translate"
+        [isAvailableCheck]="isAvailableCheck">
+      </app-agents-auto-complete>
+    </div>
+    <div
+      *ngIf="environmentFormGroup?.controls['deviceId']"
+      [class.d-none]="agentsEmpty"
+      class="ts-col-25 pr-5 ml-18">
+      <app-agent-devices-auto-complete
+        *ngIf="version"
+        (onAgentDeviceChange)="setAgentDevice($event)"
+        [agentId]="agentId"
+        [mobileOsType]="mobileOsType"
+        [testPlanLabType]="testPlanLabType"
+        [formGroup]="environmentFormGroup"
+        [labelText]="('test_plan.environment.device.name' | translate)"
+        [formCtrl]="environmentFormGroup.controls['deviceId']">
+      </app-agent-devices-auto-complete>
+    </div>
+    <div *ngIf="version.workspace.isMobileWeb && !agentsEmpty"
+         class="align-items-center d-flex justify-content-around pr-14 ts-col-15">
+      <i class="fz-18 text-t-secondary"
+         [class.fa-safari-brands]="agentDevice?.isIOS"
+         [class.fa-chrome]="agentDevice?.isAndroid"></i>
+      <label class="control-label" [translate]="'test_plan.environment.browser'"></label>
+    </div>
+  </div>
+</div>

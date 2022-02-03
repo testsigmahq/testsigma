@@ -1,0 +1,296 @@
+<div class="details-page-container" style="height:165px">
+  <app-placeholder-loader class="ts-col-100 d-flex-wrap" [isDetails]=true *ngIf="!isTestCaseFetchingCompleted"></app-placeholder-loader>
+  <div
+    *ngIf="isTestCaseFetchingCompleted"
+    class="ts-col-100 d-flex-wrap">
+    <div class="pt-15 d-flex align-items-start">
+      <app-td-overlay-menu-button
+        [versionId]="testCaseResult?.testDeviceResult?.testPlanResult?.testPlan?.workspaceVersionId"></app-td-overlay-menu-button>
+      <a class="go-back-icon pl-10" *ngIf="!isDry"
+         [matTooltip]="'hint.message.common.back' | translate"
+         [routerLink]="['/td/suite_results', testCaseResult?.suiteResultId]"></a>
+      <a class="go-back-icon pl-10" *ngIf="isDry"
+         [routerLink]="['/td', 'cases', testCaseResult?.testCaseId]"
+         [matTooltip]="'hint.message.common.back' | translate"></a>
+    </div>
+    <div class="ts-col-100-77">
+      <div class="d-flex ts-col-100">
+        <div class="ts-col-70 text-truncate">
+          <div class="theme-breadcrumb" *ngIf="!isDry">
+            <a
+              class="theme-breadcrumb-item mw-25"
+              [routerLink]="['/td/runs/', testCaseResult?.testPlanResultId]"
+              [matTooltip]="testCaseResult?.testDeviceResult?.testPlanResult?.testPlan?.name"
+              [textContent]="testCaseResult?.testDeviceResult.testPlanResult?.testPlan?.name"></a>
+            <a
+              class="theme-breadcrumb-item mw-25"
+              [routerLink]="['/td/runs/', testCaseResult?.testPlanResultId]"
+              [textContent]="'result.run_id' | translate: {id: testCaseResult?.testPlanResultId}"></a>
+            <a
+              class="theme-breadcrumb-item mw-25"
+              [routerLink]="['/td/machine_results', testCaseResult?.environmentResultId]"
+              [matTooltip]="testCaseResult?.testDeviceResult?.testDeviceSettings?.title"
+              [textContent]="testCaseResult?.testDeviceResult?.testDeviceSettings?.title"></a>
+            <a
+              class="theme-breadcrumb-item mw-25"
+              [routerLink]="['/td/suite_results', testCaseResult?.suiteResultId]"
+              [matTooltip]="testCaseResult?.testSuite?.name"
+              [textContent]="testCaseResult?.testSuite?.name"></a>
+          </div>
+          <div class="theme-details-header" [class.pt-15]="isDry">
+            <a
+              *ngIf="testCaseResult"
+              [routerLink]="['/td', 'cases', testCaseResult?.testCaseId]"
+              class="title-name"
+              [matTooltip]="testCaseResult?.testCase?.name"
+              [textContent]="testCaseResult?.testCase?.name"></a>
+          </div>
+        </div>
+        <div class="d-flex align-items-baseline pl-10 ml-auto mt-10">
+          <button
+            *ngIf="testCaseResult?.isQueued"
+            (click)="fetchTestCaseResult()"
+            [matTooltip]="'result.hint.click.here.refresh' | translate"
+            class="btn icon-btn border-rds-2 mr-14">
+            <i class="fa-refresh-thick"></i>
+          </button>
+          <app-test-case-result-details-pagination
+            *ngIf="!isDry && !testCaseResult.isQueued"
+            [testCaseResult]="testCaseResult"></app-test-case-result-details-pagination>
+          <a (click)="openSummary()"
+            *ngIf="!isDry"
+            [matTooltip]="'result.hint.details' | translate"
+            class="btn icon-btn border-rds-2 ml-14">
+            <i class="fa-info"></i>
+          </a>
+          <div
+            [class.ml-14]="testCaseResult?.testCase?.preRequisite"
+            [class.dropdown]="testCaseResult?.testCase?.preRequisite"
+            [class.mouse-over]="testCaseResult?.testCase?.preRequisite">
+            <button
+              [disabled]="startSync"
+              *ngIf="(testCaseResult.iteration && !testCaseResult.parentResult?.isExecuting||!testCaseResult.iteration) && !testCaseResult?.isExecuting && isDry"
+              (click)="startExecution(getTestCaseResult()?.testDeviceResult?.testPlanResult?.dryTestPlan)"
+              class="theme-btn-primary py-6">
+              <i class="fa-filled-circled-play pr-4"></i>
+              <span [translate]="'dry.testcase.btn.re_run'"></span>
+            </button>
+          </div>
+          <button
+            *ngIf="testCaseResult?.isExecuting && isDry"
+            (click)="stopExecution(getTestCaseResult()?.testDeviceResult?.testPlanResult)"
+            class="btn btn-delete">
+            <i class="fa-stop-circle-solid pr-4"></i>
+            <span [translate]="'hint.message.common.stop'"></span>
+          </button>
+          <button
+            *ngIf="!isDry"
+            (click)="reportBug()"
+            [matTooltip]="'result.hint.report.bug' | translate"
+            class="btn icon-btn border-rds-2 ml-14">
+            <i class="fa-bug"></i>
+          </button>
+          <button
+            (click)="openUpdateStatus()"
+            [translate]="'testcase.status.update.btn'"
+            class="btn icon-btn border-rds-2 ml-14">
+          </button>
+        </div>
+      </div>
+      <div class="ts-col-100 position-relative d-flex pt-18" [class.pt-30]="isDry">
+        <div class="details-container ts-col-90 flex-nowrap no-margin align-items-center">
+          <div class="pr-20 position-relative">
+            <div class="highChart ml-auto">
+              <app-result-donut-chart
+                *ngIf="testCaseResult && getTestCaseResult()"
+                [width]="68"
+                [height]="68"
+                [resultEntity]="getTestCaseResult()"></app-result-donut-chart>
+            </div>
+            <i
+              (click)="openSummary()"
+              [matTooltip]="'hint.message.common.expand_summary' | translate"
+              class="expand-icon-slope"></i>
+          </div>
+          <div>
+            <div class="details-items text-nowrap mt-n5">
+              <div class="pb-4 details-info align-items-center d-flex mt-n5">
+                <div *ngIf="testCase?.preRequisite && isDry" class="mr-10">
+                  <a
+                    class="pr-4"
+                    (click)="preReqNavigate()"
+                    [matTooltip]="'result.pre_requisite_navigate' | translate">
+                    <i class='fas fa-eye fa-2x text-t-secondary'></i>
+                  </a>
+                </div>
+                <app-result-status-label-info *ngIf="testCaseResult && getTestCaseResult()"
+                                              [result]="getTestCaseResult()"></app-result-status-label-info>
+                <div
+                  class="align-items-center d-flex text-theme pointer"
+                  *ngIf="(getTestCaseResult()?.isFailed || getTestCaseResult()?.isAborted) && !(isRest)"
+                  (click)="openResultFailedHelp()">
+                  <i class="fa-idea pr-7 fz-24"></i>
+                  <span [translate]="'testcase_result.why_failed'"></span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="details-items mt-5 text-nowrap">
+              <div class="details-info">
+                <div class="d-flex justify-content-center">
+                  <div
+                    [textContent]="getTestCaseResult()?.startTime | date:'h:mm a MMM d, y'"></div>
+                  <div class="pl-10">
+                    <app-duration-format
+                      [duration]="getTestCaseResult()?.duration"></app-duration-format>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            *ngIf="!(testCaseResult?.testDeviceResult?.testPlanResult?.environment?.name == null)"
+            class="details-items pl-40 mw-20 text-nowrap">
+            <label class="details-title" [translate]="'runs.details.environment'"></label>
+            <div
+              class="details-info text-truncate mt-10"
+              [matTooltip]="testCaseResult?.testDeviceResult?.testPlanResult?.environment?.name"
+              [textContent]="testCaseResult?.testDeviceResult?.testPlanResult?.environment?.name || '-'"></div>
+          </div>
+          <app-lab-environment-screen-short-info
+            *ngIf="testCaseResult && getTestCaseResult()"
+            class="text-nowrap"
+            [environmentResult]="getTestCaseResult()?.testDeviceResult"
+            [executionEnvironment]="getTestCaseResult()?.testDeviceResult?.testDevice"
+            [executionResult]="getTestCaseResult()?.testDeviceResult?.testPlanResult"></app-lab-environment-screen-short-info>
+          <div class="details-items mt-30 mw-20 text-nowrap" [ngSwitch]="!testCaseResult?.isExecuting && !testCaseResult?.totalCount && isTestCaseFetchingCompleted">
+            <div *ngSwitchCase="true"
+                 class="align-items-center d-flex details-info mt-2">
+              <span
+                class="text-truncate pointer"
+                [innerHTML]="testCaseResult.message"
+                matTooltip="{{testCaseResult?.message}}"></span>
+            </div>
+            <div *ngSwitchDefault
+              class="align-items-center d-flex details-info mt-2 text-link pointer" (click)="openSummary()">
+              <span
+                [translate]="'hint.message.common.more'"
+                class="text-truncate"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="d-flex theme-details-scroll-content" style="height: calc(100% - 165px)">
+<!--  <div-->
+<!--    class="theme-border-r theme-border-t h-100 rb-regular theme-details-scroll x-md-h ts-col-18"-->
+<!--    *ngIf="testCaseResult?.parentId">-->
+<!--    <app-test-case-data-driven-results-->
+<!--      *ngIf="!isDry && testCaseResult"-->
+<!--      [resultEntity]="testCaseResult"></app-test-case-data-driven-results>-->
+<!--    <app-dry-test-case-data-driven-results-->
+<!--      *ngIf="isDry && testCaseResult"-->
+<!--      [resultEntity]="testCaseResult"></app-dry-test-case-data-driven-results>-->
+<!--    <app-placeholder-loader *ngIf="!isTestCaseFetchingCompleted"></app-placeholder-loader>-->
+<!--  </div>-->
+  <div class="ts-col-100">
+    <div
+      class="page-details-navigation-md">
+      <div  *ngIf="testCaseResult?.parentId" class="ml-n45 ts-col-23">
+      <app-test-case-data-driven-results
+        class="bg-grey-x-light d-block pl-45 ts-col-100 py-4"
+        *ngIf="testCaseResult"
+        [resultEntity]="testCaseResult"></app-test-case-data-driven-results>
+      </div>
+      <ul class="tab-nav" role="tablist">
+        <li class="nav-items" role="presentation">
+          <a
+            (click)="activeTab = 'steps'"
+            [class.active]="activeTab == 'steps'"
+            [class.md-height-border]="testCaseResult?.parentId"
+            class="normal-text">
+            <i class="fa-list"></i>
+            <span [translate]="'result.test_step'"></span>
+          </a>
+        </li>
+        <li class="nav-items" role="presentation">
+          <a
+            (click)="activeTab = 'attachment'"
+            [class.md-height-border]="testCaseResult?.parentId"
+            [class.active]="activeTab == 'attachment'"
+            class="normal-text">
+            <i class="fa-pin-alt"></i>
+            <span [translate]="'message.common.attachments'"></span>
+          </a>
+        </li>
+      </ul>
+      <div
+        [class.d-flex]="activeTab == 'steps'"
+        [class.align-items-center]="activeTab == 'steps'"
+        class="ml-auto">
+        <app-auto-refresh
+          *ngIf="(testCaseResult?.isQueued || testCaseResult?.parentResult?.isQueued)"
+          [autoRefreshIntervalTime]="autoRefreshInterval"
+          (autoRefreshIntervalTime)="changeAutoRefreshTime($event)"
+          (autoRefreshToggle)="toggleAutoRefresh($event)"></app-auto-refresh>
+      </div>
+    </div>
+    <div class="d-flex-wrap ts-col-100 theme-details-scroll h-100">
+      <div *ngIf="activeTab == 'steps' && !testCaseResult?.isExecuting && !testCaseResult?.totalCount && isTestCaseFetchingCompleted"
+           class="empty-full-container w-100">
+        <div class="empty-run-md" *ngIf="!testCaseResult.message"></div>
+        <div class="empty-text" [translate]="'test_step.no_steps'"*ngIf="!testCaseResult.message"></div>
+        <div class="d-flex justify-content-center empty-text text-center" [style]="{'overflow-wrap': 'break-word','word-break': 'break-word'}"
+             [innerHTML]="testCaseResult?.message.length > 1000 ? testCaseResult?.message.substring(0,1000)+'...' : testCaseResult?.message"
+             *ngIf="testCaseResult?.message"></div>
+      </div>
+      <div class="d-flex ts-col-100 h-100" *ngIf="activeTab == 'steps'">
+        <div
+          *ngIf="(testCaseResult?.isExecuting || !testCaseResult?.isQueued)"
+          class="h-100 rb-regular"
+          [ngStyle]="{'flex': !isEditStep? '0 0 calc(63% + 45px' : '0 0 100%', 'max-width': !isEditStep? 'calc(63% + 45px)': '100%'}">
+          <app-test-step-results
+            *ngIf="testCaseResult"
+            (onStepEditAction)="setEditToggle($event)"
+            (onStepDetails)="triggerPopup()"
+            (onStepNavigate)="navigateToStepResult($event)"
+            (onFirstFailedStep)="setFirstFailedStep($event)"
+            [resultEntity]="testCaseResult"></app-test-step-results>
+          <app-placeholder-loader *ngIf="!isTestCaseFetchingCompleted||testCaseResult?.isExecuting"></app-placeholder-loader>
+        </div>
+        <div
+          cdkOverlayOrigin #trigger="cdkOverlayOrigin"
+          [class.d-none]="!isEditStep">
+        </div>
+        <ng-template
+          cdkConnectedOverlayPanelClass="pop-hover-step-details"
+          cdkConnectedOverlayHasBackdrop="true"
+          cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+          #detailsRef="cdkConnectedOverlay"
+          cdkConnectedOverlay
+          [cdkConnectedOverlayOrigin]="trigger"
+          [cdkConnectedOverlayOpen]="testStepDetailsOpen">
+          <div
+            *ngIf="testCaseResult?.isRunning || !testCaseResult?.isQueued"
+            class="rb-regular d-flex h-100 ts-col-100 step-details-pop-up">
+            <router-outlet></router-outlet>
+          </div>
+        </ng-template>
+        <div
+          *ngIf="(testCaseResult?.isRunning || !testCaseResult?.isQueued) && !isEditStep"
+          class="rb-regular d-flex h-100 ts-col-37-45 w-100">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+      <div class="ts-col-100 h-100 bg-default">
+        <app-result-attachment
+          *ngIf="activeTab == 'attachment'"
+          [attachmentRow]="'TESTCASE_RESULT'"
+          [attachmentRowId]="testCaseResult?.id"
+          class="h-100 d-flex"></app-result-attachment>
+      </div>
+    </div>
+  </div>
+</div>

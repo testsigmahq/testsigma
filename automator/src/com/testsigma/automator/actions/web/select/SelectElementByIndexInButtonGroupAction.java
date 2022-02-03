@@ -29,7 +29,7 @@ public class SelectElementByIndexInButtonGroupAction extends ElementAction {
   protected void execute() throws Exception {
     findElement();
     List<WebElement> targetElements = getElements();
-    int indexValue = NumberFormatter.getIntegerValue(getTestData(), String.format(ELEMENT_IS_NOT_A_NUMBER, getTestDataMaskResult()));
+    int indexValue = NumberFormatter.getIntegerValue(getTestData(), String.format(ELEMENT_IS_NOT_A_NUMBER, getTestData()));
     Assert.isTrue((indexValue < targetElements.size()), String.format(INDEX_NOT_AVAILABLE, indexValue, targetElements.size(), targetElements.size() - 1));
     for (int i = 0; i < targetElements.size(); i++) {
       if (i == indexValue) {
@@ -43,14 +43,14 @@ public class SelectElementByIndexInButtonGroupAction extends ElementAction {
         }
       }
     }
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult()));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
   }
 
   private void handleElementExceptions(Exception e) throws AutomatorException {
     if (e instanceof NotFoundException) {
-      throw new AutomatorException(String.format(ELEMENT_NOT_FOUND, getTestDataMaskResult()));
+      throw new AutomatorException(String.format(ELEMENT_NOT_FOUND, getTestData()));
     } else {
-      throw new AutomatorException(String.format(ELEMENT_NOT_CLICKABLE, getTestDataMaskResult()));
+      throw new AutomatorException(String.format(ELEMENT_NOT_CLICKABLE, getTestData()));
     }
   }
 }

@@ -35,7 +35,6 @@
           <input
             type="textbox" formControlName="key"
             [readOnly]="!edit"
-            (blur)="setEncryptedNames()"
             [class.border-fail-1]="isDuplicateParameters(parametersControl.value.key)"
             [class.result-1]="isDuplicateParameters(parametersControl.value.key)"
             [placeholder]="'common.key' | translate" (blur)="andEmptyRowIfMissing()"/>
@@ -50,20 +49,10 @@
           <span
             [class.view-input]="!edit"
             class="input-encrypt">
-<!--           <i-->
-<!--             [matTooltip]="!edit? '':'hint.message.common.encrypt' | translate"-->
-<!--             *ngIf="!isParameterEncrypted(parametersControl)"-->
-<!--             class="fa-lock-open-solid input-encrypt-icon"-->
-<!--             (click)="!edit? '' : encrypt(parametersControl)"></i>-->
-<!--          <i-->
-<!--            [matTooltip]="!edit? '':'hint.message.common.decrypt' | translate"-->
-<!--            *ngIf="isParameterEncrypted(parametersControl)"-->
-<!--            class="fa-lock-solid input-encrypt-icon"-->
-<!--            (click)="!edit? '' : decrypt(parametersControl)"></i>-->
           <input
             [readOnly]="!edit"
             class="ts-col-100-25 input-encrypt-field"
-            [type]="isParameterEncrypted(parametersControl) ? 'password' : 'textbox'"  formControlName="value"
+            [type]="'textbox'"  formControlName="value"
             [class.border-fail-1]="isEmptyValue(parametersControl)"
             [class.result-1]="isEmptyValue(parametersControl)"
             [placeholder]="'common.value' | translate" (blur)="andEmptyRowIfMissing()"/>

@@ -21,10 +21,9 @@ public class WhileLoopStepProcessor extends StepProcessor {
                                 WorkspaceType workspaceType, Map<String, Element> elementMap,
                                 TestStepDTO testStepDTO, Long executionId, TestDataSet testDataSet,
                                 Map<String, String> environmentParams, TestCaseEntityDTO testCaseEntityDTO,
-                                String environmentParamSetName, String dataProfile, List<String> testDataPasswords,
-                                List<String> environmentPasswords) {
+                                String environmentParamSetName, String dataProfile) {
     super(webApplicationContext, testCaseStepEntityDTOS, workspaceType, elementMap, testStepDTO, executionId, testDataSet,
-      environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile, testDataPasswords, environmentPasswords);
+      environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile);
   }
 
   public void processWhileLoop(List<TestStepDTO> testStepDTOS, List<Long> loopIds)
@@ -42,13 +41,13 @@ public class WhileLoopStepProcessor extends StepProcessor {
       if (loopentity.getType() == TestStepType.REST_STEP) {
         new RestStepProcessor(webApplicationContext, iteEntity.getTestCaseSteps(), workspaceType, elementMap,
           loopentity, executionId, testDataSet, environmentParameters, testCaseEntityDTO, environmentParamSetName,
-          dataProfile, testDataPasswords, environmentPasswords).process();
+          dataProfile).process();
         exeEntity = iteEntity.getTestCaseSteps().get(iteEntity.getTestCaseSteps().size() - 1);
         iteEntity.getTestCaseSteps().remove(iteEntity.getTestCaseSteps().size() - 1);
       } else {
         exeEntity = new StepProcessor(webApplicationContext, testCaseStepEntityDTOS, workspaceType, elementMap,
           loopentity, executionId, testDataSet, environmentParameters, testCaseEntityDTO, environmentParamSetName,
-          dataProfile, testDataPasswords, environmentPasswords).processStep();
+          dataProfile).processStep();
 
         exeEntity.setParentId(loopentity.getParentId());
         exeEntity.setTestCaseId(loopentity.getTestCaseId());
@@ -63,8 +62,7 @@ public class WhileLoopStepProcessor extends StepProcessor {
         List<TestCaseStepEntityDTO> stepGroupSpecialSteps = new ArrayList<>();
         if (centity.getType() == TestStepType.REST_STEP) {
           new RestStepProcessor(webApplicationContext, stepGroupSpecialSteps, workspaceType, elementMap,
-            centity, executionId, testDataSet, environmentParameters, testCaseEntityDTO, environmentParamSetName, dataProfile,
-            testDataPasswords, environmentPasswords).process();
+            centity, executionId, testDataSet, environmentParameters, testCaseEntityDTO, environmentParamSetName, dataProfile).process();
           exeEntity.getTestCaseSteps().addAll(stepGroupSpecialSteps);
           continue;
         }
@@ -72,7 +70,7 @@ public class WhileLoopStepProcessor extends StepProcessor {
         if (TestStepType.FOR_LOOP == centity.getType()) {
           new ForLoopStepProcessor(webApplicationContext, stepGroupSpecialSteps, workspaceType,
             elementMap, centity, executionId, testDataSet, environmentParameters, testCaseEntityDTO,
-            environmentParamSetName, dataProfile, testDataPasswords, environmentPasswords)
+            environmentParamSetName, dataProfile)
             .processLoop(loopentity.getTestStepDTOS(), loopIds);
           exeEntity.getTestCaseSteps().addAll(stepGroupSpecialSteps);
 
@@ -81,7 +79,7 @@ public class WhileLoopStepProcessor extends StepProcessor {
 
         TestCaseStepEntityDTO cstepEntity = new StepProcessor(webApplicationContext, testCaseStepEntityDTOS,
                 workspaceType, elementMap, centity, executionId, testDataSet, environmentParameters, testCaseEntityDTO,
-          environmentParamSetName, dataProfile, testDataPasswords, environmentPasswords).processStep();
+          environmentParamSetName, dataProfile).processStep();
 
         cstepEntity.setParentId(centity.getParentId());
         cstepEntity.setTestCaseId(centity.getTestCaseId());
@@ -95,18 +93,18 @@ public class WhileLoopStepProcessor extends StepProcessor {
           if (stepDTOFromGroup.getType() == TestStepType.REST_STEP) {
             new RestStepProcessor(webApplicationContext, cstepEntity.getTestCaseSteps(), workspaceType,
               elementMap, stepDTOFromGroup, executionId, testDataSet, environmentParameters, testCaseEntityDTO,
-              environmentParamSetName, dataProfile, testDataPasswords, environmentPasswords).process();
+              environmentParamSetName, dataProfile).process();
             continue;
           }
           TestCaseStepEntityDTO stepEntityFromGroup = new StepProcessor(webApplicationContext, testCaseStepEntityDTOS,
                   workspaceType, elementMap, stepDTOFromGroup, executionId, testDataSet, environmentParameters,
-            testCaseEntityDTO, environmentParamSetName, dataProfile, testDataPasswords, environmentPasswords)
+            testCaseEntityDTO, environmentParamSetName, dataProfile)
             .processStep();
 
           if (TestStepType.FOR_LOOP == stepDTOFromGroup.getType()) {
             new ForLoopStepProcessor(webApplicationContext, stepEntityFromGroup.getTestCaseSteps(), workspaceType,
               elementMap, stepDTOFromGroup, executionId, testDataSet, environmentParameters, testCaseEntityDTO,
-              environmentParamSetName, dataProfile, testDataPasswords, environmentPasswords)
+              environmentParamSetName, dataProfile)
               .processLoop(null, loopIds);
             continue;
           }

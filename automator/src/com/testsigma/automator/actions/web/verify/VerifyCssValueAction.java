@@ -29,11 +29,11 @@ public class VerifyCssValueAction extends ElementAction {
     findElement();
     setActualValue(getElement().getCssValue(getAttribute()));
     Assert.notNull(getActualValue(), String.format(FAILURE_MESSAGE, getAttribute(), getFindByType(), getLocatorValue(), getActualValue(),
-      getTestDataMaskResult(), getActualValue()));
+      getTestData(), getActualValue()));
     Assert.isTrue(!(getActualValue().toString().isEmpty()), String.format(FAILURE_MESSAGE_NOT_AVAILABLE, getFindByType(),
       getLocatorValue(), getAttribute()));
     Assert.isTrue(getTestData().equalsIgnoreCase(getActualValue().toString()),
-      String.format(FAILURE_MESSAGE, getAttribute(), getFindByType(), getLocatorValue(), getActualValue(), getTestDataMaskResult(), getActualValue()));
+      String.format(FAILURE_MESSAGE, getAttribute(), getFindByType(), getLocatorValue(), getActualValue(), getTestData(), getActualValue()));
     setSuccessMessage(String.format(SUCCESS_MESSAGE, getAttribute(), getFindByType(), getLocatorValue(), getActualValue()));
   }
 }

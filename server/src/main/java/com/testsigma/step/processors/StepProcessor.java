@@ -13,7 +13,6 @@ import com.testsigma.mapper.TestStepMapper;
 import com.testsigma.model.TestDataSet;
 import com.testsigma.model.*;
 import com.testsigma.service.*;
-import com.testsigma.util.EncryptDecryt;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
@@ -35,8 +34,6 @@ public class StepProcessor {
   protected TestCaseEntityDTO testCaseEntityDTO;
   protected String environmentParamSetName;
   protected String dataProfile;
-  protected List<String> testDataPasswords;
-  protected List<String> environmentPasswords;
   protected TestDataProfileService testDataProfileService;
   protected ElementMapper elementMapper;
   protected NaturalTextActionsService naturalTextActionsService;
@@ -51,7 +48,7 @@ public class StepProcessor {
                        WorkspaceType workspaceType, Map<String, Element> elementMap,
                        TestStepDTO testStepDTO, Long executionId, TestDataSet testDataSet,
                        Map<String, String> environmentParameters, TestCaseEntityDTO testCaseEntityDTO, String environmentParamSetName,
-                       String dataProfile, List<String> testDataPasswords, List<String> environmentPasswords) {
+                       String dataProfile) {
     this.webApplicationContext = webApplicationContext;
     this.testCaseStepEntityDTOS = testCaseStepEntityDTOS;
     this.workspaceType = workspaceType;
@@ -63,8 +60,6 @@ public class StepProcessor {
     this.testCaseEntityDTO = testCaseEntityDTO;
     this.environmentParamSetName = environmentParamSetName;
     this.dataProfile = dataProfile;
-    this.testDataPasswords = testDataPasswords;
-    this.environmentPasswords = environmentPasswords;
     this.testDataProfileService = (TestDataProfileService) webApplicationContext.getBean("testDataProfileService");
     this.elementMapper = (ElementMapper) webApplicationContext.getBean("elementMapperImpl");
     this.testStepMapper = (TestStepMapper) webApplicationContext.getBean("testStepMapperImpl");
@@ -219,8 +214,7 @@ public class StepProcessor {
       throw new TestsigmaException(ExceptionErrorCodes.ELEMENT_NOT_FOUND,
         MessageConstants.getMessage(MessageConstants.ELEMENT_WITH_THE_NAME_IS_NOT_AVAILABLE, elementName));
     }
-    String locatorValue = updateElement(element, testDataSet, environmentParameters,
-      testDataPasswords);
+    String locatorValue = updateElement(element, testDataSet, environmentParameters);
     ElementPropertiesDTO elementPropertiesDTO = new ElementPropertiesDTO();
     elementPropertiesDTO.setElementName(elementName);
     elementPropertiesDTO.setLocatorValue(locatorValue);
@@ -249,9 +243,6 @@ public class StepProcessor {
         }
         String originalTestDataEnvironmentValue = testDataValue;
         testDataValue = environmentParameters.get(testDataValue);
-        if (environmentPasswords != null && environmentPasswords.contains(originalTestDataEnvironmentValue)) {
-          testDataPropertiesEntity.setHasPassword(environmentPasswords.contains(originalTestDataEnvironmentValue));
-        }
         break;
       case parameter:
         if ((testDataSet == null) || (testDataSet.getData() == null)) {
@@ -267,10 +258,6 @@ public class StepProcessor {
               testDataName, testCaseEntityDTO.getTestCaseName(), dataProfile));
         }
 
-        if (testDataPasswords != null && testDataPasswords.contains(originalTestDataValue)) {
-          testDataPropertiesEntity.setHasPassword(testDataPasswords.contains(originalTestDataValue));
-          testDataValue = new EncryptDecryt().decrypt(testDataValue);
-        }
         break;
       case random:
       case runtime:
@@ -407,7 +394,7 @@ public class StepProcessor {
   }
 
 
-  public String updateElement(Element element, TestDataSet testData, Map<String, String> environmentParams, List<String> passwords) {
+  public String updateElement(Element element, TestDataSet testData, Map<String, String> environmentParams) {
     String locatorValue = element.getLocatorValue();
     try {
 
@@ -428,9 +415,6 @@ public class StepProcessor {
           if (!(testData == null || testData.getData() == null || org.apache.commons.lang3.StringUtils.isEmpty(dataMap.get(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA)) ||
             org.apache.commons.lang3.StringUtils.isEmpty(testData.getData().optString(dataMap.get(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA))))) {
             String data = testData.getData().getString(dataMap.get(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA));
-            if (passwords != null && passwords.contains(dataMap.get(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA))) {
-              data = new EncryptDecryt().decrypt(data);
-            }
             locatorValue =
               element.getLocatorValue().replaceAll(NaturalTextActionConstants.TEST_DATA_PARAMETER_PREFIX + "\\|" + Pattern.quote(dataMap.get(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA)) + "\\|",
                 Matcher.quoteReplacement(data));

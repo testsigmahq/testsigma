@@ -28,7 +28,7 @@ public class VerifyElementValueNotEqualsAction extends ElementAction {
       getFindByType(), getLocatorValue(), actualValueString));
     setActualValue(actualValue);
     Double expectedValue = NumberFormatter.getDoubleValue(getTestData(), FAILURE_MESSAGE_INVALID_EXPECTED_VALUE);
-    Assert.isTrue((!actualValue.equals(expectedValue)), String.format(FAILURE_MESSAGE_MISMATCH, getFindByType(), getLocatorValue(), actualValueString, getTestDataMaskResult()));
+    Assert.isTrue((!actualValue.equals(expectedValue)), String.format(FAILURE_MESSAGE_MISMATCH, getFindByType(), getLocatorValue(), actualValueString, getTestData()));
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 }

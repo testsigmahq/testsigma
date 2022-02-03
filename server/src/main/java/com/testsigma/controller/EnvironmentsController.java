@@ -39,12 +39,10 @@ public class EnvironmentsController {
   private final EnvironmentService environmentService;
 
   @RequestMapping(path = "/{id}", method = RequestMethod.GET)
-  public EnvironmentDTO show(@PathVariable(value = "id") Long id, @RequestParam(value = "encrypt", required = false) Boolean encrypt) throws ResourceNotFoundException {
+  public EnvironmentDTO show(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
     log.info("Get Request /environments/" + id);
     Environment environment = environmentService.find(id);
     EnvironmentDTO environmentDTO = environmentMapper.map(environment);
-    if (encrypt != null && !encrypt)
-      environmentDTO.setParameters(new JSONObject(environment.decryptedData()));
     return environmentDTO;
   }
 
@@ -77,11 +75,9 @@ public class EnvironmentsController {
     log.info("Update Request /environments/" + id);
     Environment environment = environmentService.find(id);
     Environment oldEnvironment = new Environment();
-    oldEnvironment.setPasswords(environment.getPasswords());
     oldEnvironment.setData(environment.getData());
     environmentMapper.merge(environment, request);
     environment.setUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-    environment.updatePasswordValue(oldEnvironment);
     environment = this.environmentService.update(environment);
     return environmentMapper.map(environment);
   }
@@ -92,7 +88,6 @@ public class EnvironmentsController {
     log.info("Create Request /environments/" + request);
     Environment environment = environmentMapper.map(request);
     environment.setCreatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-    environment.encryptPasswords();
     environment = this.environmentService.create(environment);
     return environmentMapper.map(environment);
   }

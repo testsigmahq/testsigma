@@ -16,7 +16,7 @@ public class VerifyElementsCountGreaterOrEqualsAction extends ElementAction {
   protected void execute() throws Exception {
     findElement();
     double elementsSize = getElements().size();
-    double expectedCount = NumberFormatter.getDoubleValue(getTestData(), String.format(FAILURE_NOT_A_NUMBER, getTestDataMaskResult()));
+    double expectedCount = NumberFormatter.getDoubleValue(getTestData(), String.format(FAILURE_NOT_A_NUMBER, getTestData()));
     Assert.isTrue((elementsSize >= expectedCount), String.format(FAILURE_MESSAGE, getFindByType(), getLocatorValue(),
       expectedCount, (int) elementsSize));
     setSuccessMessage(String.format(SUCCESS_MESSAGE, expectedCount, (int) elementsSize));

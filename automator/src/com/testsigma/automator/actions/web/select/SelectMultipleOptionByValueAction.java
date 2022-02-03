@@ -41,7 +41,7 @@ public class SelectMultipleOptionByValueAction extends ElementAction {
       for (WebElement webElement : webElements) {
         selectedValue.add(webElement.getText());
       }
-      throw new AutomatorException(String.format(ELEMENTS_MISMATCHED, getTestDataMaskResult(), getFindByType(), getLocatorValue(), selectedValue));
+      throw new AutomatorException(String.format(ELEMENTS_MISMATCHED, getTestData(), getFindByType(), getLocatorValue(), selectedValue));
     }
     setSuccessMessage(SUCCESS_MESSAGE);
   }

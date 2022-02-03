@@ -13,7 +13,6 @@ import com.testsigma.constants.AutomatorMessages;
 import com.testsigma.mapper.TestStepResultMapper;
 import com.testsigma.model.*;
 import com.testsigma.repository.TestStepResultRepository;
-import com.testsigma.util.EncryptDecryt;
 import com.testsigma.web.request.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -87,11 +86,6 @@ public class TestStepResultService {
       index++;
     }
     List<TestDataSet> sets = testData.getData();
-    List<String> passwords = testData.getPasswords();
-    passwords = passwords != null ? passwords : new ArrayList<String>();
-    for (String password : passwords) {
-      testDataSet.getData().put(password, new EncryptDecryt().encrypt(testDataSet.getData().getString(password)));
-    }
     sets.set(index, testDataSet);
     testData.setData(sets);
   }

@@ -185,10 +185,6 @@ public abstract class TestcaseStepRunner {
         log.debug("Step type is normal. Executing normal Action step");
         execute(envDetails, testCaseStepResult, testCaseStepEntity, testCaseResult);
 
-        if (testCaseStepEntity.getHasPassword()) {
-          testCaseStepEntity.setTestDataValue(NaturalTextActionConstants.PASSWORD_MASK);
-        }
-
         ObjectMapper mapper = new ObjectMapper();
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         Map<String, Object> metadata = mapper.convertValue(testCaseStepEntity, Map.class);

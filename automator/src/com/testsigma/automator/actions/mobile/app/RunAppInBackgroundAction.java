@@ -11,10 +11,10 @@ public class RunAppInBackgroundAction extends MobileElementAction {
 
   @Override
   protected void execute() throws Exception {
-    int noOfSeconds = NumberFormatter.getIntegerValue(getTestData(), String.format(FAILURE_NOT_A_NUMBER, getTestDataMaskResult()));
+    int noOfSeconds = NumberFormatter.getIntegerValue(getTestData(), String.format(FAILURE_NOT_A_NUMBER, getTestData()));
     Duration duration = Duration.ofSeconds(noOfSeconds);
     getDriver().runAppInBackground(duration);
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult()));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
   }
 }
 

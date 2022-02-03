@@ -13,6 +13,6 @@ public class StoreSelectedOptionAction extends ElementAction {
     String runTimeVarValue = selectElement.getFirstSelectedOption().getText();
     runtimeDataProvider.storeRuntimeVariable(getTestData(), runTimeVarValue);
     resultMetadata.put(getTestData(), runTimeVarValue);
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult(), runTimeVarValue));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData(), runTimeVarValue));
   }
 }

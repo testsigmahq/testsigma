@@ -34,7 +34,7 @@ public class VerifyClassNameAction extends ElementAction {
     String[] expectedClassNames = getTestData().split(" ");
     for (String expectedClassName : expectedClassNames) {
       Assert.isTrue(actualClassNames.contains(expectedClassName),
-        String.format(FAILURE_MESSAGE, getFindByType(), getLocatorValue(), expectedClassName, getTestDataMaskResult(), getActualValue()));
+        String.format(FAILURE_MESSAGE, getFindByType(), getLocatorValue(), expectedClassName, getTestData(), getActualValue()));
     }
     setSuccessMessage(SUCCESS_MESSAGE);
   }

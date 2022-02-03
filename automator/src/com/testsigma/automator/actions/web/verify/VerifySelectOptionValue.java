@@ -19,7 +19,7 @@ public class VerifySelectOptionValue extends ElementAction {
     String selectedOptionValue = selectElement.getFirstSelectedOption().getAttribute(ActionConstants.ATTRIBUTE_VALUE);
     Assert.notNull(selectedOptionValue, "\"value\" attribute is not present for the selected option");
     Assert.isTrue(selectedOptionValue.equals(getTestData()), String.format(FAILURE_MESSAGE,
-      getFindByType(), getLocatorValue(), selectedOptionValue, getTestDataMaskResult()));
+      getFindByType(), getLocatorValue(), selectedOptionValue, getTestData()));
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 

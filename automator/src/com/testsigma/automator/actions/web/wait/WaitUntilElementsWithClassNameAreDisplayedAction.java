@@ -20,10 +20,10 @@ public class WaitUntilElementsWithClassNameAreDisplayedAction extends ElementAct
   public void execute() throws Exception {
     try {
       List<WebElement> elements = getWebDriverWait().until(CustomExpectedConditions.allElementsOfClassNameAreDisplayed(getTestData()));
-      Assert.notNull(elements, String.format(FAILURE_MESSAGE, getTestDataMaskResult()));
+      Assert.notNull(elements, String.format(FAILURE_MESSAGE, getTestData()));
       setSuccessMessage(SUCCESS_MESSAGE);
     } catch (TimeoutException e) {
-      throw new AutomatorException(String.format(FAILURE_MESSAGE, getTestDataMaskResult()), (Exception) e.getCause());
+      throw new AutomatorException(String.format(FAILURE_MESSAGE, getTestData()), (Exception) e.getCause());
     }
   }
 

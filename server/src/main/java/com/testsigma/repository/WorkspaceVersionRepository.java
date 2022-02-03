@@ -46,8 +46,8 @@ public interface WorkspaceVersionRepository extends JpaSpecificationExecutor<Wor
   void copyFields(@Param("newVersionId") Long newVersionId, @Param("versionId") Long versionId);
 
   @Modifying
-  @Query(value = "INSERT INTO test_data( CREATED_DATE, version_id, test_data, test_data_name, passwords, copied_from)  SELECT now(), " +
-    ":newVersionId, test_data,test_data_name, passwords, id FROM test_data " +
+  @Query(value = "INSERT INTO test_data( CREATED_DATE, version_id, test_data, test_data_name, copied_from)  SELECT now(), " +
+    ":newVersionId, test_data,test_data_name, id FROM test_data " +
     "WHERE version_id= :versionId", nativeQuery = true)
   void copyTestData(@Param("newVersionId") Long newVersionId, @Param("versionId") Long versionId);
 

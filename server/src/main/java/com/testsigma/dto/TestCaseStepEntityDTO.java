@@ -47,7 +47,6 @@ public class TestCaseStepEntityDTO implements Cloneable {
   private String testDataName;
   private String testDataValue;
   private String testDataValuePreSignedURL;
-  private Boolean hasPassword = false;
   private String attribute;
   private String iteration;
   private String testDataProfileName;

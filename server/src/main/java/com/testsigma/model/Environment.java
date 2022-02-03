@@ -9,9 +9,7 @@ package com.testsigma.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.testsigma.converter.EnvironmentDataConverter;
-import com.testsigma.converter.StringSetConverter;
 import com.testsigma.service.ObjectMapperService;
-import com.testsigma.util.EncryptDecryt;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -63,8 +61,6 @@ public class Environment implements Serializable {
   @Column(name = "parameters", columnDefinition = "text")
   private String parameters;
 
-  @Column(name = "passwords", columnDefinition = "text")
-  private String passwords;
 
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "environment")
@@ -83,59 +79,6 @@ public class Environment implements Serializable {
 
   public void setParameters(JSONObject params) {
     this.parameters = params.toString();
-  }
-
-  public Map<String, String> decryptedData() {
-
-    Map<String, String> data = getData();
-    if (this.passwords != null) {
-      for (String password : this.getPasswords()) {
-        data.put(password, new EncryptDecryt().decrypt(data.get(password)));
-      }
-    }
-    return data;
-
-  }
-
-  public void encryptPasswords() {
-    if (this.passwords != null && this.getPasswords().size() > 0) {
-      Map<String, String> data = getData();
-      for (String password : this.getPasswords()) {
-        data.put(password, new EncryptDecryt().encrypt(data.get(password)));
-      }
-      setData(data);
-    }
-  }
-
-  public void updatePasswordValue(Environment oldEntity) {
-
-    List<String> passwords = getPasswords();
-    List<String> oldPasswords = oldEntity.getPasswords();
-    Map<String, String> newData = getData();
-    Map<String, String> oldData = oldEntity.getData();
-    for (String password : passwords) {
-      boolean oldDataChanged = oldData.containsKey(password) && isColumnChanged(oldData, newData, password);
-      boolean oldPlainDataMarkedAsPassword = oldData.containsKey(password) && !oldPasswords.contains(password);
-      boolean isNewPasswordColumnAdded = !oldData.containsKey(password) && newData.containsKey(password);
-      boolean hasToEncryptData = oldDataChanged || oldPlainDataMarkedAsPassword || isNewPasswordColumnAdded;
-      if (hasToEncryptData) {
-        newData.put(password, new EncryptDecryt().encrypt(newData.get(password)));
-      }
-    }
-    setData(newData);
-  }
-
-  private boolean isColumnChanged(Map<String, String> oldData, Map<String, String> newData, String password) {
-    boolean isColumnValueChanged = newData.containsKey(password) && (!newData.get(password).equals(oldData.get(password)));
-    return isColumnValueChanged;
-  }
-
-  public List<String> getPasswords() {
-    return new StringSetConverter().convertToEntityAttribute(this.passwords);
-  }
-
-  public void setPasswords(List<String> passwords) {
-    this.passwords = new StringSetConverter().convertToDatabaseColumn(passwords);
   }
 
   public Map<String, String> getData() {

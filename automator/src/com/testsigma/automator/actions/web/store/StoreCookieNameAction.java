@@ -21,7 +21,7 @@ public class StoreCookieNameAction extends ElementAction {
   protected void execute() throws Exception {
 
     Cookie cookie = getDriver().manage().getCookieNamed(getTestData());
-    Assert.notNull(cookie, String.format(FAILURE_MESSAGE, getTestDataMaskResult(),
+    Assert.notNull(cookie, String.format(FAILURE_MESSAGE, getTestData(),
       getAvailableCookieNames()));
     String nameAndValue = cookie.getName() + "=" + cookie.getValue();
     runtimeDataProvider.storeRuntimeVariable(getAttribute(), nameAndValue);

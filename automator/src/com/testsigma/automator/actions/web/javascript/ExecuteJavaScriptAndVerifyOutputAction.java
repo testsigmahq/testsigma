@@ -27,7 +27,7 @@ public class ExecuteJavaScriptAndVerifyOutputAction extends ElementAction {
   protected void handleException(Exception e) {
     super.handleException(e);
     if (e instanceof JavascriptException) {
-      setErrorMessage(String.format(FAILURE_MESSAGE, getTestDataMaskResult()));
+      setErrorMessage(String.format(FAILURE_MESSAGE, getTestData()));
       setErrorCode(ErrorCodes.JAVA_SCRIPT_EXCEPTION);
     }
   }

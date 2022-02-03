@@ -33,7 +33,7 @@ public class MobileNativeScrollToExactAction extends ScrollToCenterSnippet {
   protected void handleException(Exception e) {
     super.handleException(e);
     if (e instanceof NotFoundException) {
-      setErrorMessage(String.format(FAILURE_MESSAGE, getTestDataMaskResult()));
+      setErrorMessage(String.format(FAILURE_MESSAGE, getTestData()));
     }
   }
 }

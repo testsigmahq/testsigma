@@ -15,10 +15,10 @@ public class WaitUntilPageTitleContainsAction extends ElementAction {
   public void execute() throws Exception {
     try {
       boolean pageTitleValidated = getWebDriverWait().until(ExpectedConditions.titleContains(getTestData()));
-      Assert.isTrue(pageTitleValidated, String.format(FAILURE_MESSAGE, getTestDataMaskResult(), getTimeout()));
+      Assert.isTrue(pageTitleValidated, String.format(FAILURE_MESSAGE, getTestData(), getTimeout()));
       setSuccessMessage(SUCCESS_MESSAGE);
     } catch (TimeoutException e) {
-      throw new AutomatorException(String.format(FAILURE_MESSAGE, getTestDataMaskResult(), getTimeout()), (Exception) e.getCause());
+      throw new AutomatorException(String.format(FAILURE_MESSAGE, getTestData(), getTimeout()), (Exception) e.getCause());
     }
   }
 }

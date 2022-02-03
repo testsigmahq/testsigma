@@ -10,7 +10,7 @@ public class VerifyTextPresenceInScreenAction extends MobileElementAction {
   @Override
   protected void execute() throws Exception {
     String pageSource = getDriver().getPageSource();
-    Assert.isTrue(pageSource.contains(getTestData()), String.format(FAILURE_MESSAGE, getTestDataMaskResult()));
+    Assert.isTrue(pageSource.contains(getTestData()), String.format(FAILURE_MESSAGE, getTestData()));
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 }

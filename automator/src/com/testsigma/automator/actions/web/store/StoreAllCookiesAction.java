@@ -20,6 +20,6 @@ public class StoreAllCookiesAction extends ElementAction {
       setSuccessMessage(SUCCESS_MESSAGE_EMPTY);
       return;
     }
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult(), cookieSet));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData(), cookieSet));
   }
 }

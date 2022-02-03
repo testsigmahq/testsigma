@@ -61,11 +61,9 @@ public class EnvironmentsController {
     log.info("Update Request /api/v1/environments/" + id);
     Environment environment = environmentService.find(id);
     Environment oldEnvironment = new Environment();
-    oldEnvironment.setPasswords(environment.getPasswords());
     oldEnvironment.setData(environment.getData());
     environmentMapper.merge(environment, request);
     environment.setUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-    environment.updatePasswordValue(oldEnvironment);
     environment = this.environmentService.update(environment);
     return environmentMapper.mapApi(environment);
   }
@@ -76,7 +74,6 @@ public class EnvironmentsController {
     log.info("Create Request /api/v1/environments/" + request);
     Environment environment = environmentMapper.map(request);
     environment.setCreatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-    environment.encryptPasswords();
     environment = this.environmentService.create(environment);
     return environmentMapper.mapApi(environment);
   }

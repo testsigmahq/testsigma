@@ -43,7 +43,7 @@ public class SelectMultipleOptionByIndexAction extends ElementAction {
       for (WebElement webElement : webElements) {
         selectedIndex.add(webElement.getText());
       }
-      throw new AutomatorException(String.format(ELEMENTS_MISMATCHED, getTestDataMaskResult(), getFindByType(), getLocatorValue(), selectedIndex));
+      throw new AutomatorException(String.format(ELEMENTS_MISMATCHED, getTestData(), getFindByType(), getLocatorValue(), selectedIndex));
     }
     setSuccessMessage(SUCCESS_MESSAGE);
   }

@@ -13,10 +13,10 @@ public class LongPressOnElementAction extends ElementAction {
   @Override
   protected void execute() throws Exception {
     findElement();
-    int noOfSeconds = NumberFormatter.getIntegerValue(getTestData(), String.format(FAILURE_NOT_A_NUMBER, getTestDataMaskResult()));
+    int noOfSeconds = NumberFormatter.getIntegerValue(getTestData(), String.format(FAILURE_NOT_A_NUMBER, getTestData()));
     Duration time = Duration.ofSeconds(noOfSeconds);
     Actions actions = new Actions(getDriver());
     actions.clickAndHold(getElement()).pause(time).release().perform();
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult()));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
   }
 }

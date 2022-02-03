@@ -15,10 +15,10 @@ public class WaitUntilTextDisplayedAction extends MobileElementAction {
   public void execute() throws Exception {
     try {
       boolean textPresent = getWebDriverWait().until(CustomExpectedConditions.mobileTextToBePresent(getTestData()));
-      Assert.isTrue(textPresent, String.format(FAILURE_MESSAGE, getTimeout(), getTestDataMaskResult()));
+      Assert.isTrue(textPresent, String.format(FAILURE_MESSAGE, getTimeout(), getTestData()));
       setSuccessMessage(SUCCESS_MESSAGE);
     } catch (TimeoutException e) {
-      throw new AutomatorException(String.format(FAILURE_MESSAGE, getTimeout(), getTestDataMaskResult()), (Exception) e.getCause());
+      throw new AutomatorException(String.format(FAILURE_MESSAGE, getTimeout(), getTestData()), (Exception) e.getCause());
     }
   }
 }

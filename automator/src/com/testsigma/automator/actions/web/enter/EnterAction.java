@@ -22,11 +22,11 @@ public abstract class EnterAction extends ElementAction {
   }
 
   protected String getSelectSucceededMessage() {
-    return String.format(SUCCESS_MESSAGE, getTestDataMaskResult(), getFindByType(), getLocatorValue());
+    return String.format(SUCCESS_MESSAGE, getTestData(), getFindByType(), getLocatorValue());
   }
 
   protected String getEnterFailedMessage() {
-    return String.format(FAILURE_MESSAGE_NODATA, getTestDataMaskResult());
+    return String.format(FAILURE_MESSAGE_NODATA, getTestData());
   }
 
   protected String getElementNotFoundMessage() {

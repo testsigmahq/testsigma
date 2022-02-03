@@ -38,15 +38,15 @@ public class SelectElementByLabelContainingInButtonGroupAction extends ElementAc
         handleElementExceptions(e);
       }
     }
-    Assert.isTrue(elementSelect, String.format(ELEMENT_NOT_FOUND, getTestDataMaskResult()));
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult()));
+    Assert.isTrue(elementSelect, String.format(ELEMENT_NOT_FOUND, getTestData()));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
   }
 
   private void handleElementExceptions(Exception e) throws AutomatorException {
     if (e instanceof NotFoundException) {
-      throw new AutomatorException(String.format(ELEMENT_NOT_FOUND, getTestDataMaskResult()));
+      throw new AutomatorException(String.format(ELEMENT_NOT_FOUND, getTestData()));
     } else {
-      throw new AutomatorException(String.format(ELEMENT_NOT_CLICKABLE, getTestDataMaskResult(), getTestDataMaskResult()));
+      throw new AutomatorException(String.format(ELEMENT_NOT_CLICKABLE, getTestData(), getTestData()));
     }
   }
 }

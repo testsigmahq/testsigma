@@ -12,7 +12,6 @@ import java.util.*;
 public class TestCaseStepEntity implements Cloneable {
 
   public static final String REST_DETAILS_KEY = "rest_details";
-  public static final String MASKED_ENITY = "masked_enity";
   public LinkedHashMap<String, TestDataPropertiesEntity> testDataMap;
   public Map<String, ElementPropertiesEntity> elementsMap;
   public Map<String, AttributePropertiesEntity> attributesMap;
@@ -41,7 +40,6 @@ public class TestCaseStepEntity implements Cloneable {
   private String testDataValue;
   private String testDataValuePreSignedURL;
   private String locatorStrategy;
-  private Boolean hasPassword = false;
   private String attribute;
   private String iteration;
   private String testDataProfileName;

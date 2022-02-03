@@ -34,7 +34,7 @@ public class MobileNativeTapCoordinatesSnippet extends MobileElementAction {
   protected void handleException(Exception e) {
     super.handleException(e);
     if (e instanceof NumberFormatException) {
-      setErrorMessage(String.format("Invalid coordinates entered %s", getTestDataMaskResult()));
+      setErrorMessage(String.format("Invalid coordinates entered %s", getTestData()));
       setErrorCode(ErrorCodes.PRESS_INVALID_ARGUMENT);
     } else if (e instanceof InvalidArgumentException) {
       setErrorCode(ErrorCodes.PRESS_INVALID_OPERATION);
@@ -42,7 +42,7 @@ public class MobileNativeTapCoordinatesSnippet extends MobileElementAction {
       if (message != null && message.toUpperCase().contains("(WARNING")) {
         setErrorMessage(message.substring(0, message.toUpperCase().indexOf("(WARNING")));
       } else {
-        setErrorMessage(String.format("Please verify that the given coordinates(%s) are valid.", getTestDataMaskResult()));
+        setErrorMessage(String.format("Please verify that the given coordinates(%s) are valid.", getTestData()));
       }
     }
   }

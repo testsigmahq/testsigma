@@ -22,7 +22,6 @@ public class EnvironmentDTO {
   private String description;
   private Timestamp updatedDate;
   private Timestamp createdDate;
-  private List<String> passwords;
   @JsonSerialize(using = JSONObjectSerializer.class)
   private JSONObject parameters;
 }

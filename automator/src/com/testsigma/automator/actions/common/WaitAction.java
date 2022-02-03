@@ -24,7 +24,7 @@ public class WaitAction extends ElementAction {
 
   @Override
   public void execute() throws Exception {
-    Integer waitInSeconds = NumberFormatter.getIntegerValue(getTestData(), String.format(FAILURE_NOT_A_NUMBER, getTestDataMaskResult()));
+    Integer waitInSeconds = NumberFormatter.getIntegerValue(getTestData(), String.format(FAILURE_NOT_A_NUMBER, getTestData()));
     Long timeWithWait = System.currentTimeMillis() + (waitInSeconds * 1000);
     Long sleepStartTime = System.currentTimeMillis();
     while (true) {
@@ -40,7 +40,7 @@ public class WaitAction extends ElementAction {
         }
       }
     }
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult()));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
   }
 
   @Override

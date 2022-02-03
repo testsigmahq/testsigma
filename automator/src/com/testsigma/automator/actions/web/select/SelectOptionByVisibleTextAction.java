@@ -24,7 +24,7 @@ public class SelectOptionByVisibleTextAction extends ElementAction {
       selectElement.selectByVisibleText(getTestData());
       setSuccessMessage(SUCCESS_MESSAGE);
     } catch (NoSuchElementException e) {
-      throw new AutomatorException(String.format(FAILURE_MESSAGE, getTestDataMaskResult(), getFindByType(), getLocatorValue(), getTestDataMaskResult()));
+      throw new AutomatorException(String.format(FAILURE_MESSAGE, getTestData(), getFindByType(), getLocatorValue(), getTestData()));
     }
   }
 }

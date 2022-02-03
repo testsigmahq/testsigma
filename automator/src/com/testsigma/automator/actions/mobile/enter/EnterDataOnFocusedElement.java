@@ -11,6 +11,6 @@ public class EnterDataOnFocusedElement extends MobileElementAction {
     Actions a = new Actions(getDriver());
     a.sendKeys(getTestData());
     a.perform();
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult()));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
   }
 }

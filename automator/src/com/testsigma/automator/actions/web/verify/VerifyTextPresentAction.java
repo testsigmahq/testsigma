@@ -21,8 +21,8 @@ public class VerifyTextPresentAction extends ElementAction {
       textPresent = elementText.contains(getTestData());
     }
     Assert.isTrue(textPresent, String.format(FAILURE_MESSAGE_MISMATCH,
-      getTestDataMaskResult()));
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult()));
+      getTestData()));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
   }
 
   private String getPageTextUsingJavaScript() {

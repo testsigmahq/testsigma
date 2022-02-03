@@ -13,7 +13,6 @@ public class NaturalTextActionConstants {
   public final static String restDatRunaEndPattern = "\\|";
   public final static String restDataiRunStartPattern = "$|";
   public final static String restDataiRunaEndPattern = "|";
-  public final static String PASSWORD_MASK = "********";
 
   public final static String DISPLAYED = "displayed";
   public final static String NOT_DISPLAYED = "not displayed";

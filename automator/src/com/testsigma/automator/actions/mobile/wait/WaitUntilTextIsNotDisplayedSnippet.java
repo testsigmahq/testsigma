@@ -43,7 +43,7 @@ public class WaitUntilTextIsNotDisplayedSnippet extends MobileElementAction {
     try {
       getWebDriverWait().until(ExpectedConditions.not(mobileTextToBePresent(getTestData())));
     } catch (TimeoutException e) {
-      throw new AutomatorException(String.format(FAILURE_MESSAGE, getTestDataMaskResult()), (Exception) e.getCause());
+      throw new AutomatorException(String.format(FAILURE_MESSAGE, getTestData()), (Exception) e.getCause());
     }
     setSuccessMessage(SUCCESS_MESSAGE);
   }

@@ -16,11 +16,11 @@ public class WaitUntilElementHasValueAction extends ElementAction {
   protected void execute() throws Exception {
     try {
       boolean valueMatching = getWebDriverWait().until(ExpectedConditions.textToBePresentInElementValue(getBy(), getTestData()));
-      Assert.isTrue(valueMatching, String.format(FAILURE_MESSAGE, getFindByType(), getLocatorValue(), getTimeout(), getTestDataMaskResult()));
+      Assert.isTrue(valueMatching, String.format(FAILURE_MESSAGE, getFindByType(), getLocatorValue(), getTimeout(), getTestData()));
       setSuccessMessage(SUCCESS_MESSAGE);
     } catch (
       TimeoutException e) {
-      throw new AutomatorException(String.format(FAILURE_MESSAGE, getFindByType(), getLocatorValue(), getTimeout(), getTestDataMaskResult()), (Exception) e.getCause());
+      throw new AutomatorException(String.format(FAILURE_MESSAGE, getFindByType(), getLocatorValue(), getTimeout(), getTestData()), (Exception) e.getCause());
     }
 
   }

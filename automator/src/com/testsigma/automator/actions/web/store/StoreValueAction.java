@@ -13,9 +13,9 @@ public class StoreValueAction extends ElementAction {
   protected void execute() throws Exception {
     findElement();
     String runTimeVarValue = getElement().getAttribute(ActionConstants.ATTRIBUTE_VALUE);
-    Assert.isTrue(!(StringUtils.isEmpty(runTimeVarValue)), String.format(FAILURE_MESSAGE, getTestDataMaskResult()));
+    Assert.isTrue(!(StringUtils.isEmpty(runTimeVarValue)), String.format(FAILURE_MESSAGE, getTestData()));
     runtimeDataProvider.storeRuntimeVariable(getTestData(), runTimeVarValue);
     resultMetadata.put(getTestData(), runTimeVarValue);
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult(), runTimeVarValue));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData(), runTimeVarValue));
   }
 }

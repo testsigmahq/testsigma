@@ -20,12 +20,12 @@ public class StoreCookieValueAction extends ElementAction {
   @Override
   protected void execute() throws Exception {
     Cookie cookie = getDriver().manage().getCookieNamed(getTestData());
-    Assert.notNull(cookie, String.format(FAILURE_MESSAGE, getTestDataMaskResult(),
+    Assert.notNull(cookie, String.format(FAILURE_MESSAGE, getTestData(),
       getAvailableCookieNames()));
     String cookieValue = cookie.getValue();
     runtimeDataProvider.storeRuntimeVariable(getAttribute(), cookieValue);
     resultMetadata.put(getAttribute(), cookieValue);
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult(), cookieValue));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData(), cookieValue));
   }
 
   private List<String> getAvailableCookieNames() throws AutomatorException {

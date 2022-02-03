@@ -30,8 +30,8 @@ public class SelectOptionContainsValueAction extends ElementAction {
         break;
       }
     }
-    Assert.notNull(elementValue, String.format(ELEMENT_NOT_FOUND, getTestDataMaskResult(), getFindByType(), getLocatorValue(), getTestDataMaskResult()));
+    Assert.notNull(elementValue, String.format(ELEMENT_NOT_FOUND, getTestData(), getFindByType(), getLocatorValue(), getTestData()));
     selectElement.selectByValue(elementValue);
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult()));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
   }
 }

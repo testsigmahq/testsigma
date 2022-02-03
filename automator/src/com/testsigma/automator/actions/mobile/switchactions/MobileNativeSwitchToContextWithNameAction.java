@@ -18,14 +18,14 @@ public class MobileNativeSwitchToContextWithNameAction extends MobileElementActi
     currentContext = getDriver().getContext();
     contexts = getDriver().getContextHandles();
     getDriver().context(getTestData());
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult(), contexts));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData(), contexts));
   }
 
   @Override
   public void handleException(Exception e) {
     super.handleException(e);
     if (e instanceof WebDriverException) {
-      setErrorMessage(String.format(FAILURE_MESSAGE, getTestDataMaskResult(), contexts, currentContext));
+      setErrorMessage(String.format(FAILURE_MESSAGE, getTestData(), contexts, currentContext));
     }
   }
 }

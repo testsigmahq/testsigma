@@ -7,8 +7,6 @@ export class TestData extends Base implements PageObject {
 
   @serializable(alias('testDataName'))
   public name: String;
-  @serializable(custom(v => v, v => v || []))
-  public passwords: String[];
   @serializable(list(object(TestDataSet)))
   public data: TestDataSet[];
   @serializable
@@ -28,11 +26,8 @@ export class TestData extends Base implements PageObject {
 
   deserializeRawValue(rawValue: any): this {
     this.name = rawValue.name;
-    this.passwords = [];
     this.data = [];
     rawValue.parameterNames.forEach((name, index) => {
-      if (rawValue.encryptedIndexes.indexOf(index) > -1)
-        this.passwords.push(name.trim());
     });
 
     rawValue.dataSets.forEach((dataSet) => {

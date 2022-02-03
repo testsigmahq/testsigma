@@ -11,7 +11,7 @@ public class VerifyCurrentUrlAction extends ElementAction {
   protected void execute() throws Exception {
     setActualValue(getDriver().getCurrentUrl());
     Assert.isTrue(getTestData().trim().equalsIgnoreCase(getActualValue().toString().trim()),
-      String.format(FAILURE_MESSAGE, getTestDataMaskResult(), getActualValue().toString()));
+      String.format(FAILURE_MESSAGE, getTestData(), getActualValue().toString()));
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 }

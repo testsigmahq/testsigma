@@ -11,7 +11,7 @@ public class VerifyCurrentPageURLContainsAction extends ElementAction {
   protected void execute() throws Exception {
     setActualValue(getDriver().getCurrentUrl());
     Assert.isTrue(getActualValue().toString().trim().toUpperCase().contains(getTestData().trim().toUpperCase()),
-      String.format(FAILURE_MESSAGE, getTestDataMaskResult(), getActualValue().toString()));
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult()));
+      String.format(FAILURE_MESSAGE, getTestData(), getActualValue().toString()));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
   }
 }

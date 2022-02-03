@@ -15,7 +15,7 @@ public class VerifySelectOptionsCountAction extends ElementAction {
     Select selectElement = new Select(getElement());
     setActualValue(selectElement.getOptions().size());
     Assert.isTrue(getActualValue().toString().equals(getTestData()), String.format(FAILURE_MESSAGE,
-      getActualValue().toString(), getTestDataMaskResult()));
+      getActualValue().toString(), getTestData()));
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 

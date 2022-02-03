@@ -9,9 +9,9 @@ public class SwitchToFrameByIndexAction extends ElementAction {
 
   @Override
   protected void execute() throws Exception {
-    int frameIndex = NumberFormatter.getIntegerValue(getTestData(), String.format(ELEMENT_IS_NOT_A_NUMBER, getTestDataMaskResult()));
+    int frameIndex = NumberFormatter.getIntegerValue(getTestData(), String.format(ELEMENT_IS_NOT_A_NUMBER, getTestData()));
     getDriver().switchTo().frame(frameIndex);
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult()));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
   }
 
   @Override

@@ -76,9 +76,7 @@
         <div class ="error noarrow position-relative mb-15 top-0" [translate]="'environments.form.message.parameter_name_empty'"></div>
       </div>
       <app-environments-table
-        (onEncryptedNames)="setEncryptedNames($event)"
         [edit]="true"
-        [encryptedNames]="encryptedNames"
         [formGroup]="environmentForm"
         [environment]="environment"
         [formSubmitted]="formSubmitted"></app-environments-table>

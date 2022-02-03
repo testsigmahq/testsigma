@@ -20,7 +20,6 @@ export class FormComponent extends BaseComponent implements OnInit {
   public environment: Environment;
   public versionId: number;
   public formSubmitted = false;
-  public encryptedNames: String[] = [];
   public codeMirrorOptions = {
     lineNumbers: true,
     lineWrapping: true,
@@ -50,7 +49,6 @@ export class FormComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.environment = new Environment();
     this.environment.parameters = JSON.parse('{"":""}');
-    this.environment.passwords = [];
     this.versionId = this.route.snapshot.parent.parent.params.versionId;
     this.route.snapshot.params = {...this.route.snapshot.params, ...{versionId: this.versionId}}
     this.pushToParent(this.route, this.route.snapshot.params);
@@ -174,15 +172,11 @@ export class FormComponent extends BaseComponent implements OnInit {
 
   returnIfInvalid(): Boolean {
     this.environment.description = this.environmentForm.controls.description.value;
-    this.environment.passwords =this.environmentForm.controls.encryptedNames.value;
     this.formSubmitted = true;
     return (this.parametersInvalid() ||this.environmentForm.controls.name.invalid ||
             this.hasDuplicateParameters() || this.hasEmptyParameterValues() || this.hasEmptyParameterNames());
   }
 
-  setEncryptedNames($event: String[]) {
-    this.encryptedNames = $event;
-  }
 
   hasDuplicateParameters(): boolean {
     let count = 0;

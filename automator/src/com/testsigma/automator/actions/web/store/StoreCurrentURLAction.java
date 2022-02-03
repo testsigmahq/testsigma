@@ -10,6 +10,6 @@ public class StoreCurrentURLAction extends ElementAction {
     String runTimeVarValue = getDriver().getCurrentUrl();
     runtimeDataProvider.storeRuntimeVariable(getTestData(), runTimeVarValue);
     resultMetadata.put(getTestData(), runTimeVarValue);
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult(), runTimeVarValue));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData(), runTimeVarValue));
   }
 }

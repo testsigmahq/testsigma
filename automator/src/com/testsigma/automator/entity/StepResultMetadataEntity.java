@@ -17,7 +17,6 @@ public class StepResultMetadataEntity {
 
   private Long id;
   private String action;
-  private Boolean hasPassword;
   private String testDataType;
   private String testDataValue;
   private String attribute;

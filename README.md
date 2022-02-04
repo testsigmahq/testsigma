@@ -25,7 +25,7 @@
 &emsp;
 
 ## Overview
-Testsigma is an open-source, extensible test automation platform that works out of the box. Rapidly(10X faster) automate web, mobile app, and API tests in plain English. 
+Testsigma is an open-source, extensible test automation platform that works out of the box. Rapidly(5X faster) automate web, mobile app, and API tests in plain English. 
   
   - Eliminate complex setups, multiple tools and frameworks.
   - Let everyone write tests 5X faster using plain English. 

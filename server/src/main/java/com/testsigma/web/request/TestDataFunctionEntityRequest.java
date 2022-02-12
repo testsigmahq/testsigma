@@ -17,5 +17,5 @@ public class TestDataFunctionEntityRequest {
   private Integer lib;
   private Map<String, String> arguments;
   private Map<String, String> argumentTypes;
-  private Boolean isKibbutzFn = false;
+  private Boolean isAddonFn = false;
 }

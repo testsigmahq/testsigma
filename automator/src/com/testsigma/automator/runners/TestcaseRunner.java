@@ -30,7 +30,7 @@ public class TestcaseRunner {
   protected EnvironmentRunResult environmentRunResult;
   protected TestPlanRunSettingEntity testPlanRunSettingEntity;
   protected TestDeviceSettings testDeviceSettings;
-  protected String executionId;
+  protected String testPlanId;
   protected WorkspaceType workspaceType;
   protected TestCaseEntity testCaseEntity;
   protected TestCaseResult testCaseResult;
@@ -45,7 +45,7 @@ public class TestcaseRunner {
     this.environmentRunResult = EnvironmentRunner.getRunnerEnvironmentRunResult();
     this.testPlanRunSettingEntity = testDeviceEntity.getTestPlanSettings();
     this.testDeviceSettings = testDeviceEntity.getEnvSettings();
-    this.executionId = EnvironmentRunner.getRunnerExecutionId();
+    this.testPlanId = EnvironmentRunner.getRunnerExecutionId();
     this.workspaceType = testDeviceEntity.getWorkspaceType();
     this.testCaseEntity = testCaseEntity;
     this.testCaseResult = testCaseResult;
@@ -92,7 +92,7 @@ public class TestcaseRunner {
     testCaseResult.setTestCaseStepResults(testCaseStepsResult);
     testCaseResult.setIsStepGroup(testCaseEntity.getIsStepGroup());
     testCaseResult.setDataDriven(testCaseEntity.getIsDataDriven());
-    testCaseResult.setExecutionResultID(testDeviceEntity.getExecutionRunId());
+    testCaseResult.setTestPlanResultId(testDeviceEntity.getExecutionRunId());
     testCaseResult.setTestCaseName(testCaseEntity.getTestCaseName());
     try {
       HashMap<Long, TestCaseStepResult> parentStatus = new HashMap<>();
@@ -194,7 +194,7 @@ public class TestcaseRunner {
         ) {
         } else if (i == (stepList.size() - 1) && !skipGetUrl && testCaseStepResult.getResult() == ResultConstant.SUCCESS
           && (workspaceType.equals(WorkspaceType.WebApplication) || workspaceType.equals(WorkspaceType.MobileWeb))) {
-          ExecutionEnvironmentRunner.addUrl(executionId, testCaseEntity.getId(), getUrl());
+          ExecutionEnvironmentRunner.addUrl(testPlanId, testCaseEntity.getId(), getUrl());
         }
 
         //TODO:use check based step type

@@ -49,7 +49,7 @@ export class StepSummaryComponent implements OnInit {
     }
   }
 
-  getKibbutzTestDataAndElements(map: Map<String, any>) {
+  getAddonTestDataAndElements(map: Map<String, any>) {
     let result = [];
     Object.keys(map).forEach(key => {
       result.push(map[key]);
@@ -57,31 +57,31 @@ export class StepSummaryComponent implements OnInit {
     return result;
   }
 
-  canShowKibbutzDetails(map: Map<String, any>) {
+  canShowAddonDetails(map: Map<String, any>) {
     return map && Object.keys(map).length;
   }
 
-  updateKibbutzElements(oldName, newName) {
-    let testStepKibbutzElements = this.getKibbutzTestDataAndElements(this.testStep?.kibbutzElements);
-    for (let i = 0; i < testStepKibbutzElements.length; i++) {
-      if (testStepKibbutzElements[i].name == oldName) {
-        testStepKibbutzElements[i].name = newName;
-        testStepKibbutzElements[i].isElementChanged = true;
+  updateAddonElements(oldName, newName) {
+    let testStepAddonElements = this.getAddonTestDataAndElements(this.testStep?.addonElements);
+    for (let i = 0; i < testStepAddonElements.length; i++) {
+      if (testStepAddonElements[i].name == oldName) {
+        testStepAddonElements[i].name = newName;
+        testStepAddonElements[i].isElementChanged = true;
       }
     }
-    this.updateElementsInTestStep(testStepKibbutzElements);
+    this.updateElementsInTestStep(testStepAddonElements);
   }
 
   updateElementsInTestStep(testStepElements) {
-    let elements = this.testStep.kibbutzElements;
+    let elements = this.testStep.addonElements;
     let index = 0;
     Object.keys(elements).forEach(key => {
       elements[key] = testStepElements[index++];
     });
-    this.testStep.kibbutzElements = elements;
+    this.testStep.addonElements = elements;
   }
 
-  openEditElement(name, isKibbutzElement?: boolean) {
+  openEditElement(name, isAddonElement?: boolean) {
     if (this.popupsAlreadyOpen(ElementFormComponent)) return;
     this.editedElement = name;
     const dialogRef = this.matDialog.open(ElementFormComponent, {
@@ -101,8 +101,8 @@ export class StepSummaryComponent implements OnInit {
       if(Boolean(this.options.isStepRecordView))
         this.matDialogRef.updateSize(this.originalWidth, this.originalHeight);
       if (res && res instanceof Element) {
-        if (isKibbutzElement)
-          this.updateKibbutzElements(name, res.name);
+        if (isAddonElement)
+          this.updateAddonElements(name, res.name);
         else
           this.updateElement(res.name);
       }

@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 @Log4j2
 public class StepProcessor {
   protected static Integer LOOP_END = -1;
-  protected Long executionId;
+  protected Long testPlanId;
   protected List<TestCaseStepEntityDTO> testCaseStepEntityDTOS;
   protected WorkspaceType workspaceType;
   protected Map<String, Element> elementMap;
@@ -40,13 +40,13 @@ public class StepProcessor {
   protected StorageService storageService;
   protected RestStepService restStepService;
   protected TestStepMapper testStepMapper;
-  protected KibbutzService kibbutzService;
+  protected ProxyAddonService addonService;
   protected DefaultDataGeneratorService defaultDataGeneratorService;
   WebApplicationContext webApplicationContext;
 
   public StepProcessor(WebApplicationContext webApplicationContext, List<TestCaseStepEntityDTO> testCaseStepEntityDTOS,
                        WorkspaceType workspaceType, Map<String, Element> elementMap,
-                       TestStepDTO testStepDTO, Long executionId, TestDataSet testDataSet,
+                       TestStepDTO testStepDTO, Long testPlanId, TestDataSet testDataSet,
                        Map<String, String> environmentParameters, TestCaseEntityDTO testCaseEntityDTO, String environmentParamSetName,
                        String dataProfile) {
     this.webApplicationContext = webApplicationContext;
@@ -54,7 +54,7 @@ public class StepProcessor {
     this.workspaceType = workspaceType;
     this.elementMap = elementMap;
     this.testStepDTO = testStepDTO;
-    this.executionId = executionId;
+    this.testPlanId = testPlanId;
     this.testDataSet = testDataSet;
     this.environmentParameters = environmentParameters;
     this.testCaseEntityDTO = testCaseEntityDTO;
@@ -68,7 +68,7 @@ public class StepProcessor {
     this.restStepService = (RestStepService) webApplicationContext.getBean("restStepService");
     this.defaultDataGeneratorService = (DefaultDataGeneratorService) webApplicationContext.getBean("defaultDataGeneratorService");
     this.testStepMapper = (TestStepMapper) webApplicationContext.getBean("testStepMapperImpl");
-    this.kibbutzService = (KibbutzService) webApplicationContext.getBean("kibbutzService");
+    this.addonService = (ProxyAddonService) webApplicationContext.getBean("proxyAddonService");
   }
 
   protected void processDefault(TestCaseStepEntityDTO exeTestStepEntity) throws TestsigmaException {
@@ -76,13 +76,13 @@ public class StepProcessor {
     exeTestStepEntity.setType(testStepDTO.getType());
     exeTestStepEntity.setTestCaseId(testStepDTO.getTestCaseId());
     exeTestStepEntity.setAction(testStepDTO.getAction());
-    exeTestStepEntity.setExecutionId(executionId);
+    exeTestStepEntity.setTestPlanId(testPlanId);
     exeTestStepEntity.setPriority(testStepDTO.getPriority());
     exeTestStepEntity.setPreRequisite(testStepDTO.getPreRequisiteStepId());
     exeTestStepEntity.setPosition(testStepDTO.getPosition());
     exeTestStepEntity.setIfConditionExpectedResults(testStepDTO.getIfConditionExpectedResults());
     exeTestStepEntity.setAdditionalData(testStepDTO.getDataMapJson());
-    exeTestStepEntity.setKibbutzTestData(testStepDTO.getKibbutzTestData());
+    exeTestStepEntity.setAddonTestData(testStepDTO.getAddonTestData());
     populateStepDetails(testStepDTO, exeTestStepEntity);
   }
 
@@ -93,7 +93,7 @@ public class StepProcessor {
     exeTestStepEntity.setNaturalTextActionId(testStepDTO.getNaturalTextActionId());
     exeTestStepEntity.setTestCaseId(testStepDTO.getTestCaseId());
     exeTestStepEntity.setAction(testStepDTO.getAction());
-    exeTestStepEntity.setExecutionId(executionId);
+    exeTestStepEntity.setTestPlanId(testPlanId);
     exeTestStepEntity.setPriority(testStepDTO.getPriority());
     exeTestStepEntity.setPreRequisite(testStepDTO.getPreRequisiteStepId());
     exeTestStepEntity.setPosition(testStepDTO.getPosition());
@@ -114,7 +114,7 @@ public class StepProcessor {
       exeTestStepEntity.setSnippetClass(naturalTextActions.getSnippetClass());
     } else if (testStepDTO.getAddonActionId() != null) {
       exeTestStepEntity.setSnippetEnabled(Boolean.FALSE);
-      exeTestStepEntity.setAddonNaturalTextActionEntity(kibbutzService.fetchPluginEntity(testStepDTO.getAddonActionId()));
+      exeTestStepEntity.setAddonNaturalTextActionEntity(addonService.fetchPluginEntity(testStepDTO.getAddonActionId()));
     }
 
     setElementMap(exeTestStepEntity);
@@ -122,17 +122,17 @@ public class StepProcessor {
     setAttributesMap(exeTestStepEntity);
     exeTestStepEntity.getStepDetails().setTestDataName(exeTestStepEntity.getTestDataName());
     exeTestStepEntity.getStepDetails().setTestDataValue(exeTestStepEntity.getTestDataValue());
-    setKibbutzPluginStepDetails(exeTestStepEntity);
+    setAddonPluginStepDetails(exeTestStepEntity);
     return exeTestStepEntity;
   }
 
   public void setElementMap(TestCaseStepEntityDTO exeTestStepEntity) throws TestsigmaException {
     Map<String, ElementPropertiesDTO> elementsMap = new HashMap<>();
     if (testStepDTO.getAddonActionId() != null) {
-      Map<String, KibbutzElementData> elements = testStepDTO.getKibbutzElements();
-      for (Map.Entry<String, KibbutzElementData> entry : elements.entrySet()) {
-        KibbutzElementData kibbutzElementData = entry.getValue();
-        String elementName = kibbutzElementData.getName();
+      Map<String, AddonElementData> elements = testStepDTO.getAddonElements();
+      for (Map.Entry<String, AddonElementData> entry : elements.entrySet()) {
+        AddonElementData addonElementData = entry.getValue();
+        String elementName = addonElementData.getName();
         ElementPropertiesDTO elementPropertiesDTO = getElementEntityDTO(elementName);
         elementsMap.put(entry.getKey(), elementPropertiesDTO);
       }
@@ -159,17 +159,17 @@ public class StepProcessor {
 
   public void setTestDataMap(TestCaseStepEntityDTO exeTestStepEntity) throws TestsigmaException {
     LinkedHashMap<String, com.testsigma.automator.entity.TestDataPropertiesEntity> testDatasMap = new LinkedHashMap<>();
-    if (testStepDTO.getAddonActionId() != null || testStepDTO.getKibbutzTestData() != null) {
-      Map<String, com.testsigma.model.KibbutzTestStepTestData> testDataMap = testStepDTO.getKibbutzTestData();
-      for (Map.Entry<String, com.testsigma.model.KibbutzTestStepTestData> entry : testDataMap.entrySet()) {
-        com.testsigma.model.KibbutzTestStepTestData kibbutzTestStepTestData = entry.getValue();
+    if (testStepDTO.getAddonActionId() != null || testStepDTO.getAddonTestData() != null) {
+      Map<String, AddonTestStepTestData> testDataMap = testStepDTO.getAddonTestData();
+      for (Map.Entry<String, AddonTestStepTestData> entry : testDataMap.entrySet()) {
+        AddonTestStepTestData addonTestStepTestData = entry.getValue();
         String testDataName = entry.getKey();
-        String testDataValue = kibbutzTestStepTestData.getValue();
-        String testDataType = kibbutzTestStepTestData.getType().getDispName();
+        String testDataValue = addonTestStepTestData.getValue();
+        String testDataType = addonTestStepTestData.getType().getDispName();
         com.testsigma.automator.entity.TestDataPropertiesEntity testDataPropertiesEntity = getTestDataEntityDTO(testDataName,
-          testDataValue, testDataType, kibbutzTestStepTestData,exeTestStepEntity);
+          testDataValue, testDataType, addonTestStepTestData,exeTestStepEntity);
         if (com.testsigma.model.TestDataType.getTypeFromName(testDataType) == com.testsigma.model.TestDataType.raw) {
-          testDataPropertiesEntity.setTestDataValue(kibbutzTestStepTestData.getValue());
+          testDataPropertiesEntity.setTestDataValue(addonTestStepTestData.getValue());
         }
         testDatasMap.put(entry.getKey(), testDataPropertiesEntity);
       }
@@ -225,8 +225,8 @@ public class StepProcessor {
   }
 
     private com.testsigma.automator.entity.TestDataPropertiesEntity getTestDataEntityDTO(String testDataName, String testDataValue,
-                                                                                         String testDataType, com.testsigma.model.KibbutzTestStepTestData
-                                                             kibbutzTestStepTestData, TestCaseStepEntityDTO testCaseStepEntityDTO)
+                                                                                         String testDataType, AddonTestStepTestData
+                                                                                                 addonTestStepTestData, TestCaseStepEntityDTO testCaseStepEntityDTO)
     throws TestsigmaException {
     com.testsigma.automator.entity.TestDataPropertiesEntity testDataPropertiesEntity = new com.testsigma.automator.entity.TestDataPropertiesEntity();
     testDataPropertiesEntity.setTestDataType(testDataType);
@@ -263,7 +263,7 @@ public class StepProcessor {
       case runtime:
         break;
       case function:
-        populateDefaultDataGeneratorsEntity(testDataPropertiesEntity, kibbutzTestStepTestData,testCaseStepEntityDTO);
+        populateDefaultDataGeneratorsEntity(testDataPropertiesEntity, addonTestStepTestData,testCaseStepEntityDTO);
         break;
       default:
     }
@@ -290,10 +290,10 @@ public class StepProcessor {
     testCaseStepEntityDTO.setStepDetails(stepDetails);
   }
 
-  private void setKibbutzPluginStepDetails(TestCaseStepEntityDTO exeTestStepEntity) {
+  private void setAddonPluginStepDetails(TestCaseStepEntityDTO exeTestStepEntity) {
     if (testStepDTO.getAddonActionId() != null) {
-      exeTestStepEntity.setKibbutzTestData(testStepDTO.getKibbutzTestData());
-      exeTestStepEntity.setKibbutzElements(testStepDTO.getKibbutzElements());
+      exeTestStepEntity.setAddonTestData(testStepDTO.getAddonTestData());
+      exeTestStepEntity.setAddonElements(testStepDTO.getAddonElements());
     }
   }
 
@@ -323,12 +323,12 @@ public class StepProcessor {
   }
 
   private void populateDefaultDataGeneratorsEntity(com.testsigma.automator.entity.TestDataPropertiesEntity testDataPropertiesEntity,
-                                                   com.testsigma.model.KibbutzTestStepTestData kibbutzTestStepTestData, TestCaseStepEntityDTO exeTestStepEntity)
+                                                   AddonTestStepTestData addonTestStepTestData, TestCaseStepEntityDTO exeTestStepEntity)
     throws TestsigmaException {
     DefaultDataGeneratorsEntity defaultDataGeneratorsEntity = new DefaultDataGeneratorsEntity();
     try {
       if (testStepDTO.getAddonActionId() != null) {
-        populateTestDataFunctionDetailsFromId(defaultDataGeneratorsEntity, kibbutzTestStepTestData, exeTestStepEntity);
+        populateTestDataFunctionDetailsFromId(defaultDataGeneratorsEntity, addonTestStepTestData, exeTestStepEntity);
       } else {
         populateTestDataFunctionDetailsFromMap(defaultDataGeneratorsEntity, exeTestStepEntity);
       }
@@ -338,21 +338,21 @@ public class StepProcessor {
     }
   }
   private void populateTestDataFunctionDetailsFromId(DefaultDataGeneratorsEntity testDataFunctionEntity,
-                                                     KibbutzTestStepTestData kibbutzTestStepTestData, TestCaseStepEntityDTO exeTestStepEntity) throws ResourceNotFoundException {
-    Map<String, String> arguments = kibbutzTestStepTestData.getTestDataFunctionArguments();
+                                                     AddonTestStepTestData addonTestStepTestData, TestCaseStepEntityDTO exeTestStepEntity) throws ResourceNotFoundException {
+    Map<String, String> arguments = addonTestStepTestData.getTestDataFunctionArguments();
     testDataFunctionEntity.setArguments(arguments);
-    if (kibbutzTestStepTestData.getIsKibbutzFn()) {
-      KibbutzPluginTestDataFunctionEntityDTO tdfEntityDTO = kibbutzService.fetchPluginTestDataFunctionEntities(kibbutzTestStepTestData.getTestDataFunctionId());
-      ArrayList<KibbutzPluginTestDataFunctionEntityDTO> tdfEntityDTOList = new ArrayList<KibbutzPluginTestDataFunctionEntityDTO>();
+    if (addonTestStepTestData.getIsAddonFn()) {
+      AddonPluginTestDataFunctionEntityDTO tdfEntityDTO = addonService.fetchPluginTestDataFunctionEntities(addonTestStepTestData.getTestDataFunctionId());
+      ArrayList<AddonPluginTestDataFunctionEntityDTO> tdfEntityDTOList = new ArrayList<AddonPluginTestDataFunctionEntityDTO>();
       tdfEntityDTOList.add(tdfEntityDTO);
-      if (exeTestStepEntity.getKibbutzPluginTDFEntityList() == null) {
-        exeTestStepEntity.setKibbutzPluginTDFEntityList(tdfEntityDTOList);
+      if (exeTestStepEntity.getAddonPluginTDFEntityList() == null) {
+        exeTestStepEntity.setAddonPluginTDFEntityList(tdfEntityDTOList);
       } else {
-        exeTestStepEntity.getKibbutzPluginTDFEntityList().addAll(tdfEntityDTOList);
+        exeTestStepEntity.getAddonPluginTDFEntityList().addAll(tdfEntityDTOList);
       }
-      testDataFunctionEntity.setIsKibbutzFn(kibbutzTestStepTestData.getIsKibbutzFn());
+      testDataFunctionEntity.setIsAddonFn(addonTestStepTestData.getIsAddonFn());
     } else {
-      DefaultDataGenerator customFunction = defaultDataGeneratorService.find(kibbutzTestStepTestData.getTestDataFunctionId());
+      DefaultDataGenerator customFunction = defaultDataGeneratorService.find(addonTestStepTestData.getTestDataFunctionId());
       DefaultDataGeneratorFile customFunctionFile = defaultDataGeneratorService.findFileById(customFunction.getFileId());
       testDataFunctionEntity.setClassName(customFunctionFile.getClassName());
       testDataFunctionEntity.setFunctionName(customFunction.getFunctionName());
@@ -363,20 +363,20 @@ public class StepProcessor {
       testDataFunctionEntity.setCustomFunctionType(CustomFunctionType.DefaultTestData);
 //      testDataFunctionEntity.setBinaryFileUrl(getSignedURL(customFunctionFile.getBinary_file_url(), customFunctionFile.getClassName()));
     }
-    testDataFunctionEntity.setId(kibbutzTestStepTestData.getTestDataFunctionId());
+    testDataFunctionEntity.setId(addonTestStepTestData.getTestDataFunctionId());
   }
 
   private void populateTestDataFunctionDetailsFromMap(DefaultDataGeneratorsEntity defaultDataGeneratorsEntity, TestCaseStepEntityDTO exeTestStepEntity)
     throws TestsigmaException {
     TestStepDataMap testStepDataMap = testStepDTO.getDataMapBean();
     if (testStepDataMap != null) {
-      if (testStepDataMap.getKibbutzTDF() != null) {
-        defaultDataGeneratorsEntity.setArguments(testStepDataMap.getKibbutzTDF().getTestDataFunctionArguments());
-        defaultDataGeneratorsEntity.setIsKibbutzFn(true);
-        KibbutzPluginTestDataFunctionEntityDTO tdfEntityDTO = kibbutzService.fetchPluginTestDataFunctionEntities(testStepDataMap.getKibbutzTDF().getTestDataFunctionId());
-        ArrayList<KibbutzPluginTestDataFunctionEntityDTO> tdfEntityDTOList = new ArrayList<KibbutzPluginTestDataFunctionEntityDTO>();
+      if (testStepDataMap.getAddonTDF() != null) {
+        defaultDataGeneratorsEntity.setArguments(testStepDataMap.getAddonTDF().getTestDataFunctionArguments());
+        defaultDataGeneratorsEntity.setIsAddonFn(true);
+        AddonPluginTestDataFunctionEntityDTO tdfEntityDTO = addonService.fetchPluginTestDataFunctionEntities(testStepDataMap.getAddonTDF().getTestDataFunctionId());
+        ArrayList<AddonPluginTestDataFunctionEntityDTO> tdfEntityDTOList = new ArrayList<AddonPluginTestDataFunctionEntityDTO>();
         tdfEntityDTOList.add(tdfEntityDTO);
-        exeTestStepEntity.setKibbutzPluginTDFEntityList(tdfEntityDTOList);
+        exeTestStepEntity.setAddonPluginTDFEntityList(tdfEntityDTOList);
         return;
       }
     }

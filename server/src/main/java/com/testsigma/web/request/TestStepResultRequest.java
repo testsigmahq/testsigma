@@ -47,15 +47,15 @@ public class TestStepResultRequest {
   private Integer waitTime;
   private TestStepPriority priority;
   private StepDetailsRequest stepDetails;
-  private Map<String, KibbutzTestStepTestData> kibbutzTestData;
-  private Map<String, KibbutzElementData> kibbutzElements;
-  private String kibbutzActionLogs;
+  private Map<String, AddonTestStepTestData> addonTestData;
+  private Map<String, AddonElementData> addonElements;
+  private String addonActionLogs;
   @ToString.Exclude
   private StepResultMetadataRequest metadata = new StepResultMetadataRequest();
   private Map<String, String> outputData = new HashMap<String, String>();
   private List<TestStepResultRequest> stepResults = new ArrayList<TestStepResultRequest>();
   private List<SuggestionEngineResultRequest> suggestionResults = new ArrayList<SuggestionEngineResultRequest>();
-  private Map<String, ElementProperties> fieldDefinitionDetails;
+  private Map<String, ElementProperties> ElementDetails;
   private Map<String, TestDataPropertiesEntityRequest> testDataDetails;
 
 }

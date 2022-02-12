@@ -88,7 +88,7 @@
         <div class="ts-col-20 px-10">
           <app-lab-environments-info
             *ngIf="testPlan.environments"
-            [execution]="testPlan"
+            [testPlan]="testPlan"
             [executionEnvironments]="testPlan.environments"></app-lab-environments-info>
           <span [ngSwitch]="testPlan.testPlanType==getCrossBrowser() && testPlan?.workspaceVersion?.workspace?.isMobile">
             <div
@@ -102,15 +102,15 @@
         <div class="ts-col-30 d-flex align-items-center ml-auto justify-content-end execution-list">
           <app-schedule-form-button class=""
             [displayText]="('schedule.plan.btn' | translate)"
-            [execution]="testPlan"></app-schedule-form-button>
+            [testPlan]="testPlan"></app-schedule-form-button>
           <app-reports-button
             class="ml-10"
             [displayText]="('btn.common.reports' | translate)"
-            [execution]="testPlan"></app-reports-button>
+            [testPlan]="testPlan"></app-reports-button>
           <app-run-now-button
             class="ml-10"
             [displayText]="('btn.common.run' | translate)"
-            [execution]="testPlan"
+            [testPlan]="testPlan"
             (onStart)="fetchTestPlans()"
             (onStop)="fetchTestPlans()">
           </app-run-now-button>

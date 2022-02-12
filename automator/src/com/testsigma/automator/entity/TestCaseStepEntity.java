@@ -19,7 +19,7 @@ public class TestCaseStepEntity implements Cloneable {
   private Long id;
   private ResultConstant[] ifConditionExpectedResults;
   private Long testCaseId;
-  private Long executionId;
+  private Long testPlanId;
   private Long preRequisite;
   private Long parentId;
   private TestStepPriority priority;
@@ -46,12 +46,12 @@ public class TestCaseStepEntity implements Cloneable {
   private String action;
   private String snippetClass;
   private StepDetails stepDetails;
-  private Map<String, KibbutzTestStepTestData> kibbutzTestData;
-  private Map<String, KibbutzElementData> kibbutzElements;
+  private Map<String, AddonTestStepTestData> addonTestData;
+  private Map<String, AddonElementData> addonElements;
   private Map<String, Object> additionalData = new HashMap<>();
   private List<TestCaseStepEntity> testCaseSteps = new ArrayList<TestCaseStepEntity>();
   private Map<String, String> additionalScreenshotPaths = new HashMap<>();
-  public List<KibbutzPluginTestDataFunctionEntity> kibbutzPluginTDFEntityList;
+  public List<AddonPluginTestDataFunctionEntity> addonPluginTDFEntityList;
   //Used only on automator side
   private Screenshot screenshot;
   private int noOfRetriesOnStepFailure = 1;

@@ -29,12 +29,12 @@ export class ReRunIconComponent implements OnInit {
         testCaseResult: this.testCaseResult,
         testSuiteResult: this.testSuiteResult,
         environmentResult: this.environmentResult,
-        executionResult: this.executionResult},
+        testPlanResult: this.testPlanResult},
       panelClass: ['mat-overlay']
     })
   }
 
-  get executionResult() {
+  get testPlanResult() {
     if(this.resultEntity instanceof TestPlanResult)
       return this.resultEntity;
     else if(this.resultEntity instanceof TestSuiteResult)

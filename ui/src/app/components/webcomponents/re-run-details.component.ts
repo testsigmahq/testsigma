@@ -24,22 +24,22 @@ export class ReRunDetailsComponent implements OnInit {
       testCaseResult?: TestCaseResult,
       testSuiteResult?: TestSuiteResult,
       environmentResult?: TestDeviceResult,
-      executionResult: TestPlanResult
+      testPlanResult: TestPlanResult
     }) {
   }
 
   get runId() {
-    return this.options.executionResult?.childResult?.id;
+    return this.options.testPlanResult?.childResult?.id;
   }
 
   get parentRunId() {
-    return this.options.executionResult?.id;
+    return this.options.testPlanResult?.id;
   }
 
   ngOnInit(): void {
     console.log(this.options);
     if(!this.options.testCaseResult && !this.options.testSuiteResult && !this.options.environmentResult)
-      this.activeExecutionResult = this.options.executionResult;
+      this.activeExecutionResult = this.options.testPlanResult;
     this.activeTestCaseResult = this.options.testCaseResult;
     this.activeEnvironmentResult = this.options.environmentResult;
     this.activeTestSuiteResult = this.options.testSuiteResult;
@@ -75,7 +75,7 @@ export class ReRunDetailsComponent implements OnInit {
   }
 
   showExecutionResult(){
-    this.activeExecutionResult = this.options.executionResult;
+    this.activeExecutionResult = this.options.testPlanResult;
     this.activeTestSuiteResult = null;
     this.activeEnvironmentResult = null;
     this.activeTestCaseResult = null;

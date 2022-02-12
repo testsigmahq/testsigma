@@ -22,7 +22,7 @@ export class TestSuiteDetailsQuickInfoComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.userService.show(this.suiteResultResult.testDeviceResult.executionResult.executedById).subscribe(user => this.suiteResultResult.testDeviceResult.executionResult.executedBy = user);
+    // this.userService.show(this.suiteResultResult.testDeviceResult.testPlanResult.executedById).subscribe(user => this.suiteResultResult.testDeviceResult.testPlanResult.executedBy = user);
   }
 
   toggleDetails(communicateToParent?: Boolean) {

@@ -37,6 +37,6 @@ public class TestStepDataMap {
   private TestStepWhileLoop whileLoop;
   @JsonProperty("whileCondition")
   private String whileCondition;
-  @JsonProperty("kibbutz_test_data_function")
-  private KibbutzTestStepTestData kibbutzTDF;
+  @JsonProperty("addon_test_data_function")
+  private AddonTestStepTestData addonTDF;
 }

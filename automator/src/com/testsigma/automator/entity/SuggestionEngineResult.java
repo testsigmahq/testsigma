@@ -1,6 +1,6 @@
 package com.testsigma.automator.entity;
 
-import com.testsigma.automator.suggestion.snippets.SuggestionSnippetResult;
+import com.testsigma.automator.suggestion.actions.SuggestionActionResult;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,17 +8,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SuggestionEngineResult {
   private Integer id;
-  private SuggestionSnippetResult result;
+  private SuggestionActionResult result;
   private String message;
   private SuggestionEngineResultMetaData metaData;
   private Integer suggestionId;
 
-  public SuggestionEngineResult(SuggestionSnippetResult result, String message) {
+  public SuggestionEngineResult(SuggestionActionResult result, String message) {
     this.result = result;
     this.message = message;
   }
 
-  public SuggestionEngineResult(SuggestionSnippetResult result) {
+  public SuggestionEngineResult(SuggestionActionResult result) {
     this.result = result;
   }
 

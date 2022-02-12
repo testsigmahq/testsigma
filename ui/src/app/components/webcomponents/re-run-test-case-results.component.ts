@@ -14,7 +14,7 @@ import {TestSuiteResultService} from "../../services/test-suite-result.service";
   ]
 })
 export class ReRunTestCaseResultsComponent implements OnInit {
-  @Input('executionResult') executionResult: TestPlanResult;
+  @Input('testPlanResult') testPlanResult: TestPlanResult;
   @Input('environmentResult') environmentResult: TestDeviceResult;
   @Input('testSuiteResult') testSuiteResult: TestSuiteResult;
   @Output('onTestCaseResultShow') onTestCaseResultShow = new EventEmitter<TestCaseResult>();
@@ -28,7 +28,7 @@ export class ReRunTestCaseResultsComponent implements OnInit {
     private testCaseResultService: TestCaseResultService) { }
 
   ngOnInit(): void {
-    let query = "childRunId:"+this.executionResult.childResult.id+",iteration:null,testPlanResultId:" + this.executionResult.id;
+    let query = "childRunId:"+this.testPlanResult.childResult.id+",iteration:null,testPlanResultId:" + this.testPlanResult.id;
     if(this.environmentResult)
       query+=",environmentResultId:"+this.environmentResult.id;
     if(this.testSuiteResult)

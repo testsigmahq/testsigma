@@ -22,7 +22,6 @@ CREATE TABLE `test_devices`
   `disabled`                      BIT(1)       NOT NULL DEFAULT false,
   `match_browser_version`         TINYINT(1)            DEFAULT 0,
   `copied_from`                   BIGINT(20)            DEFAULT null,
-  `run_in_parallel`               TINYINT(1)            DEFAULT 0,
   `create_session_at_case_level`  TINYINT(1)            DEFAULT 0 NOT NULL,
   `created_date`                  DATETIME              DEFAULT CURRENT_TIMESTAMP,
   `updated_date`                  DATETIME              DEFAULT CURRENT_TIMESTAMP,

@@ -101,9 +101,6 @@ public class TestDevice {
   @Column(name = "match_browser_version")
   private Boolean matchBrowserVersion = false;
 
-  @Column(name = "run_in_parallel")
-  private Boolean runInParallel = Boolean.FALSE;
-
   @Column(name = "create_session_at_case_level")
   private Boolean createSessionAtCaseLevel = Boolean.FALSE;
 
@@ -112,7 +109,7 @@ public class TestDevice {
   @JoinColumn(name = "test_plan_id", referencedColumnName = "id", insertable = false, updatable = false)
   @EqualsAndHashCode.Exclude
   @ToString.Exclude
-  private AbstractTestPlan execution;
+  private AbstractTestPlan testPlan;
 
   @ManyToOne
   @Fetch(value = FetchMode.SELECT)

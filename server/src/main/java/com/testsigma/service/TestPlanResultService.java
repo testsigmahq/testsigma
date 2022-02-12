@@ -139,32 +139,12 @@ public class TestPlanResultService {
       Arrays.asList(StatusConstant.STATUS_IN_PROGRESS, StatusConstant.STATUS_PRE_FLIGHT, StatusConstant.STATUS_QUEUED));
   }
 
-  public List<TestPlanResultAndCount> countOngoingNonParallelEnvironmentResultsGroupByExecutionResult() {
-    return this.testPlanResultRepository.countOngoingNonParallelEnvironmentResultsGroupByExecutionResult(
-      Arrays.asList(StatusConstant.STATUS_IN_PROGRESS, StatusConstant.STATUS_PRE_FLIGHT));
-  }
-
-  public List<TestPlanResultAndCount> countOngoingParallelTestSuiteResultsGroupByExecutionResult() {
-    return this.testPlanResultRepository.countOngoingParallelTestSuiteResultsGroupByExecutionResult(
-      Arrays.asList(StatusConstant.STATUS_IN_PROGRESS, StatusConstant.STATUS_PRE_FLIGHT));
-  }
-
-  public List<TestPlanResultAndCount> countQueuedNonParallelEnvironmentResultsGroupByExecutionResult() {
-    return this.testPlanResultRepository.countOngoingNonParallelEnvironmentResultsGroupByExecutionResult(
-      Collections.singletonList(StatusConstant.STATUS_QUEUED));
-  }
-
-  public List<TestPlanResultAndCount> countQueuedParallelTestSuiteResultsGroupByExecutionResult() {
-    return this.testPlanResultRepository.countOngoingParallelTestSuiteResultsGroupByExecutionResult(
-      Collections.singletonList(StatusConstant.STATUS_QUEUED));
-  }
-
   public void destroy(Long id) throws ResourceNotFoundException {
     TestPlanResult result = this.find(id);
     this.testPlanResultRepository.delete(result);
   }
 
-  public void markExecutionResultStatus(TestPlanResult testPlanResult, StatusConstant status, String message) {
+  public void markTestPlanResultstatus(TestPlanResult testPlanResult, StatusConstant status, String message) {
     testPlanResult.setStatus(status);
     testPlanResult.setMessage(message);
     update(testPlanResult);

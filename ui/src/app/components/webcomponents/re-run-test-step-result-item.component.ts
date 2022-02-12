@@ -46,7 +46,7 @@ import {TestCaseResult} from "../../models/test-case-result.model";
             <span
               *ngIf="isKubbutzStep()">
               <i class="fa-addon mr-5 text-nowrap"></i><span
-              [innerHTML]="testStepResult.parsedKibbutzStep(testStepResult?.kibbutzTestData, testStepResult?.kibbutzElements, testStepResult?.stepDetail?.action)"></span>
+              [innerHTML]="testStepResult.parsedAddonStep(testStepResult?.addonTestData, testStepResult?.addonElements, testStepResult?.stepDetail?.action)"></span>
             </span>
           </div>
 
@@ -121,11 +121,11 @@ import {TestCaseResult} from "../../models/test-case-result.model";
         class="ts-col-100"
         *ngIf="activeStepGroup?.id == testStepResult.id">
         <app-re-run-test-step-result-item
-          *ngFor='let componentStepResult of activeStepGroup.stepGroupResults?.content; let childStepNumber = index; '
+          *ngFor='let stepGroupResult of activeStepGroup.stepGroupResults?.content; let childStepNumber = index; '
           [stepNumber]="stepNumber+'.'+(childStepNumber+1)"
           [isStepGroupChild]=true
           [testcaseResult]="testcaseResult"
-          [testStepResults]="componentStepResult"></app-re-run-test-step-result-item>
+          [testStepResults]="stepGroupResult"></app-re-run-test-step-result-item>
       </div>
     </div>
   `,
@@ -156,7 +156,7 @@ export class ReRunTestStepResultItemComponent implements OnInit {
   }
 
   isKubbutzStep(){
-    return (this.testStepResult?.kibbutzTestData || this.testStepResult?.kibbutzElements) || (this.testStepResult.testStep?.isKibbutzAction && this.testStepResult?.testStep?.kibbutzTemplate) && !this.testStepResult.template
+    return (this.testStepResult?.addonTestData || this.testStepResult?.addonElements) || (this.testStepResult.testStep?.isAddonAction && this.testStepResult?.testStep?.addonTemplate) && !this.testStepResult.template
   }
 
 }

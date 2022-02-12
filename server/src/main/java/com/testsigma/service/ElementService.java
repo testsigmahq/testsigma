@@ -86,7 +86,7 @@ public class ElementService extends XMLExportService<Element> {
     element = elementRepository.save(element);
     if (!oldName.equals(element.getName())) {
       testStepService.updateElementName(oldName, element.getName());
-      testStepService.updateKibbutzElementsName(oldName, element.getName());
+      testStepService.updateAddonElementsName(oldName, element.getName());
     }
     publishEvent(element, EventType.UPDATE);
     return element;

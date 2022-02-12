@@ -76,9 +76,9 @@ public class TestPlanResultsController {
     agentExecutionService.setRunTimeData(runTimeData);
     if (testPlanResultRequest.getReRunType() != null
       && testPlanResultRequest.getReRunType() != ReRunType.NONE
-      && testPlanResultRequest.getParentExecutionResultId() != null) {
+      && testPlanResultRequest.getParenttestPlanResultId() != null) {
       agentExecutionService.setReRunType(testPlanResultRequest.getReRunType());
-      agentExecutionService.setParentTestPlanResultId(testPlanResultRequest.getParentExecutionResultId());
+      agentExecutionService.setParentTestPlanResultId(testPlanResultRequest.getParenttestPlanResultId());
 
     }
     agentExecutionService.start();
@@ -109,39 +109,9 @@ public class TestPlanResultsController {
     List<TestPlanResult> ongoingTestPlans = testPlanResultService
       .countOngoingEnvironmentResultsGroupByExecutionResult();
 
-    List<TestPlanResultAndCount> ongoingNonParallelEnvironmentResultCounts = testPlanResultService
-      .countOngoingNonParallelEnvironmentResultsGroupByExecutionResult();
-    List<TestPlanResultAndCount> ongoingParallelTestSuiteResultCounts = testPlanResultService
-      .countOngoingParallelTestSuiteResultsGroupByExecutionResult();
-
-    List<TestPlanResultAndCount> queuedNonParallelEnvironmentResultCounts = testPlanResultService
-      .countQueuedNonParallelEnvironmentResultsGroupByExecutionResult();
-    List<TestPlanResultAndCount> queuedParallelTestSuiteResultCounts = testPlanResultService
-      .countQueuedParallelTestSuiteResultsGroupByExecutionResult();
-
     Map<Long, TestPlanResult> testPlanResultMap = new HashMap<>();
     for (TestPlanResult er : ongoingTestPlans) {
       testPlanResultMap.put(er.getId(), er);
-    }
-
-    for (TestPlanResultAndCount ec : ongoingNonParallelEnvironmentResultCounts) {
-      TestPlanResult er = testPlanResultMap.get(ec.getTestPlanResultId());
-      er.setTotalRunningCount(er.getTotalRunningCount() + ec.getResultCount());
-    }
-
-    for (TestPlanResultAndCount tc : ongoingParallelTestSuiteResultCounts) {
-      TestPlanResult er = testPlanResultMap.get(tc.getTestPlanResultId());
-      er.setTotalRunningCount(er.getTotalRunningCount() + tc.getResultCount());
-    }
-
-    for (TestPlanResultAndCount ec : queuedNonParallelEnvironmentResultCounts) {
-      TestPlanResult er = testPlanResultMap.get(ec.getTestPlanResultId());
-      er.setTotalQueuedCount(er.getTotalQueuedCount() + ec.getResultCount());
-    }
-
-    for (TestPlanResultAndCount tc : queuedParallelTestSuiteResultCounts) {
-      TestPlanResult er = testPlanResultMap.get(tc.getTestPlanResultId());
-      er.setTotalQueuedCount(er.getTotalQueuedCount() + tc.getResultCount());
     }
 
     return new PageImpl<>(testPlanResultMapper.map(ongoingTestPlans));

@@ -40,7 +40,7 @@
     [class.overflow-y-hidden]="!isStepsFetchComplete">
     <div
       class="pb-40 pr-30 pt-10"
-      *ngIf="testSteps && testStepResults?.totalElements && workspaceVersion && filteredTestStepResults?.content && resultEntity && (templates || kibbutzTemplates)">
+      *ngIf="testSteps && testStepResults?.totalElements && workspaceVersion && filteredTestStepResults?.content && resultEntity && (templates || addonTemplates)">
       <span  *cdkVirtualFor='let testStepResult of filteredTestStepResults?.content; let stepNumber = index; trackBy: trackByIdx;'>
         <app-test-step-result-list-item
           class="w-100 scroll-item"
@@ -52,7 +52,7 @@
           [activeStepGroup]="activeStepGroup"
           [filteredTestStepResult]="filteredTestStepResults"
           [templates]="templates"
-          [kibbutzTemplates]="kibbutzTemplates"
+          [addonTemplates]="addonTemplates"
           [workspaceVersion]="workspaceVersion"
           [stepNumber]="stepNumber+1"
           [isEditEnabled]="isEditEnabled"

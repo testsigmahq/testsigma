@@ -16,7 +16,7 @@ export class DryRunWebFormComponent extends BaseComponent implements OnInit {
 
   @Input('formGroup') webForm: FormGroup;
   @Input('version') version: WorkspaceVersion;
-  @Input('execution') execution: DryTestPlan;
+  @Input('testPlan') testPlan: DryTestPlan;
   @Input('environment') environment?: Environment;
   @Output("closeDialog")closeDryRunDialog = new EventEmitter<any>();
 
@@ -49,11 +49,11 @@ export class DryRunWebFormComponent extends BaseComponent implements OnInit {
     this.environmentFormGroup.removeControl('osVersion');
     this.environmentFormGroup.removeControl('browser');
     this.environmentFormGroup.removeControl('browserVersion');
-    this.environmentFormGroup.addControl('platform', new FormControl(this.execution.environments[0].platform, [this.requiredIfValidator(() => !this.isRest)]));
-    this.environmentFormGroup.addControl('resolution', new FormControl(this.execution.environments[0].resolution, []));
-    this.environmentFormGroup.addControl('osVersion', new FormControl(this.execution.environments[0].osVersion, []));
-    this.environmentFormGroup.addControl('browser', new FormControl(this.execution.environments[0].browser, [this.requiredIfValidator(() => !this.version?.workspace.isMobileNative && !this.isRest && this.isHybrid)]));
-    this.environmentFormGroup.addControl('browserVersion', new FormControl(this.execution.environments[0].browserVersion, []));
+    this.environmentFormGroup.addControl('platform', new FormControl(this.testPlan.environments[0].platform, [this.requiredIfValidator(() => !this.isRest)]));
+    this.environmentFormGroup.addControl('resolution', new FormControl(this.testPlan.environments[0].resolution, []));
+    this.environmentFormGroup.addControl('osVersion', new FormControl(this.testPlan.environments[0].osVersion, []));
+    this.environmentFormGroup.addControl('browser', new FormControl(this.testPlan.environments[0].browser, [this.requiredIfValidator(() => !this.version?.workspace.isMobileNative && !this.isRest && this.isHybrid)]));
+    this.environmentFormGroup.addControl('browserVersion', new FormControl(this.testPlan.environments[0].browserVersion, []));
   }
   requiredIfValidator(predicate) {
     return (formControl => {

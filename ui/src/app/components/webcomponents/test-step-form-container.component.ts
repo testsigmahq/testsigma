@@ -43,7 +43,7 @@ export class TestStepFormContainerComponent extends BaseComponent implements OnI
   @Input('testSteps') testSteps: Page<TestStep>;
   @Input('testStep') testStep: TestStep;
   @Input('templates') templates?: Page<NaturalTextActions>;
-  @Input('kibbutzTemplates') kibbutzTemplates?: Page<AddonNaturalTextAction>;
+  @Input('addonTemplates') addonTemplates?: Page<AddonNaturalTextAction>;
   @Input('selectedTemplate') selectedTemplate: NaturalTextActions = undefined;
   @Input('testCaseResultId') testCaseResultId: number;
   @Input('isDryRun') isDryRun: boolean;

@@ -55,7 +55,7 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
   public templates: Page<any>;
   public searchTerm: string;
   public version: any;
-  public kibbutzNlp: Page<any>;
+  public addonAction: Page<any>;
   public selectedTemplate: any;
   public canDrag: boolean = false;
   public isCheckHelpPreference: boolean;
@@ -166,45 +166,45 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
 
   private saveLaunchStep() {
     let templateId = RecorderActionTemplateConstant.launch_app[this.platform];
-    this.saveUiIdentifierAndCreateStep(templateId);
+    this.saveElementAndCreateStep(templateId);
   }
 
   public saveTapStep(mobileElement: MobileElement) {
     let templateId = RecorderActionTemplateConstant.tap[this.platform];
-    let uiIdentifierName = mobileElement.text && mobileElement.text.length < 250 ? mobileElement.text : mobileElement.type;
-    this.saveUiIdentifierAndCreateStep(templateId, uiIdentifierName, undefined, mobileElement);
+    let elementName = mobileElement.text && mobileElement.text.length < 250 ? mobileElement.text : mobileElement.type;
+    this.saveElementAndCreateStep(templateId, elementName, undefined, mobileElement);
   }
 
   public saveDeviceTapStep(tapPoint: Position) {
     tapPoint.y = (Number(tapPoint.y) / this.mirroringContainerComponent.screenOriginalHeight) * 100;
     tapPoint.x = (Number(tapPoint.x) / this.mirroringContainerComponent.screenOriginalWidth) * 100;
     let templateId = RecorderActionTemplateConstant.tapByRelativeCoordinates[this.platform];
-    this.saveUiIdentifierAndCreateStep(templateId, null, tapPoint.x + "," + tapPoint.y);
+    this.saveElementAndCreateStep(templateId, null, tapPoint.x + "," + tapPoint.y);
   }
 
   public saveNavigateBackStep() {
     let templateId = RecorderActionTemplateConstant.navigateBack[this.platform];
-    this.saveUiIdentifierAndCreateStep(templateId);
+    this.saveElementAndCreateStep(templateId);
   }
 
   public saveChangeOrientationStep(isLandscape) {
     let templateId = isLandscape ?
       RecorderActionTemplateConstant.setOrientationAsLandscape[this.platform] :
       RecorderActionTemplateConstant.setOrientationAsPortrait[this.platform];
-    this.saveUiIdentifierAndCreateStep(templateId);
+    this.saveElementAndCreateStep(templateId);
   }
 
   public saveEnterStep(sendKeysRequest: SendKeysRequest) {
     let mobileElement = sendKeysRequest.mobileElement;
     let templateId = RecorderActionTemplateConstant.enter[this.platform];
-    let uiIdentifierName = mobileElement.text && mobileElement.text.length < 250 ? mobileElement.text : mobileElement.type;
-    this.saveUiIdentifierAndCreateStep(templateId, uiIdentifierName, sendKeysRequest.keys, sendKeysRequest.mobileElement);
+    let elementName = mobileElement.text && mobileElement.text.length < 250 ? mobileElement.text : mobileElement.type;
+    this.saveElementAndCreateStep(templateId, elementName, sendKeysRequest.keys, sendKeysRequest.mobileElement);
   }
 
   public saveClearStep(mobileElement: MobileElement) {
     let templateId = RecorderActionTemplateConstant.clear[this.platform];
-    let uiIdentifierName = mobileElement.text && mobileElement.text.length < 250 ? mobileElement.text : mobileElement.type;
-    this.saveUiIdentifierAndCreateStep(templateId, uiIdentifierName, undefined, mobileElement);
+    let elementName = mobileElement.text && mobileElement.text.length < 250 ? mobileElement.text : mobileElement.type;
+    this.saveElementAndCreateStep(templateId, elementName, undefined, mobileElement);
   }
 
   private fetchTestCase(testCaseId: number) {
@@ -212,12 +212,12 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
       this.testCase = testCase
       this.applicationVersionService.show(this.testCase.workspaceVersionId).subscribe(res => {
         this.version = res;
-        this.fetchNLPTemplates();
+        this.fetchActionTemplates();
       })
     })
   }
 
-  private fetchNLPTemplates() {
+  private fetchActionTemplates() {
     let workspaceType: WorkspaceType = this.version.workspace.workspaceType;
     this.naturalTextActionsService.findAll("workspaceType:" + workspaceType).subscribe(res => {
       this.templates = res
@@ -225,22 +225,22 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
     });
   }
 
-  private saveUiIdentifierAndCreateStep(templateId: number, uiIdentifierName?: String, testData?: String,
+  private saveElementAndCreateStep(templateId: number, elementName?: String, testData?: String,
                                         mobileElement?: MobileElement, fromTestData?: String, toTestData?: String) {
     if(this.canDrag|| this.pauseRecord) return;
-    this.checkViewAndAddActionStep(templateId, uiIdentifierName, testData, mobileElement, fromTestData, toTestData);
+    this.checkViewAndAddActionStep(templateId, elementName, testData, mobileElement, fromTestData, toTestData);
   }
 
-  private saveUiIdentifier(uiIdentifierName, mobileElement?: MobileElement): Observable<Element[]> {
-    let uiIdentifier = new Element();
-    uiIdentifier.name = uiIdentifierName.replace(/[{}().+*?^$%`'/\\|]/g,'_');
-    uiIdentifier.locatorType = (mobileElement.accessibilityId) ? ElementLocatorType.accessibility_id :
+  private saveElement(elementName, mobileElement?: MobileElement): Observable<Element[]> {
+    let element = new Element();
+    element.name = elementName.replace(/[{}().+*?^$%`'/\\|]/g,'_');
+    element.locatorType = (mobileElement.accessibilityId) ? ElementLocatorType.accessibility_id :
       (mobileElement.id ? ElementLocatorType.id_value : ElementLocatorType.xpath);
-    uiIdentifier.locatorValue = mobileElement[this.locatorTypes[uiIdentifier.locatorType].variableName];
-    uiIdentifier.createdType = ElementCreateType.MOBILE_INSPECTOR;
-    let uiIdentifiers: Element[] = [uiIdentifier];
-    uiIdentifiers.forEach(uiIdentifier => uiIdentifier.workspaceVersionId = this.testCase.workspaceVersionId);
-    return this.elementService.bulkCreate(uiIdentifiers)
+    element.locatorValue = mobileElement[this.locatorTypes[element.locatorType].variableName];
+    element.createdType = ElementCreateType.MOBILE_INSPECTOR;
+    let elements: Element[] = [element];
+    elements.forEach(element => element.workspaceVersionId = this.testCase.workspaceVersionId);
+    return this.elementService.bulkCreate(elements)
   }
 
   private createStepAfterRefresh(currentStep: TestStep) {
@@ -325,17 +325,17 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
     }
   }
 
-  updateRecordedUiIdentifier() {
+  updateRecordedElement() {
     if(this.canDrag) return;
-    let uiIdentifierFormComponent:ElementFormComponent= this.dialog.openDialogs?.find(dialog => dialog.componentInstance instanceof ElementFormComponent)?.componentInstance;
-    if(!Boolean(uiIdentifierFormComponent)) return;
+    let elementFormComponent:ElementFormComponent= this.dialog.openDialogs?.find(dialog => dialog.componentInstance instanceof ElementFormComponent)?.componentInstance;
+    if(!Boolean(elementFormComponent)) return;
     let inspectedElement  = this.mirroringContainerComponent.inspectedElement.mobileElement;
     let locatorType = (inspectedElement.accessibilityId) ?
       ElementLocatorType.accessibility_id : (inspectedElement.id ?
         ElementLocatorType.id_value : ElementLocatorType.xpath);
     let definition = inspectedElement[this.locatorTypes[locatorType].variableName];
-    uiIdentifierFormComponent.element.locatorType = locatorType;
-    uiIdentifierFormComponent.element.locatorValue = definition;
+    elementFormComponent.element.locatorType = locatorType;
+    elementFormComponent.element.locatorValue = definition;
   }
 
   openBulkUpdate() {
@@ -419,22 +419,22 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
     return currentStep;
   }
 
-  private checkViewAndAddActionStep(templateId: number, uiIdentifierName?: String, testData?: String,
+  private checkViewAndAddActionStep(templateId: number, elementName?: String, testData?: String,
                                     mobileElement?: MobileElement, fromTestData?: String, toTestData?: String) {
     if(this.viewAfterLastAction != this.getMirroringContainerComponent().viewType){
       const switchViewTemplateId = this.getMirroringContainerComponent().viewType == 'NATIVE_APP'?
         RecorderActionTemplateConstant.switchToNativeAppContext[this.platform] : RecorderActionTemplateConstant.switchToWebviewContext[this.platform];
       this.naturalTextActionsService.findAll("id:" + switchViewTemplateId ).subscribe(templates => {
-        this.createSwitchStepAndActionActionStep(this.populateAttributesFromDetails(templates.content[0]), templateId, uiIdentifierName,
+        this.createSwitchStepAndActionActionStep(this.populateAttributesFromDetails(templates.content[0]), templateId, elementName,
           testData, mobileElement, fromTestData, toTestData);
       });
     } else {
       this.addActionStepAfterSwitch = false;
-      this.addActionStep(templateId, uiIdentifierName, testData, mobileElement, fromTestData, toTestData)
+      this.addActionStep(templateId, elementName, testData, mobileElement, fromTestData, toTestData)
     }
   }
 
-  private addActionStep(templateId: number, uiIdentifierName?: String, testData?: String, mobileElement?: MobileElement,
+  private addActionStep(templateId: number, elementName?: String, testData?: String, mobileElement?: MobileElement,
                         fromTestData?: String, toTestData?: String){
     this.naturalTextActionsService.findAll("id:" + templateId).subscribe(templates => {
       let currentStep: TestStep = this.populateAttributesFromDetails(templates.content[0]);
@@ -442,8 +442,8 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
         currentStep.testDataVal = testData;
         currentStep.testDataType = TestDataType.raw;
       }
-      if (Boolean(uiIdentifierName)) {
-        this.saveUiIdentifier(uiIdentifierName, mobileElement).subscribe(res => {
+      if (Boolean(elementName)) {
+        this.saveElement(elementName, mobileElement).subscribe(res => {
           currentStep.element = res[0].name;
           this.createStep(currentStep)
         })
@@ -453,18 +453,18 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
     })
   }
 
-  private createSwitchStepAndActionActionStep(SwitchStep: TestStep, templateId: number, uiIdentifierName?: String,
+  private createSwitchStepAndActionActionStep(SwitchStep: TestStep, templateId: number, elementName?: String,
                                               testData?: String, mobileElement?: MobileElement,
                                               fromTestData?: String, toTestData?: String) {
     this.viewAfterLastAction = this.getMirroringContainerComponent().viewType;
-    this.populateActionStep(templateId, uiIdentifierName, testData, mobileElement, fromTestData, toTestData);
+    this.populateActionStep(templateId, elementName, testData, mobileElement, fromTestData, toTestData);
     this.createStep(SwitchStep, true);
   }
 
-  private populateActionStep(templateId: number, uiIdentifierName: String, testData: String,
+  private populateActionStep(templateId: number, elementName: String, testData: String,
                              mobileElement: MobileElement, fromTestData?: String, toTestData?: String) {
     this.addActionStepAfterSwitch = true;
-    this.addActionStep(templateId, uiIdentifierName, testData, mobileElement, fromTestData, toTestData);
+    this.addActionStep(templateId, elementName, testData, mobileElement, fromTestData, toTestData);
   }
 
   public findConditionalParent(parentStep: TestStep) {

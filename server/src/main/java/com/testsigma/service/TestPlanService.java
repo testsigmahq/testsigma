@@ -84,7 +84,7 @@ public class TestPlanService extends XMLExportService<TestPlan> {
     return testPlan;
   }
 
-  public TestPlan updateExecutionAndEnvironments(TestPlan testPlan) {
+  public TestPlan updateTestPlanAndEnvironments(TestPlan testPlan) {
     saveExecutionEnvironments(testPlan, true);
     return update(testPlan);
   }

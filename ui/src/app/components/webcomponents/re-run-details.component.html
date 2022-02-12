@@ -14,7 +14,7 @@
       <span
         *ngIf="!activeTestCaseResult && !activeTestSuiteResult && !activeEnvironmentResult"
         class="ml-5 rb-light text-t-secondary"
-        [textContent]="'('+ ('re_run.'+options.executionResult?.childResult?.reRunType | translate)+')'"></span>
+        [textContent]="'('+ ('re_run.'+options.testPlanResult?.childResult?.reRunType | translate)+')'"></span>
       <span  class="pointer"
         *ngIf="activeTestCaseResult || activeTestSuiteResult"
         (click)="showTestMachineResult(activeTestCaseResult?.testDeviceResult || activeTestSuiteResult?.testDeviceResult)"
@@ -111,30 +111,30 @@
       (onTestCaseResultShow)="showTestCaseResult($event)"
       (onTestSuiteResultShow)="showTestSuiteResult($event)"
       (onTestMachineResultShow)="showTestMachineResult($event)"
-      [executionResult]="options.executionResult"
+      [executionResult]="options.testPlanResult"
       [environmentResult]="activeEnvironmentResult"
       [testSuiteResult]="activeTestSuiteResult">
     </app-re-run-test-case-results>
     <app-re-run-test-suite-results
-      [executionResult]="options.executionResult"
+      [executionResult]="options.testPlanResult"
       [environmentResult]="activeEnvironmentResult"
       (onTestMachineResultShow)="showTestMachineResult($event)"
       (onTestSuiteResultShow)="showTestSuiteResult($event)"
       *ngIf="view == 'TSR'"></app-re-run-test-suite-results>
     <app-re-run-test-machine-results
-      [executionResult]="options.executionResult"
+      [executionResult]="options.testPlanResult"
       (onTestMachineResultShow)="showTestMachineResult($event)"
       *ngIf="view == 'TMR'"></app-re-run-test-machine-results>
   </div>
   <app-re-run-data-driven-results
     *ngIf="activeTestCaseResult && activeTestCaseResult.isDataDriven"
     [testCaseResult]="activeTestCaseResult"
-    [executionResult]="options.executionResult"
+    [executionResult]="options.testPlanResult"
     (onTestCaseResultShow)="showTestCaseResult($event)">
   </app-re-run-data-driven-results>
   <app-re-run-test-step-result
     *ngIf="activeTestCaseResult && !activeTestCaseResult.isDataDriven"
     [testCaseResult]="activeTestCaseResult"
-    [executionResult]="options.executionResult">
+    [testPlanResult]="options.testPlanResult">
   </app-re-run-test-step-result>
 </div>

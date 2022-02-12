@@ -20,12 +20,12 @@ import {TestStepService} from "../../services/test-step.service";
 import {TestStep} from "../../models/test-step.model";
 import {Element} from "../../models/element.model";
 import {ActivatedRoute} from "@angular/router";
-import {KibbutzElementData} from "../../models/kibbutz-element-data.model";
-import {KibbutzTestStepTestData} from "../../models/kibbutz-test-step-test-data.model";
+import {AddonElementData} from "../../models/addon-element-data.model";
+import {AddonTestStepTestData} from "../../models/addon-test-step-test-data.model";
 import {TestDeviceResultService} from "../../shared/services/test-device-result.service";
 import {TestDeviceResult} from "../../models/test-device-result.model";
 import {UploadService} from "../../shared/services/upload.service";
-import {SubmitUiIdentifierReviewComponent} from "./submit-ui-identifier-review.component";
+import {SubmitElementReviewComponent} from "./submit-element-review.component";
 
 @Component({
   selector: 'app-action-step-result-details',
@@ -39,7 +39,7 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
   public isScreenshotExpired: boolean = false;
   public isShowMetaData: boolean = false;
   public isShowAttachment: boolean = false;
-  public isShowKibbutzLogs: boolean = false;
+  public isShowAddonLogs: boolean = false;
   public preRequestStep: TestStepResult;
   @ViewChild('stepDetailsRef', {static: false}) public stepDetailsRef: ElementRef;
   public isSelected: string = 'step_data';
@@ -50,10 +50,10 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
   public isCapabilities: Boolean = false;
   public showDetails: boolean = false;
   public element: Element;
-  public kibbutzElements: KibbutzElementData[];
-  public kibbutzTestData: KibbutzTestStepTestData[];
+  public addonElementData: AddonElementData[];
+  public addonTestStepTestData: AddonTestStepTestData[];
   public appDetails: JSON = JSON.parse('{}');
-  public fieldDefinitionDetails;
+  public ElementDetails;
 
   constructor(
     public authGuard: AuthenticationGuard,
@@ -83,11 +83,11 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
       if (((diffInMillis) / (1000 * 60 * 60 * 24)) > 30) {
         this.isScreenshotExpired = true;
       }
-      if (this.testStepResult?.kibbutzElements) {
-        this.kibbutzElements = this.getElements(this.testStepResult?.kibbutzElements);
+      if (this.testStepResult?.addonElements) {
+        this.addonElementData = this.getElements(this.testStepResult?.addonElements);
       }
-      if (this.testStepResult?.kibbutzTestData) {
-        this.kibbutzTestData = this.getTestData(this.testStepResult?.kibbutzTestData);
+      if (this.testStepResult?.addonTestData) {
+        this.addonTestStepTestData = this.getTestData(this.testStepResult?.addonTestData);
       }
       this.isScreenshotBroken = false;
     }
@@ -110,11 +110,11 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
     if (elementName) {
       this.fetchElementByName(elementName)
     }
-    if (this.testStepResult?.kibbutzElements) {
-      this.kibbutzElements = this.getElements(this.testStepResult?.kibbutzElements);
+    if (this.testStepResult?.addonElements) {
+      this.addonElementData = this.getElements(this.testStepResult?.addonElements);
     }
-    if (this.testStepResult?.kibbutzTestData) {
-      this.kibbutzTestData = this.getTestData(this.testStepResult?.kibbutzTestData);
+    if (this.testStepResult?.addonTestData) {
+      this.addonTestStepTestData = this.getTestData(this.testStepResult?.addonTestData);
     }
     if (this.testStepResult?.stepId && !this.testStepResult?.testStep) {
       this.testStepService.findAll("id:" + this.testStepResult.stepId).subscribe(res => {
@@ -128,9 +128,9 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
     this.isScreenshotBroken = false;
   }
 
-  getFieldDefinitionDetails() {
-    this.fieldDefinitionDetails = this.getElements(this.testStepResult?.fieldDefinitionDetails, true);
-    return this.fieldDefinitionDetails.length || this.element?.locatorValue;//TODO Fallback element details need to clean
+  getElementDetails() {
+    this.ElementDetails = this.getElements(this.testStepResult?.ElementDetails, true);
+    return this.ElementDetails.length || this.element?.locatorValue;//TODO Fallback element details need to clean
   }
 
   isEmptyObject(obj){
@@ -151,19 +151,19 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
     return this.preRequestStep?.testStep?.stepDisplayNumber ? this.preRequestStep?.testStep?.stepDisplayNumber : (<number>this.preRequestStep?.stepDetail?.order_id + 1)
   }
 
-  fetchElementByName(elementName, kibbutzElement?) {
+  fetchElementByName(elementName, addonElement?) {
     this.elementService.findAll('name:' + encodeURIComponent(elementName) + ',workspaceVersionId:' + this.testStepResult?.testCase?.workspaceVersionId).subscribe(
       (res) => {
         this.testStepResult.isElementChanged = res?.content?.length == 0;
-        if (kibbutzElement) {
-          kibbutzElement.isElementChanged = res?.content?.length == 0;
-          kibbutzElement.element = res.content[0];
+        if (addonElement) {
+          addonElement.isElementChanged = res?.content?.length == 0;
+          addonElement.element = res.content[0];
         }
         if (!this.testStepResult.isElementChanged)
           this.element = res.content[0];
       },
       (err) => {
-        kibbutzElement ? kibbutzElement.isElementChanged = true : '';
+        addonElement ? addonElement.isElementChanged = true : '';
         this.testStepResult.isElementChanged = true;
       }
     )
@@ -179,7 +179,7 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
     this.isScreenshotBroken = false;
   }
 
-  openEditElement(name, isKibbutzElement?: boolean) {
+  openEditElement(name, isAddonElement?: boolean) {
     this.matDialog.open(ElementFormComponent, {
       height: "100vh",
       width: '60%',
@@ -192,8 +192,8 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
       panelClass: ['mat-dialog', 'rds-none']
     }).afterClosed().subscribe((res: Element) => {
       if (res && res instanceof Element) {
-        if (isKibbutzElement)
-          this.updateKibbutzElements(name, res.name);
+        if (isAddonElement)
+          this.updateAddonElements(name, res.name);
         else
           this.testStep.element = res.name;
         this.testStepService.update(this.testStep).subscribe()
@@ -210,8 +210,8 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
     this.isShowMetaData = !this.isShowMetaData;
   }
 
-  toggleKibbutzLogs() {
-    this.isShowKibbutzLogs = !this.isShowKibbutzLogs;
+  toggleAddonLogs() {
+    this.isShowAddonLogs = !this.isShowAddonLogs;
   }
 
   toggleCapabilities() {
@@ -249,7 +249,7 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
     return result;
   }
 
-  getTestData(testDataMap: Map<String, KibbutzTestStepTestData>) {
+  getTestData(testDataMap: Map<String, AddonTestStepTestData>) {
     let result = [];
     Object.keys(testDataMap).forEach(key => {
       result.push(testDataMap[key]);
@@ -257,9 +257,9 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
     return result;
   }
 
-  updateKibbutzElements(oldName, newName) {
-    let testStepResultElements = this.getElements(this.testStepResult?.kibbutzElements, true);
-    let testStepElements = this.getElements(this.testStep?.kibbutzElements, true);
+  updateAddonElements(oldName, newName) {
+    let testStepResultElements = this.getElements(this.testStepResult?.addonElements, true);
+    let testStepElements = this.getElements(this.testStep?.addonElements, true);
     for (let i = 0; i < testStepElements.length; i++) {
       if (testStepElements[i].name == oldName) {
         testStepElements[i].name = newName;
@@ -314,11 +314,11 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
 
   //TODO Fallback element details need to clean
   get elementValue() {
-    return this.fieldDefinitionDetails[0]?.locatorValue ? this.fieldDefinitionDetails[0]?.locatorValue : this.element.locatorValue;
+    return this.ElementDetails[0]?.locatorValue ? this.ElementDetails[0]?.locatorValue : this.element.locatorValue;
   }
 
   get elementType() {
-    return this.fieldDefinitionDetails[0]?.findByType ? this.fieldDefinitionDetails[0]?.findByType : this.element.locatorType;
+    return this.ElementDetails[0]?.findByType ? this.ElementDetails[0]?.findByType : this.element.locatorType;
   }
 
 }

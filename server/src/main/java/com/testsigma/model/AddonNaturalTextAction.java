@@ -1,6 +1,5 @@
 package com.testsigma.model;
 
-import com.testsigma.service.ObjectMapperService;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Fetch;
@@ -70,6 +69,6 @@ public class AddonNaturalTextAction {
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "plugin")
   @EqualsAndHashCode.Exclude
   @ToString.Exclude
-  private List<KibbutzPluginTestDataFunction> testDataFunctions;
+  private List<AddonPluginTestDataFunction> testDataFunctions;
 
 }

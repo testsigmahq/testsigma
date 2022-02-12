@@ -5,10 +5,10 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.testsigma</groupId>
-  <artifactId>agent</artifactId>
+  <artifactId>testsigma-agent</artifactId>
   <version>1.0.0</version>
   <packaging>jar</packaging>
-  <name>agent</name>
+  <name>Testsigma Agent</name>
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -112,7 +112,7 @@
 
     <dependency>
       <groupId>com.testsigma</groupId>
-      <artifactId>automator</artifactId>
+      <artifactId>testsigma-automator</artifactId>
       <version>1.0.0</version>
     </dependency>
 

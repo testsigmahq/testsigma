@@ -73,14 +73,14 @@
       *ngIf="emptyElements.length>0">
       <div class="mx-auto w-fit-content d-flex align-items-center">
         <i class="fa-warning fz-20 pr-8"></i>
-        <span [innerHTML]="'ad_hoc.empty_elements'| translate:{ fieldNames:emptyElements.join(', ') }"></span>
+        <span [innerHTML]="'ad_hoc.empty_elements'| translate:{ elementNames:emptyElements.join(', ') }"></span>
       </div>
     </div>
     <div class="theme-warning text-danger border-rds-4 px-10 py-5 fz-12 mt-2 mb-40 text-center"
          *ngIf="invalidUrls.length>0 && !isHybrid">
       <div class="mx-auto w-fit-content d-flex align-items-center">
         <i class="fa-warning fz-20 pl-15 pr-8"></i>
-        <span class="p-10 text-left" [innerHTML]="'ad_hoc.invalid_url'| translate:{ fieldNames:invalidUrls.join(', ') }"></span>
+        <span class="p-10 text-left" [innerHTML]="'ad_hoc.invalid_url'| translate:{ elementNames:invalidUrls.join(', ') }"></span>
       </div>
     </div>
     <app-dry-run-rest-form
@@ -92,21 +92,21 @@
       (closeDialog)="closeDialogTab()"
       *ngIf="dryExecutionForm && isMobileNative && version && refresh"
       [formGroup]="dryExecutionForm"
-      [execution]="this.testPlan"
+      [testPlan]="this.testPlan"
       [environment]="environment"
       [version]="version"></app-dry-run-mobile-native-form>
     <app-dry-run-mobile-web-form
       (closeDialog)="closeDialogTab()"
       *ngIf="dryExecutionForm && isMobileWeb && version"
       [formGroup]="dryExecutionForm"
-      [execution]="this.testPlan"
+      [testPlan]="this.testPlan"
       [environment]="environment"
       [version]="version"></app-dry-run-mobile-web-form>
     <app-dry-run-web-form
       (closeDialog)="closeDialogTab()"
       *ngIf="dryExecutionForm && isWeb && version && testPlan"
       [formGroup]="dryExecutionForm"
-      [execution]="testPlan"
+      [testPlan]="testPlan"
       [environment]="environment"
       [version]="version"></app-dry-run-web-form>
     <app-desired-capabilities

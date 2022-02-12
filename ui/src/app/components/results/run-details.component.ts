@@ -21,7 +21,7 @@ import {TestPlanType} from "../../enums/execution-type.enum";
 export class RunDetailsComponent extends BaseComponent implements OnInit {
 
 
-  public executionResult: TestPlanResult;
+  public testPlanResult: TestPlanResult;
   public originalExecutionResult: TestPlanResult = new TestPlanResult();
   private runId: Number;
   public showList: String = 'TCR';
@@ -42,7 +42,7 @@ export class RunDetailsComponent extends BaseComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private executionResultService: TestPlanResultService,
+    private testPlanResultService: TestPlanResultService,
     private router: Router) {
     super();
   }
@@ -71,11 +71,11 @@ export class RunDetailsComponent extends BaseComponent implements OnInit {
   }
 
   addAutoRefresh(listenerChangeTrue?:boolean) {
-    if (listenerChangeTrue && this.executionResult?.isExecuting && !this.isDisabledAutoRefresh){
+    if (listenerChangeTrue && this.testPlanResult?.isExecuting && !this.isDisabledAutoRefresh){
       this.fetchExecutionResult();
     }
     this.removeAutoRefresh();
-    if ((this.executionResult?.isExecuting || this.executionResult?.childResult?.isExecuting) && !this.isDisabledAutoRefresh)
+    if ((this.testPlanResult?.isExecuting || this.testPlanResult?.childResult?.isExecuting) && !this.isDisabledAutoRefresh)
       this.autoRefreshSubscription = interval(this.autoRefreshInterval).subscribe(() => {
         this.fetchExecutionResult();
       });
@@ -103,18 +103,18 @@ export class RunDetailsComponent extends BaseComponent implements OnInit {
   fetchExecutionResult() {
     this.isExecutionRunning = false;
     this.isExecutionFetchingCompleted = false;
-    this.executionResultService.show(this.runId).subscribe(result => {
-      this.executionResult = result;
+    this.testPlanResultService.show(this.runId).subscribe(result => {
+      this.testPlanResult = result;
       Object.assign(this.originalExecutionResult, result);
-      if(this.executionResult?.reRunParentId)
-        this.router.navigate(['/td', 'runs', this.executionResult?.reRunParentId]);
-      if (!this.executionResult.isExecuting && !this.executionResult?.childResult?.isExecuting) {
+      if(this.testPlanResult?.reRunParentId)
+        this.router.navigate(['/td', 'runs', this.testPlanResult?.reRunParentId]);
+      if (!this.testPlanResult.isExecuting && !this.testPlanResult?.childResult?.isExecuting) {
         this.removeAutoRefresh();
-      } else if ((this.executionResult?.isExecuting || this.executionResult?.childResult?.isExecuting) && this.executionResult?.testPlan) {
+      } else if ((this.testPlanResult?.isExecuting || this.testPlanResult?.childResult?.isExecuting) && this.testPlanResult?.testPlan) {
         this.isExecutionRunning = true;
         this.addAutoRefresh();
       }
-      // this.userService.show(this.executionResult.executedById).subscribe(user => this.executionResult.executedBy = user);
+      // this.userService.show(this.testPlanResult.executedById).subscribe(user => this.testPlanResult.executedBy = user);
       this.isExecutionFetchingCompleted = true;
     }, error => {
       this.isExecutionFetchingCompleted = true;
@@ -150,11 +150,11 @@ export class RunDetailsComponent extends BaseComponent implements OnInit {
   private resetExecutionResultCounts() {
     let originalExecutionResult = new TestPlanResult();
     Object.assign(originalExecutionResult , this.originalExecutionResult)
-    this.executionResult.failedCount = originalExecutionResult.failedCount;
-    this.executionResult.abortedCount = originalExecutionResult.abortedCount;
-    this.executionResult.stoppedCount = originalExecutionResult.stoppedCount;
-    this.executionResult.notExecutedCount = originalExecutionResult.notExecutedCount;
-    this.executionResult.queuedCount = originalExecutionResult.queuedCount;
-    this.executionResult.passedCount = originalExecutionResult.passedCount;
+    this.testPlanResult.failedCount = originalExecutionResult.failedCount;
+    this.testPlanResult.abortedCount = originalExecutionResult.abortedCount;
+    this.testPlanResult.stoppedCount = originalExecutionResult.stoppedCount;
+    this.testPlanResult.notExecutedCount = originalExecutionResult.notExecutedCount;
+    this.testPlanResult.queuedCount = originalExecutionResult.queuedCount;
+    this.testPlanResult.passedCount = originalExecutionResult.passedCount;
   }
 }

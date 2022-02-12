@@ -14,14 +14,14 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class DetailsComponent implements OnInit {
 
-  public execution: TestPlan;
+  public testPlan: TestPlan;
 
   constructor(
     private route: ActivatedRoute,
-    private executionService: TestPlanService) { }
+    private testPlanService: TestPlanService) { }
 
   ngOnInit(): void {
-    this.executionService.find(this.route.parent.snapshot.params.testPlanId).subscribe(res => this.execution = res);
+    this.testPlanService.find(this.route.parent.snapshot.params.testPlanId).subscribe(res => this.testPlan = res);
   }
 
 }

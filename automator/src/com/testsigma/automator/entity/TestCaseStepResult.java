@@ -43,10 +43,10 @@ public class TestCaseStepResult {
   private TestStepPriority priority;
   private Integer retriedCount = 0;
   private StepDetails stepDetails;
-  private Map<String, KibbutzTestStepTestData> kibbutzTestData;
-  private Map<String, KibbutzElementData> kibbutzElements;
-  private String kibbutzActionLogs;
-  private Map<String, ElementPropertiesEntity> fieldDefinitionDetails = new HashMap<>();
+  private Map<String, AddonTestStepTestData> addonTestData;
+  private Map<String, AddonElementData> addonElements;
+  private String addonActionLogs;
+  private Map<String, ElementPropertiesEntity> ElementDetails = new HashMap<>();
   private Map<String,  TestDataPropertiesEntity> testDataDetails = new LinkedHashMap<>();
 
   @ToString.Exclude

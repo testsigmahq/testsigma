@@ -10,7 +10,7 @@ import {ResultConstant} from "../../enums/result-constant.enum";
   styles: []
 })
 export class TestMachineResultFilterComponent implements OnInit {
-  @Input('executionResult') executionResult: TestPlanResult;
+  @Input('testPlanResult') testPlanResult: TestPlanResult;
   @Output('toggleFilterAction') toggleFilterAction = new EventEmitter<Boolean>();
   @Output('filterAction') filterAction = new EventEmitter<any>();
 

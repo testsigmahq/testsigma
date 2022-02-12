@@ -18,11 +18,11 @@ import {StepResultScreenshotComparision} from "./step-result-screenshot-comparis
 import {TestStepPriority} from "../enums/test-step-priority.enum";
 import {TestStep} from "./test-step.model";
 import {AddonNaturalTextAction} from "./addon-natural-text-action.model";
-import {KibbutzElementData} from "./kibbutz-element-data.model";
-import {KibbutzTestStepTestData} from "./kibbutz-test-step-test-data.model";
+import {AddonElementData} from "./addon-element-data.model";
+import {AddonTestStepTestData} from "./addon-test-step-test-data.model";
 import {TestStepResultMetaSelfHealing} from "./test-step-result-meta-self-healing.model";
 import {TestDataDetails} from "./step-details-test-data-map.model";
-import {FieldDefinitionDetails} from "./field-definition-details.model";
+import {ElementDetails} from "./element-details.model";
 
 export class TestStepResult extends ResultBase implements PageObject {
   @serializable
@@ -59,16 +59,16 @@ export class TestStepResult extends ResultBase implements PageObject {
   public priority: TestStepPriority;
 
   @serializable
-  public kibbutzActionLogs: String;
+  public addonActionLogs: String;
 
 
   @serializable(custom(v => {
     if (!v)
       return v;
-    let returnValue = new Map<string, KibbutzElementData>();
+    let returnValue = new Map<string, AddonElementData>();
     for (const key in v) {
       if (v.hasOwnProperty(key))
-        returnValue[key] = new KibbutzElementData().deserialize(v[key]);
+        returnValue[key] = new AddonElementData().deserialize(v[key]);
     }
     return v;
   }, v => {
@@ -77,19 +77,19 @@ export class TestStepResult extends ResultBase implements PageObject {
     let returnValue = new Map<string, JSON>();
     for (const key in v) {
       if (v.hasOwnProperty(key))
-        returnValue[key] = new KibbutzElementData().serialize();
+        returnValue[key] = new AddonElementData().serialize();
     }
     return v;
   }))
-  kibbutzElements: Map<string, KibbutzElementData>;
+  addonElements: Map<string, AddonElementData>;
 
   @serializable(custom(v => {
     if (!v)
       return v;
-    let returnValue = new Map<string, KibbutzTestStepTestData>();
+    let returnValue = new Map<string, AddonTestStepTestData>();
     for (const key in v) {
       if (v.hasOwnProperty(key))
-        returnValue[key] = new KibbutzTestStepTestData().deserialize(v[key]);
+        returnValue[key] = new AddonTestStepTestData().deserialize(v[key]);
     }
     return v;
   }, v => {
@@ -98,11 +98,11 @@ export class TestStepResult extends ResultBase implements PageObject {
     let returnValue = new Map<string, JSON>();
     for (const key in v) {
       if (v.hasOwnProperty(key))
-        returnValue[key] = new KibbutzTestStepTestData().serialize();
+        returnValue[key] = new AddonTestStepTestData().serialize();
     }
     return v;
   }))
-  kibbutzTestData: Map<string, KibbutzTestStepTestData>;
+  addonTestData: Map<string, AddonTestStepTestData>;
 
   @serializable(custom(v => SKIP, v => {
       return v;
@@ -113,10 +113,10 @@ export class TestStepResult extends ResultBase implements PageObject {
       return v;
     }
   ))
-  public fieldDefinitionDetails: Map<string, FieldDefinitionDetails>;
+  public ElementDetails: Map<string, ElementDetails>;
 
   public template: NaturalTextActions;
-  public kibbutzTemplate: AddonNaturalTextAction;
+  public addonTemplate: AddonNaturalTextAction;
   public parentResult: TestStepResult;
   public stepGroup: TestCase;
   public stepGroupResults: Page<TestStepResult>;
@@ -159,12 +159,12 @@ export class TestStepResult extends ResultBase implements PageObject {
     return parsedStep;
   }
 
-  get parseKibbutzLogs() {
-    let parsedStep = this.kibbutzActionLogs.replace('\n', '<br/>');
+  get parseAddonLogs() {
+    let parsedStep = this.addonActionLogs.replace('\n', '<br/>');
     return parsedStep;
   }
 
-  replaceKibbutzTestData(type, value) {
+  replaceAddonTestData(type, value) {
     switch (type) {
       case TestDataType.random:
         value = '~|' + value + '|';
@@ -185,20 +185,20 @@ export class TestStepResult extends ResultBase implements PageObject {
     return value;
   }
 
-  parsedKibbutzStep(kibbutzTestData, kibbutzElements, grammar?): String {
+  parsedAddonStep(addonTestData, addonElements, grammar?): String {
     let parsedStep = grammar;
-    Object.keys(kibbutzTestData).forEach(key => {
-      let value = kibbutzTestData[key]?.value;
-      value = this.replaceKibbutzTestData(kibbutzTestData[key]?.type, value);
+    Object.keys(addonTestData).forEach(key => {
+      let value = addonTestData[key]?.value;
+      value = this.replaceAddonTestData(addonTestData[key]?.type, value);
       parsedStep = parsedStep.replace(key, '<TSTESTDAT ref="' + key + '">' + value + '</TSTESTDAT>')
     })
-    Object.keys(kibbutzElements).forEach(key => {
-      parsedStep = parsedStep.replace(key, '<TSELEMENT ref="' + key + '">' + kibbutzElements[key]?.name + '</TSELEMENT>')
+    Object.keys(addonElements).forEach(key => {
+      parsedStep = parsedStep.replace(key, '<TSELEMENT ref="' + key + '">' + addonElements[key]?.name + '</TSELEMENT>')
     })
-    Object.keys(kibbutzTestData).forEach(key => {
+    Object.keys(addonTestData).forEach(key => {
       parsedStep = parsedStep.replace('<TSTESTDAT ref="' + key + '">', '<span class="test_data" data-reference="' + key + '">')
     })
-    Object.keys(kibbutzElements).forEach(key => {
+    Object.keys(addonElements).forEach(key => {
       parsedStep = parsedStep.replace('<TSELEMENT ref="' + key + '">', '<span class="element" data-reference="' + key + '">')
     })
     parsedStep = parsedStep.replace(new RegExp('</TSTESTDAT>', 'g'), '</span>')

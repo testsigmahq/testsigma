@@ -25,5 +25,5 @@ public class TestPlanResultRequest {
   private StatusConstant status;
   private Boolean isReRun = false;
   private ReRunType reRunType = ReRunType.NONE;
-  private Long parentExecutionResultId;
+  private Long parenttestPlanResultId;
 }

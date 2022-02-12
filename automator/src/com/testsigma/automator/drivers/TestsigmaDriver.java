@@ -203,13 +203,6 @@ public class TestsigmaDriver {
       String runBy = ObjectUtils.defaultIfNull(settings.getRunBy(), "");
       String executionRunId = settings.getExecutionRunId().toString();
       String executionName = settings.getExecutionName();
-      if (testDeviceEntity.getRunInParallel()) {
-        if (testDeviceEntity.getTestSuites().size() > 0) {
-          TestSuiteEntity testSuiteEntity = testDeviceEntity.getTestSuites().get(0);
-          executionName = testSuiteEntity.getName();
-          executionRunId = executionRunId + " [" + testSuiteEntity.getResultId() + "]";
-        }
-      }
       name = String.format("[%s] - %s - %s", executionRunId, runBy, executionName);
       name = name.replaceAll("[^a-zA-Z1-90_\\s\\[\\]\\:\\-@\\.]*", "");
     }

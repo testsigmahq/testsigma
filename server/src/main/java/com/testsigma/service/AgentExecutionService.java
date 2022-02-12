@@ -184,7 +184,7 @@ public class AgentExecutionService {
 
   private void populateEnvironmentResults(TestPlanResult testPlanResult) throws TestsigmaException {
     List<TestDevice> testDevices =
-      testDeviceService.findByExecutionIdAndDisable(this.getTestPlan().getId(), Boolean.FALSE);
+      testDeviceService.findByTestPlanIdAndDisable(this.getTestPlan().getId(), Boolean.FALSE);
     for (TestDevice testDevice : testDevices) {
       log.info("Populating Environment result for environment:" + testDevice);
       TestDeviceResult testDeviceResult = createEnvironmentResult(testPlanResult, testDevice);
@@ -542,7 +542,6 @@ public class AgentExecutionService {
     settings.setAppUploadId(testDevice.getAppUploadId());
 
     settings.setTitle(testDevice.getTitle());
-    settings.setRunInParallel(testDevice.getRunInParallel());
     settings.setCreateSessionAtCaseLevel(testDevice.getCreateSessionAtCaseLevel());
     return settings;
   }
@@ -594,11 +593,7 @@ public class AgentExecutionService {
           agentDeviceService.find(testDeviceResult.getTestDevice().getDeviceId()).getName()+ " "+AutomatorMessages.DEVICE_NOT_ONLINE, StatusConstant.STATUS_CREATED);
       }
       else {
-        if (testDeviceResult.getTestDevice().getRunInParallel()) {
-          processEnvironmentResultInParallel(testDeviceResult, inStatus);
-        } else {
           processEnvironmentResult(testDeviceResult, inStatus);
-        }
       }
     }
     testDeviceResultService.updateExecutionConsolidatedResults(this.testPlanResult.getId(),
@@ -632,7 +627,6 @@ public class AgentExecutionService {
         List<TestSuiteEntityDTO> testSuiteEntityDTOS = new ArrayList<>();
         testSuiteEntityDTOS.add(testSuiteEntity);
         EnvironmentEntityDTO environmentEntityDTO = loadEnvironmentDetails(testDeviceResult);
-        environmentEntityDTO.setRunInParallel(Boolean.TRUE);
         environmentEntityDTO.setTestSuites(testSuiteEntityDTOS);
         try {
           pushEnvironmentToLab(testDeviceResult, environmentEntityDTO);
@@ -652,22 +646,6 @@ public class AgentExecutionService {
     EnvironmentEntityDTO environmentEntityDTO = loadEnvironmentDetails(testDeviceResult);
     environmentEntityDTO.setTestSuites(testSuiteEntityDTOS);
     return environmentEntityDTO;
-  }
-
-  public List<EnvironmentEntityDTO> loadEnvironmentsForParallel(TestDeviceResult testDeviceResult, StatusConstant inStatus)
-    throws Exception {
-    List<TestSuiteEntityDTO> testSuiteEntityDTOS = loadTestSuites(testDeviceResult, inStatus);
-    EnvironmentEntityDTO environmentEntityDTO = loadEnvironmentDetails(testDeviceResult);
-    List<EnvironmentEntityDTO> environmentEntityDTOS = new ArrayList<EnvironmentEntityDTO>();
-    for (TestSuiteEntityDTO testSuiteEntityDTO : testSuiteEntityDTOS) {
-      EnvironmentEntityDTO environmentEntity = environmentEntityDTO.clone();
-      environmentEntity.setRunInParallel(Boolean.TRUE);
-      ArrayList<TestSuiteEntityDTO> testSuiteEntities = new ArrayList<>();
-      testSuiteEntities.add(testSuiteEntityDTO);
-      environmentEntity.setTestSuites(testSuiteEntities);
-      environmentEntityDTOS.add(environmentEntity);
-    }
-    return environmentEntityDTOS;
   }
 
   public EnvironmentEntityDTO loadEnvironmentDetails(TestDeviceResult testDeviceResult) throws Exception {
@@ -1046,7 +1024,7 @@ public class AgentExecutionService {
     }
 
     List<String> elementNames = testStepService.findElementNamesByTestCaseIds(testCaseIds);
-    elementNames.addAll(testStepService.findKibbutzActionElementsByTestCaseIds(testCaseIds));
+    elementNames.addAll(testStepService.findAddonActionElementsByTestCaseIds(testCaseIds));
 
     List<Element> elementList = elementService.findByNameInAndWorkspaceVersionId(elementNames,
       testPlan.getWorkspaceVersionId());

@@ -13,7 +13,7 @@ import {debounceTime, distinctUntilChanged, filter, tap} from "rxjs/operators";
 })
 export class TestSuiteResultsComponent implements OnInit {
 
-  @Input('executionResult') executionResult: TestPlanResult;
+  @Input('testPlanResult') testPlanResult: TestPlanResult;
   @Input('showFilter') showFilter: Boolean;
   @Input('showRunDetails') showRunDetails: Boolean;
   @Input('isExecutionRunning') isExecutionRunning: Boolean;
@@ -45,7 +45,7 @@ export class TestSuiteResultsComponent implements OnInit {
     if (changes["showFilter"] && !changes["showFilter"].firstChange) {
       return
     }
-    this.suiteResults = new InfiniteScrollableDataSource(this.testSuiteResultService, ",testPlanResultId:" + this.executionResult.id);
+    this.suiteResults = new InfiniteScrollableDataSource(this.testSuiteResultService, ",testPlanResultId:" + this.testPlanResult.id);
     this.isRunSuiteFetchComplete = true;
   }
 
@@ -67,7 +67,7 @@ export class TestSuiteResultsComponent implements OnInit {
 
   clearSearch() {
     this.suiteResults = undefined;
-    let query = "testPlanResultId:" + this.executionResult.id;
+    let query = "testPlanResultId:" + this.testPlanResult.id;
     this.suiteResults = new InfiniteScrollableDataSource(this.testSuiteResultService, query);
     this.inputClear();
   }
@@ -98,7 +98,7 @@ export class TestSuiteResultsComponent implements OnInit {
   filter(event) {
     let applyFilter: boolean = event.applyFilter;
     let filterResult: ResultConstant[] = event.filterResult;
-    let query = "testPlanResultId:" + this.executionResult.id;
+    let query = "testPlanResultId:" + this.testPlanResult.id;
     this.isFilterApplied = false;
     this.filterResult = undefined;
     if (applyFilter) {
@@ -113,7 +113,7 @@ export class TestSuiteResultsComponent implements OnInit {
 
   toggleSearch() {
     this.isSearchEnable = !this.isSearchEnable;
-    let query = "testPlanResultId:" + this.executionResult.id;
+    let query = "testPlanResultId:" + this.testPlanResult.id;
     if (this.isSearchEnable) {
       setTimeout(() => {
         this.searchMachineInput.nativeElement.focus();
@@ -131,7 +131,7 @@ export class TestSuiteResultsComponent implements OnInit {
         debounceTime(500),
         distinctUntilChanged(),
         tap((event: KeyboardEvent) => {
-          let query = "testPlanResultId:" + this.executionResult.id;
+          let query = "testPlanResultId:" + this.testPlanResult.id;
           if (this.searchMachineInput.nativeElement.value) {
             query += ",suiteName:*" + this.searchMachineInput.nativeElement.value + "*";
             this.suiteResults = new InfiniteScrollableDataSource(this.testSuiteResultService, query);

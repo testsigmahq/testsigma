@@ -3,7 +3,7 @@ import {Base} from "../shared/models/base.model";
 import {PageObject} from "../shared/models/page-object";
 import {AddonNaturalTextActionParameter} from "./addons-parameter.model";
 import {WorkspaceType} from "../enums/workspace-type.enum";
-import {KibbutzParameterType} from "../enums/kibbutz-parameter-type.enum";
+import {AddonParameterType} from "../enums/addon-parameter-type.enum";
 import {StepActionType} from "../enums/step-action-type.enum";
 
 export class AddonNaturalTextAction extends Base implements PageObject {

@@ -39,7 +39,7 @@ export abstract class TestStepListItemComponent extends BaseComponent implements
   @Input('testSteps') testSteps: Page<TestStep>;
   @Input('isSearchEnabled') isSearchEnabled: any;
   @Input('templates') templates: Page<NaturalTextActions>;
-  @Input('kibbutzTemplates') kibbutzTemplates?: Page<AddonNaturalTextAction>;
+  @Input('addonTemplates') addonTemplates?: Page<AddonNaturalTextAction>;
   @Output('onStepSelection') stepSelectionEvent = new EventEmitter<TestStep>();
   @Output('onStepDeselection') stepDeselectionEvent = new EventEmitter<TestStep>();
   @Output('onStepDestroy') stepDestroyEvent = new EventEmitter<TestStep>();
@@ -145,7 +145,7 @@ export abstract class TestStepListItemComponent extends BaseComponent implements
       step.testData = testStep.testData;
       step.stepGroup = testStep.stepGroup;
       step.stepDisplayNumber = this.testSteps.totalElements+1;//TODO need change method
-      step.kibbutzTemplate = testStep.kibbutzTemplate;
+      step.addonTemplate = testStep.addonTemplate;
       this.stepCloneEvent.emit(step);
       this.isCloning = false;
     }, error => {

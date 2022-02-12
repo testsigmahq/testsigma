@@ -2,9 +2,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.testsigma</groupId>
-  <artifactId>automator</artifactId>
+  <artifactId>testsigma-automator</artifactId>
   <version>1.0.0</version>
-  <name>automator</name>
+  <name>Testsigma Automator</name>
   <description>Automator for testsigma</description>
 
   <properties>

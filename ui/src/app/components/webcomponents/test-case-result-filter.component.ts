@@ -15,7 +15,7 @@ import {TestPlan} from "../../models/test-plan.model";
   styles: []
 })
 export class TestCaseResultFilterComponent implements OnInit {
-  @Input('execution') execution: TestPlan;
+  @Input('testPlan') testPlan: TestPlan;
   @Input('filterResult') filterResult: ResultConstant[];
   @Output('toggleFilterAction') toggleFilterAction = new EventEmitter<Boolean>();
   @Output() filterAction = new EventEmitter<any>();
@@ -53,10 +53,10 @@ export class TestCaseResultFilterComponent implements OnInit {
 
   fetchTypes() {
 
-    this.testCaseTypeService.findAll("workspaceId:"+this.execution?.workspaceVersion?.workspaceId).subscribe(res => {
+    this.testCaseTypeService.findAll("workspaceId:"+this.testPlan?.workspaceVersion?.workspaceId).subscribe(res => {
       this.testCaseTypesList = res;
     })
-    this.testCasePriorityService.findAll("workspaceId:"+this.execution?.workspaceVersion?.workspaceId).subscribe(res => {
+    this.testCasePriorityService.findAll("workspaceId:"+this.testPlan?.workspaceVersion?.workspaceId).subscribe(res => {
       this.testcasePrioritiesList = res;
     });
   }

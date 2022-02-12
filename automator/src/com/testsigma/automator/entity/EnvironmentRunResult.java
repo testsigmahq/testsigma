@@ -32,7 +32,6 @@ public class EnvironmentRunResult {
   private Timestamp deviceAllocatedOn;
   private Timestamp sessionCreatedOn;
   private Timestamp sessionCompletedOn;
-  private Boolean runInParallel = false;
   private Map<String, Object> metaData = new HashMap<String, Object>();
 
   public EnvironmentRunResult() {

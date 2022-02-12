@@ -43,7 +43,7 @@ import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
           class="example-radio-group d-flex" formControlName="testPlanLabType">
           <mat-radio-button
             (change)="setTargetMachineAsMandatory(false)"
-            *ngIf="((execution?.id && execution.isTestsigmaLab) || !execution?.id) && applications && !isRest"
+            *ngIf="((testPlan?.id && testPlan.isTestsigmaLab) || !testPlan?.id) && applications && !isRest"
             [value]="'TestsigmaLab'">
             <div class="lab-item">
               <span class="testsigma-lab-logo lab-icon"></span>
@@ -53,7 +53,7 @@ import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
           </mat-radio-button>
           <mat-radio-button
             (change)="setTargetMachineAsMandatory(true)"
-            *ngIf="((execution?.id && execution.isHybrid) || !execution?.id )"
+            *ngIf="((testPlan?.id && testPlan.isHybrid) || !testPlan?.id )"
             [value]="'Hybrid'">
             <div class="lab-item">
               <span class="testsigma-local-devices-logo lab-icon"></span>
@@ -101,7 +101,7 @@ import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
 export class SelectTestLabComponent implements OnInit {
   @Input('formGroup') selectTestLabForm: FormGroup;
   @Input('version') version: WorkspaceVersion;
-  @Input('execution') execution: TestPlan;
+  @Input('testPlan') testPlan: TestPlan;
   @Input('isDry') isDry : boolean;
   @Output() closeDryRunDialog = new EventEmitter<void>();
 

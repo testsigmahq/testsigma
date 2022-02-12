@@ -69,8 +69,8 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
                                     WebDriverSettingsDTO webDriverSettings)
     throws TestsigmaException, MalformedURLException {
     List<WebDriverCapability> capabilities = new ArrayList<>();
-    PlatformDevice device = platformsService.getPlatformDevice(testDevice.getPlatformDeviceId(), testDevice.getExecution().getTestPlanLabType());
-    PlatformOsVersion platformOsVersion = platformsService.getPlatformOsVersion(testDevice.getPlatformOsVersionId(),testDevice.getExecution().getTestPlanLabType());
+    PlatformDevice device = platformsService.getPlatformDevice(testDevice.getPlatformDeviceId(), testDevice.getTestPlan().getTestPlanLabType());
+    PlatformOsVersion platformOsVersion = platformsService.getPlatformOsVersion(testDevice.getPlatformOsVersionId(),testDevice.getTestPlan().getTestPlanLabType());
     Platform os = device.getPlatform();
     capabilities.add(new WebDriverCapability(TSCapabilityType.DEVICE_NAME, device.getName()));
     capabilities.add(new WebDriverCapability(TSCapabilityType.PLATFORM_VERSION, platformOsVersion.getPlatformVersion()));
@@ -81,7 +81,7 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
       capabilities.add(new WebDriverCapability(TSCapabilityType.AUTOMATION_NAME, TSCapabilityType.XCUI_TEST));
     }
     if (WorkspaceType.MobileWeb.equals(workspaceType)) {
-      PlatformBrowserVersion platformBrowserVersion = platformsService.getPlatformBrowserVersion(testDevice.getPlatformBrowserVersionId(), testDevice.getExecution().getTestPlanLabType());
+      PlatformBrowserVersion platformBrowserVersion = platformsService.getPlatformBrowserVersion(testDevice.getPlatformBrowserVersionId(), testDevice.getTestPlan().getTestPlanLabType());
       capabilities.add(new WebDriverCapability(TSCapabilityType.BROWSER_NAME, platformBrowserVersion.getName()));
     }
     capabilities.add(new WebDriverCapability(TSCapabilityType.TESTSIGMA_LAB_NEW_COMMAND_TIMEOUT_CAP,
@@ -106,9 +106,9 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
     throws MalformedURLException, TestsigmaException {
     List<WebDriverCapability> capabilities = new ArrayList<>();
 
-    PlatformOsVersion platformOsVersion = platformsService.getPlatformOsVersion(testDevice.getPlatformOsVersionId(), testDevice.getExecution().getTestPlanLabType());
-    PlatformBrowserVersion platformBrowserVersion = platformsService.getPlatformBrowserVersion(testDevice.getPlatformBrowserVersionId(), testDevice.getExecution().getTestPlanLabType());
-    PlatformScreenResolution platformScreenResolution = platformsService.getPlatformScreenResolution(testDevice.getPlatformScreenResolutionId(), testDevice.getExecution().getTestPlanLabType());
+    PlatformOsVersion platformOsVersion = platformsService.getPlatformOsVersion(testDevice.getPlatformOsVersionId(), testDevice.getTestPlan().getTestPlanLabType());
+    PlatformBrowserVersion platformBrowserVersion = platformsService.getPlatformBrowserVersion(testDevice.getPlatformBrowserVersionId(), testDevice.getTestPlan().getTestPlanLabType());
+    PlatformScreenResolution platformScreenResolution = platformsService.getPlatformScreenResolution(testDevice.getPlatformScreenResolutionId(), testDevice.getTestPlan().getTestPlanLabType());
     capabilities.add(new WebDriverCapability(TSCapabilityType.PLATFORM, platformOsVersion.getPlatformVersion()));
     capabilities.add(new WebDriverCapability(TSCapabilityType.OS, platformOsVersion.getPlatform()));
     capabilities.add(new WebDriverCapability(TSCapabilityType.OS_VERSION, platformOsVersion.getPlatformVersion()));

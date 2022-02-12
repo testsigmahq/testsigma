@@ -32,7 +32,7 @@ public abstract class EnvironmentRunner {
 
   protected TestDeviceEntity testDeviceEntity;
   protected EnvironmentRunResult environmentRunResult;
-  protected String executionId;
+  protected String testPlanId;
   protected WorkspaceType workspaceType;
 
 
@@ -41,7 +41,7 @@ public abstract class EnvironmentRunner {
     this.testDeviceEntity = testDeviceEntity;
     this.environmentRunResult = environmentRunResult;
     this.workspaceType = testDeviceEntity.getWorkspaceType();
-    this.executionId = getExecutionId();
+    this.testPlanId = getTestPlanId();
 
     _webAppHttpClient.set(webAppHttpClient);
     _assetsHttpClient.set(assetsHttpClient);
@@ -86,8 +86,8 @@ public abstract class EnvironmentRunner {
     return _runnerExecutionId.get();
   }
 
-  public static void setRunnerExecutionId(String executionId) {
-    _runnerExecutionId.set(executionId);
+  public static void setRunnerExecutionId(String testPlanId) {
+    _runnerExecutionId.set(testPlanId);
   }
 
   public static HttpClient getWebAppHttpClient() {
@@ -110,7 +110,7 @@ public abstract class EnvironmentRunner {
       populateThreadContextData();
       setRunnerEnvironmentEntity(testDeviceEntity);
       setRunnerEnvironmentRunResult(environmentRunResult);
-      setRunnerExecutionId(executionId);
+      setRunnerExecutionId(testPlanId);
       beforeExecute();
       setStartedStatus();
       execute();
@@ -131,7 +131,7 @@ public abstract class EnvironmentRunner {
 
   private void populateThreadContextData() {
     ThreadContext.put("TEST_DEVICE_RESULT", environmentRunResult.getId() + "");
-    ThreadContext.put("TEST_PLAN", testDeviceEntity.getExecutionId() + "");
+    ThreadContext.put("TEST_PLAN", testDeviceEntity.getTestPlanId() + "");
     ThreadContext.put("TEST_PLAN_RESULT", testDeviceEntity.getExecutionRunId() + "");
   }
 
@@ -171,7 +171,7 @@ public abstract class EnvironmentRunner {
 
   protected abstract void execute() throws AutomatorException;
 
-  protected String getExecutionId() {
+  protected String getTestPlanId() {
     return String.format("%s-%s", environmentRunResult.getId(), testDeviceEntity.getId());
   }
 

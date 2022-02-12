@@ -20,7 +20,7 @@ public class TestDeviceEntity {
   private Long id;
   private Long environmentResultId;
   private String name;
-  private Long executionId;
+  private Long testPlanId;
   private Long executionRunId;
   private WorkspaceType workspaceType;
   @JsonIgnore
@@ -36,7 +36,6 @@ public class TestDeviceEntity {
   private Integer errorCode;
   private String agentDeviceUuid;
   private Boolean matchBrowserVersion;
-  private Boolean runInParallel = false;
   private Boolean createSessionAtCaseLevel = false;
   @JsonIgnore
   private String username;

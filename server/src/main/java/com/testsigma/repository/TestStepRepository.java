@@ -76,7 +76,7 @@ public interface TestStepRepository extends JpaRepository<TestStep, Long> {
 
   @Query(value = "select * from test_steps where addon_action_id is not null\n" +
     "and JSON_SEARCH(JSON_EXTRACT(addon_natural_text_action_data , '$.\"elements\".*.*'), 'all', :oldName) is not null;\n", nativeQuery = true)
-  List<TestStep> findKibbutzElementsByName(@Param("oldName") String oldName);
+  List<TestStep> findAddonElementsByName(@Param("oldName") String oldName);
 
   @Query(value = "select step.* from test_steps step where step.for_loop_start_index is null and step.parent_id is null and test_case_id in (select id from test_cases where test_data_id=:testDataId) and (condition_type is not null and condition_type > 0)", nativeQuery = true)
   List<TestStep> getTopLevelConditionalStepsExceptLoop(@Param("testDataId") Long testDataId);

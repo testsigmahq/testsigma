@@ -62,16 +62,16 @@
                 <span [translate]="'action.custom_function.default'"></span>
               </a>
             </li>
-            <li class="nav-items" role="presentation" [class.active]="activeTab == 'kibbutz_functions'">
-              <a (click)="activeTab = 'kibbutz_functions'"
-                 class="normal-text pb-10" [class.active]="activeTab == 'kibbutz_functions'">
+            <li class="nav-items" role="presentation" [class.active]="activeTab == 'addon_functions'">
+              <a (click)="activeTab = 'addon_functions'"
+                 class="normal-text pb-10" [class.active]="activeTab == 'addon_functions'">
                 <i class="fa-addon"></i>
-                <span [translate]="'action.custom_function.kibbutz_functions'"></span>
+                <span [translate]="'action.custom_function.addon_functions'"></span>
               </a>
             </li>
           </ul>
           <div class="theme-w-o-h-scroll lg-h">
-            <div *ngIf="activeTab == 'kibbutz_functions'" class="h-90 mt-n30">
+            <div *ngIf="activeTab == 'addon_functions'" class="h-90 mt-n30">
               <div
                 class="overflow-x-hidden h-100 pt-30">
                 <cdk-virtual-scroll-viewport
@@ -79,7 +79,7 @@
                   class="list-container virtual-scroll-viewport">
                   <a
                     class="list-view py-7 px-5 border-0 pointer align-items-center"
-                    *cdkVirtualFor='let element of kibbutzCustomFunctionSuggestion; let index = index'
+                    *cdkVirtualFor='let element of addonCustomFunctionSuggestion; let index = index'
                     [class.h-active]="currentFocusedIndex == index"
                     (mouseover)="currentFocusedIndex = index">
                     <div
@@ -102,11 +102,11 @@
                     </div>
                     <div *ngIf="element?.showInfo" class="ts-col-100 text-truncate p-15 border-lightGray-y-1 mt-10">
                       <div class="ts-col-100 mb-10">
-                        <span [translate]="'nlp.custom_function.suggestion.description'" class="rb-medium"></span>
+                        <span [translate]="'action.custom_function.suggestion.description'" class="rb-medium"></span>
                         <span [textContent]="element?.description" class="pl-5"></span>
                       </div>
                       <div class="ts-col-100 mb-10" *ngIf="element?.parameters.length">
-                        <span [translate]="'nlp.custom_function.suggestion.input'" class="rb-medium"></span>
+                        <span [translate]="'action.custom_function.suggestion.input'" class="rb-medium"></span>
                         <div *ngFor="let parameter of element?.parameters; let index = index" class="pl-5 pt-5">
                           <span [textContent]="parameter?.name" class="pl-5"></span>
                         </div>
@@ -147,12 +147,12 @@
 
                     <div *ngIf="element?.showInfo" class="ts-col-100 text-truncate p-15 border-lightGray-y-1 mt-10">
                       <div class="ts-col-100 mb-10">
-                        <span [translate]="'nlp.custom_function.suggestion.description'" class="rb-medium"></span>
+                        <span [translate]="'action.custom_function.suggestion.description'" class="rb-medium"></span>
                         <span [textContent]="element?.description" class="pl-5"></span>
                       </div>
                       <div class="ts-col-100 mb-10"
                            *ngIf="canShowCustomFunctionsParameters(element?.arguments?.display_names)">
-                        <span [translate]="'nlp.custom_function.suggestion.input'" class="rb-medium"></span>
+                        <span [translate]="'action.custom_function.suggestion.input'" class="rb-medium"></span>
                         <div *ngFor="let item of element?.arguments?.display_names | keyvalue; let index=index"
                              class="pl-5 pt-5">
                           <span [textContent]="item.value" class="pl-5 rb-medium"></span>

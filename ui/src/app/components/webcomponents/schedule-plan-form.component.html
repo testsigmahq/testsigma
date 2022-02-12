@@ -36,7 +36,7 @@
           <span [translate]="'schedule.plan.note_prefix'"></span>
           <a
             [textContent]="'schedule.plan.note_count' | translate : {Count: scheduleList?.content?.length}"
-            [routerLink]="['/td', 'plans', execution?.id, 'schedules']"
+            [routerLink]="['/td', 'plans', testPlan?.id, 'schedules']"
             class="text-t-highlight px-4"></a>
           <span [translate]="'schedule.plan.note_suffix'"></span>
         </div>

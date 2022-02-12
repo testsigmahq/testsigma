@@ -24,8 +24,8 @@ import java.util.List;
 public interface TestStepMapper {
   List<TestStepXMLDTO> mapTestSteps(List<TestStep> testSteps);
 
-  @Mapping(target = "kibbutzTestData", expression = "java(testStep.getKibbutzTestData())")
-  @Mapping(target = "kibbutzElements", expression = "java(testStep.getKibbutzElements())")
+  @Mapping(target = "addonTestData", expression = "java(testStep.getAddonTestData())")
+  @Mapping(target = "addonElements", expression = "java(testStep.getAddonElements())")
   TestCaseStepEntityDTO mapEntity(TestStep testStep);
 
 //  @Mapping(target = "testDataFunction", expression = "java(this.mapTestDataFunction(testStepDataMap.getTestDataFunction()))")
@@ -43,20 +43,20 @@ public interface TestStepMapper {
   RestStepDTO map(RestStep restStep);
 
   @Mapping(target = "id", ignore = true)
-  @Mapping(target = "kibbutzTestData", expression = "java(testStep.getKibbutzTestData())")
-  @Mapping(target = "kibbutzElements", expression = "java(testStep.getKibbutzElements())")
-  @Mapping(target = "kibbutzTDF", expression = "java(testStep.getKibbutzTDF())")
+  @Mapping(target = "addonTestData", expression = "java(testStep.getAddonTestData())")
+  @Mapping(target = "addonElements", expression = "java(testStep.getAddonElements())")
+  @Mapping(target = "addonTDF", expression = "java(testStep.getAddonTDF())")
   TestStep copy(TestStep testStep);
 
   List<TestStepDTO> mapDTOs(List<TestStep> testSteps);
 
   @Mapping(target = "preRequisiteStepId", expression = "java(testStepRequest.getPreRequisiteStepId())")
-  @Mapping(target = "kibbutzTestData", expression = "java(testStepRequest.getKibbutzTestData())")
-  @Mapping(target = "kibbutzElements", expression = "java(testStepRequest.getKibbutzElements())")
+  @Mapping(target = "addonTestData", expression = "java(testStepRequest.getAddonTestData())")
+  @Mapping(target = "addonElements", expression = "java(testStepRequest.getAddonElements())")
   TestStep map(TestStepRequest testStepRequest);
 
-  @Mapping(target = "kibbutzTestData", expression = "java(request.getKibbutzTestData())")
-  @Mapping(target = "kibbutzElements", expression = "java(request.getKibbutzElements())")
+  @Mapping(target = "addonTestData", expression = "java(request.getAddonTestData())")
+  @Mapping(target = "addonElements", expression = "java(request.getAddonElements())")
   @Mapping(target = "preRequisiteStepId", expression = "java(request.getPreRequisiteStepId())")
   @Mapping(target = "naturalTextActionId", expression = "java(request.getNaturalTextActionId())")
   @Mapping(target = "addonActionId", expression = "java(request.getAddonActionId())")
@@ -67,7 +67,7 @@ public interface TestStepMapper {
   @Mapping(target = "forLoopStartIndex", expression = "java(request.getForLoopStartIndex())")
   @Mapping(target = "forLoopEndIndex", expression = "java(request.getForLoopEndIndex())")
   @Mapping(target = "forLoopTestDataId", expression = "java(request.getForLoopTestDataId())")
-  @Mapping(target = "kibbutzTDF", expression = "java(request.getKibbutzTDF())")
+  @Mapping(target = "addonTDF", expression = "java(request.getAddonTDF())")
   @Mapping(target = "testDataFunctionId", expression = "java(request.getTestDataFunctionId())")
   @Mapping(target = "testDataFunctionArgs", expression = "java(request.getTestDataFunctionArgs())")
   void merge(TestStepRequest request, @MappingTarget TestStep testStep);

@@ -5,16 +5,16 @@
       class="details-page-header">
       <div class="theme-details-header pb-30 mb-6 text-break">
         <app-td-overlay-menu-button
-          [versionId]="executionResult?.testPlan?.workspaceVersionId"></app-td-overlay-menu-button>
+          [versionId]="testPlanResult?.testPlan?.workspaceVersionId"></app-td-overlay-menu-button>
         <a class="go-back-icon text-decoration-none ml-10"
-           *ngIf="executionResult"
+           *ngIf="testPlanResult"
            [matTooltip]="'hint.message.common.back' | translate"
-           [routerLink]="['/td', executionResult?.testPlan?.workspaceVersionId, 'results']"></a>
+           [routerLink]="['/td', testPlanResult?.testPlan?.workspaceVersionId, 'results']"></a>
         <a
           class="title-name text-decoration-none"
-          [routerLink]="['/td', 'plans', executionResult?.testPlan?.id]"
-          [matTooltip]="executionResult?.testPlan?.name"
-          [textContent]="executionResult?.testPlan?.name"></a>
+          [routerLink]="['/td', 'plans', testPlanResult?.testPlan?.id]"
+          [matTooltip]="testPlanResult?.testPlan?.name"
+          [textContent]="testPlanResult?.testPlan?.name"></a>
       </div>
     </div>
     <div class="details-container no-wrap ts-col-100">
@@ -24,32 +24,32 @@
           [translate]="'test_plan.lab_type'"></label>
         <div class="details-info align-items-center d-flex" style="margin-top: 4px">
           <div class="d-inline-block mr-2 h-18p"
-               [class.testsigma-lab-logo]="executionResult?.testPlan?.isTestsigmaLab || executionResult?.testPlan?.isHybrid"
-               [matTooltip]="executionResult?.testPlan?.testPlanLabType"></div>
+               [class.testsigma-lab-logo]="testPlanResult?.testPlan?.isTestsigmaLab || testPlanResult?.testPlan?.isHybrid"
+               [matTooltip]="testPlanResult?.testPlan?.testPlanLabType"></div>
           <div class="d-inline-block pt-2 line-height-none"
-               [translate]="'execution.lab_type.'+executionResult?.testPlan?.testPlanLabType"></div>
+               [translate]="'execution.lab_type.'+testPlanResult?.testPlan?.testPlanLabType"></div>
         </div>
       </div>
       <div
-        *ngIf="executionResult?.environment?.name"
+        *ngIf="testPlanResult?.environment?.name"
         class="details-items pl-30 mw-25 text-truncate">
         <label
           class="details-title"
           [translate]="'runs.details.environment'"></label>
         <div
           class="details-info text-truncate"
-          [matTooltip]="executionResult?.environment?.name"
-          [textContent]="executionResult?.environment?.name"></div>
+          [matTooltip]="testPlanResult?.environment?.name"
+          [textContent]="testPlanResult?.environment?.name"></div>
       </div>
       <div class="details-items pl-30 text-nowrap">
         <label
           class="details-title"
           [translate]="'test_plan.type'"></label>
-        <span [ngSwitch]="executionResult?.testPlan?.testPlanType==getCrossBrowser() && executionResult?.testPlan?.workspaceVersion.workspace.isMobile">
+        <span [ngSwitch]="testPlanResult?.testPlan?.testPlanType==getCrossBrowser() && testPlanResult?.testPlan?.workspaceVersion.workspace.isMobile">
             <div class="details-info pt-2" *ngSwitchCase="true"
                  [translate]="'execution.test_plan_type.CROSS_DEVICE'"></div>
             <div class="details-info pt-2"  *ngSwitchCase="false"
-                 [translate]="'execution.test_plan_type.'+executionResult?.testPlan?.testPlanType"></div>
+                 [translate]="'execution.test_plan_type.'+testPlanResult?.testPlan?.testPlanType"></div>
         </span>
       </div>
       <div class="details-items pl-30 mw-75">
@@ -57,9 +57,9 @@
           class="details-title"
           [translate]="'message.common.msg'"></label>
         <div
-          [matTooltip]="executionResult?.message"
+          [matTooltip]="testPlanResult?.message"
           class="details-info pt-2 text-truncate"
-             [textContent]="executionResult?.message"></div>
+             [textContent]="testPlanResult?.message"></div>
       </div>
     </div>
   </div>
@@ -67,11 +67,11 @@
 <div class="theme-border-t d-flex theme-details-scroll-content">
   <div class="theme-border-r ts-col-25-1">
     <app-run-list
-      *ngIf="executionResult"
-      [runId]="executionResult.id"
-      (onExecutionResult)="executionResult = $event"
-      [executionResult]="executionResult"
-      [execution]="executionResult.testPlan"></app-run-list>
+      *ngIf="testPlanResult"
+      [runId]="testPlanResult.id"
+      (onExecutionResult)="testPlanResult = $event"
+      [testPlanResult]="testPlanResult"
+      [testPlan]="testPlanResult.testPlan"></app-run-list>
   </div>
   <div class="ts-col-75">
     <app-test-case-results
@@ -81,11 +81,11 @@
       (toggleDetailsAction)="toggleDetails($event)"
       (autoRefreshIntervalAction)="changeAutoRefreshTime($event)"
       (toggleAutoRefreshAction)="toggleAutoRefresh($event)"
-      *ngIf="executionResult && showTestCaseResults"
+      *ngIf="testPlanResult && showTestCaseResults"
       [showFilter]="showFilter"
       [showRunDetails]="showRunDetails"
       [isExecutionRunning]="isExecutionRunning"
-      [executionResult]="executionResult"></app-test-case-results>
+      [testPlanResult]="testPlanResult"></app-test-case-results>
     <app-test-suite-results
       class="d-flex h-100"
       [showFilter]="showFilter"
@@ -93,9 +93,9 @@
       (toggleViewAction)="toggleView($event)"
       (autoRefreshIntervalAction)="changeAutoRefreshTime($event)"
       (toggleAutoRefreshAction)="toggleAutoRefresh($event)"
-      *ngIf="executionResult && showTestSuiteResults"
+      *ngIf="testPlanResult && showTestSuiteResults"
       [isExecutionRunning]="isExecutionRunning"
-      [executionResult]="executionResult"></app-test-suite-results>
+      [testPlanResult]="testPlanResult"></app-test-suite-results>
     <app-test-machine-results
       class="d-flex h-100"
       [showFilter]="showFilter"
@@ -103,8 +103,8 @@
       (toggleViewAction)="toggleView($event)"
       (autoRefreshIntervalAction)="changeAutoRefreshTime($event)"
       (toggleAutoRefreshAction)="toggleAutoRefresh($event)"
-      *ngIf="executionResult && showTestMachineResults"
+      *ngIf="testPlanResult && showTestMachineResults"
       [isExecutionRunning]="isExecutionRunning"
-      [executionResult]="executionResult"></app-test-machine-results>
+      [testPlanResult]="testPlanResult"></app-test-machine-results>
   </div>
 </div>

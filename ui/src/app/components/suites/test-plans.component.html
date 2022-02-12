@@ -20,14 +20,14 @@
     class="list-container virtual-scroll-viewport"
     itemSize="59">
     <a
-      *cdkVirtualFor="let execution of testPlans.content; let i = index"
-      [routerLink]="['/td', 'plans',  execution.id]"
+      *cdkVirtualFor="let testPlan of testPlans.content; let i = index"
+      [routerLink]="['/td', 'plans',  testPlan.id]"
       class="list-view green-highlight lg-pm pl-10 text-t-secondary">
       <div class="ts-col-45 text-break d-flex pl-10">
         <div>
           <a
-            [routerLink]="['/td/plans', execution.id]"
-            [textContent]="execution.name"
+            [routerLink]="['/td/plans', testPlan.id]"
+            [textContent]="testPlan.name"
             class="list-title"></a>
           <div
             [translate]="'message.common.automated'"
@@ -36,24 +36,24 @@
       </div>
       <div class="ts-col-25 px-10">
         <app-lab-environments-info
-          *ngIf="execution.environments"
-          [execution]="execution"
-          [executionEnvironments]="execution.environments"></app-lab-environments-info>
+          *ngIf="testPlan.environments"
+          [testPlan]="testPlan"
+          [executionEnvironments]="testPlan.environments"></app-lab-environments-info>
         <div
-          [textContent]="('execution.type.'+execution.testPlanType) | translate"
+          [textContent]="('execution.type.'+testPlan.testPlanType) | translate"
           class="pt-4 text-t-secondary"></div>
       </div>
       <div class="ts-col-25 text-center align-items-baseline ml-auto justify-content-end d-flex">
         <app-schedule-form-button
-          [execution]="execution"></app-schedule-form-button>
+          [testPlan]="testPlan"></app-schedule-form-button>
         <app-reports-button
           (click)="$event.preventDefault();$event.stopPropagation()"
-          [execution]="execution"
+          [testPlan]="testPlan"
           class="ml-10"></app-reports-button>
         <app-run-now-button
           (onStart)="fetchTestPlans()"
           (onStop)="fetchTestPlans()"
-          [execution]="execution"
+          [testPlan]="testPlan"
           class="ml-10">
         </app-run-now-button>
       </div>

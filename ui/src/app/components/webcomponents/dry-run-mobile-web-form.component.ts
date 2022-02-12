@@ -20,7 +20,7 @@ import {ToastrService} from "ngx-toastr";
 export class DryRunMobileWebFormComponent extends BaseComponent implements OnInit {
   @Input('formGroup') mobileWebForm: FormGroup;
   @Input('version') version: WorkspaceVersion;
-  @Input('execution') dryExecution: DryTestPlan;
+  @Input('testPlan') dryExecution: DryTestPlan;
   @Input('environment') environment?: Environment;
   @Output("closeDialog")closeDryRunDialog = new EventEmitter<any>();
 

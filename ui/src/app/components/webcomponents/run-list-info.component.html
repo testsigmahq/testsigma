@@ -15,13 +15,13 @@
           <div class="d-flex flex-wrap ts-col-100">
             <app-run-list-bar-chart
               class="ts-col-100"
-              [execution]="execution">
+              [testPlan]="testPlan">
             </app-run-list-bar-chart>
           </div>
         </div>
       </div>
       <div
-        *ngIf="execution"
+        *ngIf="testPlan"
         class="details-container lg value-sm justify-content-between theme-border-t details-container-spacing">
         <div class="details-items ts-col-30">
           <label
@@ -36,28 +36,28 @@
           <label
             class="details-title"
             [translate]="'test_plan.lab_type'"></label>
-          <div class="details-info" [textContent]="execution.testPlanLabType">
+          <div class="details-info" [textContent]="testPlan.testPlanLabType">
           </div>
         </div>
         <div
           class="details-items ts-col-30">
           <label class="details-title" [translate]="'test_plan.capture_screenshots'"></label>
           <div class="details-info"
-               [textContent]="execution.screenshot ? ('execution.capture.type.'+execution.screenshot | translate) : '-'"></div>
+               [textContent]="testPlan.screenshot ? ('execution.capture.type.'+testPlan.screenshot | translate) : '-'"></div>
         </div>
         <div class="details-items ts-col-30">
           <label class="details-title" [translate]="'message.common.created_at'"></label>
           <div class="details-info"
-               [textContent]="execution.createdAt | date: 'MMM d,yyyy hh:mm:ss'"></div>
+               [textContent]="testPlan.createdAt | date: 'MMM d,yyyy hh:mm:ss'"></div>
         </div>
         <div class="details-items ts-col-30">
           <label class="details-title" [translate]="'test_plan.name'"></label>
           <div class="details-info">
             <a
               mat-dialog-close
-              [routerLink]="['/td', 'plans', execution.id]"
+              [routerLink]="['/td', 'plans', testPlan.id]"
               class="theme-text text-decoration-none"
-              [textContent]="execution.name"></a>
+              [textContent]="testPlan.name"></a>
           </div>
         </div>
       </div>

@@ -23,11 +23,11 @@ import java.util.Set;
 public interface TestDeviceRepository extends BaseRepository<TestDevice, Long> {
   List<TestDevice> findTestDeviceByAgentId(Long agentId);
 
-  List<TestDevice> findByExecutionIdAndDisable(Long executionId, Boolean disable);
+  List<TestDevice> findByTestPlanIdAndDisable(Long testPlanId, Boolean disable);
 
   Page<TestDevice> findAll(Specification<TestDevice> spec, Pageable pageable);
 
-  List<TestDevice> findByExecutionId(Long executionId);
+  List<TestDevice> findByTestPlanId(Long testPlanId);
 
   @Modifying
   @Query("DELETE FROM TestDevice exeEnv WHERE exeEnv.id IN (:ids)")

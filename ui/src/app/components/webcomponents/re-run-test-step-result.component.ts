@@ -23,7 +23,7 @@ import {TestCaseService} from "../../services/test-case.service";
 })
 export class ReRunTestStepResultComponent implements OnInit {
   @Input('testCaseResult') testCaseResult: TestCaseResult;
-  @Input('executionResult') executionResult: TestPlanResult;
+  @Input('testPlanResult') testPlanResult: TestPlanResult;
 
   public testCaseDataDrivenResults: InfiniteScrollableDataSource;
   public testStepResults: Page<TestStepResult>;
@@ -86,7 +86,7 @@ export class ReRunTestStepResultComponent implements OnInit {
     })
   }
   fetchNLActions(testStepResults: Page<TestStepResult>) {
-    let workspaceType: WorkspaceType = this.executionResult.testPlan.workspaceVersion.workspace.workspaceType;
+    let workspaceType: WorkspaceType = this.testPlanResult.testPlan.workspaceVersion.workspace.workspaceType;
     this.naturalTextActionsService.findAll("workspaceType:" + workspaceType).subscribe(res => {
       this.templates = res;
       testStepResults.content.forEach((testStepResult) => {
@@ -125,13 +125,13 @@ export class ReRunTestStepResultComponent implements OnInit {
     this.activeStepGroup = testStepResult;
   }
   fetchResultStepGroups() {
-    let componentIds = [];
+    let stepGroupIds = [];
     this.testStepResults.content.forEach((stepResult) => {
       if (stepResult.isStepGroup)
-        componentIds.push(stepResult.stepGroupId);
+        stepGroupIds.push(stepResult.stepGroupId);
     });
-    if (componentIds.length > 0)
-      this.testCaseService.findAll("id@" + componentIds.join("#")).subscribe((testCases: Page<TestCase>) => {
+    if (stepGroupIds.length > 0)
+      this.testCaseService.findAll("id@" + stepGroupIds.join("#")).subscribe((testCases: Page<TestCase>) => {
         this.testStepResults.content.forEach((stepResult) => {
           if (stepResult.stepGroupId)
             stepResult.stepGroup = testCases.content.find(testCase => testCase.id == stepResult.stepGroupId)

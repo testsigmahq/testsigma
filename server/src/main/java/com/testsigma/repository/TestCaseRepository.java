@@ -42,13 +42,13 @@ public interface TestCaseRepository extends PagingAndSortingRepository<TestCase,
     "JOIN FETCH caseResult.testDeviceResult as environmenResult " +
     "JOIN FETCH caseResult.testSuite as suite " +
     "JOIN FETCH environmenResult.testDevice as testDevice " +
-    "WHERE environmenResult.testPlanResultId = :executionResultId " +
+    "WHERE environmenResult.testPlanResultId = :testPlanResultId " +
     "AND caseResult.result IN (" +
     "com.testsigma.model.ResultConstant.ABORTED, com.testsigma.model.ResultConstant.FAILURE, " +
     "com.testsigma.model.ResultConstant.NOT_EXECUTED) AND caseResult.isStepGroup = FALSE AND " +
     "caseResult.iteration IS NULL"
   )
-  List<TestCase> findAllFailureByExecutionResultId(@Param("executionResultId") Long executionResultId);
+  List<TestCase> findAllFailureBytestPlanResultId(@Param("testPlanResultId") Long testPlanResultId);
 
   @Modifying
   @Query("UPDATE TestCase tc SET tc.deleted = true WHERE tc.id in :ids")

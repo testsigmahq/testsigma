@@ -97,9 +97,6 @@ export class TestDeviceSettings extends Base implements Deserializable {
   public type: number;
   @serializable
   public createSessionAtCaseLevel: boolean;
-  @serializable
-  public runInParallel: boolean;
-
 
   deserialize(input: any): this {
     return Object.assign(this, deserialize(TestDeviceSettings, input));

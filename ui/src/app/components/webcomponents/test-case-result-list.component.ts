@@ -11,12 +11,12 @@ import {MAT_DIALOG_DATA} from "@angular/material/dialog";
   styles: []
 })
 export class TestCaseResultListComponent implements OnInit {
-  public executionResultId: number;
+  public testPlanResultId: number;
   public testCaseResults: Page<TestCaseResult>;
 
   constructor(private testCaseResultService: TestCaseResultService,
-              @Inject(MAT_DIALOG_DATA) public options: { executionResultId: number }) {
-    this.executionResultId = options.executionResultId;
+              @Inject(MAT_DIALOG_DATA) public options: { testPlanResultId: number }) {
+    this.testPlanResultId = options.testPlanResultId;
   }
 
   ngOnInit() {
@@ -25,7 +25,7 @@ export class TestCaseResultListComponent implements OnInit {
 
 
   filter(query: string) {
-    query += ",testPlanResultId:" + this.executionResultId;
+    query += ",testPlanResultId:" + this.testPlanResultId;
     this.testCaseResultService.findAll(query, undefined, undefined).subscribe(res => this.testCaseResults = res);
   }
 

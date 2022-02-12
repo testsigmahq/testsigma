@@ -225,7 +225,7 @@ import {LinearIssueDetailsComponent} from './components/webcomponents/linear-iss
 import {HelpActionsComponent} from './components/webcomponents/help-actions.component';
 import {TestCaseDataDrivenResultListComponent} from './src/app/components/webcomponents/test-case-data-driven-result-list.component';
 import {ElementBulkUpdateComponent} from './components/webcomponents/element-bulk-update.component';
-import {KibbutzAppComponent} from './components/kibbutz-app.component';
+import {AddonAppComponent} from './components/addon-app.component';
 import {RouteLoadingComponent} from './components/webcomponents/route-loading.component';
 import {MatCarouselModule} from '@ngmodule/material-carousel';
 import {TestDataFilterComponent} from "./components/data/webcomponents/test-data-filter.component";
@@ -242,7 +242,7 @@ import { TelemetryNotificationComponent } from './components/webcomponents/telem
 import {QuickStartComponent} from "./components/webcomponents/quick-start.component";
 import {GetStartedBaseComponent} from "./components/webcomponents/get-started-base.component";
 import {AddonDetailsComponent} from "./shared/components/webcomponents/addon-details.component";
-import {SubmitUiIdentifierReviewComponent} from "./components/webcomponents/submit-ui-identifier-review.component";
+import {SubmitElementReviewComponent} from "./components/webcomponents/submit-element-review.component";
 import {ChromeRecordButtonComponent} from "./components/webcomponents/chrome-record-button.component";
 import {FirstChromeInstallComponent} from "./components/webcomponents/first-chrome-install.component";
 import {CodemirrorModule} from "@ctrl/ngx-codemirror";
@@ -459,7 +459,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     HelpActionsComponent,
     TestCaseDataDrivenResultListComponent,
     ElementBulkUpdateComponent,
-    KibbutzAppComponent,
+    AddonAppComponent,
     RouteLoadingComponent,
     TestDataFilterComponent,
     TestDevIconComponent,
@@ -474,7 +474,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     QuickStartComponent,
     GetStartedBaseComponent,
     AddonDetailsComponent,
-    SubmitUiIdentifierReviewComponent,
+    SubmitElementReviewComponent,
     ChromeRecordButtonComponent,
     FirstChromeInstallComponent,
     FreshChatWidgetComponent,

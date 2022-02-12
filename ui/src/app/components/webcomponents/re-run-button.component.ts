@@ -44,9 +44,9 @@ import { Router } from '@angular/router';
   `
 })
 export class ReRunButtonComponent extends BaseComponent implements OnInit {
-  @Input('executionResult') parentExecutionResult: TestPlanResult;
+  @Input('testPlanResult') parentExecutionResult: TestPlanResult;
 
-  public executionResult: TestPlanResult;
+  public testPlanResult: TestPlanResult;
   public inTransit: boolean;
   public reRunTypes = ReRunType;
 
@@ -55,7 +55,7 @@ export class ReRunButtonComponent extends BaseComponent implements OnInit {
     public notificationsService: NotificationsService,
     public translate: TranslateService,
     public toastrService: ToastrService,
-    private executionResultService: TestPlanResultService,
+    private testPlanResultService: TestPlanResultService,
     private router: Router) {
     super(authGuard, notificationsService, translate, toastrService);
   }
@@ -65,12 +65,12 @@ export class ReRunButtonComponent extends BaseComponent implements OnInit {
 
   reRun(reRunType: ReRunType) {
     this.inTransit = true;
-    let executionResult = new TestPlanResult();
-    executionResult.parentExecutionResultId = this.parentExecutionResult.id;
-    executionResult.testPlanId = this.parentExecutionResult.testPlanId;
-    executionResult.isReRun = true;
-    executionResult.reRunType = reRunType;
-    this.executionResultService.create(executionResult).subscribe((result: TestPlanResult) => {
+    let testPlanResult = new TestPlanResult();
+    testPlanResult.parenttestPlanResultId = this.parentExecutionResult.id;
+    testPlanResult.testPlanId = this.parentExecutionResult.testPlanId;
+    testPlanResult.isReRun = true;
+    testPlanResult.reRunType = reRunType;
+    this.testPlanResultService.create(testPlanResult).subscribe((result: TestPlanResult) => {
       this.inTransit = false;
       this.translate.get("re_run.initiate.success").subscribe((res: string) => {
         this.showNotification(NotificationType.Success, res);

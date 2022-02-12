@@ -47,7 +47,7 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
     public translate: TranslateService,
     public toastrService: ToastrService,
     private route: ActivatedRoute,
-    private executionResultService: TestPlanResultService,
+    private testPlanResultService: TestPlanResultService,
     // private userService: UserService,
     private testCaseService: TestCaseService,
     private testSuiteService: TestSuiteService,

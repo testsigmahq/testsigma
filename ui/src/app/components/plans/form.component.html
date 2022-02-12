@@ -14,7 +14,7 @@
       <mat-step [label]="'test_plans.form.create.title' | translate" [stepControl]="testPlanForm">
         <app-test-plan-form
           *ngIf="isFetchingComplete && testPlanForm && version"
-          [execution]="testPlan"
+          [testPlan]="testPlan"
           [version]="version" [stepper]="stepper"
           [formGroup]="testPlanForm"></app-test-plan-form>
       </mat-step>
@@ -25,7 +25,7 @@
           [stepper]="stepper"
           [formGroup]="testPlanForm"
           [formSubmitted]="formSubmitted"
-          [execution]="testPlan" ></app-test-plan-suite-selection>
+          [testPlan]="testPlan" ></app-test-plan-suite-selection>
       </mat-step>
       <mat-step #settingsStep [label]="'test_plans.form.settings.title' | translate" [stepControl]="testPlanForm" >
         <app-test-plan-settings-form

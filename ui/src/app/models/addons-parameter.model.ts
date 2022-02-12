@@ -1,7 +1,7 @@
 import {Base} from "../shared/models/base.model";
 import {Deserializable} from "../shared/models/deserializable";
 import {custom, deserialize, serializable} from "serializr";
-import {KibbutzParameterType} from "../enums/kibbutz-parameter-type.enum";
+import {AddonParameterType} from "../enums/addon-parameter-type.enum";
 
 export class AddonNaturalTextActionParameter extends Base implements Deserializable{
   @serializable
@@ -11,7 +11,7 @@ export class AddonNaturalTextActionParameter extends Base implements Deserializa
   @serializable
   public reference: string;
   @serializable
-  public type: KibbutzParameterType;
+  public type: AddonParameterType;
   @serializable(custom(v => v, v => v))
   public allowedValues: any[];
 
@@ -21,10 +21,10 @@ export class AddonNaturalTextActionParameter extends Base implements Deserializa
   }
 
   get isElement() {
-    return this.type == KibbutzParameterType.ELEMENT
+    return this.type == AddonParameterType.ELEMENT
   }
 
   get isTestData() {
-    return this.type == KibbutzParameterType.TEST_DATA
+    return this.type == AddonParameterType.TEST_DATA
   }
 }

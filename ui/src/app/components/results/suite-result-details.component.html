@@ -88,7 +88,7 @@
           <app-lab-environment-screen-short-info
             *ngIf="suiteResult"
             [environmentResult]="suiteResult?.testDeviceResult"
-            [executionResult]="suiteResult?.testDeviceResult?.testPlanResult"
+            [testPlanResult]="suiteResult?.testDeviceResult?.testPlanResult"
             [executionEnvironment]="suiteResult?.testDeviceResult?.testDevice"></app-lab-environment-screen-short-info>
 
           <div class="details-items mw-30 mt-30">
@@ -214,7 +214,7 @@
     <app-test-case-result-filter
       *ngIf="showFilter"
       class="theme-filter-section"
-      [execution]="suiteResult?.testDeviceResult?.testPlanResult?.testPlan"
+      [testPlan]="suiteResult?.testDeviceResult?.testPlanResult?.testPlan"
       (filterAction)="filterAction($event)"
       (toggleFilterAction)="toggleFilter()"></app-test-case-result-filter>
   </div>

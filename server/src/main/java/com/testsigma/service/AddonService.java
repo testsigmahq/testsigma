@@ -13,7 +13,6 @@ import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.mapper.AddonMapper;
 import com.testsigma.model.*;
 import com.testsigma.repository.AddonRepository;
-import com.testsigma.repository.KibbutzPluginTestDataFunctionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,15 +32,15 @@ public class AddonService {
   private final AddonNaturalTextActionService addonNaturalTextActionService;
   private final AddonMapper mapper;
   private final TestStepService testStepService;
-  private final KibbutzPluginTestDataFunctionService testDataFunctionService;
+  private final AddonPluginTestDataFunctionService testDataFunctionService;
 
   public void create(Addon plugin) {
     Addon pluginDB = fetchPlugin(plugin);
     if (pluginDB.getStatus() != AddonStatus.UNINSTALLED ) {
       pluginDB = repository.save(pluginDB);
-      List<AddonNaturalTextAction> nlpList = plugin.getActions();
-      saveNLP(pluginDB, nlpList);
-      List<KibbutzPluginTestDataFunction> testDataFunctionList = plugin.getTestDataFunctions();
+      List<AddonNaturalTextAction> actionList = plugin.getActions();
+      saveNLP(pluginDB, actionList);
+      List<AddonPluginTestDataFunction> testDataFunctionList = plugin.getTestDataFunctions();
       saveTestDataFunctions(pluginDB, testDataFunctionList);
       cleanupStaleEntriesPostInstall(plugin, pluginDB);
     } else {
@@ -50,17 +49,17 @@ public class AddonService {
     }
   }
 
-  private void saveTestDataFunctions(Addon pluginDB, List<KibbutzPluginTestDataFunction> testDataFunctionList) {
-    for (KibbutzPluginTestDataFunction testDataFunction : testDataFunctionList) {
+  private void saveTestDataFunctions(Addon pluginDB, List<AddonPluginTestDataFunction> testDataFunctionList) {
+    for (AddonPluginTestDataFunction testDataFunction : testDataFunctionList) {
       testDataFunction.setAddonId(pluginDB.getId());
       testDataFunctionService.create(testDataFunction);
     }
   }
 
-  private void saveNLP(Addon pluginDB, List<AddonNaturalTextAction> nlpList) {
-    for (AddonNaturalTextAction nlp : nlpList) {
-      nlp.setAddonId(pluginDB.getId());
-      addonNaturalTextActionService.create(nlp);
+  private void saveNLP(Addon pluginDB, List<AddonNaturalTextAction> actionList) {
+    for (AddonNaturalTextAction action : actionList) {
+      action.setAddonId(pluginDB.getId());
+      addonNaturalTextActionService.create(action);
     }
   }
 

@@ -21,5 +21,5 @@ public class AddonRequest {
   private String externalInstalledVersionUniqueId;
   private AddonStatus status;
   private List<AddonNaturalTextActionRequest> actions;
-  private List<KibbutzPluginTestDataFunctionRequest> testDataFunctions;
+  private List<AddonPluginTestDataFunctionRequest> testDataFunctions;
 }

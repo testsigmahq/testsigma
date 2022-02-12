@@ -162,7 +162,7 @@
             class="text-nowrap"
             [environmentResult]="getTestCaseResult()?.testDeviceResult"
             [executionEnvironment]="getTestCaseResult()?.testDeviceResult?.testDevice"
-            [executionResult]="getTestCaseResult()?.testDeviceResult?.testPlanResult"></app-lab-environment-screen-short-info>
+            [testPlanResult]="getTestCaseResult()?.testDeviceResult?.testPlanResult"></app-lab-environment-screen-short-info>
           <div class="details-items mt-30 mw-20 text-nowrap" [ngSwitch]="!testCaseResult?.isExecuting && !testCaseResult?.totalCount && isTestCaseFetchingCompleted">
             <div *ngSwitchCase="true"
                  class="align-items-center d-flex details-info mt-2">

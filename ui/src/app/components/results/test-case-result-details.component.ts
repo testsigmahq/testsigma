@@ -70,7 +70,7 @@ export class TestCaseResultDetailsComponent extends BaseComponent implements OnI
               public testCaseResultService: TestCaseResultService,
               public dryTestPlanService: DryTestPlanService,
               public matModal: MatDialog,
-              public executionResultService: TestPlanResultService,
+              public testPlanResultService: TestPlanResultService,
               public executionEnvironmentService: TestDeviceService) {
     super(authGuard, notificationsService, translate, toastrService);
   }
@@ -209,10 +209,10 @@ export class TestCaseResultDetailsComponent extends BaseComponent implements OnI
     })
   }
 
-  stopExecution(executionResult: TestPlanResult) {
-    executionResult.result = ResultConstant.STOPPED;
-    executionResult.status = StatusConstant.STATUS_COMPLETED;
-    this.executionResultService.update(executionResult).subscribe(() => {
+  stopExecution(testPlanResult: TestPlanResult) {
+    testPlanResult.result = ResultConstant.STOPPED;
+    testPlanResult.status = StatusConstant.STATUS_COMPLETED;
+    this.testPlanResultService.update(testPlanResult).subscribe(() => {
       this.translate.get("execution.stopped.success").subscribe((res: string) => {
         this.showNotification(NotificationType.Success, res);
         this.fetchTestCaseResult();

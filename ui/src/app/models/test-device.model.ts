@@ -92,16 +92,6 @@ export class TestDevice extends Base implements PageObject {
       return false;
     return v;
   }))
-  public runInParallel: Boolean;
-  @serializable(custom(v => {
-    if(v == null)
-      return false;
-    return v;
-  }, v => {
-    if(v == null)
-      return false;
-    return v;
-  }))
   public createSessionAtCaseLevel: Boolean;
   public agent: Agent;
   public testSuites: TestSuite[];

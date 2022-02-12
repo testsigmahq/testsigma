@@ -23,9 +23,9 @@ public class ExecutionEnvironmentRunner extends EnvironmentRunner {
     super(testDeviceEntity, environmentRunResult, webAppHttpClient, assetsHttpClient);
   }
 
-  public static void addUrl(String executionId, Long testcaseId, String url) {
+  public static void addUrl(String testPlanId, Long testcaseId, String url) {
     try {
-      Map<Long, List<String>> list = ObjectUtils.defaultIfNull(lastAccessedUrls.get(executionId), new HashMap<>());
+      Map<Long, List<String>> list = ObjectUtils.defaultIfNull(lastAccessedUrls.get(testPlanId), new HashMap<>());
       List<String> urls = ObjectUtils.defaultIfNull(list.get(testcaseId), new ArrayList<>());
       if (!urls.contains(url)) {
         urls.add(url);
@@ -39,10 +39,10 @@ public class ExecutionEnvironmentRunner extends EnvironmentRunner {
     }
   }
 
-  public static Set<Long> getDependenciesByUrl(String executionId, String url) {
+  public static Set<Long> getDependenciesByUrl(String testPlanId, String url) {
     Set<Long> testcases = new HashSet<>();
-    if (lastAccessedUrls.containsKey(executionId)) {
-      Map<Long, List<String>> urls = ObjectUtils.defaultIfNull(lastAccessedUrls.get(executionId), new HashMap<>());
+    if (lastAccessedUrls.containsKey(testPlanId)) {
+      Map<Long, List<String>> urls = ObjectUtils.defaultIfNull(lastAccessedUrls.get(testPlanId), new HashMap<>());
       for (Map.Entry<Long, List<String>> laUrl : urls.entrySet()) {
         if (laUrl.getValue().contains(url)) {
           testcases.add(laUrl.getKey());
@@ -54,7 +54,7 @@ public class ExecutionEnvironmentRunner extends EnvironmentRunner {
 
   public void execute() throws AutomatorException {
     this.testsuiteRunner = new TestSuiteRunnerFactory().getRunner();
-    if (!testDeviceEntity.getCreateSessionAtCaseLevel() && !testDeviceEntity.getRunInParallel()) {
+    if (!testDeviceEntity.getCreateSessionAtCaseLevel()) {
       testsuiteRunner.startSession(environmentRunResult.getId(), DriverSessionType.ENVIRONMENT_SESSION);
       environmentRunResult.setDeviceAllocatedOn(new Timestamp(System.currentTimeMillis()));
     }
@@ -63,13 +63,13 @@ public class ExecutionEnvironmentRunner extends EnvironmentRunner {
 
   public void afterExecute() throws AutomatorException {
     super.afterExecute();
-    if (!testDeviceEntity.getRunInParallel() && !testDeviceEntity.getCreateSessionAtCaseLevel()) {
+    if (!testDeviceEntity.getCreateSessionAtCaseLevel()) {
       testsuiteRunner.endSession();
     }
-    lastAccessedUrls.remove(executionId);
+    lastAccessedUrls.remove(testPlanId);
   }
 
-  public String getExecutionId() {
+  public String getTestPlanId() {
     return String.format("%s-%s", environmentRunResult.getId(), testDeviceEntity.getId());
   }
 

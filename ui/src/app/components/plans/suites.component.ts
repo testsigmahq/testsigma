@@ -33,7 +33,7 @@ export class SuitesComponent extends BaseComponent implements OnInit {
   public testPlanId: number;
   @ViewChild('searchInput', {static: true}) searchInput: ElementRef;
   public isFetching: boolean = false;
-  private execution: TestPlan;
+  private testPlan: TestPlan;
   private executionEnvironment = new TestDevice();
   private executionEnvironments: TestDevice[];
   public suitesList: InfiniteScrollableDataSource;
@@ -46,7 +46,7 @@ export class SuitesComponent extends BaseComponent implements OnInit {
     private route: ActivatedRoute,
     private testSuiteService: TestSuiteService,
     private executionEnvironmentService: TestDeviceService,
-    private executionService: TestPlanService,
+    private testPlanService: TestPlanService,
     private matDialog: MatDialog) {
     super(authGuard, notificationsService, translate, toastrService);
   }
@@ -93,8 +93,8 @@ export class SuitesComponent extends BaseComponent implements OnInit {
         height: '85vh',
         data: {
           executionEnvironment: this.executionEnvironment,
-          version: this.execution.workspaceVersion,
-          execution: this.execution
+          version: this.testPlan.workspaceVersion,
+          execution: this.testPlan
         },
         panelClass: ['mat-dialog', 'full-width', 'rds-none']
       }).afterClosed().subscribe(res => {
@@ -114,25 +114,25 @@ export class SuitesComponent extends BaseComponent implements OnInit {
   }
 
   private fetchExecution() {
-    this.executionService.find(this.route.parent.snapshot.params.testPlanId).subscribe(res => {
-      this.execution = res;
+    this.testPlanService.find(this.route.parent.snapshot.params.testPlanId).subscribe(res => {
+      this.testPlan = res;
       this.fetchEnvironments();
     });
   }
 
   private fetchEnvironments() {
-    let query = "testPlanId:" + this.execution.id;
+    let query = "testPlanId:" + this.testPlan.id;
     this.executionEnvironmentService.findAll(query).subscribe(res => {
       this.executionEnvironments = res.content;
-      this.execution.environments = this.executionEnvironments
+      this.testPlan.environments = this.executionEnvironments
     });
   }
 
   private updateSuites() {
     let suiteIds =this.executionEnvironment.testSuites.map(suite => suite.id);
-    for(let i in this.execution.environments)
-      this.execution.environments[i].suiteIds =suiteIds;
-    this.executionService.update(this.execution).subscribe(
+    for(let i in this.testPlan.environments)
+      this.testPlan.environments[i].suiteIds =suiteIds;
+    this.testPlanService.update(this.testPlan).subscribe(
       () => {
         this.translate.get('message.common.update.success', {FieldName: 'Test Suites'})
           .subscribe(res => this.showNotification(NotificationType.Success, res));

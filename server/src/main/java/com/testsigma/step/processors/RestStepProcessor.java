@@ -28,10 +28,10 @@ public class RestStepProcessor extends StepProcessor {
 
   public RestStepProcessor(WebApplicationContext webApplicationContext, List<TestCaseStepEntityDTO> testCaseStepEntityDTOS,
                            WorkspaceType workspaceType, Map<String, Element> elementMap,
-                           TestStepDTO testStepDTO, Long executionId, TestDataSet testDataSet,
+                           TestStepDTO testStepDTO, Long testPlanId, TestDataSet testDataSet,
                            Map<String, String> environmentParams, TestCaseEntityDTO testCaseEntityDTO,
                            String environmentParamSetName, String dataProfile) {
-    super(webApplicationContext, testCaseStepEntityDTOS, workspaceType, elementMap, testStepDTO, executionId, testDataSet,
+    super(webApplicationContext, testCaseStepEntityDTOS, workspaceType, elementMap, testStepDTO, testPlanId, testDataSet,
       environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile);
   }
 
@@ -155,7 +155,7 @@ public class RestStepProcessor extends StepProcessor {
     return inputString;
   }
 
-  private String replaceEnvironmentDataParams(String inputString, Map<String, String> environmentDataSet, String globalDataName,
+  private String replaceEnvironmentDataParams(String inputString, Map<String, String> environmentDataSet, String environmentDataName,
                                               String testCaseName) throws TestsigmaException {
 
     if (inputString == null) {
@@ -179,7 +179,7 @@ public class RestStepProcessor extends StepProcessor {
       String parameter = environmentDataSet.getOrDefault(data, "");
       if (StringUtils.isEmpty(parameter)) {
         String errorMessage = com.testsigma.constants.MessageConstants.getMessage(
-          MessageConstants.MSG_UNKNOWN_ENVIRONMENT_PARAMETER_IN_TEST_STEP, parameter, testCaseName, globalDataName);
+          MessageConstants.MSG_UNKNOWN_ENVIRONMENT_PARAMETER_IN_TEST_STEP, parameter, testCaseName, environmentDataName);
         throw new TestsigmaException(ExceptionErrorCodes.ENVIRONMENT_PARAMETER_NOT_FOUND, errorMessage);
       }
 

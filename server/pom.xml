@@ -78,7 +78,7 @@
   <dependencies>
     <dependency>
       <groupId>com.testsigma</groupId>
-      <artifactId>automator</artifactId>
+      <artifactId>testsigma-automator</artifactId>
       <version>1.0.0</version>
     </dependency>
 

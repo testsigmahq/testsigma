@@ -280,26 +280,26 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
 
   startCapture() {
     this.chromeRecorderService.recorderVersion = this.workspaceVersion;
-    this.setIdentifierTypeToXpath();
+    this.setLocatorTypeToXpath();
     this.chromeRecorderService.pingRecorder();
-    this.chromeRecorderService.uiIdentifierCallBackContext = this;
-    this.chromeRecorderService.uiIdentifierCallBack = this.chromeExtensionUIIdentifierCallback;
+    this.chromeRecorderService.elementCallBackContext = this;
+    this.chromeRecorderService.elementCallBack = this.chromeExtensionElementCallback;
     if (this.chromeRecorderService.isInstalled)
-      this.chromeRecorderService.postGetUIIdentifierMessage(false);
+      this.chromeRecorderService.postGetElementMessage(false);
   }
 
-  private setIdentifierTypeToXpath() {
-    if (!this.elementId)
-      this.elementForm.controls['locatorType'].setValue(this.locatorTypes[0])
-  }
+  // private setLocatorTypeToXpath() {
+  //   if (!this.elementId)
+  //     this.elementForm.controls['locatorType'].setValue(this.locatorTypes[0])
+  // }
 
   stopCapture() {
-    this.chromeRecorderService.uiIdentifierCallBackContext = undefined;
-    this.chromeRecorderService.uiIdentifierCallBack = undefined;
+    this.chromeRecorderService.elementCallBackContext = undefined;
+    this.chromeRecorderService.elementCallBack = undefined;
     this.chromeRecorderService.stopSpying();
   }
 
-  private chromeExtensionUIIdentifierCallback(chromeRecorderElement: Element) {
+  private chromeExtensionElementCallback(chromeRecorderElement: Element) {
     this.element = chromeRecorderElement
   }
 

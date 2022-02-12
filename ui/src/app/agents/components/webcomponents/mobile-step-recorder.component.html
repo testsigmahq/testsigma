@@ -92,14 +92,14 @@
                              [sessionId]="sessionId"
                              [data]="data"
                              [mirroring]="mirroring"
-                             [selectedUiIdentifier]="selectedElement1"
+                             [selectedElement]="selectedElement1"
                              (saveChangeOrientationStep)="saveChangeOrientationStep($event)"
                              (saveTapStep)="saveTapStep($event)"
                              (saveTapOnDeviceStep)="saveDeviceTapStep($event)"
                              (saveNavigateBackStep)="saveNavigateBackStep()"
                              (saveEnterStep)="saveEnterStep($event)"
                              (saveClearStep)="saveClearStep($event)"
-                             (updateRecordedUiIdentifier)="updateRecordedUiIdentifier()"
+                             (updateRecordedElement)="updateRecordedElement()"
     ></app-mirroring-container>
   </div>
 </div>
@@ -147,7 +147,7 @@
                            [searchTerm]="searchTerm"
                            [version]="version"
                            [templates]="templates"
-                           [kibbutzTemplates]="kibbutzNlp"
+                           [addonTemplates]="addonAction"
                            [selectedTemplate]="selectedTemplate"
                            [isDragEnabled]="canDrag"
                            [isCheckHelpPreference]="isCheckHelpPreference"

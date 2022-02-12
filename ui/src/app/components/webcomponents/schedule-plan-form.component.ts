@@ -24,7 +24,7 @@ import {ScheduleStatus} from "../../enums/schedule-status.enum";
 })
 export class SchedulePlanFormComponent extends BaseComponent implements OnInit {
 
-  public execution: TestPlan;
+  public testPlan: TestPlan;
   public formSubmitted: boolean = false;
   public scheduleList: Page<SchedulePlan>;
   public scheduleForm: FormGroup;
@@ -54,15 +54,15 @@ export class SchedulePlanFormComponent extends BaseComponent implements OnInit {
       scheduledPlan: SchedulePlan
     }) {
     super(authGuard, notificationsService, translate, toastrService);
-    this.execution = this.options.execution;
+    this.testPlan = this.options.execution;
   }
 
   ngOnInit(): void {
     this.createSchedule();
     this.addValidations();
     this.formInit();
-    if(this.execution){
-      this.fetchSchedulePlanList(this.execution.id);
+    if(this.testPlan){
+      this.fetchSchedulePlanList(this.testPlan.id);
     }
   }
 
@@ -197,7 +197,7 @@ export class SchedulePlanFormComponent extends BaseComponent implements OnInit {
 
   setScheduleEntityValues() {
     this.scheduledPlan.scheduleTime = this.toUTCTime(this.getTimeDate());
-    this.scheduledPlan.testPlanId = this.execution.id;
+    this.scheduledPlan.testPlanId = this.testPlan.id;
     this.scheduledPlan.scheduleType = this.scheduleForm.get('scheduleType').value;
     this.scheduledPlan.status = ScheduleStatus.ACTIVE;
   }

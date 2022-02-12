@@ -29,7 +29,7 @@ export class TestCaseResultSummaryComponent implements OnInit {
     this.testCaseTypeService.show(this.testcaseResult.testCaseTypeId).subscribe(res => {
       this.testcaseResult.testCaseType = res;
     })
-    // this.userService.show(this.testcaseResult.testDeviceResult.executionResult.executedById).subscribe(user => this.testcaseResult.testDeviceResult.executionResult.executedBy = user);
+    // this.userService.show(this.testcaseResult.testDeviceResult.testPlanResult.executedById).subscribe(user => this.testcaseResult.testDeviceResult.testPlanResult.executedBy = user);
     if (this.testcaseResult.testDataId)
       this.testDataService.show(this.testcaseResult.testDataId).subscribe(res => {
         this.testcaseResult.testDataProfile = res;

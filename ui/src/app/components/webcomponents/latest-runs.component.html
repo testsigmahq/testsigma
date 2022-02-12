@@ -62,17 +62,17 @@
   </div>
   <div class="ts-col-100 d-flex theme-border-t px-8 pb-8 overflow-hidden"
        style="height: calc(100% - 75px)">
-    <div class="ts-col-50" [class.ts-col-100]="executionResults?.isEmpty">
-      <app-placeholder-loader *ngIf="executionResults?.isFetching"></app-placeholder-loader>
+    <div class="ts-col-50" [class.ts-col-100]="testPlanResults?.isEmpty">
+      <app-placeholder-loader *ngIf="testPlanResults?.isFetching"></app-placeholder-loader>
       <cdk-virtual-scroll-viewport
-      *ngIf="executionResults?.totalElements"
+      *ngIf="testPlanResults?.totalElements"
       itemSize="43"
-      class="theme-section-container list-container virtual-scroll-viewport viewport-height" [class.ts-col-100]="executionResults?.isEmpty">
+      class="theme-section-container list-container virtual-scroll-viewport viewport-height" [class.ts-col-100]="testPlanResults?.isEmpty">
       <a
         class="list-view md-pm pointer green-highlight"
         (click)="setActiveResult(result)"
         [class.active]="result.id == activeExecutionResult?.id"
-        *cdkVirtualFor='let result of executionResults'>
+        *cdkVirtualFor='let result of testPlanResults'>
         <div class="ts-col-100 d-flex align-items-center">
         <span class="border-rds-12 d-inline-block p-4 mr-10 img-wh sm-wh"
               [matTooltip]="(result.isRunning ? 'execution.result.running': 'execution.result.'+result.result) | translate"
@@ -86,10 +86,10 @@
           <span class="text-truncate" [textContent]="result.testPlan.name+' #'+result.id"></span>
         </div>
       </a>
-      <app-placeholder-loader *ngIf="executionResults?.isFetching" [isChartWith]="true"></app-placeholder-loader>
+      <app-placeholder-loader *ngIf="testPlanResults?.isFetching" [isChartWith]="true"></app-placeholder-loader>
     </cdk-virtual-scroll-viewport>
 
-    <div *ngIf="executionResults?.isEmpty" class="empty-full-container-transparent-bg">
+    <div *ngIf="testPlanResults?.isEmpty" class="empty-full-container-transparent-bg">
       <div class="empty-full-content">
         <div class="empty-run-xs"></div>
         <div
@@ -98,7 +98,7 @@
       </div>
     </div>
     </div>
-    <div class="ts-col-50" *ngIf="!executionResults?.isEmpty" >
+    <div class="ts-col-50" *ngIf="!testPlanResults?.isEmpty" >
       <div
         class="highChart ts-col-100 d-flex h-100 theme-gray-light border-rds-b-4"
         id="run-details-bar">

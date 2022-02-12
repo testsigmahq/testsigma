@@ -39,7 +39,7 @@ import {OnBoarding} from "../../enums/onboarding.enum";
             mat-dialog-close
             (click)="removePreference()"
             class="mr-14 text-t-secondary pointer"
-            [translate]="'ui_identifiers.form.chrome_extension.refresh_ifInstalled'"></div>
+            [translate]="'elements.form.chrome_extension.refresh_ifInstalled'"></div>
           <a
             mat-dialog-close
             (click)="removePreference()"

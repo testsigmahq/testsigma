@@ -12,7 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
       [class.icon-btn]="!displayText"
       [class.theme-btn-clear-default]="displayText"
       [class.schedule-align]="displayText"
-      [disabled]="execution?.lastRun?.isExecuting"
+      [disabled]="testPlan?.lastRun?.isExecuting"
       [matTooltip]="displayText ? '' : 'runs.list_view.run_later' | translate">
       <i class="fa-schedule pt-1"></i>
       <span class="pl-8"
@@ -24,7 +24,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class ScheduleFormButtonComponent implements OnInit {
   @Input('displayText') displayText: string;
-  @Input('execution') execution: TestPlan;
+  @Input('testPlan') testPlan: TestPlan;
   @Output('onClose') onClose = new EventEmitter<void>();
 
   constructor(private matDialog: MatDialog) { }
@@ -37,7 +37,7 @@ export class ScheduleFormButtonComponent implements OnInit {
       height: "100vh",
       width: '600px',
       position: {top: '0px', right: '0px'},
-      data: {execution: this.execution, scheduledPlan: null},
+      data: {testPlan: this.testPlan, scheduledPlan: null},
       panelClass: ['mat-dialog', 'rds-none']
     }).afterClosed().subscribe(res=> {
       if(res)

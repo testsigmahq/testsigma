@@ -25,7 +25,7 @@ import {TestStepType} from "../../enums/test-step-type.enum";
 import {DryRunFormComponent} from "../webcomponents/dry-run-form.component";
 import {TestStepPriority} from "../../enums/test-step-priority.enum";
 
-import {KibbutzActionService} from "../../services/kibbutz-action.service";
+import {AddonActionService} from "../../services/addon-action.service";
 import {AddonNaturalTextAction} from "../../models/addon-natural-text-action.model";
 import {TestStepConditionType} from "../../enums/test-step-condition-type.enum";
 import {StepActionType} from "../../enums/step-action-type.enum";
@@ -74,7 +74,7 @@ export class StepsListComponent extends BaseComponent implements OnInit {
   public selectedTemplate: NaturalTextActions;
   public isCheckHelpPreference = false;
   inputValue: any;
-  public kibbutzAction: Page<AddonNaturalTextAction>;
+  public addonAction: Page<AddonNaturalTextAction>;
   public saving: boolean = false;
 
   constructor(
@@ -88,7 +88,7 @@ export class StepsListComponent extends BaseComponent implements OnInit {
     public translate: TranslateService,
     public toastrService: ToastrService,
     private testStepService: TestStepService,
-    private KibbutzActionService: KibbutzActionService,
+    private AddonActionService: AddonActionService,
     ) {
     super(authGuard, notificationsService, translate, toastrService);
   }
@@ -115,7 +115,7 @@ export class StepsListComponent extends BaseComponent implements OnInit {
 
       this.stepArticleUrl = this.stepCreateArticles[this.version?.workspace?.workspaceType];
       this.stepVideoUrl = this.stepVideoResources[this.version?.workspace?.workspaceType];
-      this.fetchKibbutzAction();
+      this.fetchAddonAction();
       this.fetchNLActions();
     })
   }
@@ -125,10 +125,10 @@ export class StepsListComponent extends BaseComponent implements OnInit {
     this.naturalTextActionsService.findAll("workspaceType:" + workspaceType+(subQuery? subQuery:'')).subscribe(res => this.templates = res);
   }
 
-  fetchKibbutzAction(subQuery?) {
+  fetchAddonAction(subQuery?) {
     let workspaceType: WorkspaceType = this.version.workspace.workspaceType;
-    this.KibbutzActionService.findAll("workspaceType:" + workspaceType+(subQuery? subQuery :'')+",status!UNINSTALLED").subscribe(res => {
-      this.kibbutzAction = res;
+    this.AddonActionService.findAll("workspaceType:" + workspaceType+(subQuery? subQuery :'')+",status!UNINSTALLED").subscribe(res => {
+      this.addonAction = res;
     })
   }
 
@@ -284,10 +284,10 @@ export class StepsListComponent extends BaseComponent implements OnInit {
     if((step?.conditionType == TestStepConditionType.LOOP_WHILE && step?.isEditing) || step?.type == TestStepType.WHILE_LOOP ) {
       let query = ",stepActionType:"+ StepActionType.WHILE_LOOP;
       this.fetchNLActions(query);
-      this.fetchKibbutzAction(query)
+      this.fetchAddonAction(query)
     } else {
       this.fetchNLActions();
-      this.fetchKibbutzAction()
+      this.fetchAddonAction()
     }
   }
 

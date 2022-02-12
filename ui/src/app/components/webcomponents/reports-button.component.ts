@@ -5,9 +5,9 @@ import {TestPlan} from "../../models/test-plan.model";
   selector: 'app-reports-button',
   template: `
     <a
-      *ngIf="execution.lastRun"
+      *ngIf="testPlan.lastRun"
       [matTooltip]="displayText ? '' : 'hint.message.common.reports' | translate"
-      [routerLink]="['/td/runs', execution.lastRun.id]"
+      [routerLink]="['/td/runs', testPlan.lastRun.id]"
       (click)="$event.preventDefault();$event.stopImmediatePropagation();"
       class="btn text-t-secondary text-nowrap"
       [class.icon-btn]="!displayText"
@@ -17,7 +17,7 @@ import {TestPlan} from "../../models/test-plan.model";
             *ngIf="displayText" [translate]="displayText"></span>
     </a>
     <div
-      *ngIf="!execution.lastRun"
+      *ngIf="!testPlan.lastRun"
       class="text-t-secondary"
       [matTooltip]="'result.hint.not_run' | translate">
       <button
@@ -34,7 +34,7 @@ import {TestPlan} from "../../models/test-plan.model";
   ]
 })
 export class ReportsButtonComponent implements OnInit {
-  @Input('execution') execution: TestPlan;
+  @Input('testPlan') testPlan: TestPlan;
   @Input('displayText') displayText: string;
 
   constructor() { }

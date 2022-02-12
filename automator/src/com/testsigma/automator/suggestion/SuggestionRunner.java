@@ -7,9 +7,9 @@ import com.testsigma.automator.drivers.DriverManager;
 import com.testsigma.automator.entity.*;
 import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.actions.FindByType;
+import com.testsigma.automator.suggestion.actions.SuggestionAction;
+import com.testsigma.automator.suggestion.actions.SuggestionActionResult;
 import com.testsigma.automator.suggestion.entity.SuggestionEntity;
-import com.testsigma.automator.suggestion.snippets.SuggestionSnippet;
-import com.testsigma.automator.suggestion.snippets.SuggestionSnippetResult;
 import com.testsigma.automator.utilities.RuntimeDataProvider;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.ObjectUtils;
@@ -53,9 +53,9 @@ public class SuggestionRunner {
       try {
         result = new SuggestionEngineResult();
         result.setMetaData(new SuggestionEngineResultMetaData());
-        SuggestionSnippet snippet = prepareSnippet(entity.getSnippetClass(), settings, envSettings);
+        SuggestionAction snippet = prepareSnippet(entity.getSnippetClass(), settings, envSettings);
         snippet.engineResult = result;
-        SuggestionSnippet.setTestCaseStepEntity(testCaseStepEntity);
+        SuggestionAction.setTestCaseStepEntity(testCaseStepEntity);
         result = tryFix(snippet, entity.getId());
         result.setMessage(entity.getDisplayName());
         result.setMetaData(snippet.engineResult.getMetaData());
@@ -63,45 +63,45 @@ public class SuggestionRunner {
       } catch (Exception e) {
         log.error(e, e);
         result.setMessage(entity.getDisplayName());
-        result.setResult(SuggestionSnippetResult.Failure);
+        result.setResult(SuggestionActionResult.Failure);
         testCaseStepResult.getSuggestionResults().add(result);
       }
       result.setSuggestionId(entity.getId());
     }
   }
 
-  protected SuggestionEngineResult tryFix(SuggestionSnippet snippet, Integer fix) {
+  protected SuggestionEngineResult tryFix(SuggestionAction snippet, Integer fix) {
     SuggestionEngineResult res = new SuggestionEngineResult();
     res.setMetaData(new SuggestionEngineResultMetaData());
     ActionResult snippetResult = null;
     try {
       snippetResult = snippet.run();
       if (snippetResult == ActionResult.SUCCESS) {
-        res.setResult(res.getResult() == SuggestionSnippetResult.Failure ?
-          SuggestionSnippetResult.Failure : SuggestionSnippetResult.Success);
+        res.setResult(res.getResult() == SuggestionActionResult.Failure ?
+          SuggestionActionResult.Failure : SuggestionActionResult.Success);
         res.setSuggestionId(fix);
         return res;
       } else {
-        res.setResult(SuggestionSnippetResult.Failure);
+        res.setResult(SuggestionActionResult.Failure);
       }
     } catch (Exception e) {
       log.error(e, e);
-      res.setResult(SuggestionSnippetResult.Failure);
+      res.setResult(SuggestionActionResult.Failure);
     }
     return res;
   }
 
-  protected SuggestionSnippet prepareSnippet(String snippetClass, TestPlanRunSettingEntity executionSettings,
+  protected SuggestionAction prepareSnippet(String snippetClass, TestPlanRunSettingEntity executionSettings,
                                              Map<String, String> envSetting) throws ClassNotFoundException,
     IllegalAccessException, InstantiationException, AutomatorException {
 
     Class className = Class.forName(snippetClass);
-    SuggestionSnippet snippet = (SuggestionSnippet) className.newInstance();
+    SuggestionAction snippet = (SuggestionAction) className.newInstance();
     //convertTestStepDataToNewFormat(testCaseStepEntity);
     snippet.setDriver(DriverManager.getRemoteWebDriver());
     //  snippet.setTimeout(testCaseStepEntity.getWaitTime().longValue());
     snippet.setTimeout(0l);
-    SuggestionSnippet.setTestCaseStepEntity(testCaseStepEntity);
+    SuggestionAction.setTestCaseStepEntity(testCaseStepEntity);
     snippet.setTestDataPropertiesEntityMap(testCaseStepEntity.getTestDataMap());
     snippet.setElementPropertiesEntityMap(testCaseStepEntity.getElementsMap());
     snippet.setAttributesMap(testCaseStepEntity.getAttributesMap());

@@ -39,6 +39,5 @@ public class TestDeviceDTO {
   private Boolean disable;
   private Boolean matchBrowserVersion;
   private Long deviceId;
-  private Boolean runInParallel = Boolean.FALSE;
   private Boolean createSessionAtCaseLevel;
 }

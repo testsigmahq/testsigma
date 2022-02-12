@@ -82,10 +82,10 @@ public class WebDriverSettingsService {
   public WebDriverSettingsDTO getCapabilities(long id) throws TestsigmaException, IOException, SQLException {
     TestDeviceResult testDeviceResult = testDeviceResultService.find(id);
     TestDevice testDevice = testDeviceService.find(testDeviceResult.getTestDeviceId());
-    WorkspaceType workspaceType = testDeviceResult.getTestDevice().getExecution()
+    WorkspaceType workspaceType = testDeviceResult.getTestDevice().getTestPlan()
       .getWorkspaceVersion().getWorkspace().getWorkspaceType();
     TestPlanLabType testPlanLabType = testDeviceResult.getTestDevice()
-      .getExecution().getTestPlanLabType();
+      .getTestPlan().getTestPlanLabType();
     return getDriverCapabilities(testDevice, workspaceType, testPlanLabType);
   }
 }

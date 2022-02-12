@@ -31,7 +31,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -184,11 +183,11 @@ public class ElementsController {
       }
     }
     List<SearchCriteria> params = new ArrayList<>();
-    List<String> definitions = new ArrayList<>();
-    definitions.add(null);
-    definitions.add("");
+    List<String> elements = new ArrayList<>();
+    elements.add(null);
+    elements.add("");
     params.add(new SearchCriteria("name", SearchOperation.IN, names));
-    params.add(new SearchCriteria("locatorValue", SearchOperation.IN, definitions));
+    params.add(new SearchCriteria("locatorValue", SearchOperation.IN, elements));
     params.add(new SearchCriteria("workspaceVersionId", SearchOperation.EQUALITY, workspaceVersionId));
     ElementSpecificationsBuilder builder = new ElementSpecificationsBuilder();
     builder.setParams(params);
@@ -196,7 +195,7 @@ public class ElementsController {
     List<ElementDTO> dtos = elementMapper.map(elementService.findAll(spec, Pageable.unpaged()).getContent());
     if (names.indexOf("element") > -1) {
       params.remove(new SearchCriteria("name", SearchOperation.IN, names));
-      params.remove(new SearchCriteria("locatorValue", SearchOperation.IN, definitions));
+      params.remove(new SearchCriteria("locatorValue", SearchOperation.IN, elements));
       params.add(new SearchCriteria("name", SearchOperation.EQUALITY, "element"));
       builder.setParams(params);
       spec = builder.build();

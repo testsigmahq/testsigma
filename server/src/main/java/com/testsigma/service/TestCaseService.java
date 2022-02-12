@@ -92,10 +92,10 @@ public class TestCaseService extends XMLExportService<TestCase> {
       testCaseEntityDTO = testCaseMapper.map(testCase);
       TestDeviceResult testDeviceResult = testDeviceResultService.find(environmentResultId);
       TestDevice testDevice = testDeviceService.find(testDeviceResult.getTestDeviceId());
-      Optional<TestPlan> optionalExecution = testPlanService.findOptional(testDevice.getTestPlanId());
+      Optional<TestPlan> optionalTestPlan = testPlanService.findOptional(testDevice.getTestPlanId());
       AbstractTestPlan testPlan;
-      if (optionalExecution.isPresent())
-        testPlan = optionalExecution.get();
+      if (optionalTestPlan.isPresent())
+        testPlan = optionalTestPlan.get();
       else
         testPlan = dryTestPlanService.find(testDevice.getTestPlanId());
       WorkspaceVersion applicationVersion = testPlan.getWorkspaceVersion();

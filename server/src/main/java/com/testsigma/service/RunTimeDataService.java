@@ -58,12 +58,7 @@ public class RunTimeDataService {
     try {
       RunTimeData runTimeData;
       TestDeviceResult testDeviceResult = testDeviceResultService.find(environmentResultId);
-
-      if (testDeviceResult.getTestDevice().getRunInParallel()) {
-        runTimeData = findBySessionId(sessionId);
-      } else {
         runTimeData = findByExecutionRunId(testDeviceResult.getTestPlanResultId());
-      }
       return runTimeData.getData().getString(variableName);
     } catch (JSONException | ResourceNotFoundException exception) {
       ResourceNotFoundException resourceNotFoundException = new ResourceNotFoundException(exception.getMessage());
@@ -81,13 +76,8 @@ public class RunTimeDataService {
     runTimeData.setTestPlanRunId(testDeviceResult.getTestPlanResultId());
 
     try {
-      if (testDeviceResult.getTestDevice().getRunInParallel()) {
-        runTimeData.setSessionId(runtimeRequest.getSessionId());
-        runTimeData = findByTestPlanRunIdAndSessionId(testDeviceResult.getTestPlanResultId(), runtimeRequest.getSessionId());
-      } else {
-        runTimeData.setSessionId(null);
-        runTimeData = findByExecutionRunId(testDeviceResult.getTestPlanResultId());
-      }
+      runTimeData.setSessionId(null);
+      runTimeData = findByExecutionRunId(testDeviceResult.getTestPlanResultId());
     } catch (ResourceNotFoundException exception) {
       log.error(exception.getMessage(), exception);
     }

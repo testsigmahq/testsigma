@@ -107,7 +107,7 @@ export class DevicesComponent extends BaseComponent implements OnInit {
     this.matDialog.open(TestPlanTestMachineSelectFormComponent, {
       width: this.testPlan.workspaceVersion.workspace.isWeb ? '875px' : 'auto',
       height: '100vh',
-      data: {execution: this.testPlan, executionEnvironment: environment, isEdit: isEdit},
+      data: {testPlan: this.testPlan, executionEnvironment: environment, isEdit: isEdit},
       position: {top: '0px', right: '0px'},
       panelClass: ['mat-dialog', 'rds-none']
     }).afterClosed().subscribe((res: TestDevice) => {

@@ -28,14 +28,13 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
   public originalExecutionEnvironment = new TestDevice();
   public submitted: Boolean;
   public workspace: Workspace;
-  public execution: TestPlan;
+  public testPlan: TestPlan;
   public activeEnvironmentFormGroup: FormGroup;
   public isEdit: boolean;
-  public runInParallel: Boolean;
   public createSessionAtCaseLevel: Boolean;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { execution: TestPlan, executionEnvironment: TestDevice, isEdit: boolean },
+    @Inject(MAT_DIALOG_DATA) public data: { testPlan: TestPlan, executionEnvironment: TestDevice, isEdit: boolean },
     private matDialog: MatDialog,
     public dialogRef: MatDialogRef<TestPlanTestMachineSelectFormComponent>,
     private testSuiteService: TestSuiteService,
@@ -46,12 +45,11 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
     public toastrService: ToastrService,
     public devicesService: DevicesService) {
     super(authGuard, notificationsService, translate, toastrService);
-    this.runInParallel = this.data.executionEnvironment.runInParallel;
     this.createSessionAtCaseLevel = this.data.executionEnvironment.createSessionAtCaseLevel;
   }
 
   get advancedSettings(): boolean {
-    return this.data?.execution?.testPlanType == TestPlanType.DISTRIBUTED;
+    return this.data?.testPlan?.testPlanType == TestPlanType.DISTRIBUTED;
   }
 
   get environmentControl() {
@@ -59,11 +57,11 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
   }
 
   get version(): WorkspaceVersion {
-    return this.execution?.workspaceVersion;
+    return this.testPlan?.workspaceVersion;
   }
 
   get isHybrid() {
-    return this.execution?.testPlanLabType == TestPlanLabType.Hybrid;
+    return this.testPlan?.testPlanLabType == TestPlanLabType.Hybrid;
   }
 
   get isAppUploadIdRequired() {
@@ -75,30 +73,30 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
   }
 
   get isMobile() {
-    return this.execution?.workspaceVersion?.workspace?.isMobileWeb
-        || this.execution?.workspaceVersion?.workspace?.isIosNative
-        || this.execution?.workspaceVersion?.workspace?.isAndroidNative;
+    return this.testPlan?.workspaceVersion?.workspace?.isMobileWeb
+        || this.testPlan?.workspaceVersion?.workspace?.isIosNative
+        || this.testPlan?.workspaceVersion?.workspace?.isAndroidNative;
   }
 
   get isWeb() {
-    return this.execution?.workspaceVersion?.workspace?.isWeb;
+    return this.testPlan?.workspaceVersion?.workspace?.isWeb;
   }
 
   get isMobileNative() {
-    return this.execution?.workspaceVersion?.workspace?.isIosNative
-      || this.execution?.workspaceVersion?.workspace?.isAndroidNative;
+    return this.testPlan?.workspaceVersion?.workspace?.isIosNative
+      || this.testPlan?.workspaceVersion?.workspace?.isAndroidNative;
   }
 
   ngOnInit(): void {
     this.activeExecutionEnvironment.testSuites = [];
-    this.workspace = this.data.execution?.workspaceVersion?.workspace;
-    this.execution = this.data.execution;
+    this.workspace = this.data.testPlan?.workspaceVersion?.workspace;
+    this.testPlan = this.data.testPlan;
     if (this.data?.executionEnvironment && this.data.isEdit) {
       this.isEdit = true;
       this.fetchActiveSuites("testDeviceId:" + this.data?.executionEnvironment?.id);
     } else {
       this.data['executionEnvironment'] = undefined;
-      this.fetchActiveSuites("testPlanId:" + this.data?.execution?.id);
+      this.fetchActiveSuites("testPlanId:" + this.data?.testPlan?.id);
     }
   }
 
@@ -117,7 +115,7 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
       height: '85vh',
       data: {
         executionEnvironment: this.activeExecutionEnvironment, version: this.version,
-        execution: this.execution
+        execution: this.testPlan
       },
       panelClass: ['mat-dialog', 'full-width', 'rds-none']
     }).afterClosed().subscribe(res => {
@@ -149,19 +147,17 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
     executionEnvironment.osVersion = this.activeEnvironmentFormGroup.getRawValue().osVersion;
     executionEnvironment.browserVersion = this.activeEnvironmentFormGroup.getRawValue().browserVersion;
     executionEnvironment.deviceName = this.activeEnvironmentFormGroup.getRawValue().deviceName;
-    executionEnvironment.testPlanId = this.execution.id;
+    executionEnvironment.testPlanId = this.testPlan.id;
     executionEnvironment.id = this.data.executionEnvironment.id;
     executionEnvironment.disable = false
-    if (!this.execution.isCustomPlan)
+    if (!this.testPlan.isCustomPlan)
       executionEnvironment.suiteIds = this.activeEnvironmentFormGroup.getRawValue().suiteIds
-    executionEnvironment.runInParallel = this.runInParallel
     executionEnvironment.createSessionAtCaseLevel = this.createSessionAtCaseLevel;
-    if(this.execution.isCustomPlan){
+    if(this.testPlan.isCustomPlan){
       executionEnvironment.suiteIds = this.activeEnvironmentFormGroup.getRawValue().suiteIds;
-      executionEnvironment.runInParallel = this.activeEnvironmentFormGroup.getRawValue().runInParallel;
       executionEnvironment.createSessionAtCaseLevel = this.activeEnvironmentFormGroup.getRawValue().createSessionAtCaseLevel;
     }
-    if(this.execution.isHybrid)
+    if(this.testPlan.isHybrid)
       executionEnvironment.agentId = this.activeEnvironmentFormGroup.getRawValue().agentId;
     executionEnvironment.title = executionEnvironment.platform + "(" + executionEnvironment.osVersion + ")";
     if(executionEnvironment.browser)
@@ -225,7 +221,6 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
     let environmentFormGroup = this.formBuilder.group({
           agentId: new FormControl(environment?.agentId, [this.requiredIfValidator(() => this.isHybrid)]),
           deviceId: new FormControl(environment?.deviceId, [this.requiredIfValidator(() => this.isHybrid && this.version?.workspace.isMobile)]),
-          runInParallel: new FormControl(environment?.runInParallel, []),
           createSessionAtCaseLevel: new FormControl(environment?.createSessionAtCaseLevel, []),
           suiteIds: this.formBuilder.array([this.formBuilder.control([], Validators.required)]),
           platformOsVersionId: new FormControl(environment.platformOsVersionId, [this.requiredIfValidator(() => !this.isRest && !this.isHybrid)]),

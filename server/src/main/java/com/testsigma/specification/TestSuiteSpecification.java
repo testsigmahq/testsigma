@@ -68,7 +68,7 @@ public class TestSuiteSpecification extends BaseSpecification<TestSuite> {
   public Predicate toPredicate(Root<TestSuite> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
     Predicate predicate = super.toPredicate(root, query, builder);
     Join environmentSuiteMappingJoin = null;
-    if (criteria.getKey().equals("executionId") || criteria.getKey().equals("testPlanId")) {
+    if (criteria.getKey().equals("testPlanId") || criteria.getKey().equals("testPlanId")) {
       for (Join<?, ?> join : root.getJoins()) {
         if (join.getAttribute().getName().equals("testDeviceSuites"))
           environmentSuiteMappingJoin = join;

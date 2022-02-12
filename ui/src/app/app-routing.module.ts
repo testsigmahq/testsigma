@@ -49,7 +49,7 @@ import {DetailsHeaderComponent as EnvironmentDetailsHeaderComponent} from './com
 import {TestPlansComponent as EnvironmentTestPlansComponent} from './components/environments/test-plans.component';
 import {LoginFormComponent} from "./components/login-form.component";
 import {UnAuthenticationGuardGuard} from "./guards/un-authentication-guard.guard";
-import {KibbutzAppComponent} from "./components/kibbutz-app.component";
+import {AddonAppComponent} from "./components/addon-app.component";
 import {ConsentGuard} from "./guards/consent.guard";
 import {ConsentComponent} from "./components/webcomponents/consent.component";
 import {OnboardingFormComponent} from "./components/onboarding-form.component";
@@ -362,7 +362,7 @@ const routes: Routes = [
       {
         path: 'addons',
         data: {legacyURL: '#/addons', title: 'page_title.add_ons'},
-        component: KibbutzAppComponent
+        component: AddonAppComponent
       },
       {
         path: 'settings',

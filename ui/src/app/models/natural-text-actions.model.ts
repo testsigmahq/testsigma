@@ -50,12 +50,12 @@ export class NaturalTextActions extends Base implements PageObject {
   }
   get htmlGrammar(): String {
     let naturalText = this.naturalText;
-    if (naturalText.match(/#{logicalnameTo}/g) || naturalText.match(/#{from-element}/g)) {
-      naturalText = naturalText.replace(/#{logicalname}|#{from-element}/g, '<span class="element">from element</span>');
-      naturalText = naturalText.replace(/#{logicalnameTo}|#{to-element}/g, '<span class="element">to element</span>');
+    if (naturalText.match(/#{elementnameTo}/g) || naturalText.match(/#{from-element}/g)) {
+      naturalText = naturalText.replace(/#{elementname}|#{from-element}/g, '<span class="element">from element</span>');
+      naturalText = naturalText.replace(/#{elementnameTo}|#{to-element}/g, '<span class="element">to element</span>');
     }
     let span_class= this.allowedValues?'selected_list':'test_data';
-    naturalText = naturalText.replace(/#{logicalname}/g, '<span class="element">element</span>')
+    naturalText = naturalText.replace(/#{elementname}/g, '<span class="element">element</span>')
       .replace(/#{element}/g, '<span class="element">element</span>')
       .replace(/\$\{([^}]+)\}/g, "<span class="+span_class+">"+this.extractTestDataString+"</span>")
       .replace(/@{attribute}/g, '<span class="attribute">attribute</span>');
@@ -64,8 +64,8 @@ export class NaturalTextActions extends Base implements PageObject {
 
   get searchableGrammar(): string{
     return this.naturalText
-      .replace(/#{logicalname}/g, "Element")
-      .replace(/#{logicalnameTo}|#{to-element}/g, "Element")
+      .replace(/#{elementname}/g, "Element")
+      .replace(/#{elementnameTo}|#{to-element}/g, "Element")
       .replace(/#{from-element}/g, "Element")
       .replace(/#{element}/g, 'Element')
       .replace(/\$\{([^}]+)\}/g, this.extractTestDataString)
@@ -75,8 +75,8 @@ export class NaturalTextActions extends Base implements PageObject {
 
   actionText(element?:string, testData?: string){
     return this.naturalText
-      .replace(/#{logicalname}/g, element)
-      .replace(/#{logicalnameTo}|#{to-element}/g, element)
+      .replace(/#{elementname}/g, element)
+      .replace(/#{elementnameTo}|#{to-element}/g, element)
       .replace(/#{from-element}/g, element)
       .replace(/#{element}/g, element)
       .replace(/\$\{([^}]+)\}/g, testData )

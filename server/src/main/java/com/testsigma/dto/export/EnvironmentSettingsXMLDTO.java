@@ -124,8 +124,6 @@ public class EnvironmentSettingsXMLDTO {
   private String nativeTestObjectKey;
   @JsonProperty("test-object-api-key")
   private String testObjectApiKey;
-  @JsonProperty("run-in-parallel")
-  private Boolean runInParallel;
   @JsonProperty(value = "create-session-at-case-level")
   private Boolean createSessionAtCaseLevel;
 }

@@ -28,15 +28,15 @@ import set = Reflect.set;
   styles: []
 })
 export class RunListComponent extends BaseComponent implements OnInit {
-  @Input('execution') execution: TestPlan;
+  @Input('testPlan') testPlan: TestPlan;
   @Input('runId') currentRunId: number;
-  @Input('executionResult') executionResult: TestPlanResult;
+  @Input('testPlanResult') testPlanResult: TestPlanResult;
   @Output('onExecutionResult') onExecutionResult = new EventEmitter<TestPlanResult>();
 
   @ViewChild('searchInput') searchInput: ElementRef;
   @ViewChild('buildNoInput') buildNoInput: ElementRef;
   @ViewChild(CdkVirtualScrollViewport) viewPort: CdkVirtualScrollViewport;
-  public executionResults: InfiniteScrollableDataSource;
+  public testPlanResults: InfiniteScrollableDataSource;
   public isSearch: boolean = false;
   public activeExecutionResult: TestPlanResult;
   public disableMouse: boolean = true;
@@ -56,22 +56,22 @@ export class RunListComponent extends BaseComponent implements OnInit {
     public notificationsService: NotificationsService,
     public translate: TranslateService,
     public toastrService: ToastrService,
-    private executionResultService: TestPlanResultService,
+    private testPlanResultService: TestPlanResultService,
     private matModal: MatDialog,
   ) {
     super(authGuard, notificationsService, translate, toastrService);
   }
 
   ngOnInit() {
-    this.executionResults = new InfiniteScrollableDataSource(this.executionResultService, "reRunParentId:null,testPlanId:" + this.execution.id, this.sortBy);
+    this.testPlanResults = new InfiniteScrollableDataSource(this.testPlanResultService, "reRunParentId:null,testPlanId:" + this.testPlan.id, this.sortBy);
     this.isRunListFetchCompleted = true;
     this.scrollRunIdIntoView();
 
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (((this.executionResult?.isExecuting || this.executionResult?.childResult?.isExecuting)) || this.getStatus(changes)) {
-      this.executionResults = new InfiniteScrollableDataSource(this.executionResultService, "reRunParentId:null,testPlanId:" + this.execution.id, this.sortBy);
+    if (((this.testPlanResult?.isExecuting || this.testPlanResult?.childResult?.isExecuting)) || this.getStatus(changes)) {
+      this.testPlanResults = new InfiniteScrollableDataSource(this.testPlanResultService, "reRunParentId:null,testPlanId:" + this.testPlan.id, this.sortBy);
       this.isRunListFetchCompleted = true;
     }
   }
@@ -85,14 +85,14 @@ export class RunListComponent extends BaseComponent implements OnInit {
     }
   }
 
-  fetchExecutionResults(query) {
-    query += ",reRunParentId:null,testPlanId:" + this.execution.id;
-    this.executionResults = new InfiniteScrollableDataSource(this.executionResultService, query, this.sortBy);
+  fetchTestPlanResults(query) {
+    query += ",reRunParentId:null,testPlanId:" + this.testPlan.id;
+    this.testPlanResults = new InfiniteScrollableDataSource(this.testPlanResultService, query, this.sortBy);
     this.isRunListFetchCompleted = true;
   }
 
   updateBuildId(event) {
-    this.executionResultService.update(this.activeExecutionResult).subscribe((result) => {
+    this.testPlanResultService.update(this.activeExecutionResult).subscribe((result) => {
       this.activeExecutionResult.buildNo = result.buildNo;
       this.onExecutionResult.emit(this.activeExecutionResult)
       this.translate.get("message.common.update.success", {FieldName: 'Build Number'}).subscribe((res: string) => {
@@ -126,7 +126,7 @@ export class RunListComponent extends BaseComponent implements OnInit {
 
   openRunInfo() {
     this.matModal.open(RunListInfoComponent, {
-      data: {execution: this.execution},
+      data: {execution: this.testPlan},
       panelClass: ['mat-dialog', 'rds-none']
     })
   }
@@ -164,7 +164,7 @@ export class RunListComponent extends BaseComponent implements OnInit {
            query = "triggeredType@" + this.filterTriggeredType.join("#");
         }
       }
-      this.fetchExecutionResults(query);
+      this.fetchTestPlanResults(query);
     });
   }
 
@@ -172,7 +172,7 @@ export class RunListComponent extends BaseComponent implements OnInit {
     this.isFilterApplied = false;
     this.filterResult = undefined;
     this.filterStartTime = undefined;
-    this.fetchExecutionResults("");
+    this.fetchTestPlanResults("");
   }
 
   attachDebounceEvent() {
@@ -183,9 +183,9 @@ export class RunListComponent extends BaseComponent implements OnInit {
         distinctUntilChanged(),
         tap((event: KeyboardEvent) => {
           if (this.searchInput.nativeElement.value)
-            this.fetchExecutionResults("term:*" + this.searchInput.nativeElement.value + "*");
+            this.fetchTestPlanResults("term:*" + this.searchInput.nativeElement.value + "*");
           else
-            this.fetchExecutionResults("");
+            this.fetchTestPlanResults("");
         })
       )
       .subscribe();
@@ -199,7 +199,7 @@ export class RunListComponent extends BaseComponent implements OnInit {
         this.attachDebounceEvent();
       }, 10);
     } else {
-      this.fetchExecutionResults("");
+      this.fetchTestPlanResults("");
     }
   }
 
@@ -238,8 +238,8 @@ export class RunListComponent extends BaseComponent implements OnInit {
   }
 
   destroy(result: TestPlanResult) {
-    this.executionResultService.destroy(result.id).subscribe(res => {
-      this.fetchExecutionResults("");
+    this.testPlanResultService.destroy(result.id).subscribe(res => {
+      this.fetchTestPlanResults("");
       this.translate.get("message.common.deleted.success", {FieldName: '#'+result.id}).subscribe((res: string) => {
         this.showNotification(NotificationType.Success, res);
       })
@@ -247,17 +247,17 @@ export class RunListComponent extends BaseComponent implements OnInit {
   }
 
   private scrollRunIdIntoView() {
-    if(this.executionResults?.isFetching) {
+    if(this.testPlanResults?.isFetching) {
       setTimeout(() => this.scrollRunIdIntoView(), 100);
       return;
     }
-    let activeItemInCache = this.executionResults.cachedItems?.find( executionResult =>
+    let activeItemInCache = this.testPlanResults.cachedItems?.find( executionResult =>
       executionResult['id']==this.currentRunId);
     let activeItemVisible = Boolean(activeItemInCache)?
-      ((this.executionResults.cachedItems.indexOf(activeItemInCache) < this.viewPort.getRenderedRange().end)
-      && (this.executionResults.cachedItems.indexOf(activeItemInCache)) >= this.viewPort.getRenderedRange().start) : false;
+      ((this.testPlanResults.cachedItems.indexOf(activeItemInCache) < this.viewPort.getRenderedRange().end)
+      && (this.testPlanResults.cachedItems.indexOf(activeItemInCache)) >= this.viewPort.getRenderedRange().start) : false;
     if(activeItemInCache && !activeItemVisible) {
-      this.viewPort.scrollToIndex((this.executionResults.cachedItems.indexOf(activeItemInCache) -1 ));
+      this.viewPort.scrollToIndex((this.testPlanResults.cachedItems.indexOf(activeItemInCache) -1 ));
       this.scrollAndUnSubscribe();
     } else if(!Boolean(activeItemInCache)){
       if(this.viewPort.getRenderedRange().end ==0) return;
@@ -273,8 +273,8 @@ export class RunListComponent extends BaseComponent implements OnInit {
   private completeScroll(activeItemInCache){
     if(Boolean(this.viewPort.elementRef.nativeElement.querySelector("a.list-view.active"))) {
       if ((this.viewPort.elementRef.nativeElement.querySelector("a.list-view.active").getClientRects()[0].top - this.viewPort.elementRef.nativeElement.getClientRects()[0].top)
-        < (70 * (this.executionResults.cachedItems.indexOf(activeItemInCache) + 1))) {
-        this.viewPort.scrollToIndex(this.executionResults.cachedItems.indexOf(activeItemInCache), "smooth");
+        < (70 * (this.testPlanResults.cachedItems.indexOf(activeItemInCache) + 1))) {
+        this.viewPort.scrollToIndex(this.testPlanResults.cachedItems.indexOf(activeItemInCache), "smooth");
         this.disableMouse = false;
       }else {
         setTimeout(()=> this.completeScroll(activeItemInCache), 500);

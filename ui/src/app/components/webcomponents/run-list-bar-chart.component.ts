@@ -21,7 +21,7 @@ import {ResultConstant} from "../../enums/result-constant.enum";
       ></highcharts-chart>
     </div>
     <div
-      *ngIf="executionResults?.totalElements > 0"
+      *ngIf="testPlanResults?.totalElements > 0"
       class="legend-container overflow-x-auto bg-highlight d-flex fz-12 justify-content-between lsp-19 text-right ts-col-100">
       <div class="legend-item px-14 py-8 text-nowrap pointer flex-auto"
            [class.bg-grey-light]="this.successFilter"
@@ -93,7 +93,7 @@ import {ResultConstant} from "../../enums/result-constant.enum";
   styles: []
 })
 export class RunListBarChartComponent implements OnInit {
-  @Input('execution') execution: TestPlan;
+  @Input('testPlan') testPlan: TestPlan;
 
   public stoppedFilter: Boolean;
   public successFilter: Boolean;
@@ -103,7 +103,7 @@ export class RunListBarChartComponent implements OnInit {
   public queuedFilter: Boolean;
 
   public resultConstant: typeof ResultConstant = ResultConstant;
-  public executionResults: Page<TestPlanResult>;
+  public testPlanResults: Page<TestPlanResult>;
   private keys: JSON;
   public Highcharts: typeof Highcharts = Highcharts;
   public chartOptions: Highcharts.Options = {
@@ -150,7 +150,7 @@ export class RunListBarChartComponent implements OnInit {
   };
 
   constructor(
-    private executionResultService: TestPlanResultService,
+    private testPlanResultService: TestPlanResultService,
     private translate: TranslateService) {
 
   }
@@ -166,45 +166,45 @@ export class RunListBarChartComponent implements OnInit {
   }
 
   populateChartOptions(query, firstRequest?: boolean) {
-    query += "reRunParentId:null,testPlanId:" + this.execution.id;
+    query += "reRunParentId:null,testPlanId:" + this.testPlan.id;
     let pageable = new Pageable();
     pageable.pageSize = 300;
     pageable.pageNumber = 0;
     this.chartOptions['series'] = undefined;
-    this.executionResultService.findAll(query, undefined, pageable).subscribe((res) => {
+    this.testPlanResultService.findAll(query, undefined, pageable).subscribe((res) => {
       if (firstRequest) {
-        this.executionResults = res;
+        this.testPlanResults = res;
       }
       this.chartOptions.yAxis['stackLabels'].enabled = res.totalElements < 10;
       this.chartOptions.plotOptions.column.pointWidth = res.totalElements > 50 ? undefined : 18;
       this.chartOptions['series'] = [{
         name: this.keys['execution.result.SUCCESS'],
-        data: res.content.map((executionResult) => executionResult.passedCount),
+        data: res.content.map((testPlanResult) => testPlanResult.passedCount),
         type: 'column',
         color: '#1FB47E'
       }, {
         name: this.keys['execution.result.FAILURE'],
-        data: res.content.map((executionResult) => executionResult.failedCount),
+        data: res.content.map((testPlanResult) => testPlanResult.failedCount),
         type: 'column',
         color: '#F23D3D'
       }, {
         name: this.keys['execution.result.ABORTED'],
-        data: res.content.map((executionResult) => executionResult.abortedCount),
+        data: res.content.map((testPlanResult) => testPlanResult.abortedCount),
         type: 'column',
         color: '#F0B14C'
       }, {
         name: this.keys['execution.result.NOT_EXECUTED'],
-        data: res.content.map((executionResult) => executionResult.notExecutedCount),
+        data: res.content.map((testPlanResult) => testPlanResult.notExecutedCount),
         type: 'column',
         color: '#7A68BC'
       }, {
         name: this.keys['execution.result.QUEUED'],
-        data: res.content.map((executionResult) => executionResult.totalCount == 0 && executionResult.isQueued ? 1 : executionResult.queuedCount),
+        data: res.content.map((testPlanResult) => testPlanResult.totalCount == 0 && testPlanResult.isQueued ? 1 : testPlanResult.queuedCount),
         type: 'column',
         color: '#3C8FE2'
       }, {
         name: this.keys['execution.result.STOPPED'],
-        data: res.content.map((executionResult) => executionResult.totalCount == 0 && !executionResult.isQueued ? 1 : executionResult.stoppedCount),
+        data: res.content.map((testPlanResult) => testPlanResult.totalCount == 0 && !testPlanResult.isQueued ? 1 : testPlanResult.stoppedCount),
         type: 'column',
         color: '#C4C4C4'
       }]
@@ -266,26 +266,26 @@ export class RunListBarChartComponent implements OnInit {
   }
 
   get passedPercentage(): Number {
-    return Math.round(((this.executionResults.content.filter(res => res.isPassed).length) / this.executionResults.totalElements) * 100);
+    return Math.round(((this.testPlanResults.content.filter(res => res.isPassed).length) / this.testPlanResults.totalElements) * 100);
   }
 
   get failedPercentage(): Number {
-    return Math.round(((this.executionResults.content.filter(res => res.isFailed).length) / this.executionResults.totalElements) * 100);
+    return Math.round(((this.testPlanResults.content.filter(res => res.isFailed).length) / this.testPlanResults.totalElements) * 100);
   }
 
   get notExecutedPercentage(): Number {
-    return Math.round(((this.executionResults.content.filter(res => res.isNotExecuted).length) / this.executionResults.totalElements) * 100);
+    return Math.round(((this.testPlanResults.content.filter(res => res.isNotExecuted).length) / this.testPlanResults.totalElements) * 100);
   }
 
   get abortedPercentage(): Number {
-    return Math.round(((this.executionResults.content.filter(res => res.isAborted).length) / this.executionResults.totalElements) * 100);
+    return Math.round(((this.testPlanResults.content.filter(res => res.isAborted).length) / this.testPlanResults.totalElements) * 100);
   }
 
   get queuedPercentage(): Number {
-    return Math.round(((this.executionResults.content.filter(res => res.isQueued).length) / this.executionResults.totalElements) * 100);
+    return Math.round(((this.testPlanResults.content.filter(res => res.isQueued).length) / this.testPlanResults.totalElements) * 100);
   }
 
   get stoppedPercentage(): Number {
-    return Math.round(((this.executionResults.content.filter(res => res.isStopped).length) / this.executionResults.totalElements) * 100);
+    return Math.round(((this.testPlanResults.content.filter(res => res.isStopped).length) / this.testPlanResults.totalElements) * 100);
   }
 }

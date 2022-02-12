@@ -67,7 +67,7 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
     public toastrService:ToastrService,
     private route: ActivatedRoute,
     private router: Router,
-    private executionResultService: TestPlanResultService,
+    private testPlanResultService: TestPlanResultService,
     private  testCaseService: TestCaseService,
     private  testCaseResultService: TestCaseResultService,
     private testCasePrioritiesService: TestCasePrioritiesService,

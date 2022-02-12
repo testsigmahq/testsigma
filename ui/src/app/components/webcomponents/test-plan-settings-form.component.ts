@@ -66,10 +66,10 @@ export class TestPlanSettingsFormComponent extends BaseComponent implements OnIn
   save() {
     this.formSubmitted.emit();
     this.saving = true;
-    let executionId = this.testPlan.id;
+    let testPlanId = this.testPlan.id;
     let json = this.formGroup.getRawValue();
     this.testPlan = new TestPlan().deserialize(this.formGroup.getRawValue());
-    this.testPlan.id = executionId;
+    this.testPlan.id = testPlanId;
     this.testPlan.workspaceVersionId = this.version.id;
     this.testPlan.environmentId = json.environmentId==undefined ? null : json.environmentId;
     if(this.testPlan.environmentId == -1) {

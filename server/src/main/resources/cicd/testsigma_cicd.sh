@@ -160,7 +160,7 @@ else
 fi
 }
 function populateJsonPayload(){
-  JSON_DATA='{"executionId":'$TESTSIGMA_TEST_PLAN_ID
+  JSON_DATA='{"testPlanId":'$TESTSIGMA_TEST_PLAN_ID
   populateRuntimeData
   populateBuildNo
   if [ -z "$BUILD_DATA" ]

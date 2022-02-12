@@ -80,7 +80,7 @@ Write-Host "No of polls: $NO_OF_POLLS"
 Write-Host "Polling Interval:$SLEEP_TIME"
 Write-Host "Junit report file path: $REPORT_FILE_PATH"
 
-$REQUEST_BODY_TABLE=@{executionId="$TESTSIGMA_TEST_PLAN_ID"}
+$REQUEST_BODY_TABLE=@{testPlanId="$TESTSIGMA_TEST_PLAN_ID"}
 $REQUEST_BODY_TABLE.Add("runtimeData",$RUN_TIME_PARAMS)
 
 $REQUEST_BODY = $REQUEST_BODY_TABLE | ConvertTo-Json -Compress

@@ -188,7 +188,7 @@ export class SchedulePlanFormComponent extends BaseComponent implements OnInit {
   }
   getTimeDate()
   {
-    let date = new Date(this.scheduleForm.get('date').value);
+    let date = new Date(this.scheduleForm.get('date').value + " " + this.scheduleForm.get('time').value);
     let time = this.scheduleForm.get('time').value.split(":");
     return new Date(date.getFullYear(),
       date.getMonth(), date.getDate(), time[0],

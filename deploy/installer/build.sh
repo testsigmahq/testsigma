@@ -10,6 +10,12 @@ VERSION=v1.1.0
 PUBLISH_TO_GIT=true
 
 
+if [ $# -lt $EXPECTED_ARGS ]
+then
+  echo "Usage: $0 <version>"
+  exit $E_BADARGS
+fi
+
 while [ $# -gt 0 ]; do
   case "$1" in
     --VERSION=*)
@@ -27,12 +33,6 @@ while [ $# -gt 0 ]; do
   shift
 done
 
-if [ $# -lt $EXPECTED_ARGS ]
-then
-  echo "Usage: $0 <version>"
-  exit $E_BADARGS
-fi
-
 
 ROOT_FOLDER="$(cd "$(dirname "$0")"; cd ../../ ; pwd -P)"
 
@@ -46,9 +46,9 @@ sh "$ROOT_FOLDER/deploy/installer/create_zip.sh" Windows windows $VERSION
 sh "$ROOT_FOLDER/deploy/installer/create_zip.sh" Mac mac $VERSION
 sh "$ROOT_FOLDER/deploy/installer/create_zip.sh" Linux linux $VERSION
 
-aws s3 cp $ROOT_FOLDER/Testsigma-Windows-$VERSION.zip s3://opensource-staging.testsigma.com/server/$VERSION/Testsigma-Windows-$VERSION.zip --acl public-read
-aws s3 cp $ROOT_FOLDER/Testsigma-Mac-$VERSION.zip s3://opensource-staging.testsigma.com/server/$VERSION/Testsigma-Mac-$VERSION.zip --acl public-read
-aws s3 cp $ROOT_FOLDER/Testsigma-Linux-$VERSION.zip s3://opensource-staging.testsigma.com/server/$VERSION/Testsigma-Linux-$VERSION.zip --acl public-read
+aws s3 cp $ROOT_FOLDER/Testsigma-Windows-$VERSION.zip s3://hybrid-staging.testsigma.com/community/server/$VERSION/Testsigma-Windows-$VERSION.zip --acl public-read
+aws s3 cp $ROOT_FOLDER/Testsigma-Mac-$VERSION.zip s3://hybrid-staging.testsigma.com/community/server/$VERSION/Testsigma-Mac-$VERSION.zip --acl public-read
+aws s3 cp $ROOT_FOLDER/Testsigma-Linux-$VERSION.zip s3://hybrid-staging.testsigma.com/community/server/$VERSION/Testsigma-Linux-$VERSION.zip --acl public-read
 
 if [[ "$PUBLISH_TO_GIT" == "true"* ]]; then
 	gh release upload $VERSION $ROOT_FOLDER/Testsigma-Windows-$VERSION.zip --clobber

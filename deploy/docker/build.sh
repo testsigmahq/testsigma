@@ -12,6 +12,12 @@ DOCKER_VERSION=v1.1.0
 AGENT_TAG=v1.1.0
 IMAGE_NAME=server
 
+if [ $# -lt $EXPECTED_ARGS ]
+then
+  echo "Usage: $0 <version>"
+  exit $E_BADARGS
+fi
+
 while [ $# -gt 0 ]; do
   case "$1" in
     --DOCKER_VERSION=*)
@@ -31,12 +37,6 @@ while [ $# -gt 0 ]; do
   esac
   shift
 done
-
-if [ $# -lt $EXPECTED_ARGS ]
-then
-  echo "Usage: $0 <version>"
-  exit $E_BADARGS
-fi
 
 ROOT_FOLDER="$(
   cd "$(dirname "$0")" || exit

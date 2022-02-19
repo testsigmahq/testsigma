@@ -24,6 +24,7 @@
   "testgroups.details.export_as_xml": "Step Group XML Export",
   "test_step.results.element": "Element",
   "btn.common.new": "New",
+  "btn.common.add.new": "+New",
   "btn.common.create_new": "Create New",
   "btn.common.close": "Close",
   "btn.common.edit": "Edit",

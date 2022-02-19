@@ -54,6 +54,7 @@ export class TestCaseResultDetailsComponent extends BaseComponent implements OnI
   public isCaseLevelExecution: boolean = false;
   public isParallelExecution: boolean = false;
   public startSync: boolean = false;
+  public queueSizeErrorMessage: string;
 
   @ViewChild(RouterOutlet) outlet: RouterOutlet;
 
@@ -155,6 +156,10 @@ export class TestCaseResultDetailsComponent extends BaseComponent implements OnI
         });
       } else {
         this.testCaseResult = res;
+        if(this.testCaseResult?.message == 'Your Current Plan Reached Max Allowed Queue Size. Please upgrade for higher limits.'){
+          this.queueSizeErrorMessage = "Your current plan reached max allowed queue size. Please <a class= 'text-link text-decoration-none px-2' href='javascript:fcWidget.open()' style='text-decoration: none;'>" +
+            "contact support</a> to upgrade for higher limits"
+        }
         console.log("TestCaseResult", this.testCaseResult);
         this.isTestCaseFetchingCompleted = true;
         this.handleAutoRefresh();

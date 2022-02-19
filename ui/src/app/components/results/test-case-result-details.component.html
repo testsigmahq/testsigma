@@ -244,7 +244,10 @@
         <div class="empty-text" [translate]="'test_step.no_steps'"*ngIf="!testCaseResult.message"></div>
         <div class="d-flex justify-content-center empty-text text-center" [style]="{'overflow-wrap': 'break-word','word-break': 'break-word'}"
              [innerHTML]="testCaseResult?.message.length > 1000 ? testCaseResult?.message.substring(0,1000)+'...' : testCaseResult?.message"
-             *ngIf="testCaseResult?.message"></div>
+             *ngIf="testCaseResult?.message && !queueSizeErrorMessage"></div>
+        <div class="d-flex justify-content-center empty-text text-center" [style]="{'overflow-wrap': 'break-word','word-break': 'break-word'}"
+             [innerHTML]="queueSizeErrorMessage| SanitizeHtml"
+             *ngIf="testCaseResult?.message && queueSizeErrorMessage"></div>
       </div>
       <div class="d-flex ts-col-100 h-100" *ngIf="activeTab == 'steps'">
         <div

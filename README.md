@@ -1,4 +1,11 @@
-<a href="https://testsigma.com/signup?utm_source=github&utm_medium=social"><img src="http://docs.testsigma.com/images/github/testsigma-os-banner.svg" width="100%"></a>
+[![Latest release](https://img.shields.io/github/v/release/testsigmahq/testsigma)](https://github.com/testsigmahq/testsigma/releases/latest)
+[![Docs](https://img.shields.io/badge/docs-latest-brightgreen)](https://testsigma.com/docs)
+<a href="https://discord.gg/invite/5caWS7R6QX"><img src="https://img.shields.io/badge/chat-discord-brightgreen.svg?logo=discord&style=flat"></a>
+<a href="https://testsigma.com/newsletter"><img src="https://img.shields.io/badge/newsletter-subscribe-yellow.svg?style=flat"></a>
+
+
+
+<a href="https://testsigma.com/signup?utm_source=github&utm_medium=social">![testsigma-os-banner](https://docs.testsigma.com/images/github/testsigma-opensource-banner.svg)</a>
 
 <p align="center">
   <a href="https://testsigma.com/signup?utm_source=github&utm_medium=social" target="_bank">Getting started</a>
@@ -11,8 +18,6 @@
   &nbsp; &#8901; &nbsp;
   <a href="https://discord.com/invite/5caWS7R6QX" target="_bank">Discord</a>
   &nbsp; &#8901; &nbsp;
-  <a href="https://testsigma.com/docs/product-updates/roadmap/?utm_source=github&utm_medium=social" target="_bank">Roadmap</a>
-  &nbsp; &#8901; &nbsp;
   <a href="https://www.youtube.com/testsigma" target="_bank">YouTube</a>
 </p>
 &emsp;
@@ -20,8 +25,7 @@
 &emsp;
 
 ## Overview
-  Rapidly automate web, mobile app, and API tests in plain English,
-  on a single, extensible platform that works out of the box. 
+Testsigma is an open-source, extensible test automation platform that works out of the box. Rapidly(5X faster) automate web, mobile app, and API tests in plain English. 
   
   - Eliminate complex setups, multiple tools and frameworks.
   - Let everyone write tests 5X faster using plain English. 

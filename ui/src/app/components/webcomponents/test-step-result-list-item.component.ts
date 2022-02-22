@@ -71,7 +71,7 @@ import {NaturalTextActionsService} from "../../services/natural-text-actions.ser
               *ngIf="testStepResult?.canShowConditionalStepActions && !testStepResult?.isConditionalWhileLoop">
               <i *ngIf="testStepResult?.isConditionalIf" class="fa-conditional-if mr-5 text-nowrap text-warning"></i>
                 <span class="text-warning"
-                      [translate]="testStepResult?.testStep?.isWhileLoop ? 'step.while.label' : 'step.condition_type.'+testStepResult?.testStep?.conditionType"></span>
+                      [translate]="testStepResult?.testStep?.isWhileLoop ? 'step.while.label' : 'step.condition_type.'+testStepResult?.stepDetail?.conditionType"></span>
           </span>
             <span
               *ngIf="testStepResult.isForLoop">

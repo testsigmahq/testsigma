@@ -25,6 +25,7 @@ CREATE TABLE `test_cases`
   `created_date`           DATETIME            DEFAULT CURRENT_TIMESTAMP,
   `updated_date`           DATETIME            DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
+  CONSTRAINT `index_test_cases_on_name` UNIQUE (`name`,`workspace_version_id`),
   KEY `index_on_test_cases_priority_id` (`priority_id`),
   KEY `index_on_test_cases_type` (`type`),
   KEY `index_on_test_cases_workspace_version_id` (`workspace_version_id`),

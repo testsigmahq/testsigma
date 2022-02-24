@@ -169,17 +169,19 @@ public class ElementsController {
     List<TestStep> testSteps = testStepService.findAllByTestCaseId(id);
     List<String> names = new ArrayList<>();
     for (TestStep testStep : testSteps) {
-      if (testStep.getElement() != null) {
-        if (!names.contains(testStep.getElement()))
-          names.add(testStep.getElement());
-      }
-      if (testStep.getFromElement() != null) {
-        if (!names.contains(testStep.getFromElement()))
-          names.add(testStep.getFromElement());
-      }
-      if (testStep.getToElement() != null) {
-        if (!names.contains(testStep.getToElement()))
-          names.add(testStep.getToElement());
+      if (!testStep.getDisabled()){
+        if (testStep.getElement() != null) {
+          if (!names.contains(testStep.getElement()))
+            names.add(testStep.getElement());
+        }
+        if (testStep.getFromElement() != null) {
+          if (!names.contains(testStep.getFromElement()))
+            names.add(testStep.getFromElement());
+        }
+        if (testStep.getToElement() != null) {
+          if (!names.contains(testStep.getToElement()))
+            names.add(testStep.getToElement());
+        }
       }
     }
     List<SearchCriteria> params = new ArrayList<>();

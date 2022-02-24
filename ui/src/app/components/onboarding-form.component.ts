@@ -55,7 +55,7 @@ export class OnboardingFormComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.updateForm = new FormGroup({
-      'firstName': new FormControl(null,  Validators.required),
+      'firstName': new FormControl(null,  [Validators.required,Validators.min(4)]),
       'lastName':new FormControl(null, Validators.required),
       'email':new FormControl(null, [Validators.email]),
       'username': new FormControl(null, Validators.required),
@@ -174,6 +174,10 @@ export class OnboardingFormComponent extends BaseComponent implements OnInit {
       this.onboardingGuard.server = null;
       this.router.navigate(['dashboard'],{queryParams: {showTelemetryNotification: true}});
     }, err => {this.showNotification(NotificationType.Error, "Problem while logging in");})
+  }
+
+  requiredFieldsNotFilled(){
+    return !this.updateForm.valid;
   }
 
 }

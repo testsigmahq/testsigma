@@ -11,6 +11,7 @@ package com.testsigma.service;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.testsigma.automator.actions.constants.ErrorCodes;
 import com.testsigma.automator.entity.TestDeviceEntity;
 import com.testsigma.config.ApplicationConfig;
 import com.testsigma.config.StorageServiceFactory;
@@ -18,6 +19,7 @@ import com.testsigma.constants.AutomatorMessages;
 import com.testsigma.constants.MessageConstants;
 import com.testsigma.constants.NaturalTextActionConstants;
 import com.testsigma.dto.*;
+import com.testsigma.exception.ExceptionErrorCodes;
 import com.testsigma.exception.IntegrationNotFoundException;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaException;
@@ -665,7 +667,7 @@ public class AgentExecutionService {
     settings.setExecutionName(testPlan.getName());
     settings.setEnvironmentParamId(this.testPlan.getEnvironmentId());
     settings.setEnvRunId(testDeviceResult.getId());
-    setTestLabDetails(testDevice, settings);
+    setTestLabDetails(testDevice, settings,environmentEntityDTO);
     environmentEntityDTO.setEnvSettings(this.testPlanMapper.mapToDTO(settings));
     Agent agent = null;
     if (testDevice.getAgentId() != null)
@@ -963,12 +965,12 @@ public class AgentExecutionService {
   private void afterStop() {
   }
 
-  protected void setTestLabDetails(TestDevice testDevice, TestDeviceSettings settings)
+  protected void setTestLabDetails(TestDevice testDevice, TestDeviceSettings settings,EnvironmentEntityDTO environmentEntityDTO)
     throws Exception {
     if (this.testPlan.getWorkspaceVersion().getWorkspace().getWorkspaceType().isRest())
       return;
     TestPlanLabType exeLabType = this.getTestPlan().getTestPlanLabType();
-    setPlatformDetails(testDevice, settings, exeLabType, testDevice.getAgent());
+    setPlatformDetails(testDevice, settings, exeLabType, testDevice.getAgent(), environmentEntityDTO);
   }
 
   public void loadTestCase(String testDataSetName, TestCaseEntityDTO testCaseEntityDTO, AbstractTestPlan testPlan,
@@ -1160,12 +1162,12 @@ public class AgentExecutionService {
   }
 
   private void setPlatformDetails(TestDevice testDevice, TestDeviceSettings settings,
-                                  TestPlanLabType testPlanLabType, Agent agent) throws TestsigmaException {
+                                  TestPlanLabType testPlanLabType, Agent agent,EnvironmentEntityDTO environmentEntityDTO) throws TestsigmaException {
 
     populatePlatformOsDetails(testDevice, settings, testPlanLabType, agent);
 
     if (this.getAppType().isWeb()) {
-      populatePlatformBrowserDetails(testDevice, settings, testPlanLabType, agent);
+      populatePlatformBrowserDetails(testDevice, settings, testPlanLabType, agent,environmentEntityDTO);
     }
   }
 
@@ -1197,7 +1199,7 @@ public class AgentExecutionService {
   }
 
   protected void populatePlatformBrowserDetails(TestDevice testDevice, TestDeviceSettings settings,
-                                                TestPlanLabType testPlanLabType, Agent agent)
+                                                TestPlanLabType testPlanLabType, Agent agent,EnvironmentEntityDTO environmentEntityDTO)
     throws TestsigmaException {
 
 
@@ -1212,7 +1214,7 @@ public class AgentExecutionService {
       platformBrowserVersion = platformsService.getPlatformBrowserVersion(testDevice.getPlatformBrowserVersionId(), testPlanLabType);
     }
     if (testPlanLabType.isHybrid()) {
-      matchHybridBrowserVersion(agent, platformBrowserVersion, testDevice, platformBrowserVersion.getName());
+      matchHybridBrowserVersion(agent, platformBrowserVersion, testDevice, platformBrowserVersion.getName(),environmentEntityDTO);
     }
     settings.setBrowser(platformBrowserVersion.getName().name());
 
@@ -1228,7 +1230,7 @@ public class AgentExecutionService {
   }
 
   private void matchHybridBrowserVersion(Agent agent1, PlatformBrowserVersion platformBrowserVersion,
-                                         TestDevice testDevice, Browsers browser)
+                                         TestDevice testDevice, Browsers browser,EnvironmentEntityDTO environmentEntityDTO)
     throws TestsigmaException {
     if ((agent1 != null) && (platformBrowserVersion != null)) {
       Agent agent = agentService.find(agent1.getId());
@@ -1237,7 +1239,8 @@ public class AgentExecutionService {
         if ((browser == aBrowser) &&
           (Boolean.TRUE == testDevice.getMatchBrowserVersion()) &&
           !platformBrowserVersion.getVersion().equals("" + agentBrowser.getMajorVersion())) {
-          throw new TestsigmaException("Local agent browser version[" + agentBrowser.getMajorVersion()
+          environmentEntityDTO.setErrorCode(ExceptionErrorCodes.BROWSER_VERSION_NOT_AVAILABLE);
+          log.info("Local agent browser version[" + agentBrowser.getMajorVersion()
             + "] doesn't match selected browser version[" + platformBrowserVersion.getVersion() + "]");
         }
       }

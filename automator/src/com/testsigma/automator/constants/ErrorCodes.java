@@ -36,6 +36,7 @@ public class ErrorCodes {
   public static Integer ERROR_TEST_DATA_SET_FAILURE = 102;
   public static Integer ERROR_TEST_DATA_FAILURE = 103;
   public static Integer ERROR_ELEMENT_FAILURE = 104;
+  public static Integer BROWSER_VERSION_NOT_AVAILABLE = 109;
 
   public static Integer TEST_CASE_DETAILS_FETCH_FAILED = 200;
 

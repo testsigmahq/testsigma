@@ -72,7 +72,7 @@ public interface WorkspaceVersionRepository extends JpaSpecificationExecutor<Wor
   void updateStepPreRequirementReference(@Param("newVersionId") Long newVersionId);
 
   @Modifying
-  @Query(value = "insert into test_suites(created_date, workspace_version_id, name, pre_requisite, description, copied_from)  select now(), :newVersionId, name, pre_requisite, description,  id from test_suites where workspace_version_id=:oldVersionId", nativeQuery = true)
+  @Query(value = "insert into test_suites(created_date, workspace_version_id, name, pre_requisite, description, copied_from , entity_type)  select now(), :newVersionId, name, pre_requisite, description,  id ,entity_type from test_suites where workspace_version_id=:oldVersionId", nativeQuery = true)
   void copyTestSuites(@Param("newVersionId") Long newVersionId, @Param("oldVersionId") Long oldVersionId);
 
   @Modifying
@@ -88,7 +88,7 @@ public interface WorkspaceVersionRepository extends JpaSpecificationExecutor<Wor
   void copyGroupTestcaseMappings(@Param("newVersionId") Long newVersionId, @Param("oldVersionId") Long oldVersionId);
 
   @Modifying
-  @Query(value = "insert into test_plans(created_date, workspace_version_id, description, element_time_out, environment_id, name, page_time_out, screenshot, recovery_action, on_aborted_action, re_run_on_failure, on_suite_pre_requisite_failed , on_testcase_pre_requisite_failed , on_step_pre_requisite_failed ,test_lab_type, test_plan_type, match_browser_version, copied_from) select now(), :newVersionId, description, element_time_out, environment_id, name, page_time_out, screenshot, recovery_action,on_aborted_action, re_run_on_failure, on_suite_pre_requisite_failed , on_testcase_pre_requisite_failed, on_step_pre_requisite_failed, test_lab_type, test_plan_type, match_browser_version, id from test_plans where workspace_version_id=:oldVersionId", nativeQuery = true)
+  @Query(value = "insert into test_plans(created_date, workspace_version_id, description, element_time_out, environment_id, name, page_time_out, screenshot, recovery_action, on_aborted_action, re_run_on_failure, on_suite_pre_requisite_failed , on_testcase_pre_requisite_failed , on_step_pre_requisite_failed ,test_lab_type, test_plan_type, match_browser_version, copied_from,entity_type) select now(), :newVersionId, description, element_time_out, environment_id, name, page_time_out, screenshot, recovery_action,on_aborted_action, re_run_on_failure, on_suite_pre_requisite_failed , on_testcase_pre_requisite_failed, on_step_pre_requisite_failed, test_lab_type, test_plan_type, match_browser_version, id ,entity_type from test_plans where workspace_version_id=:oldVersionId", nativeQuery = true)
   void copyTestPlansFromVersion(@Param("newVersionId") Long newVersionId, @Param("oldVersionId") Long oldVersionId);
 
   @Modifying

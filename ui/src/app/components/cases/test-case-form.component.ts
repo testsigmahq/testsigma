@@ -121,7 +121,7 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
   addValidations() {
     this.testCaseForm = new FormGroup({
       name: new FormControl(this.testCase.name, [
-        Validators.required, Validators.maxLength(125)
+        Validators.required, Validators.maxLength(125) , Validators.minLength(4)
       ]),
       description: new FormControl(this.testCase.description, []),
       priority: new FormControl(this.testCase.priorityId, []),

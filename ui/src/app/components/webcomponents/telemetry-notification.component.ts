@@ -53,9 +53,8 @@ export class TelemetryNotificationComponent implements OnInit {
   }
 
   routeToTelemetry() {
-    this.router.navigate(['settings', 'telemetry']);
     this.dialogRef.close();
-
+    this.dialogRef.afterClosed().subscribe(res =>     this.router.navigate(['settings', 'telemetry']));
   }
 
   closeAndRouteToDashboard() {

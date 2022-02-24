@@ -179,7 +179,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
   addValidations() {
     this.elementForm = new FormGroup({
       created_type: new FormControl(this.element.createdType),
-      name: new FormControl(this.element.name, [Validators.required]),
+      name: new FormControl(this.element.name, [Validators.required, Validators.minLength(4)]),
       definition: new FormControl(this.element.locatorValue),
       locatorType: new FormControl(this.element.locatorType),
       screen_name: new FormControl(this.element.screenNameObj.name, [Validators.required]),

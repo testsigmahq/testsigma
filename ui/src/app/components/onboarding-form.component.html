@@ -41,7 +41,10 @@
                     </label>
                     <input type="text"
                            formControlName="firstName"
-                           id="firstName" class="form-control ">
+                           id="firstName" class="form-control" minlength="4">
+                    <div class="error left"
+                         *ngIf="(updateForm?.get('firstName')?.value?.length > 0) && updateForm?.get('firstName')?.value?.length < 4 && updateForm?.get('firstName')?.touched"
+                         [textContent]="'form.validation.common.min_length' | translate: {FieldName:'First Name' , min:'4'}"></div>
                   </div> <!--firstName-->
                   <div class="ts-col-50 pl-20" >
                     <label for="lastName" class="control-label required">
@@ -106,6 +109,7 @@
                 </div>
                 <div class="d-flex justify-content-end pt-10">
                   <button
+                    [disabled]="requiredFieldsNotFilled()"
                     type="submit" (click)="verifyOrNavigate()"
                     appAsyncBtn
                     [isLoading]="isSaving"

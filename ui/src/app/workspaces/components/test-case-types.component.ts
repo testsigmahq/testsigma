@@ -11,6 +11,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import {TestCaseType} from "../../models/test-case-type.model";
 import {TestCaseTypesService} from "../../services/test-case-types.service";
+import {LinkedEntitiesModalComponent} from "../../shared/components/webcomponents/linked-entities-modal.component";
+import {TestCaseService} from "../../services/test-case.service";
 
 @Component({
   selector: 'app-test-case-types',
@@ -34,6 +36,7 @@ export class TestCaseTypesComponent extends BaseComponent implements OnInit {
     public toastrService: ToastrService,
     private matDialog: MatDialog,
     private testCaseTypesService: TestCaseTypesService,
+    private testCaseService: TestCaseService,
     private route: ActivatedRoute) {
     super(authGuard, notificationsService, translate, toastrService);
   }
@@ -69,6 +72,38 @@ export class TestCaseTypesComponent extends BaseComponent implements OnInit {
   }
 
   openDeleteDialog(id) {
+    let testCases: InfiniteScrollableDataSource;
+    testCases = new InfiniteScrollableDataSource(this.testCaseService, "type:" + id , "name,asc" );
+    waitTillRequestResponds();
+    let _this = this;
+
+    function waitTillRequestResponds() {
+      if (testCases.isFetching)
+        setTimeout(() => waitTillRequestResponds(), 100);
+      else {
+        if (testCases.isEmpty)
+          _this.deleteConfirmation(id);
+        else
+          _this.openLinkedTestCasesDialog(testCases);
+      }
+    }
+  }
+
+  private openLinkedTestCasesDialog(list) {
+    this.translate.get("test_case_type.linked_with_test_cases").subscribe((res) => {
+      this.matDialog.open(LinkedEntitiesModalComponent, {
+        width: '568px',
+        height: 'auto',
+        data: {
+          description: res,
+          linkedEntityList: list,
+        },
+        panelClass: ['mat-dialog', 'rds-none']
+      });
+    });
+  }
+
+  deleteConfirmation(id){
     this.translate.get("message.common.confirmation.default").subscribe((res) => {
       const dialogRef = this.matDialog.open(ConfirmationModalComponent, {
         width: '450px',

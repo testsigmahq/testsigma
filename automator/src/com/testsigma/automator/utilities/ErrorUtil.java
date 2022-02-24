@@ -10,6 +10,7 @@ public class ErrorUtil {
   public static final String EXCEPTION_REST_AUTOMATION = "To execute Rest API Tests, please upgrade to a higher plan";
   public static final String EXCEPTION_MOBILE_AUTOMATION = "To execute Mobile Application Tests, please upgrade to a higher plan";
   public static final String UNKOWN_ERROR = "Unexpected error occurred";
+  public static final String BROWSER_VERSION_NOT_AVILABLE = "Selected Browser Version is not available in your Local.";
 
   public void checkError(Integer error, String message) throws AutomatorException {
 
@@ -33,6 +34,9 @@ public class ErrorUtil {
       throw new AutomatorException(error, message);
     } else if (ErrorCodes.ERROR_ELEMENT_FAILURE.equals(error)) {
       throw new AutomatorException(error, message);
+    } else if (ErrorCodes.BROWSER_VERSION_NOT_AVAILABLE.equals(error)) {
+      throw new AutomatorException(ErrorCodes.BROWSER_VERSION_NOT_AVAILABLE,
+              BROWSER_VERSION_NOT_AVILABLE);
     } else {
       message = (message != null) ? message : UNKOWN_ERROR;
       throw new AutomatorException(error, message);

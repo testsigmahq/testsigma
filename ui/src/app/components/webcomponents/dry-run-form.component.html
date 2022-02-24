@@ -73,7 +73,7 @@
       *ngIf="emptyElements.length>0">
       <div class="mx-auto w-fit-content d-flex align-items-center">
         <i class="fa-warning fz-20 pr-8"></i>
-        <span [innerHTML]="'ad_hoc.empty_elements'| translate:{ elementNames:emptyElements.join(', ') }"></span>
+        <span [innerHTML]="'ad_hoc.empty_elements'| translate:{ fieldNames:emptyElements.join(', ') }"></span>
       </div>
     </div>
     <div class="theme-warning text-danger border-rds-4 px-10 py-5 fz-12 mt-2 mb-40 text-center"

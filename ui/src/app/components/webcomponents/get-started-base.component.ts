@@ -35,7 +35,7 @@ export class GetStartedBaseComponent extends BaseComponent implements OnInit {
           titleKey: "get_started.overview",
           source: "https://s3.amazonaws.com/assets.testsigma.com/videos/get-started/web/overview.mp4",
           descriptionKey: "get_started.overview_description",
-          articleLink: "https://testsigma.com/docs/test-cases/create-steps-recorder/web-apps/",
+          articleLink: "https://testsigma.com/docs/test-cases/create-steps-recorder/web-apps/overview/",
           countKey: "testCasesCount",
           navigateToTry: "cases"
         },
@@ -43,7 +43,7 @@ export class GetStartedBaseComponent extends BaseComponent implements OnInit {
           titleKey: "get_started.create_automated_test",
           source: "https://s3.amazonaws.com/assets.testsigma.com/videos/get-started/web/create-testcase.mp4",
           descriptionKey: "get_started.create_automated_test_description",
-          articleLink: "https://testsigma.com/docs/test-cases/create-steps-recorder/web-apps/",
+          articleLink: "https://testsigma.com/docs/test-cases/create-steps-recorder/web-apps/overview/",
           countKey: "testCasesCount",
           navigateToTry: "cases/create"
         },
@@ -111,7 +111,7 @@ export class GetStartedBaseComponent extends BaseComponent implements OnInit {
           titleKey: "get_started.overview",
           source: "https://s3.amazonaws.com/assets.testsigma.com/videos/get-started/mobile-web/overview.mp4",
           descriptionKey: "get_started.overview_description",
-          articleLink: "https://testsigma.com/docs/test-cases/create-steps-recorder/web-apps/",
+          articleLink: "https://testsigma.com/docs/test-cases/create-steps-recorder/web-apps/overview/",
           countKey: "testCasesCount",
           navigateToTry: "cases"
         },
@@ -119,7 +119,7 @@ export class GetStartedBaseComponent extends BaseComponent implements OnInit {
           titleKey: "get_started.create_automated_test",
           source: "https://s3.amazonaws.com/assets.testsigma.com/videos/get-started/mobile-web/create-testcase.mp4",
           descriptionKey: "get_started.create_automated_test_description",
-          articleLink: "https://testsigma.com/docs/test-cases/create-steps-recorder/web-apps/",
+          articleLink: "https://testsigma.com/docs/test-cases/create-steps-recorder/web-apps/overview/",
           countKey: "testCasesCount",
           navigateToTry: "cases/create"
         },

@@ -54,6 +54,7 @@ public interface TestCaseRepository extends PagingAndSortingRepository<TestCase,
   @Query("UPDATE TestCase tc SET tc.deleted = true WHERE tc.id in :ids")
   Integer markAsDelete(@Param("ids") List<Long> ids);
 
+  boolean existsTestCaseByNameAndWorkspaceVersionId(String name,Long workspaceVersionId);
 
   void deleteAllByWorkspaceVersionId(@Param("workspaceVersionId") Long workspaceVersionId);
 

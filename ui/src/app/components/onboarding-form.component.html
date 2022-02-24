@@ -76,6 +76,9 @@
                   <input type="text"
                          formControlName="username"
                          id="username" class="form-control " >
+                  <div class="error left"
+                       *ngIf="(updateForm?.get('username')?.value?.length > 0) && updateForm?.get('username')?.value?.length < 4 && updateForm?.get('username')?.touched"
+                       [textContent]="'form.validation.common.min_length' | translate: {FieldName:'Username' , min:'4'}"></div>
                 </div>
 
                 <div class="d-flex ts-col-100 form-group pb-20">

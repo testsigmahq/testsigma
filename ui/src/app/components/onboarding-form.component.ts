@@ -58,7 +58,7 @@ export class OnboardingFormComponent extends BaseComponent implements OnInit {
       'firstName': new FormControl(null,  [Validators.required,Validators.min(4)]),
       'lastName':new FormControl(null, Validators.required),
       'email':new FormControl(null, [Validators.email]),
-      'username': new FormControl(null, Validators.required),
+      'username': new FormControl(null, [Validators.required,Validators.minLength(4)]),
       'password': new FormControl(null, Validators.required),
     })
   }

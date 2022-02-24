@@ -11,6 +11,8 @@ ALTER TABLE `test_step_results` CHANGE `kibbutz_test_data` `addon_test_data` jso
 ALTER TABLE `test_step_results` CHANGE `kibbutz_elements` `addon_elements` json NULL;
 ALTER TABLE `test_step_results` CHANGE `kibbutz_action_logs` `addon_action_logs` LONGTEXT COLLATE utf8_unicode_ci;
 
+ALTER TABLE `test_cases` ADD CONSTRAINT `index_test_cases_on_name` UNIQUE (`name`,`workspace_version_id`),
+
 UPDATE `default_data_generators`
 SET `arguments` = JSON_INSERT(
         JSON_REMOVE(arguments, '$.executionId'),

@@ -171,4 +171,10 @@ export class WorkspaceSwitcherComponent implements OnInit {
     this.onProjectSwitch.emit();
   }
 
+  stopAction($event: MouseEvent) {
+    $event.preventDefault();
+    $event.stopPropagation();
+    $event.stopImmediatePropagation();
+    return false;
+  }
 }

@@ -49,30 +49,6 @@ export class TestStepHelpExamplesComponent implements OnInit {
       this.selectToggle.close();
     }
   }
-  parsedStep(template: NaturalTextActions): String {
-    let parsedStep = template.naturalText;
-    parsedStep = this.replaceTestDataRaw(parsedStep, template.data && template.data.testData);
-    if (template.data && template.data.element || template.data.fromElement || template.data.toElement) {
-      parsedStep = this.replaceElement(parsedStep, template.data.element || template.data.fromElement || template.data.toElement);
-    }
-    if (template.data && template.data.attribute) {
-      parsedStep = this.replaceAttribute(parsedStep, template.data.attribute);
-    }
-    return parsedStep;
-  }
-
-
-  public replaceTestDataRaw(parsedStep: String, data: String): String {
-    return parsedStep.replace(new RegExp("\\${.*?}"), "<span class='action-test-data'>Test Data</span>");
-  }
-
-  public replaceElement(parsedStep: String, data: String): String {
-    return parsedStep.replace(new RegExp("#{.*?}"), "<span class='action-element'>Element</span>");
-  }
-
-  public replaceAttribute(parsedStep: String, data: String): String {
-    return parsedStep.replace(new RegExp("@{.*?}"), "<span class='action-attribute'>Attribute</span>");
-  }
 
   attachDebounceEvent() {
     if (this.searchInput && this.searchInput.nativeElement)

@@ -200,7 +200,7 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
 
   deletePermanently() {
     this.testCaseService.destroy(this.testCaseId).subscribe({ next : () => {
-      this.router.navigate(['/td', this.testCase.workspaceVersionId, 'cases', 'filter', this.userPreference?.testCaseFilterId]);
+      this.router.navigate(['/td', this.testCase.workspaceVersionId, this.testCase?.testcaseRedirection, 'filter', this.userPreference?.testCaseFilterId]);
     },
 
     error: (error) => {

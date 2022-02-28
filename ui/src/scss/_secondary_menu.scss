@@ -226,7 +226,7 @@
   width: 350px;
   z-index: 3;
   transition: all 150ms ease-in-out;
-  @extend .pl-10, .pr-20, .pb-20, .border-0, .position-absolute, .ts-form, .bg-white, .border-rds-bottom-4;
+  @extend .pr-20, .pb-20, .border-0, .position-absolute, .ts-form, .bg-white, .border-rds-bottom-4;
   .project-nav{
     list-style: none;
     background: #FAFBFC;

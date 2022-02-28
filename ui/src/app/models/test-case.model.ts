@@ -97,4 +97,8 @@ export class TestCase extends Base implements PageObject {
   deserialize(input: any): this {
     return Object.assign(this, deserialize(TestCase, input));
   }
+
+  get testcaseRedirection() {
+    return this.isStepGroup ? 'step_groups' : 'cases';
+  }
 }

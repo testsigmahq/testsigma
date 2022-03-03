@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Integrations} from "../../shared/models/integrations.model";
 import {IntegrationsService} from "../../shared/services/integrations.service";
 import {JiraIssueField} from "../../models/jira-issue-field.model";
@@ -42,7 +42,7 @@ export class JiraIssueFormComponent extends BaseComponent implements OnInit {
   public isLinkToIssue: boolean = false;
   public searchIssuesFormCtrl: FormControl = new FormControl();
   public isFetchingIssues: Boolean = false;
-  public isButtonClicked: Boolean = false;
+  @Input("isButtonClicked") isButtonClicked: Boolean;
 
   constructor(
     public authGuard: AuthenticationGuard,
@@ -56,6 +56,7 @@ export class JiraIssueFormComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log("ngOninit")
     this.applicationService.getJiraFields(this.application.id).subscribe(projects => {
       if (projects && projects[0] && projects[0].issueTypes && projects[0].issueTypes[0]) {
         this.projects = projects;
@@ -69,6 +70,10 @@ export class JiraIssueFormComponent extends BaseComponent implements OnInit {
         this.initFormControl();
       }
     });
+  }
+
+  ngOnChange(namespace :SimpleChanges) : void {
+    console.log(namespace);
   }
 
   filterMultiSelectFields() {
@@ -136,7 +141,6 @@ export class JiraIssueFormComponent extends BaseComponent implements OnInit {
       mapping.fields["summary"] = "[Automated Test Failed]"+this.testCaseResult.testCase.name;
 
     }
-    this.isButtonClicked = true;
     this.createCallBack.emit(mapping);
   }
 

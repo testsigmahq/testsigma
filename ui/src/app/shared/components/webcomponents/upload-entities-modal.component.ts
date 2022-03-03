@@ -20,7 +20,7 @@ export class UploadEntitiesModalComponent extends LinkedEntitiesModalComponent {
   openLinkedEntity(id) {
     let entityUrl;
     if(this.modalData.linkedEntityList['cachedItems'][0] instanceof TestDevice)
-      entityUrl = "/#/td/plans/"+ id +"/details";
+      entityUrl = "/ui/td/plans/"+ id +"/details";
     window.open(window.location.origin + entityUrl, "_blank");
   }
 }

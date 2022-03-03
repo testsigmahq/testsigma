@@ -24,6 +24,7 @@ export class ReportBugComponent extends BaseComponent implements OnInit {
   public showExternalApplication: String = 'JBR';
   public selectedList: String[] = [];
   public unSelectedList: String[] = [];
+  public isButtonClicked: Boolean = false;
   public appList: String[] = ['JBR', 'FBR', 'MBR', 'ABR', 'BBR', 'ZBR', 'YBR', 'BZBR', 'TBR', 'LBR'];
   public classList = {
     'JBR': 'jira-software bug-list-jira-software h-100',
@@ -169,10 +170,18 @@ export class ReportBugComponent extends BaseComponent implements OnInit {
   }
 
   create(event: TestCaseResultExternalMapping) {
+    this.isButtonClicked = true;
     this.externalMappingService.create(event).subscribe(() => {
       this.translate.get("Successfully reported bug on your favorite bug tracking system").subscribe(res => {
         this.showNotification(NotificationType.Success, res);
         this.fetchExternalMapping();
+        this.isButtonClicked = false;
+      })
+    },error => {
+      this.translate.get("Failed to report the bug.").subscribe(res => {
+        this.showAPIError(error,res);
+        console.log("xyz"+this.isButtonClicked);
+        this.isButtonClicked = false;
       })
     })
   }

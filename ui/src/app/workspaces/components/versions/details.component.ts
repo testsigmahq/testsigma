@@ -11,6 +11,8 @@ import {ConfirmationModalComponent} from "../../../shared/components/webcomponen
 import {MatDialog} from '@angular/material/dialog';
 import {TestCaseService} from "../../../services/test-case.service";
 import {CloneVersionComponent} from "../webcomponents/clone-version.component";
+import {UserPreference} from "../../../models/user-preference.model";
+import {UserPreferenceService} from "../../../services/user-preference.service";
 
 @Component({
   selector: 'app-version-details',
@@ -25,6 +27,7 @@ export class DetailsComponent extends BaseComponent implements OnInit {
   private versionCount: number;
   public showComments = false;
   public isDemo:Boolean = false;
+  public userPreference: UserPreference;
 
   constructor(
     private dialog: MatDialog,
@@ -35,11 +38,15 @@ export class DetailsComponent extends BaseComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private versionService: WorkspaceVersionService,
+    private userPreferenceService: UserPreferenceService,
     private testCaseService: TestCaseService) {
     super(authGuard, notificationsService, translate, toastrService);
   }
 
   ngOnInit(): void {
+    this.userPreferenceService.show().subscribe(res => {
+      this.userPreference = res;
+    });
     this.route.parent.params.subscribe(res => {
       this.refreshComments();
       this.versionId = res.versionId || this.fullScreenDetails;
@@ -96,8 +103,13 @@ export class DetailsComponent extends BaseComponent implements OnInit {
         this.router.navigate(url);
       },
       _err => {
-        this.translate.get("message.common.deleted.failure", {FieldName: 'Version'})
-          .subscribe(res => this.showNotification(NotificationType.Error, res))
+        if (_err.status == 451){
+          this.translate.get("message.common.deleted.failure", {FieldName: 'Version'})
+            .subscribe(res => this.showNotification(NotificationType.Error, res))
+        }else {
+          this.translate.get("message.common.deleted.failure", {FieldName: 'Version'})
+            .subscribe(res => this.showNotification(NotificationType.Error, res))
+        }
       }
     );
   }
@@ -106,8 +118,19 @@ export class DetailsComponent extends BaseComponent implements OnInit {
     this.versionService.findAll("workspaceId:" + this.version.workspaceId)
       .subscribe(res => {
         this.versionCount = res.content.length;
+        if (this.versionCount > 1)
+          this.go(res.content,id);
         this.deleteVersion(id)
       });
+  }
+
+  go(version: WorkspaceVersion[],versionId) {
+    let undeletedVersion = version[0].id != versionId ? version[0] : version[1];
+    this.userPreference.selectedVersion = undeletedVersion;
+    this.userPreference.selectedWorkspace = undeletedVersion.workspace;
+    this.userPreferenceService.save(this.userPreference).subscribe(res => {
+      this.userPreference = res;
+    });
   }
 
   clone() {

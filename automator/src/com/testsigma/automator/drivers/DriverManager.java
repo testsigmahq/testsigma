@@ -22,6 +22,7 @@ import java.time.Instant;
 @Data
 public abstract class DriverManager {
   public static final String MSG_LAB_MINUTES_EXCEEDED = "Allowed test execution duration on cloud devices/machines exceeded.";
+  public static final String MSG_NO_PARALLEL_RUN = "Parallel runs are not allowed in Open Source, Please Change to Community edition for parallel Execution or Contact Support Team.";
   public static final String MSG_OS_NOT_SUPPORTED = "Selected device OS and version combination is no longer supported. Please edit the device and choose a supported OS and Version.";
   public static final String MSG_BROWSER_NOT_SUPPORTED = "Selected browser and version combination is no longer supported. Please edit the device and choose a supported browser and Version.";
 
@@ -204,6 +205,8 @@ public abstract class DriverManager {
           parsedErrorMessage = MSG_BROWSER_NOT_SUPPORTED;
         }else if(errorMessage.contains(SessionErrorType.LAB_MINUTES_EXCEEDED.name())){
           parsedErrorMessage = MSG_LAB_MINUTES_EXCEEDED;
+        }else if(errorMessage.contains(SessionErrorType.NO_PARALLEL_RUN.name())){
+          parsedErrorMessage = MSG_NO_PARALLEL_RUN;
         }
       }
     } catch (Exception e) {

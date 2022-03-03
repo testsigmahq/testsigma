@@ -37,7 +37,7 @@ export class ScheduleFormButtonComponent implements OnInit {
       height: "100vh",
       width: '600px',
       position: {top: '0px', right: '0px'},
-      data: {testPlan: this.testPlan, scheduledPlan: null},
+      data: {execution: this.testPlan, scheduledPlan: null},
       panelClass: ['mat-dialog', 'rds-none']
     }).afterClosed().subscribe(res=> {
       if(res)

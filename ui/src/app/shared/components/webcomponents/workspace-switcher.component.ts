@@ -121,8 +121,7 @@ export class WorkspaceSwitcherComponent implements OnInit {
       } else {
         this.router.navigate(["/" + url[0], this.userPreference.versionId, url[1]]);
       }
-      this.show = false;
-      this.sendCloseDialog();
+      this.closeToggleModal();
     });
   }
 
@@ -145,6 +144,12 @@ export class WorkspaceSwitcherComponent implements OnInit {
   toggleModal() {
     this.trigger.openMenu();
     this.toggle();
+  }
+
+  closeToggleModal(){
+    this.show = false;
+    this.trigger.closeMenu();
+    this.sendCloseDialog();
   }
 
   menuHide() {

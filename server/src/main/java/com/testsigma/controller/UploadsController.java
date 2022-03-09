@@ -15,6 +15,7 @@ import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaException;
 import com.testsigma.mapper.UploadMapper;
 import com.testsigma.model.Upload;
+import com.testsigma.service.TestDeviceService;
 import com.testsigma.service.UploadService;
 import com.testsigma.specification.UploadSpecificationsBuilder;
 import com.testsigma.web.request.UploadRequest;
@@ -40,6 +41,7 @@ import java.util.List;
 public class UploadsController {
 
   private final UploadService uploadService;
+  private final TestDeviceService testDeviceService;
   private final UploadMapper uploadMapper;
 
   @GetMapping
@@ -74,6 +76,7 @@ public class UploadsController {
   @DeleteMapping(path = "/{id}")
   @ResponseStatus(HttpStatus.OK)
   public void delete(@PathVariable("id") Long id) throws ResourceNotFoundException {
+    this.testDeviceService.resentAppUploadIdToNull(id);
     uploadService.delete(uploadService.find(id));
   }
 

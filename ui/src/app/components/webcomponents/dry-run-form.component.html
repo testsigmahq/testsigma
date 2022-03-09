@@ -80,7 +80,7 @@
          *ngIf="invalidUrls.length>0 && !isHybrid">
       <div class="mx-auto w-fit-content d-flex align-items-center">
         <i class="fa-warning fz-20 pl-15 pr-8"></i>
-        <span class="p-10 text-left" [innerHTML]="'ad_hoc.invalid_url'| translate:{ elementNames:invalidUrls.join(', ') }"></span>
+        <span class="p-10 text-left" [innerHTML]="'ad_hoc.invalid_url'| translate:{ fieldNames:invalidUrls.join(', ') }"></span>
       </div>
     </div>
     <app-dry-run-rest-form

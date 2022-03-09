@@ -91,9 +91,26 @@ public interface TestPlanResultRepository extends JpaRepository<TestPlanResult, 
 
 
   @Query(value = "SELECT er FROM TestPlanResult er JOIN er.testDeviceResults envr ON er.id = envr.testPlanResultId " +
-    "JOIN envr.testDevice ee ON ee.id = envr.testDeviceId " +
-    "JOIN er.testPlan exe ON exe.id = er.testPlanId " +
-    "WHERE envr.status IN (:statuses) GROUP BY er.id")
-  List<TestPlanResult> countOngoingEnvironmentResultsGroupByExecutionResult(
-    @Param(value = "statuses") List<StatusConstant> statuses);
+          "JOIN envr.testDevice ee ON ee.id = envr.testDeviceId " +
+          "JOIN er.testPlan exe ON exe.id = er.testPlanId " +
+          "WHERE envr.status IN (:statuses) GROUP BY er.id")
+  List<TestPlanResult> countOngoingEnvironmentResultsGroupByTestPlanResult(
+          @Param(value = "statuses") List<StatusConstant> statuses);
+
+  @Query("SELECT  er.id AS executionResultId, COUNT(tsr.id) AS resultCount " +
+          "FROM TestPlanResult er JOIN er.testDeviceResults AS envr ON er.id = envr.testPlanResultId " +
+          "JOIN er.testPlan exe ON exe.id = er.testPlanId " +
+          "JOIN envr.testDevice ee ON ee.id = envr.testDeviceId " +
+          "JOIN envr.testSuiteResults tsr ON envr.id = tsr.environmentResultId " +
+          "WHERE tsr.status IN (:statuses) GROUP BY er.id")
+  List<TestPlanResultAndCount> countOngoingParallelTestSuiteResultsGroupByTestPlanResult(
+          @Param(value = "statuses") List<StatusConstant> statuses);
+
+  @Query("SELECT  er.id AS testPlanResultId, COUNT(envr.id) AS resultCount " +
+          "FROM TestPlanResult er JOIN er.testDeviceResults AS envr ON er.id = envr.testPlanResultId " +
+          "JOIN er.testPlan exe ON exe.id = er.testPlanId " +
+          "JOIN envr.testDevice ee ON ee.id = envr.testDeviceId " +
+          "WHERE envr.status IN (:statuses) GROUP BY er.id")
+  List<TestPlanResultAndCount> countOngoingNonParallelEnvironmentResultsGroupByTestPlanResult(
+          @Param(value = "statuses") List<StatusConstant> statuses);
 }

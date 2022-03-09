@@ -90,7 +90,7 @@ public class NavigateToAction extends ElementAction {
         String errorMsg = "The requested Web Page/Resource <b>\"%s\"</b> took too long to respond and is not reachable currently. " +
           "If you are trying to test a local Application and this is a local IP/Address, please use 'Hybrid Execution' for running the Test" +
           ".<br><br>For more information, please refer - <a class=\"text-link\" " +
-          "href=\"https://testsigma.com/docs/faqs/web/why-cloud-devices-cannot-access-local-apps/\"" +
+          "href=\"https://testsigma.com/docs/faqs/web-apps/why-cloud-devices-cannot-access-local-apps/\"" +
           "target=\"_blank\">Why Cloud Test Environments can't access Locally hosted Applications?</a>.";
         setErrorCode(ErrorCodes.HTTP_SOCKET_EXCEPTION);
         setErrorMessage(String.format(errorMsg, getTestData()));
@@ -99,7 +99,7 @@ public class NavigateToAction extends ElementAction {
         String errorMsg = "The requested Web Page/Resource <b>\"%s\"</b> not respond and is not reachable currently. " +
           "If you are trying to test a local Application and this is a local IP/Address, please use 'Hybrid Execution' for running the Test" +
           ".<br><br>For more information, please refer - <a class=\"text-link\" " +
-          "href=\"https://testsigma.com/docs/faqs/web/why-cloud-devices-cannot-access-local-apps/\"" +
+          "href=\"https://testsigma.com/docs/faqs/web-apps/why-cloud-devices-cannot-access-local-apps/\"" +
           "target=\"_blank\">Why Cloud Test Environments can't access Locally hosted Applications?</a>.";
         setErrorMessage(String.format(errorMsg, getTestData(), e.getMessage()));
       } catch (IOException ioe) {

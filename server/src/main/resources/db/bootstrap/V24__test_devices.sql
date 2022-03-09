@@ -9,7 +9,7 @@ CREATE TABLE `test_devices`
   `browser`                       VARCHAR(100)          DEFAULT NULL,
   `platform_device_id`            BIGINT(20)            DEFAULT NULL,
   `udid`                          VARCHAR(255)          DEFAULT NULL,
-  `app_upload_id`                 VARCHAR(255)          DEFAULT NULL,
+  `app_upload_id`                 BIGINT(20)            DEFAULT NULL,
   `app_package`                   VARCHAR(255)          DEFAULT NULL,
   `app_activity`                  VARCHAR(255)          DEFAULT NULL,
   `app_url`                       VARCHAR(255)          DEFAULT NULL,
@@ -27,7 +27,9 @@ CREATE TABLE `test_devices`
   `updated_date`                  DATETIME              DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `index_test_devices_on_test_plan_id` (`test_plan_id`),
-  CONSTRAINT `fk_test_plan_id_in_test_devices_to_test_plans` FOREIGN KEY (`test_plan_id`) REFERENCES `test_plans` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+  KEY `index_test_devices_on_app_upload_id` (`app_upload_id`),
+  CONSTRAINT `fk_test_plan_id_in_test_devices_to_test_plans` FOREIGN KEY (`test_plan_id`) REFERENCES `test_plans` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `fk_app_upload_id_in_test_devices_to_uploads` FOREIGN KEY (`app_upload_id`) REFERENCES `uploads` (`id`) ON DELETE RESTRICT ON UPDATE NO ACTION
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 59
   DEFAULT CHARSET = utf8

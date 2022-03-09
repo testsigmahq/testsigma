@@ -109,10 +109,45 @@ public class TestPlanResultsController {
     List<TestPlanResult> ongoingTestPlans = testPlanResultService
       .countOngoingEnvironmentResultsGroupByExecutionResult();
 
+    List<TestPlanResultAndCount> ongoingNonParallelEnvironmentResultCounts = testPlanResultService
+            .countOngoingNonParallelEnvironmentResultsGroupByTestPlanResult();
+    List<TestPlanResultAndCount> ongoingParallelTestSuiteResultCounts = testPlanResultService
+            .countOngoingParallelTestSuiteResultsGroupByTestPlanResult();
+
+    List<TestPlanResultAndCount> queuedNonParallelEnvironmentResultCounts = testPlanResultService
+            .countQueuedNonParallelEnvironmentResultsGroupByTestPlanResult();
+    List<TestPlanResultAndCount> queuedParallelTestSuiteResultCounts = testPlanResultService
+            .countQueuedParallelTestSuiteResultsGroupByTestPlanResult();    
+
     Map<Long, TestPlanResult> testPlanResultMap = new HashMap<>();
     for (TestPlanResult er : ongoingTestPlans) {
       testPlanResultMap.put(er.getId(), er);
     }
+
+    for (TestPlanResultAndCount ec : ongoingNonParallelEnvironmentResultCounts) {
+      TestPlanResult er = testPlanResultMap.get(ec.getTestPlanResultId());
+      if (er != null)
+        er.setTotalRunningCount(er.getTotalRunningCount() + ec.getResultCount());
+    }
+
+    for (TestPlanResultAndCount tc : ongoingParallelTestSuiteResultCounts) {
+      TestPlanResult er = testPlanResultMap.get(tc.getTestPlanResultId());
+      if (er != null)
+        er.setTotalRunningCount(er.getTotalRunningCount() + tc.getResultCount());
+    }
+
+    for (TestPlanResultAndCount ec : queuedNonParallelEnvironmentResultCounts) {
+      TestPlanResult er = testPlanResultMap.get(ec.getTestPlanResultId());
+      if (er != null)
+        er.setTotalQueuedCount(er.getTotalQueuedCount() + ec.getResultCount());
+    }
+
+    for (TestPlanResultAndCount tc : queuedParallelTestSuiteResultCounts) {
+      TestPlanResult er = testPlanResultMap.get(tc.getTestPlanResultId());
+      if (er != null)
+        er.setTotalQueuedCount(er.getTotalQueuedCount() + tc.getResultCount());
+    }
+
 
     return new PageImpl<>(testPlanResultMapper.map(ongoingTestPlans));
   }

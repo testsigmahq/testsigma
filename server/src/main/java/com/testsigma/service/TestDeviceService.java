@@ -30,6 +30,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -168,5 +169,9 @@ public class TestDeviceService extends XMLExportService<TestDevice> {
     TestDeviceSpecificationsBuilder testDeviceSpecificationsBuilder = new TestDeviceSpecificationsBuilder();
     testDeviceSpecificationsBuilder.params = params;
     return testDeviceSpecificationsBuilder.build();
+  }
+
+  public void resentAppUploadIdToNull(Long appUploadId){
+    this.testDeviceRepository.resentAppUploadIdToNull(appUploadId);
   }
 }

@@ -49,7 +49,7 @@ public class WebDriverSettingsService {
     }
 
     testDevice.setAppPathType(mobileInspection.getApplicationPathType());
-    testDevice.setAppUploadId(String.valueOf(mobileInspection.getAppUploadId()));
+    testDevice.setAppUploadId(mobileInspection.getAppUploadId());
     testDevice.setAppPackage(mobileInspection.getApplicationPackage());
     testDevice.setAppActivity(mobileInspection.getAppActivity());
     testDevice.setAppBundleId(mobileInspection.getBundleId());

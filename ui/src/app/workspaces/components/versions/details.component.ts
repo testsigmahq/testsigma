@@ -104,10 +104,10 @@ export class DetailsComponent extends BaseComponent implements OnInit {
       },
       _err => {
         if (_err.status == 451){
-          this.translate.get("message.common.deleted.failure", {FieldName: 'Version'})
+          this.translate.get("message.common.deleted.failure.has_some_relation")
             .subscribe(res => this.showNotification(NotificationType.Error, res))
         }else {
-          this.translate.get("message.common.deleted.failure", {FieldName: 'Version'})
+          this.translate.get("message.common.deleted.failure.has_some_relation")
             .subscribe(res => this.showNotification(NotificationType.Error, res))
         }
       }

@@ -18,7 +18,7 @@ public class TestDeviceSettings {
   private String deviceName;
   private String appiumUrl;
   @JsonProperty("app_upload_id")
-  private String appUploadId;
+  private Long appUploadId;
   private String appPackage;
   private String appActivity;
   private String appId;

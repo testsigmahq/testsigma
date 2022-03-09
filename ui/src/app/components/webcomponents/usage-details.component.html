@@ -46,8 +46,6 @@
                   <span [textContent]="testPlanResult?.testPlan?.name"></span>
                   <span class="pl-10" [textContent]="'usage_details.runs_run_id' | translate : {id:testPlanResult?.id }"></span>
                 </div>
-                {{testPlanResult?.totalRunningCount}}++Running
-                {{testPlanResult?.totalQueuedCount}}++Queued
                 <div class="ts-col-10" [textContent]="testPlanResult?.totalRunningCount+ testPlanResult?.totalQueuedCount"></div>
                 <div class="ts-col-20">
                   <span [translate]="'usage_details.test_plan'" *ngIf="!isDry(testPlanResult)" ></span>

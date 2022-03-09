@@ -66,7 +66,7 @@ public class TestDevice {
   private String udid;
 
   @Column(name = "app_upload_id")
-  private String appUploadId;
+  private Long appUploadId;
 
   @Column(name = "app_package")
   private String appPackage;

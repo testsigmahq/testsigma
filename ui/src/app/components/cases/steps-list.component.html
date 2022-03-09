@@ -50,13 +50,13 @@
   <div class="ml-auto d-flex ts-col-45 justify-content-end">
     <button
       *ngIf="(!canDrag && !canShowBulkActions && stepLength > 1) || searchTerm"
-      (click)="canDrag=true"
+      (click)="canDrag=true;isReorder=false"
       [disabled]="searchTerm"
       class="theme-btn-clear-default ml-auto" [translate]="'testcase.details.steps.re-oder'">
     </button>
     <div *ngIf="canDrag">
       <button
-        (click)="cancelDragging()"
+        (click)="cancelDragging();isReorder=true"
         class="theme-btn-clear-default" [translate]="'btn.common.cancel'">
       </button>
       <button
@@ -64,7 +64,7 @@
         [isLoading]="saving"
         [message]="'message.common.saving'"
         appAsyncBtn
-        (click)="updateSorting()"
+        (click)="updateSorting();isReorder=true"
         class="theme-btn-primary" [textContent]="'btn.common.update' | translate">
       </button>
     </div>
@@ -154,7 +154,7 @@
     </div>
   </div>
   <div
-    *ngIf="!version?.workspace?.isRest  || !isRest || canDrag || !isHelpWidgetShowed"
+    *ngIf="(!version?.workspace?.isRest  || !isRest || canDrag || !isHelpWidgetShowed ) && !isReorder"
     [class.ts-col-30]="isHelpWidgetShowed"
     class="h-100">
     <app-test-step-help
@@ -164,7 +164,7 @@
       [testcase]="testCase"
       [version]="version"
       [stepType]="currentStepType"
-      (onClose)="isHelpWidgetShowed =false"
+      (onClose)="isHelpWidgetShowed =false;isReorder=false"
       (onSelectTemplate)="onSelectTemplate($event)"
       *ngIf="testCase"></app-test-step-help>
     <span

@@ -47,7 +47,7 @@ public class MobileCapabilities extends Capabilities {
   }
 
   private String copyUploadToLocal(TestDevice testDevice) throws TestsigmaException {
-    Upload upload = this.uploadService.find(Long.valueOf(testDevice.getAppUploadId()));
+    Upload upload = this.uploadService.find(testDevice.getAppUploadId());
     return storageServiceFactory.getStorageService().downloadToLocal(upload.getAppPath(),
       StorageAccessLevel.READ);
   }

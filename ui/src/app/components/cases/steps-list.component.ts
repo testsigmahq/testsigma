@@ -71,6 +71,7 @@ export class StepsListComponent extends BaseComponent implements OnInit {
   public stepVideoUrl = "";
   public isRibbonShowed: boolean = true;
   public isHelpWidgetShowed: boolean = true;
+  public isReorder: boolean = false;
   public selectedTemplate: NaturalTextActions;
   public isCheckHelpPreference = false;
   inputValue: any;

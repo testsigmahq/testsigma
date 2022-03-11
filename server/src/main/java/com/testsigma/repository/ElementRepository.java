@@ -20,6 +20,5 @@ public interface ElementRepository extends BaseRepository<Element, Long> {
 
   List<Element> findByNameInAndWorkspaceVersionId(List<String> names, Long workspaceVersionId);
 
-  List<Element> findAllByWorkspaceVersionId(Long workspaceVersionId);
 }
 

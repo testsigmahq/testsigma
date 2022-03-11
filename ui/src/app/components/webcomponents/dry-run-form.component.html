@@ -83,6 +83,13 @@
         <span class="p-10 text-left" [innerHTML]="'ad_hoc.invalid_url'| translate:{ fieldNames:invalidUrls.join(', ') }"></span>
       </div>
     </div>
+    <div class="theme-warning text-danger border-rds-4 px-10 py-5 fz-12 mt-2 mb-40 text-center"
+         *ngIf="isHybrid && zeroActiveAgents">
+      <div class="mx-auto w-fit-content d-flex align-items-center">
+        <i class="fa-warning fz-20 pl-15 pr-8"></i>
+        <span class="p-10 text-left" [innerHTML]="'ad_hoc.inactive_agents' | translate"></span>
+      </div>
+    </div>
     <app-dry-run-rest-form
       (closeDialog)="closeDialogTab()"
       *ngIf="dryExecutionForm && isRest && version"

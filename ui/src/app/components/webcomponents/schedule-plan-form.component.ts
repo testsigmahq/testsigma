@@ -197,8 +197,8 @@ export class SchedulePlanFormComponent extends BaseComponent implements OnInit {
 
   setScheduleEntityValues() {
     this.scheduledPlan.scheduleTime = this.toUTCTime(this.getTimeDate());
-    this.scheduledPlan.testPlanId = this.testPlan.id;
-    this.scheduledPlan.scheduleType = this.scheduleForm.get('scheduleType').value;
+    this.scheduledPlan.testPlanId = this.testPlan?.id;
+    this.scheduledPlan.scheduleType = this.scheduleForm?.get('scheduleType')?.value;
     this.scheduledPlan.status = ScheduleStatus.ACTIVE;
   }
 

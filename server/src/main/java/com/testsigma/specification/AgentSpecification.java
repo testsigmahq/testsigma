@@ -6,7 +6,6 @@ import javax.persistence.criteria.*;
 import java.sql.Timestamp;
 
 public class AgentSpecification extends BaseSpecification<Agent> {
-  private static final long dayInMillis = 86400000L;
   private static final long TEN_MIN_IN_MILLISECONDS = 600000L;
 
   public AgentSpecification(final SearchCriteria criteria) {

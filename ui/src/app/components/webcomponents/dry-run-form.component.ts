@@ -54,7 +54,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
   public searchAutoComplete = new FormControl();
   public filteredDryRunConfigs: AdhocRunConfiguration[] =[];
   public refresh: boolean=true;
-  public agentEmpty:boolean;
+  public zeroActiveAgents:boolean = false;
 
   constructor(
     public authGuard: AuthenticationGuard,
@@ -113,8 +113,15 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
       this.fetchVersion();
     });
     this.agentService.findAll().subscribe(res => {
-      this.agentEmpty = res.empty;
+      res.content.forEach(agent => {
+        if (!agent.isOnline()) {
+          this.zeroActiveAgents = true;
+        }else{
+          this.zeroActiveAgents = false;
+        }
+      })
     });
+
     this.searchAutoComplete.valueChanges.subscribe((term) => {
       this.searchDryRunConfigs(term);
     })
@@ -387,7 +394,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
 
   disableRunButton() {
     return this.saving || this.savingConfig || this.dryExecutionForm?.invalid || this.emptyElements.length>0
-      || (!this.isHybrid &&  this.invalidUrls.length>0) || (this.isHybrid && this.agentEmpty) ;
+      || (!this.isHybrid &&  this.invalidUrls.length>0) || (this.isHybrid && this.zeroActiveAgents) ;
   }
 
   private searchDryRunConfigs(term: any) {

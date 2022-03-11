@@ -385,12 +385,21 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
   }
 
   saveOrUpdate() {
+    let screenName : ElementScreenName;
     if (!this.isInProgress) {
       this.formSubmitted = true;
       if (this.elementForm.invalid)
         return;
       if (this.element.screenNameId) {
-        (this.elementId) ? this.updateElement() : this.saveElement()
+        let updatedScreenName =this.elementForm.get("screen_name").value;
+        this.element.screenNameObj.name =  updatedScreenName;
+        screenName = new ElementScreenName();
+        screenName.name = updatedScreenName;
+        screenName.workspaceVersionId =this.element.workspaceVersionId;
+        this.elementScreenNameService.create(screenName).subscribe(screeNameObj => {
+          this.element.screenNameId = screeNameObj.id;
+          (this.elementId) ? this.updateElement() : this.saveElement()
+        });
       } else {
         let screenNameBean: ElementScreenName = new ElementScreenName();
         screenNameBean.name = this.elementForm.get('screen_name').value;

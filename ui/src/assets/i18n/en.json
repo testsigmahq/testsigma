@@ -966,6 +966,7 @@
   "ad_hoc.saved_config.save_as": "Save As Favorite",
   "ad_hoc.empty_elements": "Unable to run the test. The test case contains steps with empty Elements - <span class='rb-semi-bold'>{{fieldNames}}</span>. Please update those and try running again.",
   "ad_hoc.invalid_url": "Unable to run the Test. The Test Case contains Navigate Step with Local URLs - <span class='f-semi-bold text-break'>{{fieldNames}}</span> which cannot be accessed using Test Lab Type 'Testsigma Lab'. Please select the 'Hybrid' option in Test Lab Type to run the tests locally. Learn more - <a href=\"https://testsigma.com/docs/faqs/web-apps/why-cloud-devices-cannot-access-local-apps/\" target=\"_blank\" class='text-link'>Why Cloud Test Environments can't access Locally hosted Applications?</a>",
+  "ad_hoc.inactive_agents": "Provided agent is Not Active Please choose another Test Machine to run the Test Case or Restart your agent.",
   "hint.message.ad_hoc.saved_config.list": "Manage Favorite Ad-hoc Run Configs",
   "ad_hoc.btn.create_run": "Run Now",
   "test_plan.enable_visual_testing": "Enable Visual Testing",

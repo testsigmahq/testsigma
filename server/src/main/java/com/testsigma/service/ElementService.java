@@ -72,9 +72,6 @@ public class ElementService extends XMLExportService<Element> {
     return elementRepository.findAll(specification, pageable);
   }
 
-  public List<Element> findAllByWorkspaceVersionId(Long workspaceVersionId) {
-    return this.elementRepository.findAllByWorkspaceVersionId(workspaceVersionId);
-  }
 
   public Element create(Element element) {
     element = elementRepository.save(element);

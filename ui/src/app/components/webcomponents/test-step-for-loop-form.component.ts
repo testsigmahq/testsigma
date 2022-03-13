@@ -154,6 +154,7 @@ export class TestStepForLoopFormComponent extends BaseComponent implements OnIni
     this.testStep.forLoopTestDataId = this.loopForm.get("testDataId")?.value;
     this.testStep.forLoopStartIndex = this.loopForm.get("startIndex").value;
     this.testStep.forLoopEndIndex = this.loopForm.get("endIndex").value;
+    this.testStep.ignoreStepResult = this.testStep.ignoreStepResult === undefined ? true : this.testStep.ignoreStepResult;
     this.saving = true;
     this.testStepService.create(this.testStep).subscribe((step) => {
       step.testData = this.testStep.testData;

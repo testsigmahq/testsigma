@@ -464,6 +464,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     whileStep.waitTime = 30;
     whileStep.priority = TestStepPriority.MINOR;
     whileStep.type = TestStepType.WHILE_LOOP;
+    whileStep.ignoreStepResult = whileStep.ignoreStepResult === undefined ? true : whileStep.ignoreStepResult;
     this.testStepService.create(whileStep).subscribe(res => {
       this.testStep.parentId = res.id
       this.testStep.position = res.position + 1;

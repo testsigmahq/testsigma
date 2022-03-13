@@ -177,42 +177,39 @@ public interface TestCaseResultRepository extends JpaRepository<TestCaseResult, 
 
   @Modifying
   @Query(value = "UPDATE test_case_results AS tcr INNER JOIN (SELECT test_case_result_id, COUNT(id) totalCount " +
-    "FROM test_step_results WHERE test_case_result_id = :id " +
-    "AND (JSON_EXTRACT(test_step_details,'$.condition_type') = 0 " +
-    "OR JSON_EXTRACT(test_step_details,'$.condition_type') is NULL) " +
-    "AND step_group_result_id is NULL " +
-    "GROUP BY test_case_result_id) AS tsr ON tsr.test_case_result_id = tcr.id " +
-    "SET tcr.total_count = totalCount WHERE tcr.id = :id", nativeQuery = true)
+          "FROM test_step_results WHERE test_case_result_id = :id " +
+          "AND (JSON_EXTRACT(test_step_details,'$.condition_type') = 0 OR JSON_EXTRACT(test_step_details,'$.condition_type') is NULL) " +
+          "AND (JSON_EXTRACT(test_step_details,'$.ignore_step_result') is NULL OR JSON_EXTRACT(test_step_details,'$.ignore_step_result') = false) " +
+          "AND step_group_result_id is NULL " +
+          "GROUP BY test_case_result_id) AS tsr ON tsr.test_case_result_id = tcr.id " +
+          "SET tcr.total_count = totalCount WHERE tcr.id = :id", nativeQuery = true)
   void updateTotalTestCaseResultsCount(@Param("id") Long id);
 
   @Modifying
-  @Query(value = "UPDATE test_case_results AS tcr " +
-    "LEFT JOIN (SELECT test_case_result_id, COUNT(id) totalCount FROM test_step_results where result='SUCCESS' " +
-    "AND test_case_result_id = :id and (JSON_EXTRACT(test_step_details,'$.condition_type') = 0 " +
-    "OR JSON_EXTRACT(test_step_details,'$.condition_type') is NULL) " +
-    "AND step_group_result_id is NULL " +
-    "GROUP BY test_case_result_id) AS tsr " +
-    "ON tsr.test_case_result_id = tcr.id " +
-    "SET tcr.passed_count = COALESCE(totalCount, 0) WHERE tcr.id = :id", nativeQuery = true)
+  @Query(value = "UPDATE test_case_results AS tcr LEFT JOIN (SELECT test_case_result_id, COUNT(id) totalCount " +
+  "FROM test_step_results WHERE result='SUCCESS' AND test_case_result_id = :id " +
+  "AND ((JSON_EXTRACT(test_step_details,'$.condition_type') = 0 OR JSON_EXTRACT(test_step_details,'$.condition_type') is NULL) " +
+  "AND (JSON_EXTRACT(test_step_details,'$.ignore_step_result') is NULL OR JSON_EXTRACT(test_step_details,'$.ignore_step_result') = false)) " +
+  "AND step_group_result_id is NULL GROUP BY test_case_result_id) AS tsr ON tsr.test_case_result_id = tcr.id " +
+  "SET tcr.passed_count = COALESCE(totalCount, 0) WHERE tcr.id = :id", nativeQuery = true)
   void updatePassedTestCaseResultsCount(@Param("id") Long id);
 
   @Modifying
-  @Query(value = "UPDATE test_case_results AS tcr " +
-    "LEFT JOIN (SELECT test_case_result_id, COUNT(id) totalCount FROM test_step_results where result='FAILURE' " +
-    "AND test_case_result_id = :id and (JSON_EXTRACT(test_step_details,'$.condition_type') = 0 " +
-    "OR JSON_EXTRACT(test_step_details,'$.condition_type') is NULL " +
-    "AND step_group_result_id is NULL) " +
-    "GROUP BY test_case_result_id) AS tsr " +
-    "ON tsr.test_case_result_id = tcr.id " +
-    "SET tcr.failed_count = COALESCE(totalCount, 0) WHERE tcr.id = :id", nativeQuery = true)
+  @Query(value = "UPDATE test_case_results AS tcr LEFT JOIN (SELECT test_case_result_id, COUNT(id) totalCount " +
+  "FROM test_step_results where result='FAILURE' AND test_case_result_id = :id " +
+  "AND ((JSON_EXTRACT(test_step_details,'$.condition_type') = 0 OR JSON_EXTRACT(test_step_details,'$.condition_type') is NULL) " +
+  "AND (JSON_EXTRACT(test_step_details,'$.ignore_step_result') is NULL OR JSON_EXTRACT(test_step_details,'$.ignore_step_result') = false)) " +
+  "AND step_group_result_id is NULL GROUP BY test_case_result_id) AS tsr ON tsr.test_case_result_id = tcr.id " +
+  "SET tcr.failed_count = COALESCE(totalCount, 0) WHERE tcr.id = :id", nativeQuery = true)
   void updateFailedTestCaseResultsCount(@Param("id") Long id);
 
   @Modifying
   @Query(value = "UPDATE test_case_results AS tcr " +
     "LEFT JOIN (SELECT test_case_result_id, COUNT(id) totalCount FROM test_step_results where result='ABORTED' " +
-    "AND test_case_result_id = :id and (JSON_EXTRACT(test_step_details,'$.condition_type') = 0 " +
-    "OR JSON_EXTRACT(test_step_details,'$.condition_type') is NULL " +
-    "AND step_group_result_id is NULL ) " +
+    "AND test_case_result_id = :id " +
+    "AND ((JSON_EXTRACT(test_step_details,'$.condition_type') = 0 OR JSON_EXTRACT(test_step_details,'$.condition_type') is NULL) " +
+    "AND (JSON_EXTRACT(test_step_details,'$.ignore_step_result') is NULL OR JSON_EXTRACT(test_step_details,'$.ignore_step_result') = false)) " +
+    "AND step_group_result_id is NULL " +
     "GROUP BY test_case_result_id) AS tsr " +
     "ON tsr.test_case_result_id = tcr.id " +
     "SET tcr.aborted_count = COALESCE(totalCount, 0) WHERE tcr.id = :id", nativeQuery = true)
@@ -221,9 +218,10 @@ public interface TestCaseResultRepository extends JpaRepository<TestCaseResult, 
   @Modifying
   @Query(value = "UPDATE test_case_results AS tcr " +
     "LEFT JOIN (SELECT test_case_result_id, COUNT(id) totalCount FROM test_step_results where result='NOT_EXECUTED' " +
-    "AND test_case_result_id = :id and (JSON_EXTRACT(test_step_details,'$.condition_type') = 0 " +
-    "OR JSON_EXTRACT(test_step_details,'$.condition_type') is NULL " +
-    "AND step_group_result_id is NULL ) " +
+    "AND test_case_result_id = :id " +
+    "AND ((JSON_EXTRACT(test_step_details,'$.condition_type') = 0 OR JSON_EXTRACT(test_step_details,'$.condition_type') is NULL) " +
+    "AND (JSON_EXTRACT(test_step_details,'$.ignore_step_result') is NULL OR JSON_EXTRACT(test_step_details,'$.ignore_step_result') = false)) " +
+    "AND step_group_result_id is NULL " +
     "GROUP BY test_case_result_id) AS tsr " +
     "ON tsr.test_case_result_id = tcr.id " +
     "SET tcr.not_executed_count = COALESCE(totalCount, 0) WHERE tcr.id = :id", nativeQuery = true)
@@ -232,9 +230,10 @@ public interface TestCaseResultRepository extends JpaRepository<TestCaseResult, 
   @Modifying
   @Query(value = "UPDATE test_case_results AS tcr " +
     "LEFT JOIN (SELECT test_case_result_id, COUNT(id) totalCount FROM test_step_results where result='QUEUED' " +
-    "AND test_case_result_id = :id and (JSON_EXTRACT(test_step_details,'$.condition_type') = 0 " +
-    "OR JSON_EXTRACT(test_step_details,'$.condition_type') is NULL " +
-    "AND step_group_result_id is NULL ) " +
+    "AND test_case_result_id = :id " +
+    "AND ((JSON_EXTRACT(test_step_details,'$.condition_type') = 0 OR JSON_EXTRACT(test_step_details,'$.condition_type') is NULL) " +
+    "AND (JSON_EXTRACT(test_step_details,'$.ignore_step_result') is NULL OR JSON_EXTRACT(test_step_details,'$.ignore_step_result') = false)) " +
+    "AND step_group_result_id is NULL " +
     "GROUP BY test_case_result_id) AS tsr " +
     "ON tsr.test_case_result_id = tcr.id " +
     "SET tcr.queued_count = COALESCE(totalCount, 0) WHERE tcr.id = :id", nativeQuery = true)
@@ -243,9 +242,10 @@ public interface TestCaseResultRepository extends JpaRepository<TestCaseResult, 
   @Modifying
   @Query(value = "UPDATE test_case_results AS tcr " +
     "LEFT JOIN (SELECT test_case_result_id, COUNT(id) totalCount FROM test_step_results where result='STOPPED' " +
-    "AND test_case_result_id = :id and (JSON_EXTRACT(test_step_details,'$.condition_type') = 0 " +
-    "OR JSON_EXTRACT(test_step_details,'$.condition_type') is NULL " +
-    "AND step_group_result_id is NULL ) " +
+    "AND test_case_result_id = :id " +
+    "AND ((JSON_EXTRACT(test_step_details,'$.condition_type') = 0 OR JSON_EXTRACT(test_step_details,'$.condition_type') is NULL) " +
+    "AND (JSON_EXTRACT(test_step_details,'$.ignore_step_result') is NULL OR JSON_EXTRACT(test_step_details,'$.ignore_step_result') = false)) " +
+    "AND step_group_result_id is NULL " +
     "GROUP BY test_case_result_id) AS tsr " +
     "ON tsr.test_case_result_id = tcr.id " +
     "SET tcr.stopped_count = COALESCE(totalCount, 0) WHERE tcr.id = :id", nativeQuery = true)

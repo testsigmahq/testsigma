@@ -332,6 +332,10 @@ export class TestStepResult extends ResultBase implements PageObject {
     return (this?.isConditionalIf || this?.isConditionalElse || this?.isConditionalElseIf || this?.isConditionalWhileLoop)
   }
 
+  get canShowIgnoreStepResultLabel() {
+    return !(this.stepDetail?.isConditionalIf || this.stepDetail?.isConditionalElse || this.stepDetail?.isConditionalElseIf || this.stepDetail?.isConditionalWhile || this.stepDetail?.isForLoop)
+  }
+
   setResultStepDisplayNumber(testStepResults: TestStepResult[]) {
     let nestedIndex = 0;
     testStepResults.forEach((step: TestStepResult, index) => {

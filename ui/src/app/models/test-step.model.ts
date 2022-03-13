@@ -152,6 +152,12 @@ export class TestStep extends Base implements PageObject {
     return v;
   }, v => v))
   public disabled: boolean;
+  @serializable(custom(v => {
+    if(v == null)
+      return false;
+    return v;
+  }, v => v))
+  public ignoreStepResult: boolean;
 
   public template: NaturalTextActions;
   public addonTemplate: AddonNaturalTextAction;
@@ -426,6 +432,7 @@ export class TestStep extends Base implements PageObject {
       this.preRequisiteStepId = input['preRequisiteStepId'];
       this.conditionType = input['conditionType'];
       this.disabled = input['disabled'];
+      this.ignoreStepResult = input['ignoreStepResult'];
       if (input['dataMap'])
         this.conditionIf = input['conditionIf'];
     }

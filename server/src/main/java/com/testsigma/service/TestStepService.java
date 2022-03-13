@@ -147,23 +147,22 @@ public class TestStepService extends XMLExportService<TestStep> {
     return testStep;
   }
 
-  public void bulkUpdateProperties(Long[] ids, TestStepPriority testStepPriority, Integer waitTime, Boolean disabled) {
-    if (testStepPriority != null) {
-      this.repository.bulkUpdateProperties(ids, testStepPriority.toString(), waitTime);
-    } else {
-      this.repository.bulkUpdateProperties(ids, null, waitTime);
-    }
-    if (disabled != null)
-      this.bulkUpdateDisablePropertyAlone(ids, disabled);
+  public void bulkUpdateProperties(Long[] ids, TestStepPriority testStepPriority, Integer waitTime, Boolean disabled, Boolean ignoreStepResult) {
+    this.repository.bulkUpdateProperties(ids, testStepPriority != null ? testStepPriority.toString() : null, waitTime);
+    if (disabled != null || ignoreStepResult != null)
+      this.bulkUpdateDisableAndIgnoreResultProperties(ids, disabled, ignoreStepResult);
   }
 
-  private void bulkUpdateDisablePropertyAlone(Long[] ids, Boolean disabled) {
+  private void bulkUpdateDisableAndIgnoreResultProperties(Long[] ids, Boolean disabled, Boolean ignoreStepResult) {
     List<TestStep> testSteps = this.repository.findAllByIdInOrderByPositionAsc(ids);
     for (TestStep testStep : testSteps) {
-      if (testStep.getParentId() == null || (testStep.getParentId() != null && testStep.getParentStep().getDisabled() != true)) {
+      if (disabled != null && (testStep.getParentId() == null || (testStep.getParentId() != null && testStep.getParentStep().getDisabled() != true))) {
         testStep.setDisabled(disabled);
-        this.update(testStep);
       }
+      if (ignoreStepResult != null) {
+        testStep.setIgnoreStepResult(ignoreStepResult);
+      }
+      this.update(testStep);
     }
   }
 

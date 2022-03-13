@@ -198,8 +198,8 @@ public class TestcaseRunner {
         }
 
         //TODO:use check based step type
-        if (testCaseStepEntity.getConditionType() == null || testCaseStepEntity.getConditionType() == ConditionType.NOT_USED
-          || ConditionType.LOOP_FOR == testCaseStepEntity.getConditionType()) {
+        if ((testCaseStepEntity.getConditionType() == null || testCaseStepEntity.getConditionType() == ConditionType.NOT_USED
+            || ConditionType.LOOP_FOR == testCaseStepEntity.getConditionType()) && (!testCaseStepEntity.getStepDetails().getIgnoreStepResult()) ) {
           result = (result.getId() < testCaseStepResult.getResult().getId()) ? testCaseStepResult.getResult() : result;
         }
         int processedSteps = processedStepCount(testCaseStepsResult);

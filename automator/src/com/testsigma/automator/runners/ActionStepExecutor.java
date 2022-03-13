@@ -117,6 +117,10 @@ public class ActionStepExecutor {
       result.setMessage(AutomatorMessages.MSG_STEP_MAJOR_STEP_FAILURE);
       testCaseResult.setResult(ResultConstant.ABORTED);
       testCaseResult.setMessage(AutomatorMessages.MSG_TEST_CASE_ABORTED);
+      if(!testCaseStepEntity.getStepDetails().getIgnoreStepResult()) {
+        testCaseResult.setResult(ResultConstant.ABORTED);
+        testCaseResult.setMessage(AutomatorMessages.MSG_TEST_CASE_ABORTED);
+      }
     } else {
       result.setResult(ResultConstant.FAILURE);
     }

@@ -219,7 +219,7 @@ public abstract class TestcaseStepRunner {
       boolean hasToAbortTestcase = (majorFailure && !isGroupStep && !isStepGroup);
 
       if (!testCaseStepResult.getSkipExe() && hasToAbortTestcase) {
-        setFailedMessage(testCaseStepResult, testCaseResult);
+        setFailedMessage(testCaseStepResult, testCaseResult, testCaseStepEntity.getStepDetails().getIgnoreStepResult());
       }
       //Add Loop level result
       if (testCaseStepEntity.getType() == TestStepType.BREAK_LOOP && status == ResultConstant.SUCCESS) {
@@ -468,9 +468,11 @@ public abstract class TestcaseStepRunner {
       stepResults.add(childStepResult);
 
       log.debug("Result in Step Group :::: " + objectMapperService.convertToJson(childStepResult));
-      if (childStep.getConditionType() == null || childStep.getConditionType() == ConditionType.NOT_USED || ConditionType.LOOP_FOR == (childStep.getConditionType())) {
+      if ((childStep.getConditionType() == null || childStep.getConditionType() == ConditionType.NOT_USED ||
+              ConditionType.LOOP_FOR == (childStep.getConditionType()))&& (!childStep.getStepDetails().getIgnoreStepResult())) {
         status = (status.getId() < childStepResult.getResult().getId()) ? childStepResult.getResult() : status;
       }
+
       boolean isMajorStepFailure = isStepGroup && isStepGroupFailure(testcaseStep, childStep, childStepResult);
 
       if (!skipExe && isMajorStepFailure && isMajorStepGroupFailure) {
@@ -479,7 +481,7 @@ public abstract class TestcaseStepRunner {
           .append((childStepResult.getMessage() != null) ? childStepResult.getMessage() + "." : "")
           .append(AutomatorMessages.MSG_CHECK_FOR_MORE_DETAILS).toString();
         result.setMessage(majorMessage);
-        setFailedMessage(childStepResult, tresult);
+        setFailedMessage(childStepResult, tresult, testcaseStep.getStepDetails().getIgnoreStepResult());
       }
       skipExe = childStepResult.getSkipExe();
       message = childStepResult.getSkipMessage();
@@ -521,21 +523,24 @@ public abstract class TestcaseStepRunner {
     }
   }
 
-  private void setFailedMessage(TestCaseStepResult result, TestCaseResult testCaseResult) throws AutomatorException {
+  private void setFailedMessage(TestCaseStepResult result, TestCaseResult testCaseResult, Boolean ignoreStepResult) throws AutomatorException {
 
     result.setSkipExe(true);
-    testCaseResult.setResult(ResultConstant.FAILURE);
-    String majorMessage = AutomatorMessages.MSG_STEP_MAJOR_STEP_FAILURE +
-      ((result.getMessage() != null) ? result.getMessage() : "") + " . " + AutomatorMessages.MSG_CHECK_FOR_MORE_DETAILS;
-    testCaseResult.setMessage(majorMessage);
     result.setSkipMessage(AutomatorMessages.MSG_STEP_MAJOR_STEP_FAILURE);
+    if(!ignoreStepResult) {
+      String majorMessage = AutomatorMessages.MSG_STEP_MAJOR_STEP_FAILURE +
+              ((result.getMessage() != null) ? result.getMessage() : "") + " . " + AutomatorMessages.MSG_CHECK_FOR_MORE_DETAILS;
+      testCaseResult.setMessage(majorMessage);
+      testCaseResult.setResult(ResultConstant.FAILURE);
+    }
   }
 
   private boolean isStepGroupFailure(TestCaseStepEntity testcaseStep, TestCaseStepEntity childStep,
                                          TestCaseStepResult childStepResult) {
     return childStep.getPriority() == TestStepPriority.MAJOR &&
       childStepResult.getResult() != null && !childStepResult.getResult().equals(ResultConstant.SUCCESS)
-      && (testcaseStep.getConditionType() == null || !testcaseStep.getConditionType().equals(ConditionType.LOOP_FOR));
+      && (testcaseStep.getConditionType() == null || !testcaseStep.getConditionType().equals(ConditionType.LOOP_FOR))
+            && !childStep.getStepDetails().getIgnoreStepResult();
   }
 
 

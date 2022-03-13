@@ -52,6 +52,7 @@ export class TestStepResultsComponent extends TestCaseStepsListComponent impleme
   @Output('onStepDetails') onStepDetails = new EventEmitter<void>();
   @Output('onStepNavigate') onStepNavigate = new EventEmitter<TestStepResult>();
   @Output('onFirstFailedStep') onFirstFailedStep= new EventEmitter<TestStepResult>();
+  @Output('hasSteps') hasSteps= new EventEmitter<boolean>();
 
   public testStepResults: Page<TestStepResult>;
   public NotFilteredTestStepResult: Page<TestStepResult>;
@@ -121,6 +122,7 @@ export class TestStepResultsComponent extends TestCaseStepsListComponent impleme
       this.setFailedStepOnRefresh(res);
       res.content[0]?.setResultStepDisplayNumber(res.content);
       this.fetchTestSteps(this.resultEntity.testCase.id);
+      this.hasSteps.emit(this.testStepResults.totalElements>0);
     });
   }
 

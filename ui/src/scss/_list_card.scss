@@ -243,6 +243,9 @@
             border-left: 4px solid rgba($color, 1);
           }
         }
+        &.ignore-result.active, &.ignore-result:hover, &.ignore-result {
+          @extend .bg-ignore;
+        }
       }
       $run-result-number: $run-result-number+1;
     }
@@ -276,6 +279,10 @@
           border-left: 4px solid rgba($theme-pass-color, 1);
         }
       }
+      &.ignore-result.active, &.ignore-result:hover, &.ignore-result {
+        @extend .bg-ignore;
+      }
+
       &.disabled-step{
         border-left: 4px solid rgb(150 150 150 / 48%);
       }

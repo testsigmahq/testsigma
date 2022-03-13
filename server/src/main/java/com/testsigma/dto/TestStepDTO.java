@@ -58,7 +58,7 @@ public class TestStepDTO implements Cloneable, Serializable {
   private Map<String, AddonTestStepTestData> addonTestData;
   private Map<String, AddonElementData> addonElements;
   private Boolean disabled;
-
+  private Boolean ignoreStepResult;
   private List<TestStepDTO> testStepDTOS = new ArrayList<>();
 
   public TestStepDTO clone() throws CloneNotSupportedException {

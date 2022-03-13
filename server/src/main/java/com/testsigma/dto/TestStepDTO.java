@@ -43,7 +43,7 @@ public class TestStepDTO implements Cloneable, Serializable {
   private Long forLoopTestDataId;
   private Long testDataFunctionId;
   @JsonProperty()
-  private KibbutzTestStepTestData kibbutzTDF;
+  private AddonTestStepTestData addonTDF;
   private Map<String, String> testDataFunctionArgs;
   private String exceptedResult;
   private Integer naturalTextActionId;
@@ -55,8 +55,8 @@ public class TestStepDTO implements Cloneable, Serializable {
   private Long phoneNumberId;
   private Long addonActionId;
   //  private AddonNaturalTextActionData addonNaturalTextActionData;
-  private Map<String, KibbutzTestStepTestData> kibbutzTestData;
-  private Map<String, KibbutzElementData> kibbutzElements;
+  private Map<String, AddonTestStepTestData> addonTestData;
+  private Map<String, AddonElementData> addonElements;
   private Boolean disabled;
 
   private List<TestStepDTO> testStepDTOS = new ArrayList<>();
@@ -99,7 +99,7 @@ public class TestStepDTO implements Cloneable, Serializable {
     testStepDataMap.setFromElement(fromElement);
     testStepDataMap.setToElement(toElement);
     testStepDataMap.setAttribute(attribute);
-    testStepDataMap.setKibbutzTDF(kibbutzTDF);
+    testStepDataMap.setAddonTDF(addonTDF);
     DefaultDataGeneratorsDetails functionDetails = new DefaultDataGeneratorsDetails();
     functionDetails.setId(testDataFunctionId);
     functionDetails.setArguments(testDataFunctionArgs);

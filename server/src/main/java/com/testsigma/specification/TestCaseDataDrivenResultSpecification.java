@@ -25,7 +25,7 @@ public class TestCaseDataDrivenResultSpecification extends BaseSpecification<Tes
     if (criteria.getKey().equals("childRunId")) {
       Join s = root.join("iterationResult", JoinType.INNER);
       Join s1 = s.join("childResult", JoinType.INNER);
-      return s1.get("executionResultId");
+      return s1.get("testPlanResultId");
     }
     return root.get(criteria.getKey());
   }

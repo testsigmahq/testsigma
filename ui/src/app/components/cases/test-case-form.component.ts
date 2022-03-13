@@ -19,8 +19,6 @@ import {WorkspaceVersion} from "../../models/workspace-version.model";
 import {TestData} from "../../models/test-data.model";
 import {TestDataService} from "../../services/test-data.service";
 import {TestDataSet} from "../../models/test-data-set.model";
-import {RequirementsService} from "../../services/requirements.service";
-import {Requirement} from "../../models/requirement.model";
 import {UserPreferenceService} from "../../services/user-preference.service";
 import {TestCaseResultService} from "../../services/test-case-result.service";
 import {ResultConstant} from "../../enums/result-constant.enum";
@@ -47,7 +45,6 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
   public testCaseTypeList: Page<TestCaseType>;
   public testDataList: Page<TestData>;
   public testCaseList: Page<TestCase>;
-  public requirementList: Page<Requirement>;
   public testDataSetList: TestDataSet[];
   public versionId: number;
   public showDetails: Boolean = false;
@@ -70,7 +67,7 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
     public toastrService:ToastrService,
     private route: ActivatedRoute,
     private router: Router,
-    private executionResultService: TestPlanResultService,
+    private testPlanResultService: TestPlanResultService,
     private  testCaseService: TestCaseService,
     private  testCaseResultService: TestCaseResultService,
     private testCasePrioritiesService: TestCasePrioritiesService,
@@ -78,7 +75,6 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
     public tagService: TestCaseTagService,
     private workspaceVersionService: WorkspaceVersionService,
     private testDataService: TestDataService,
-    private requirementsService: RequirementsService,
     public userPreferenceService: UserPreferenceService,
     private dialog: MatDialog,
   ) {
@@ -125,10 +121,9 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
   addValidations() {
     this.testCaseForm = new FormGroup({
       name: new FormControl(this.testCase.name, [
-        Validators.required, Validators.maxLength(125)
+        Validators.required, Validators.maxLength(125) , Validators.minLength(4)
       ]),
       description: new FormControl(this.testCase.description, []),
-      requirement: new FormControl(this.testCase.requirementId, []),
       priority: new FormControl(this.testCase.priorityId, []),
       type: new FormControl(this.testCase.type, []),
       preRequisite: new FormControl(this.testCase.preRequisite, []),
@@ -142,7 +137,6 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
     this.workspaceVersionService.show(this.versionId).subscribe(res => {
       this.version = res;
       this.addValidations();
-      this.fetchRequirements();
       if (!this.isStepGroupUrl) {
         this.fetchTestCaseTypes();
         this.fetchTestCasePriorities();
@@ -179,9 +173,6 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
     this.testCaseTypesService.show(testcase.type).subscribe(res => {
       this.testCase.testCaseType = res;
     })
-    this.requirementsService.show(testcase.requirementId).subscribe(res => {
-      this.testCase.requirement = res
-    })
     if (testcase.preRequisite)
       this.testCaseService.show(testcase.preRequisite).subscribe(res => {
         this.testCase.preRequisiteCase = res
@@ -195,19 +186,6 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
   saveTestCase() {
     this.testCase.description = this.testCaseForm.controls.description.value;
     this.formSubmitted = true;
-    // if (!this.testCase.requirementId && this.testCaseForm.controls['name'].valid) {
-    //   this.matModal.open(ConfirmationModalComponent, {
-    //     width: '450px',
-    //     data: {
-    //       dontShowConfirmationNote:true,
-    //       description: this.translate.instant("test_case.title.requirement_cannot_be_empty"),
-    //       message: this.translate.instant("test_case.description.add_requirement_create_test_case")
-    //     },
-    //     panelClass: ['matDialog']
-    //   });
-    //   this.showDetails = true;
-    //   return false;
-    // }
     if (this.testCaseForm.valid) {
       this.saving = true;
       if (this.testCase.testDataId == 0) {
@@ -297,25 +275,6 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
     this.testCase.testDataStartIndex = loopDetails.startIndex;
     this.testCase.testDataEndIndex = loopDetails.endIndex;
     this.toggleStartIndex(endIndex);
-  }
-
-  fetchRequirements(term?) {
-    let searchName = '';
-    if (term) {
-      searchName = ",requirementName:*" + term + "*";
-    }
-    this.requirementsService.findAll("workspaceVersionId:" + this.versionId + searchName).subscribe(res => {
-      this.requirementList = res;
-      if (this.requirementList && this.requirementList.content && this.requirementList.content.length) {
-        if (!this.testCase.requirementId) {
-          this.testCase.requirementId = this.requirementList.content[0].id;
-        } else if(this.testCase?.id && this.testCase?.requirementId) {
-          if(!this.requirementList.content.find(req => req.id == this.testCase.requirementId)) {
-            this.requirementList.content.push(this.testCase.requirement)
-          }
-        }
-      }
-    })
   }
 
   fetchTestDataProfile(term?) {
@@ -411,10 +370,6 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
   setPriorityId(testCasePriorities) {
     this.testCase.testCasePriority = testCasePriorities;
     this.testCase.priorityId = testCasePriorities.id;
-  }
-
-  setRequirements(requirement) {
-    this.testCase.requirementId = requirement?.id;
   }
 
   goBack() {

@@ -30,7 +30,7 @@ export class EnvironmentService {
   }
 
   public show(id: Number): Observable<Environment> {
-    return this.http.get<Environment>(this.URLConstants.environmentsUrl + "/" + id +"?encrypt=true", {
+    return this.http.get<Environment>(this.URLConstants.environmentsUrl + "/" + id , {
       headers: this.httpHeaders.contentTypeApplication
     }).pipe(
       map(data => new Environment().deserialize(data)),

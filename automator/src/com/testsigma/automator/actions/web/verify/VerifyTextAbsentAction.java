@@ -13,7 +13,7 @@ public class VerifyTextAbsentAction extends ElementAction {
   protected void execute() throws Exception {
     setActualValue(getDriver().findElement(By.tagName(ActionConstants.TAG_BODY)).getText().trim());
     Assert.isTrue(!(getActualValue().toString().contains(getTestData().trim())), String.format(FAILURE_MESSAGE_MISMATCH,
-      getTestDataMaskResult()));
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult()));
+      getTestData()));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
   }
 }

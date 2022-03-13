@@ -15,7 +15,7 @@ public class VerifyBrowserVersionAction extends ElementAction {
     Capabilities sysCaps = getRemoteWebDriver().getCapabilities();
     setActualValue(sysCaps.getVersion());
     Assert.isTrue(getTestData().equalsIgnoreCase(getActualValue().toString()),
-      String.format(FAILURE_MESSAGE, getTestDataMaskResult(), getActualValue()));
+      String.format(FAILURE_MESSAGE, getTestData(), getActualValue()));
 
     setSuccessMessage(SUCCESS_MESSAGE);
   }

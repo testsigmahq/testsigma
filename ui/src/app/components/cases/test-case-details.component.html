@@ -8,7 +8,7 @@
         [versionId]="testCase?.workspaceVersionId"></app-td-overlay-menu-button>
       <a class="go-back-icon pl-10"
          [matTooltip]="'hint.message.common.back' | translate"
-         [routerLink]="['/td', testCase?.workspaceVersionId, 'cases']"></a>
+         [routerLink]="['/td', testCase?.workspaceVersionId, testCase?.testcaseRedirection]"></a>
       <div
            class="d-flex ts-col-100-67">
           <div class="theme-details-header">

@@ -79,7 +79,7 @@
             *ngIf="version"
             [testPlanLabType]="testPlanLabType"
             [version]="version"
-            [execution]="execution"
+            [testPlan]="testPlan"
             [executionEnvironment]="executionEnvironments[index]"
             (onRemove)="removeEnvironment(index)"></app-test-plan-execution-environment-info>
         </a>
@@ -121,7 +121,7 @@
       [formGroup] = "activeEnvironmentFormGroup"
       [version]="version"
       [isEdit]="true"
-      [executionForm]="testPlanForm"
+      [testPlanForm]="testPlanForm"
       [testPlanLabType]="testPlanLabType"></app-test-plan-app-uploads-form>
     <app-desired-capabilities
       *ngIf="activeEnvironmentFormGroup"
@@ -167,13 +167,13 @@
                        [cdkConnectedOverlayOpen]="isOpen"
                        cdkConnectedOverlayPanelClass="filter-dropdown">
             <div class="d-flex flex-column px-20 py-10 overflow-hidden">
-              <div class="mb-10" *ngIf="version?.workspace?.isWeb && activeExecutionEnvironment?.testSuites.length > 1" [formGroup]="activeEnvironmentFormGroup">
-                <mat-checkbox
-                  class="mat-checkbox"
-                  (change)="setCaseLevelNdParallelFlags($event, 'runInParallel')"
-                  id="runInParallel" [formControlName]="['runInParallel']">
-                  <span [translate]="'test_plan.environment.select_suite.run_in_parallel'"></span></mat-checkbox>
-              </div>
+<!--              <div class="mb-10" *ngIf="version?.workspace?.isWeb && activeExecutionEnvironment?.testSuites.length > 1" [formGroup]="activeEnvironmentFormGroup">-->
+<!--                <mat-checkbox-->
+<!--                  class="mat-checkbox"-->
+<!--                  (change)="setCaseLevelNdParallelFlags($event, 'runInParallel')"-->
+<!--                  id="runInParallel" [formControlName]="['runInParallel']">-->
+<!--                  <span [translate]="'test_plan.environment.select_suite.run_in_parallel'"></span></mat-checkbox>-->
+<!--              </div>-->
               <div *ngIf="version?.workspace?.isWeb && activeExecutionEnvironment?.testSuites.length > 0" [formGroup]="activeEnvironmentFormGroup">
                 <mat-checkbox
                   class="mat-checkbox"

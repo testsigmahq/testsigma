@@ -9,8 +9,8 @@ package com.testsigma.dto;
 
 import com.testsigma.automator.entity.ElementPropertiesEntity;
 import com.testsigma.automator.entity.TestDataPropertiesEntity;
-import com.testsigma.model.KibbutzElementData;
-import com.testsigma.model.KibbutzTestStepTestData;
+import com.testsigma.model.AddonTestStepTestData;
+import com.testsigma.model.AddonElementData;
 import com.testsigma.model.ResultConstant;
 import com.testsigma.model.TestStepPriority;
 import lombok.Data;
@@ -42,12 +42,12 @@ public class TestStepResultDTO {
   private TestStepPriority priority;
   private StepDetailsDTO stepDetails;
   private Map<String, TestDataPropertiesEntity> testDataDetails;
-  private Map<String, ElementPropertiesEntity> fieldDefinitionDetails;
+  private Map<String, ElementPropertiesEntity> ElementDetails;
   private String screenShotURL;
   private Integer waitTime;
-  private Map<String, KibbutzTestStepTestData> kibbutzTestData;
-  private Map<String, KibbutzElementData> kibbutzElements;
+  private Map<String, AddonTestStepTestData> addonTestData;
+  private Map<String, AddonElementData> addonElements;
   private Timestamp createdDate;
   private Timestamp updatedDate;
-  private String kibbutzActionLogs;
+  private String addonActionLogs;
 }

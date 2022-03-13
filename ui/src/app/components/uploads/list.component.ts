@@ -118,7 +118,7 @@ export class ListComponent extends BaseComponent implements OnInit {
 
   checkForLinkedEnvironments(id) {
     let environmentResults: InfiniteScrollableDataSource;
-    environmentResults = new InfiniteScrollableDataSource(this.environmentService, "appUploadId@"+(id ? id : this.selectedUploads.join("#")));
+    environmentResults = new InfiniteScrollableDataSource(this.environmentService, "appUploadId@"+(id ? id : this.selectedUploads.join("#"))+",entityType:TEST_PLAN");
     waitTillRequestResponds();
     let _this = this;
 

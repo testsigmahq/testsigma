@@ -38,7 +38,6 @@ import java.util.Optional;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class WorkspaceVersionService extends XMLExportService<WorkspaceVersion> {
   private final WorkspaceVersionRepository workspaceVersionRepository;
-  private final RequirementService requirementService;
   private final WorkspaceVersionMapper workspaceVersionMapper;
   private final WorkspaceVersionMapper mapper;
 
@@ -81,7 +80,6 @@ public class WorkspaceVersionService extends XMLExportService<WorkspaceVersion> 
     Long newVersionId = copiedVersion.getId();
 //    Long userId = CommonUtil.getLoggedInUserId();
 
-    workspaceVersionRepository.copyRequirementDetails(newVersionId, versionId);
     workspaceVersionRepository.copyTestCaseDetails(newVersionId, versionId);
     workspaceVersionRepository.copyTestStepDetails(newVersionId);
     workspaceVersionRepository.copyRestStepDetails(newVersionId);

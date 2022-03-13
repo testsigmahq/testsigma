@@ -19,7 +19,7 @@ public class OpenAppAction extends MobileElementAction {
   @Override
   protected void execute() throws Exception {
 
-    Assert.isTrue(getTestData().contains(":"), String.format(SEMICOLON_ERROR_MESSAGE, getTestDataMaskResult()));
+    Assert.isTrue(getTestData().contains(":"), String.format(SEMICOLON_ERROR_MESSAGE, getTestData()));
     String[] diff = getTestData().split(":");
     packageName = diff[0].trim();
     activityName = diff[1].trim();

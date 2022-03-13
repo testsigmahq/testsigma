@@ -10,7 +10,7 @@
       class="w-15"
       (onClose)="fetchSchedules()"
       [displayText]="('test_plans.schedules.new' | translate)"
-      [execution]="execution"></app-schedule-form-button>
+      [testPlan]="testPlan"></app-schedule-form-button>
   </div>
   <div
     *ngIf="!schedules.isEmpty && !schedules.isFetching"

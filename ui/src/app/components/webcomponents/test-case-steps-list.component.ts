@@ -56,7 +56,7 @@ export abstract class TestCaseStepsListComponent extends BaseComponent implement
     this.check();
     if(!(Object.keys(changes).length && Object.keys(changes)[0] === "selectedTemplate") &&
       (!(Object.keys(changes).length && Object.keys(changes)[0] === "templates") || changes?.templates?.currentValue?.content?.length == changes?.templates?.previousValue?.length) &&
-      (!(Object.keys(changes).length && Object.keys(changes)[0] === "kibbutzTemplates")))
+      (!(Object.keys(changes).length && Object.keys(changes)[0] === "addonTemplates")))
       this.fetchSteps();
     this.selectedSteps=[];
   }

@@ -13,6 +13,5 @@ public class TestDataPropertiesEntity {
   private String testDataType;
   private Map<String, Object> testDataFunction;
   private String testDataValuePreSignedURL;
-  private Boolean hasPassword;
   private DefaultDataGeneratorsEntity defaultDataGeneratorsEntity;
 }

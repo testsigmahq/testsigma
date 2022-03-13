@@ -16,10 +16,6 @@ export class Environment extends Base implements PageObject {
   public description: String;
   @serializable(custom(v => v, v =>  v ))
   public parameters:  JSON;
-
-  @serializable(custom(v => v, v =>  v ))
-  public passwords:  String[];
-
   public projectId: Number;
   public selected: Boolean;
   public parametersJson: string;

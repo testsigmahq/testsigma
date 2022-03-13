@@ -10,8 +10,6 @@ public class TestCaseDetails {
 
   @JsonProperty("name")
   private String name;
-  @JsonProperty("requirement_id")
-  private Long requirementId;
 
   @JsonProperty("testData")
   private String testData;

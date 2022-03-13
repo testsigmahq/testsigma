@@ -18,13 +18,13 @@ import {Platform} from "../../enums/platform.enum";
     <div class="details-items pl-50 pr-20">
       <div class="align-items-center d-flex justify-content-start flex-wrap mb-10">
         <span class="mr-5" style="height: 20px;width: 20px;"
-              [class.testsigma-lab-logo]="executionResult?.testPlan?.isTestsigmaLab"
+              [class.testsigma-lab-logo]="testPlanResult?.testPlan?.isTestsigmaLab"
               [class.testsigma-local-devices-logo]="isHybrid">
         </span>
         <span
           class="rb-medium"
           [translate]="'execution.lab_type.'+
-            executionResult?.testPlan?.testPlanLabType" *ngIf="!isHybrid || !agent"></span>
+            testPlanResult?.testPlan?.testPlanLabType" *ngIf="!isHybrid || !agent"></span>
         <a class="text-link"
            [routerLink]="['/agents', agent.id]" [textContent]="agent.title" *ngIf="isHybrid && agent"></a>
       </div>
@@ -76,7 +76,7 @@ import {Platform} from "../../enums/platform.enum";
 })
 export class LabEnvironmentScreenShortInfoComponent implements OnInit {
   @Input('executionEnvironment') executionEnvironment: TestDevice;
-  @Input('executionResult') executionResult: TestPlanResult;
+  @Input('testPlanResult') testPlanResult: TestPlanResult;
   @Input("environmentResult") environmentResult: TestDeviceResult;
 
   public agent: Agent;
@@ -92,7 +92,7 @@ export class LabEnvironmentScreenShortInfoComponent implements OnInit {
 
   }
   ngOnChanges() {
-    if(this.executionResult?.testPlan?.isHybrid) {
+    if(this.testPlanResult?.testPlan?.isHybrid) {
       this.agentService.findAll("id:"+this.executionEnvironment?.agentId).subscribe(res=> {
         if(res.content.length) {
           this.agent = res.content[0]
@@ -113,24 +113,24 @@ export class LabEnvironmentScreenShortInfoComponent implements OnInit {
       });
     }
     if(this.executionEnvironment.platformOsVersionId!= null){
-      this.platformService.findOsVersion(this.executionEnvironment.platformOsVersionId, this.executionResult.testPlan.testPlanLabType).subscribe((platformOsversion) => {
+      this.platformService.findOsVersion(this.executionEnvironment.platformOsVersionId, this.testPlanResult.testPlan.testPlanLabType).subscribe((platformOsversion) => {
         this.executionEnvironment.platform = platformOsversion.platform;
         this.executionEnvironment.osVersion = platformOsversion.version;
       });
     }
     if(this.executionEnvironment.platformBrowserVersionId!=null){
-      this.platformService.findBrowserVersion(this.executionEnvironment.platformBrowserVersionId, this.executionResult.testPlan.testPlanLabType).subscribe((platformBrowsersversion) => {
+      this.platformService.findBrowserVersion(this.executionEnvironment.platformBrowserVersionId, this.testPlanResult.testPlan.testPlanLabType).subscribe((platformBrowsersversion) => {
         this.executionEnvironment.browser = platformBrowsersversion.name;
         this.executionEnvironment.browserVersion = platformBrowsersversion.version;
       });
     }
     if(this.executionEnvironment.platformDeviceId!=null){
-        this.platformService.findDevice(this.executionEnvironment.platformDeviceId, this.executionResult.testPlan.testPlanLabType).subscribe((platformDevice) => {
+        this.platformService.findDevice(this.executionEnvironment.platformDeviceId, this.testPlanResult.testPlan.testPlanLabType).subscribe((platformDevice) => {
         this.executionEnvironment.deviceName = platformDevice.displayName;
       });
     }
     if(this.executionEnvironment.platformScreenResolutionId!=null){
-      this.platformService.findScreenResolution(this.executionEnvironment.platformScreenResolutionId, this.executionResult.testPlan.testPlanLabType).subscribe((platformResolution) => {
+      this.platformService.findScreenResolution(this.executionEnvironment.platformScreenResolutionId, this.testPlanResult.testPlan.testPlanLabType).subscribe((platformResolution) => {
         this.executionEnvironment.resolution = platformResolution.resolution;
       });
     }
@@ -141,19 +141,19 @@ export class LabEnvironmentScreenShortInfoComponent implements OnInit {
   }
 
   get isHybrid() {
-    return this.executionResult?.testPlan?.isHybrid;
+    return this.testPlanResult?.testPlan?.isHybrid;
   }
 
   get isMobileWeb() {
-    return this.executionResult?.testPlan?.workspaceVersion?.workspace?.isMobileWeb;
+    return this.testPlanResult?.testPlan?.workspaceVersion?.workspace?.isMobileWeb;
   }
 
   get isMobileNative() {
-    return this.executionResult?.testPlan?.workspaceVersion?.workspace?.isMobileNative;
+    return this.testPlanResult?.testPlan?.workspaceVersion?.workspace?.isMobileNative;
   }
 
   get isMobile() {
-    return this.executionResult?.testPlan?.workspaceVersion?.workspace?.isMobile;
+    return this.testPlanResult?.testPlan?.workspaceVersion?.workspace?.isMobile;
   }
 
 

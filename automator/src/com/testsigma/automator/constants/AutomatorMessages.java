@@ -13,8 +13,8 @@ public class AutomatorMessages {
   public final static String MSG_CHECK_FOR_MORE_DETAILS = "Check step results for more details.";
   public final static String MSG_STEP_SUCCESS = "Test Step executed successfully";
   public final static String MSG_STEP_FAILURE = "Test Step execution failed";
-  public final static String MSG_COMPONET_SUCCESS = "Step Group executed successfully";
-  public final static String MSG_COMPONET_FAILURE = "Step Group execution failed";
+  public final static String MSG_STEP_GROUP_SUCCESS = "Step Group executed successfully";
+  public final static String MSG_STEP_GROUP_FAILURE = "Step Group execution failed";
   public final static String MSG_TEST_CASE_SUCCESS = "Test Case executed successfully";
   public final static String MSG_TEST_CASE_FAILURE = "Test Case execution failed. Check step results for more details";
   public final static String MSG_CASE_PRE_REQUISITE_FAILED = "Test Case pre-requisite failed";

@@ -12,7 +12,7 @@ public class VerifyTitleContainsAction extends ElementAction {
   protected void execute() throws Exception {
     setActualValue(getDriver().getTitle().trim());
     Assert.isTrue(getActualValue().toString().contains(getTestData().trim()), String.format(FAILURE_MESSAGE_MISMATCH,
-      getTestDataMaskResult(), getActualValue().toString()));
+      getTestData(), getActualValue().toString()));
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 }

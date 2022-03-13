@@ -12,7 +12,7 @@ import {TestDataType} from "../enums/test-data-type.enum";
 import {TestStepForLoop} from "./test-step-for-loop.model";
 import {TestStepTestDataFunction} from "./test-step-test-data-function.model";
 import {CustomStep} from "./custom-step.model";
-import {KibbutzTestStepTestData} from "./kibbutz-test-step-test-data.model";
+import {AddonTestStepTestData} from "./addon-test-step-test-data.model";
 
 export class StepDetailsDataMap extends Base implements Deserializable {
   @serializable(optional(list(primitive())))
@@ -29,14 +29,14 @@ export class StepDetailsDataMap extends Base implements Deserializable {
     return new TestStepTestDataFunction().deserialize(v)
   }))))
   public testDataFunction: TestStepTestDataFunction;
-  @serializable(alias('kibbutz_test_data_function', optional(custom(v => {
+  @serializable(alias('addon_test_data_function', optional(custom(v => {
     if (!v)
       return v;
     return v.serialize();
   }, v => {
-    return new KibbutzTestStepTestData().deserialize(v)
+    return new AddonTestStepTestData().deserialize(v)
   }))))
-  kibbutzTDF: KibbutzTestStepTestData;
+  addonTDF: AddonTestStepTestData;
   @serializable(alias('custom-step', optional(custom(v => {
     if (!v)
       return v;
@@ -92,8 +92,8 @@ export class StepDetailsDataMap extends Base implements Deserializable {
       input['from-element'] = input['fromElementString'];
     if(input['testDataFunction'])
       input['test-data-function'] = input['testDataFunction']
-    if(input['kibbutzTDF'])
-      input['kibbutz_test_data_function'] = input['kibbutzTDF']
+    if(input['addonTDF'])
+      input['addon_test_data_function'] = input['addonTDF']
     return Object.assign(this, deserialize(StepDetailsDataMap, input));
   }
 

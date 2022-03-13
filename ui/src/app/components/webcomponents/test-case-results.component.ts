@@ -17,7 +17,7 @@ import {BaseComponent} from "../../shared/components/base.component";
   styles: []
 })
 export class TestCaseResultsComponent extends BaseComponent implements OnInit {
-  @Input('executionResult') executionResult: TestPlanResult;
+  @Input('testPlanResult') testPlanResult: TestPlanResult;
   @Input('showFilter') showFilter: Boolean;
   @Input('showRunDetails') showRunDetails: Boolean;
   @Input('isExecutionRunning') isExecutionRunning: Boolean;
@@ -48,14 +48,14 @@ export class TestCaseResultsComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.testCaseResultsDataSource = new InfiniteScrollableDataSource(this.testCaseResultService, "iteration:null,testPlanResultId:" + this.executionResult.id);
+    this.testCaseResultsDataSource = new InfiniteScrollableDataSource(this.testCaseResultService, "iteration:null,testPlanResultId:" + this.testPlanResult.id);
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes["showFilter"] && !changes["showFilter"].firstChange) {
       return
     }
-    this.testCaseResultsDataSource = new InfiniteScrollableDataSource(this.testCaseResultService, "iteration:null,testPlanResultId:" + this.executionResult.id);
+    this.testCaseResultsDataSource = new InfiniteScrollableDataSource(this.testCaseResultService, "iteration:null,testPlanResultId:" + this.testPlanResult.id);
     this.isRunTestcaseFetchComplete = true;
   }
 
@@ -78,7 +78,7 @@ export class TestCaseResultsComponent extends BaseComponent implements OnInit {
 
   clearSearch() {
     this.testCaseResultsDataSource = undefined;
-    let query = "iteration:null,testPlanResultId:" + this.executionResult.id;
+    let query = "iteration:null,testPlanResultId:" + this.testPlanResult.id;
     this.testCaseResultsDataSource = new InfiniteScrollableDataSource(this.testCaseResultService, query);
     this.inputClear();
   }
@@ -111,7 +111,7 @@ export class TestCaseResultsComponent extends BaseComponent implements OnInit {
     let filterResult: ResultConstant[] = event.filterResult;
     let filterTestCaseTypes: string[] = event.filterTestCaseTypes
     let filterTestCasePriorities: string[] = event.filterTestCasePriorities
-    let query = "iteration:null,testPlanResultId:" + this.executionResult.id;
+    let query = "iteration:null,testPlanResultId:" + this.testPlanResult.id;
     this.isFilterApplied = false;
     this.filterResult = undefined;
     if (applyFilter) {
@@ -132,7 +132,7 @@ export class TestCaseResultsComponent extends BaseComponent implements OnInit {
 
   toggleSearch() {
     this.isSearchEnable = !this.isSearchEnable;
-    let query = "iteration:null,testPlanResultId:" + this.executionResult.id;
+    let query = "iteration:null,testPlanResultId:" + this.testPlanResult.id;
     if (this.isSearchEnable) {
       setTimeout(() => {
         this.searchMachineInput.nativeElement.focus();
@@ -150,7 +150,7 @@ export class TestCaseResultsComponent extends BaseComponent implements OnInit {
         debounceTime(500),
         distinctUntilChanged(),
         tap((event: KeyboardEvent) => {
-          let query = "iteration:null,testPlanResultId:" + this.executionResult.id;
+          let query = "iteration:null,testPlanResultId:" + this.testPlanResult.id;
           if (this.searchMachineInput.nativeElement.value) {
             query += ",testCaseName:*" + this.searchMachineInput.nativeElement.value + "*";
             this.testCaseResultsDataSource = new InfiniteScrollableDataSource(this.testCaseResultService, query);

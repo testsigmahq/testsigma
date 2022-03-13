@@ -56,17 +56,10 @@ public class WebserviceUtil {
     log.debug("Executing Rest step:" + testcaseStep);
     RestfulStepEntity entity = new ObjectMapper().convertValue(testcaseStep.getAdditionalData()
       .get(TestCaseStepEntity.REST_DETAILS_KEY), RestfulStepEntity.class);
-    RestfulStepEntity maskedEnity = new ObjectMapper().convertValue(testcaseStep.getAdditionalData()
-      .get(TestCaseStepEntity.MASKED_ENITY), RestfulStepEntity.class);
-    testcaseStep.getAdditionalData().remove(TestCaseStepEntity.MASKED_ENITY);
-
     result.setResult(ResultConstant.SUCCESS);
     try {
-      log.debug("Updating Rest step variables for Masked RestStepEntity:" + maskedEnity);
-      new RestAPIRunTimeDataProcessor(maskedEnity,result).processRestAPIStep();
       log.debug("Updating Rest step variables for RestStepEntity:" + entity);
       new RestAPIRunTimeDataProcessor(entity,result).processRestAPIStep();
-      maskedEnity.setStatus(entity.getStatus());
 
       initializeHttpClient(entity);
       Map<String, String> headers = fetchHeadersFromRestStep(entity);
@@ -78,10 +71,10 @@ public class WebserviceUtil {
 
       log.debug("Rest Url - " + entity.getUrl() + " Method " + entity.getMethod().toUpperCase()
         + " Headers - " + new ObjectMapperService().convertToJson(headers) + " PayLoad - " + entity.getPayload());
-      result.getMetadata().setReqEntity(maskedEnity);
+      result.getMetadata().setReqEntity(entity);
 
       log.debug("Method - " + entity.getMethod().toUpperCase() + "response - " + new ObjectMapperService().convertToJson(response));
-      ((Map<String, Object>) (testcaseStep.getAdditionalData().get(TestCaseStepEntity.REST_DETAILS_KEY))).put("url", maskedEnity.getUrl());
+      ((Map<String, Object>) (testcaseStep.getAdditionalData().get(TestCaseStepEntity.REST_DETAILS_KEY))).put("url", entity.getUrl());
 
       WebserviceResponse resObj = new WebserviceResponse();
       resObj.setStatus(response.getStatusCode());

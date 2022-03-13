@@ -21,7 +21,6 @@ public class TestSuiteResult {
   private ResultConstant result;
   private String message;
   private Long duration;
-  private Boolean suiteInParallel = false;
   private Timestamp executionInitiatedOn;
   private Timestamp agentPickedOn;
   private Timestamp deviceAllocatedOn;

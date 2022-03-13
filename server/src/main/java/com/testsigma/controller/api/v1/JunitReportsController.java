@@ -32,14 +32,14 @@ public class JunitReportsController {
   private final TestPlanResultService testPlanResultService;
   private final JunitReportService junitReportService;
 
-  @RequestMapping(value = {"/{executionResultId}"}, method = RequestMethod.GET, produces = {MediaType.APPLICATION_XML_VALUE})
-  public String getReport(@PathVariable(value = "executionResultId") Long executionResultId) throws Exception {
-    TestPlanResult testPlanResult = testPlanResultService.find(executionResultId);
+  @RequestMapping(value = {"/{testPlanResultId}"}, method = RequestMethod.GET, produces = {MediaType.APPLICATION_XML_VALUE})
+  public String getReport(@PathVariable(value = "testPlanResultId") Long testPlanResultId) throws Exception {
+    TestPlanResult testPlanResult = testPlanResultService.find(testPlanResultId);
     if (testPlanResult.getStatus() != StatusConstant.STATUS_COMPLETED) {
       return MessageConstants.REPORT_GENERATION_FAILED_TEST_PLAN_RUN_IS_NOT_COMPLETED;
     }
     JUNITTestSuitesNodeDTO JUNITTestSuitesNodeDTO = junitReportService.generateJunitReport(testPlanResult.getTestPlanId(),
-      executionResultId);
+      testPlanResultId);
     return junitReportService.getFormattedXML(JUNITTestSuitesNodeDTO);
   }
 

@@ -32,7 +32,7 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
   @Input('formGroup') testPlanForm: FormGroup;
   @Input('formSubmitted') formSubmitted: boolean;
   @Input('version') version: WorkspaceVersion;
-  @Input('execution') execution: TestPlan;
+  @Input('testPlan') testPlan: TestPlan;
   @Input('stepper') stepper: MatHorizontalStepper;
   @ViewChild('suitesValidationDiv') suitesValidationDiv: ElementRef;
   @ViewChild('machineValidationDiv') machineValidationDiv: ElementRef;
@@ -93,7 +93,7 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
   }
 
   get advancedSettings(): boolean {
-    return this.execution.testPlanType == TestPlanType.DISTRIBUTED;
+    return this.testPlan.testPlanType == TestPlanType.DISTRIBUTED;
   }
 
   get isInValid(): boolean {
@@ -114,10 +114,10 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
 
   set advancedSettings(value: boolean) {
     if(value)
-      this.execution.testPlanType = TestPlanType.DISTRIBUTED;
+      this.testPlan.testPlanType = TestPlanType.DISTRIBUTED;
     else
-      this.execution.testPlanType = TestPlanType.CROSS_BROWSER;
-    this.testPlanForm.controls['testPlanType'].setValue(this.execution.testPlanType);
+      this.testPlan.testPlanType = TestPlanType.CROSS_BROWSER;
+    this.testPlanForm.controls['testPlanType'].setValue(this.testPlan.testPlanType);
   }
 
   get hasDifferentSuites() {
@@ -161,8 +161,8 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
     }, 200);
     if(this.executionEnvironments.length > 0)
       return
-    if (this.execution?.environments) {
-      this.execution.environments.forEach(environment => {
+    if (this.testPlan?.environments) {
+      this.testPlan.environments.forEach(environment => {
         this.executionEnvironments.push(environment);
         (<FormArray>this.testPlanForm.controls['environments']).push(this.createEnvironmentFormGroup(environment))
       });
@@ -206,7 +206,6 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
       appActivity:  new FormControl(environment?.appActivity, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.APP_DETAILS)]),
       suiteIds: this.formBuilder.array([this.formBuilder.control(suiteIds, Validators.required)]),
       title: new FormControl(environment?.title, []),
-      runInParallel: new FormControl(environment?.runInParallel, []),
       createSessionAtCaseLevel: new FormControl(environment?.createSessionAtCaseLevel, []),
       browser: new FormControl(environment?.browser, [this.requiredIfValidator(() => !this.version?.workspace.isMobile && !this.isRest && this.isHybrid)]),
       platform: new FormControl(environment?.platform, [this.requiredIfValidator(() => !this.isRest && this.isHybrid)]),
@@ -357,7 +356,7 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
     this.matDialog.open(TestPlanAddSuiteFormComponent, {
       width: '65vw',
       height: '85vh',
-      data: {executionEnvironment: this.activeExecutionEnvironment, version: this.version, execution: this.execution},
+      data: {executionEnvironment: this.activeExecutionEnvironment, version: this.version, execution: this.testPlan},
       panelClass: ['mat-dialog', 'full-width', 'rds-none']
     }).afterClosed().subscribe(res => {
       if(res && !this.advancedSettings)

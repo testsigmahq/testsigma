@@ -15,7 +15,7 @@ import com.testsigma.automator.constants.AutomatorMessages;
 import com.testsigma.automator.drivers.DriverManager;
 import com.testsigma.automator.entity.*;
 import com.testsigma.automator.exceptions.AutomatorException;
-import com.testsigma.automator.service.KibbutzService;
+import com.testsigma.automator.service.AddonService;
 import com.testsigma.automator.service.ObjectMapperService;
 import com.testsigma.automator.utilities.RuntimeDataProvider;
 import com.testsigma.automator.utilities.ScreenCaptureUtil;
@@ -42,22 +42,22 @@ public abstract class TestcaseStepRunner {
   private static final String[] SKIP_SCREENSHOT_KEYWORDS = {"Close App", "Close all windows"};
   public static final String INVALID_SESSION = "The browser connection is lost. Either the browser is closed by the user or the connection is terminated.";
   public static final String BROWSER_UNREACHABLE = "The browser connection is lost. Either the browser is closed by the user or the connection is terminated. Session will be reset. ";
-  protected String executionId;
+  protected String testPlanId;
   protected WorkspaceType workspaceType;
   protected Platform os;
   private ObjectMapperService objectMapperService;
-  private KibbutzService kibbutzService;
+  private AddonService addonService;
 
   public TestcaseStepRunner() {
     this.objectMapperService = new ObjectMapperService();
   }
 
   public TestcaseStepRunner(WorkspaceType workspaceType, Platform os) {
-    this.executionId = EnvironmentRunner.getRunnerExecutionId();
+    this.testPlanId = EnvironmentRunner.getRunnerExecutionId();
     this.workspaceType = workspaceType;
     this.os = os;
     this.objectMapperService = new ObjectMapperService();
-    this.kibbutzService = KibbutzService.getInstance();
+    this.addonService = AddonService.getInstance();
   }
 
   public Platform getOs() {
@@ -95,8 +95,8 @@ public abstract class TestcaseStepRunner {
     testCaseStepResult.setConditionType(testCaseStepEntity.getConditionType());
     testCaseStepResult.setTestCaseStepType(testCaseStepEntity.getType());
     testCaseStepResult.setStepDetails(testCaseStepEntity.getStepDetails());
-    testCaseStepResult.setKibbutzTestData(testCaseStepEntity.getKibbutzTestData());
-    testCaseStepResult.setKibbutzElements(testCaseStepEntity.getKibbutzElements());
+    testCaseStepResult.setAddonTestData(testCaseStepEntity.getAddonTestData());
+    testCaseStepResult.setAddonElements(testCaseStepEntity.getAddonElements());
     testCaseStepResult.setWaitTime(testCaseStepEntity.getWaitTime());
     testCaseStepResult.setTestPlanRunSettingEntity(testPlanRunSettingEntity);
     testCaseStepResult.setPriority(testCaseStepEntity.getPriority());
@@ -180,14 +180,10 @@ public abstract class TestcaseStepRunner {
           failedToProcess, screenCaptureUtil, status);
       } else if (isRunning && !testCaseStepResult.getSkipExe() && !preReqFailed) {
         setTestDataValue(testCaseStepEntity, envDetails, testCaseResult, testCaseStepResult);
-        testCaseStepResult.setFieldDefinitionDetails(testCaseStepEntity.getElementsMap());
+        testCaseStepResult.setElementDetails(testCaseStepEntity.getElementsMap());
         testCaseStepResult.setTestDataDetails(testCaseStepEntity.getTestDataMap());
         log.debug("Step type is normal. Executing normal Action step");
         execute(envDetails, testCaseStepResult, testCaseStepEntity, testCaseResult);
-
-        if (testCaseStepEntity.getHasPassword()) {
-          testCaseStepEntity.setTestDataValue(NaturalTextActionConstants.PASSWORD_MASK);
-        }
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
@@ -265,9 +261,9 @@ public abstract class TestcaseStepRunner {
     ResultConstant status = (testCaseStepResult.getResult() != ResultConstant.SUCCESS) ? testCaseStepResult.getResult() : currentStatus;
 
     if ((status == ResultConstant.SUCCESS)) {
-      testCaseStepResult.setMessage(AutomatorMessages.MSG_COMPONET_SUCCESS);
+      testCaseStepResult.setMessage(AutomatorMessages.MSG_STEP_GROUP_SUCCESS);
     } else if (StringUtils.isBlank(testCaseStepResult.getMessage())) {
-      testCaseStepResult.setMessage(AutomatorMessages.MSG_COMPONET_FAILURE);
+      testCaseStepResult.setMessage(AutomatorMessages.MSG_STEP_GROUP_FAILURE);
     }
     return status;
   }
@@ -566,7 +562,7 @@ public abstract class TestcaseStepRunner {
             Integer.parseInt(testDataPropertiesEntity.getTestDataValue())));
           break;
         case function:
-          if (!testDataPropertiesEntity.getDefaultDataGeneratorsEntity().getIsKibbutzFn()) {
+          if (!testDataPropertiesEntity.getDefaultDataGeneratorsEntity().getIsAddonFn()) {
             DefaultDataGeneratorsEntity testDataFunctionEntity = testDataPropertiesEntity.getDefaultDataGeneratorsEntity();
             DefaultDataGeneratorsExecutor testDataFunctionExecutor = new DefaultDataGeneratorsExecutor();
             testDataFunctionExecutor.setTestCaseResult(testCaseResult);
@@ -576,7 +572,7 @@ public abstract class TestcaseStepRunner {
             testDataPropertiesEntity.setTestDataName(testDataPropertiesEntity.getTestDataValue());
             testDataPropertiesEntity.setTestDataValue(testDataValue);
           } else {
-            setTestDataValueFromKibbutzTestDataFunction(step, index, testDataPropertiesEntity, testCaseStepResult);
+            setTestDataValueFromAddonTestDataFunction(step, index, testDataPropertiesEntity, testCaseStepResult);
             index++;
           }
           break;
@@ -587,15 +583,15 @@ public abstract class TestcaseStepRunner {
   }
 
 
-  private void setTestDataValueFromKibbutzTestDataFunction(TestCaseStepEntity testCaseStepEntity, int index, TestDataPropertiesEntity testDataPropertiesEntity, TestCaseStepResult testCaseStepResult) throws IOException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException {
+  private void setTestDataValueFromAddonTestDataFunction(TestCaseStepEntity testCaseStepEntity, int index, TestDataPropertiesEntity testDataPropertiesEntity, TestCaseStepResult testCaseStepResult) throws IOException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException {
 
     try {
-      List<KibbutzPluginTestDataFunctionEntity> kibbutzPluginTDFEntityList = testCaseStepEntity.getKibbutzPluginTDFEntityList();
-      KibbutzPluginTestDataFunctionEntity entity = kibbutzPluginTDFEntityList.get(index);
-      String jarFilePath = kibbutzService.checkAndDownloadJar(entity.getClassPath(), entity.getModifiedHash());
-      Class<?> clazz = kibbutzService.loadJarClass(jarFilePath, entity.getFullyQualifiedName(), false);
+      List<AddonPluginTestDataFunctionEntity> addonPluginTDFEntityList = testCaseStepEntity.getAddonPluginTDFEntityList();
+      AddonPluginTestDataFunctionEntity entity = addonPluginTDFEntityList.get(index);
+      String jarFilePath = addonService.checkAndDownloadJar(entity.getClassPath(), entity.getModifiedHash());
+      Class<?> clazz = addonService.loadJarClass(jarFilePath, entity.getFullyQualifiedName(), false);
       Object instance = clazz.getDeclaredConstructor().newInstance();
-      setTestDataParameter(instance, kibbutzService, testDataPropertiesEntity);
+      setTestDataParameter(instance, addonService, testDataPropertiesEntity);
       Method executeMethod = clazz.getDeclaredMethod("generate");
       executeMethod.setAccessible(true);
       TestData testData = (TestData) executeMethod.invoke(instance);
@@ -612,12 +608,12 @@ public abstract class TestcaseStepRunner {
     }
   }
 
-  public void setTestDataParameter(Object instance, KibbutzService kibbutzService, TestDataPropertiesEntity testDataPropertiesEntity) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+  public void setTestDataParameter(Object instance, AddonService addonService, TestDataPropertiesEntity testDataPropertiesEntity) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
     Map<String, String> arguments = testDataPropertiesEntity.getDefaultDataGeneratorsEntity().getArguments();
     for (Map.Entry<String, String> entry : arguments.entrySet()) {
       String key = entry.getKey();
       String value = entry.getValue();
-      Object testDataParameterInstance = kibbutzService.getTestDataParameterInstance(value);
+      Object testDataParameterInstance = addonService.getTestDataParameterInstance(value);
       FieldUtils.writeField(instance, key, testDataParameterInstance, true);
       log.info("Setting test data instance - " + testDataParameterInstance);
     }

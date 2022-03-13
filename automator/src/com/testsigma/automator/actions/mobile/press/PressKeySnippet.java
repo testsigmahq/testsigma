@@ -32,10 +32,10 @@ public class PressKeySnippet extends MobileElementAction {
   protected void handleException(Exception e) {
     super.handleException(e);
     if (e instanceof IllegalArgumentException) {
-      setErrorMessage(String.format("Unable to press the key <b>%s</b>, given key in test data is not supported.", getTestDataMaskResult()));
+      setErrorMessage(String.format("Unable to press the key <b>%s</b>, given key in test data is not supported.", getTestData()));
       setErrorCode(ErrorCodes.PRESS_INVALID_ARGUMENT);
     } else if (e instanceof InvalidElementStateException) {
-      setErrorMessage(String.format(FAILURE_MESSAGE, getTestDataMaskResult()));
+      setErrorMessage(String.format(FAILURE_MESSAGE, getTestData()));
     }
   }
 }

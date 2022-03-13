@@ -84,7 +84,7 @@
                <a *ngIf="!!isAzure" (click)="view($event,StorageType.AZURE_BLOB)"
                   class="text-link" [translate]="'message.common.view_details'"></a>
                <mat-slide-toggle
-                 [checked]="!!isAzure"
+                 [checked]="!!status(StorageType.AZURE_BLOB)"
                  (change)="checkOrCreate($event,StorageType.AZURE_BLOB)"
                  class="mat-slide-toggle ml-auto slide-with-text">
                </mat-slide-toggle>

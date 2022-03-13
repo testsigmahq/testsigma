@@ -52,7 +52,7 @@ export class DryRunsComponent extends BaseComponent implements OnInit {
   constructor(
     public authGuard: AuthenticationGuard,
     public notificationsService: NotificationsService,
-    private executionResultService: TestPlanResultService,
+    private testPlanResultService: TestPlanResultService,
     private testCaseResultService: TestCaseResultService,
     private dryTestPlanService: DryTestPlanService,
     public translate: TranslateService,
@@ -109,10 +109,10 @@ export class DryRunsComponent extends BaseComponent implements OnInit {
     })
   }
 
-  stop(executionResult: TestPlanResult) {
-    executionResult.result = ResultConstant.STOPPED;
-    executionResult.status = StatusConstant.STATUS_COMPLETED;
-    this.executionResultService.update(executionResult).subscribe(() => {
+  stop(testPlanResult: TestPlanResult) {
+    testPlanResult.result = ResultConstant.STOPPED;
+    testPlanResult.status = StatusConstant.STATUS_COMPLETED;
+    this.testPlanResultService.update(testPlanResult).subscribe(() => {
       this.translate.get("execution.stopped.success").subscribe((res: string) => {
         this.showNotification(NotificationType.Success, res);
         this.fetchTestCaseResults();

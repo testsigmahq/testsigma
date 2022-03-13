@@ -50,9 +50,9 @@ public class TestStepRequest {
   private Long phoneNumberId;
   private Long addonActionId;
   private AddonNaturalTextActionData addonNaturalTextActionData;
-  private Map<String, KibbutzTestStepTestData> kibbutzTestData;
-  private Map<String, KibbutzElementData> kibbutzElements;
+  private Map<String, AddonTestStepTestData> addonTestData;
+  private Map<String, AddonElementData> addonElements;
   private Boolean disabled;
   @JsonProperty()
-  private KibbutzTestStepTestData kibbutzTDF;
+  private AddonTestStepTestData addonTDF;
 }

@@ -9,7 +9,6 @@ import com.testsigma.exception.TestsigmaException;
 import com.testsigma.model.TestDataSet;
 import com.testsigma.model.*;
 import com.testsigma.service.ObjectMapperService;
-import com.testsigma.util.EncryptDecryt;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -29,12 +28,11 @@ public class RestStepProcessor extends StepProcessor {
 
   public RestStepProcessor(WebApplicationContext webApplicationContext, List<TestCaseStepEntityDTO> testCaseStepEntityDTOS,
                            WorkspaceType workspaceType, Map<String, Element> elementMap,
-                           TestStepDTO testStepDTO, Long executionId, TestDataSet testDataSet,
+                           TestStepDTO testStepDTO, Long testPlanId, TestDataSet testDataSet,
                            Map<String, String> environmentParams, TestCaseEntityDTO testCaseEntityDTO,
-                           String environmentParamSetName, String dataProfile, List<String> testDataPasswords,
-                           List<String> environmentPasswords) {
-    super(webApplicationContext, testCaseStepEntityDTOS, workspaceType, elementMap, testStepDTO, executionId, testDataSet,
-      environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile, testDataPasswords, environmentPasswords);
+                           String environmentParamSetName, String dataProfile) {
+    super(webApplicationContext, testCaseStepEntityDTOS, workspaceType, elementMap, testStepDTO, testPlanId, testDataSet,
+      environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile);
   }
 
   public void process() throws TestsigmaException {
@@ -43,11 +41,9 @@ public class RestStepProcessor extends StepProcessor {
     processDefault(testCaseStepEntityDTO);
     testCaseStepEntityDTOS.add(testCaseStepEntityDTO);
     Map<String, Object> restDetails = new HashMap<>();
-    List<String> passwords = new ArrayList<>();
     try {
       if (testCaseEntityDTO.getTestDataId() != null) {
         TestData testData = testDataProfileService.find(testCaseEntityDTO.getTestDataId());
-        passwords = testData.getPasswords();
       }
       RestStep restStep = restStepService.findByStepId(testStepDTO.getId());
       //in restful application if the type is custom function skip
@@ -55,36 +51,23 @@ public class RestStepProcessor extends StepProcessor {
         return;
       }
       RestStepDTO restEntity = testStepMapper.map(restStep);
-      RestStepDTO dupEntity = restEntity.clone();
 
       processMultipart(restEntity);
 
       if (testStepDTO.getConditionType() != TestStepConditionType.CONDITION_ELSE) {
         restEntity.setRequestHeaders(replaceTestDataAndEnvironmentParams(ObjectUtils.defaultIfNull(
-          restEntity.getRequestHeaders(), new JSONObject()), passwords, Boolean.FALSE));
+          restEntity.getRequestHeaders(), new JSONObject())));
         restEntity.setAuthorizationValue(replaceTestDataAndEnvironmentParams(ObjectUtils.defaultIfNull(
-          restEntity.getAuthorizationValue(), new JSONObject()), passwords, Boolean.FALSE));
+          restEntity.getAuthorizationValue(), new JSONObject())));
 
-        restEntity.setUrl(replaceTestDataAndEnvironmentParams(restEntity.getUrl(), passwords, Boolean.FALSE));
-        restEntity.setPayload(replaceTestDataAndEnvironmentParams(restEntity.getPayload(), passwords, Boolean.FALSE));
-        restEntity.setResponse(replaceTestDataAndEnvironmentParams(restEntity.getResponse(), passwords, Boolean.FALSE));
-        restEntity.setStatus(replaceTestDataAndEnvironmentParams(restEntity.getStatus(),
-          passwords, Boolean.FALSE));
+        restEntity.setUrl(replaceTestDataAndEnvironmentParams(restEntity.getUrl()));
+        restEntity.setPayload(replaceTestDataAndEnvironmentParams(restEntity.getPayload()));
+        restEntity.setResponse(replaceTestDataAndEnvironmentParams(restEntity.getResponse()));
+        restEntity.setStatus(replaceTestDataAndEnvironmentParams(restEntity.getStatus()));
         restDetails.put("rest_details", testStepMapper.mapStepEntity(restEntity));
 
-        dupEntity.setRequestHeaders(replaceTestDataAndEnvironmentParams(ObjectUtils.defaultIfNull(
-          dupEntity.getRequestHeaders(), new JSONObject()), passwords, Boolean.TRUE));
-        dupEntity.setAuthorizationValue(replaceTestDataAndEnvironmentParams(ObjectUtils.defaultIfNull(
-          dupEntity.getAuthorizationValue(), new JSONObject()), passwords, Boolean.TRUE));
-
-        dupEntity.setUrl(replaceTestDataAndEnvironmentParams(dupEntity.getUrl(), passwords, Boolean.TRUE));
-        dupEntity.setPayload(replaceTestDataAndEnvironmentParams(dupEntity.getPayload(), passwords, Boolean.TRUE));
-        dupEntity.setResponse(replaceTestDataAndEnvironmentParams(dupEntity.getResponse(), passwords, Boolean.TRUE));
-        dupEntity.setStatus(replaceTestDataAndEnvironmentParams(dupEntity.getStatus(),
-          passwords, Boolean.FALSE));
         testCaseStepEntityDTO.setIfConditionExpectedResults(testStepDTO.getIfConditionExpectedResults());
         testCaseStepEntityDTO.setAdditionalData(testStepDTO.getDataMapJson());
-        restDetails.put("masked_enity", testStepMapper.mapStepEntity(dupEntity));
       }
 
     } catch (TestsigmaException e) {
@@ -123,21 +106,21 @@ public class RestStepProcessor extends StepProcessor {
     testCaseStepEntityDTO.setStepDetails(stepDetails);
   }
 
-  private JSONObject replaceTestDataAndEnvironmentParams(JSONObject requestString, List<String> passwords, Boolean isMasked)
+  private JSONObject replaceTestDataAndEnvironmentParams(JSONObject requestString)
     throws TestsigmaException {
-    return new JSONObject(replaceTestDataAndEnvironmentParams(requestString.toString(), passwords, isMasked));
+    return new JSONObject(replaceTestDataAndEnvironmentParams(requestString.toString()));
   }
 
-  private String replaceTestDataAndEnvironmentParams(String requestString, List<String> passwords, Boolean isMasked)
+  private String replaceTestDataAndEnvironmentParams(String requestString)
     throws TestsigmaException {
     String testDataReplacedString = replaceTestDataParams(requestString, testDataSet,
-      testCaseEntityDTO.getTestCaseName(), dataProfile, passwords, isMasked);
+      testCaseEntityDTO.getTestCaseName(), dataProfile);
     return replaceEnvironmentDataParams(testDataReplacedString, environmentParameters, environmentParamSetName,
       testCaseEntityDTO.getTestCaseName());
   }
 
   protected String replaceTestDataParams(String inputString, TestDataSet dataSet, String testCaseName,
-                                         String testDataName, List<String> passwords, Boolean isMasked)
+                                         String testDataName)
     throws TestsigmaException {
     if (inputString == null) {
       return null;
@@ -162,13 +145,6 @@ public class RestStepProcessor extends StepProcessor {
           MessageConstants.MSG_UNKNOWN_TEST_DATA_PARAMETER_NOTIN_TEST_STEP, data, testDataName);
         throw new TestsigmaException(ExceptionErrorCodes.TEST_DATA_NOT_FOUND, errorMessage);
       }
-      if (passwords != null && passwords.contains(data)) {
-        if (isMasked) {
-          parameter = Matcher.quoteReplacement(NaturalTextActionConstants.PASSWORD_MASK);
-        } else {
-          parameter = Matcher.quoteReplacement(new EncryptDecryt().decrypt(parameter));
-        }
-      }
       inputString = inputString.replaceAll(NaturalTextActionConstants.REST_DATA_PARAM_START_ESCAPED_PATTERN
         + Pattern.quote(data) + NaturalTextActionConstants.REST_DATA_PARAM_END_ESCAPED_PATTERN, parameter);
 
@@ -179,7 +155,7 @@ public class RestStepProcessor extends StepProcessor {
     return inputString;
   }
 
-  private String replaceEnvironmentDataParams(String inputString, Map<String, String> environmentDataSet, String globalDataName,
+  private String replaceEnvironmentDataParams(String inputString, Map<String, String> environmentDataSet, String environmentDataName,
                                               String testCaseName) throws TestsigmaException {
 
     if (inputString == null) {
@@ -203,7 +179,7 @@ public class RestStepProcessor extends StepProcessor {
       String parameter = environmentDataSet.getOrDefault(data, "");
       if (StringUtils.isEmpty(parameter)) {
         String errorMessage = com.testsigma.constants.MessageConstants.getMessage(
-          MessageConstants.MSG_UNKNOWN_ENVIRONMENT_PARAMETER_IN_TEST_STEP, parameter, testCaseName, globalDataName);
+          MessageConstants.MSG_UNKNOWN_ENVIRONMENT_PARAMETER_IN_TEST_STEP, parameter, testCaseName, environmentDataName);
         throw new TestsigmaException(ExceptionErrorCodes.ENVIRONMENT_PARAMETER_NOT_FOUND, errorMessage);
       }
 

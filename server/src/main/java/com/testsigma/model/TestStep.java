@@ -48,12 +48,12 @@ public class TestStep {
   private Long testCaseId;
 
   @Type(type = "json")
-  @Column(name = "kibbutz_test_data", columnDefinition = "json")
-  private String kibbutzTestData;
+  @Column(name = "addon_test_data", columnDefinition = "json")
+  private String addonTestData;
 
   @Type(type = "json")
-  @Column(name = "kibbutz_elements", columnDefinition = "json")
-  private String kibbutzElements;
+  @Column(name = "addon_elements", columnDefinition = "json")
+  private String addonElements;
 
   @Column(name = "addon_action_id")
   private Long addonActionId;
@@ -77,8 +77,8 @@ public class TestStep {
   @Column(name = "attribute")
   private String attribute;
 
-  @Column(name = "kibbutz_test_data_function")
-  private String kibbutzTDF;
+  @Column(name = "addon_test_data_function")
+  private String addonTDF;
 
   @Transient
   private String fromElement;
@@ -167,35 +167,35 @@ public class TestStep {
   @ToString.Exclude
   private RestStep restStep;
 
-  public Map<String, KibbutzTestStepTestData> getKibbutzTestData() {
+  public Map<String, AddonTestStepTestData> getAddonTestData() {
     ObjectMapperService mapper = new ObjectMapperService();
-    return mapper.parseJson(this.kibbutzTestData, new TypeReference<>() {
+    return mapper.parseJson(this.addonTestData, new TypeReference<>() {
     });
   }
 
-  public void setKibbutzTestData(Map<String, KibbutzTestStepTestData> testData) {
+  public void setAddonTestData(Map<String, AddonTestStepTestData> testData) {
     ObjectMapperService mapper = new ObjectMapperService();
-    kibbutzTestData = mapper.convertToJson(testData);
+    addonTestData = mapper.convertToJson(testData);
   }
 
-  public Map<String, KibbutzElementData> getKibbutzElements() {
+  public Map<String, AddonElementData> getAddonElements() {
     ObjectMapperService mapper = new ObjectMapperService();
-    return mapper.parseJson(this.kibbutzElements, new TypeReference<>() {
+    return mapper.parseJson(this.addonElements, new TypeReference<>() {
     });
   }
 
-  public void setKibbutzElements(Map<String, KibbutzElementData> elements) {
+  public void setAddonElements(Map<String, AddonElementData> elements) {
     ObjectMapperService mapper = new ObjectMapperService();
-    kibbutzElements = mapper.convertToJson(elements);
+    addonElements = mapper.convertToJson(elements);
   }
 
 
-  public KibbutzTestStepTestData getKibbutzTDF() {
-    return new ObjectMapperService().parseJson(kibbutzTDF, KibbutzTestStepTestData.class);
+  public AddonTestStepTestData getAddonTDF() {
+    return new ObjectMapperService().parseJson(addonTDF, AddonTestStepTestData.class);
   }
 
-  public void setKibbutzTDF(KibbutzTestStepTestData kibbutzTdf) {
-    this.kibbutzTDF = (kibbutzTdf == null) ? null : new ObjectMapperService().convertToJson(kibbutzTdf);
+  public void setAddonTDF(AddonTestStepTestData addonTdf) {
+    this.addonTDF = (addonTdf == null) ? null : new ObjectMapperService().convertToJson(addonTdf);
   }
 
   public TestStepDataMap getDataMapBean() {
@@ -208,7 +208,7 @@ public class TestStep {
     testStepDataMap.setToElement(toElement);
     testStepDataMap.setAttribute(attribute);
     ObjectMapperService mapper = new ObjectMapperService();
-    testStepDataMap.setKibbutzTDF(mapper.parseJson(kibbutzTestData, KibbutzTestStepTestData.class));
+    testStepDataMap.setAddonTDF(mapper.parseJson(addonTestData, AddonTestStepTestData.class));
     DefaultDataGeneratorsDetails functionDetails = new DefaultDataGeneratorsDetails();
     functionDetails.setId(testDataFunctionId);
     functionDetails.setArguments(testDataFunctionArgs);

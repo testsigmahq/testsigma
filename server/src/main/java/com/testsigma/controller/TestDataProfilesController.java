@@ -40,7 +40,6 @@ public class TestDataProfilesController {
   @RequestMapping(path = "/{id}", method = RequestMethod.GET)
   public TestDataProfileDTO show(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
     TestData testData = service.find(id);
-    testData.decryptPasswords();
     return mapper.mapToDTO(testData);
   }
 
@@ -65,7 +64,6 @@ public class TestDataProfilesController {
     TestData testData = this.service.find(id);
     mapper.merge(testDataProfileRequest, testData);
     testData.setUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-    testData.encryptPasswords();
     testData = this.service.update(testData);
     return this.mapper.mapToDTO(testData);
   }
@@ -74,7 +72,6 @@ public class TestDataProfilesController {
   @ResponseStatus(HttpStatus.CREATED)
   public TestDataProfileDTO create(@RequestBody TestDataProfileRequest testDataProfileRequest) throws ResourceNotFoundException {
     TestData testData = mapper.map(testDataProfileRequest);
-    testData.encryptPasswords();
     testData.setCreatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
     testData = service.create(testData);
     return mapper.mapToDTO(testData);

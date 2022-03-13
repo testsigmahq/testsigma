@@ -45,7 +45,7 @@ export class TestPlanResult extends ResultBase implements PageObject {
   @serializable
   public isReRun: boolean;
   @serializable
-  public parentExecutionResultId: number;
+  public parenttestPlanResultId: number;
   @serializable
   public isVisuallyPassed: boolean;
   @serializable

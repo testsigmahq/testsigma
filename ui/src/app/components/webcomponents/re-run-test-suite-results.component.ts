@@ -12,7 +12,7 @@ import {TestDeviceResult} from "../../models/test-device-result.model";
   ]
 })
 export class ReRunTestSuiteResultsComponent implements OnInit {
-  @Input('executionResult') executionResult: TestPlanResult;
+  @Input('testPlanResult') testPlanResult: TestPlanResult;
   @Input('environmentResult') environmentResult?: TestDeviceResult;
   @Output('onTestSuiteResultShow') onTestSuiteResultShow = new EventEmitter<TestSuiteResult>();
   @Output('onTestMachineResultShow') onTestMachineResultShow = new EventEmitter<TestDeviceResult>();
@@ -23,7 +23,7 @@ export class ReRunTestSuiteResultsComponent implements OnInit {
     private testSuiteResultService: TestSuiteResultService) { }
 
   ngOnInit(): void {
-    let query = "childRunId:"+this.executionResult.childResult.id;
+    let query = "childRunId:"+this.testPlanResult.childResult.id;
     if(this.environmentResult){
       query +=",environmentResultId:"+this.environmentResult.id;
     }

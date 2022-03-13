@@ -120,9 +120,6 @@ import {OverlayModule} from "@angular/cdk/overlay";
 import {TestDataGridComponent} from './components/webcomponents/test-data-grid.component';
 import {TestStepMoreActionFormComponent} from './components/webcomponents/test-step-more-action-form.component';
 import {TestCaseCloneFormComponent} from './components/webcomponents/test-case-clone-form.component';
-import {ListComponent as RequirementsListComponent} from "./components/requirements/list.component";
-import {FormComponent as RequirementFormComponent} from "./components/requirements/form.component";
-import {DetailsComponent as RequirementDetailsComponent} from "./components/requirements/details.component";
 import {TestCaseFormComponent} from './components/cases/test-case-form.component';
 import {TestCaseCreateHelpComponent} from './components/webcomponents/test-case-create-help.component';
 import {ListTagsComponent} from './components/webcomponents/list-tags.component';
@@ -192,8 +189,6 @@ import {BySummaryDonutChartComponent} from './components/webcomponents/by-summar
 import {Ng9OdometerModule} from 'ng9-odometer';
 import {DryRunSavedConfigFormComponent} from './components/webcomponents/dry-run-saved-config-form.component';
 import {DryRunSavedConfigListComponent} from "./components/webcomponents/dry-run-saved-config-list.component";
-import {DetailsHeaderComponent} from './components/requirements/details-header.component';
-import {TestCasesComponent} from './components/requirements/test-cases.component';
 import {DetailsHeaderComponent as EnvironmentDetailsHeaderComponent} from './components/environments/details-header.component';
 import {TestPlansComponent as EnvironmentTestPlansComponent} from './components/environments/test-plans.component';
 import {TagsChipListComponent} from './components/webcomponents/tags-chip-list.component';
@@ -230,7 +225,7 @@ import {LinearIssueDetailsComponent} from './components/webcomponents/linear-iss
 import {HelpActionsComponent} from './components/webcomponents/help-actions.component';
 import {TestCaseDataDrivenResultListComponent} from './src/app/components/webcomponents/test-case-data-driven-result-list.component';
 import {ElementBulkUpdateComponent} from './components/webcomponents/element-bulk-update.component';
-import {KibbutzAppComponent} from './components/kibbutz-app.component';
+import {AddonAppComponent} from './components/addon-app.component';
 import {RouteLoadingComponent} from './components/webcomponents/route-loading.component';
 import {MatCarouselModule} from '@ngmodule/material-carousel';
 import {TestDataFilterComponent} from "./components/data/webcomponents/test-data-filter.component";
@@ -247,7 +242,7 @@ import { TelemetryNotificationComponent } from './components/webcomponents/telem
 import {QuickStartComponent} from "./components/webcomponents/quick-start.component";
 import {GetStartedBaseComponent} from "./components/webcomponents/get-started-base.component";
 import {AddonDetailsComponent} from "./shared/components/webcomponents/addon-details.component";
-import {SubmitUiIdentifierReviewComponent} from "./components/webcomponents/submit-ui-identifier-review.component";
+import {SubmitElementReviewComponent} from "./components/webcomponents/submit-element-review.component";
 import {ChromeRecordButtonComponent} from "./components/webcomponents/chrome-record-button.component";
 import {FirstChromeInstallComponent} from "./components/webcomponents/first-chrome-install.component";
 import {CodemirrorModule} from "@ctrl/ngx-codemirror";
@@ -365,9 +360,6 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     TestDataTestCasesComponent,
     TestStepMoreActionFormComponent,
     TestCaseCloneFormComponent,
-    RequirementsListComponent,
-    RequirementFormComponent,
-    RequirementDetailsComponent,
     TestCaseFormComponent,
     TestCaseCreateHelpComponent,
     ListTagsComponent,
@@ -431,8 +423,6 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     BySummaryDonutChartComponent,
     DryRunSavedConfigFormComponent,
     DryRunSavedConfigListComponent,
-    DetailsHeaderComponent,
-    TestCasesComponent,
     EnvironmentDetailsHeaderComponent,
     EnvironmentTestPlansComponent,
     TagsChipListComponent,
@@ -469,7 +459,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     HelpActionsComponent,
     TestCaseDataDrivenResultListComponent,
     ElementBulkUpdateComponent,
-    KibbutzAppComponent,
+    AddonAppComponent,
     RouteLoadingComponent,
     TestDataFilterComponent,
     TestDevIconComponent,
@@ -484,7 +474,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     QuickStartComponent,
     GetStartedBaseComponent,
     AddonDetailsComponent,
-    SubmitUiIdentifierReviewComponent,
+    SubmitElementReviewComponent,
     ChromeRecordButtonComponent,
     FirstChromeInstallComponent,
     FreshChatWidgetComponent,

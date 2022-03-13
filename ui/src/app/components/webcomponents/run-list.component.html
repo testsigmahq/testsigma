@@ -62,7 +62,7 @@
     [class.list-highlight-3]="result?.isNotExecuted"
     [class.list-highlight-5]="result?.isQueued"
     [class.list-highlight-6]="result?.isStopped"
-    *cdkVirtualFor='let result of executionResults'
+    *cdkVirtualFor='let result of testPlanResults'
     [routerLink]="['/td/runs', result.id]"
     [routerLinkActive]="'active'">
     <div class="d-flex mr-10 ts-col-40">
@@ -77,7 +77,7 @@
         <i (click)="deleteRun(result);$event.stopImmediatePropagation();$event.stopPropagation();$event.preventDefault()"
            [matTooltip]="'runs.details.hint.delete_run' | translate"
            class="fa-trash action-icons text-t-secondary ml-5 fz-11"
-           *ngIf="result.id != activeExecutionResult?.id && execution?.lastRunId != result.id && result.id != currentRunId"></i>
+           *ngIf="result.id != activeExecutionResult?.id && testPlan?.lastRunId != result.id && result.id != currentRunId"></i>
       </div>
       <div class="pt-2 text-t-secondary fz-12 d-flex justify-content-center"
            [class.position-absolute]="result.id == activeExecutionResult?.id"
@@ -121,7 +121,7 @@
       </div>
     </div>
   </a>
-  <div *ngIf="executionResults.isEmpty" class="empty-full-container-transparent-bg">
+  <div *ngIf="testPlanResults.isEmpty" class="empty-full-container-transparent-bg">
     <div class="empty-full-content">
       <div class="empty-run-xs"></div>
       <div
@@ -129,5 +129,5 @@
         [translate]="'message.common.search.not_found'"></div>
     </div>
   </div>
-  <app-placeholder-loader *ngIf="executionResults?.isFetching" [isChartWith]="true"></app-placeholder-loader>
+  <app-placeholder-loader *ngIf="testPlanResults?.isFetching" [isChartWith]="true"></app-placeholder-loader>
 </cdk-virtual-scroll-viewport>

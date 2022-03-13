@@ -22,7 +22,6 @@ public class NaturalTextActionConstants {
   public final static String REST_DATA_ENVIRONMENT_PARAM_END_ESCAPED_PATTERN = "\\|";
   public final static String REST_DATA_ENVIRONMENT_PARAM_START_PATTERN = "*|";
   public final static String REST_DATA_ENVIRONMENT_PARAM_END_PATTERN = "|";
-  public final static String PASSWORD_MASK = "********";
   public static final int WHILE_LOOP_MAX_LIMIT = 100;
   private static final List<String> fieldPatternList = new ArrayList<String>();
   public static Map<String, String> ERROR_MSGS = new HashMap<String, String>();

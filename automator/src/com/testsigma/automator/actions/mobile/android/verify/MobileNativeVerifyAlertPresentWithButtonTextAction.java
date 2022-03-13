@@ -32,13 +32,13 @@ public class MobileNativeVerifyAlertPresentWithButtonTextAction extends MobileEl
     findElement();
     MobileElement targetElement = (MobileElement) getElement();
     Assert.isTrue(targetElement.isDisplayed(),
-      String.format(FAILURE_MESSAGE_NOT_DISPLAYED, getTestDataMaskResult()));
+      String.format(FAILURE_MESSAGE_NOT_DISPLAYED, getTestData()));
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 
   @Override
   protected void handleException(Exception e) {
     super.handleException(e);
-    updateErrorMessageForDynamicLocatorTypes(e, String.format(FAILURE_NOT_FOUND, getTestDataMaskResult()));
+    updateErrorMessageForDynamicLocatorTypes(e, String.format(FAILURE_NOT_FOUND, getTestData()));
   }
 }

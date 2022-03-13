@@ -12,7 +12,7 @@ public class TestSuiteEntity {
   private Long resultId;
   private Long preRequisite;
   private Long environmentResultId;
-  private Long executionResultId;
+  private Long testPlanResultId;
   private List<TestCaseEntity> testCases = new ArrayList<>();
   private String videoPreSignedURL;
   private String seleniumLogPreSignedURL;

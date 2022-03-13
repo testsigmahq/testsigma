@@ -1,14 +1,14 @@
 {
   "checksum": {
-    "previous": "6bad57e907db737cf18b43c71b8db5a89f48a8402b52836448851fc9fefa92c5",
-    "current": "6bad57e907db737cf18b43c71b8db5a89f48a8402b52836448851fc9fefa92c5"
+    "previous": "0db0138cbab473ececf701ba5d9aef8260b0c7090592c48e1eea1fea4b81f7d0",
+    "current": "0db0138cbab473ececf701ba5d9aef8260b0c7090592c48e1eea1fea4b81f7d0"
   },
   "fonts": [
-    "./assets/font_icons/font_custom_6bad57e907db737cf18b43c71b8db5a8.ttf",
-    "./assets/font_icons/font_custom_6bad57e907db737cf18b43c71b8db5a8.svg",
-    "./assets/font_icons/font_custom_6bad57e907db737cf18b43c71b8db5a8.woff",
-    "./assets/font_icons/font_custom_6bad57e907db737cf18b43c71b8db5a8.eot",
-    "./assets/font_icons/font_custom_6bad57e907db737cf18b43c71b8db5a8.woff2"
+    "./assets/font_icons/font_custom_0db0138cbab473ececf701ba5d9aef82.ttf",
+    "./assets/font_icons/font_custom_0db0138cbab473ececf701ba5d9aef82.svg",
+    "./assets/font_icons/font_custom_0db0138cbab473ececf701ba5d9aef82.woff",
+    "./assets/font_icons/font_custom_0db0138cbab473ececf701ba5d9aef82.eot",
+    "./assets/font_icons/font_custom_0db0138cbab473ececf701ba5d9aef82.woff2"
   ],
   "glyphs": {
     "4-quabs": {
@@ -1019,9 +1019,9 @@
       "codepoint": 61836,
       "source": "./icons/not-equal-solid.svg"
     },
-    "nlp-grammar-alt": {
-      "codepoint": 62153,
-      "source": "./icons/nlp-grammar-alt.svg"
+    "npl-grammar-alt": {
+      "codepoint": 62156,
+      "source": "./icons/npl-grammar-alt.svg"
     },
     "object-ungroup-regular": {
       "codepoint": 61837,
@@ -1222,18 +1222,6 @@
     "reports": {
       "codepoint": 61860,
       "source": "./icons/reports.svg"
-    },
-    "requirement-type": {
-      "codepoint": 62078,
-      "source": "./icons/requirement-type.svg"
-    },
-    "requirements": {
-      "codepoint": 61861,
-      "source": "./icons/requirements.svg"
-    },
-    "requirements-alt": {
-      "codepoint": 62046,
-      "source": "./icons/requirements-alt.svg"
     },
     "rest-cloud": {
       "codepoint": 61862,

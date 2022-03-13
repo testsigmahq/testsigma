@@ -37,8 +37,8 @@ public class DryTestPlanService {
     return dryTestPlanRepository.findAll(spec, pageable);
   }
 
-  public DryTestPlan find(Long executionId) throws ResourceNotFoundException {
-    return this.dryTestPlanRepository.findById(executionId)
+  public DryTestPlan find(Long testPlanId) throws ResourceNotFoundException {
+    return this.dryTestPlanRepository.findById(testPlanId)
       .orElseThrow(() -> new ResourceNotFoundException("Missing Dry execution"));
   }
 

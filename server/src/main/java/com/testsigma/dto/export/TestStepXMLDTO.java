@@ -38,7 +38,7 @@ public class TestStepXMLDTO extends BaseXMLDTO {
   private String action;
   @JsonProperty("test-case-id")
   private Long testCaseId;
-  @JsonProperty("kibbutz-plugin-action-id")
+  @JsonProperty("addon-plugin-action-id")
   private Long addonActionId;
   @JsonProperty("test-group-id")
   private Long stepGroupId;

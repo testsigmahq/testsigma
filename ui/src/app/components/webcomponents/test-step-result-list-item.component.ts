@@ -87,19 +87,19 @@ import {NaturalTextActionsService} from "../../services/natural-text-actions.ser
               class="mw-80 lh-1point4"
               [class.text-warning]="testStepResult.testStep &&!testStepResult?.isBreakContinueLoopStep"
               [class.text-uppercase]="testStepResult.testStep &&!testStepResult?.isBreakContinueLoopStep"
-              *ngIf="(testStepResult.template || testStepResult.kibbutzTemplate) || (testStepResult.testStep &&!testStepResult?.isBreakContinueLoopStep)">
+              *ngIf="(testStepResult.template || testStepResult.addonTemplate) || (testStepResult.testStep &&!testStepResult?.isBreakContinueLoopStep)">
               <i *ngIf="testStepResult?.isConditionalWhileLoop" class="fa-while-loop mr-5 text-nowrap text-warning"></i>
               <span
-                [innerHTML]="testStepResult.testStep && !testStepResult?.isBreakContinueLoopStep ? testStepResult?.stepDetail?.action : testStepResult?.testStep?.addonActionId ? testStepResult.parsedKibbutzStep(testStepResult?.kibbutzTestData, testStepResult?.stepDetail?.action) : testStepResult.parsedStep"></span>
+                [innerHTML]="testStepResult.testStep && !testStepResult?.isBreakContinueLoopStep ? testStepResult?.stepDetail?.action : testStepResult?.testStep?.addonActionId ? testStepResult.parsedAddonStep(testStepResult?.addonTestData, testStepResult?.stepDetail?.action) : testStepResult.parsedStep"></span>
             </span>
             <span *ngIf="testStepResult.isStepGroup" [textContent]="testStepResult.stepGroup?.name"></span>
             <span
-              *ngIf="(testStepResult.isRestStep || !testStepResult.template) && (testStepResult.testStep &&testStepResult?.isBreakContinueLoopStep) && !testStepResult.testStep?.isKibbutzAction && !(testStepResult?.kibbutzTestData || testStepResult?.kibbutzElements)"
+              *ngIf="(testStepResult.isRestStep || !testStepResult.template) && (testStepResult.testStep &&testStepResult?.isBreakContinueLoopStep) && !testStepResult.testStep?.isAddonAction && !(testStepResult?.addonTestData || testStepResult?.addonElements)"
               [innerHTML]="testStepResult?.stepDetail?.action"></span>
             <span
-              *ngIf="(testStepResult?.kibbutzElements || testStepResult?.kibbutzTestData) || (testStepResult.testStep?.isKibbutzAction && testStepResult?.testStep?.kibbutzTemplate) && !testStepResult.template">
+              *ngIf="(testStepResult?.addonElements || testStepResult?.addonTestData) || (testStepResult.testStep?.isAddonAction && testStepResult?.testStep?.addonTemplate) && !testStepResult.template">
               <i class="fa-addon mr-5 text-nowrap"></i><span
-              [innerHTML]="testStepResult.parsedKibbutzStep(testStepResult?.kibbutzTestData, testStepResult?.kibbutzElements, testStepResult?.stepDetail?.action)"></span>
+              [innerHTML]="testStepResult.parsedAddonStep(testStepResult?.addonTestData, testStepResult?.addonElements, testStepResult?.stepDetail?.action)"></span>
             </span>
           </div>
 
@@ -194,7 +194,7 @@ import {NaturalTextActionsService} from "../../services/natural-text-actions.ser
         [testSteps]="testSteps"
         [version]="workspaceVersion"
         [testStep]="testStepResult?.testStep"
-        [kibbutzTemplates]="kibbutzTemplates"
+        [addonTemplates]="addonTemplates"
         [testCaseResultId]="testcaseResult?.id"
         [templates]="templates"></app-test-step-form-container>
       <div class="bg-grey-x-light p-10 ml-auto align-items-center d-flex" (mouseenter)="onTriggerDetails()">
@@ -215,7 +215,7 @@ import {NaturalTextActionsService} from "../../services/natural-text-actions.ser
           [workspaceVersion]="workspaceVersion"
           [testSteps]="testSteps"
           [templates]="templates"
-          [kibbutzTemplates]="kibbutzTemplates"
+          [addonTemplates]="addonTemplates"
           [filteredTestStepResult]="filteredTestStepResult"
           [testStepResult]="childStepResult"
           (click)="setIfFailedStep(childStepResult)"></app-test-step-result-list-item>
@@ -232,7 +232,7 @@ export class TestStepResultListItemComponent extends TestStepListItemComponent i
   @Input('isStepGroupChild') isStepGroupChild: Boolean = false;
   @Input('testcaseResult') testcaseResult: TestCaseResult;
   @Input('templates') templates: Page<NaturalTextActions>;
-  @Input('kibbutzTemplates') kibbutzTemplates?: Page<AddonNaturalTextAction>;
+  @Input('addonTemplates') addonTemplates?: Page<AddonNaturalTextAction>;
   @Input('testSteps') testSteps: Page<TestStep>;
   @Input('workspaceVersion') workspaceVersion: WorkspaceVersion;
   @Input('isEditEnabled') isEditEnabled?: boolean = false;
@@ -260,8 +260,8 @@ export class TestStepResultListItemComponent extends TestStepListItemComponent i
   ngOnInit() {
     if(this.testStepResult?.testStep){
       this.testStepResult.testStep['stepGroup'] = this.testStepResult?.stepGroup;
-      if(this.kibbutzTemplates?.totalElements){
-        this.testStepResult.testStep.kibbutzTemplate =  this.kibbutzTemplates.content.find(template => template.id == this.testStepResult.testStep.addonActionId)
+      if(this.addonTemplates?.totalElements){
+        this.testStepResult.testStep.addonTemplate =  this.addonTemplates.content.find(template => template.id == this.testStepResult.testStep.addonActionId)
       }
     }
   }
@@ -269,8 +269,8 @@ export class TestStepResultListItemComponent extends TestStepListItemComponent i
   ngOnChanges() {
     if(this.testStepResult?.testStep){
       this.testStepResult.testStep['stepGroup'] = this.testStepResult?.stepGroup;
-      if(this.kibbutzTemplates?.totalElements){
-        this.testStepResult.testStep.kibbutzTemplate =  this.kibbutzTemplates.content.find(template => template.id == this.testStepResult.testStep.addonActionId)
+      if(this.addonTemplates?.totalElements){
+        this.testStepResult.testStep.addonTemplate =  this.addonTemplates.content.find(template => template.id == this.testStepResult.testStep.addonActionId)
       }
     }
   }

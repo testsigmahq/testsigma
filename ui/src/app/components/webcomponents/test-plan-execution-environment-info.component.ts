@@ -81,7 +81,7 @@ import { DevicesService } from 'app/agents/services/devices.service';
 })
 export class TestPlanExecutionEnvironmentInfoComponent implements OnInit {
   @Input('executionEnvironment') executionEnvironment: TestDevice;
-  @Input('execution') execution: TestPlan;
+  @Input('testPlan') testPlan: TestPlan;
   @Input('version') version: WorkspaceVersion;
   @Input('testPlanLabType') testPlanLabType: TestPlanLabType;
   @Input('index') index: number;
@@ -97,7 +97,7 @@ export class TestPlanExecutionEnvironmentInfoComponent implements OnInit {
   }
 
   get advancedSettingsEnabled() {
-    return this.execution.testPlanType == TestPlanType.DISTRIBUTED;
+    return this.testPlan.testPlanType == TestPlanType.DISTRIBUTED;
   }
 
   ngOnInit(): void {

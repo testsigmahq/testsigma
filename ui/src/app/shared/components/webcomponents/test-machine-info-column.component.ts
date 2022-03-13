@@ -69,8 +69,8 @@ export class TestMachineInfoColumnComponent implements OnInit {
   public environmentSettings: TestDeviceSettings;
   @Input("environmentResult") environmentResult: TestDeviceResult;
   @Input('executionEnvironment') executionEnvironment: TestDevice;
-  @Input('executionResult') executionResult: TestPlanResult;
-  @Input('execution') execution: TestPlan;
+  @Input('testPlanResult') testPlanResult: TestPlanResult;
+  @Input('testPlan') testPlan: TestPlan;
   public agent: Agent;
   public agentDevice: AgentDevice;
 
@@ -138,22 +138,22 @@ export class TestMachineInfoColumnComponent implements OnInit {
   }
 
   get isHybrid() {
-    return this.executionResult?.testPlan?.isHybrid || this.execution?.isHybrid;
+    return this.testPlanResult?.testPlan?.isHybrid || this.testPlan?.isHybrid;
   }
 
   get isMobileWeb() {
-    return this.executionResult?.testPlan?.workspaceVersion?.workspace?.isMobileWeb
-    || this.execution?.workspaceVersion?.workspace?.isMobileWeb;
+    return this.testPlanResult?.testPlan?.workspaceVersion?.workspace?.isMobileWeb
+    || this.testPlan?.workspaceVersion?.workspace?.isMobileWeb;
   }
 
   get isMobileNative() {
-    return this.executionResult?.testPlan?.workspaceVersion?.workspace?.isMobileNative
-    || this.execution?.workspaceVersion?.workspace?.isMobileNative;
+    return this.testPlanResult?.testPlan?.workspaceVersion?.workspace?.isMobileNative
+    || this.testPlan?.workspaceVersion?.workspace?.isMobileNative;
   }
 
   get isMobile() {
-    return this.executionResult?.testPlan?.workspaceVersion?.workspace?.isMobile
-    || this.execution?.workspaceVersion?.workspace?.isMobile;
+    return this.testPlanResult?.testPlan?.workspaceVersion?.workspace?.isMobile
+    || this.testPlan?.workspaceVersion?.workspace?.isMobile;
   }
   eventPrevent(event) {
     event.stopPropagation();

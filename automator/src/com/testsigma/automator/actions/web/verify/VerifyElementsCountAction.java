@@ -15,7 +15,7 @@ public class VerifyElementsCountAction extends ElementAction {
   protected void execute() throws Exception {
     findElement();
     setActualValue(Double.valueOf(getElements().size()));
-    Double expectedCount = NumberFormatter.getDoubleValue(getTestData(), String.format(FAILURE_NOT_A_NUMBER, getTestDataMaskResult()));
+    Double expectedCount = NumberFormatter.getDoubleValue(getTestData(), String.format(FAILURE_NOT_A_NUMBER, getTestData()));
     Assert.isTrue(expectedCount.equals(getActualValue()), String.format(FAILURE_MESSAGE, getFindByType(), getLocatorValue(),
       expectedCount, ((Double) getActualValue()).intValue()));
     setSuccessMessage(SUCCESS_MESSAGE);

@@ -23,15 +23,19 @@ import java.util.Set;
 public interface TestDeviceRepository extends BaseRepository<TestDevice, Long> {
   List<TestDevice> findTestDeviceByAgentId(Long agentId);
 
-  List<TestDevice> findByExecutionIdAndDisable(Long executionId, Boolean disable);
+  List<TestDevice> findByTestPlanIdAndDisable(Long testPlanId, Boolean disable);
 
   Page<TestDevice> findAll(Specification<TestDevice> spec, Pageable pageable);
 
-  List<TestDevice> findByExecutionId(Long executionId);
+  List<TestDevice> findByTestPlanId(Long testPlanId);
 
   @Modifying
   @Query("DELETE FROM TestDevice exeEnv WHERE exeEnv.id IN (:ids)")
   void deleteAllByIds(@Param("ids") Set<Long> ids);
 
   List<TestDevice> findAllByDeviceIdIn(List<Long> removedAgentDeviceIds);
+
+  @Modifying
+  @Query(value = "UPDATE test_devices td INNER JOIN test_plans tp ON td.test_plan_id = tp.id SET td.app_upload_id = NULL WHERE td.app_upload_id = :appUploadId and tp.entity_type = 'ADHOC_TEST_PLAN'", nativeQuery = true)
+  void resentAppUploadIdToNull(@Param("appUploadId") Long appUploadId);
 }

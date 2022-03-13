@@ -17,7 +17,7 @@ public class VerifyAttributeValueAction extends ElementAction {
     setActualValue(getElement().getAttribute(getAttribute()));
     Assert.notNull(getActualValue(), String.format(FAILURE_MESSAGE_NOT_AVAILABLE, getAttribute(), getFindByType(), getLocatorValue()));
     Assert.isTrue(getActualValue().equals(getTestData()), String.format(FAILURE_MESSAGE_MISMATCH, getAttribute(),
-      getFindByType(), getLocatorValue(), getTestDataMaskResult(), getActualValue()));
+      getFindByType(), getLocatorValue(), getTestData(), getActualValue()));
     setSuccessMessage(String.format(SUCCESS_MESSAGE, getAttribute(), getActualValue()));
   }
 }

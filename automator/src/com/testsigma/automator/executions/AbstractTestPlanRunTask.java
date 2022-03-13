@@ -48,7 +48,6 @@ public abstract class AbstractTestPlanRunTask extends Thread {
     environmentRunResult.setStartTime(new Timestamp(System.currentTimeMillis()));
     environmentRunResult.setAgentPickedOn(new Timestamp(System.currentTimeMillis()));
     environmentRunResult.setId(environmentResultId);
-    environmentRunResult.setRunInParallel(environment.getRunInParallel());
   }
 
 

@@ -30,7 +30,7 @@ public class ClickOnElementUsingLocatorWithTextContainingAction extends ElementA
       s = s.substring(0, s.length() - 1);
     }
     Assert.isTrue(clickElement, String.format(FAILURE_MESSAGE, getFindByType(), getLocatorValue(),
-      getTestDataMaskResult(), s, getTestDataMaskResult()));
+      getTestData(), s, getTestData()));
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 }

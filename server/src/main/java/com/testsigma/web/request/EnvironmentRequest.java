@@ -21,5 +21,4 @@ public class EnvironmentRequest {
   private String description;
   @JsonDeserialize(using = JSONObjectDeserializer.class)
   private JSONObject parameters;
-  private List<String> passwords;
 }

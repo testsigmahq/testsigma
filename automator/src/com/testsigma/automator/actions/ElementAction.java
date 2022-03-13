@@ -108,16 +108,6 @@ public abstract class ElementAction extends DriverAction {
     return testDataPropertiesEntity.getTestDataValue();
   }
 
-  protected Boolean getHasPassword(String testDataActionVarName) {
-    TestDataPropertiesEntity testDataPropertiesEntity = getTestDataPropertiesEntity(testDataActionVarName);
-    return testDataPropertiesEntity != null && testDataPropertiesEntity.getHasPassword() != null && testDataPropertiesEntity.getHasPassword();
-  }
-
-  protected String getTestDataMaskResult() {
-    String testDataResult = (getHasPassword(TEST_STEP_DATA_MAP_KEY_TEST_DATA) == true) ? PASSWORD_MASK : getTestData();
-    return testDataResult;
-  }
-
   protected FindByType getFindByType() {
     return getFindByType(TESTS_TEP_DATA_MAP_KEY_ELEMENT);
   }

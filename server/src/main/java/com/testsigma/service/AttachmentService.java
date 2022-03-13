@@ -15,7 +15,6 @@ import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.mapper.AttachmentMapper;
 import com.testsigma.model.WorkspaceVersion;
 import com.testsigma.model.Attachment;
-import com.testsigma.model.Requirement;
 import com.testsigma.model.TestCase;
 import com.testsigma.repository.AttachmentRepository;
 import com.testsigma.specification.AttachmentSpecificationsBuilder;
@@ -112,7 +111,6 @@ public class AttachmentService extends XMLExportService<Attachment> {
     log.debug("backup process for attachment initiated");
     backupDTO.setEntity(WorkspaceVersion.class.getName());
     writeXML("attachment_version", backupDTO, PageRequest.of(0, 25));
-    backupDTO.setEntity(Requirement.class.getName());
     writeXML("attachment_requirement", backupDTO, PageRequest.of(0, 25));
     backupDTO.setEntity(TestCase.class.getName());
     writeXML("attachment_test_case", backupDTO, PageRequest.of(0, 25));

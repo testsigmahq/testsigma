@@ -64,11 +64,7 @@ public class WorkspaceVersion {
   @ToString.Exclude
   private Workspace workspace;
 
-  @OneToMany(mappedBy = "version", fetch = FetchType.LAZY)
-  @EqualsAndHashCode.Exclude
-  @ToString.Exclude
-  @JsonIgnore
-  private Set<Requirement> requirements;
+
 
   @OneToMany(mappedBy = "workspaceVersion", fetch = FetchType.LAZY)
   @EqualsAndHashCode.Exclude

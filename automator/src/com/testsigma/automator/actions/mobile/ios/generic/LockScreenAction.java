@@ -12,9 +12,9 @@ public class LockScreenAction extends MobileElementAction {
 
   @Override
   protected void execute() throws Exception {
-    int noOfSeconds = NumberFormatter.getIntegerValue(getTestData(), String.format(FAILURE_NOT_A_NUMBER, getTestDataMaskResult()));
+    int noOfSeconds = NumberFormatter.getIntegerValue(getTestData(), String.format(FAILURE_NOT_A_NUMBER, getTestData()));
     Duration time = Duration.ofSeconds(noOfSeconds);
     ((IOSDriver) getDriver()).lockDevice(time);
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult()));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
   }
 }

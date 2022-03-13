@@ -13,12 +13,12 @@ public class TapOnAlertButtonUsingTextAction extends MobileElementAction {
     constructElementWithDynamicXpath(PARAMETERIZED_XPATH);
     findElement();
     getElement().click();
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult()));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
   }
 
   @Override
   protected void handleException(Exception e) {
     super.handleException(e);
-    updateErrorMessageForDynamicLocatorTypes(e, String.format(FAILURE_MESSAGE, getTestDataMaskResult()));
+    updateErrorMessageForDynamicLocatorTypes(e, String.format(FAILURE_MESSAGE, getTestData()));
   }
 }

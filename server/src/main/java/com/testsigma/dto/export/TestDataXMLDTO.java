@@ -42,8 +42,7 @@ public class TestDataXMLDTO extends BaseXMLDTO {
   private String testDataName;
   @JsonIgnore
   private String data;
-  @JsonProperty("passwords")
-  private String passwords;
+
   @JsonProperty("copied-from")
   private Long copiedFrom;
   @JsonProperty("created-by-id")
@@ -113,16 +112,6 @@ public class TestDataXMLDTO extends BaseXMLDTO {
       e.printStackTrace();
     }
 
-  }
-
-  public List<String> getPasswords() {
-    return new StringSetConverter().convertToEntityAttribute(this.passwords);
-  }
-
-  public void setPasswords(List<String> passwordList) {
-    if (passwordList != null) {
-      this.passwords = new StringSetConverter().convertToDatabaseColumn(passwordList);
-    }
   }
 
 }

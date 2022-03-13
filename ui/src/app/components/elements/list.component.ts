@@ -254,7 +254,7 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
     this.elementCapture = true;
     this.chromeRecorderService.recorderVersion = this.version;
     this.registerListener();
-    this.chromeRecorderService.postGetUIIdentifierMessage( true);
+    this.chromeRecorderService.postGetElementMessage( true);
   }
 
   stopCapture() {
@@ -264,19 +264,20 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
   }
 
   registerListener() {
-    this.chromeRecorderService.multiUIIdentifierCallBack = this.saveMultipleUiIdentifiers;
-    this.chromeRecorderService.multiUIIdentifierCallBackContext = this;
+    this.chromeRecorderService.multiElementCallBack = this.saveMultipleElements;
+    this.chromeRecorderService.multiElementCallBackContext = this;
   }
-  saveMultipleUiIdentifiers(uiIdentifiers: Element[]) {
-    if(uiIdentifiers?.length) {
-      uiIdentifiers.forEach(uiIdentifier => uiIdentifier.workspaceVersionId = this.versionId);
-      this.elementService.bulkCreate(uiIdentifiers).subscribe((res) => {
-        this.translate.get('ui_identifiers.multiple_save.success.message').subscribe(msg =>
+
+  saveMultipleUiIdentifiers(elements: Element[]) {
+    if(elements?.length) {
+      elements.forEach(element => element.workspaceVersionId = this.versionId);
+      this.elementService.bulkCreate(elements).subscribe((res) => {
+        this.translate.get('elements.multiple_save.success.message').subscribe(msg =>
           this.sendNotificationResponseToPlugin(msg, "SUCCESS")
         );
         this.fetchElements();
       }, error => {
-        this.translate.get('ui_identifiers.multiple_save.failure.message').subscribe(msg =>
+        this.translate.get('elements.multiple_save.failure.message').subscribe(msg =>
           this.sendNotificationResponseToPlugin(msg)
         );
       });
@@ -293,7 +294,7 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
         result["isListupdate"] = true;
         result["message"] = message;
         result['status'] = status
-        this.chromeRecorderService.sendResponseUIIdentifier(result);
+        this.chromeRecorderService.sendResponseElement(result);
       });
   }
 

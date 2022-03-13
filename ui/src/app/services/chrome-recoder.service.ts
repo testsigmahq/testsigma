@@ -24,22 +24,22 @@ export class ChromeRecorderService {
   public static MESSAGE_STOP_RECORDING = "ts_2";
   public static MESSAGE_SEND_RECORDING = "ts_4";
   public static MESSAGE_SEND_RESPONSE = "ts_5";
-  public static MESSAGE_GET_UI_IDENTIFIER = "ts_11";
+  public static MESSAGE_GET_ELEMENT = "ts_11";
   public static INSTALLED_PING_MESSAGE = "ts_14";
   public static INSTALLED_PONG_MESSAGE = "ts_15";
   public static MESSAGE_STOP_SPY = "ts_16";
   public static MESSAGE_ELEMENT_TYPE = "ts_17";
   public static MESSAGE_TYPE_STOPPED_RECORDING = "ts_22";
-  public static MESSAGE_TYPE_GET_NLP_STEPS_LIST = "ts_31";
+  public static MESSAGE_TYPE_GET_ACTION_STEPS_LIST = "ts_31";
   public static MESSAGE_TYPE_DELETE_STEP_BY_ID = "ts_49";
-  public static MESSAGE_SAVE_UI_IDENTIFIER_LIST = "ts_42";
+  public static MESSAGE_SAVE_ELEMENT_LIST = "ts_42";
   public static POST_INSTALLED_PONG_MESSAGE = "ts_50";
   public static TS_WEB = "testsigma_web";
   public isInstalled: Boolean = false;
-  public uiIdentifierCallBack;
-  public uiIdentifierCallBackContext: ElementFormComponent;
-  public multiUIIdentifierCallBack;
-  public multiUIIdentifierCallBackContext: ElementsListComponent;
+  public elementCallBack;
+  public elementCallBackContext: ElementFormComponent;
+  public multiElementCallBack;
+  public multiElementCallBackContext: ElementsListComponent;
   public stepListCallBack;
   public stepListCallBackContext: TestCaseStepsListComponent;
   public isChrome: Boolean = false;
@@ -52,7 +52,7 @@ export class ChromeRecorderService {
   public navigateTemplate = [1044, 94, 10116, 10001];
 
   constructor(
-    private nlpTemplateService: NaturalTextActionsService,
+    private actionTemplateService: NaturalTextActionsService,
     private testStepService: TestStepService,
     public translate: TranslateService) {
     console.log('initializing ChromeRecorderService');
@@ -77,12 +77,12 @@ export class ChromeRecorderService {
         this.isInstalled = true;
       } else if (this.isStoppedRecorder) {
         this.isStepRecording = false;
-        if(!event.data.isUiIdentifierRecorder)
+        if(!event.data.isElementRecorder)
           this.stepListCallBack.apply(this.stepListCallBackContext, [])
-        if(this.multiUIIdentifierCallBack)
-          this.multiUIIdentifierCallBack.apply(this.multiUIIdentifierCallBackContext, []);
-      } else if (this.isAddUiIdentifier) {
-        this.addUIIdentifierListener()
+        if(this.multiElementCallBack)
+          this.multiElementCallBack.apply(this.multiElementCallBackContext, []);
+      } else if (this.isAddElement) {
+        this.addElementListener()
       }
 
     });
@@ -98,16 +98,16 @@ export class ChromeRecorderService {
       this.messageEvent?.data?.type === ChromeRecorderService.MESSAGE_STOP_RECORDING
   }
 
-  get isAddUiIdentifier(): boolean {
+  get isAddElement(): boolean {
     return this.messageEvent?.data?.type === ChromeRecorderService.MESSAGE_ELEMENT_TYPE;
   }
 
-  get isAddMultipleUIIdentifiers(): boolean {
-    return this.messageEvent?.data?.type === ChromeRecorderService.MESSAGE_SAVE_UI_IDENTIFIER_LIST;
+  get isAddMultipleElements(): boolean {
+    return this.messageEvent?.data?.type === ChromeRecorderService.MESSAGE_SAVE_ELEMENT_LIST;
   }
 
-  get isGetNlpList(): boolean {
-    return this.messageEvent?.data?.type === ChromeRecorderService.MESSAGE_TYPE_GET_NLP_STEPS_LIST;
+  get isGetActionList(): boolean {
+    return this.messageEvent?.data?.type === ChromeRecorderService.MESSAGE_TYPE_GET_ACTION_STEPS_LIST;
   }
 
   get isRecordedDetails(): boolean {
@@ -126,32 +126,32 @@ export class ChromeRecorderService {
     }, "*");
   };
 
-  public addUIIdentifierListener() {
-    let chromeRecorderElement = this.processingUiIdentifier(this.messageEvent.data.ele.data);
-    if (this.uiIdentifierCallBack)
-      this.uiIdentifierCallBack.apply(this.uiIdentifierCallBackContext, [chromeRecorderElement]);
+  public addElementListener() {
+    let chromeRecorderElement = this.processingElement(this.messageEvent.data.ele.data);
+    if (this.elementCallBack)
+      this.elementCallBack.apply(this.elementCallBackContext, [chromeRecorderElement]);
   };
 
-  public processingUiIdentifier(currentUiIdentifier) {
-    let uiIdentifier = new Element().deserialize(currentUiIdentifier);
-    uiIdentifier.metadata = new ElementMetaData().deserialize(currentUiIdentifier.metaData);
-    currentUiIdentifier.elementDetails.data = currentUiIdentifier.elementDetails.attributes;
-    uiIdentifier.elementDetails = new ElementElementDetails().deserialize(currentUiIdentifier.elementDetails);
-    return uiIdentifier
+  public processingElement(currentElement) {
+    let element = new Element().deserialize(currentElement);
+    element.metadata = new ElementMetaData().deserialize(currentElement.metaData);
+    currentElement.elementDetails.data = currentElement.elementDetails.attributes;
+    element.elementDetails = new ElementElementDetails().deserialize(currentElement.elementDetails);
+    return element
   }
 
-  public postGetUIIdentifierMessage(isMultipleElementCapture?: boolean) {
+  public postGetElementMessage(isMultipleElementCapture?: boolean) {
     window.postMessage({
       from: ChromeRecorderService.TS_WEB,
-      type: ChromeRecorderService.MESSAGE_GET_UI_IDENTIFIER,
-      content: "Get ui identifier",
+      type: ChromeRecorderService.MESSAGE_GET_ELEMENT,
+      content: "Get element",
       version_id: this.recorderVersion?.id,
       element_capture: isMultipleElementCapture,
       serverUrl: window.location.origin
     }, "*");
   };
 
-  public sendResponseUIIdentifier(response) {
+  public sendResponseElement(response) {
     window.postMessage({
       from: ChromeRecorderService.TS_WEB,
       type: ChromeRecorderService.MESSAGE_SEND_RESPONSE,
@@ -191,9 +191,9 @@ export class ChromeRecorderService {
     this.fetchSteps();
   }
 
-  public fetchNLPTemplates() {
+  public fetchActionTemplates() {
     let workspaceType: WorkspaceType = this.recorderVersion.workspace.workspaceType;
-    this.nlpTemplateService.findAll("workspaceType:" + workspaceType).subscribe(res => this.recorderTemplates = res);
+    this.actionTemplateService.findAll("workspaceType:" + workspaceType).subscribe(res => this.recorderTemplates = res);
   }
 
   public fetchSteps() {

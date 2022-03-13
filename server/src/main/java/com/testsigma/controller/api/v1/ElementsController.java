@@ -11,6 +11,7 @@ package com.testsigma.controller.api.v1;
 
 import com.testsigma.dto.api.APIElementDTO;
 import com.testsigma.exception.ResourceNotFoundException;
+import com.testsigma.exception.TestsigmaDatabaseException;
 import com.testsigma.mapper.ElementMapper;
 import com.testsigma.model.Element;
 import com.testsigma.service.ElementService;
@@ -60,7 +61,7 @@ public class ElementsController {
 
   @RequestMapping(path = "/{id}", method = RequestMethod.PUT)
   public APIElementDTO update(@PathVariable("id") Long id, @RequestBody ElementRequest elementRequest)
-    throws ResourceNotFoundException {
+          throws ResourceNotFoundException, TestsigmaDatabaseException {
     Element element = elementService.find(id);
     String oldName = element.getName();
     elementMapper.merge(elementRequest, element);

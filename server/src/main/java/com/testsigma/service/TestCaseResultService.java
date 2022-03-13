@@ -53,8 +53,8 @@ public class TestCaseResultService {
     return this.testCaseResultRepository.findAll(spec, pageable);
   }
 
-  public List<TestCaseResult> findAllByExecutionResultId(Long executionResultId) {
-    return this.testCaseResultRepository.findAllByExecutionResultId(executionResultId);
+  public List<TestCaseResult> findAllBytestPlanResultId(Long testPlanResultId) {
+    return this.testCaseResultRepository.findAllBytestPlanResultId(testPlanResultId);
   }
 
   public Timestamp findMinTimeStampByEnvironmentResultId(Long environmentResultId) {

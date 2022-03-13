@@ -11,7 +11,6 @@ package com.testsigma.service;
 
 import com.testsigma.constants.AutomatorMessages;
 import com.testsigma.dto.EnvironmentEntityDTO;
-import com.testsigma.dto.TestSuiteEntityDTO;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaException;
 import com.testsigma.mapper.TestDeviceResultMapper;
@@ -274,7 +273,7 @@ public class TestDeviceResultService {
           String message = (maxStatus == StatusConstant.STATUS_IN_PROGRESS) ? AutomatorMessages.MSG_EXECUTION_IN_PROGRESS :
             (maxStatus == StatusConstant.STATUS_QUEUED) ? AutomatorMessages.MSG_EXECUTION_QUEUED :
               AutomatorMessages.MSG_EXECUTION_IN_PROGRESS;
-          testPlanResultService.markExecutionResultStatus(testPlanResult, maxStatus, message);
+          testPlanResultService.markTestPlanResultstatus(testPlanResult, maxStatus, message);
         }
       }
     } catch (Exception e) {
@@ -302,7 +301,7 @@ public class TestDeviceResultService {
         try {
           Map<Long, List<TestDeviceResult>> envResultMap = new HashMap<>();
           Map<Long, AbstractTestPlan> executionMap = new HashMap<>();
-          Map<Long, TestPlanResult> executionResultMap = new HashMap<>();
+          Map<Long, TestPlanResult> testPlanResultMap = new HashMap<>();
 
           for (TestDeviceResult pendingTestDeviceResult : testDeviceResults) {
             TestPlanResult pendingTestPlanResult = testPlanResultService.find(
@@ -318,12 +317,12 @@ public class TestDeviceResultService {
             pendingTestDeviceResults.add(pendingTestDeviceResult);
             envResultMap.put(execution.getId(), pendingTestDeviceResults);
             executionMap.put(execution.getId(), execution);
-            executionResultMap.put(execution.getId(), pendingTestPlanResult);
+            testPlanResultMap.put(execution.getId(), pendingTestPlanResult);
           }
 
           for (Long key : envResultMap.keySet()) {
             AbstractTestPlan testPlan = executionMap.get(key);
-            TestPlanResult testPlanResult = executionResultMap.get(key);
+            TestPlanResult testPlanResult = testPlanResultMap.get(key);
             List<TestDeviceResult> envResults = envResultMap.get(key);
             try {
               AgentExecutionService agentExecutionService = agentExecutionServiceObjectFactory.getObject();
@@ -354,7 +353,7 @@ public class TestDeviceResultService {
     List<EnvironmentEntityDTO> environmentEntityDTOS = new ArrayList<>();
     Map<Long, List<TestDeviceResult>> envResultMap = new HashMap<>();
     Map<Long, AbstractTestPlan> executionMap = new HashMap<>();
-    Map<Long, TestPlanResult> executionResultMap = new HashMap<>();
+    Map<Long, TestPlanResult> testPlanResultMap = new HashMap<>();
     try {
       for (TestDeviceResult pendingTestDeviceResult : testDeviceResults) {
         TestPlanResult pendingTestPlanResult = testPlanResultService.find(pendingTestDeviceResult.getTestPlanResultId());
@@ -368,12 +367,12 @@ public class TestDeviceResultService {
         pendingTestDeviceResults.add(pendingTestDeviceResult);
         envResultMap.put(execution.getId(), pendingTestDeviceResults);
         executionMap.put(execution.getId(), execution);
-        executionResultMap.put(execution.getId(), pendingTestPlanResult);
+        testPlanResultMap.put(execution.getId(), pendingTestPlanResult);
       }
 
       for (Long key : envResultMap.keySet()) {
         AbstractTestPlan exe = executionMap.get(key);
-        TestPlanResult exeResult = executionResultMap.get(key);
+        TestPlanResult exeResult = testPlanResultMap.get(key);
         List<TestDeviceResult> envResults = envResultMap.get(key);
         try {
           AgentExecutionService agentExecutionService = agentExecutionServiceObjectFactory.getObject();
@@ -381,23 +380,9 @@ public class TestDeviceResultService {
           agentExecutionService.setTestPlanResult(exeResult);
           for (TestDeviceResult testDeviceResult : envResults) {
             Boolean cascade = Boolean.TRUE;
-            if (testDeviceResult.getTestDevice().getRunInParallel()) {
-              List<EnvironmentEntityDTO> environmentEntityDTOList = agentExecutionService.loadEnvironmentsForParallel(testDeviceResult,
-                StatusConstant.STATUS_PRE_FLIGHT);
-              for (EnvironmentEntityDTO parallelEnvironmentEntityDTO : environmentEntityDTOList) {
-                for (TestSuiteEntityDTO testSuiteEntityDTO : parallelEnvironmentEntityDTO.getTestSuites()) {
-                  TestSuiteResult testSuiteResult = testSuiteResultService.find(testSuiteEntityDTO.getResultId());
-                  testSuiteResultService.markTestSuiteResultAsInProgress(testSuiteResult, StatusConstant.STATUS_PRE_FLIGHT);
-                }
-                cascade = Boolean.FALSE;
-                environmentEntityDTOS.add(parallelEnvironmentEntityDTO);
-              }
-
-            } else {
-              EnvironmentEntityDTO environmentEntityDTO = agentExecutionService.loadEnvironment(testDeviceResult,
-                StatusConstant.STATUS_PRE_FLIGHT);
-              environmentEntityDTOS.add(environmentEntityDTO);
-            }
+            EnvironmentEntityDTO environmentEntityDTO = agentExecutionService.loadEnvironment(testDeviceResult,
+                    StatusConstant.STATUS_PRE_FLIGHT);
+            environmentEntityDTOS.add(environmentEntityDTO);
             this.markEnvironmentResultAsInProgress(testDeviceResult, StatusConstant.STATUS_PRE_FLIGHT, cascade);
           }
           this.updateExecutionConsolidatedResults(exeResult.getId(), Boolean.TRUE);
@@ -426,10 +411,8 @@ public class TestDeviceResultService {
     TestDeviceResult testDeviceResult = find(environmentResultRequest.getId());
     Timestamp firstTestCase = testCaseResultService.findMinTimeStampByEnvironmentResultId(testDeviceResult.getId());
     testDeviceResult.setSessionCreatedOn(ObjectUtils.defaultIfNull(firstTestCase, new Timestamp(System.currentTimeMillis())));
-    if (!environmentResultRequest.getRunInParallel()) {
-      testDeviceResultMapper.merge(environmentResultRequest, testDeviceResult);
-      testDeviceResult = update(testDeviceResult);
-    }
+    testDeviceResultMapper.merge(environmentResultRequest, testDeviceResult);
+    testDeviceResult = update(testDeviceResult);
     if (environmentResultRequest.getErrorCode() != null) {
       updateResultOnError(environmentResultRequest.getMessage(), environmentResultRequest.getId());
     }

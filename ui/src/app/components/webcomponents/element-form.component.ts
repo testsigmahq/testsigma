@@ -179,7 +179,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
   addValidations() {
     this.elementForm = new FormGroup({
       created_type: new FormControl(this.element.createdType),
-      name: new FormControl(this.element.name, [Validators.required]),
+      name: new FormControl(this.element.name, [Validators.required, Validators.minLength(4)]),
       definition: new FormControl(this.element.locatorValue),
       locatorType: new FormControl(this.element.locatorType),
       screen_name: new FormControl(this.element.screenNameObj.name, [Validators.required]),
@@ -280,26 +280,26 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
 
   startCapture() {
     this.chromeRecorderService.recorderVersion = this.workspaceVersion;
-    this.setIdentifierTypeToXpath();
+    this.setLocatorTypeToXpath();
     this.chromeRecorderService.pingRecorder();
-    this.chromeRecorderService.uiIdentifierCallBackContext = this;
-    this.chromeRecorderService.uiIdentifierCallBack = this.chromeExtensionUIIdentifierCallback;
+    this.chromeRecorderService.elementCallBackContext = this;
+    this.chromeRecorderService.elementCallBack = this.chromeExtensionElementCallback;
     if (this.chromeRecorderService.isInstalled)
-      this.chromeRecorderService.postGetUIIdentifierMessage(false);
+      this.chromeRecorderService.postGetElementMessage(false);
   }
 
-  private setIdentifierTypeToXpath() {
-    if (!this.elementId)
-      this.elementForm.controls['locatorType'].setValue(this.locatorTypes[0])
-  }
+  // private setLocatorTypeToXpath() {
+  //   if (!this.elementId)
+  //     this.elementForm.controls['locatorType'].setValue(this.locatorTypes[0])
+  // }
 
   stopCapture() {
-    this.chromeRecorderService.uiIdentifierCallBackContext = undefined;
-    this.chromeRecorderService.uiIdentifierCallBack = undefined;
+    this.chromeRecorderService.elementCallBackContext = undefined;
+    this.chromeRecorderService.elementCallBack = undefined;
     this.chromeRecorderService.stopSpying();
   }
 
-  private chromeExtensionUIIdentifierCallback(chromeRecorderElement: Element) {
+  private chromeExtensionElementCallback(chromeRecorderElement: Element) {
     this.element = chromeRecorderElement
   }
 
@@ -385,12 +385,21 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
   }
 
   saveOrUpdate() {
+    let screenName : ElementScreenName;
     if (!this.isInProgress) {
       this.formSubmitted = true;
       if (this.elementForm.invalid)
         return;
       if (this.element.screenNameId) {
-        (this.elementId) ? this.updateElement() : this.saveElement()
+        let updatedScreenName =this.elementForm.get("screen_name").value;
+        this.element.screenNameObj.name =  updatedScreenName;
+        screenName = new ElementScreenName();
+        screenName.name = updatedScreenName;
+        screenName.workspaceVersionId =this.element.workspaceVersionId;
+        this.elementScreenNameService.create(screenName).subscribe(screeNameObj => {
+          this.element.screenNameId = screeNameObj.id;
+          (this.elementId) ? this.updateElement() : this.saveElement()
+        });
       } else {
         let screenNameBean: ElementScreenName = new ElementScreenName();
         screenNameBean.name = this.elementForm.get('screen_name').value;

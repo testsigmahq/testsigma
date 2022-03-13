@@ -14,9 +14,9 @@ public class GetValueOfCookieUsingTestDataAction extends ElementAction {
     if (getDriver().manage().getCookieNamed(getTestData()) != null) {
       cookieValue = getDriver().manage().getCookieNamed(getTestData()).getValue();
     } else {
-      throw new AutomatorException(String.format(FAILURE_MESSAGE, getTestDataMaskResult(),
+      throw new AutomatorException(String.format(FAILURE_MESSAGE, getTestData(),
         getDriver().manage().getCookies().toString()));
     }
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult(), getTestDataMaskResult(), cookieValue));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData(), getTestData(), cookieValue));
   }
 }

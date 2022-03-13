@@ -4,7 +4,7 @@ import {debounceTime, distinctUntilChanged, filter, tap} from 'rxjs/operators';
 import {DefaultDataGeneratorService} from '../../services/default-data-generator.service';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {InfiniteScrollableDataSource} from '../../data-sources/infinite-scrollable-data-source';
-import {KibbutzTestDataFunctionService} from "../../services/kibbutz-default-data-generator.service";
+import {AddonTestDataFunctionService} from "../../services/addon-default-data-generator.service";
 import {AddonDetailsComponent} from "../../shared/components/webcomponents/addon-details.component";
 
 @Component({
@@ -15,7 +15,7 @@ import {AddonDetailsComponent} from "../../shared/components/webcomponents/addon
 export class ActionTestDataFunctionSuggestionComponent implements OnInit {
   public activeTab = 'custom_functions'
   public testDataFunctionSuggestion: InfiniteScrollableDataSource;
-  public kibbutzCustomFunctionSuggestion: InfiniteScrollableDataSource;
+  public addonCustomFunctionSuggestion: InfiniteScrollableDataSource;
   public searchText: string;
   @ViewChild('searchInput') searchInput: ElementRef;
   public versionId: number;
@@ -27,7 +27,7 @@ export class ActionTestDataFunctionSuggestionComponent implements OnInit {
     private dialogRef: MatDialogRef<ActionTestDataFunctionSuggestionComponent, any>,
     @Inject(MAT_DIALOG_DATA) public option: { versionId: number },
     private defaultDataGeneratorService: DefaultDataGeneratorService,
-    private kibbutzTestDataFunctionService: KibbutzTestDataFunctionService,
+    private addonTestDataFunctionService: AddonTestDataFunctionService,
     private matModal: MatDialog
   ) {
     this.versionId = this.option.versionId;
@@ -35,14 +35,14 @@ export class ActionTestDataFunctionSuggestionComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchTestDataFunction();
-    this.fetchKibbutzTestDataFunctions();
+    this.fetchAddonTestDataFunctions();
     this.attachDebounceEvent();
     setTimeout(() => {
       this.searchInput.nativeElement.focus();
     }, 300);
   }
 
-  fetchKibbutzTestDataFunctions(isSearch?){
+  fetchAddonTestDataFunctions(isSearch?){
     let searchQuery = '';
     if (isSearch) {
       this.isQueryBased = true;
@@ -50,7 +50,7 @@ export class ActionTestDataFunctionSuggestionComponent implements OnInit {
     } else {
       this.isQueryBased = false;
     }
-    this.kibbutzCustomFunctionSuggestion = new InfiniteScrollableDataSource(this.kibbutzTestDataFunctionService,   searchQuery, undefined, 50);
+    this.addonCustomFunctionSuggestion = new InfiniteScrollableDataSource(this.addonTestDataFunctionService,   searchQuery, undefined, 50);
   }
 
   openAddonDetails(id){
@@ -95,10 +95,10 @@ export class ActionTestDataFunctionSuggestionComponent implements OnInit {
             if (this.environmentNameValue) {
               this.searchText = this.environmentNameValue;
               this.fetchTestDataFunction(this.searchText);
-              this.fetchKibbutzTestDataFunctions(this.searchText);
+              this.fetchAddonTestDataFunctions(this.searchText);
             } else {
               this.fetchTestDataFunction();
-              this.fetchKibbutzTestDataFunctions();
+              this.fetchAddonTestDataFunctions();
             }
           })
         )
@@ -116,7 +116,7 @@ export class ActionTestDataFunctionSuggestionComponent implements OnInit {
   }
 
   selectedSuggestion(suggestion?) {
-    suggestion = suggestion || this.testDataFunctionSuggestion.cachedItems[this.currentFocusedIndex] || this.kibbutzCustomFunctionSuggestion.cachedItems[this.currentFocusedIndex];
+    suggestion = suggestion || this.testDataFunctionSuggestion.cachedItems[this.currentFocusedIndex] || this.addonCustomFunctionSuggestion.cachedItems[this.currentFocusedIndex];
     this.dialogRef.close(suggestion);
   }
 
@@ -129,7 +129,7 @@ export class ActionTestDataFunctionSuggestionComponent implements OnInit {
   }
 
   scrollDownFunctionFocus() {
-    if (this.currentFocusedIndex < this.testDataFunctionSuggestion.totalElements || this.currentFocusedIndex < this.kibbutzCustomFunctionSuggestion.totalElements) {
+    if (this.currentFocusedIndex < this.testDataFunctionSuggestion.totalElements || this.currentFocusedIndex < this.addonCustomFunctionSuggestion.totalElements) {
       ++this.currentFocusedIndex;
     }
     const target = document.querySelector('.h-active') as HTMLElement;
@@ -145,6 +145,6 @@ export class ActionTestDataFunctionSuggestionComponent implements OnInit {
   }
 
   searchCriteriaNotFound(){
-    return (this.activeTab=='custom_functions' && this.testDataFunctionSuggestion?.isEmpty) || (this.activeTab=='kibbutz_functions' && this.kibbutzCustomFunctionSuggestion?.isEmpty);
+    return (this.activeTab=='custom_functions' && this.testDataFunctionSuggestion?.isEmpty) || (this.activeTab=='addon_functions' && this.addonCustomFunctionSuggestion?.isEmpty);
   }
 }

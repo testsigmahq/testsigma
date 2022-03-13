@@ -48,16 +48,16 @@ export class TestPlanResultService implements DataSourceService {
     )
   }
 
-  public update(executionResult: TestPlanResult): Observable<TestPlanResult> {
-    return this.http.put<TestPlanResult>(this.URLConstants.testPlanResultsUrl + "/" + executionResult.id, executionResult.serialize(), {
+  public update(testPlanResult: TestPlanResult): Observable<TestPlanResult> {
+    return this.http.put<TestPlanResult>(this.URLConstants.testPlanResultsUrl + "/" + testPlanResult.id, testPlanResult.serialize(), {
       headers: this.httpHeaders.contentTypeApplication
     }).pipe(map(data => new TestPlanResult().deserialize(data)),
       catchError(() => throwError('Problem while updating Execution Result'))
     )
   }
 
-  public create(executionResult: TestPlanResult): Observable<TestPlanResult> {
-    return this.http.post<TestPlanResult>(this.URLConstants.testPlanResultsUrl, executionResult.serialize(), {
+  public create(testPlanResult: TestPlanResult): Observable<TestPlanResult> {
+    return this.http.post<TestPlanResult>(this.URLConstants.testPlanResultsUrl, testPlanResult.serialize(), {
       headers: this.httpHeaders.contentTypeApplication
     }).pipe(map(data => new TestPlanResult().deserialize(data)),
       catchError((err) => {

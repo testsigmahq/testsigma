@@ -33,7 +33,7 @@ import {ElementFormComponent} from "./element-form.component";
       [testStep]="testStep.siblingStep"
       [version]="version"
       [templates]="templates"
-      [kibbutzTemplates]="kibbutzTemplates"
+      [addonTemplates]="addonTemplates"
       (onSuccessfulStepSave)="onStepSave($event)"
       (onStepType)="onStepChangeAction($event)"
       (onCancel)="onFormCancel($event)"
@@ -144,14 +144,14 @@ import {ElementFormComponent} from "./element-form.component";
               [innerHTML]="testStep?.action"></span>
             <span
               class="lh-1point4"
-              *ngIf="testStep?.template && !(testStep?.isContinueLoop || testStep?.isBreakLoop || testStep?.isKibbutzAction)"
+              *ngIf="testStep?.template && !(testStep?.isContinueLoop || testStep?.isBreakLoop || testStep?.isAddonAction)"
               [innerHTML]="testStep?.parsedStep"></span>
             <span *ngIf="testStep?.isStepGroup" [textContent]="testStep.stepGroup?.name"></span>
             <span
-              *ngIf="testStep?.isRestStep && (!testStep?.isContinueLoop && !testStep?.isBreakLoop && !testStep?.isKibbutzAction && !testStep.template)"
+              *ngIf="testStep?.isRestStep && (!testStep?.isContinueLoop && !testStep?.isBreakLoop && !testStep?.isAddonAction && !testStep.template)"
               [textContent]="testStep?.action"></span>
-            <span *ngIf="testStep?.isKibbutzAction">
-              <i class="fa-addon mr-5 text-nowrap"></i><span [innerHTML]="testStep.parsedKibbutzStep"></span>
+            <span *ngIf="testStep?.isAddonAction">
+              <i class="fa-addon mr-5 text-nowrap"></i><span [innerHTML]="testStep.parsedAddonStep"></span>
             </span>
           </div>
           <div
@@ -243,7 +243,7 @@ import {ElementFormComponent} from "./element-form.component";
             [testSteps]="testSteps"
             [stepNumber]="testStep?.stepDisplayNumber+'.'+(childStepNumber+1)"
             [templates]="templates"
-            [kibbutzTemplates]="kibbutzTemplates"
+            [addonTemplates]="addonTemplates"
             [testCase]="testCase"
             [isChild]=true></app-action-test-step-list-item>
         </span>
@@ -257,7 +257,7 @@ import {ElementFormComponent} from "./element-form.component";
       [version]="version"
       [testStep]="testStep"
       [templates]="templates"
-      [kibbutzTemplates]="kibbutzTemplates"
+      [addonTemplates]="addonTemplates"
       (onSuccessfulStepSave)="onStepSave($event)"
       (onStepType)="onStepChangeAction($event)"
       (onCancel)="onFormCancel($event)"
@@ -270,7 +270,7 @@ import {ElementFormComponent} from "./element-form.component";
       [version]="version"
       [testStep]="testStep.siblingStep"
       [templates]="templates"
-      [kibbutzTemplates]="kibbutzTemplates"
+      [addonTemplates]="addonTemplates"
       (onSuccessfulStepSave)="onStepSave($event)"
       (onStepType)="onStepChangeAction($event)"
       (onCancel)="onFormCancel($event)"
@@ -285,7 +285,7 @@ import {ElementFormComponent} from "./element-form.component";
 })
 export class ActionTestStepListItemComponent extends TestStepListItemComponent implements OnInit {
   @Input('templates') templates: Page<NaturalTextActions>;
-  @Input('kibbutzTemplates') kibbutzTemplates?: Page<AddonNaturalTextAction>;
+  @Input('addonTemplates') addonTemplates?: Page<AddonNaturalTextAction>;
   @Input() stepRecorderView?: boolean;
   @Input()public stepForm: FormGroup = new FormGroup({});
 
@@ -346,8 +346,8 @@ export class ActionTestStepListItemComponent extends TestStepListItemComponent i
         testStep.template = this.templates.content.find((template) => {
           return template.id == testStep.naturalTextActionId;
         });
-        if(this.kibbutzTemplates?.content?.length)
-          testStep.kibbutzTemplate = this.kibbutzTemplates.content.find(template => template.id == testStep.addonActionId)
+        if(this.addonTemplates?.content?.length)
+          testStep.addonTemplate = this.addonTemplates.content.find(template => template.id == testStep.addonActionId)
       }
       testStep.parentStep = testSteps.content.find(res => testStep.parentId == res.id);
       if(childStep)

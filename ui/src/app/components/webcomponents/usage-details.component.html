@@ -39,28 +39,28 @@
           <cdk-virtual-scroll-viewport
             itemSize="46"
             class="ts-col-100 list-container virtual-scroll-viewport viewport-height h-90">
-            <div *cdkVirtualFor='let executionResult of runsList'
+            <div *cdkVirtualFor='let testPlanResult of runsList'
                  class="list-view green-highlight lg-pm pl-10 text-t-secondary ts-col-100">
-              <div class="ts-col-100 d-flex align-items-center" *ngIf="executionResult">
+              <div class="ts-col-100 d-flex align-items-center" *ngIf="testPlanResult">
                 <div class="d-flex pr-10 rb-medium text-dark ts-col-20">
-                  <span [textContent]="executionResult?.testPlan?.name"></span>
-                  <span class="pl-10" [textContent]="'usage_details.runs_run_id' | translate : {id:executionResult?.id }"></span>
+                  <span [textContent]="testPlanResult?.testPlan?.name"></span>
+                  <span class="pl-10" [textContent]="'usage_details.runs_run_id' | translate : {id:testPlanResult?.id }"></span>
                 </div>
-                <div class="ts-col-10" [textContent]="executionResult?.totalRunningCount+ executionResult?.totalQueuedCount"></div>
+                <div class="ts-col-10" [textContent]="testPlanResult?.totalRunningCount+ testPlanResult?.totalQueuedCount"></div>
                 <div class="ts-col-20">
-                  <span [translate]="'usage_details.test_plan'" *ngIf="!isDry(executionResult)" ></span>
-                  <span [translate]="'usage_details.dry_run'" *ngIf="isDry(executionResult)" ></span>
-                  (<span [translate]="'execution.lab_type.'+ executionResult?.testPlan?.testPlanLabType"></span>)
+                  <span [translate]="'usage_details.test_plan'" *ngIf="!isDry(testPlanResult)" ></span>
+                  <span [translate]="'usage_details.dry_run'" *ngIf="isDry(testPlanResult)" ></span>
+                  (<span [translate]="'execution.lab_type.'+ testPlanResult?.testPlan?.testPlanLabType"></span>)
                 </div>
                 <div class="ts-col-20 d-flex">
         <span
-          [textContent]="executionResult?.startTime  | date:'h:mm a MMM d'"></span>
-                  <app-duration-format class="ml-10" [duration]="(today | amDifference: executionResult?.startTime :'seconds' : true)"></app-duration-format>
+          [textContent]="testPlanResult?.startTime  | date:'h:mm a MMM d'"></span>
+                  <app-duration-format class="ml-10" [duration]="(today | amDifference: testPlanResult?.startTime :'seconds' : true)"></app-duration-format>
                 </div>
                 <div class="ts-col-20">
-                  <div class="ts-col-100 text-truncate" [textContent]="executionResult?.testPlan?.workspaceVersion?.workspace?.name"></div>
+                  <div class="ts-col-100 text-truncate" [textContent]="testPlanResult?.testPlan?.workspaceVersion?.workspace?.name"></div>
                   <div class="ts-col-100 d-flex">
-                    <div class="ts-col-20 version-label text-truncate" [matTooltip]="executionResult?.testPlan?.workspaceVersion?.versionName" [textContent]="executionResult?.testPlan?.workspaceVersion?.versionName"></div>
+                    <div class="ts-col-20 version-label text-truncate" [matTooltip]="testPlanResult?.testPlan?.workspaceVersion?.versionName" [textContent]="testPlanResult?.testPlan?.workspaceVersion?.versionName"></div>
                   </div>
                 </div>
                 <div class="ts-col-10">
@@ -68,28 +68,28 @@
                     [displayText]="('hint.message.common.stop' | translate)"
                     (onStart)="refresh()"
                     (onStop)="refresh()"
-                    [executionResult]="executionResult"
-                    [execution]="executionResult?.execution"
+                    [testPlanResult]="testPlanResult"
+                    [testPlan]="testPlanResult?.testPlan"
                     class="ml-10">
                   </app-run-now-button>
                 </div>
               </div>
-              <div class="ts-col-100 d-flex align-items-center" *ngIf="!executionResult">
-                <div class="d-flex pr-10 rb-medium text-dark ts-col-20" [textContent]="executionResult.testCase.name"></div>
+              <div class="ts-col-100 d-flex align-items-center" *ngIf="!testPlanResult">
+                <div class="d-flex pr-10 rb-medium text-dark ts-col-20" [textContent]="testPlanResult.testCase.name"></div>
                 <div class="ts-col-20">
-                  <span [translate]="'usage_details.test_plan'" *ngIf="!isDry(executionResult)" ></span>
-                  <span [translate]="'usage_details.dry_run'" *ngIf="isDry(executionResult)" ></span>
-                  <span [translate]="'execution.lab_type.'+ executionResult?.testPlan?.testPlanLabType"></span>)
+                  <span [translate]="'usage_details.test_plan'" *ngIf="!isDry(testPlanResult)" ></span>
+                  <span [translate]="'usage_details.dry_run'" *ngIf="isDry(testPlanResult)" ></span>
+                  <span [translate]="'execution.lab_type.'+ testPlanResult?.testPlan?.testPlanLabType"></span>)
                 </div>
                 <div class="ts-col-20 d-flex">
         <span
-          [textContent]="executionResult?.startTime  | date:'h:mm a MMM d'"></span>
-                  <app-duration-format class="ml-10" [duration]="(today | amDifference: executionResult?.startTime :'seconds' : true)"></app-duration-format>
+          [textContent]="testPlanResult?.startTime  | date:'h:mm a MMM d'"></span>
+                  <app-duration-format class="ml-10" [duration]="(today | amDifference: testPlanResult?.startTime :'seconds' : true)"></app-duration-format>
                 </div>
                 <div class="ts-col-20">
-                  <div class="ts-col-100 text-truncate" [textContent]="executionResult?.testPlan?.workspaceVersion?.workspace?.name"></div>
+                  <div class="ts-col-100 text-truncate" [textContent]="testPlanResult?.testPlan?.workspaceVersion?.workspace?.name"></div>
                   <div class="ts-col-100 d-flex">
-                    <div class="ts-col-20 version-label text-truncate" [matTooltip]="executionResult?.testPlan?.workspaceVersion?.versionName" [textContent]="executionResult?.testPlan?.workspaceVersion?.versionName"></div>
+                    <div class="ts-col-20 version-label text-truncate" [matTooltip]="testPlanResult?.testPlan?.workspaceVersion?.versionName" [textContent]="testPlanResult?.testPlan?.workspaceVersion?.versionName"></div>
                   </div>
                 </div>
                 <div class="ts-col-10">
@@ -97,8 +97,8 @@
                     [displayText]="('hint.message.common.stop' | translate)"
                     (onStart)="refresh()"
                     (onStop)="refresh()"
-                    [executionResult]="executionResult"
-                    [execution]="executionResult?.execution"
+                    [testPlanResult]="testPlanResult"
+                    [testPlan]="testPlanResult?.testPlan"
                     class="ml-10">
                   </app-run-now-button>
                 </div>

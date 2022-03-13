@@ -18,7 +18,7 @@ public class VerifySelectedOptionAction extends ElementAction {
     String selectedOptionValue = selectElement.getFirstSelectedOption().getText();
     Assert.notNull(selectedOptionValue, "text is not present for the selected option");
     Assert.isTrue(selectedOptionValue.equals(getTestData()), String.format(FAILURE_MESSAGE,
-      getFindByType(), getLocatorValue(), selectedOptionValue, getTestDataMaskResult()));
+      getFindByType(), getLocatorValue(), selectedOptionValue, getTestData()));
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 

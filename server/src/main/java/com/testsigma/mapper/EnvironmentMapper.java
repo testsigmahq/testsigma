@@ -34,11 +34,7 @@ public interface EnvironmentMapper {
     if (request.getParameters() != null) {
       environment.setParameters(request.getParameters());
     }
-    if (request.getPasswords() != null) {
-      environment.setPasswords(request.getPasswords());
-    } else {
-      environment.setPasswords(new ArrayList<String>());
-    }
+
     if (request.getId() != null) {
       environment.setId(request.getId());
     }

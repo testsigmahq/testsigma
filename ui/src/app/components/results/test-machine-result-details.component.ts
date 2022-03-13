@@ -40,7 +40,6 @@ export class TestMachineResultDetailsComponent extends BaseComponent implements 
   private testSuiteResults: TestMachineTestSuiteResultsComponent;
   public isMachineFetchingCompleted: boolean = false;
   public isCaseLevelExecution: boolean = false;
-  public isParallelExecution: boolean = false;
   inputValue: any;
 
   constructor(
@@ -117,11 +116,8 @@ export class TestMachineResultDetailsComponent extends BaseComponent implements 
 
 
   loadVideo() {
-    if (this.environmentResult.testDeviceSettings.createSessionAtCaseLevel) {
+    if (this.environmentResult.testDeviceSettings.createSessionAtCaseLevel)
       this.isCaseLevelExecution = true;
-    } else if (this.environmentResult.testDeviceSettings.runInParallel) {
-      this.isParallelExecution = true;
-    }
   }
 
   compareLogURLs(o1: string, o2: string): boolean {

@@ -33,7 +33,7 @@ export class SchedulesComponent extends BaseComponent implements OnInit {
   public schedules: InfiniteScrollableDataSource;
   public testPlanId: number;
   public dateFormatPipe = new DateFormatPipe();
-  public execution: TestPlan;
+  public testPlan: TestPlan;
   @ViewChild('searchInput', {static: true}) searchInput: ElementRef;
   public isFiltered: boolean;
 
@@ -57,7 +57,7 @@ export class SchedulesComponent extends BaseComponent implements OnInit {
   }
 
   fetchTestPlan() {
-    this.testPlanService.find(this.testPlanId).subscribe(res => this.execution = res);
+    this.testPlanService.find(this.testPlanId).subscribe(res => this.testPlan = res);
   }
 
   fetchSchedules(term?: string) {
@@ -124,7 +124,7 @@ export class SchedulesComponent extends BaseComponent implements OnInit {
       height: "100vh",
       width: '600px',
       position: {top: '0px', right: '0px'},
-      data: {execution: this.execution, scheduledPlan: scheduledPlan},
+      data: {execution: this.testPlan, scheduledPlan: scheduledPlan},
       panelClass: ['mat-dialog', 'rds-none']
     }).afterClosed().subscribe(res=> {
       if(res){

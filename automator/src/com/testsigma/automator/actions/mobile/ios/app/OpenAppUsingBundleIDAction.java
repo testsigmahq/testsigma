@@ -10,12 +10,12 @@ public class OpenAppUsingBundleIDAction extends MobileElementAction {
   @Override
   protected void execute() throws Exception {
     getDriver().activateApp(getTestData().trim());
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult()));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
   }
 
   @Override
   protected void handleException(Exception e) {
     super.handleException(e);
-    setErrorMessage(String.format(FAILURE_MESSAGE, getTestDataMaskResult()) + "<br>" + getErrorMessage());
+    setErrorMessage(String.format(FAILURE_MESSAGE, getTestData()) + "<br>" + getErrorMessage());
   }
 }

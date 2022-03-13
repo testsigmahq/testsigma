@@ -18,32 +18,32 @@ import {ToastrService} from "ngx-toastr";
       [disabled]="inTransit"
       [class.text-t-secondary]="!displayText"
       [class.icon-btn]="!displayText"
-      [class.theme-btn-primary]="displayText && displayText!='Run' && !executionResult?.isQueued"
-      [class.theme-btn-clear-default]="displayText=='Run' && !executionResult?.isQueued"
-      [class.btn-delete]="executionResult?.isQueued"
+      [class.theme-btn-primary]="displayText && displayText!='Run' && !testPlanResult?.isQueued"
+      [class.theme-btn-clear-default]="displayText=='Run' && !testPlanResult?.isQueued"
+      [class.btn-delete]="testPlanResult?.isQueued"
       (click)="startOrStop();$event.stopImmediatePropagation();$event.stopPropagation();$event.preventDefault()"
-      [matTooltip]="displayText=='Run' ? '' : (executionResult?.isQueued ? 'hint.message.common.stop' : 'runs.list_view.run_now') | translate">
+      [matTooltip]="displayText=='Run' ? '' : (testPlanResult?.isQueued ? 'hint.message.common.stop' : 'runs.list_view.run_now') | translate">
       <i
-        [class.fa-play]="!executionResult?.isQueued && ((displayText && displayText!='Run') || !displayText)"
-        [class.fa-play-circle]="!executionResult?.isQueued && displayText=='Run'"
-        [class.text-white]="executionResult?.isQueued"
-        [class.mr-n7]="executionResult?.isQueued"
-        [class.pr-10]="executionResult?.isQueued"
-        [class.fa-stop]="executionResult?.isQueued"></i>
-      <span class="px-5" [translate]="displayText" *ngIf="displayText && !executionResult?.isQueued"></span>
-      <span class="px-5" [translate]="'message.common.stop'"  *ngIf="displayText && executionResult?.isQueued"></span>
+        [class.fa-play]="!testPlanResult?.isQueued && ((displayText && displayText!='Run') || !displayText)"
+        [class.fa-play-circle]="!testPlanResult?.isQueued && displayText=='Run'"
+        [class.text-white]="testPlanResult?.isQueued"
+        [class.mr-n7]="testPlanResult?.isQueued"
+        [class.pr-10]="testPlanResult?.isQueued"
+        [class.fa-stop]="testPlanResult?.isQueued"></i>
+      <span class="px-5" [translate]="displayText" *ngIf="displayText && !testPlanResult?.isQueued"></span>
+      <span class="px-5" [translate]="'message.common.stop'"  *ngIf="displayText && testPlanResult?.isQueued"></span>
     </button>
   `,
   styles: []
 })
 export class RunNowButtonComponent extends BaseComponent implements OnInit {
   @Input('displayText') displayText: string;
-  @Input('execution') execution: TestPlan;
+  @Input('testPlan') testPlan: TestPlan;
   @Output('onStart') onStart = new EventEmitter<void>();
   @Output('onStop') onStop = new EventEmitter<void>();
 
-  @Input('executionResult')
-  public executionResult: TestPlanResult;
+  @Input('testPlanResult')
+  public testPlanResult: TestPlanResult;
   public inTransit: boolean;
 
   constructor(
@@ -51,16 +51,16 @@ export class RunNowButtonComponent extends BaseComponent implements OnInit {
     public notificationsService: NotificationsService,
     public translate: TranslateService,
     public toastrService: ToastrService,
-    private executionResultService: TestPlanResultService) {
+    private testPlanResultService: TestPlanResultService,) {
     super(authGuard, notificationsService, translate, toastrService);
   }
 
   ngOnInit(): void {
-    this.executionResult =(this.executionResult) ? this.executionResult : this.execution?.lastRun;
+    this.testPlanResult =(this.testPlanResult) ? this.testPlanResult : this.testPlan?.lastRun;
   }
 
   startOrStop() {
-    if(this.executionResult?.isQueued)
+    if(this.testPlanResult?.isQueued)
       this.stop();
     else
       this.start();
@@ -68,9 +68,9 @@ export class RunNowButtonComponent extends BaseComponent implements OnInit {
 
   stop() {
     this.inTransit=true;
-    this.executionResult.result = ResultConstant.STOPPED;
-    this.executionResult.status = StatusConstant.STATUS_COMPLETED;
-    this.executionResultService.update(this.executionResult).subscribe(() => {
+    this.testPlanResult.result = ResultConstant.STOPPED;
+    this.testPlanResult.status = StatusConstant.STATUS_COMPLETED;
+    this.testPlanResultService.update(this.testPlanResult).subscribe(() => {
       this.inTransit=false;
       this.translate.get("execution.stopped.success").subscribe((res: string) => {
         this.showNotification(NotificationType.Success, res);
@@ -81,13 +81,13 @@ export class RunNowButtonComponent extends BaseComponent implements OnInit {
 
   start() {
     this.inTransit = true;
-    let executionResult = new TestPlanResult();
-    executionResult.testPlanId = this.execution.id;
-    this.executionResultService.create(executionResult).subscribe((executionResult) => {
+    let testPlanResult = new TestPlanResult();
+    testPlanResult.testPlanId = this.testPlan.id;
+    this.testPlanResultService.create(testPlanResult).subscribe((testPlanResult) => {
       this.inTransit = false;
       this.translate.get("execution.initiate.success").subscribe((res: string) => {
         this.showNotification(NotificationType.Success, res);
-        this.executionResult = executionResult;
+        this.testPlanResult = testPlanResult;
         this.onStart?.emit();
       })
     }, error => {

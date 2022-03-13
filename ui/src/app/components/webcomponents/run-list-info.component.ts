@@ -9,11 +9,11 @@ import {TestPlan} from "../../models/test-plan.model";
   styles: []
 })
 export class RunListInfoComponent implements OnInit {
-  public execution: TestPlan;
+  public testPlan: TestPlan;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public options: { execution: TestPlan }) {
-    this.execution = options.execution;
+    this.testPlan = options.execution;
   }
 
   ngOnInit() {

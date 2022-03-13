@@ -31,7 +31,6 @@ public class EnvironmentRunResultRequest {
   private Timestamp agentStartTime;
   private Timestamp agentEndTime;
   private Integer errorCode;
-  private Boolean runInParallel = false;
   private Timestamp executionInitiatedOn;
   private Timestamp agentPickedOn;
   private Timestamp deviceAllocatedOn;

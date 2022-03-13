@@ -51,7 +51,7 @@
     <div
       *ngFor="let formField of formFields"
       class="form-row">
-      <div [ngSwitch]="formField.type">
+      <div [ngSwitch]="formField?.type">
         <div
           *ngSwitchCase="'textarea'" class="pb-20">
           <div
@@ -112,7 +112,7 @@
       *ngFor="let formField of formFields"
       class="form-row" [ngSwitch]="true">
       <div class="pb-20"
-           *ngSwitchCase="formField.type != 'textarea'">
+           *ngSwitchCase="formField?.type != 'textarea'">
         <div
           class="rb-medium pb-4 pl-7"
           [textContent]="formField.name"></div>

@@ -21,7 +21,7 @@ public class TapOnCoordinatesRelativeToScreen extends MobileElementAction {
 
   @Override
   protected void execute() throws Exception {
-    Assert.isTrue(getTestData().contains(","), String.format(FAILURE_NO_SEPARATOR + "<br>" + TEST_DATA_FORMAT, getTestDataMaskResult()));
+    Assert.isTrue(getTestData().contains(","), String.format(FAILURE_NO_SEPARATOR + "<br>" + TEST_DATA_FORMAT, getTestData()));
     String[] coOrdinates = getTestData().trim().split(",");
     double xPercent = NumberFormatter.getDoubleValue(coOrdinates[0], String.format(FAILURE_NOT_A_NUMBER_X + "<br>" + TEST_DATA_FORMAT, coOrdinates[0]));
     double yPercent = NumberFormatter.getDoubleValue(coOrdinates[1], String.format(FAILURE_NOT_A_NUMBER_Y + "<br>" + TEST_DATA_FORMAT, coOrdinates[1]));

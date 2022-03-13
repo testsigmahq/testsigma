@@ -34,10 +34,10 @@ public class SwitchToWindowByTitleAction extends ElementAction {
     } finally {
       if (!isWindowFound) {
         getDriver().switchTo().window(currentWindowHandle);
-        throw new AutomatorException(String.format(FAILURE_MESSAGE, getTestDataMaskResult(), getTestDataMaskResult(), sb));
+        throw new AutomatorException(String.format(FAILURE_MESSAGE, getTestData(), getTestData(), sb));
       }
     }
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult()));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
   }
 }
 

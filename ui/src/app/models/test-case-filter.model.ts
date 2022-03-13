@@ -135,8 +135,6 @@ export class TestCaseFilter extends Base implements PageObject {
       queryString += ",type@" + (<number[]>this.normalizedQuery.find(query => query.key == "type").value).join("#")
     if (this.normalizedQuery.find(query => query.key == "tagId"))
       queryString += ",tagId@" + (<number[]>this.normalizedQuery.find(query => query.key == "tagId").value).join("#")
-    if (this.normalizedQuery.find(query => query.key == "requirementId"))
-      queryString += ",requirementId@" + (<number[]>this.normalizedQuery.find(query => query.key == "requirementId").value).join("#");
     if (this.normalizedQuery.find(query => query.key == "createdDate" && query.operation == FilterOperation.LESS_THAN))
       queryString += ",createdDate<" + moment(<number>this.normalizedQuery.find(query => query.key == "createdDate" && query.operation == FilterOperation.LESS_THAN).value).format("YYYY-MM-DD");
     if (this.normalizedQuery.find(query => query.key == "createdDate" && query.operation == FilterOperation.GREATER_THAN))

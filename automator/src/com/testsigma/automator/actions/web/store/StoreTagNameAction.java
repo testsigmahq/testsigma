@@ -11,6 +11,6 @@ public class StoreTagNameAction extends ElementAction {
     String runTimeVarValue = getElement().getTagName();
     runtimeDataProvider.storeRuntimeVariable(getTestData(), runTimeVarValue);
     resultMetadata.put(getTestData(), runTimeVarValue);
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult(), runTimeVarValue));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData(), runTimeVarValue));
   }
 }

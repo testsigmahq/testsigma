@@ -16,7 +16,7 @@ public class PressKeyAction extends ElementAction {
       actions.sendKeys(Keys.valueOf(getTestData().toUpperCase().trim())).build().perform();
       setSuccessMessage("Successfully typed given test data.");
     } catch (Exception e) {
-      throw new AutomatorException(String.format(FAILURE_MESSAGE, getTestDataMaskResult()));
+      throw new AutomatorException(String.format(FAILURE_MESSAGE, getTestData()));
     }
 
   }

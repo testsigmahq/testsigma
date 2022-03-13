@@ -17,9 +17,9 @@ public class LongPressOnElementAction extends MobileElementAction {
   protected void execute() throws Exception {
     findElement();
     TouchAction action = new TouchAction(getDriver());
-    int noOfSeconds = NumberFormatter.getIntegerValue(getTestData(), String.format(FAILURE_NOT_A_NUMBER, getTestDataMaskResult()));
+    int noOfSeconds = NumberFormatter.getIntegerValue(getTestData(), String.format(FAILURE_NOT_A_NUMBER, getTestData()));
     Duration time = Duration.ofSeconds(noOfSeconds);
     action.longPress(LongPressOptions.longPressOptions().withElement(ElementOption.element(getElement())).withDuration(time)).release().perform();
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult()));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
   }
 }

@@ -28,7 +28,7 @@ public class ClickOnElementUsingLocatorWithTextAction extends ElementAction {
       s = s.substring(0, s.length() - 1);
     }
     Assert.isTrue(clickPerformed, String.format(FAILURE_ELEMENT_WITH_TEXT_NOT_FOUND, getFindByType(), getLocatorValue(),
-      getTestDataMaskResult(), s, getTestDataMaskResult()));
+      getTestData(), s, getTestData()));
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 }

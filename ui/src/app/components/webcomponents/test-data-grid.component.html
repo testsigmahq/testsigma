@@ -154,7 +154,7 @@
                  [matTooltipPosition]="'left'">
               <input [class.text-truncate]="isReadOnly"
                 autocomplete="false" class="form-control py-7"
-                [type]="isParameterEncrypted(columnIndex) ? 'password' : 'text'" [formControl]="columnControl">
+                [type]="'text'" [formControl]="columnControl">
             </div>
           </div>
           <i class="fa-trash-thin pointer row-hover-action ml-auto position-sticky right-0 top-10 text-t-secondary"

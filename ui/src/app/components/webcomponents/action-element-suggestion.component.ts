@@ -16,7 +16,6 @@ import {TestStepMoreActionFormComponent} from "./test-step-more-action-form.comp
 import {MobileStepRecorderComponent} from "../../agents/components/webcomponents/mobile-step-recorder.component";
 import {WorkspaceType} from "../../enums/workspace-type.enum";
 
-
 @Component({
   selector: 'app-action-element-suggestion',
   templateUrl: './action-element-suggestion.component.html',
@@ -34,7 +33,7 @@ export class ActionElementSuggestionComponent implements OnInit {
   public currentFocusedIndex: number;
   private elementForm: MatDialogRef<ElementFormComponent>;
   public showVideo: Boolean = false;
-  public isQueryBased: boolean = false
+  public isQueryBased: boolean = false;
 
   constructor(
     private dialogRef: MatDialogRef<ActionElementSuggestionComponent>,
@@ -302,5 +301,23 @@ export class ActionElementSuggestionComponent implements OnInit {
 
   get isIosNative(){
     return this.workspaceVersion.workspace.workspaceType == WorkspaceType.IOSNative;
+  }
+
+  openAddEditElement() {
+    const dialogRef = this.matModal.open(ElementFormComponent, {
+      height: "100vh",
+      width: '60%',
+      position: {top: '0px', right: '0px'},
+      data: {
+        versionId: this.option.version.id,
+      },
+      panelClass: ['mat-dialog', 'rds-none']
+    });
+    dialogRef.afterClosed()
+      .subscribe((res) => {
+        if (res) {
+          this.fetchElement();
+        }
+      });
   }
 }

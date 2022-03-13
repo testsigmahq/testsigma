@@ -32,7 +32,7 @@ public abstract class TestsuiteRunner {
   protected EnvironmentRunResult environmentRunResult;
   protected TestPlanRunSettingEntity testPlanRunSettingEntity;
   protected TestDeviceSettings testDeviceSettings;
-  protected String executionId;
+  protected String testPlanId;
   protected WorkspaceType workspaceType;
   protected boolean skipExecution;
   protected String resultFailureMessage;
@@ -46,7 +46,7 @@ public abstract class TestsuiteRunner {
     this.environmentRunResult = EnvironmentRunner.getRunnerEnvironmentRunResult();
     this.testPlanRunSettingEntity = testDeviceEntity.getTestPlanSettings();
     this.testDeviceSettings = testDeviceEntity.getEnvSettings();
-    this.executionId = EnvironmentRunner.getRunnerExecutionId();
+    this.testPlanId = EnvironmentRunner.getRunnerExecutionId();
     this.workspaceType = testDeviceEntity.getWorkspaceType();
     this.httpClient = EnvironmentRunner.getWebAppHttpClient();
     this.skipExecution = false;
@@ -71,7 +71,6 @@ public abstract class TestsuiteRunner {
       testSuiteResult.setExecutionInitiatedOn(environmentRunResult.getExecutionInitiatedOn());
       testSuiteResult.setAgentPickedOn(environmentRunResult.getAgentPickedOn());
       testSuiteResult.setDeviceAllocatedOn(environmentRunResult.getDeviceAllocatedOn());
-      testSuiteResult.setSuiteInParallel(testDeviceEntity.getRunInParallel());
       testCaseGroupsResults.add(testSuiteResult);
       groupResultMap.put(testSuiteEntity.getId(), testSuiteResult);
       testSuiteResult.setStartTime(new Timestamp(System.currentTimeMillis()));
@@ -149,10 +148,7 @@ public abstract class TestsuiteRunner {
     resetThreadContextData();
     populateThreadContextData(testSuiteEntity, testSuiteResult);
     log.debug("Running test suite - " + testSuiteEntity.getName());
-    if (testDeviceEntity.getRunInParallel() && !testDeviceEntity.getCreateSessionAtCaseLevel()) {
-      startSession(testDeviceEntity.getTestSuites().get(0).getResultId(), DriverSessionType.TEST_SUITE_SESSION);
-      testSuiteResult.setDeviceAllocatedOn(new Timestamp(System.currentTimeMillis()));
-    } else if (!testDeviceEntity.getCreateSessionAtCaseLevel()) {
+    if (!testDeviceEntity.getCreateSessionAtCaseLevel()) {
       restartCurrentSession(testSuiteResult);
     }
     List<TestCaseEntity> testCaseEntityList = testSuiteEntity.getTestCases();
@@ -239,10 +235,6 @@ public abstract class TestsuiteRunner {
       if (testCaseResult.getResult().getId() > testSuiteResult.getResult().getId()) {
         testSuiteResult.setResult(testCaseResult.getResult());
       }
-    }
-
-    if (testDeviceEntity.getRunInParallel() && !testDeviceEntity.getCreateSessionAtCaseLevel()) {
-      endSession();
     }
 
     testSuiteResult.setSessionCompletedOn(new Timestamp(System.currentTimeMillis()));

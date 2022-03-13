@@ -45,7 +45,6 @@ public class TestDeviceSettingsDTO {
   @JsonProperty(value = "native_test_object_key")
   private String nativeTestObjectKey;
   private String testObjectApiKey;
-  private Boolean runInParallel;
   @JsonProperty(value = "create_session_at_case_level")
   private Boolean createSessionAtCaseLevel;
   @JsonProperty("apksrcType")

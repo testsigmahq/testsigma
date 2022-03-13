@@ -42,14 +42,14 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
   @Input() public data: MirroringData;
   @Input() public sessionId: String;
   @Input() public mirroring: boolean;
-  @Input() public selectedUiIdentifier: Element;
+  @Input() public selectedElement: Element;
   @Output() saveTapOnDeviceStep: EventEmitter<Position> = new EventEmitter<Position>();
   @Output() saveChangeOrientationStep: EventEmitter<Boolean> = new EventEmitter<Boolean>();
   @Output() saveNavigateBackStep: EventEmitter<void> = new EventEmitter<void>();
   @Output() saveTapStep: EventEmitter<MobileElement> = new EventEmitter<MobileElement>();
   @Output() saveEnterStep = new EventEmitter<SendKeysRequest>();
   @Output() saveClearStep = new EventEmitter<MobileElement>();
-  @Output() updateRecordedUiIdentifier: EventEmitter<void> = new EventEmitter<void>();
+  @Output() updateRecordedElement: EventEmitter<void> = new EventEmitter<void>();
   private devicesService:  DevicesService; //CloudDevicesService
   public inspectedElement: MobileElementRect = null;
   public isLandscapeMode: Boolean;
@@ -235,8 +235,8 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
       this.inspectedElement = new MobileElementRect();
       this.inspectedElement.mobileElement = new MobileElement();
       this.inspectedElement.mobileElement.contentDesc = "";
-      this.inspectedElement.mobileElement[this.locatorTypes[this.selectedUiIdentifier?.locatorType]?.variableName]
-        = this.uiId ? this.selectedUiIdentifier?.locatorValue : "";
+      this.inspectedElement.mobileElement[this.locatorTypes[this.selectedElement?.locatorType]?.variableName]
+        = this.uiId ? this.selectedElement?.locatorValue : "";
       this.selectElement(this.inspectedElement);
     }
   }
@@ -660,7 +660,7 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
     if(!Boolean(this.data.isStepRecord))
       this.recorderDialog.initElement();
     else
-      this.updateRecordedUiIdentifier.emit()
+      this.updateRecordedElement.emit()
     this.optimiseXpath();
   }
 
@@ -674,7 +674,7 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
           if(!Boolean(this.data.isStepRecord))
             this.recorderDialog.initElement();
           else
-            this.updateRecordedUiIdentifier.emit()
+            this.updateRecordedElement.emit()
         }
         this.optimisingXpath = false;
       })

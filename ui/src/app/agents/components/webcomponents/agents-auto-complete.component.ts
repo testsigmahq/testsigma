@@ -149,7 +149,7 @@ export class AgentsAutoCompleteComponent implements OnInit {
     if (term) {
       searchName = ",title:*" + term + "*";
     }
-    this.agentService.findAll(searchName).subscribe(res => {
+    this.agentService.findAll(searchName,"updatedDate,desc").subscribe(res => {
       if(searchName?.length == 0)
         this.agentsEmpty = res.empty;
       this.agents = res;

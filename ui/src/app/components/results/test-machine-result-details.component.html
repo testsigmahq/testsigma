@@ -88,7 +88,7 @@
           <app-lab-environment-screen-short-info
             [environmentResult]="environmentResult"
             [executionEnvironment]="environmentResult?.testDevice"
-            [executionResult]="environmentResult?.testPlanResult"></app-lab-environment-screen-short-info>
+            [testPlanResult]="environmentResult?.testPlanResult"></app-lab-environment-screen-short-info>
           <div class="details-items mt-30 mw-30">
             <div class="align-items-center d-flex details-info text-truncate mt-2 pointer"
                  [matTooltip]="environmentResult?.message"
@@ -221,7 +221,7 @@
       </div>
       <div class="ts-col-100 h-100 bg-default">
           <app-result-attachment
-            *ngIf="activeTab == 'attachment' && !isCaseLevelExecution && !isParallelExecution"
+            *ngIf="activeTab == 'attachment' && !isCaseLevelExecution"
             [attachmentRow]="'ENVIRONMENT_RESULT'"
             [attachmentRowId]="environmentResult.id"
             class="h-100 d-flex"></app-result-attachment>
@@ -241,7 +241,7 @@
     <app-test-case-result-filter
       class="theme-filter-section"
       *ngIf="showFilter && showTestCaseResults"
-      [execution]="environmentResult?.testPlanResult?.testPlan"
+      [testPlan]="environmentResult?.testPlanResult?.testPlan"
       (filterAction)="filterAction($event)"
       (toggleFilterAction)="toggleFilter()"></app-test-case-result-filter>
 

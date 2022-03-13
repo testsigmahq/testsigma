@@ -33,6 +33,6 @@ public class VerifyMultipleElementsINSelectListAction extends ElementAction {
     }
 
     Assert.isTrue(notMatched.isEmpty(), String.format(FAILURE_MESSAGE, getFindByType(), getLocatorValue(), notMatched));
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getFindByType(), getLocatorValue(), getTestDataMaskResult()));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getFindByType(), getLocatorValue(), getTestData()));
   }
 }

@@ -13,7 +13,7 @@ public class DeleteCookieByNameAction extends ElementAction {
     if (getDriver().manage().getCookieNamed(getTestData()) != null) {
       getDriver().manage().deleteCookieNamed(getTestData());
     } else {
-      throw new AutomatorException(String.format(FAILURE_NO_COOKIE, getTestDataMaskResult()));
+      throw new AutomatorException(String.format(FAILURE_NO_COOKIE, getTestData()));
     }
     setSuccessMessage(SUCCESS_MESSAGE);
   }

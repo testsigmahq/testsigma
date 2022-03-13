@@ -30,6 +30,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -52,12 +53,12 @@ public class TestDeviceService extends XMLExportService<TestDevice> {
     return testDeviceRepository.findTestDeviceByAgentId(agentId);
   }
 
-  public List<TestDevice> findByExecutionIdAndDisable(Long executionId, Boolean disable) {
-    return testDeviceRepository.findByExecutionIdAndDisable(executionId, disable);
+  public List<TestDevice> findByTestPlanIdAndDisable(Long testPlanId, Boolean disable) {
+    return testDeviceRepository.findByTestPlanIdAndDisable(testPlanId, disable);
   }
 
-  public List<TestDevice> findByExecutionId(Long executionId) {
-    return testDeviceRepository.findByExecutionId(executionId);
+  public List<TestDevice> findByTestPlanId(Long testPlanId) {
+    return testDeviceRepository.findByTestPlanId(testPlanId);
   }
 
   public TestDevice find(Long id) throws TestsigmaDatabaseException {
@@ -161,12 +162,16 @@ public class TestDeviceService extends XMLExportService<TestDevice> {
 
   public Specification<TestDevice> getExportXmlSpecification(BackupDTO backupDTO) {
     List<TestPlan> testPlanList = testPlanService.findAllByWorkspaceVersionId(backupDTO.getWorkspaceVersionId());
-    List<Long> executionIds = testPlanList.stream().map(execution -> execution.getId()).collect(Collectors.toList());
-    SearchCriteria criteria = new SearchCriteria("testPlanId", SearchOperation.IN, executionIds);
+    List<Long> testPlanIds = testPlanList.stream().map(execution -> execution.getId()).collect(Collectors.toList());
+    SearchCriteria criteria = new SearchCriteria("testPlanId", SearchOperation.IN, testPlanIds);
     List<SearchCriteria> params = new ArrayList<>();
     params.add(criteria);
     TestDeviceSpecificationsBuilder testDeviceSpecificationsBuilder = new TestDeviceSpecificationsBuilder();
     testDeviceSpecificationsBuilder.params = params;
     return testDeviceSpecificationsBuilder.build();
+  }
+
+  public void resentAppUploadIdToNull(Long appUploadId){
+    this.testDeviceRepository.resentAppUploadIdToNull(appUploadId);
   }
 }

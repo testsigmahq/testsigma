@@ -19,6 +19,6 @@
   *ngIf="version && webForm && (isHybrid || (!isHybrid && authGuard.openSource.isEnabled))"
   [formGroup]="webForm"
   [environment]="environment"
-  [environmentId]="execution?.environmentId"
+  [environmentId]="testPlan?.environmentId"
   [version]="version"></app-test-plan-time-out-settings>
 

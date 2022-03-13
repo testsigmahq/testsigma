@@ -3,17 +3,40 @@
 set -x
 set -e
 
-DOCKER_VERSION=$1
-AGENT_TAG=$2
-EXPECTED_ARGS=2
+EXPECTED_ARGS=3
 E_BADARGS=65
 CURRENT_DIR="$(pwd -P)"
+
+
+DOCKER_VERSION=v1.1.0
+AGENT_TAG=v1.1.0
+IMAGE_NAME=server
 
 if [ $# -lt $EXPECTED_ARGS ]
 then
   echo "Usage: $0 <version>"
   exit $E_BADARGS
 fi
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --DOCKER_VERSION=*)
+      DOCKER_VERSION="${1#*=}"
+      ;;
+    --AGENT_TAG=*)
+      AGENT_TAG="${1#*=}"
+      ;;
+    --IMAGE_NAME=*)
+      IMAGE_NAME="${1#*=}"
+      ;;
+    *)
+      printf "***************************\n"
+      printf "* Error: Invalid argument.*\n"
+      printf "***************************\n"
+      exit 1
+  esac
+  shift
+done
 
 ROOT_FOLDER="$(
   cd "$(dirname "$0")" || exit
@@ -27,7 +50,7 @@ sh $ROOT_FOLDER/deploy/compile.sh --UI_BUILD_CONF=docker --LOCAL_AGENT_TAG=$AGEN
 
 docker build -t server -f $ROOT_FOLDER/Dockerfile .
 
-docker tag server:latest testsigmahq/server:$DOCKER_VERSION
-docker push testsigmahq/server:$DOCKER_VERSION
+docker tag server:latest testsigmahq/$IMAGE_NAME:$DOCKER_VERSION
+docker push testsigmahq/$IMAGE_NAME:$DOCKER_VERSION
 
 cd $CURRENT_DIR

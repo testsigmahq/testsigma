@@ -10,7 +10,7 @@ import java.util.Map;
 @Getter
 public enum TestDataType {
 
-  //@|Parameter|, $|Runtime| ,*|Environment|, !|Function|, ~|Random|
+  //@|Parameter|, $|Runtime|, *|Environment !|Data Generator|, ~|Random|
   NOT_USED(0, "Not Used"),
   raw(1, "raw"),
   parameter(2, "parameter"),

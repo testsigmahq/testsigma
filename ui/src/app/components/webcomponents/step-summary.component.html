@@ -20,12 +20,12 @@
          *ngIf="testStep">
       <div class="details-container value-md md">
         <div class="details-items ts-col-100"
-             *ngIf="!testStep?.isRestStep && testStep?.testDataValue && !testStep?.kibbutzTestData">
+             *ngIf="!testStep?.isRestStep && testStep?.testDataValue && !testStep?.addonTestData">
           <div class="ts-col-100 d-flex">
             <label class="details-title ts-col-25" [translate]="'test_step.results.test_data'"></label>
             <div class="rb-medium"
-                 [class.pointer]="(testStep?.kibbutzTestData && !testStep?.testDataValue.includes('::'))"
-                 (click)="(testStep?.kibbutzTestData && !testStep?.testDataValue.includes('::')) ? openAddonDetails(testStep?.kibbutzTestData?.testDataFunctionId) : ''"
+                 [class.pointer]="(testStep?.addonTestData && !testStep?.testDataValue.includes('::'))"
+                 (click)="(testStep?.addonTestData && !testStep?.testDataValue.includes('::')) ? openAddonDetails(testStep?.addonTestData?.testDataFunctionId) : ''"
                  [translate]="testStep?.testDataValue">
             </div>
           </div>
@@ -44,12 +44,12 @@
               </div>
             </div>
 
-            <div *ngIf="testStep?.kibbutzTestData" class="d-flex">
+            <div *ngIf="testStep?.addonTestData" class="d-flex">
               <label class="details-title ts-col-25"></label>
               <div class="ts-col-100">
-                <div  *ngIf="canShowCustomFunctionsParameters(testStep?.kibbutzTestData.testDataFunctionArguments)">
+                <div  *ngIf="canShowCustomFunctionsParameters(testStep?.addonTestData.testDataFunctionArguments)">
                   <span [translate]="'natural_text_action.custom_function.suggestion.input'" class="rb-medium"></span>
-                  <div *ngFor="let item of testStep?.kibbutzTestData?.testDataFunctionArguments | keyvalue; let index=index" class="pl-5 pt-5">
+                  <div *ngFor="let item of testStep?.addonTestData?.testDataFunctionArguments | keyvalue; let index=index" class="pl-5 pt-5">
                     <span [textContent]="item.key" class="pl-5 rb-medium" *ngIf="!item.key.startsWith('arg')"></span>
                     <span [textContent]="item.value" class="pl-5"></span>
                   </div>
@@ -60,8 +60,8 @@
         </div>
 
         <div class="details-items ts-col-100"
-             *ngIf="!testStep?.isRestStep && canShowKibbutzDetails(testStep?.kibbutzTestData)">
-          <div *ngFor="let testData of getKibbutzTestDataAndElements(testStep?.kibbutzTestData)" class="pt-8">
+             *ngIf="!testStep?.isRestStep && canShowAddonDetails(testStep?.addonTestData)">
+          <div *ngFor="let testData of getAddonTestDataAndElements(testStep?.addonTestData)" class="pt-8">
             <div class="ts-col-100 d-flex">
               <label class="details-title ts-col-25" [translate]="'test_step.results.test_data'"></label>
               <div class="rb-medium"
@@ -87,7 +87,7 @@
           class="details-items ts-col-100"
           *ngIf="!testStep?.isRestStep && testStep?.element">
           <div class="ts-col-100 d-flex">
-            <label class="details-title ts-col-25" [translate]="'test_step.results.ui_identifier'"></label>
+            <label class="details-title ts-col-25" [translate]="'test_step.results.element'"></label>
             <div class="d-flex align-items-center flex-wrap">
               <div
                 [matTooltip]="'step_result.hint.edit_element' | translate"
@@ -102,19 +102,19 @@
           </div>
         </div>
 
-        <div *ngIf="!testStep?.isRestStep && canShowKibbutzDetails(testStep?.kibbutzElements)" class="ts-col-100">
+        <div *ngIf="!testStep?.isRestStep && canShowAddonDetails(testStep?.addonElements)" class="ts-col-100">
           <div
             class="details-items ts-col-100"
-            *ngFor="let kibbutzElement of getKibbutzTestDataAndElements(testStep?.kibbutzElements)">
+            *ngFor="let addonElement of getAddonTestDataAndElements(testStep?.addonElements)">
             <div class="ts-col-100 d-flex">
-              <label class="details-title ts-col-25" [translate]="'test_step.results.ui_identifier'"></label>
+              <label class="details-title ts-col-25" [translate]="'test_step.results.element'"></label>
               <div class="d-flex align-items-center flex-wrap">
                 <div
                   [matTooltip]="'step_result.hint.edit_element' | translate"
                   class="pointer pb-5 pr-5"
-                  (click)="openEditElement(kibbutzElement.name, true)">
+                  (click)="openEditElement(addonElement.name, true)">
                 <span class="text-link rb-medium"
-                      [textContent]="kibbutzElement.name"></span>
+                      [textContent]="addonElement.name"></span>
                   <i class="fa-pencil-on-paper px-4"></i>
                 </div>
               </div>

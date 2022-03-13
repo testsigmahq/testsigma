@@ -25,13 +25,13 @@ public class CloseWindowWithTitleAction extends ElementAction {
       String title = getDriver().getTitle();
       sb.append(title).append("\n");
       if (title.equals(getTestData().trim())) {
-        log.info("Closing window/tab,Window title:" + getTestDataMaskResult());
+        log.info("Closing window/tab,Window title:" + getTestData());
         getDriver().close();
         windowClosed = true;
         break;
       }
     }
-    Assert.isTrue(windowClosed, String.format(FAILURE_WINDOW_NOT_AVAILABLE, getTestDataMaskResult(), sb));
+    Assert.isTrue(windowClosed, String.format(FAILURE_WINDOW_NOT_AVAILABLE, getTestData(), sb));
     if (windowHandles.size() > 1) {
       Set<String> switchWindows = getDriver().getWindowHandles();
       if (!switchWindows.isEmpty()) {
@@ -43,10 +43,10 @@ public class CloseWindowWithTitleAction extends ElementAction {
         }
       }
     } else {
-      setSuccessMessage(String.format(WINDOW_NOT_AVAILABLE, getTestDataMaskResult()));
+      setSuccessMessage(String.format(WINDOW_NOT_AVAILABLE, getTestData()));
       return;
     }
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult()));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
   }
 
 }

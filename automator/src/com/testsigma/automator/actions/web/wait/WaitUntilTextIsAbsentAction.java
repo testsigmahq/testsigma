@@ -16,10 +16,10 @@ public class WaitUntilTextIsAbsentAction extends ElementAction {
   public void execute() throws Exception {
     try {
       boolean textNotPresent = getWebDriverWait().until(ExpectedConditions.not(CustomExpectedConditions.textToBePresent(getTestData())));
-      Assert.isTrue(textNotPresent, String.format(FAILURE_MESSAGE, getTimeout(), getTestDataMaskResult()));
+      Assert.isTrue(textNotPresent, String.format(FAILURE_MESSAGE, getTimeout(), getTestData()));
       setSuccessMessage(SUCCESS_MESSAGE);
     } catch (TimeoutException e) {
-      throw new AutomatorException(String.format(FAILURE_MESSAGE, getTimeout(), getTestDataMaskResult()), (Exception) e.getCause());
+      throw new AutomatorException(String.format(FAILURE_MESSAGE, getTimeout(), getTestData()), (Exception) e.getCause());
     }
   }
 }

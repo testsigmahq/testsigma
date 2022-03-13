@@ -80,7 +80,7 @@
         </div>
         <div
           class="details-items ts-col-100 mb-25"
-          *ngIf="!testStepResult?.isRestStep && testStepResult?.stepDetails?.dataMap?.elementString && !testStepResult?.kibbutzElements">
+          *ngIf="!testStepResult?.isRestStep && testStepResult?.stepDetails?.dataMap?.elementString && !testStepResult?.addonElements">
           <div class="ts-col-100 d-flex">
             <div
               (click)="testStepResult.isOpen= !testStepResult.isOpen"
@@ -91,7 +91,7 @@
                 [class.pr-7]="testStepResult.isOpen"
                 [class.fa-arrow-right-filled]="!testStepResult.isOpen">
               </i>
-              <label class="" [translate]="'test_step.results.ui_identifier'"></label>
+              <label class="" [translate]="'test_step.results.element'"></label>
             </div>
 
             <div class="details-info d-flex align-items-center flex-wrap mt-0">
@@ -108,41 +108,41 @@
 
 
         </div>
-          <div *ngIf="testStepResult?.isOpen && getFieldDefinitionDetails()" class="ts-col-100">
+          <div *ngIf="testStepResult?.isOpen && getElementDetails()" class="ts-col-100">
             <div class="details-item ts-col-100  align-item-center">
               <span [translate]="'common.value'" class="details-title ts-col-30 rb-medium"></span>
               <span class="details-info m-0 pl-5" [textContent]="elementValue"></span>
             </div>
             <div class="details-item align-item-center">
-              <div [translate]="'ui_identifier.details.type'" class=" details-title ts-col-30 rb-medium"></div>
+              <div [translate]="'element.details.type'" class=" details-title ts-col-30 rb-medium"></div>
               <div class="details-info m-0 pl-5" [textContent]="elementType"></div>
             </div>
           </div>
 
-        <div class="ts-col-100" *ngIf="!testStepResult?.isRestStep &&  testStepResult?.kibbutzElements">
+        <div class="ts-col-100" *ngIf="!testStepResult?.isRestStep &&  testStepResult?.addonElements">
           <div
-            class="details-items ts-col-100 mb-25" *ngFor="let kibbutzElement of kibbutzElements; let index=index">
+            class="details-items ts-col-100 mb-25" *ngFor="let addonElement of addonElementData; let index=index">
             <div class="ts-col-100 d-flex">
               <div
-                (click)="kibbutzElement.showInfo= !kibbutzElement?.showInfo"
+                (click)="addonElement.showInfo= !addonElement?.showInfo"
                 class="details-title ts-col-25">
                 <i
                   class="fz-12"
-                  [class.fa-arrow-down-filled]="kibbutzElement?.showInfo"
-                  [class.pr-7]="kibbutzElement?.showInfo"
-                  [class.fa-arrow-right-filled]="!kibbutzElement?.showInfo">
+                  [class.fa-arrow-down-filled]="addonElement?.showInfo"
+                  [class.pr-7]="addonElement?.showInfo"
+                  [class.fa-arrow-right-filled]="!addonElement?.showInfo">
                 </i>
-                <label class="" [translate]="'test_step.results.ui_identifier'"></label>
+                <label class="" [translate]="'test_step.results.element'"></label>
               </div>
               <div class="details-info d-flex align-items-center flex-wrap mt-0">
                 <div
-                  [matTooltip]="kibbutzElement?.isElementChanged ? '' : 'step_result.hint.edit_element' | translate"
+                  [matTooltip]="addonElement?.isElementChanged ? '' : 'step_result.hint.edit_element' | translate"
                   class="pointer"
-                  (click)="kibbutzElement?.isElementChanged ? '' : openEditElement(kibbutzElement.name, true)">
+                  (click)="addonElement?.isElementChanged ? '' : openEditElement(addonElement.name, true)">
                 <span
                   class="text-link rb-medium"
-                  [textContent]="kibbutzElement.name"></span>
-                  <i class="fa-pencil-on-paper px-4" *ngIf="!kibbutzElement?.isElementChanged"></i>
+                  [textContent]="addonElement.name"></span>
+                  <i class="fa-pencil-on-paper px-4" *ngIf="!addonElement?.isElementChanged"></i>
                 </div>
             </div>
           </div>
@@ -289,20 +289,20 @@
         </ngx-json-viewer>
       </div>
       <div
-        *ngIf="testStepResult?.kibbutzTestData && testStepResult?.kibbutzActionLogs">
+        *ngIf="testStepResult?.addonTestData && testStepResult?.addonActionLogs">
         <div
-          (click)="toggleKibbutzLogs()"
+          (click)="toggleAddonLogs()"
           class="fz-16 pt-2 mt-5 theme-text pointer">
           <i
             class="fz-12"
-            [class.fa-arrow-down-filled]="isShowKibbutzLogs"
-            [class.pr-7]="isShowKibbutzLogs"
-            [class.fa-arrow-right-filled]="!isShowKibbutzLogs">
+            [class.fa-arrow-down-filled]="isShowAddonLogs"
+            [class.pr-7]="isShowAddonLogs"
+            [class.fa-arrow-right-filled]="!isShowAddonLogs">
           </i>
-          <span class="rb-medium" [translate]="'step_result.desired.kibbutz_action_logs'" ></span>
+          <span class="rb-medium" [translate]="'step_result.desired.addon_action_logs'" ></span>
         </div>
-        <div *ngIf="isShowKibbutzLogs" class="mt-5 p-10 fz-15 kibbutz_logs ">
-          <span [innerHTML]="testStepResult?.parseKibbutzLogs" ></span>
+        <div *ngIf="isShowAddonLogs" class="mt-5 p-10 fz-15 addon_logs ">
+          <span [innerHTML]="testStepResult?.parseAddonLogs" ></span>
         </div>
       </div>
       <div

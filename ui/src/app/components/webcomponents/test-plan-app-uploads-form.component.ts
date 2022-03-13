@@ -111,7 +111,7 @@ export class TestPlanAppUploadsFormComponent implements OnInit {
   @Input('version') version: WorkspaceVersion;
   @Input('deviceId') deviceId: number;
   @Input('testPlanLabType') testPlanLabTypeInput: TestPlanLabType;
-  @Input('executionForm') executionForm: FormGroup;
+  @Input('testPlanForm') testPlanForm: FormGroup;
   @Input('isEdit') isEdit?: boolean;
   public isEmptyUploads: boolean = false;
 
@@ -161,7 +161,7 @@ export class TestPlanAppUploadsFormComponent implements OnInit {
   }
 
   get testPlanLabType() {
-    return this.executionForm?.controls['testPlanLabType']?.value || this.testPlanLabTypeInput || this.environmentFormGroup.parent?.parent?.controls['testPlanLabType']?.value;
+    return this.testPlanForm?.controls['testPlanLabType']?.value || this.testPlanLabTypeInput || this.environmentFormGroup.parent?.parent?.controls['testPlanLabType']?.value;
   }
 
   get pathTypes() {

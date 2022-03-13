@@ -31,7 +31,7 @@ public class VerifyAlertTextAction extends ElementAction {
     Alert alert = getWebDriverWait().until(ExpectedConditions.alertIsPresent());
     Assert.notNull(alert, FAILURE_MESSAGE_NULL);
     setActualValue(alert.getText());
-    Assert.isTrue(getActualValue().toString().contains(getTestData()), String.format(FAILURE_MESSAGE, getTestDataMaskResult(), getActualValue()));
+    Assert.isTrue(getActualValue().toString().contains(getTestData()), String.format(FAILURE_MESSAGE, getTestData(), getActualValue()));
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 

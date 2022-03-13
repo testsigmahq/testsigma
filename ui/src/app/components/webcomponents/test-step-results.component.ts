@@ -34,7 +34,7 @@ import {TestCaseStepsListComponent} from "./test-case-steps-list.component";
 import {NaturalTextActions} from "../../models/natural-text-actions.model";
 import {WorkspaceVersion} from "../../models/workspace-version.model";
 import {WorkspaceVersionService} from "../../shared/services/workspace-version.service";
-import {KibbutzActionService} from "../../services/kibbutz-action.service";
+import {AddonActionService} from "../../services/addon-action.service";
 import {AddonNaturalTextAction} from "../../models/addon-natural-text-action.model";
 import {TestStepConditionType} from "../../enums/test-step-condition-type.enum";
 import {TestStepType} from "../../enums/test-step-type.enum";
@@ -60,7 +60,7 @@ export class TestStepResultsComponent extends TestCaseStepsListComponent impleme
   public activeStepGroup: TestStepResult;
   public isStepsFetchComplete: boolean = false;
   public templates: Page<NaturalTextActions>;
-  public kibbutzTemplates: Page<AddonNaturalTextAction>;
+  public addonTemplates: Page<AddonNaturalTextAction>;
   public workspaceVersion: WorkspaceVersion;
   public isEditEnabled: boolean = false;
 
@@ -81,7 +81,7 @@ export class TestStepResultsComponent extends TestCaseStepsListComponent impleme
     public router: Router,
     public route: ActivatedRoute,
     public naturalTextActionsService: NaturalTextActionsService,
-    public kibbutzActionService: KibbutzActionService,
+    public addonActionService: AddonActionService,
     public testStepResultService: TestStepResultService,
     public testCaseService: TestCaseService,
     public stepResultScreenshotComparisionService: StepResultScreenshotComparisonService,
@@ -237,10 +237,10 @@ export class TestStepResultsComponent extends TestCaseStepsListComponent impleme
   fetchNLActions(testStepResults: Page<TestStepResult>, isGroup?, groupResult?, isWhile?) {
     let workspaceType: WorkspaceType = this.execution?.workspaceVersion?.workspace?.workspaceType;
     let query = isWhile ? ",conditionType:"+TestStepConditionType.LOOP_WHILE : "";
-    this.kibbutzActionService.findAll("workspaceType:" + workspaceType).subscribe(res => {
-      this.kibbutzTemplates = res;
+    this.addonActionService.findAll("workspaceType:" + workspaceType).subscribe(res => {
+      this.addonTemplates = res;
       if (res?.content?.length)
-        this.setKibbutzTemplate(testStepResults, isGroup, this.kibbutzTemplates)
+        this.setAddonTemplate(testStepResults, isGroup, this.addonTemplates)
     })
     this.naturalTextActionsService.findAll("workspaceType:" + workspaceType).subscribe(res => {
       this.templates = res;
@@ -250,10 +250,10 @@ export class TestStepResultsComponent extends TestCaseStepsListComponent impleme
         this.activeStepGroup = groupResult;
       }
     });
-    this.kibbutzActionService.findAll("workspaceType:" + workspaceType+query).subscribe(res => {
-      this.kibbutzTemplates = res;
+    this.addonActionService.findAll("workspaceType:" + workspaceType+query).subscribe(res => {
+      this.addonTemplates = res;
       if(res?.content?.length)
-        this.setKibbutzTemplate(testStepResults, isGroup, this.kibbutzTemplates)
+        this.setAddonTemplate(testStepResults, isGroup, this.addonTemplates)
     })
   }
 
@@ -267,7 +267,7 @@ export class TestStepResultsComponent extends TestCaseStepsListComponent impleme
         if (testStepResult.testStep) {
           testStepResult.testStep.template = testStepResult.template;
           if (testStepResult.testStep.addonActionId) {
-            testStepResult.testStep.kibbutzTemplate = templates.content.find(template => template.id == testStepResult.testStep.addonActionId)
+            testStepResult.testStep.addonTemplate = templates.content.find(template => template.id == testStepResult.testStep.addonActionId)
           }
         }
       }
@@ -275,10 +275,10 @@ export class TestStepResultsComponent extends TestCaseStepsListComponent impleme
     })
   }
 
-  setKibbutzTemplate(testStepResults: Page<TestStepResult>, isGroup, templates) {
+  setAddonTemplate(testStepResults: Page<TestStepResult>, isGroup, templates) {
     testStepResults.content.filter(result => result.testStep?.addonActionId).forEach((testStepResult) => {
       if (testStepResult.testStep) {
-        testStepResult.testStep.kibbutzTemplate = templates.content.find(template => template.id == testStepResult.testStep.addonActionId)
+        testStepResult.testStep.addonTemplate = templates.content.find(template => template.id == testStepResult.testStep.addonActionId)
       }
     })
   }

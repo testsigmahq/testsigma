@@ -2,7 +2,7 @@
      [class.ts-col-65]="showRunDetails || showFilter">
   <div
     class="theme-section-header align-items-center"
-    [style.padding]="isExecutionRunning ? '0px 24px 0px 20px' : executionResult.canReRun ? '0px 24px 0px 20px': '0px 24px 0px 20px'">
+    [style.padding]="isExecutionRunning ? '0px 24px 0px 20px' : testPlanResult.canReRun ? '0px 24px 0px 20px': '0px 24px 0px 20px'">
     <div class="dropdown section-title mouse-over hover-dropdown">
       <div class="btn-group text-nowrap">
         <a class="rb-medium" target="_blank">
@@ -62,8 +62,8 @@
         </div>
       </div>
 <!--      <app-re-run-button-->
-<!--        *ngIf="executionResult.canReRun"-->
-<!--        [executionResult]="executionResult"></app-re-run-button>-->
+<!--        *ngIf="testPlanResult.canReRun"-->
+<!--        [testPlanResult]="testPlanResult"></app-re-run-button>-->
       <div class="position-relative">
         <span
           [class.active]="showFilter"
@@ -136,7 +136,7 @@
               [class.ts-col-30]="!(showFilter || showRunDetails)">
               <app-test-machine-info-column
                 [environmentResult]="testDeviceResult"
-                [executionResult]="testDeviceResult?.testPlanResult"
+                [testPlanResult]="testDeviceResult?.testPlanResult"
                 [executionEnvironment]="testDeviceResult?.testDevice"></app-test-machine-info-column>
             </div>
             <div
@@ -173,7 +173,7 @@
 <div *ngIf="showRunDetails" class="ts-col-35">
   <app-run-details-quick-info
     [showList]="'TMR'"
-    [executionResult]="executionResult"
+    [testPlanResult]="testPlanResult"
     (filterAction)="filter($event)"
     (toggleDetailsAction)="toggleDetails($event)"></app-run-details-quick-info>
 </div>

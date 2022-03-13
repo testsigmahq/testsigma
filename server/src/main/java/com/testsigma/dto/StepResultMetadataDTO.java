@@ -17,7 +17,6 @@ public class StepResultMetadataDTO {
 
   private Long id;
   private String action;
-  private Boolean hasPassword;
   private TestDataType testDataType;
   private String testDataValue;
   private String attribute;

@@ -9,7 +9,7 @@ public class EnterDataUsingJavascript extends EnterAction {
   protected void execute() throws Exception {
     findElement();
     JavascriptExecutor js = (JavascriptExecutor) getDriver();
-    String script = String.format("arguments[0].value='%s';", getTestDataMaskResult());
+    String script = String.format("arguments[0].value='%s';", getTestData());
     js.executeScript(script, getElement());
     setSuccessMessage(SUCCESS_MESSAGE);
   }

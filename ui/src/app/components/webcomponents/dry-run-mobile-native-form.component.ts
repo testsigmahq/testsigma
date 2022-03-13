@@ -19,7 +19,7 @@ import {ToastrService} from "ngx-toastr";
 export class DryRunMobileNativeFormComponent extends BaseComponent implements OnInit {
   @Input('formGroup') nativeForm: FormGroup;
   @Input('version') version: WorkspaceVersion;
-  @Input('execution') dryExecution: DryTestPlan;
+  @Input('testPlan') dryExecution: DryTestPlan;
   @Input('environment') environment?: Environment;
   @Output("closeDialog")closeDryRunDialog = new EventEmitter<any>();
 

@@ -2,7 +2,7 @@ package com.testsigma.automator.runners;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.testsigma.automator.constants.ErrorCodes;
-import com.testsigma.automator.constants.KibbutzActionParameterType;
+import com.testsigma.automator.constants.AddonActionParameterType;
 import com.testsigma.automator.constants.NaturalTextActionConstants;
 import com.testsigma.automator.constants.AutomatorMessages;
 import com.testsigma.automator.drivers.DriverManager;
@@ -34,8 +34,8 @@ public class WebTestcaseStepRunner extends TestcaseStepRunner {
   private TestPlanRunSettingEntity settings;
   private RuntimeDataProvider runtimeDataProvider;
   private ElementPropertiesEntity elementPropertiesEntity;
-  private String oldUiIdentifierDefinition = "";
-  private LinkedList<ElementPropertiesEntity> kibbutzElementPropertiesEntity = new LinkedList<>();
+  private String oldLocatorValue = "";
+  private LinkedList<ElementPropertiesEntity> addonElementPropertiesEntity = new LinkedList<>();
 
   public WebTestcaseStepRunner(WorkspaceType workspaceType, Platform os) {
     super(workspaceType, os);
@@ -70,20 +70,20 @@ public class WebTestcaseStepRunner extends TestcaseStepRunner {
 
   private void setInitialElementData() {
     if (testcaseStep.getElementsMap().size() > 0) {
-      AddonNaturalTextActionEntity kibbutzPluginNlpEntity = testcaseStep.getAddonNaturalTextActionEntity();
-      if (kibbutzPluginNlpEntity != null) {
-        Map<String, ElementPropertiesEntity> uiIdentifiersMap = testcaseStep.getElementsMap();
-        for (AddonNaturalTextActionParameterEntity kibbutzPluginNlpParameterEntity : kibbutzPluginNlpEntity.getPluginParameters()) {
-          if (kibbutzPluginNlpParameterEntity.getType() == KibbutzActionParameterType.ELEMENT) {
-            this.kibbutzElementPropertiesEntity.add(uiIdentifiersMap.get(kibbutzPluginNlpParameterEntity.getReference()));
+      AddonNaturalTextActionEntity addonPluginActionEntity = testcaseStep.getAddonNaturalTextActionEntity();
+      if (addonPluginActionEntity != null) {
+        Map<String, ElementPropertiesEntity> elementsMap = testcaseStep.getElementsMap();
+        for (AddonNaturalTextActionParameterEntity addonPluginActionParameterEntity : addonPluginActionEntity.getPluginParameters()) {
+          if (addonPluginActionParameterEntity.getType() == AddonActionParameterType.ELEMENT) {
+            this.addonElementPropertiesEntity.add(elementsMap.get(addonPluginActionParameterEntity.getReference()));
           }
         }
-        elementPropertiesEntity = this.kibbutzElementPropertiesEntity.getFirst();
+        elementPropertiesEntity = this.addonElementPropertiesEntity.getFirst();
       } else {
         elementPropertiesEntity = testcaseStep.getElementsMap().get("element-locator");
       }
       if (elementPropertiesEntity != null) {
-        oldUiIdentifierDefinition = elementPropertiesEntity.getLocatorValue();
+        oldLocatorValue = elementPropertiesEntity.getLocatorValue();
       }
 
 
@@ -104,7 +104,7 @@ public class WebTestcaseStepRunner extends TestcaseStepRunner {
       }
     } catch (NaturalActionException naturalActionException) {
       log.info("Snippet execution failed:" + naturalActionException.getMessage());
-      //Any additional details specific to ActionSnippet executions can be added here
+      //Any additional details specific to Action executions can be added here
     } catch (IllegalAccessException e) {
       Throwable cause = e.getCause() != null ? e.getCause() : e;
       testCaseStepResult.setResult(ResultConstant.FAILURE);
@@ -191,9 +191,9 @@ public class WebTestcaseStepRunner extends TestcaseStepRunner {
 
       addonNaturalTextActionStepExecutor.execute();
     } else {
-      ActionStepExecutor actionSnippetStepExecutor = new ActionStepExecutor(testcaseStep, testCaseStepResult,
+      ActionStepExecutor actionStepExecutor = new ActionStepExecutor(testcaseStep, testCaseStepResult,
         envSettings, testCaseResult);
-      actionSnippetStepExecutor.execute();
+      actionStepExecutor.execute();
     }
   }
 

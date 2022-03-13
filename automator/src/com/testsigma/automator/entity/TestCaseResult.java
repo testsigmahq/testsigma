@@ -29,11 +29,10 @@ public class TestCaseResult {
   private Long testDataId;
   private Boolean dataDriven = false;
   private Integer errorCode;
-  private Long requirementId;
   private Integer currentIndex;
   private Timestamp createdDate;
   private Timestamp updatedDate;
-  private Long executionResultID;
+  private Long testPlanResultId;
   private boolean visualTestingEnabled = false;
   private Long phoneNumberId;
 

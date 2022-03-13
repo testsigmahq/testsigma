@@ -51,10 +51,10 @@ public interface TestCaseResultRepository extends JpaRepository<TestCaseResult, 
     "JOIN caseResult.testDeviceResult as environmenResult " +
     "JOIN caseResult.testSuite as suite " +
     "JOIN environmenResult.testDevice as environment " +
-    "WHERE environmenResult.testPlanResultId = :executionResultId AND caseResult.isStepGroup = FALSE AND " +
+    "WHERE environmenResult.testPlanResultId = :testPlanResultId AND caseResult.isStepGroup = FALSE AND " +
     "caseResult.iteration IS NULL"
   )
-  List<TestCaseResult> findAllByExecutionResultId(@Param("executionResultId") Long executionResultId);
+  List<TestCaseResult> findAllBytestPlanResultId(@Param("testPlanResultId") Long testPlanResultId);
 
   @Query("SELECT tcr FROM TestCaseResult AS tcr JOIN tcr.testCase AS tc WHERE tcr.parentId is NULL " +
     "AND tcr.suiteResultId = :suiteResultId AND tcr.status = :status ORDER BY tcr.position ASC")

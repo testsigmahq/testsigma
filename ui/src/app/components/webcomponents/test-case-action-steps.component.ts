@@ -23,7 +23,7 @@ import {ChromeRecorderService} from "../../services/chrome-recoder.service";
 })
 export class TestCaseActionStepsComponent extends TestCaseStepsListComponent implements OnInit {
   @Input('templates') templates: Page<NaturalTextActions>;
-  @Input('kibbutzTemplates') kibbutzTemplates?: Page<AddonNaturalTextAction>;
+  @Input('addonTemplates') addonTemplates?: Page<AddonNaturalTextAction>;
   @Input('selectedTemplate') selectedTemplate: NaturalTextActions;
   @Input('stepRecorderView') stepRecorderView?: boolean; // TODO Check the usage in cloud side
   public navigateTemplate = [1044, 94, 10116, 10001]
@@ -55,8 +55,8 @@ export class TestCaseActionStepsComponent extends TestCaseStepsListComponent imp
           testStep.template = this.templates.content.find((template) => {
             return template.id == testStep.naturalTextActionId;
           });
-          if(this.kibbutzTemplates?.content?.length)
-          testStep.kibbutzTemplate = this.kibbutzTemplates.content.find(template => template.id == testStep.addonActionId)
+          if(this.addonTemplates?.content?.length)
+          testStep.addonTemplate = this.addonTemplates.content.find(template => template.id == testStep.addonActionId)
         }
         if(this.navigateTemplate.includes(testStep?.template?.id))
           this.testCase.startUrl = testStep.testDataValue;

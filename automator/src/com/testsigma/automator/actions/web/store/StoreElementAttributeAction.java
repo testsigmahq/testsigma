@@ -15,6 +15,6 @@ public class StoreElementAttributeAction extends ElementAction {
     Assert.isTrue(!(StringUtils.isEmpty(attributeValue)), String.format(FAILURE_MESSAGE, getAttribute()));
     runtimeDataProvider.storeRuntimeVariable(getTestData(), attributeValue);
     resultMetadata.put(getTestData(), attributeValue);
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult(), attributeValue));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData(), attributeValue));
   }
 }

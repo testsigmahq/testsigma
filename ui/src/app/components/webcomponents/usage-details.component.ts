@@ -36,7 +36,7 @@ export class UsageDetailsComponent extends BaseComponent implements OnInit {
     public notificationsService: NotificationsService,
     public translate: TranslateService,
     public toastrService: ToastrService,
-    private executionResultService: TestPlanResultService,
+    private testPlanResultService: TestPlanResultService,
     private mobileInspectionService: MobileInspectionService,
     private devicesService: DevicesService) {
     super(authGuard, notificationsService, translate, toastrService)
@@ -84,7 +84,7 @@ export class UsageDetailsComponent extends BaseComponent implements OnInit {
     this.runsArray = [];
     this.inspectionsList = new Observable<MobileInspection[]>();
     this.inspectionsArray = [];
-    this.executionResultService.getRunningCounts().subscribe(res => {
+    this.testPlanResultService.getRunningCounts().subscribe(res => {
       this.runsArray.unshift(...res.content);
       this.runsList = of(this.runsArray);
       this.fetchMobileInspections();
@@ -126,8 +126,8 @@ export class UsageDetailsComponent extends BaseComponent implements OnInit {
       });
   }
 
-  isDry(executionResult: TestPlanResult) {
-    return !!executionResult.dryTestPlan;
+  isDry(testPlanResult: TestPlanResult) {
+    return !!testPlanResult.dryTestPlan;
   }
 
   private fetchMobileInspections() {

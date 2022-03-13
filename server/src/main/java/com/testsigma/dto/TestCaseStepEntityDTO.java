@@ -23,11 +23,11 @@ public class TestCaseStepEntityDTO implements Cloneable {
   public Map<String, ElementPropertiesDTO> elementsMap;
   public Map<String, AttributePropertiesEntityDTO> attributesMap;
   public AddonNaturalTextActionEntityDTO addonNaturalTextActionEntity;
-  public List<KibbutzPluginTestDataFunctionEntityDTO> kibbutzPluginTDFEntityList;
+  public List<AddonPluginTestDataFunctionEntityDTO> addonPluginTDFEntityList;
   private Long id;
   private ResultConstant[] ifConditionExpectedResults;
   private Long testCaseId;
-  private Long executionId;
+  private Long testPlanId;
   private Long preRequisite;
   private Long parentId;
   private TestStepPriority priority;
@@ -47,7 +47,6 @@ public class TestCaseStepEntityDTO implements Cloneable {
   private String testDataName;
   private String testDataValue;
   private String testDataValuePreSignedURL;
-  private Boolean hasPassword = false;
   private String attribute;
   private String iteration;
   private String testDataProfileName;
@@ -56,8 +55,8 @@ public class TestCaseStepEntityDTO implements Cloneable {
   private Boolean disabled;
   private String snippetClass;
   private StepDetailsDTO stepDetails;
-  private Map<String, KibbutzTestStepTestData> kibbutzTestData;
-  private Map<String, KibbutzElementData> kibbutzElements;
+  private Map<String, AddonTestStepTestData> addonTestData;
+  private Map<String, AddonElementData> addonElements;
   private Map<String, Object> additionalData;
   private List<TestCaseStepEntityDTO> testCaseSteps = new ArrayList<>();
   private Map<String, String> additionalScreenshotPaths = new HashMap<>();

@@ -14,7 +14,7 @@ import lombok.Getter;
 @Getter
 public enum TestDataType {
 
-  //@|Parameter|, $|Runtime|, *|Global| ,%|Environment|, !|Function|, ~|Random|
+  //@|Parameter|, $|Runtime|, *|Environment !|Data Generator|, ~|Random|
   raw, parameter, runtime, global, environment, random,
   function, phone_number, mail_box;
 

@@ -26,14 +26,14 @@ public class MobileNativeScrollToAction extends ScrollToCenterSnippet {
     String command = "new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView("
       + uiSelector + ");";
     ((AndroidDriver) getDriver()).findElementByAndroidUIAutomator(command);
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult()));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
   }
 
   @Override
   protected void handleException(Exception e) {
     super.handleException(e);
     if (e instanceof NotFoundException) {
-      setErrorMessage(String.format(FAILURE_MESSAGE, getTestDataMaskResult()));
+      setErrorMessage(String.format(FAILURE_MESSAGE, getTestData()));
     }
   }
 }

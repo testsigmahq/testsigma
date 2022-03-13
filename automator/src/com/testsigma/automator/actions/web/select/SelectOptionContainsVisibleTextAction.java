@@ -29,8 +29,8 @@ public class SelectOptionContainsVisibleTextAction extends ElementAction {
         break;
       }
     }
-    Assert.notNull(text, String.format(ELEMENT_NOT_FOUND, getTestDataMaskResult(), getFindByType(), getLocatorValue(), getTestDataMaskResult()));
+    Assert.notNull(text, String.format(ELEMENT_NOT_FOUND, getTestData(), getFindByType(), getLocatorValue(), getTestData()));
     selectElement.selectByVisibleText(text);
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult()));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
   }
 }

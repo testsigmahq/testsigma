@@ -27,7 +27,7 @@ export class ElementFiltersComponent implements OnInit {
   public filterName: string = '';
   public filterLocatorTypes: ElementLocatorType[];
   public filterScreenName: string = '';
-  public filterDefinition: string = '';
+  public filterLocatorValue: string = '';
   public filterTagIds: number[];
   public filterByUsage: string = '';
   public createdDateRange = new FormGroup({
@@ -77,8 +77,8 @@ export class ElementFiltersComponent implements OnInit {
 
   constructQueryString() {
     let queryString = "";
-    if (this.filterDefinition)
-      queryString += ",locatorValue:*" + encodeURIComponent(this.filterDefinition) + "*";
+    if (this.filterLocatorValue)
+      queryString += ",locatorValue:*" + encodeURIComponent(this.filterLocatorValue) + "*";
     if (this.filterScreenName)
       queryString += ",screenName:*" + encodeURIComponent(this.filterScreenName) + "*"
     if (this.filterName)
@@ -106,7 +106,7 @@ export class ElementFiltersComponent implements OnInit {
 
   reset() {
     this.filterApplied = false;
-    this.filterDefinition = '';
+    this.filterLocatorValue = '';
     this.filterScreenName = '';
     this.filterName = '';
     this.filterLocatorTypes = undefined;
@@ -136,8 +136,8 @@ export class ElementFiltersComponent implements OnInit {
       this.filterScreenName = decodeURIComponent(this.filterScreenName);
     }
     if (this.data.filter.normalizedQuery.find(query => query.key == "definition")) {
-      this.filterDefinition = <string>this.data.filter.normalizedQuery.find(query => query.key == "definition").value;
-      this.filterDefinition = this.filterDefinition.split("*")[1];
+      this.filterLocatorValue = <string>this.data.filter.normalizedQuery.find(query => query.key == "definition").value;
+      this.filterLocatorValue = this.filterLocatorValue.split("*")[1];
     }
     if (this.data.filter.normalizedQuery.find(query => query.key == "createdDate" && query.operation == FilterOperation.LESS_THAN))
       this.createdDateRange.controls['end'].setValue(moment(<number>this.data.filter.normalizedQuery.find(query => query.key == "createdDate" && query.operation == FilterOperation.LESS_THAN).value).format("YYYY-MM-DD"));

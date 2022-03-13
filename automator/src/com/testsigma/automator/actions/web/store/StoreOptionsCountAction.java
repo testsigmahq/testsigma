@@ -13,6 +13,6 @@ public class StoreOptionsCountAction extends ElementAction {
     int runTimeVarValue = selectElement.getOptions().size();
     runtimeDataProvider.storeRuntimeVariable(getTestData(), runTimeVarValue + "");
     resultMetadata.put(getTestData(), runTimeVarValue);
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult(), runTimeVarValue));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData(), runTimeVarValue));
   }
 }

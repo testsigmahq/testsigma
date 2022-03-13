@@ -17,7 +17,6 @@ CREATE TABLE `backup_details`
   `is_test_data_enabled`           TINYINT(1)    DEFAULT '0',
   `is_attachment_enabled`          TINYINT(1)    DEFAULT '0',
   `is_agent_enabled`               TINYINT(1)    DEFAULT '0',
-  `is_requirement_enabled`         TINYINT(1)    DEFAULT '0',
   `is_test_plan_enabled`           TINYINT(1)    DEFAULT '0',
   `is_test_device_enabled`         TINYINT(1)    DEFAULT '0',
   `is_suites_enabled`              TINYINT(1)    DEFAULT '0',

@@ -12,7 +12,7 @@ import {TestCaseResultService} from "../../services/test-case-result.service";
 })
 export class ReRunDataDrivenResultsComponent implements OnInit {
   @Input('testCaseResult') testCaseResult: TestCaseResult;
-  @Input('executionResult') executionResult: TestPlanResult;
+  @Input('testPlanResult') testPlanResult: TestPlanResult;
   @Output('onTestCaseResultShow') onTestCaseResultShow = new EventEmitter<TestCaseResult>();
 
   public testCaseDataDrivenResults: InfiniteScrollableDataSource;
@@ -23,7 +23,7 @@ export class ReRunDataDrivenResultsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let query = "childRunId:"+this.executionResult.childResult.id+",testCaseResultId:" + this.testCaseResult.id;
+    let query = "childRunId:"+this.testPlanResult.childResult.id+",testCaseResultId:" + this.testCaseResult.id;
     this.testCaseDataDrivenResults = new InfiniteScrollableDataSource(this.testCaseDataDrivenResultService, query)
   }
 

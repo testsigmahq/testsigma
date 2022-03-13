@@ -61,6 +61,6 @@ public class Addon {
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "plugin")
   @EqualsAndHashCode.Exclude
   @ToString.Exclude
-  private List<KibbutzPluginTestDataFunction> testDataFunctions;
+  private List<AddonPluginTestDataFunction> testDataFunctions;
 
 }

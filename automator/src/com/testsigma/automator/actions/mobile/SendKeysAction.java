@@ -26,6 +26,6 @@ public class SendKeysAction extends MobileElementAction {
       tapByElementCoOrdinates(getElement(), driver);
     }
     getElement().sendKeys(getTestData());
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult(), getFindByType(), getLocatorValue()));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData(), getFindByType(), getLocatorValue()));
   }
 }

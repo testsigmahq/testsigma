@@ -24,7 +24,6 @@ export class TestDataGridComponent implements OnInit {
   @Input('testDataForm') testDataForm: FormGroup;
   @Input('testData') testData: TestData;
   @Input('formSubmitted') formSubmitted: Boolean;
-  public encryptedIndexes: Number[] = [];
   public dataWithOrder: string[] = [];
   @ViewChild('setNameScrollable') setNameScrollable: CdkVirtualScrollViewport;
   @ViewChild('dataScrollable') dataScrollable: CdkVirtualScrollViewport;
@@ -59,7 +58,6 @@ export class TestDataGridComponent implements OnInit {
     if (!this.testData.id) {
       this.testDataForm.addControl('parameterNames', this.formBuilder.array([]));
       this.testDataForm.addControl('dataSets', this.formBuilder.array([]));
-      this.testDataForm.addControl('encryptedIndexes', new FormControl(this.encryptedIndexes, []));
       this.testDataForm.addControl('dataWithOrder', new FormControl(this.dataWithOrder, []));
       this.addParameter();
       this.addDataSet();
@@ -68,7 +66,6 @@ export class TestDataGridComponent implements OnInit {
       this.testDataForm.addControl('dataSets', this.formBuilder.array([]));
       this.populateParameters();
       this.populateDataSets();
-      this.testDataForm.addControl('encryptedIndexes', new FormControl(this.encryptedIndexes, []));
       this.testDataForm.addControl('dataWithOrder', new FormControl(this.dataWithOrder, []));
     }
     this.refreshControls();
@@ -184,23 +181,6 @@ export class TestDataGridComponent implements OnInit {
     }, 100);
   }
 
-  encrypt(index: number): void {
-    this.encryptedIndexes.push(index);
-    this.testDataForm.patchValue({
-      encryptedIndexes: this.encryptedIndexes
-    })
-  }
-
-  decrypt(index: Number): void {
-    this.encryptedIndexes.splice(this.encryptedIndexes.indexOf(index), 1);
-    this.testDataForm.patchValue({
-      encryptedIndexes: this.encryptedIndexes
-    })
-  }
-
-  isParameterEncrypted(parameterIndex: number): boolean {
-    return this.encryptedIndexes.indexOf(parameterIndex) > -1;
-  }
 
   populateParameters(): void {
     if (this.testData.data.length > 0) {
@@ -208,8 +188,6 @@ export class TestDataGridComponent implements OnInit {
       for (let key in this.testData.data[0].data) {
         this.dataWithOrder.push(key);
         this.parameterControls().push(new FormControl(key, [this.isParameterDuplicate()]));
-        if (this.testData.passwords.indexOf(key) > -1)
-          this.encryptedIndexes.push(index);
         ++index;
       }
     }

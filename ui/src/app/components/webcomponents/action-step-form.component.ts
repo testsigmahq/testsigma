@@ -36,8 +36,8 @@ import {ToastrService} from "ngx-toastr";
 import {TestCaseService} from "../../services/test-case.service";
 import {StepDetailsDataMap} from "../../models/step-details-data-map.model";
 import {AddonNaturalTextAction} from "../../models/addon-natural-text-action.model";
-import {KibbutzTestStepTestData} from "../../models/kibbutz-test-step-test-data.model";
-import {KibbutzElementData} from "../../models/kibbutz-element-data.model";
+import {AddonTestStepTestData} from "../../models/addon-test-step-test-data.model";
+import {AddonElementData} from "../../models/addon-element-data.model";
 import {Router} from "@angular/router";
 import {TestStepConditionType} from "../../enums/test-step-condition-type.enum";
 import {TestStepPriority} from "../../enums/test-step-priority.enum";
@@ -46,9 +46,9 @@ import {MobileStepRecorderComponent} from "../../agents/components/webcomponents
 import {ResultConstant} from "../../enums/result-constant.enum";
 import {TestStepMoreActionFormComponent} from "./test-step-more-action-form.component";
 import {ElementFormComponent} from "./element-form.component";
-import {KibbutzTestDataFunctionService} from "../../services/kibbutz-default-data-generator.service";
-import {KibbutzTestDataFunction} from "../../models/kibbutz-test-data-function.model";
-import {KibbutzTestDataFunctionParameter} from "../../models/kibbutz-test-data-function-parameter.model";
+import {AddonTestDataFunctionService} from "../../services/addon-default-data-generator.service";
+import {AddonTestDataFunction} from "../../models/addon-test-data-function.model";
+import {AddonTestDataFunctionParameter} from "../../models/addon-test-data-function-parameter.model";
 import {StepActionType} from "../../enums/step-action-type.enum";
 
 @Component({
@@ -69,7 +69,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   @Output('onSave') onSave = new EventEmitter<TestStep>();
   @Input('stepForm') actionForm: FormGroup;
   @Input('templates') templates: Page<NaturalTextActions>;
-  @Input('kibbutzTemplates') kibbutzTemplates?: Page<AddonNaturalTextAction>;
+  @Input('addonTemplates') addonTemplates?: Page<AddonNaturalTextAction>;
   @Input('selectedTemplate') currentTemplate: NaturalTextActions;
   @Input('testCaseResultId') testCaseResultId: number;
   @Input('isDryRun') isDryRun: boolean;
@@ -82,7 +82,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   @ViewChild('dataTypesContainer') dataTypesContainer: ElementRef;
   public currentFocusedIndex: number;
   public filteredTemplates: NaturalTextActions[];
-  public filteredKibbutzTemplates: AddonNaturalTextAction[];
+  public filteredAddonTemplates: AddonNaturalTextAction[];
   public animatedPlaceholder: string;
   public formSubmitted: boolean;
   public isFetching: Boolean = false;
@@ -109,8 +109,8 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     "Verify that the current page displays text This email address is not registered on WordPress.com"];
   private placeholders: any[];
   private stepCreateArticles = {
-    "WebApplication": "https://testsigma.com/docs/test-cases/create-steps-recorder/web-apps/",
-    "MobileWeb": "https://testsigma.com/docs/test-cases/create-steps-recorder/web-apps/",
+    "WebApplication": "https://testsigma.com/docs/test-cases/create-steps-recorder/web-apps/overview/",
+    "MobileWeb": "https://testsigma.com/docs/test-cases/create-steps-recorder/web-apps/overview/",
     "AndroidNative": "https://testsigma.com/docs/test-cases/create-steps-recorder/android-apps/",
     "IOSNative": "https://testsigma.com/docs/test-cases/create-steps-recorder/ios-apps/",
     "Rest": "https://testsigma.com/tutorials/getting-started/automate-rest-apis/"
@@ -130,9 +130,9 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   public isCurrentDataTypeRaw: boolean = false;
   private currentStepDataMap: StepDetailsDataMap;
   private lastActionNavigateUrl: string;
-  public currentKibbutzTemplate: AddonNaturalTextAction;
+  public currentAddonTemplate: AddonNaturalTextAction;
   public currentDataItemIndex: number;
-  public currentKibbutzAllowedValues = [];
+  public currentAddonAllowedValues = [];
   @Input() stepRecorderView?: boolean;
   private eventEmitterAlreadySubscribed: Boolean = false;
   private oldStepData: TestStep;
@@ -141,8 +141,8 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     return this.matModal.openDialogs.find(dialog => dialog.componentInstance instanceof MobileStepRecorderComponent).componentInstance;
   }
 
-  public currentTestDataFunctionParameters: KibbutzTestDataFunctionParameter[];
-  public currentKibbutzTDF: KibbutzTestDataFunction;
+  public currentTestDataFunctionParameters: AddonTestDataFunctionParameter[];
+  public currentAddonTDF: AddonTestDataFunction;
 
   constructor(
     public authGuard: AuthenticationGuard,
@@ -152,7 +152,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     private testStepService: TestStepService,
     private testDataFunctionService: DefaultDataGeneratorService,
     private testCaseService: TestCaseService,
-    private kibbutzTestDataFunctionService: KibbutzTestDataFunctionService,
+    private addonTestDataFunctionService: AddonTestDataFunctionService,
     private matModal: MatDialog,
     private router: Router,
     private _eref: ElementRef,
@@ -171,7 +171,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.fetchSteps();
     this.filter();
-    this.filterKibbutzAction()
+    this.filterAddonAction()
     this.placeholders = [...this.StepMsg];
     if (this.version.workspace.isMobile) {
       this.placeholders = [...this.stepMsgMobile]
@@ -199,11 +199,11 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     this.showTemplates = false;
   }
 
-  getKibbutzTemplateAllowedValues(reference?) {
-    this.currentKibbutzAllowedValues = undefined;
-    this.currentKibbutzTemplate?.parameters.forEach(parameter => {
+  getAddonTemplateAllowedValues(reference?) {
+    this.currentAddonAllowedValues = undefined;
+    this.currentAddonTemplate?.parameters.forEach(parameter => {
       if (parameter?.reference == reference) {
-        this.currentKibbutzAllowedValues = parameter?.allowedValues?.length ? parameter?.allowedValues : undefined;
+        this.currentAddonAllowedValues = parameter?.allowedValues?.length ? parameter?.allowedValues : undefined;
       }
     })
   }
@@ -241,14 +241,14 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       ;
     }
     this.filteredTemplates = this.filter();
-    this.filteredKibbutzTemplates = this.filterKibbutzAction();
+    this.filteredAddonTemplates = this.filterAddonAction();
     if (this.testStep?.id) {
       if (this.testStep.naturalTextActionId) {
         this.testStep.template = this.filteredTemplates.find(item => item.id == this.testStep.naturalTextActionId);
-        delete this.testStep.kibbutzTemplate;
+        delete this.testStep.addonTemplate;
       }
       if (this.testStep.addonActionId) {
-        this.testStep.kibbutzTemplate = this.filteredKibbutzTemplates.find(item => item.id === this.testStep.addonActionId);
+        this.testStep.addonTemplate = this.filteredAddonTemplates.find(item => item.id === this.testStep.addonActionId);
         delete this.testStep.template;
       }
       // this.testStep.dataMap = new StepDetailsDataMap().deserialize(this.currentStepDataMap ? this.currentStepDataMap : this.testStep.dataMap);
@@ -259,7 +259,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     this.resetCFArguments();
     this.resetValidation();
     this.currentTestDataFunctionParameters = null;
-    this.currentKibbutzTDF = null;
+    this.currentAddonTDF = null;
   }
 
   attachContentEditableDivKeyEvent() {
@@ -322,10 +322,10 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
                 .replace(/<span class="attribute+(.*?)>(.*?)<\/span>/g, "attribute")
                 .replace(/&nbsp;/g, "");
               this.filter(htmlGrammar);
-              this.filterKibbutzAction(htmlGrammar)
+              this.filterAddonAction(htmlGrammar)
             } else {
               this.filteredTemplates = this.filter();
-              this.filteredKibbutzTemplates = this.filterKibbutzAction();
+              this.filteredAddonTemplates = this.filterAddonAction();
             }
           })
         )
@@ -402,19 +402,19 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     return this.filteredTemplates;
   }
 
-  filterKibbutzAction(searchText?: string) {
-    if (this.kibbutzTemplates?.content?.length) {
-      this.filteredKibbutzTemplates = [];
+  filterAddonAction(searchText?: string) {
+    if (this.addonTemplates?.content?.length) {
+      this.filteredAddonTemplates = [];
       if (searchText && searchText.length) {
-        this.kibbutzTemplates.content.forEach(template => {
+        this.addonTemplates.content.forEach(template => {
           if (template.searchableGrammar.toLowerCase().includes(searchText.toLowerCase()))
-            this.filteredKibbutzTemplates.push(template)
+            this.filteredAddonTemplates.push(template)
         })
       } else {
-        this.filteredKibbutzTemplates = this.kibbutzTemplates.content;
+        this.filteredAddonTemplates = this.addonTemplates.content;
       }
 
-      return this.filteredKibbutzTemplates;
+      return this.filteredAddonTemplates;
     } else {
       return [];
     }
@@ -489,13 +489,13 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
   }
 
-  update(naturalTextActionId, kibbutzActionId) {
+  update(naturalTextActionId, addonActionId) {
     this.formSubmitted = true;
     if (this.validation()) {
       this.saving = true;
-      if ((kibbutzActionId && !this.testStep.naturalTextActionId) || (naturalTextActionId && this.testStep.addonActionId)) {
+      if ((addonActionId && !this.testStep.naturalTextActionId) || (naturalTextActionId && this.testStep.addonActionId)) {
         this.testStep.naturalTextActionId = undefined;
-      } else if ((naturalTextActionId && !this.testStep.addonActionId) || (kibbutzActionId && this.testStep.naturalTextActionId)) {
+      } else if ((naturalTextActionId && !this.testStep.addonActionId) || (addonActionId && this.testStep.naturalTextActionId)) {
         this.testStep.addonActionId = undefined;
       }
       this.testStepService.update(this.testStep).subscribe((step) => this.afterSave(step), e => this.handleSaveFailure(e, true))
@@ -515,9 +515,9 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
 
   assignOldData() {
     if (this.testStep.addonActionId) {
-      this.testStep.kibbutzTestData = this.oldStepData.kibbutzTestData;
-      this.testStep.kibbutzElements = this.oldStepData.kibbutzElements;
-      this.testStep.kibbutzTDF = this.oldStepData.kibbutzTDF;
+      this.testStep.addonTestData = this.oldStepData.addonTestData;
+      this.testStep.addonElements = this.oldStepData.addonElements;
+      this.testStep.addonTDF = this.oldStepData.addonTDF;
     } else if(this.testStep.naturalTextActionId) {
       this.testStep.testDataVal = this.oldStepData.testDataVal;
       this.testStep.attribute = this.oldStepData.attribute;
@@ -526,7 +526,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
   }
 
-  kibbutzValidation() {
+  addonValidation() {
     let dataMap = {};
     if (this.elementPlaceholder().length) {
       this.elementPlaceholder().forEach(item => {
@@ -548,16 +548,16 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
           value = value.replace(type, '').replace(/&nbsp;/g, "");
         });
         if (value.length) {
-          if (this.testStep?.kibbutzTestData) {
-            const testDataFunctionId = this.testStep?.kibbutzTestData[reference]?.testDataFunctionId;
-            const isKibbutzFn = this.testStep?.kibbutzTestData[reference]?.isKibbutzFn;
-            const args = this.testStep?.kibbutzTestData[reference]?.testDataFunctionArguments;
+          if (this.testStep?.addonTestData) {
+            const testDataFunctionId = this.testStep?.addonTestData[reference]?.testDataFunctionId;
+            const isAddonFn = this.testStep?.addonTestData[reference]?.isAddonFn;
+            const args = this.testStep?.addonTestData[reference]?.testDataFunctionArguments;
             dataMap[reference] = {
               value: value,
               type: testDataType,
               testDataFunctionArguments: item.dataset?.testDataFunctionArguments ? JSON.parse(item.dataset?.testDataFunctionArguments) : args,
               testDataFunctionId: testDataType === TestDataType.function ? item.dataset?.testDataFunctionId ? item.dataset?.testDataFunctionId : testDataFunctionId : undefined,
-              isKibbutzFn: item.dataset?.isKibbutzFn ? item.dataset?.isKibbutzFn : isKibbutzFn
+              isAddonFn: item.dataset?.isAddonFn ? item.dataset?.isAddonFn : isAddonFn
             }
           } else {
             dataMap[reference] = {
@@ -565,7 +565,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
               type: testDataType,
               testDataFunctionArguments: item.dataset?.testDataFunctionArguments ? JSON.parse(item.dataset?.testDataFunctionArguments) : undefined,
               testDataFunctionId: testDataType === TestDataType.function && item.dataset?.testDataFunctionId ? item.dataset?.testDataFunctionId : undefined,
-              isKibbutzFn: item.dataset?.isKibbutzFn ? item.dataset?.isKibbutzFn : undefined
+              isAddonFn: item.dataset?.isAddonFn ? item.dataset?.isAddonFn : undefined
             }
           }
         } else {
@@ -574,23 +574,23 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       })
     }
     let action = this.replacer.nativeElement.innerHTML;
-    let testData = new Map<string, KibbutzTestStepTestData>();
-    let elements = new Map<string, KibbutzElementData>();
-    if (this.testStep?.kibbutzTemplate?.parameters) {
-      action = this.currentKibbutzTemplate.naturalText
-      this.testStep.kibbutzTemplate.parameters.forEach(parameter => {
+    let testData = new Map<string, AddonTestStepTestData>();
+    let elements = new Map<string, AddonElementData>();
+    if (this.testStep?.addonTemplate?.parameters) {
+      action = this.currentAddonTemplate.naturalText
+      this.testStep.addonTemplate.parameters.forEach(parameter => {
         if (parameter.isTestData && dataMap[parameter.reference]) {
           //action = action.replace(parameter.reference, dataMap[parameter.reference]['value']);
-          let data = new KibbutzTestStepTestData();
+          let data = new AddonTestStepTestData();
           data.value = dataMap[parameter.reference]['value'];
           data.type = dataMap[parameter.reference]['type'];
           data.testDataFunctionArguments = dataMap[parameter.reference]['testDataFunctionArguments'];
-          data.isKibbutzFn = dataMap[parameter.reference]['isKibbutzFn'];
+          data.isAddonFn = dataMap[parameter.reference]['isAddonFn'];
           data.testDataFunctionId = dataMap[parameter.reference]['testDataFunctionId'];
           testData[parameter.reference] = data;
         } else if (parameter.isElement) {
           //action = action.replace(parameter.reference, dataMap[parameter.reference]);
-          let element = new KibbutzElementData();
+          let element = new AddonElementData();
           element.name = dataMap[parameter.reference];
           elements[parameter.reference] = element;
         }
@@ -599,12 +599,12 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
 
     if (action && action.length && this.isValidElement && this.isValidTestData && this.isValidAttribute) {
       this.testStep.action = action;
-      this.testStep.addonActionId = this.currentKibbutzTemplate.id;
+      this.testStep.addonActionId = this.currentAddonTemplate.id;
       //this.testStep.addonNaturalTextActionData = new AddonNaturalTextActionDataModel();
-      this.testStep.kibbutzTestData = testData;
-      this.testStep.kibbutzElements = elements;
+      this.testStep.addonTestData = testData;
+      this.testStep.addonElements = elements;
       this.testStep.type = TestStepType.ACTION_TEXT;
-      this.testStep.kibbutzTemplate = this.currentKibbutzTemplate;
+      this.testStep.addonTemplate = this.currentAddonTemplate;
       this.testStep.deserializeCommonProperties(this.actionForm.getRawValue());
       delete this.testStep.template;
       delete this.testStep.naturalTextActionId;
@@ -623,8 +623,8 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   validation() {
     this.replacer.nativeElement.click();
     this.showTemplates = false;
-    if (this.currentKibbutzTemplate) {
-      return this.kibbutzValidation();
+    if (this.currentAddonTemplate) {
+      return this.addonValidation();
     }
     let elementValue = this.elementPlaceholder()[0]?.textContent?.replace(/&nbsp;/g, "");
     let testDataValue = this.testDataPlaceholder()[0]?.textContent?.replace(/&nbsp;/g, "");
@@ -648,7 +648,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         }
       })
     }
-    //this.isValidElement = this.elementPlaceholder() ? uiIdentifierValue?.trim()?.length : true;
+    //this.isValidElement = this.elementPlaceholder() ? elementValue?.trim()?.length : true;
     this.isValidTestData = this.testDataPlaceholder()[0] ? testDataValue?.trim().length : true;
     this.isValidAttribute = this.attributePlaceholder() ? attributeValue?.trim().length : true;
     if (action && action.length && this.isValidElement && this.isValidTestData && this.isValidAttribute) {
@@ -690,13 +690,13 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
           this.setTemplate(template);
       }, 100);
     } else {
-      this.selectKibbutzTemplate(template)
+      this.selectAddonTemplate(template)
     }
   }
 
   setTemplate(template: NaturalTextActions) {
     if (template) {
-      delete this.currentKibbutzTemplate;
+      delete this.currentAddonTemplate;
       this.resetDataMap();
       this.replacer.nativeElement.innerHTML = template.htmlGrammar;
       this.currentTemplate = template;
@@ -704,24 +704,24 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
   }
 
-  selectKibbutzTemplate(template) {
+  selectAddonTemplate(template) {
     delete this.currentTemplate;
     //this.selectedTemplate = undefined;
     if (this.testStep.id) {
       //this.resetDataMap();
     }
-    this.testStep.kibbutzTemplate = template;
+    this.testStep.addonTemplate = template;
     setTimeout(() => {
       //this.resetCFArguments();
       this.showTemplates = false;
-      this.setKibbutzTemplate(template);
+      this.setAddonTemplate(template);
     }, 100);
   }
 
-  setKibbutzTemplate(template: AddonNaturalTextAction) {
+  setAddonTemplate(template: AddonNaturalTextAction) {
     if (template) {
       //this.resetDataMap();
-      this.currentKibbutzTemplate = template;
+      this.currentAddonTemplate = template;
       this.replacer.nativeElement.innerHTML = template.htmlGrammar;
       this.attachActionTemplatePlaceholderEvents();
     }
@@ -783,12 +783,12 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     if (this.testDataPlaceholder()?.length) {
       this.currentTestDataType = this.testStep?.testDataType || this.currentTestDataType || TestDataType.raw;
       console.log('attaching test data events');
-      this.currentKibbutzAllowedValues = undefined
+      this.currentAddonAllowedValues = undefined
       this.testDataPlaceholder().forEach((item, index) => {
         item.addEventListener('click', (event) => {
           this.isCurrentDataTypeRaw = false;
           console.log('test data click event triggered');
-          this.getKibbutzTemplateAllowedValues(item.dataset?.reference)
+          this.getAddonTemplateAllowedValues(item.dataset?.reference)
           this.currentDataTypeIndex = 0;
           item.contentEditable = true;
           this.currentDataItemIndex = index;
@@ -804,7 +804,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         });
         item.addEventListener('keydown', (event) => {
           console.log('test data keydown event triggered');
-          this.getKibbutzTemplateAllowedValues(item.dataset?.reference);
+          this.getAddonTemplateAllowedValues(item.dataset?.reference);
           let value = item?.textContent;
           let testDataType = ['@|', '!|', '~|', '$|', '*|'].some(type => item?.textContent.includes(type))
           if (["Escape", "Tab"].includes(event.key))
@@ -835,7 +835,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
 
         item.addEventListener('keyup', (event) => {
           console.log('test data keyup event triggered');
-          this.getKibbutzTemplateAllowedValues(item.dataset?.reference);
+          this.getAddonTemplateAllowedValues(item.dataset?.reference);
           this.urlPatternError = false;
           let testDataType = ['@|', '!|', '~|', '$|', '*|'].some(type => item?.textContent.includes(type))
           if (event.key == "Backspace") {
@@ -1091,7 +1091,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       if (this.testStep?.testDataFunctionId)
         this.showTestDataCF(this.testStep?.testDataFunctionId);
       else if (this.testStep?.testDataFunctionId) {
-        this.showKibbutzTDF(this.testStep?.testDataFunctionId);
+        this.showAddonTDF(this.testStep?.testDataFunctionId);
         this.editSerialize();
       }
     } else {
@@ -1099,15 +1099,15 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
   }
 
-  showKibbutzTDF(id: number) {
-    this.kibbutzTestDataFunctionService.show(id).subscribe(res => {
-      this.currentKibbutzTDF = res;
+  showAddonTDF(id: number) {
+    this.addonTestDataFunctionService.show(id).subscribe(res => {
+      this.currentAddonTDF = res;
       this.assignTDFData(res);
     })
   }
 
 
-  getKibbutzActionData(map: Map<string, any>) {
+  getAddonActionData(map: Map<string, any>) {
     let result = [];
     Object.keys(map).forEach(key => {
       result.push(map[key]);
@@ -1116,28 +1116,28 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   }
 
   private editSerialize() {
-    if (this.testStep.kibbutzTemplate) {
-      this.replacer.nativeElement.innerHTML = this.testStep.parsedKibbutzStep;
-      this.setKibbutzTemplate(this.testStep.kibbutzTemplate);
-      if (this.testStep.kibbutzElements) {
-        const uiIdentifierPlaceHolders = this.elementPlaceholder();
+    if (this.testStep.addonTemplate) {
+      this.replacer.nativeElement.innerHTML = this.testStep.parsedAddonStep;
+      this.setAddonTemplate(this.testStep.addonTemplate);
+      if (this.testStep.addonElements) {
+        const elementPlaceHolders = this.elementPlaceholder();
         let index = 0;
-        for (const key in this.testStep.kibbutzElements) {
-          this.assignElement(this.testStep.kibbutzElements[key].name, uiIdentifierPlaceHolders[index++]);
+        for (const key in this.testStep.addonElements) {
+          this.assignElement(this.testStep.addonElements[key].name, elementPlaceHolders[index++]);
         }
       }
-      if (this.testStep.kibbutzTestData) {
+      if (this.testStep.addonTestData) {
         const testDataPlaceHolders = this.testDataPlaceholder();
         let index = 0;
         testDataPlaceHolders.forEach(item => {
           let reference = item.dataset?.reference;
-          const dataName = this.getDataTypeString(this.testStep.kibbutzTestData[reference].type, this.testStep.kibbutzTestData[reference].value);
+          const dataName = this.getDataTypeString(this.testStep.addonTestData[reference].type, this.testStep.addonTestData[reference].value);
           if (dataName) {
             let item = testDataPlaceHolders[index++];
             if (item?.contentEditable) {
               item.innerHTML = dataName;
             }
-            item.setAttribute("data-test-data-type", this.testStep.kibbutzTestData[reference].type);
+            item.setAttribute("data-test-data-type", this.testStep.addonTestData[reference].type);
           }
         })
       }
@@ -1258,7 +1258,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     this.resetTestDataValues();
     delete this.testStep['attribute'];
     delete this.testStep['element'];
-    delete this.testStep['kibbutzElements'];
+    delete this.testStep['addonElements'];
   }
 
   private resetTestData() {
@@ -1266,8 +1266,8 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     delete this.testStep['testDataType'];
     delete this.testStep['testDataFunctionId'];
     delete this.testStep['testDataFunctionArgs'];
-    delete this.testStep['kibbutzTestData'];
-    delete this.testStep['kibbutzTDF'];
+    delete this.testStep['addonTestData'];
+    delete this.testStep['addonTDF'];
   }
 
   private resetCFArguments() {
@@ -1287,7 +1287,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     });
     let afterClose = (data) => {
       if (data) {
-        if (data instanceof KibbutzTestDataFunction) {
+        if (data instanceof AddonTestDataFunction) {
           this.assignTDFData(data);
         } else {
           this.currentTestDataFunction = data;
@@ -1316,11 +1316,11 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     if (argumentList.length) {
       argumentList.forEach(argument => {
         this.actionForm.addControl(argument.reference, new FormControl(
-          this.testStep?.kibbutzTestData ? this.testStep?.kibbutzTestData[argument.reference] :
-            this.testStep?.kibbutzTestData ? this.testStep?.testDataFunctionArgs[argument.reference] : undefined));
+          this.testStep?.addonTestData ? this.testStep?.addonTestData[argument.reference] :
+            this.testStep?.addonTestData ? this.testStep?.testDataFunctionArgs[argument.reference] : undefined));
       })
     } else {
-      this.setKibbutzTestDataValues(this.currentKibbutzTDF.id)
+      this.setAddonTestDataValues(this.currentAddonTDF.id)
     }
   }
 
@@ -1329,7 +1329,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   }
 
   private assignTDFData(data) {
-    this.currentKibbutzTDF = data;
+    this.currentAddonTDF = data;
     this.currentTestDataFunctionParameters = data.parameters;
     this.assignDataValue(this.getDataTypeString(TestDataType.function, data.displayName))
     this.addTDFControls(data.parameters);
@@ -1482,7 +1482,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
   }
 
-  public setKibbutzTestDataValues(customFunctionId) {
+  public setAddonTestDataValues(customFunctionId) {
     this.testDataPlaceholder().forEach((item, index) => {
       if (this.currentDataItemIndex != index)
         return
@@ -1496,11 +1496,11 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
           argsArray[argsKey] = args[argsKey];
         }
         item.setAttribute('data-test-data-function-arguments', JSON.stringify(argsArray));
-        item.setAttribute('data-is-kibbutz-fn', true);
+        item.setAttribute('data-is-addon-fn', true);
       }
     });
     this.currentTestDataFunctionParameters = null;
-    this.currentKibbutzTDF = null;
+    this.currentAddonTDF = null;
   }
 
   public setTestDataValues(customFunctionId) {
@@ -1517,17 +1517,17 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
           argsArray[argsKey] = args[argsKey];
         }
         item.setAttribute('data-test-data-function-arguments', JSON.stringify(argsArray));
-        item.setAttribute('data-is-kibbutz-fn', false);
+        item.setAttribute('data-is-addon-fn', false);
       }
     });
     this.currentTestDataFunctionParameters = null;
-    this.currentKibbutzTDF = null;
+    this.currentAddonTDF = null;
     this.resetCFArguments();
   }
 
   public resetTestDataValues() {
     this.testDataPlaceholder().forEach((item) => {
-      item.removeAttribute('data-is-kibbutz-fn');
+      item.removeAttribute('data-is-addon-fn');
       item.removeAttribute('data-test-data-function-arguments');
       item.removeAttribute('data-test-data-type');
       item.removeAttribute('data-test-data-function-id');
@@ -1554,15 +1554,15 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       testDataFunction.package = this.currentTestDataFunction.classPackage;
       this.testStep.testDataFunctionId = this.currentTestDataFunction.id;
       this.testStep.testDataFunctionArgs = this.getArguments(formValue);
-    } else if (this.currentTestDataType && this.currentTestDataType == TestDataType.function && this.currentKibbutzTDF) {
+    } else if (this.currentTestDataType && this.currentTestDataType == TestDataType.function && this.currentAddonTDF) {
       let formValue = this.actionForm.getRawValue();
       delete formValue.action
-      let testData = new KibbutzTestStepTestData();
+      let testData = new AddonTestStepTestData();
       testData.testDataFunctionArguments = formValue;
-      testData.testDataFunctionId = this.currentKibbutzTDF.id;
-      testData.value = this.currentKibbutzTDF.displayName;
+      testData.testDataFunctionId = this.currentAddonTDF.id;
+      testData.value = this.currentAddonTDF.displayName;
       testData.type = this.currentTestDataType;
-      this.testStep.kibbutzTDF = testData;
+      this.testStep.addonTDF = testData;
     }
   }
 
@@ -1582,7 +1582,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
 
   get filteredTemplate() {
     this.filteredTemplates = this.filteredTemplates.filter(template => template.displayName !== 'breakLoop' && template.displayName !== 'continueLoop');
-    let returnData = [...this.filteredTemplates, ...this.filteredKibbutzTemplates];
+    let returnData = [...this.filteredTemplates, ...this.filteredAddonTemplates];
     if (this.testStep.conditionType === TestStepConditionType.CONDITION_IF ||
       this.testStep.conditionType === TestStepConditionType.CONDITION_ELSE_IF) {
       returnData = returnData.filter(template => template.stepActionType === StepActionType.IF_CONDITION);
@@ -1643,7 +1643,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
 
   private afterSave(step: TestStep) {
     if (step.addonActionId) {
-      step.kibbutzTemplate = this.testStep.kibbutzTemplate
+      step.addonTemplate = this.testStep.addonTemplate
     } else {
       step.template = this.testStep.template;
     }

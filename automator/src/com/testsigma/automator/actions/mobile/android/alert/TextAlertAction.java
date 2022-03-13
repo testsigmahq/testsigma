@@ -33,6 +33,6 @@ public class TextAlertAction extends MobileElementAction {
   @Override
   protected void handleException(Exception e) {
     super.handleException(e);
-    updateErrorMessageForDynamicLocatorTypes(e, String.format(FAILURE_MESSAGE, getTestDataMaskResult()));
+    updateErrorMessageForDynamicLocatorTypes(e, String.format(FAILURE_MESSAGE, getTestData()));
   }
 }

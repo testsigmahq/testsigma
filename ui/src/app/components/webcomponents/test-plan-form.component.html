@@ -34,8 +34,8 @@
     </div>
   </div>
   <app-select-test-lab
-    *ngIf="execution && testPlanForm"
-    [execution]="execution"
+    *ngIf="testPlan && testPlanForm"
+    [testPlan]="testPlan"
     [version]="version"
     [formGroup]="testPlanForm"
     [isDry]="false"></app-select-test-lab>

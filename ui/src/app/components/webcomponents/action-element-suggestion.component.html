@@ -84,6 +84,10 @@
           contenteditable="true"
           [attr.data-placeholder]="'action.element.screen.name.suggestion.placeholder' | translate"></div>
         </div>
+        <button
+          (click)="openAddEditElement()"
+          class="theme-btn-primary ml-14 my-auto"
+          [translate]="'btn.common.create.element'"></button>
         <div class="ml-auto d-flex align-items-center">
         <span
           #stepResultFilterBtn
@@ -135,7 +139,7 @@
                (click)="openElementForm(element.name, element.id)"></i>
           </div>
         </a>
-        <div class="px-20 mt-50 "  *ngIf="isNew && !this.elementName && this.elementScreenName && elements.cachedItems.length==0">
+        <div class="px-20 mt-10 "  *ngIf="isNew && !this.elementName && this.elementScreenName && elements.cachedItems.length==0">
           <span
                 [translate]="'elements.not.available.screen.name'"></span>
         </div>

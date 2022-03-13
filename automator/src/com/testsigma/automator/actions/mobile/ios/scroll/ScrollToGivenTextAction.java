@@ -12,11 +12,11 @@ public class ScrollToGivenTextAction extends MobileElementAction {
   @Override
   protected void execute() throws Exception {
     boolean bodytextContainsText = getDriver().getPageSource().toUpperCase().contains(getTestData().toUpperCase());
-    Assert.isTrue(bodytextContainsText, String.format(FAILURE_NOT_FOUND, getTestDataMaskResult()));
+    Assert.isTrue(bodytextContainsText, String.format(FAILURE_NOT_FOUND, getTestData()));
     HashMap scrollObject = new HashMap<>();
     scrollObject.put("predicateString", "value == '" + getTestData() + "'");
     getDriver().executeScript("mobile: scroll", scrollObject);
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult()));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
   }
 }
 

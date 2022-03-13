@@ -47,7 +47,9 @@
     </div>
   </div>
   <mat-menu #menu="matMenu" class="project-dropdown vw-100 vh-100">
-    <div class="w-100 d-flex">
+    <div
+      (click)="stopAction($event)"
+      class="w-100 d-flex pl-10">
       <div class="ts-col-15">
         <div
           class="project-info flex-column mt-n2"
@@ -117,7 +119,7 @@
           <div class="d-flex fz-20 rb-medium w-95 mb-30">
             <div [translate]="'work_space.switcher.title'"></div>
             <div [matTooltip]="'hint.message.common.close' | translate"
-                 class="fz-30 mat-tooltip-trigger ml-auto pointer rb-light" (click)="toggle()">&times;
+                 class="fz-30 mat-tooltip-trigger ml-auto pointer rb-light" (click)="closeToggleModal()">&times;
             </div>
           </div>
 

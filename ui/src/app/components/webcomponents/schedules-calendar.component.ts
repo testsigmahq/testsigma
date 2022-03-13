@@ -40,9 +40,6 @@ export class SchedulesCalendarComponent implements OnInit {
 
   ngOnInit(): void {
     this.viewDate = moment().toDate();
-    // we set the timezone to UTC to avoid issues with DST changes
-    // see https://github.com/mattlewis92/angular-calendar/issues/717 for more info
-    moment.tz.setDefault('Utc');
     this.fetchSchedules();
     this.calendarViewTypeControl = new FormControl('week', []);
   }

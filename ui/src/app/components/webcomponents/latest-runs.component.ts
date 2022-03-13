@@ -17,7 +17,7 @@ import {TestDeviceResultService} from "../../shared/services/test-device-result.
 export class LatestRunsComponent implements OnInit {
   @Input('version') version: WorkspaceVersion;
   public period: FilterTimePeriod = FilterTimePeriod.TODAY;
-  public executionResults: InfiniteScrollableDataSource;
+  public testPlanResults: InfiniteScrollableDataSource;
   public dayResults: InfiniteScrollableDataSource;
   public weekResults: InfiniteScrollableDataSource;
   public monthResults: InfiniteScrollableDataSource;
@@ -28,37 +28,37 @@ export class LatestRunsComponent implements OnInit {
 
   constructor(
     private environmentResultService: TestDeviceResultService,
-    private executionResultService: TestPlanResultService) {
+    private testPlanResultService: TestPlanResultService,) {
   }
 
   ngOnInit(): void {
-    this.executionResults = this.dayResults = this.fetchExecutionResults(this.period);
-    this.weekResults = this.fetchExecutionResults(FilterTimePeriod.LAST_SEVEN_DAYS);
-    this.monthResults = this.fetchExecutionResults(FilterTimePeriod.LAST_30_DAYS);
-    this.quarterResults = this.fetchExecutionResults(FilterTimePeriod.LAST_90_DAYS);
+    this.testPlanResults = this.dayResults = this.fetchTestPlanResults(this.period);
+    this.weekResults = this.fetchTestPlanResults(FilterTimePeriod.LAST_SEVEN_DAYS);
+    this.monthResults = this.fetchTestPlanResults(FilterTimePeriod.LAST_30_DAYS);
+    this.quarterResults = this.fetchTestPlanResults(FilterTimePeriod.LAST_90_DAYS);
     this.setFirstActiveResult();
   }
 
-  fetchExecutionResults(period: FilterTimePeriod) {
+  fetchTestPlanResults(period: FilterTimePeriod) {
     let query = "entityType:TEST_PLAN,workspaceVersionId:" + this.version.id;
     query += ",startTime>" + this.getFormattedDate(period);
-    return new InfiniteScrollableDataSource(this.executionResultService, query, "id,desc");
+    return new InfiniteScrollableDataSource(this.testPlanResultService, query, "id,desc");
   }
 
   filter(period: FilterTimePeriod) {
     this.period = period;
     switch (this.period) {
       case FilterTimePeriod.TODAY:
-        this.executionResults = this.dayResults;
+        this.testPlanResults = this.dayResults;
         break;
       case FilterTimePeriod.LAST_SEVEN_DAYS:
-        this.executionResults = this.weekResults;
+        this.testPlanResults = this.weekResults;
         break;
       case FilterTimePeriod.LAST_30_DAYS:
-        this.executionResults = this.monthResults;
+        this.testPlanResults = this.monthResults;
         break;
       case FilterTimePeriod.LAST_90_DAYS:
-        this.executionResults = this.quarterResults;
+        this.testPlanResults = this.quarterResults;
         break;
     }
     this.setFirstActiveResult();
@@ -80,11 +80,11 @@ export class LatestRunsComponent implements OnInit {
   }
 
   private setFirstActiveResult() : void{
-    if(this.executionResults.isFetching)
+    if(this.testPlanResults.isFetching)
       setTimeout(()=> this.setFirstActiveResult(), 500);
     else
-      if(this.executionResults.isEmpty) this.environmentResults = null;
-      this.activeExecutionResult = <TestPlanResult>this.executionResults['cachedItems'][0];
+      if(this.testPlanResults.isEmpty) this.environmentResults = null;
+      this.activeExecutionResult = <TestPlanResult>this.testPlanResults['cachedItems'][0];
       if(this.activeExecutionResult)
         this.fetchEnvironmentResults();
   }

@@ -13,6 +13,5 @@ public class TestDataProfileDTO {
   private List<TestDataSetDTO> data;
   private Timestamp createdDate;
   private Timestamp updatedDate;
-  private List<String> passwords;
   private Long versionId;
 }

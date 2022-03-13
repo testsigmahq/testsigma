@@ -24,8 +24,8 @@ public class CloseWindowAtIndexAction extends ElementAction {
 
     Set<String> windowHandles = getDriver().getWindowHandles();
     ArrayList<String> windows = new ArrayList<>(windowHandles);
-    int index = NumberFormatter.getIntegerValue(getTestData(), String.format(ELEMENT_IS_NOT_A_NUMBER, getTestDataMaskResult()));
-    Assert.isTrue((index < windows.size()), String.format(INDEX_NOT_AVAILABLE, getTestDataMaskResult(), windows.size(), windows.size() - 1));
+    int index = NumberFormatter.getIntegerValue(getTestData(), String.format(ELEMENT_IS_NOT_A_NUMBER, getTestData()));
+    Assert.isTrue((index < windows.size()), String.format(INDEX_NOT_AVAILABLE, getTestData(), windows.size(), windows.size() - 1));
     getDriver().switchTo().window(windows.get(index)).close();
     if (windows.size() > 1) {
       Set<String> switchWindows = getDriver().getWindowHandles();
@@ -38,9 +38,9 @@ public class CloseWindowAtIndexAction extends ElementAction {
         }
       }
     } else {
-      setSuccessMessage(String.format(WINDOW_NOT_AVAILABLE, getTestDataMaskResult()));
+      setSuccessMessage(String.format(WINDOW_NOT_AVAILABLE, getTestData()));
       return;
     }
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult()));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
   }
 }

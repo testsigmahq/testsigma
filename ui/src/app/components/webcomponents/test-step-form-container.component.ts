@@ -43,7 +43,7 @@ export class TestStepFormContainerComponent extends BaseComponent implements OnI
   @Input('testSteps') testSteps: Page<TestStep>;
   @Input('testStep') testStep: TestStep;
   @Input('templates') templates?: Page<NaturalTextActions>;
-  @Input('kibbutzTemplates') kibbutzTemplates?: Page<AddonNaturalTextAction>;
+  @Input('addonTemplates') addonTemplates?: Page<AddonNaturalTextAction>;
   @Input('selectedTemplate') selectedTemplate: NaturalTextActions = undefined;
   @Input('testCaseResultId') testCaseResultId: number;
   @Input('isDryRun') isDryRun: boolean;
@@ -236,6 +236,7 @@ export class TestStepFormContainerComponent extends BaseComponent implements OnI
     }
     if (this.testStep.isConditionalType) {
       this.testStep.priority = TestStepPriority.MINOR;
+      this.testStep.conditionIf = [ResultConstant.SUCCESS];
     }
     if (!this.isForLoop) {
       delete this.testStep.forLoopEndIndex;
@@ -273,7 +274,6 @@ export class TestStepFormContainerComponent extends BaseComponent implements OnI
     }
     this.selectedTemplate = undefined;
     delete this.selectedTemplate
-    console.log(this.selectedTemplate)
     testStep.stepDisplayNumber = this.testStep.stepDisplayNumber;
     this.onSuccessfulStepSave.emit(testStep);
     this.updateChildStepsDisabledProperty(testStep);

@@ -77,7 +77,6 @@ export class BackupFormComponent extends BaseComponent implements OnInit {
       isTestDataEnabled: new FormControl(this.backupModel.isTestDataEnabled, []),
       isAttachmentEnabled: new FormControl(this.backupModel.isAttachmentEnabled, []),
       isAgentEnabled: new FormControl(this.backupModel.isAgentEnabled, []),
-      isRequirementEnabled: new FormControl(this.backupModel.isRequirementEnabled, []),
       isTestPlanEnabled: new FormControl(this.backupModel.isTestPlanEnabled, []),
       isSuitesEnabled: new FormControl(this.backupModel.isSuitesEnabled, []),
       isTestDeviceEnabled: new FormControl(this.backupModel.isTestDeviceEnabled, []),

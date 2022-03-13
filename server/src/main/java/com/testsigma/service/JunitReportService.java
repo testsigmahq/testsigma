@@ -41,14 +41,14 @@ public class JunitReportService {
   private final TestSuiteService testSuiteService;
   private final ApplicationConfig applicationConfig;
 
-  public JUNITTestSuitesNodeDTO generateJunitReport(Long executionId, Long executionResultId) throws Exception {
+  public JUNITTestSuitesNodeDTO generateJunitReport(Long testPlanId, Long testPlanResultId) throws Exception {
     JUNITTestSuitesNodeDTO JUNITTestSuitesNodeDTO = new JUNITTestSuitesNodeDTO();
     Map<Long, TestSuite> testSuitesMap = new HashMap<>();
 
-    TestPlan testPlan = testPlanService.find(executionId);
-    String resultsURL = generateReportsURL(executionResultId);
+    TestPlan testPlan = testPlanService.find(testPlanId);
+    String resultsURL = generateReportsURL(testPlanResultId);
 
-    List<TestDeviceResult> testDeviceResults = testDeviceResultService.findAllByTestPlanResultId(executionResultId);
+    List<TestDeviceResult> testDeviceResults = testDeviceResultService.findAllByTestPlanResultId(testPlanResultId);
     List<JUNITTestSuiteNodeDTO> JUNITTestSuiteNodeDTOS = new ArrayList<>();
     for (TestDeviceResult testDeviceResult : testDeviceResults) {
       JUNITTestSuiteNodeDTO JUNITTestSuiteNodeDTO = generateTestSuiteNode(testPlan, testDeviceResult, resultsURL, testSuitesMap);
@@ -118,12 +118,12 @@ public class JunitReportService {
     }
   }
 
-  private String generateReportsURL(Long executionResultId) {
-    String resultsUrl = "/ui/td/runs/{executionResultId}";
+  private String generateReportsURL(Long testPlanResultId) {
+    String resultsUrl = "/ui/td/runs/{testPlanResultId}";
     String url = applicationConfig.getServerUrl() + resultsUrl;
     UriTemplate template = new UriTemplate(url);
     Map<String, String> uriVariables = new HashMap<String, String>();
-    uriVariables.put("executionResultId", executionResultId.toString());
+    uriVariables.put("testPlanResultId", testPlanResultId.toString());
     return template.expand(uriVariables).toString();
   }
 

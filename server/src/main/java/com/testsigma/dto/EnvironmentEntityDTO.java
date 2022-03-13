@@ -19,7 +19,7 @@ public class EnvironmentEntityDTO implements Cloneable {
   private Long id;
   private Long environmentResultId;
   private String name;
-  private Long executionId;
+  private Long testPlanId;
   private Long executionRunId;
   private WorkspaceType workspaceType;
   private TestPlanLabType executionLabType;
@@ -30,7 +30,6 @@ public class EnvironmentEntityDTO implements Cloneable {
   private Integer errorCode;
   private String agentDeviceUuid;
   private Boolean matchBrowserVersion;
-  private Boolean runInParallel = false;
   private Boolean createSessionAtCaseLevel = false;
   private StorageType storageType;
 

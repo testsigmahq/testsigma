@@ -12,7 +12,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -41,7 +40,7 @@ public class AddonNaturalTextActionParameter {
 
   @Column(name = "parameter_type")
   @Enumerated(EnumType.STRING)
-  private KibbutzActionParameterType type;
+  private AddonActionParameterType type;
 
   @ManyToOne
   @JoinColumn(name = "addon_natural_text_action_id", referencedColumnName = "id", insertable = false, updatable = false)

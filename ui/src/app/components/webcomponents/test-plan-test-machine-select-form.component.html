@@ -13,13 +13,13 @@
   </div>
   <div class="theme-overlay-content">
     <div *ngIf="activeEnvironmentFormGroup" class="ts-form pt-30">
-      <div
-        class="pb-30 d-flex justify-content-end"
-        *ngIf="version?.workspace?.isWeb && advancedSettings && activeExecutionEnvironment"
-        [formGroup]="activeEnvironmentFormGroup">
-        <mat-checkbox class="mat-checkbox" id="runInParallel" [formControlName]="['runInParallel']">
-          <span [translate]="'test_plan.environment.select_suite.run_in_parallel'"></span></mat-checkbox>
-      </div>
+<!--      <div-->
+<!--        class="pb-30 d-flex justify-content-end"-->
+<!--        *ngIf="version?.workspace?.isWeb && advancedSettings && activeExecutionEnvironment"-->
+<!--        [formGroup]="activeEnvironmentFormGroup">-->
+<!--        <mat-checkbox class="mat-checkbox" id="runInParallel" [formControlName]="['runInParallel']">-->
+<!--          <span [translate]="'test_plan.environment.select_suite.run_in_parallel'"></span></mat-checkbox>-->
+<!--      </div>-->
       <div
         class="pb-30 d-flex justify-content-end"
         *ngIf="version?.workspace?.isWeb && advancedSettings && activeExecutionEnvironment"
@@ -29,26 +29,26 @@
       </div>
       <app-test-plan-test-machine-form
         class="column"
-        *ngIf="workspace?.isWeb && activeEnvironmentFormGroup && execution"
-        [testPlanLabType]="execution?.testPlanLabType"
+        *ngIf="workspace?.isWeb && activeEnvironmentFormGroup && testPlan"
+        [testPlanLabType]="testPlan?.testPlanLabType"
         [formGroup]="activeEnvironmentFormGroup"
         [isAvailableCheck]="false"
         [version]="version"
         [isEdit]="isEdit"></app-test-plan-test-machine-form>
       <app-test-plan-device-form
         class="column"
-        *ngIf="workspace?.isMobile && activeEnvironmentFormGroup && execution"
+        *ngIf="workspace?.isMobile && activeEnvironmentFormGroup && testPlan"
         [formGroup]="activeEnvironmentFormGroup"
         [version]="version"
         [isEdit]="isEdit"
-        [testPlanLabType]="execution?.testPlanLabType"></app-test-plan-device-form>
+        [testPlanLabType]="testPlan?.testPlanLabType"></app-test-plan-device-form>
       <app-test-plan-app-uploads-form
         *ngIf="workspace?.isMobileNative && environmentControl"
         [formGroup] = "activeEnvironmentFormGroup"
-        [testPlanLabType]="this.execution?.testPlanLabType"
+        [testPlanLabType]="this.testPlan?.testPlanLabType"
         [version]="version"
         [isEdit]="isEdit"
-        [testPlanLabType]="execution?.testPlanLabType"></app-test-plan-app-uploads-form>
+        [testPlanLabType]="testPlan?.testPlanLabType"></app-test-plan-app-uploads-form>
       <app-desired-capabilities
         *ngIf="environmentControl"
         [capabilities]="activeExecutionEnvironment?.capabilities"

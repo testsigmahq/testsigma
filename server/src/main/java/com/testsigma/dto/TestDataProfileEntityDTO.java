@@ -10,5 +10,4 @@ public class TestDataProfileEntityDTO {
   private String testDataName;
   private String testData;
   private List<TestDataSetDTO> data;
-  private List<String> passwords;
 }

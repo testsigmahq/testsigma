@@ -28,10 +28,13 @@
           class="list-view md-pm green-highlight">
           <div [textContent]="linkedEntity.name" class="ts-col-50 text-truncate pr-20"></div>
           <div (click)="openLinkedEntity(linkedEntity.id)" class="ts-col-50 pointer d-flex" target="_blank">
-            <span *ngIf="(linkedEntity.requirement?.requirementName || linkedEntity.workspaceVersionId)"
-              [textContent]="linkedEntity.requirement?.requirementName || ('linked_entities.open_test_suite'|translate)"
+            <span *ngIf="(linkedEntity.workspaceVersionId && !linkedEntity.type)"
+              [textContent]="('linked_entities.open_test_suite'|translate)"
               class="pr-20 ts-col-90 text-truncate"></span>
-            <div *ngIf="!(linkedEntity.requirement?.requirementName || linkedEntity.workspaceVersionId)"
+            <span *ngIf="(linkedEntity.type)"
+              [textContent]="('linked_entities.open_test_case'|translate)"
+              class="pr-20 ts-col-90 text-truncate"></span>
+            <div *ngIf="!(linkedEntity.workspaceVersionId)"
                  class="pr-20 ts-col-90 text-truncate d-flex">
               <span
                 *ngIf="linkedEntity?.workspaceVersion?.application?.project?.hasMultipleApps"

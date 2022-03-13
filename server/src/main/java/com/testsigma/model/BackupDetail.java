@@ -56,9 +56,6 @@ public class BackupDetail implements Serializable {
   @Column(name = "is_agent_enabled")
   private Boolean isAgentEnabled;
 
-  @Column(name = "is_requirement_enabled")
-  private Boolean isRequirementEnabled;
-
   @Column(name = "is_test_plan_enabled")
   private Boolean isTestPlanEnabled;
 

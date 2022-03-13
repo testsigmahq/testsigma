@@ -15,10 +15,10 @@ public class WaitUntilCurrentURLContainsAction extends ElementAction {
   public void execute() throws Exception {
     try {
       boolean urlContainsExpectedData = getWebDriverWait().until(ExpectedConditions.urlContains(getTestData()));
-      Assert.isTrue(urlContainsExpectedData, String.format(FAILURE_MESSAGE, getTestDataMaskResult(), getTimeout()));
-      setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult()));
+      Assert.isTrue(urlContainsExpectedData, String.format(FAILURE_MESSAGE, getTestData(), getTimeout()));
+      setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
     } catch (TimeoutException e) {
-      throw new AutomatorException(String.format(FAILURE_MESSAGE, getTestDataMaskResult(), getTimeout()), (Exception) e.getCause());
+      throw new AutomatorException(String.format(FAILURE_MESSAGE, getTestData(), getTimeout()), (Exception) e.getCause());
     }
 
   }

@@ -22,9 +22,9 @@ import {TestDevice} from "../../models/test-device.model";
     <div class="align-items-center d-flex justify-content-start flex-wrap">
       <span class="d-inline-block mr-5 no-bg-transparent"
             style="height: 20px;min-width: 20px"
-            *ngIf="execution.testPlanLabType"
-            [class.testsigma-lab-logo]="execution.isTestsigmaLab || execution.isHybrid"
-            [matTooltip]="('execution.lab_type.'+execution.testPlanLabType) | translate"></span>
+            *ngIf="testPlan.testPlanLabType"
+            [class.testsigma-lab-logo]="testPlan.isTestsigmaLab || testPlan.isHybrid"
+            [matTooltip]="('testPlan.lab_type.'+testPlan.testPlanLabType) | translate"></span>
       <span *ngIf="isHybridMobileWeb">
         <span *ngFor="let env of executionEnvironments"
               [matTooltip]="
@@ -71,7 +71,7 @@ import {TestDevice} from "../../models/test-device.model";
   styles: []
 })
 export class LabEnvironmentsInfoComponent implements OnInit {
-  @Input('execution') execution: TestPlan;
+  @Input('testPlan') testPlan: TestPlan;
   @Input('executionEnvironments') executionEnvironments : TestDevice[];
 
   constructor( private platformService: PlatformService,
@@ -84,7 +84,7 @@ export class LabEnvironmentsInfoComponent implements OnInit {
 
   ngOnChanges(changes : SimpleChanges) : void{
     this.executionEnvironments.forEach((env)=>{
-      if(this.execution.testPlanLabType == TestPlanLabType.Hybrid){
+      if(this.testPlan.testPlanLabType == TestPlanLabType.Hybrid){
         this.agentService.findAll("id:"+env?.agentId).subscribe(res=> {
           let agent;
           if(res.content.length){
@@ -109,24 +109,24 @@ export class LabEnvironmentsInfoComponent implements OnInit {
       }
       else{
         if (env.platformOsVersionId != null) {
-          this.platformService.findOsVersion(env.platformOsVersionId, this.execution.testPlanLabType).subscribe((platformOsversion) => {
+          this.platformService.findOsVersion(env.platformOsVersionId, this.testPlan.testPlanLabType).subscribe((platformOsversion) => {
             env.platform =  platformOsversion.platform;
             env.osVersion = platformOsversion.version;
           });
         }
         if (env.platformBrowserVersionId != null) {
-          this.platformService.findBrowserVersion(env.platformBrowserVersionId, this.execution.testPlanLabType).subscribe((platformBrowsersversion) => {
+          this.platformService.findBrowserVersion(env.platformBrowserVersionId, this.testPlan.testPlanLabType).subscribe((platformBrowsersversion) => {
             env.browser = platformBrowsersversion.name.toUpperCase();
             env.browserVersion = platformBrowsersversion.version;
           });
         }
         if (env.platformDeviceId != null) {
-          this.platformService.findDevice(env.platformDeviceId, this.execution.testPlanLabType).subscribe((platformDevice) => {
+          this.platformService.findDevice(env.platformDeviceId, this.testPlan.testPlanLabType).subscribe((platformDevice) => {
             env.deviceName = platformDevice.displayName;
           });
         }
         if (env.platformScreenResolutionId != null) {
-          this.platformService.findScreenResolution(env.platformScreenResolutionId, this.execution.testPlanLabType).subscribe((platformResolution) => {
+          this.platformService.findScreenResolution(env.platformScreenResolutionId, this.testPlan.testPlanLabType).subscribe((platformResolution) => {
             env.resolution = platformResolution.resolution;
           });
         }
@@ -135,19 +135,19 @@ export class LabEnvironmentsInfoComponent implements OnInit {
   }
 
   get isHybridMobileNative() {
-    return this.execution?.isHybrid && this.execution?.workspaceVersion?.workspace?.isMobileNative;
+    return this.testPlan?.isHybrid && this.testPlan?.workspaceVersion?.workspace?.isMobileNative;
   }
 
   get isAndroidNative() {
-    return this.execution?.workspaceVersion?.workspace?.isAndroidNative;
+    return this.testPlan?.workspaceVersion?.workspace?.isAndroidNative;
   }
 
   get isIosNative() {
-    return this.execution?.workspaceVersion?.workspace?.isIosNative;
+    return this.testPlan?.workspaceVersion?.workspace?.isIosNative;
   }
 
   get isHybridMobileWeb(){
-    return this.execution?.isHybrid && this.execution?.workspaceVersion?.workspace?.isMobileWeb;
+    return this.testPlan?.isHybrid && this.testPlan?.workspaceVersion?.workspace?.isMobileWeb;
   }
 
 }

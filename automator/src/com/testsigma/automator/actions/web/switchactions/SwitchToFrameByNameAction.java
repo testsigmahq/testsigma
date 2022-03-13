@@ -15,7 +15,7 @@ public class SwitchToFrameByNameAction extends ElementAction {
   @Override
   protected void execute() throws Exception {
     getDriver().switchTo().frame(getTestData());
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult()));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
   }
 
   @Override

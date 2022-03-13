@@ -2,7 +2,7 @@
      [class.ts-col-65]="showRunDetails || showFilter">
   <div
     class="theme-section-header align-items-center"
-    [style.padding]="isExecutionRunning ? '0px 24px 0px 20px' : executionResult.canReRun ? '0px 24px 0px 20px': '0px 24px 0px 20px'">
+    [style.padding]="isExecutionRunning ? '0px 24px 0px 20px' : testPlanResult.canReRun ? '0px 24px 0px 20px': '0px 24px 0px 20px'">
     <div class="dropdown section-title mouse-over hover-dropdown">
       <div class="btn-group  text-nowrap">
         <a class="rb-medium" target="_blank">
@@ -62,8 +62,8 @@
         </div>
       </div>
 <!--      <app-re-run-button-->
-<!--        *ngIf="executionResult.canReRun"-->
-<!--        [executionResult]="executionResult"></app-re-run-button>-->
+<!--        *ngIf="testPlanResult.canReRun"-->
+<!--        [testPlanResult]="testPlanResult"></app-re-run-button>-->
       <div class="position-relative">
         <span
           [class.active]="showFilter"
@@ -139,7 +139,7 @@
               class="px-10 text-center ts-col-45">
               <app-test-machine-info-column
                 [environmentResult]="testCaseResult?.testDeviceResult"
-                [executionResult]="testCaseResult?.testDeviceResult?.testPlanResult"
+                [testPlanResult]="testCaseResult?.testDeviceResult?.testPlanResult"
                 [executionEnvironment]="testCaseResult?.testDeviceResult?.testDevice"></app-test-machine-info-column>
             </div>
             <div
@@ -169,7 +169,7 @@
 <div *ngIf="showRunDetails" class="ts-col-35">
   <app-run-details-quick-info
     [showList]="'TCR'"
-    [executionResult]="executionResult"
+    [testPlanResult]="testPlanResult"
     (filterAction)="filter($event)"
     (toggleDetailsAction)="toggleDetails()"></app-run-details-quick-info>
 </div>
@@ -177,7 +177,7 @@
 <div *ngIf="showFilter" class="ts-col-35">
   <app-test-case-result-filter
     [filterResult]="filterResult"
-    [execution]="executionResult?.testPlan"
+    [testPlan]="testPlanResult?.testPlan"
     (filterAction)="filter($event)"
     (toggleFilterAction)="toggleFilter()"></app-test-case-result-filter>
 </div>

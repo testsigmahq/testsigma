@@ -64,14 +64,14 @@ public class TestPlansController {
   public TestPlanDTO update(@PathVariable(value = "id") Long id, @RequestBody TestPlanRequest request) throws TestsigmaDatabaseException {
     log.info("Put request /test_plans/" + id + "  " + request);
     TestPlan testPlan = this.testPlanService.find(id);
-    testPlan.setTestDevices(testDeviceService.findByExecutionId(testPlan.getId()));
+    testPlan.setTestDevices(testDeviceService.findByTestPlanId(testPlan.getId()));
     Set<Long> existingIds = testPlan.getTestDevices().stream().map(TestDevice::getId).collect(Collectors.toSet());
     Set<Long> newIds = request.getEnvironments().stream().map(TestDeviceRequest::getId).collect(Collectors.toSet());
     existingIds.removeAll(newIds);
     testPlan.setOrphanTestDeviceIds(existingIds);
     testPlanMapper.merge(testPlan, request);
     testPlan.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
-    testPlan = this.testPlanService.updateExecutionAndEnvironments(testPlan);
+    testPlan = this.testPlanService.updateTestPlanAndEnvironments(testPlan);
     return this.testPlanMapper.mapTo(testPlan);
   }
 

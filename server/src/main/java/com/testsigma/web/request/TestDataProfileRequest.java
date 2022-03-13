@@ -11,7 +11,6 @@ public class TestDataProfileRequest {
   Long id;
   private String testDataName;
   private String testData;
-  private List<String> passwords;
   private Map<String, String> renamedColumns;
   private List<TestDataSetRequest> data;
   private Long versionId;

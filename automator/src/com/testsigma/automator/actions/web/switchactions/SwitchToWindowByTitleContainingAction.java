@@ -29,14 +29,14 @@ public class SwitchToWindowByTitleContainingAction extends ElementAction {
         title = (title == null || title.isEmpty()) ? getDriver().getCurrentUrl() : title;
         if (title.toUpperCase().contains(getTestData().toUpperCase())) {
           isWindowFound = true;
-          setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult()));
+          setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
           break;
         }
       }
     } finally {
       if (!isWindowFound) {
         getDriver().switchTo().window(currentWindowHandle);
-        throw new AutomatorException(String.format(FAILURE_MESSAGE, getTestDataMaskResult(), getTestDataMaskResult(), sb));
+        throw new AutomatorException(String.format(FAILURE_MESSAGE, getTestData(), getTestData(), sb));
 
       }
     }

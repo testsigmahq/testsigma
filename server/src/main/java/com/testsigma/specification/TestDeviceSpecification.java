@@ -19,6 +19,11 @@ public class TestDeviceSpecification extends BaseSpecification<TestDevice> {
 
   @Override
   protected Expression<String> getPath(SearchCriteria criteria, Root<TestDevice> root) {
+    String key = criteria.getKey();
+    if (key.equals("entityType")) {
+      Join s = root.join("testPlan", JoinType.INNER);
+      return s.get(key);
+    }
     return root.get(criteria.getKey());
   }
 

@@ -24,15 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface WorkspaceVersionRepository extends JpaSpecificationExecutor<WorkspaceVersion>, PagingAndSortingRepository<WorkspaceVersion, Long>, JpaRepository<WorkspaceVersion, Long> {
 
   @Modifying
-  @Query(value = "INSERT INTO requirements(created_date, workspace_version_id, description, name, copied_from) SELECT " +
-    "now(), " +
-    ":newVersionId, " +
-    "description, name, id from requirements " +
-    "WHERE workspace_version_id = :versionId", nativeQuery = true)
-  void copyRequirementDetails(@Param("newVersionId") Long newVersionId, @Param("versionId") Long versionId);
-
-  @Modifying
-  @Query(value = "insert into test_cases (created_date, start_time, end_time, is_data_driven, is_step_group, priority_id, requirement_id, description, name, status, type, test_data_id, workspace_version_id, pre_requisite, deleted, test_data_start_index, copied_from)  select now(), tcase.start_time, tcase.end_time, tcase.is_data_driven, tcase.is_step_group,tcase.priority_id, (select req.id from requirements req where req.copied_from=tcase.requirement_id), tcase.description, tcase.name, tcase.status, tcase.type, tcase.test_data_id, :newVersionId, tcase.pre_requisite, deleted, test_data_start_index, tcase.id from test_cases tcase where tcase.workspace_version_id=:versionId", nativeQuery = true)
+  @Query(value = "insert into test_cases (created_date, start_time, end_time, is_data_driven, is_step_group, priority_id, description, name, status, type, test_data_id, workspace_version_id, pre_requisite, deleted, test_data_start_index, copied_from)  select now(), tcase.start_time, tcase.end_time, tcase.is_data_driven, tcase.is_step_group,tcase.priority_id, tcase.description, tcase.name, tcase.status, tcase.type, tcase.test_data_id, :newVersionId, tcase.pre_requisite, deleted, test_data_start_index, tcase.id from test_cases tcase where tcase.workspace_version_id=:versionId", nativeQuery = true)
   void copyTestCaseDetails(@Param("newVersionId") Long newVersionId, @Param("versionId") Long versionId);
 
   @Modifying
@@ -54,8 +46,8 @@ public interface WorkspaceVersionRepository extends JpaSpecificationExecutor<Wor
   void copyFields(@Param("newVersionId") Long newVersionId, @Param("versionId") Long versionId);
 
   @Modifying
-  @Query(value = "INSERT INTO test_data( CREATED_DATE, version_id, test_data, test_data_name, passwords, copied_from)  SELECT now(), " +
-    ":newVersionId, test_data,test_data_name, passwords, id FROM test_data " +
+  @Query(value = "INSERT INTO test_data( CREATED_DATE, version_id, test_data, test_data_name, copied_from)  SELECT now(), " +
+    ":newVersionId, test_data,test_data_name, id FROM test_data " +
     "WHERE version_id= :versionId", nativeQuery = true)
   void copyTestData(@Param("newVersionId") Long newVersionId, @Param("versionId") Long versionId);
 
@@ -80,7 +72,7 @@ public interface WorkspaceVersionRepository extends JpaSpecificationExecutor<Wor
   void updateStepPreRequirementReference(@Param("newVersionId") Long newVersionId);
 
   @Modifying
-  @Query(value = "insert into test_suites(created_date, workspace_version_id, name, pre_requisite, description, copied_from)  select now(), :newVersionId, name, pre_requisite, description,  id from test_suites where workspace_version_id=:oldVersionId", nativeQuery = true)
+  @Query(value = "insert into test_suites(created_date, workspace_version_id, name, pre_requisite, description, copied_from , entity_type)  select now(), :newVersionId, name, pre_requisite, description,  id ,entity_type from test_suites where workspace_version_id=:oldVersionId", nativeQuery = true)
   void copyTestSuites(@Param("newVersionId") Long newVersionId, @Param("oldVersionId") Long oldVersionId);
 
   @Modifying
@@ -96,11 +88,11 @@ public interface WorkspaceVersionRepository extends JpaSpecificationExecutor<Wor
   void copyGroupTestcaseMappings(@Param("newVersionId") Long newVersionId, @Param("oldVersionId") Long oldVersionId);
 
   @Modifying
-  @Query(value = "insert into test_plans(created_date, workspace_version_id, description, element_time_out, environment_id, name, page_time_out, screenshot, recovery_action, on_aborted_action, re_run_on_failure, on_suite_pre_requisite_failed , on_testcase_pre_requisite_failed , on_step_pre_requisite_failed ,test_lab_type, test_plan_type, match_browser_version, copied_from) select now(), :newVersionId, description, element_time_out, environment_id, name, page_time_out, screenshot, recovery_action,on_aborted_action, re_run_on_failure, on_suite_pre_requisite_failed , on_testcase_pre_requisite_failed, on_step_pre_requisite_failed, test_lab_type, test_plan_type, match_browser_version, id from test_plans where workspace_version_id=:oldVersionId", nativeQuery = true)
+  @Query(value = "insert into test_plans(created_date, workspace_version_id, description, element_time_out, environment_id, name, page_time_out, screenshot, recovery_action, on_aborted_action, re_run_on_failure, on_suite_pre_requisite_failed , on_testcase_pre_requisite_failed , on_step_pre_requisite_failed ,test_lab_type, test_plan_type, match_browser_version, copied_from,entity_type) select now(), :newVersionId, description, element_time_out, environment_id, name, page_time_out, screenshot, recovery_action,on_aborted_action, re_run_on_failure, on_suite_pre_requisite_failed , on_testcase_pre_requisite_failed, on_step_pre_requisite_failed, test_lab_type, test_plan_type, match_browser_version, id ,entity_type from test_plans where workspace_version_id=:oldVersionId", nativeQuery = true)
   void copyTestPlansFromVersion(@Param("newVersionId") Long newVersionId, @Param("oldVersionId") Long oldVersionId);
 
   @Modifying
-  @Query(value = "insert into test_devices(created_date, title, test_plan_id, device_id, platform_device_id, platform_screen_resolution_id, platform_browser_version_id, platform_os_version_id, disabled, match_browser_version, copied_from) select now(), title, (select id from test_plans where copied_from=test_plan_id and workspace_version_id=?) executionId, device_id, platform_device_id, platform_screen_resolution_id, platform_browser_version_id, platform_os_version_id, disabled, match_browser_version, id from test_devices where test_plan_id in (select id from test_plans where workspace_version_id=?)", nativeQuery = true)
+  @Query(value = "insert into test_devices(created_date, title, test_plan_id, device_id, platform_device_id, platform_screen_resolution_id, platform_browser_version_id, platform_os_version_id, disabled, match_browser_version, copied_from) select now(), title, (select id from test_plans where copied_from=test_plan_id and workspace_version_id=?) testPlanId, device_id, platform_device_id, platform_screen_resolution_id, platform_browser_version_id, platform_os_version_id, disabled, match_browser_version, id from test_devices where test_plan_id in (select id from test_plans where workspace_version_id=?)", nativeQuery = true)
   void copyTestDevices(@Param("newVersionId") Long newVersionId, @Param("oldVersionId") Long oldVersionId);
 
   @Modifying

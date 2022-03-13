@@ -1,6 +1,6 @@
 package com.testsigma.dto;
 
-import com.testsigma.model.KibbutzActionParameterType;
+import com.testsigma.model.AddonActionParameterType;
 import lombok.Data;
 
 import java.util.List;
@@ -11,6 +11,6 @@ public class AddonNaturalTextActionParameterDTO {
   private String name;
   private String reference;
   private String description;
-  private KibbutzActionParameterType type;
+  private AddonActionParameterType type;
   private List allowedValues;
 }

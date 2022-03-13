@@ -10,8 +10,6 @@ export class EnvironmentsTableComponent implements OnInit {
   @Input('environment') environment: Environment;
   @Input('formGroup') environmentForm : FormGroup;
   @Input('edit') edit: Boolean = false;
-  @Input('encryptedNames') encryptedNames: String[] = [];
-  @Output('onEncryptedNames')onEncryptedNames = new EventEmitter<String[]>();
   @Input('formSubmitted') formSubmitted;
   public selectAll: Boolean;
   public selectedList = [];
@@ -22,7 +20,6 @@ export class EnvironmentsTableComponent implements OnInit {
   ngOnInit(): void {
     this.environmentForm.removeControl('parameters');
     this.environmentForm.addControl('parameters', this.formBuilder.array([]));
-    this.environmentForm.addControl('encryptedNames', new FormControl(this.encryptedNames, []));
     this.populateControls();
   }
 
@@ -33,12 +30,10 @@ export class EnvironmentsTableComponent implements OnInit {
         key: key,
         value: this.environment.parameters[key],
         selected: false,
-        encrypted: this.environment.passwords?.includes(key)
       }));
     });
 
     this.addRowControl();
-    this.setEncryptedNames();
   }
 
   addRowControl() {
@@ -49,14 +44,12 @@ export class EnvironmentsTableComponent implements OnInit {
     return this.formBuilder.group({
       key: '',
       value: '',
-      selected: false,
-      encrypted: false
+      selected: false
     })
   }
 
   removeRowControl(index: number): void {
     this.rowControls().removeAt(index);
-    this.setEncryptedNames();
   }
 
   rowControls(): FormArray {
@@ -82,7 +75,6 @@ export class EnvironmentsTableComponent implements OnInit {
   public removeMultipleParameters(): void {
     let selectedRows = this.selectedList.reverse();
     for (let i of selectedRows ) this.removeRowControl(i);
-    this.setEncryptedNames();
   }
 
   public selectAllToggle(selectAll: Boolean): void {
@@ -93,20 +85,6 @@ export class EnvironmentsTableComponent implements OnInit {
         this.selectedList.push(index);
       }
     });
-  }
-
-  encrypt(parametersControl: AbstractControl): void {
-    parametersControl.setValue({...parametersControl.value,...{encrypted: true}});
-    this.setEncryptedNames();
-  }
-
-  decrypt(parametersControl: AbstractControl): void {
-    parametersControl.setValue({...parametersControl.value,...{encrypted: false}});
-    this.setEncryptedNames();
-  }
-
-  isParameterEncrypted(parametersControl: AbstractControl): boolean {
-    return parametersControl.value.encrypted;
   }
 
   isDuplicateParameters(key: String) {
@@ -125,9 +103,4 @@ export class EnvironmentsTableComponent implements OnInit {
     return parametersControl.value.value.trim().length == 0 && this.formSubmitted;
   }
 
-  setEncryptedNames() {
-    this.encryptedNames = this.rowControls().getRawValue().filter(parameter => parameter.encrypted && parameter.key?.length)
-                                                          .map(parameter => parameter.key);
-    this.environmentForm.controls.encryptedNames.setValue(this.encryptedNames);
-  }
 }

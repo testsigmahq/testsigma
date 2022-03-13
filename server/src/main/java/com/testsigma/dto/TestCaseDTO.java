@@ -27,7 +27,6 @@ public class TestCaseDTO {
   private Boolean isDataDriven;
   private Boolean isStepGroup;
   private Long priority;
-  private Long requirementId;
   private Timestamp draftAt;
   private Timestamp obsoleteAt;
   private Timestamp readyAt;
@@ -50,7 +49,6 @@ public class TestCaseDTO {
   private String order;
   private List<Attachment> files;
   private List<String> tags;
-  private RequirementDTO requirement;
   private WorkspaceVersionDTO version;
   private String from;
   private String to;

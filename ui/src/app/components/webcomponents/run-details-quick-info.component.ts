@@ -20,7 +20,7 @@ import {Pageable} from "../../shared/models/pageable";
   styles: []
 })
 export class RunDetailsQuickInfoComponent extends BaseComponent implements OnInit {
-  @Input('executionResult') executionResult: TestPlanResult;
+  @Input('testPlanResult') testPlanResult: TestPlanResult;
   @Input('showList') showList: String;
   @Output('toggleDetailsAction') toggleDetailsAction = new EventEmitter<Boolean>();
   @Output('filterAction') filterAction = new EventEmitter<any>();
@@ -36,33 +36,33 @@ export class RunDetailsQuickInfoComponent extends BaseComponent implements OnIni
     public notificationsService: NotificationsService,
     public translate: TranslateService,
     public toastrService: ToastrService,
-    private executionResultService: TestPlanResultService,
+    private testPlanResultService: TestPlanResultService,
     private environmentResultService: TestDeviceResultService,
     private testSuiteResultService: TestSuiteResultService) {
     super(authGuard, notificationsService, translate, toastrService);
   }
 
   ngOnInit() {
-    // this.userService.show(this.executionResult.executedById).subscribe(user => this.executionResult.executedBy = user);
+    // this.userService.show(this.testPlanResult.executedById).subscribe(user => this.testPlanResult.executedBy = user);
   }
 
   ngOnChanges() {
     if (this.showList == 'TCR') {
-      this.executionResult.consolidateCount()
+      this.testPlanResult.consolidateCount()
     }
     if (this.showList == 'TMR') {
       let page = new Pageable();
       page.pageSize = 100;
-      this.environmentResultService.findAll("testPlanResultId:" + this.executionResult.id, undefined, page).subscribe(res => {
+      this.environmentResultService.findAll("testPlanResultId:" + this.testPlanResult.id, undefined, page).subscribe(res => {
         this.results = res;
-        if (this.executionResult.childResult) new TestPlanResult().consolidateListCount(res);
+        if (this.testPlanResult.childResult) new TestPlanResult().consolidateListCount(res);
       });
     } else if (this.showList == 'TSR') {
       let page = new Pageable();
       page.pageSize = 1000;
-      this.testSuiteResultService.findAll("testPlanResultId:" + this.executionResult.id, undefined, page).subscribe(res => {
+      this.testSuiteResultService.findAll("testPlanResultId:" + this.testPlanResult.id, undefined, page).subscribe(res => {
         this.results = res
-        if (this.executionResult.childResult) new TestPlanResult().consolidateListCount(res);
+        if (this.testPlanResult.childResult) new TestPlanResult().consolidateListCount(res);
       });
     }
   }
@@ -80,7 +80,7 @@ export class RunDetailsQuickInfoComponent extends BaseComponent implements OnIni
   }
 
   updateBuildId() {
-    this.executionResultService.update(this.executionResult).subscribe({
+    this.testPlanResultService.update(this.testPlanResult).subscribe({
       next: () => {
         this.translate.get("message.common.update.success", {FieldName: 'Build Number'}).subscribe((res: string) => {
           this.showNotification(NotificationType.Success, res);

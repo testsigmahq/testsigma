@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AddonNaturalTextActionData {
-//  private Map<String, KibbutzElementData> elements;
-//  private Map<String, KibbutzTestStepTestData> testData;
+//  private Map<String, AddonElementData> elements;
+//  private Map<String, AddonTestStepTestData> testData;
 
 }

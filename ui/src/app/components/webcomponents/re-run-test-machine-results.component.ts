@@ -10,7 +10,7 @@ import {TestDeviceResultService} from "../../shared/services/test-device-result.
   styles: []
 })
 export class ReRunTestMachineResultsComponent implements OnInit {
-  @Input('executionResult') executionResult: TestPlanResult;
+  @Input('testPlanResult') testPlanResult: TestPlanResult;
   @Output('onTestMachineResultShow') onTestMachineResultShow = new EventEmitter<TestDeviceResult>();
 
   testMachineResults : InfiniteScrollableDataSource;
@@ -18,7 +18,7 @@ export class ReRunTestMachineResultsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let query = "childRunId:"+this.executionResult.childResult.id;
+    let query = "childRunId:"+this.testPlanResult.childResult.id;
     this.testMachineResults = new InfiniteScrollableDataSource(this.environmentResultService, query);
   }
 

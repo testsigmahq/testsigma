@@ -41,7 +41,6 @@ public class TestDeviceRequest {
   Long envRunId;
   Boolean disable;
   Boolean matchBrowserVersion = false;
-  Boolean runInParallel = false;
   Boolean createSessionAtCaseLevel = false;
   List<Long> suiteIds;
 }

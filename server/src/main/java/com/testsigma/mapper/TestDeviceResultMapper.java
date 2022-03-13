@@ -33,7 +33,7 @@ public interface TestDeviceResultMapper {
   void mergeRequest(TestDeviceResultRequest testDeviceResultRequest, @MappingTarget TestDeviceResult testDeviceResult);
 
   @Mapping(target = "environmentResultId", source = "id")
-  @Mapping(target = "executionId", expression = "java(testDeviceResult.getTestPlanResult().getTestPlan().getId())")
+  @Mapping(target = "testPlanId", expression = "java(testDeviceResult.getTestPlanResult().getTestPlan().getId())")
   @Mapping(target = "name", expression = "java(testDeviceResult.getTestPlanResult().getTestPlan().getName())")
   @Mapping(target = "executionLabType", expression = "java(testDeviceResult.getTestPlanResult().getTestPlan()" +
     ".getTestPlanLabType())")

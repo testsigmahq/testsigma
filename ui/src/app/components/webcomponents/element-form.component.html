@@ -173,6 +173,10 @@
                 *ngIf="formSubmitted && elementForm.get('name').hasError('required')"
                 class="error" [translate]="'agents.message.title.required'">
               </div>
+              <div
+                *ngIf="elementForm?.get('name')?.touched && elementForm?.controls?.name?.errors?.minlength "
+                class="error" [translate]="'agents.message.title.minlength' | translate: {FieldName:'Name' , min:'4'}">
+              </div>
             </div>
             <div class="form-group ts-col-50 pl-20" matAutocompleteOrigin #origin="matAutocompleteOrigin">
               <div class="p-0 field mb-0" appearance="fill">

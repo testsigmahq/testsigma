@@ -17,12 +17,12 @@ public class SwitchToWindowByIndexAction extends ElementAction {
 
   @Override
   protected void execute() throws Exception {
-    int windowIndex = NumberFormatter.getIntegerValue(getTestData(), String.format(ELEMENT_IS_NOT_A_NUMBER, getTestDataMaskResult()));
+    int windowIndex = NumberFormatter.getIntegerValue(getTestData(), String.format(ELEMENT_IS_NOT_A_NUMBER, getTestData()));
     Set<String> windowHandles = getDriver().getWindowHandles();
     windowsList = new ArrayList<>(windowHandles);
     Assert.isTrue((windowIndex >= 0 && windowIndex < windowsList.size()),
       String.format(FAILURE_INDEX_OUT_OF_BOUND, windowIndex, windowsList.size(), windowsList.size() - 1));
     getDriver().switchTo().window(windowsList.get(windowIndex));
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult()));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
   }
 }

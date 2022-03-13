@@ -21,7 +21,7 @@ export class TestPlanFormComponent extends BaseComponent implements OnInit {
   @Input('formGroup') testPlanForm : FormGroup;
   @Input('stepper') stepper: MatHorizontalStepper;
   @Input('version') version: WorkspaceVersion;
-  @Input('execution') execution: TestPlan;
+  @Input('testPlan') testPlan: TestPlan;
   public showDescription: Boolean;
   public formSubmitted: boolean;
 

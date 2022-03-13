@@ -10,7 +10,7 @@ public class VerifyIfAppInstalledAction extends MobileElementAction {
   @Override
   protected void execute() throws Exception {
     boolean appInstalled = getDriver().isAppInstalled(getTestData());
-    Assert.isTrue(appInstalled, String.format(FAILURE_MESSAGE, getTestDataMaskResult()));
+    Assert.isTrue(appInstalled, String.format(FAILURE_MESSAGE, getTestData()));
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 }

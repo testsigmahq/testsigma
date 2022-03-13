@@ -33,13 +33,13 @@ public class MobileNativeVerifyAlertPresentWithTextAction extends MobileElementA
     findElement();
     MobileElement targetElement = (MobileElement) getElement();
     Assert.isTrue(targetElement.isDisplayed(),
-      String.format("The Alert with text %s is not displayed in this page", getTestDataMaskResult()));
+      String.format("The Alert with text %s is not displayed in this page", getTestData()));
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 
   @Override
   protected void handleException(Exception e) {
     super.handleException(e);
-    updateErrorMessageForDynamicLocatorTypes(e, String.format(FAILURE_MESSAGE, getTestDataMaskResult()));
+    updateErrorMessageForDynamicLocatorTypes(e, String.format(FAILURE_MESSAGE, getTestData()));
   }
 }

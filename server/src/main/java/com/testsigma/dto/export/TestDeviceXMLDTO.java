@@ -69,8 +69,6 @@ public class TestDeviceXMLDTO extends BaseXMLDTO {
   private Timestamp updatedDate;
   @JsonProperty("match-browser-version")
   private Boolean matchBrowserVersion = false;
-  @JsonProperty("run-in-parallel")
-  private Boolean runInParallel = Boolean.FALSE;
   @JsonProperty("create-session-at-case-level")
   private Boolean createSessionAtCaseLevel = Boolean.FALSE;
   @JsonProperty("env-parameters-name")

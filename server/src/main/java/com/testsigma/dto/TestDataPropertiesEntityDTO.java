@@ -11,6 +11,5 @@ public class TestDataPropertiesEntityDTO {
   private String testDataType;
   private Map<String, Object> testDataFunction;
   private String testDataValuePreSignedURL;
-  private Boolean hasPassword;
   private DefaultDataGeneratorsEntityDTO defaultDataGeneratorsEntity;
 }

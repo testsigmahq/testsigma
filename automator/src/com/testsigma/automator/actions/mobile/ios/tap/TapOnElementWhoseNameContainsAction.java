@@ -28,7 +28,7 @@ public class TapOnElementWhoseNameContainsAction extends MobileElementAction {
         break;
       }
     }
-    Assert.isTrue(isElementFound, String.format(FAILURE_MESSAGE, getFindByType(), getLocatorValue(), getTestDataMaskResult(), names));
+    Assert.isTrue(isElementFound, String.format(FAILURE_MESSAGE, getFindByType(), getLocatorValue(), getTestData(), names));
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 }

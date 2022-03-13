@@ -55,7 +55,7 @@ export class ElementsContainerComponent implements OnInit {
   };
   public  screenNameOptions : Observable<Set<ElementScreenName>>;
   public  screenNames : Set<ElementScreenName>;
-  public isUiIdentifiersChanged:Boolean;
+  public isElementChanged:Boolean;
 
 
   constructor(
@@ -108,7 +108,7 @@ export class ElementsContainerComponent implements OnInit {
   public filterData(target:any){
     let name:String = target.value;
     this.element.screenNameObj.name = name;
-    this.isUiIdentifiersChanged=true
+    this.isElementChanged=true
     if(!name.length){
       this.element.screenNameId = null;
     }

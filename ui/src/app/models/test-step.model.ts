@@ -11,8 +11,8 @@ import {Page} from "../shared/models/page";
 import {TestData} from "./test-data.model";
 import {RestStepEntity} from "./rest-step-entity.model";
 import {AddonNaturalTextAction} from "./addon-natural-text-action.model";
-import {KibbutzTestStepTestData} from "./kibbutz-test-step-test-data.model";
-import {KibbutzElementData} from "./kibbutz-element-data.model";
+import {AddonTestStepTestData} from "./addon-test-step-test-data.model";
+import {AddonElementData} from "./addon-element-data.model";
 import {ResultConstant} from "../enums/result-constant.enum";
 import {AddonNaturalTextActionParameter} from "./addons-parameter.model";
 import {StepDetailsDataMap} from "./step-details-data-map.model";
@@ -95,10 +95,10 @@ export class TestStep extends Base implements PageObject {
   @serializable(custom(v => {
     if (!v)
       return v;
-    let returnValue = new Map<string, KibbutzElementData>();
+    let returnValue = new Map<string, AddonElementData>();
     for (const key in v) {
       if (v.hasOwnProperty(key))
-        returnValue[key] = new KibbutzElementData().deserialize(v[key]);
+        returnValue[key] = new AddonElementData().deserialize(v[key]);
     }
     return v;
   }, v => {
@@ -107,19 +107,19 @@ export class TestStep extends Base implements PageObject {
     let returnValue = new Map<string, JSON>();
     for (const key in v) {
       if (v.hasOwnProperty(key))
-        returnValue[key] = new KibbutzElementData().serialize();
+        returnValue[key] = new AddonElementData().serialize();
     }
     return v;
   }))
-  kibbutzElements: Map<string, KibbutzElementData>;
+  addonElements: Map<string, AddonElementData>;
 
   @serializable(custom(v => {
     if (!v)
       return v;
-    let returnValue = new Map<string, KibbutzTestStepTestData>();
+    let returnValue = new Map<string, AddonTestStepTestData>();
     for (const key in v) {
       if (v.hasOwnProperty(key))
-        returnValue[key] = new KibbutzTestStepTestData().deserialize(v[key]);
+        returnValue[key] = new AddonTestStepTestData().deserialize(v[key]);
     }
     return v;
   }, v => {
@@ -128,11 +128,11 @@ export class TestStep extends Base implements PageObject {
     let returnValue = new Map<string, JSON>();
     for (const key in v) {
       if (v.hasOwnProperty(key))
-        returnValue[key] = new KibbutzTestStepTestData().serialize();
+        returnValue[key] = new AddonTestStepTestData().serialize();
     }
     return v;
   }))
-  kibbutzTestData: Map<string, KibbutzTestStepTestData>;
+  addonTestData: Map<string, AddonTestStepTestData>;
   @serializable( optional(custom(v => {
     if (!v)
       return v;
@@ -140,9 +140,9 @@ export class TestStep extends Base implements PageObject {
   }, v => {
     if(!v)
       return v;
-    return new KibbutzTestStepTestData().deserialize(v)
+    return new AddonTestStepTestData().deserialize(v)
   })))
-  kibbutzTDF: KibbutzTestStepTestData;
+  addonTDF: AddonTestStepTestData;
   @serializable(optional())
   public addonActionId: number;
 
@@ -154,7 +154,7 @@ export class TestStep extends Base implements PageObject {
   public disabled: boolean;
 
   public template: NaturalTextActions;
-  public kibbutzTemplate: AddonNaturalTextAction;
+  public addonTemplate: AddonNaturalTextAction;
 
   @serializable(optional(object(TestStep)))
   public parentStep: TestStep;
@@ -196,14 +196,14 @@ export class TestStep extends Base implements PageObject {
     return parsedStep;
   }
 
-  get parsedKibbutzStep(): String {
-    let parsedStep = this.kibbutzTemplate.naturalText;
-    if (this.kibbutzTestData && this.kibbutzElements)
-      this.kibbutzTemplate.parameters?.forEach(parameter => {
+  get parsedAddonStep(): String {
+    let parsedStep = this.addonTemplate.naturalText;
+    if (this.addonTestData && this.addonElements)
+      this.addonTemplate.parameters?.forEach(parameter => {
         let referenceName = new RegExp(parameter.reference);
         if (parameter.isTestData) {
-          let value = this.kibbutzTestData[parameter.reference]?.value;
-          switch (this.kibbutzTestData[parameter.reference]?.type) {
+          let value = this.addonTestData[parameter.reference]?.value;
+          switch (this.addonTestData[parameter.reference]?.type) {
             case TestDataType.random:
               value = '~|' + value + '|';
               break;
@@ -222,11 +222,11 @@ export class TestStep extends Base implements PageObject {
           }
           parsedStep = parsedStep.replace(referenceName, '<TSTESTDAT ref="' + parameter.reference + '">' + value + '</TSTESTDAT>')
         } else if (parameter.isElement) {
-          parsedStep = parsedStep.replace(referenceName, '<TSELEMENT ref="' + parameter.reference + '">' + this.kibbutzElements[parameter.reference]?.name + '</TSELEMENT>')
+          parsedStep = parsedStep.replace(referenceName, '<TSELEMENT ref="' + parameter.reference + '">' + this.addonElements[parameter.reference]?.name + '</TSELEMENT>')
         }
       })
 
-    this.kibbutzTemplate.parameters?.forEach((parameter: AddonNaturalTextActionParameter) => {
+    this.addonTemplate.parameters?.forEach((parameter: AddonNaturalTextActionParameter) => {
       if (parameter.isTestData) {
         parsedStep = parsedStep.replace('<TSTESTDAT ref="' + parameter.reference + '">', '<span class="test_data" data-reference="' + parameter.reference + '">')
       } else if (parameter.isElement) {
@@ -431,7 +431,7 @@ export class TestStep extends Base implements PageObject {
     }
   }
 
-  get isKibbutzAction() {
+  get isAddonAction() {
     return this.addonActionId;
   }
 

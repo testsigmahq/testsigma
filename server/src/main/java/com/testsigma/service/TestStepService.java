@@ -45,7 +45,7 @@ public class TestStepService extends XMLExportService<TestStep> {
   private final TestStepRepository repository;
   private final RestStepService restStepService;
   private final RestStepMapper mapper;
-  private final KibbutzService kibbutzService;
+  private final ProxyAddonService addonService;
   private final AddonNaturalTextActionService addonNaturalTextActionService;
   private final ApplicationEventPublisher applicationEventPublisher;
   private final TestCaseService testCaseService;
@@ -72,13 +72,13 @@ public class TestStepService extends XMLExportService<TestStep> {
     return ElementNames.stream().map(x -> StringUtils.strip(x, "\"")).collect(Collectors.toList());
   }
 
-  public List<String> findKibbutzActionElementsByTestCaseIds(List<Long> testCaseIds) {
+  public List<String> findAddonActionElementsByTestCaseIds(List<Long> testCaseIds) {
     List<String> elementsNames = new ArrayList<>();
     List<TestStep> testSteps = repository.findAllByTestCaseIdInAndAddonActionIdIsNotNull(testCaseIds);
     for (TestStep step : testSteps) {
-      Map<String, KibbutzElementData> kibbutzElementData = step.getKibbutzElements();
+      Map<String, AddonElementData> addonElementData = step.getAddonElements();
 
-      for (KibbutzElementData elementData : kibbutzElementData.values()) {
+      for (AddonElementData elementData : addonElementData.values()) {
         elementsNames.add(elementData.getName());
       }
     }
@@ -94,7 +94,7 @@ public class TestStepService extends XMLExportService<TestStep> {
     repository.delete(testStep);
     if (testStep.getAddonActionId() != null) {
       AddonNaturalTextAction addonNaturalTextAction = addonNaturalTextActionService.findById(testStep.getAddonActionId());
-      kibbutzService.notifyActionNotUsing(addonNaturalTextAction);
+      addonService.notifyActionNotUsing(addonNaturalTextAction);
     }
     publishEvent(testStep, EventType.DELETE);
   }
@@ -141,7 +141,7 @@ public class TestStepService extends XMLExportService<TestStep> {
     }
     if (testStep.getAddonActionId() != null) {
       AddonNaturalTextAction addonNaturalTextAction = addonNaturalTextActionService.findById(testStep.getAddonActionId());
-      kibbutzService.notifyActionUsing(addonNaturalTextAction);
+      addonService.notifyActionUsing(addonNaturalTextAction);
     }
     publishEvent(testStep, EventType.CREATE);
     return testStep;
@@ -203,16 +203,16 @@ public class TestStepService extends XMLExportService<TestStep> {
     return this.repository.countAllByAddonActionIdIn(ids);
   }
 
-  public void updateKibbutzElementsName(String oldName, String newName) {
-    List<TestStep> testSteps = this.repository.findKibbutzElementsByName(oldName);
+  public void updateAddonElementsName(String oldName, String newName) {
+    List<TestStep> testSteps = this.repository.findAddonElementsByName(oldName);
     testSteps.forEach(testStep -> {
-      Map<String, KibbutzElementData> elements = testStep.getKibbutzElements();
-      for (Map.Entry<String, KibbutzElementData> entry : elements.entrySet()) {
+      Map<String, AddonElementData> elements = testStep.getAddonElements();
+      for (Map.Entry<String, AddonElementData> entry : elements.entrySet()) {
         if (entry.getValue().getName().equals(oldName)) {
           entry.getValue().setName(newName);
         }
       }
-      testStep.setKibbutzElements(elements);
+      testStep.setAddonElements(elements);
       this.repository.save(testStep);
     });
   }

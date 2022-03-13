@@ -40,10 +40,10 @@ public class TestPlanResultsController {
   @GetMapping
   public Page<APITestPlanResultDTO> index(TestPlanResultSpecificationsBuilder builder, @PageableDefault(size = 50) Pageable pageable) {
     Specification<TestPlanResult> spec = builder.build();
-    Page<TestPlanResult> executionResults = testPlanResultService.findAll(spec, pageable);
-    List<APITestPlanResultDTO> executionResultDTOS =
-      testPlanResultMapper.mapApi(executionResults.getContent());
-    return new PageImpl<>(executionResultDTOS, pageable, executionResults.getTotalElements());
+    Page<TestPlanResult> testPlanResults = testPlanResultService.findAll(spec, pageable);
+    List<APITestPlanResultDTO> testPlanResultDTOS =
+      testPlanResultMapper.mapApi(testPlanResults.getContent());
+    return new PageImpl<>(testPlanResultDTOS, pageable, testPlanResults.getTotalElements());
   }
 
   @RequestMapping(method = RequestMethod.POST)

@@ -1,7 +1,7 @@
 <div class="theme-section-header theme-border-l theme-section-header-spacing">
   <div
     class="section-title"
-    [translate]="'runs.details.quick_info.header' | translate: {runId: executionResult.id}"></div>
+    [translate]="'runs.details.quick_info.header' | translate: {runId: testPlanResult.id}"></div>
   <div class="ml-auto">
     <i
       class="fa-close-alt  action-hover-icon pointer"
@@ -16,7 +16,7 @@
       <app-result-donut-chart
         [width]="118"
         [height]="118"
-        [resultEntity]="executionResult"></app-result-donut-chart>
+        [resultEntity]="testPlanResult"></app-result-donut-chart>
     </div>
     <div class="legend-container ml-14 w-100 text-right">
       <div class="legend-item" (click)="filter(resultConstant.SUCCESS)">
@@ -24,47 +24,47 @@
           class="result-status-0 fa-show legend-icon btn">
         </i>
         <span [textContent]="('execution.result.SUCCESS' | translate) +
-        ' : '+ executionResult.passedCount+''"></span>
+        ' : '+ testPlanResult.passedCount+''"></span>
       </div>
       <div class="legend-item" (click)="filter(resultConstant.FAILURE)">
         <i
           class="result-status-1 fa-show legend-icon btn result-status-active-1">
         </i>
         <span [textContent]="('execution.result.FAILURE' | translate) +
-        ' : '+ executionResult.failedCount+''"></span>
+        ' : '+ testPlanResult.failedCount+''"></span>
       </div>
       <div class="legend-item" (click)="filter(resultConstant.ABORTED)">
         <i
           class="result-status-2 fa-show legend-icon btn result-status-active-2">
         </i>
         <span [textContent]="('execution.result.ABORTED' | translate) +
-        ' : '+ executionResult.abortedCount+''"></span>
+        ' : '+ testPlanResult.abortedCount+''"></span>
       </div>
       <div class="legend-item" (click)="filter(resultConstant.NOT_EXECUTED)">
         <i
           class="result-status-3 fa-show legend-icon btn result-status-active-3">
         </i>
         <span [textContent]="('execution.result.NOT_EXECUTED' | translate) +
-        ' : '+ executionResult.notExecutedCount+''"></span>
+        ' : '+ testPlanResult.notExecutedCount+''"></span>
       </div>
       <div class="legend-item" (click)="filter(resultConstant.QUEUED)">
         <i
           class="result-status-5 fa-show legend-icon btn result-status-active-5">
         </i>
         <span [textContent]="('execution.result.QUEUED' | translate) +
-        ' : '+ executionResult.queuedCount+''"></span>
+        ' : '+ testPlanResult.queuedCount+''"></span>
       </div>
       <div class="legend-item" (click)="filter(resultConstant.STOPPED)">
         <i
           class="result-status-6 fa-show legend-icon btn result-status-active-6">
         </i>
         <span [textContent]="('execution.result.STOPPED' | translate) +
-        ' : '+ executionResult.stoppedCount+''"></span>
+        ' : '+ testPlanResult.stoppedCount+''"></span>
       </div>
 
       <div class="legend-item theme-border-t mt-5 mr-xl-n8">
         <span class="white-space-nowrap" [textContent]="('execution.result.test_case.total' | translate) +
-        ' : '+ executionResult.totalCount+''"></span>
+        ' : '+ testPlanResult.totalCount+''"></span>
       </div>
     </div>
   </div>
@@ -137,10 +137,10 @@
         [translate]="'result.start_time'"></label>
       <div class="details-info d-flex">
         <span
-          [textContent]="executionResult?.startTime  | date:'h:mm a MMM d, y'"></span>
+          [textContent]="testPlanResult?.startTime  | date:'h:mm a MMM d, y'"></span>
         <span class="d-flex pl-7">
           <span [textContent]="'( '"></span>
-          <app-duration-format [duration]="executionResult.duration"></app-duration-format>
+          <app-duration-format [duration]="testPlanResult.duration"></app-duration-format>
           <span [textContent]="' )'"></span>
         </span>
       </div>
@@ -153,7 +153,7 @@
       <div>
       <span *ngIf="!isEditBuildNo"
             class="details-info"
-            [textContent]="executionResult.buildNo ? executionResult.buildNo : '-'"></span>
+            [textContent]="testPlanResult.buildNo ? testPlanResult.buildNo : '-'"></span>
         <i *ngIf="!isEditBuildNo" class="fa-pencil-on-paper pl-7 pointer"
            [matTooltip]="'runs.details.hint.update_build_no' | translate"
            (click)="toggleBuildNo()"></i>
@@ -163,7 +163,7 @@
             <input
               class="border-0 form-control"
               #buildNoInput
-              [(ngModel)]="executionResult.buildNo"
+              [(ngModel)]="testPlanResult.buildNo"
               [placeholder]="'runs.details.build_no' | translate " style="background: none;padding: 0!important;">
             <i
               class="fa-tick pr-2 result-status-text-0"
@@ -180,12 +180,12 @@
 
     <div
       class="details-items text-break"
-      *ngIf="executionResult?.environment?.name">
+      *ngIf="testPlanResult?.environment?.name">
       <label
         class="details-title"
         [translate]="'runs.details.environment'"></label>
       <div class="details-info"
-           [textContent]="executionResult?.environment?.name"></div>
+           [textContent]="testPlanResult?.environment?.name"></div>
     </div>
 
     <div class="details-items">
@@ -193,7 +193,7 @@
         class="details-title"
         [translate]="'message.common.msg'"></label>
       <div class="details-info text-wrap"
-           [textContent]="executionResult?.message"></div>
+           [textContent]="testPlanResult?.message"></div>
     </div>
   </div>
 </div>

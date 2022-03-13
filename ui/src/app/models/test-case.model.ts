@@ -2,7 +2,6 @@ import {alias, custom, deserialize, object, optional, serializable, SKIP} from "
 import {PageObject} from "../shared/models/page-object";
 import {Base} from "../shared/models/base.model";
 import {TestCaseStatus} from "../enums/test-case-status.enum";
-import {Requirement} from "./requirement.model";
 import {TestData} from "./test-data.model";
 import {TestCaseResult} from "./test-case-result.model";
 import {TestCasePriority} from "./test-case-priority.model";
@@ -27,10 +26,6 @@ export class TestCase extends Base implements PageObject {
   public isStepGroup: Boolean;
   @serializable
   public testDataId: number;
-  @serializable
-  public requirementId: number;
-  @serializable(optional(object(Requirement)))
-  public requirement: Requirement;
   @serializable(alias('priority'))
   public priorityId: Number;
   @serializable
@@ -101,5 +96,9 @@ export class TestCase extends Base implements PageObject {
   }
   deserialize(input: any): this {
     return Object.assign(this, deserialize(TestCase, input));
+  }
+
+  get testcaseRedirection() {
+    return this.isStepGroup ? 'step_groups' : 'cases';
   }
 }

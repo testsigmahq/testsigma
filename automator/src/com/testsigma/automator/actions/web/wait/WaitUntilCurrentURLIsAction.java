@@ -15,10 +15,10 @@ public class WaitUntilCurrentURLIsAction extends ElementAction {
   public void execute() throws Exception {
     try {
       boolean urlIsAsExpected = getWebDriverWait().until(ExpectedConditions.urlToBe(getTestData()));
-      Assert.isTrue(urlIsAsExpected, String.format(FAILURE_MESSAGE, getTimeout(), getTestDataMaskResult()));
-      setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult()));
+      Assert.isTrue(urlIsAsExpected, String.format(FAILURE_MESSAGE, getTimeout(), getTestData()));
+      setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
     } catch (TimeoutException e) {
-      throw new AutomatorException(String.format(FAILURE_MESSAGE, getTimeout(), getTestDataMaskResult()), (Exception) e.getCause());
+      throw new AutomatorException(String.format(FAILURE_MESSAGE, getTimeout(), getTestData()), (Exception) e.getCause());
     }
 
   }

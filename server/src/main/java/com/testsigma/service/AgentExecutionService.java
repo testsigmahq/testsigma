@@ -11,6 +11,7 @@ package com.testsigma.service;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.testsigma.automator.actions.constants.ErrorCodes;
 import com.testsigma.automator.entity.TestDeviceEntity;
 import com.testsigma.config.ApplicationConfig;
 import com.testsigma.config.StorageServiceFactory;
@@ -18,6 +19,7 @@ import com.testsigma.constants.AutomatorMessages;
 import com.testsigma.constants.MessageConstants;
 import com.testsigma.constants.NaturalTextActionConstants;
 import com.testsigma.dto.*;
+import com.testsigma.exception.ExceptionErrorCodes;
 import com.testsigma.exception.IntegrationNotFoundException;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaException;
@@ -184,7 +186,7 @@ public class AgentExecutionService {
 
   private void populateEnvironmentResults(TestPlanResult testPlanResult) throws TestsigmaException {
     List<TestDevice> testDevices =
-      testDeviceService.findByExecutionIdAndDisable(this.getTestPlan().getId(), Boolean.FALSE);
+      testDeviceService.findByTestPlanIdAndDisable(this.getTestPlan().getId(), Boolean.FALSE);
     for (TestDevice testDevice : testDevices) {
       log.info("Populating Environment result for environment:" + testDevice);
       TestDeviceResult testDeviceResult = createEnvironmentResult(testPlanResult, testDevice);
@@ -397,7 +399,6 @@ public class AgentExecutionService {
     testCaseDetails.setTestData(testCaseResult.getIteration());
     testCaseDetails.setTestDataSetName(testCaseResult.getTestDataSetName());
     testCaseDetails.setPrerequisite(testCase.getPreRequisite());
-    testCaseDetails.setRequirementId(testCase.getRequirementId());
     return testCaseDetails;
   }
 
@@ -543,7 +544,6 @@ public class AgentExecutionService {
     settings.setAppUploadId(testDevice.getAppUploadId());
 
     settings.setTitle(testDevice.getTitle());
-    settings.setRunInParallel(testDevice.getRunInParallel());
     settings.setCreateSessionAtCaseLevel(testDevice.getCreateSessionAtCaseLevel());
     return settings;
   }
@@ -595,11 +595,7 @@ public class AgentExecutionService {
           agentDeviceService.find(testDeviceResult.getTestDevice().getDeviceId()).getName()+ " "+AutomatorMessages.DEVICE_NOT_ONLINE, StatusConstant.STATUS_CREATED);
       }
       else {
-        if (testDeviceResult.getTestDevice().getRunInParallel()) {
-          processEnvironmentResultInParallel(testDeviceResult, inStatus);
-        } else {
           processEnvironmentResult(testDeviceResult, inStatus);
-        }
       }
     }
     testDeviceResultService.updateExecutionConsolidatedResults(this.testPlanResult.getId(),
@@ -633,7 +629,6 @@ public class AgentExecutionService {
         List<TestSuiteEntityDTO> testSuiteEntityDTOS = new ArrayList<>();
         testSuiteEntityDTOS.add(testSuiteEntity);
         EnvironmentEntityDTO environmentEntityDTO = loadEnvironmentDetails(testDeviceResult);
-        environmentEntityDTO.setRunInParallel(Boolean.TRUE);
         environmentEntityDTO.setTestSuites(testSuiteEntityDTOS);
         try {
           pushEnvironmentToLab(testDeviceResult, environmentEntityDTO);
@@ -655,22 +650,6 @@ public class AgentExecutionService {
     return environmentEntityDTO;
   }
 
-  public List<EnvironmentEntityDTO> loadEnvironmentsForParallel(TestDeviceResult testDeviceResult, StatusConstant inStatus)
-    throws Exception {
-    List<TestSuiteEntityDTO> testSuiteEntityDTOS = loadTestSuites(testDeviceResult, inStatus);
-    EnvironmentEntityDTO environmentEntityDTO = loadEnvironmentDetails(testDeviceResult);
-    List<EnvironmentEntityDTO> environmentEntityDTOS = new ArrayList<EnvironmentEntityDTO>();
-    for (TestSuiteEntityDTO testSuiteEntityDTO : testSuiteEntityDTOS) {
-      EnvironmentEntityDTO environmentEntity = environmentEntityDTO.clone();
-      environmentEntity.setRunInParallel(Boolean.TRUE);
-      ArrayList<TestSuiteEntityDTO> testSuiteEntities = new ArrayList<>();
-      testSuiteEntities.add(testSuiteEntityDTO);
-      environmentEntity.setTestSuites(testSuiteEntities);
-      environmentEntityDTOS.add(environmentEntity);
-    }
-    return environmentEntityDTOS;
-  }
-
   public EnvironmentEntityDTO loadEnvironmentDetails(TestDeviceResult testDeviceResult) throws Exception {
     TestPlanSettingEntityDTO testPlanSettingEntityDTO = this.testPlanMapper.mapSettings(this.testPlan);
     EnvironmentEntityDTO environmentEntityDTO = this.testDeviceResultMapper.map(testDeviceResult);
@@ -688,7 +667,7 @@ public class AgentExecutionService {
     settings.setExecutionName(testPlan.getName());
     settings.setEnvironmentParamId(this.testPlan.getEnvironmentId());
     settings.setEnvRunId(testDeviceResult.getId());
-    setTestLabDetails(testDevice, settings);
+    setTestLabDetails(testDevice, settings,environmentEntityDTO);
     environmentEntityDTO.setEnvSettings(this.testPlanMapper.mapToDTO(settings));
     Agent agent = null;
     if (testDevice.getAgentId() != null)
@@ -986,19 +965,17 @@ public class AgentExecutionService {
   private void afterStop() {
   }
 
-  protected void setTestLabDetails(TestDevice testDevice, TestDeviceSettings settings)
+  protected void setTestLabDetails(TestDevice testDevice, TestDeviceSettings settings,EnvironmentEntityDTO environmentEntityDTO)
     throws Exception {
     if (this.testPlan.getWorkspaceVersion().getWorkspace().getWorkspaceType().isRest())
       return;
     TestPlanLabType exeLabType = this.getTestPlan().getTestPlanLabType();
-    setPlatformDetails(testDevice, settings, exeLabType, testDevice.getAgent());
+    setPlatformDetails(testDevice, settings, exeLabType, testDevice.getAgent(), environmentEntityDTO);
   }
 
   public void loadTestCase(String testDataSetName, TestCaseEntityDTO testCaseEntityDTO, AbstractTestPlan testPlan,
                            Workspace workspace) throws Exception {
 
-    List<String> testDatapasswords = null;
-    List<String> environmentPasswords = null;
     String profileName = null;
     String environmentProfileName = null;
     Map<String, String> environmentParameters = null;
@@ -1007,9 +984,8 @@ public class AgentExecutionService {
 
     if (testPlan.getEnvironmentId() != null) {
       Environment environment = testPlan.getEnvironment();
-      environmentParameters = environment.decryptedData();
+      environmentParameters = environment.getData();
       environmentProfileName = environment.getName();
-      environmentPasswords = environment.getPasswords();
     }
 
     List<TestStep> testSteps = testStepService.findAllByTestCaseIdAndEnabled(testCaseEntityDTO.getId());
@@ -1020,8 +996,6 @@ public class AgentExecutionService {
     Long testDataId = testCaseEntityDTO.getTestDataId();
     if (testDataId != null) {
       TestData testData = testDataProfileService.find(testCaseEntityDTO.getTestDataId());
-
-      testDatapasswords = testData.getPasswords();
       databank = testData.getData();
       profileName = testData.getTestDataName();
     }
@@ -1052,7 +1026,7 @@ public class AgentExecutionService {
     }
 
     List<String> elementNames = testStepService.findElementNamesByTestCaseIds(testCaseIds);
-    elementNames.addAll(testStepService.findKibbutzActionElementsByTestCaseIds(testCaseIds));
+    elementNames.addAll(testStepService.findAddonActionElementsByTestCaseIds(testCaseIds));
 
     List<Element> elementList = elementService.findByNameInAndWorkspaceVersionId(elementNames,
       testPlan.getWorkspaceVersionId());
@@ -1081,8 +1055,7 @@ public class AgentExecutionService {
       workspace.getWorkspaceType(), testStepDTOS,
       elements, dataSet, testPlan.getId(),
       environmentParameters, testCaseEntityDTO, environmentProfileName,
-      profileName, testDatapasswords, environmentPasswords
-    );
+      profileName);
     appendPreSignedURLs(executableList, testCaseEntityDTO, false, null, null);
 
     testCaseEntityDTO.setTestSteps(executableList);
@@ -1189,12 +1162,12 @@ public class AgentExecutionService {
   }
 
   private void setPlatformDetails(TestDevice testDevice, TestDeviceSettings settings,
-                                  TestPlanLabType testPlanLabType, Agent agent) throws TestsigmaException {
+                                  TestPlanLabType testPlanLabType, Agent agent,EnvironmentEntityDTO environmentEntityDTO) throws TestsigmaException {
 
     populatePlatformOsDetails(testDevice, settings, testPlanLabType, agent);
 
     if (this.getAppType().isWeb()) {
-      populatePlatformBrowserDetails(testDevice, settings, testPlanLabType, agent);
+      populatePlatformBrowserDetails(testDevice, settings, testPlanLabType, agent,environmentEntityDTO);
     }
   }
 
@@ -1226,7 +1199,7 @@ public class AgentExecutionService {
   }
 
   protected void populatePlatformBrowserDetails(TestDevice testDevice, TestDeviceSettings settings,
-                                                TestPlanLabType testPlanLabType, Agent agent)
+                                                TestPlanLabType testPlanLabType, Agent agent,EnvironmentEntityDTO environmentEntityDTO)
     throws TestsigmaException {
 
 
@@ -1241,7 +1214,7 @@ public class AgentExecutionService {
       platformBrowserVersion = platformsService.getPlatformBrowserVersion(testDevice.getPlatformBrowserVersionId(), testPlanLabType);
     }
     if (testPlanLabType.isHybrid()) {
-      matchHybridBrowserVersion(agent, platformBrowserVersion, testDevice, platformBrowserVersion.getName());
+      matchHybridBrowserVersion(agent, platformBrowserVersion, testDevice, platformBrowserVersion.getName(),environmentEntityDTO);
     }
     settings.setBrowser(platformBrowserVersion.getName().name());
 
@@ -1257,7 +1230,7 @@ public class AgentExecutionService {
   }
 
   private void matchHybridBrowserVersion(Agent agent1, PlatformBrowserVersion platformBrowserVersion,
-                                         TestDevice testDevice, Browsers browser)
+                                         TestDevice testDevice, Browsers browser,EnvironmentEntityDTO environmentEntityDTO)
     throws TestsigmaException {
     if ((agent1 != null) && (platformBrowserVersion != null)) {
       Agent agent = agentService.find(agent1.getId());
@@ -1266,7 +1239,8 @@ public class AgentExecutionService {
         if ((browser == aBrowser) &&
           (Boolean.TRUE == testDevice.getMatchBrowserVersion()) &&
           !platformBrowserVersion.getVersion().equals("" + agentBrowser.getMajorVersion())) {
-          throw new TestsigmaException("Local agent browser version[" + agentBrowser.getMajorVersion()
+          environmentEntityDTO.setErrorCode(ExceptionErrorCodes.BROWSER_VERSION_NOT_AVAILABLE);
+          log.info("Local agent browser version[" + agentBrowser.getMajorVersion()
             + "] doesn't match selected browser version[" + platformBrowserVersion.getVersion() + "]");
         }
       }
@@ -1280,8 +1254,7 @@ public class AgentExecutionService {
                                                             com.testsigma.model.TestDataSet testDataSet,
                                                             Long testPlanId, Map<String, String> environmentParams,
                                                             TestCaseEntityDTO testCaseEntityDTO, String environmentParamSetName,
-                                                            String dataProfile, List<String> testDataPasswords,
-                                                            List<String> environmentPasswords) throws Exception {
+                                                            String dataProfile) throws Exception {
 
     List<Long> loopIds = new ArrayList<>();
     List<TestCaseStepEntityDTO> toReturn = new ArrayList<>();
@@ -1294,25 +1267,22 @@ public class AgentExecutionService {
       if (testStepDTO.getType() == TestStepType.FOR_LOOP) {
         loopIds.add(testStepDTO.getId());
         new ForLoopStepProcessor(webApplicationContext, toReturn, workspaceType, elementMap, testStepDTO,
-          testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile, testDataPasswords,
-          environmentPasswords).processLoop(testStepDTOS, loopIds);
+          testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile).processLoop(testStepDTOS, loopIds);
         continue;
       } else if (testStepDTO.getType() == TestStepType.WHILE_LOOP) {
         loopIds.add(testStepDTO.getId());
         new WhileLoopStepProcessor(webApplicationContext, toReturn, workspaceType, elementMap, testStepDTO,
-          testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile, testDataPasswords,
-          environmentPasswords).processWhileLoop(testStepDTOS, loopIds);
+          testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile).processWhileLoop(testStepDTOS, loopIds);
         continue;
       } else if (testStepDTO.getType() == TestStepType.REST_STEP) {
         new RestStepProcessor(webApplicationContext, toReturn, workspaceType, elementMap, testStepDTO,
-          testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile, testDataPasswords,
-          environmentPasswords).process();
+          testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile).process();
         continue;
       }
 
       TestCaseStepEntityDTO stepEntity = new StepProcessor(webApplicationContext, toReturn, workspaceType,
         elementMap, testStepDTO, testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName,
-        dataProfile, testDataPasswords, environmentPasswords).processStep();
+        dataProfile).processStep();
 
       stepEntity.setStepGroupId(testStepDTO.getStepGroupId());
       stepEntity.setParentId(testStepDTO.getParentId());
@@ -1332,30 +1302,27 @@ public class AgentExecutionService {
           if (subTestStepDTO.getType() == TestStepType.FOR_LOOP) {
             loopIds.add(subTestStepDTO.getId());
             new ForLoopStepProcessor(webApplicationContext, stepGroupSpecialSteps, workspaceType, elementMap, subTestStepDTO,
-              testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile,
-              testDataPasswords, environmentPasswords)
+              testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile)
               .processLoop(testStepDTO.getTestStepDTOS(), loopIds);
             stepEntity.getTestCaseSteps().addAll(stepGroupSpecialSteps);
             continue;
           } else if (subTestStepDTO.getType() == TestStepType.WHILE_LOOP) {
             loopIds.add(subTestStepDTO.getId());
             new WhileLoopStepProcessor(webApplicationContext, stepGroupSpecialSteps, workspaceType, elementMap,
-              subTestStepDTO, testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile,
-              testDataPasswords, environmentPasswords)
+              subTestStepDTO, testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile)
               .processWhileLoop(testStepDTO.getTestStepDTOS(), loopIds);
             stepEntity.getTestCaseSteps().addAll(stepGroupSpecialSteps);
             continue;
           } else if (subTestStepDTO.getType() == TestStepType.REST_STEP) {
             new RestStepProcessor(webApplicationContext, stepGroupSpecialSteps, workspaceType, elementMap, subTestStepDTO,
-              testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile,
-              testDataPasswords, environmentPasswords).process();
+              testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile).process();
             stepEntity.getTestCaseSteps().addAll(stepGroupSpecialSteps);
             continue;
           }
 
           TestCaseStepEntityDTO cstepEntity = new StepProcessor(webApplicationContext, toReturn, workspaceType,
             elementMap, subTestStepDTO, testPlanId, testDataSet, environmentParams, testCaseEntityDTO,
-            environmentParamSetName, dataProfile, testDataPasswords, environmentPasswords).processStep();
+            environmentParamSetName, dataProfile).processStep();
 
           cstepEntity.setParentId(subTestStepDTO.getParentId());
           cstepEntity.setConditionType(subTestStepDTO.getConditionType());

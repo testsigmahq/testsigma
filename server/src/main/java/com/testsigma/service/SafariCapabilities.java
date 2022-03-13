@@ -28,7 +28,7 @@ public class SafariCapabilities extends Capabilities {
                                     Integrations integrations,
                                     List<WebDriverCapability> capabilities) throws TestsigmaException {
     capabilities.add(new WebDriverCapability(TSCapabilityType.BROWSER_NAME, TSCapabilityType.BROWSER_NAME_SAFARI));
-    PlatformOsVersion platformOsVersion = platformsService.getPlatformOsVersion(testDevice.getPlatformOsVersionId(), testDevice.getExecution().getTestPlanLabType());
+    PlatformOsVersion platformOsVersion = platformsService.getPlatformOsVersion(testDevice.getPlatformOsVersionId(), testDevice.getTestPlan().getTestPlanLabType());
     capabilities.add(new WebDriverCapability(TSCapabilityType.OS_VERSION, Platform.Mac + "" + platformOsVersion.getVersion().substring(0, 5)));
   }
 

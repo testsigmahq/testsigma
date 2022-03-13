@@ -51,8 +51,6 @@ public class TestCase {
   private Boolean isStepGroup;
   @Column(name = "priority_id")
   private Long priority;
-  @Column(name = "requirement_id")
-  private Long requirementId;
   @Column(name = "description")
   private String description;
   @Column
@@ -100,10 +98,6 @@ public class TestCase {
   @EqualsAndHashCode.Exclude
   @ToString.Exclude
   private Set<TestCaseResult> results;
-  @ManyToOne
-  @Fetch(value = FetchMode.SELECT)
-  @JoinColumn(name = "requirement_id", referencedColumnName = "id", insertable = false, updatable = false)
-  private Requirement requirement;
   @ManyToOne
   @Fetch(value = FetchMode.SELECT)
   @JoinColumn(name = "workspace_version_id", referencedColumnName = "id", insertable = false, updatable = false)

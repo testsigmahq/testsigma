@@ -33,7 +33,6 @@ public class TestCaseResultRequest {
   private Long testDataId;
   private Boolean dataDriven;
   private Integer errorCode;
-  private Long requirementId;
   private Integer currentIndex;
   private String sessionId;
   private boolean visualTestingEnabled = false;

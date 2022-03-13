@@ -5,9 +5,9 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.testsigma</groupId>
-  <artifactId>agent-launcher</artifactId>
+  <artifactId>testsigma-agent-launcher</artifactId>
   <version>1.0.0</version>
-  <name>agent-launcher</name>
+  <name>Testsigma Agent Launcher</name>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.plugin>3.8.1</maven.compiler.plugin>

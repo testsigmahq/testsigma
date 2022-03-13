@@ -18,7 +18,6 @@ public class APIEnvironmentDTO {
   private Timestamp updatedDate;
   @JsonProperty("created_date")
   private Timestamp createdDate;
-  private List<String> passwords;
   @JsonSerialize(using = JSONObjectSerializer.class)
   private JSONObject parameters;
 }

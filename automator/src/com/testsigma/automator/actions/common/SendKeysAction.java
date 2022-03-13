@@ -21,6 +21,6 @@ public class SendKeysAction extends ElementAction {
   public void execute() throws Exception {
     findElement();
     getElement().sendKeys(getTestData());
-    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestDataMaskResult()));
+    setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
   }
 }

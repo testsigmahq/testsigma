@@ -19,6 +19,6 @@ public class TestSuiteEntityDTO {
   private Long groupResultId;
   private Long preRequisite;
   private Long environmentResultId;
-  private Long executionResultId;
+  private Long testPlanResultId;
   private List<TestCaseEntityDTO> testCases;
 }

@@ -117,7 +117,7 @@
     </button>
     <button
       *ngIf="(!canDrag && stepList?.testSteps?.content?.length > 1) || searchTerm"
-      (click)="canDrag=true"
+      (click)="canDrag=true;isReorder=false;"
       [disabled]="searchTerm"
       class="theme-btn-clear-default ml-10" [translate]="'testcase.details.steps.re-oder'">
     </button>

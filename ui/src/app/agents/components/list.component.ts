@@ -12,6 +12,9 @@ import {NotificationsService, NotificationType} from 'angular2-notifications';
 import {TranslateService} from '@ngx-translate/core';
 import {ToastrService} from "ngx-toastr";
 import {TitleCasePipe} from "@angular/common";
+import {InfiniteScrollableDataSource} from "../../data-sources/infinite-scrollable-data-source";
+import {TestPlanService} from "../../services/test-plan.service";
+import {LinkedEntitiesModalComponent} from "../../shared/components/webcomponents/linked-entities-modal.component";
 
 @Component({
   selector: 'app-list',
@@ -45,6 +48,7 @@ export class ListComponent extends BaseComponent implements OnInit {
     public translate: TranslateService,
     public toastrService: ToastrService,
     private route: ActivatedRoute,
+    private testPlanService: TestPlanService,
     private agentService: AgentService,
     private dialog: MatDialog,
     public titleCasePipe: TitleCasePipe) {
@@ -77,6 +81,39 @@ export class ListComponent extends BaseComponent implements OnInit {
         this.hasAgents = (this.agents.content.length != 0);
     })
   }
+
+  public fetchLinkedPlans(agent) {
+    let testPlans: InfiniteScrollableDataSource;
+    testPlans = new InfiniteScrollableDataSource(this.testPlanService, "agentId:" + agent.id, "name,asc");
+    waitTillRequestResponds();
+    let _this = this;
+
+    function waitTillRequestResponds() {
+      if (testPlans.isFetching)
+        setTimeout(() => waitTillRequestResponds(), 100);
+      else {
+        if (testPlans.isEmpty)
+          _this.deleteAgent(agent);
+        else
+          _this.openLinkedTestPlansDialog(testPlans);
+      }
+    }
+  }
+
+  private openLinkedTestPlansDialog(list) {
+    this.translate.get("test_device.linked_with_test_plans").subscribe((res) => {
+      this.dialog.open(LinkedEntitiesModalComponent, {
+        width: '568px',
+        height: 'auto',
+        data: {
+          description: res,
+          linkedEntityList: list,
+        },
+        panelClass: ['mat-dialog', 'rds-none']
+      });
+    });
+  }
+
 
   deleteAgent(agent) {
     this.translate.get("agents.delete.confirmation.message").subscribe((res) => {

@@ -62,6 +62,9 @@ public class TestPlanSpecification extends BaseSpecification<TestPlan> {
       Join environments = root.join("testDevices", JoinType.INNER);
       Join envSuites = environments.join("environmentSuites", JoinType.INNER);
       return envSuites.get("suiteId");
+    } else if (criteria.getKey().equals("agentId")) {
+      Join environments = root.join("testDevices", JoinType.INNER);
+      return environments.get("agentId");
     }
     return root.get(criteria.getKey());
   }

@@ -160,7 +160,7 @@ export class TestPlanPlatformOsVersionFormComponent implements OnInit {
 
   setTargetMachines() {
 
-    this.agentService.findAll().subscribe(res => {
+    this.agentService.findAll(null, "updatedDate,desc").subscribe(res => {
       let currentAgent = res?.content.find(agent => this.environmentFormGroup.controls['agentId'].value == agent.id)
       if (currentAgent) {
         this.setAgent(currentAgent, true);

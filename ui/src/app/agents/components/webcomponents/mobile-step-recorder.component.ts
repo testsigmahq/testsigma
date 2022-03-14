@@ -84,6 +84,7 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
   public isElseIfStep: boolean = false;
   private isNeedToUpdateId: number;
   public editedStep: TestStep;
+  public isReorder: boolean = false;
 
   constructor(
     public authGuard: AuthenticationGuard,

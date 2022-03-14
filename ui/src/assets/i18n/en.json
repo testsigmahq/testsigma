@@ -1593,6 +1593,7 @@
   "agents.mobile.inspection.switch_to_native": "Switch To Native",
   "agents.mobile.inspection.switch_to_webview": "Switch To WebView Context (Hybrid App)",
   "test_case.create_help.description.label": "Description",
+  "test_device.linked_with_test_plans": "This Test Device is used in the below Test plans,<br>Please remove the mapping and try again.",
   "test_case.create_help.description.details": "Enter a meaningful description for this Test Case.",
   "test_case.create_help.select_step_group_type.label": "Select Step Group Type",
   "test_case.create_help.select_test_case_type.label": "Select Test Case Type",

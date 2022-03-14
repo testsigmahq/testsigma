@@ -238,7 +238,7 @@
       </div>
     </div>
     <div class="d-flex-wrap ts-col-100 theme-details-scroll h-100">
-      <div *ngIf="activeTab == 'steps' && !testCaseResult?.isExecuting && !testCaseResult?.totalCount && isTestCaseFetchingCompleted"
+      <div *ngIf="activeTab == 'steps' && !testCaseResult?.isExecuting && !hasSteps && isTestCaseFetchingCompleted"
            class="empty-full-container w-100">
         <div class="empty-run-md" *ngIf="!testCaseResult.message"></div>
         <div class="empty-text" [translate]="'test_step.no_steps'"*ngIf="!testCaseResult.message"></div>
@@ -260,6 +260,7 @@
             (onStepDetails)="triggerPopup()"
             (onStepNavigate)="navigateToStepResult($event)"
             (onFirstFailedStep)="setFirstFailedStep($event)"
+            (hasSteps)="setStepsCount($event)"
             [resultEntity]="testCaseResult"></app-test-step-results>
           <app-placeholder-loader *ngIf="!isTestCaseFetchingCompleted||testCaseResult?.isExecuting"></app-placeholder-loader>
         </div>

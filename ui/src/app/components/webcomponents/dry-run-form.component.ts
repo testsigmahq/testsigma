@@ -365,7 +365,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
     this.testPlan.name = "Dry run::"+ new Date();
     this.testPlan.elementTimeOut = 30;
     this.testPlan.pageTimeOut = 30;
-    this.testPlan.screenshot = Screenshot.FAILED_STEPS;
+    this.testPlan.screenshot = Screenshot.ALL_TYPES;
     this.testPlan.workspaceVersionId = this.version.id;
     this.testPlan.testPlanLabType = TestPlanLabType.TestsigmaLab;
     this.testPlan.testCaseId = this.testCase.id;

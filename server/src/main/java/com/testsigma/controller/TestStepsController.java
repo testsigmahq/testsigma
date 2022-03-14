@@ -109,10 +109,11 @@ public class TestStepsController {
   public void bulkUpdateProperties(@RequestParam(value = "ids[]") Long[] ids,
                                    @RequestParam(value = "waitTime", required = false) Integer waitTime,
                                    @RequestParam(value = "priority", required = false) TestStepPriority testStepPriority,
-                                   @RequestParam(value = "disabled", required = false) Boolean disabled) {
+                                   @RequestParam(value = "disabled", required = false) Boolean disabled,
+                                   @RequestParam(value = "ignoreStepResult", required = false) Boolean ignoreStepResult) {
     log.debug("PUT /test_steps/bulk_update_properties with ids::" + Arrays.toString(ids) + " waitTime ::"
-      + waitTime + " priority ::" + testStepPriority + " disabled ::" + disabled);
-    this.service.bulkUpdateProperties(ids, testStepPriority, waitTime, disabled);
+      + waitTime + " priority ::" + testStepPriority + " disabled ::" + disabled +" ignoreStepResult ::" +ignoreStepResult);
+    this.service.bulkUpdateProperties(ids, testStepPriority, waitTime, disabled, ignoreStepResult);
   }
 
   @PutMapping(value = "/bulk_update")

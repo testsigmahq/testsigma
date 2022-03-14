@@ -53,6 +53,7 @@ public class TestStepRequest {
   private Map<String, AddonTestStepTestData> addonTestData;
   private Map<String, AddonElementData> addonElements;
   private Boolean disabled;
+  private Boolean ignoreStepResult;
   @JsonProperty()
   private AddonTestStepTestData addonTDF;
 }

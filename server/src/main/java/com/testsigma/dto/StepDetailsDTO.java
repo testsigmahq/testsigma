@@ -38,4 +38,5 @@ public class StepDetailsDTO {
   private Long parentId;
   private String testDataName;
   private String testDataValue;
+  private Boolean ignoreStepResult;
 }

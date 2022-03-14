@@ -97,3 +97,7 @@
 .cdk-overlay-backdrop-none {
  @extend .d-none;
 }
+
+.bg-ignore {
+  background: repeating-linear-gradient(310deg, #fff, #dddddd 1px, #fff 3px, #fff 6px);
+}

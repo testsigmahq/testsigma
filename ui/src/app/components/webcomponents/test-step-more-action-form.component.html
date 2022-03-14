@@ -59,13 +59,18 @@
           [formControl]="priorityControl"
         ><span [translate]="'test_step.priority.MAJOR_STOP'"></span></mat-checkbox>
       </div>
-<!--      <div-->
-<!--        *ngIf="!testStep.isConditionalType && !conditionalIf"-->
-<!--        class="form-group d-flex align-items-center">-->
-<!--        <mat-checkbox-->
-<!--          [formControlName]="['isMandatory']"-->
-<!--        ><span [translate]="'test_step.results.mandatory_label'"></span></mat-checkbox>-->
-<!--      </div>-->
+      <div class="form-group d-flex align-items-center">
+        <mat-checkbox
+          [matTooltip]="testStep?.isConditionalType ? ('test_step.results.ignore_step_result_hint'|translate):''"
+          [matTooltipPosition]="'right'"
+          [class.disabled]="testStep?.isConditionalType"
+          [disabled]="testStep?.isConditionalType"
+          [formControlName]="['ignoreStepResult']"
+          (change)="changePriorityOverIgnoreResult($event)">
+          <span [translate]="'test_step.results.ignore_step_result_label'"></span>
+          <i [matTooltip]="'test_step.details.ignore_step_result_hint' | translate"
+             class="fa-question-circle-solid ml-8"></i></mat-checkbox>
+      </div>
       <div>
         <mat-checkbox
           [matTooltip]="options?.parentDisabled ? ('test_step.results.cant_enable_hint'|translate):''"

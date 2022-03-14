@@ -38,6 +38,7 @@ export class TestStepMoreActionFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    delete this.form.controls['ignoreStepResult'];
     this.addFormControls();
     this.addPriorityControl();
     if(this.testStep?.isConditionalElseIf || this.testStep?.isConditionalIf) {
@@ -45,6 +46,11 @@ export class TestStepMoreActionFormComponent implements OnInit {
       this.form.controls['conditionType'].setValue(this.testStep?.isConditionalElseIf? TestStepConditionType.CONDITION_ELSE_IF : TestStepConditionType.CONDITION_IF);
       this.form.controls['conditionIf'].value.push(...this.testStep.conditionIf);
     }
+    if (this.testStep?.conditionType) {
+      this.form.controls['ignoreStepResult'].setValue(true);
+      this.testStep.ignoreStepResult = true;
+    }
+
     this.prerequisiteList = this.options.steps.filter(step => step.position < this.testStep.position && !step.isWhileLoop);
   }
 
@@ -54,6 +60,7 @@ export class TestStepMoreActionFormComponent implements OnInit {
     this.priorityControl.valueChanges.subscribe(res => {
       if(res){
         this.form.controls.priority.setValue(TestStepPriority.MAJOR)
+        this.form.controls.ignoreStepResult.setValue(undefined);
       } else{
         this.form.controls.priority.setValue(TestStepPriority.MINOR)
       }
@@ -67,6 +74,7 @@ export class TestStepMoreActionFormComponent implements OnInit {
     this.form.addControl('conditionType', new FormControl(this.options.testStep.conditionType, []));
     this.form.addControl('disabled', new FormControl(this.options.testStep.disabled, []));
     this.form.addControl("conditionIf", new FormControl(this.options.testStep.conditionIf,[]));
+    this.form.addControl('ignoreStepResult', new FormControl(this.options.testStep.ignoreStepResult, []));
     this.dataMapGroup = new FormGroup({
       conditionIf: new FormControl(this.options.testStep.conditionIf, [])
     });
@@ -90,6 +98,10 @@ export class TestStepMoreActionFormComponent implements OnInit {
       this.form.controls['conditionType'].setValue(undefined);
       this.form.controls['conditionIf'].setValue([]);
       this.form.get('priority').setValue(this.testStep.priority);
+    }
+    if (this.form.controls['ignoreStepResult'].value) {
+      this.testStep.ignoreStepResult = this.form.controls['ignoreStepResult'].value;
+      this.form.controls['priority'].setValue(TestStepPriority.MINOR);
     }
   }
 
@@ -126,5 +138,12 @@ export class TestStepMoreActionFormComponent implements OnInit {
 
   ngOnDestroy(){
     this.form.controls['dataMap'] = this.dataMapGroup;
+  }
+
+  changePriorityOverIgnoreResult($event: MatCheckboxChange) {
+    if ($event.checked){
+      this.form.controls.priority.setValue(TestStepPriority.MINOR);
+      this.priorityControl.setValue(undefined);
+    }
   }
 }

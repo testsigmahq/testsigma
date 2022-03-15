@@ -65,4 +65,8 @@ export class Element extends Base implements PageObject {
   deserialize(input: any): this {
     return Object.assign(this, deserialize(Element, input));
   }
+
+  get locatorValueWithSpecialCharacters() {
+    return this.locatorValue.replace(/\*/, 'ts_asterisk').replace(/,/, 'ts_comma');
+  }
 }

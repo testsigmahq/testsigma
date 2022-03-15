@@ -250,6 +250,7 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
 import {FreshChatWidgetComponent} from "./components/webcomponents/fresh-chat-widget.component";
 import {ClickUpIssueFormComponent} from "./components/webcomponents/click-up-issue-form.component";
 import {ClickUpIssueDetailsComponent} from "./components/webcomponents/click-up-issue-details.component";
+import {DuplicateLocatorWarningComponent} from "./components/webcomponents/duplicate-locator-warning.component";
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -479,7 +480,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     FirstChromeInstallComponent,
     FreshChatWidgetComponent,
     ClickUpIssueFormComponent,
-    ClickUpIssueDetailsComponent
+    ClickUpIssueDetailsComponent,
+    DuplicateLocatorWarningComponent
   ],
   imports: [
     BrowserModule,

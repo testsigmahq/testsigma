@@ -13,6 +13,7 @@ CREATE TABLE `elements`
   `is_dynamic`             BIT(1)        DEFAULT FALSE,
   `copied_from`            BIGINT(20)    DEFAULT NULL,
   `screen_name_id`         BIGINT(20) NOT NULL,
+  `is_duplicated`          BIT(1)        DEFAULT 0,
   `created_date`           DATETIME      DEFAULT CURRENT_TIMESTAMP,
   `updated_date`           DATETIME      DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),

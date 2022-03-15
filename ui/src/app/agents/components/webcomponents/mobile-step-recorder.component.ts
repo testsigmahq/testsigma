@@ -37,13 +37,15 @@ import {Observable} from "rxjs";
 import {ElementLocatorType} from "../../../enums/element-locator-type.enum";
 import {ElementCreateType} from "../../../enums/element-create-type.enum";
 import {TestStepConditionType} from "../../../enums/test-step-condition-type.enum";
-import {StepDetailsDataMap} from "../../../models/step-details-data-map.model";
 import {TestDataType} from "../../../enums/test-data-type.enum";
 import {TestStepPriority} from "../../../enums/test-step-priority.enum";
 import {ConfirmationModalComponent} from "../../../shared/components/webcomponents/confirmation-modal.component";
 import {NaturalTextActionsService} from "../../../services/natural-text-actions.service";
 import {NaturalTextActions} from "../../../models/natural-text-actions.model";
 import {TestCaseActionStepsComponent} from "../../../components/webcomponents/test-case-action-steps.component";
+import {WorkspaceVersion} from "../../../models/workspace-version.model";
+import {DuplicateLocatorWarningComponent} from "../../../components/webcomponents/duplicate-locator-warning.component";
+import {AddonActionService} from "../../../services/addon-action.service";
 
 @Component({
     selector: 'app-mobile-step-recorder',
@@ -54,7 +56,7 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
   public testCase: TestCase;
   public templates: Page<any>;
   public searchTerm: string;
-  public version: any;
+  public version: WorkspaceVersion;
   public addonAction: Page<any>;
   public selectedTemplate: any;
   public canDrag: boolean = false;
@@ -101,6 +103,7 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
     public testCaseService: TestCaseService,
     public testStepService: TestStepService,
     public naturalTextActionsService: NaturalTextActionsService,
+    public addonActionService: AddonActionService,
     public applicationVersionService: WorkspaceVersionService,
     private route: ActivatedRoute,
     private mobileRecorderEventService: MobileRecorderEventService
@@ -214,16 +217,24 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
       this.applicationVersionService.show(this.testCase.workspaceVersionId).subscribe(res => {
         this.version = res;
         this.fetchActionTemplates();
+        this.fetchAddonActionTemplates();
       })
     })
   }
 
   private fetchActionTemplates() {
     let workspaceType: WorkspaceType = this.version.workspace.workspaceType;
-    this.naturalTextActionsService.findAll("workspaceType:" + workspaceType).subscribe(res => {
-      this.templates = res
-      this.addLaunchStep();
+    this.naturalTextActionsService.findAll("workspaceType:" + workspaceType).subscribe(actions => {
+      this.templates = actions;
     });
+  }
+
+  fetchAddonActionTemplates() {
+    let workspaceType: WorkspaceType = this.version.workspace.workspaceType;
+    this.addonActionService.findAll("workspaceType:" +workspaceType+",status:INSTALLED").subscribe(actions => {
+      this.addonAction = actions;
+      this.addLaunchStep();
+    })
   }
 
   private saveElementAndCreateStep(templateId: number, elementName?: String, testData?: String,
@@ -444,14 +455,53 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
         currentStep.testDataType = TestDataType.raw;
       }
       if (Boolean(elementName)) {
-        this.saveElement(elementName, mobileElement).subscribe(res => {
-          currentStep.element = res[0].name;
-          this.createStep(currentStep)
-        })
+        let locatorType = (mobileElement.accessibilityId) ? ElementLocatorType.accessibility_id :
+          (mobileElement.id ? ElementLocatorType.id_value : ElementLocatorType.xpath);
+        let element = new Element();
+        element.locatorValue = mobileElement[this.locatorTypes[locatorType].variableName];
+        let query = 'workspaceVersionId:' + this.version.id + ',locatorType:' + this.element.locatorType +
+        ',locatorValue:' + this.element.locatorValueWithSpecialCharacters;
+        query = this.byPassSpecialCharacters(query);
+        this.elementService.findAll(query).subscribe(res => {
+          if(res?.content?.length){
+            this.openDuplicateLocatorWarning(res.content, elementName, mobileElement, currentStep);
+          } else {
+            this.saveElement(elementName, mobileElement).subscribe(elements => {
+              currentStep.element = elements[0].name;
+              this.createStep(currentStep);
+            })
+          }
+        });
       } else {
-        this.createStep(currentStep)
+        this.createStep(currentStep);
       }
     })
+  }
+
+  private openDuplicateLocatorWarning(res: Element[],uiIdentifierName: String , mobileElement:MobileElement, currentStep: TestStep) {
+    let description = this.translate.instant('element.inspector.create_confirmation.description', {elementType: this.locatorTypes[res[0].locatorType].variableName, definition: res[0].locatorValue});
+    const dialogRef = this.dialog.open(DuplicateLocatorWarningComponent, {
+      width: '568px',
+      height: 'auto',
+      data: {
+        description: description,
+        elements: res,
+        isRecorder: true,
+      },
+      panelClass: ['mat-dialog', 'rds-none']
+    });
+    dialogRef.afterClosed()
+      .subscribe(result => {
+        if (result) {
+          this.saveElement(uiIdentifierName, mobileElement).subscribe(elements => {
+            currentStep.element = elements[0].name;
+            this.createStep(currentStep);
+          })
+        } else {
+          currentStep.element = res[0].name;
+          this.createStep(currentStep);
+        }
+      });
   }
 
   private createSwitchStepAndActionActionStep(SwitchStep: TestStep, templateId: number, elementName?: String,

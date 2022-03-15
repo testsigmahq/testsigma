@@ -123,4 +123,27 @@ export class BaseComponent implements OnInit {
       return this.getScrollParent(node.parentElement);
     }
   }
+
+  byPassSpecialCharacters(query: string) {
+    let returnData = [],
+      keys =[];
+    query?.split(',')?.forEach(item => {
+      let operatorIndex = item.match(/!|~|:|;|>|<|@|\$/).index;
+      let searchValue = item.slice(operatorIndex+1);
+      let searchKeyWithOperator = item.slice(0,operatorIndex+1);
+      if(keys.indexOf(item.slice(0,operatorIndex))>-1) return;
+      keys.push(item.slice(0,operatorIndex));
+      item = searchKeyWithOperator + encodeURIComponent(searchValue.replace(/'/g, 'ts_single_quote')
+        .replace(/!/g, 'ts_negation')
+        .replace(/~/g, 'ts_like')
+        .replace(/:/g, 'ts_colon')
+        .replace(/;/g, 'ts_semicolon')
+        .replace(/>/g, 'ts_greater_than')
+        .replace(/</g, 'ts_lesser_than'))
+        .replace(/@/g, 'ts_at_sign')
+        .replace(/\$/g, 'ts_dollar_sign');
+      returnData.push(item);
+    } );
+    return returnData.toString();
+  }
 }

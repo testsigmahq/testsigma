@@ -96,8 +96,11 @@ public class ElementsController {
     throws ResourceNotFoundException, TestsigmaDatabaseException, SQLException {
     Element element = elementService.find(id);
     String oldName = element.getName();
+    String previousLocatorValue = element.getLocatorValue();
+    Long previousScreenNameId = element.getScreenNameId();
+    LocatorType previousLocatorType = element.getLocatorType();
     elementMapper.merge(elementRequest, element);
-    elementService.update(element, oldName);
+    elementService.update(element, oldName, previousLocatorValue, previousLocatorType, previousScreenNameId);
     return elementMapper.map(element);
   }
 

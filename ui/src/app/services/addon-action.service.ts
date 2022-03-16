@@ -7,7 +7,6 @@ import {AddonNaturalTextAction} from "../models/addon-natural-text-action.model"
 import {HttpClient} from "@angular/common/http";
 import {HttpHeadersService} from "../shared/services/http-headers.service";
 import {UrlConstantsService} from "../shared/services/url.constants.service";
-import {TestCase} from "../models/test-case.model";
 
 @Injectable({
   providedIn: 'root'

@@ -10,7 +10,6 @@ import {map} from 'rxjs/internal/operators/map';
 import {Pageable} from "../models/pageable";
 import {Page} from "../models/page";
 import {FilterableDataSourceService} from "./filterable-data-source.service";
-import {ElementScreenNameService} from "./element-screen-name.service";
 
 @Injectable({
   providedIn: 'root'

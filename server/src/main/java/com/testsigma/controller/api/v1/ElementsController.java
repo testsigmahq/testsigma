@@ -14,6 +14,7 @@ import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaDatabaseException;
 import com.testsigma.mapper.ElementMapper;
 import com.testsigma.model.Element;
+import com.testsigma.model.LocatorType;
 import com.testsigma.service.ElementService;
 import com.testsigma.specification.ElementSpecificationsBuilder;
 import com.testsigma.web.request.ElementRequest;
@@ -64,8 +65,11 @@ public class ElementsController {
           throws ResourceNotFoundException, TestsigmaDatabaseException {
     Element element = elementService.find(id);
     String oldName = element.getName();
+    String previousLocatorValue = element.getLocatorValue();
+    Long previousScreenNameId = element.getScreenNameId();
+    LocatorType previousLocatorType = element.getLocatorType();
     elementMapper.merge(elementRequest, element);
-    elementService.update(element, oldName);
+    elementService.update(element, oldName, previousLocatorValue, previousLocatorType, previousScreenNameId);
     return elementMapper.mapToApi(element);
   }
 

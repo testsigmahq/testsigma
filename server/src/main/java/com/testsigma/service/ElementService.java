@@ -15,10 +15,7 @@ import com.testsigma.event.ElementEvent;
 import com.testsigma.event.EventType;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.mapper.ElementMapper;
-import com.testsigma.model.Element;
-import com.testsigma.model.ElementScreenName;
-import com.testsigma.model.TagType;
-import com.testsigma.model.TestCase;
+import com.testsigma.model.*;
 import com.testsigma.repository.ElementRepository;
 import com.testsigma.specification.ElementSpecificationsBuilder;
 import com.testsigma.specification.SearchCriteria;
@@ -41,6 +38,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Service("elementService")
 @Log4j2
@@ -72,25 +70,38 @@ public class ElementService extends XMLExportService<Element> {
     return elementRepository.findAll(specification, pageable);
   }
 
+  public Element save(Element element) {
+    return elementRepository.save(element);
+  }
 
   public Element create(Element element) {
-    element = elementRepository.save(element);
+    element = this.save(element);
+    this.markAsDuplicated(element);
     publishEvent(element, EventType.CREATE);
     return element;
   }
 
-  public Element update(Element element, String oldName) {
-    element = elementRepository.save(element);
-    if (!oldName.equals(element.getName())) {
-      testStepService.updateElementName(oldName, element.getName());
-      testStepService.updateAddonElementsName(oldName, element.getName());
+  public Element update(Element element, String oldName, String previousLocatorValue, LocatorType previousLocatorType, Long previousScreenNameId)
+          throws ResourceNotFoundException {
+    element = this.save(element);
+    if (!Objects.equals(element.getLocatorValue(), previousLocatorValue) || element.getLocatorType() != previousLocatorType
+            || !Objects.equals(element.getScreenNameId(), previousScreenNameId)) {
+      this.markAsDuplicated(element);
+      this.resetDuplicate(element.getWorkspaceVersionId(), previousLocatorValue, previousLocatorType, previousScreenNameId);
     }
-    publishEvent(element, EventType.UPDATE);
+    this.eventCallForUpdate(oldName, element);
+    return element;
+  }
+
+  public Element update(Element element, String oldName) {
+    element = this.save(element);
+    this.eventCallForUpdate(oldName, element);
     return element;
   }
 
   public void delete(Element element) {
     elementRepository.delete(element);
+    this.resetDuplicate(element.getWorkspaceVersionId(), element.getLocatorValue(), element.getLocatorType(), element.getScreenNameId());
     publishEvent(element, EventType.DELETE);
   }
 
@@ -127,7 +138,7 @@ public class ElementService extends XMLExportService<Element> {
         ElementScreenName elementScreenName = screenNameService.save(elementScreenNameRequest);
         element.setScreenNameId(elementScreenName.getId());
       }
-      update(element, element.getName());
+      update(element, element.getName(), element.getLocatorValue(), element.getLocatorType(), element.getScreenNameId());
       tagService.updateTags(Arrays.asList(tags), TagType.ELEMENT, id);
     }
   }
@@ -172,5 +183,54 @@ public class ElementService extends XMLExportService<Element> {
   @Override
   protected List<ElementXMLDTO> mapToXMLDTOList(List<Element> list) {
     return elementMapper.mapElements(list);
+  }
+
+  private void eventCallForUpdate(String oldName, Element element){
+    if (!oldName.equals(element.getName())) {
+      testStepService.updateElementName(oldName, element.getName());
+      testStepService.updateAddonElementsName(oldName, element.getName());
+    }
+    publishEvent(element, EventType.UPDATE);
+  }
+
+  public List<Element> findAllMatchedElements(Long applicationVersionId, String definition,
+                                              LocatorType locatorType, Long screenNameId, Boolean duplicatedStatus) {
+    return this.elementRepository.findAllMatchedElements(applicationVersionId, definition, locatorType, screenNameId, duplicatedStatus);
+  }
+
+  public List<Element> findAllMatchedElements(Long applicationVersionId, String definition,
+                                              LocatorType locatorType, Long screenNameId) {
+    return this.elementRepository.findAllMatchedElements(applicationVersionId, definition, locatorType, screenNameId);
+  }
+
+
+  private void markAsDuplicated(Element element) {
+    List<Element> matchedElements = this.findAllMatchedElements
+            (element.getWorkspaceVersionId(), element.getLocatorValue(), element.getLocatorType(),
+                    element.getScreenNameId());
+    if(matchedElements.size() == 1){
+      this.resetOnUpdateIfEligible(matchedElements.get(0));
+      return;
+    }
+
+    matchedElements.forEach(elem -> {
+      if(elem.getIsDuplicated())
+        return;
+      elem.setIsDuplicated(true);
+      this.save(elem);
+    });
+  }
+
+  private void resetDuplicate(Long versionId, String previousLocatorValue, LocatorType previousLocatorType, Long previousScreenId) {
+    List<Element> matchedDuplicatedElements = this.findAllMatchedElements
+            (versionId, previousLocatorValue, previousLocatorType, previousScreenId, true);
+    if (matchedDuplicatedElements.size() == 1) {
+      this.resetOnUpdateIfEligible(matchedDuplicatedElements.get(0));
+    }
+  }
+
+  private void resetOnUpdateIfEligible(Element element){
+    element.setIsDuplicated(false);
+    this.save(element);
   }
 }

@@ -61,6 +61,8 @@ public class ElementSpecification extends BaseSpecification<Element> {
           }
         }
         return LocatorType.valueOf(value.toString());
+      case "isDuplicated":
+        return Boolean.parseBoolean(value.toString());
       default:
         return value;
     }

@@ -139,15 +139,15 @@
                [matTooltip]="'message.common.saved' | translate"
                class="ts-col-5 text-right result-status-text-7 fa-tick-circle-filled pr-30">
           </div>
-          <div *ngIf="element.errors"
-               [matTooltip]="((element.errors=='duplicate')?'element.message.name.duplicate':
-                  (element.errors=='specialCharacter')?'element.message.name.invalid_characters':
+          <div *ngIf="element?.errors"
+               [matTooltip]="((element?.errors=='duplicate')?'element.message.name.duplicate':
+                  (element?.errors=='specialCharacter')?'element.message.name.invalid_characters':
                   'message.common.error_contact_support') | translate"
                class="w-85p mr-15 text-right result-status-text-1 fa-exclamation-triangle-solid">
           </div>
           <div
             *ngIf="!(element.saving || element.saved)"
-            [class.mr-25]="element.errors"
+            [class.mr-25]="element?.errors"
             class="action-icons text-right position-absolute right-10 pt-8">
             <i (click)="editElement(i)"
                [matTooltip]="'btn.common.edit' | translate"

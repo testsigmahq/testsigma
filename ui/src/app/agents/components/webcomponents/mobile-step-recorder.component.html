@@ -2,7 +2,8 @@
   <button (click)="loading?'':quit()"
           [disabled]="deleteClicked"
           [matTooltip]="(loading?'agents.mobile.inspection.quit_session_later':'agents.mobile.inspection.quit_session')| translate"
-          class="btn btn-clear mobile-ins-close-recording">&times;
+          class="btn btn-delete mobile-ins-close-recording d-flex mr-10">
+    <span class="fz-14 pr-7" [translate]="'agents.mobile.inspection.quit_session'"></span> &times;
   </button>
   <div *ngIf="!fullScreenMode" class="ts-col-40 pr-14 mt-45 pt-14 pb-15">
     <div class="position-absolute top-n20 rb-medium px-25 fz-14 d-flex w-100 mt-n4">

@@ -54,6 +54,9 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
   public addonTestStepTestData: AddonTestStepTestData[];
   public appDetails: JSON = JSON.parse('{}');
   public ElementDetails;
+  elementDetails: {};
+  isShowElementDetails: boolean;
+  stepElementDetails: IElementDetails = {};
 
   constructor(
     public authGuard: AuthenticationGuard,
@@ -94,6 +97,7 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
   }
 
   ngOnChanges() {
+    this.fetchElementDetails(this.testStepResult?.stepDetails?.dataMap?.elementString);
     this.preRequestStep = undefined;
     if (this.testStepResult?.testCase?.workspaceVersionId)
       this.versionService.show(this.testStepResult?.testCase?.workspaceVersionId).subscribe(res => this.version = res)
@@ -106,10 +110,7 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
         this.getAppDetails();
       })
     }
-    let elementName = this.testStepResult?.stepDetails?.dataMap?.elementString
-    if (elementName) {
-      this.fetchElementByName(elementName)
-    }
+    // this.fetchElementDetailsByName(this.testStepResult?.stepDetails?.dataMap?.elementString);
     if (this.testStepResult?.addonElements) {
       this.addonElementData = this.getElements(this.testStepResult?.addonElements);
     }
@@ -129,7 +130,8 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
   }
 
   getElementDetails() {
-    this.ElementDetails = this.getElements(this.testStepResult?.ElementDetails, true);
+    if (!this.ElementDetails)
+      this.ElementDetails = this.getElements(this.testStepResult?.ElementDetails, true);
     return this.ElementDetails.length || this.element?.locatorValue;//TODO Fallback element details need to clean
   }
 
@@ -153,7 +155,9 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
 
   fetchElementByName(elementName, addonElement?) {
     this.elementService.findAll('name:' + encodeURIComponent(elementName) + ',workspaceVersionId:' + this.testStepResult?.testCase?.workspaceVersionId).subscribe(
-      (res) => {
+      (res) => { if(res.numberOfElements > 1) console.warn('more than one element found with the name: '+elementName);
+        let currentStepElement = res.content[0];
+        this.setElementDetails(currentStepElement);
         this.testStepResult.isElementChanged = res?.content?.length == 0;
         if (addonElement) {
           addonElement.isElementChanged = res?.content?.length == 0;
@@ -167,6 +171,37 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
         this.testStepResult.isElementChanged = true;
       }
     )
+  }
+
+  fetchElementDetailsByName(elementName: String) {
+    if(!elementName) this.setElementDetails(null);
+    else {
+      this.elementService.findAll('name:' + encodeURIComponent(elementName.toString())
+        + ',workspaceVersionId:' + this.testStepResult?.testCase?.workspaceVersionId).subscribe(
+        (res) => {
+          if(res.numberOfElements > 1) console.warn('More than one element found with the name: '+ elementName);
+          let currentStepElement = res.content[0];
+          this.setElementDetails(currentStepElement);
+        },
+        (err) => {
+          console.debug('Error while finding elements:: '+err);
+        }
+      )
+    }
+  }
+
+  setElementDetails(currentStepElement: Element) {
+    if(currentStepElement) {
+      this.stepElementDetails = {};
+      this.stepElementDetails.elementName = currentStepElement.name.toString();
+      this.stepElementDetails.locatorType = currentStepElement.locatorType.toString();
+      this.stepElementDetails.locator = currentStepElement.locatorValue.toString();
+      this.stepElementDetails.createdType = currentStepElement.createdType.toString();
+      // this.stepElementDetails.status = currentStepElement.status.toString();
+    } else {
+      this.stepElementDetails = {};
+      this.stepElementDetails.elementName = this.translate.instant('element.step.not_found');
+    }
   }
 
   setBrokenImage() {
@@ -241,11 +276,12 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
 
   getElements(elements: Map<string, any>, isUpdate?) {
     let result = [];
-    Object.keys(elements).forEach(key => {
-      if (!isUpdate)
-        this.fetchElementByName(elements[key].name, elements[key]);
-      result.push(elements[key]);
-    });
+    if (elements)
+      Object.keys(elements).forEach(key => {
+        if (!isUpdate)
+          this.fetchElementByName(elements[key].name, elements[key]);
+        result.push(elements[key]);
+      });
     return result;
   }
 
@@ -321,4 +357,42 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
     return this.ElementDetails[0]?.findByType ? this.ElementDetails[0]?.findByType : this.element.locatorType;
   }
 
+  fetchElementDetails(elementName){
+    this.elementService.findAll('name:' + encodeURIComponent(elementName)
+      + ',workspaceVersionId:' + this.testStepResult.testCase.workspaceVersionId).subscribe(
+      (elements) => {
+        let currentStepElement = elements.content[0];
+        this.elementDetails = {
+          'element name': currentStepElement.name,
+          'locator type': currentStepElement.locatorType,
+          'locator': currentStepElement.locatorValue
+        };
+      });
+  }
+
+  toggleElementDetails() {
+    this.isShowElementDetails = !this.isShowElementDetails;
+  }
+
+  get hasDefaultActionElements() {
+    return !this.testStepResult?.isRestStep && this.testStepResult?.stepDetails?.dataMap?.elementString && !this.testStepResult?.addonElements;
+  }
+
+  get hasAddonActionElements() {
+    return !this.testStepResult?.isRestStep && this.testStepResult?.addonElements;
+  }
+
+  get canShowFrameInfo() {
+    return !(this.testStepResult?.isPassed || this.testStepResult?.isQueued || this.testStepResult?.isNotExecuted) &&
+      (this.element?.metadata?.currentElement?.['isFrameElement'])
+  }
+
+}
+
+interface IElementDetails {
+  elementName?: string;
+  locatorType?: string;
+  locator?: string;
+  createdType?: string;
+  status?: string;
 }

@@ -155,7 +155,7 @@
           <div
             class="align-items-center d-flex p-0
          text-t-secondary pointer text-nowrap step-detail-p"
-            (click)="testStepResult?.isElementChanged ? '' : openEditElement(testStepResult?.stepDetails?.dataMap?.elementString)">
+            (click)="testStepResult?.isElementChanged ? '' : openEditElement(testStepResult?.stepDetails?.dataMap?.elementString,true)">
             <i class="fa-config-fix fz-18"></i>
             <div
               [translate]="'step_result.fix_element'"
@@ -177,6 +177,12 @@
                  [translate]="testStepResult?.isPassed || testStepResult?.isQueued ? 'message.common.msg' : 'step_result.error_message'"></label>
           <div class="details-info rb-regular-i-d line-height-large"
                [innerHTML]="testStepResult?.message"></div>
+          <div
+            class="note-info p-10 mt-10"
+            *ngIf="canShowFrameInfo">
+            <i class="fa-idea pr-2 result-status-text-2 fz-16"></i>
+            <span [innerHTML]="'step_result.error_with_frame' | translate"></span>
+          </div>
         </div>
   </div>
 
@@ -277,7 +283,22 @@
           </div>
         </div>
       </div>
-      <div
+      <div *ngIf="!testStepResult.isRestStep">
+        <div class="fz-16 pt-10 theme-text pointer"
+             (click)="toggleElementDetails()">
+          <i class="fz-12"
+             [class.fa-arrow-down-filled]="isShowElementDetails"
+             [class.pr-7]="isShowElementDetails"
+             [class.fa-arrow-right-filled]="!isShowElementDetails">
+          </i>
+          <span class="rb-medium" [textContent]="'Element details'"></span>
+        </div>
+        <ngx-json-viewer
+          class="custom-json-view custom-stature"
+          [json]="elementDetails" *ngIf="isShowElementDetails">
+        </ngx-json-viewer>
+      </div>
+      <div class="pt-40"
         *ngIf="testStepResult && !(testStepResult.isStepGroup || testStepResult.isForLoop || testStepResult.isRestStep || testStepResult.stepGroup) || testStepResult?.template">
         <div
           (click)="toggleMetadata()"

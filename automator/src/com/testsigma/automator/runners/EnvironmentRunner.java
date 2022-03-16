@@ -6,6 +6,7 @@ import com.testsigma.automator.constants.AutomatorMessages;
 import com.testsigma.automator.drivers.DriversUpdateService;
 import com.testsigma.automator.entity.*;
 import com.testsigma.automator.exceptions.AutomatorException;
+import com.testsigma.automator.exceptions.TestsigmaNoParallelRunException;
 import com.testsigma.automator.http.HttpClient;
 import com.testsigma.automator.utilities.ErrorUtil;
 import com.testsigma.automator.utilities.PathUtil;
@@ -117,6 +118,10 @@ public abstract class EnvironmentRunner {
       afterExecute();
       setEnvironmentResult();
       setStoppedStatus();
+    } catch (TestsigmaNoParallelRunException e){
+      environmentRunResult.setResult(ResultConstant.STOPPED);
+      environmentRunResult.setErrorCode(e.getErrorCode());
+      environmentRunResult.setMessage(e.getMessage());
     } catch (AutomatorException e) {
       environmentRunResult.setResult(ResultConstant.NOT_EXECUTED);
       environmentRunResult.setErrorCode(e.getErrorCode());

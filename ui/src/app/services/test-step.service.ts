@@ -119,7 +119,7 @@ export class TestStepService {
 
   public fetchApiResponse(restStepEntity: RestStepEntity): Observable<RestStepEntity> {
     let request = restStepEntity.serialize()
-    return this.http.post<RestStepEntity>(this.URLConstants.testStepsUlr + "/fetch_rest_response", restStepEntity.serializeRawValueSendApi(request), {
+    return this.http.post<RestStepEntity>(this.URLConstants.testStepsUlr + "/fetch_rest_response", restStepEntity.serializeRawValueForDryAPICall(request), {
       headers: this.httpHeaders.contentTypeApplication
     }).pipe(
       catchError((error) => throwError(error))

@@ -30,9 +30,14 @@ public final class SpecificationHandlerMethodArgumentResolver implements Handler
     Pattern pattern = Pattern.compile("(\\w+?)(" + operationSetExper + ")(\\p{Punct}?)([a-zA-Z_0-9#\\.\\-\\&\\\\^\\(\\)\\%\\\\$\\s\\p{L}]+)(\\p{Punct}?),");
     Matcher matcher = pattern.matcher(query + ",");
     while (matcher.find()) {
-      builder.with(matcher.group(1), matcher.group(2), URLDecoder.decode(matcher.group(4)), matcher.group(3), matcher.group(5));
+      String prefix = matcher.group(3);
+      String value = matcher.group(4);
+      if (!prefix.contains("*")) { // For skipping characters like %
+        value = prefix + value;
+        prefix = "";
+      }
+      builder.with(matcher.group(1), matcher.group(2), URLDecoder.decode(value), prefix, matcher.group(5));
     }
-
     return builder;
   }
 }

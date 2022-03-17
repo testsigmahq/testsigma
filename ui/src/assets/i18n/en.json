@@ -613,6 +613,7 @@
   "mobile_recorder.notification.session_expired": "session expired",
   "mobile_recorder.notification.change_orientation_failed": "Screen orientation cannot be changed.",
   "mobile_recorder.notification.closed": "Mobile Inspector closed",
+  "mobile_recorder.notification.stopped.alert": "Mobile Inspector Session Was Closed By {{userEmail}}",
   "mobile_recorder.notification.tap.out_of_bound.failure": "Tapped point is out of the screen bounds [{{screenWidth}},{{screenHeight}}]. This tap action won't work",
   "mobile_recorder.notification.go_to_home.failure": "Action Failed",
   "mobile_recorder.message.preparing": "<span class=\"text-center\"> Please wait <br>while the Testsigma Mobile Inspector finishes loading <span class=\"loading-dots\"></span></span>",

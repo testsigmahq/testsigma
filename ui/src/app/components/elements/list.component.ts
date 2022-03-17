@@ -164,7 +164,15 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
 
   fetchElements() {
     let sortBy = this.sortedBy + this.direction;
-    if (this.query) this.query = this.query + (this.currentFilter.normalizedQuery? this.currentFilter.queryString: '');
+    let query = ""
+    if (this.query) {
+      this.query +=  (this.currentFilter.normalizedQuery? this.currentFilter.queryString: '');
+      query = this.byPassSpecialCharacters(this.query);
+      this.query = query;
+      if(!query.includes('applicationVersionId:')) {
+        query += ',applicationVersionId:'+this.versionId;
+      }
+    }
     this.elements = new FilterableInfiniteDataSource(this.elementService, this.query, sortBy, 50, this.filterId, this.versionId);
     this.selectAllToggle(false);
   }

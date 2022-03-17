@@ -146,4 +146,17 @@ export class BaseComponent implements OnInit {
     } );
     return returnData.toString();
   }
+
+  decodeCustomSpecialCharacters(query: string) {
+    return query.replace("ts_asterisk", "*")
+      .replace("ts_comma", ",")
+      .replace("ts_negation", "!")
+      .replace("ts_like", "~")
+      .replace("ts_colon", ":")
+      .replace("ts_semicolon", ";")
+      .replace("ts_greater_than", ">")
+      .replace("ts_lesser_than", "<")
+      .replace("ts_at_sign", "@")
+      .replace("ts_dollar_sign","$") ;
+  }
 }

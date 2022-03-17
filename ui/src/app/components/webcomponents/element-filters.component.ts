@@ -9,13 +9,17 @@ import {ElementTag} from "../../models/element-tag.model";
 import {FormControl, FormGroup} from "@angular/forms";
 import * as moment from "moment";
 import {FilterOperation} from "../../enums/filter.operation.enum";
+import {BaseComponent} from "../../shared/components/base.component";
+import {NotificationsService} from "angular2-notifications";
+import {TranslateService} from "@ngx-translate/core";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-element-filter',
   templateUrl: './element-filters.component.html'
 })
 
-export class ElementFiltersComponent implements OnInit {
+export class ElementFiltersComponent extends BaseComponent implements OnInit {
 
   @Output('filterAction') filterAction = new EventEmitter<string>();
 
@@ -44,7 +48,12 @@ export class ElementFiltersComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { filter: ElementFilter, version: WorkspaceVersion, query: string },
     private elementTagService: ElementTagService,
-    public authGuard: AuthenticationGuard) {}
+    public authGuard: AuthenticationGuard,
+    public notificationsService: NotificationsService,
+    public translate: TranslateService,
+    public toasterService: ToastrService) {
+    super(authGuard, notificationsService, translate, toasterService);
+  }
 
   ngOnInit() {
 
@@ -137,7 +146,8 @@ export class ElementFiltersComponent implements OnInit {
     }
     if (this.data.filter.normalizedQuery.find(query => query.key == "definition")) {
       this.filterLocatorValue = <string>this.data.filter.normalizedQuery.find(query => query.key == "definition").value;
-      this.filterLocatorValue = this.filterLocatorValue.split("*")[1];
+      this.filterLocatorValue = this.decodeCustomSpecialCharacters(decodeURIComponent(this.filterLocatorValue.split("*")[1]));
+
     }
     if (this.data.filter.normalizedQuery.find(query => query.key == "createdDate" && query.operation == FilterOperation.LESS_THAN))
       this.createdDateRange.controls['end'].setValue(moment(<number>this.data.filter.normalizedQuery.find(query => query.key == "createdDate" && query.operation == FilterOperation.LESS_THAN).value).format("YYYY-MM-DD"));

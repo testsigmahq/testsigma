@@ -289,7 +289,7 @@ export class ElementsContainerComponent extends BaseComponent implements OnInit 
       this.elements[this.editedIndex] = Object.assign(new Element(), this.elements);
       this.editedIndex = -1;
     }
-    this.elements = null;
+    this.element = null;
     this.formSubmitted = false;
   }
 

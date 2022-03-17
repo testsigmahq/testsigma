@@ -15,7 +15,6 @@ import {AddonTestStepTestData} from "./addon-test-step-test-data.model";
 import {AddonElementData} from "./addon-element-data.model";
 import {ResultConstant} from "../enums/result-constant.enum";
 import {AddonNaturalTextActionParameter} from "./addons-parameter.model";
-import {StepDetailsDataMap} from "./step-details-data-map.model";
 
 export class TestStep extends Base implements PageObject {
   @serializable

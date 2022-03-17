@@ -27,7 +27,8 @@ export class TestStepForLoopFormComponent extends BaseComponent implements OnIni
   @Input('testStep') public testStep: TestStep;
   @Output('onCancel') onCancel = new EventEmitter<void>();
   @Output('onSave') onSave = new EventEmitter<TestStep>();
-  @Input('stepForm') loopForm: FormGroup;
+  @Input('stepForm') stepForm: FormGroup;
+  loopForm: FormGroup = new FormGroup({});
   public testDataList: Page<TestData>;
   public startArray: Array<any>;
   public endArray: Array<any>;
@@ -151,6 +152,7 @@ export class TestStepForLoopFormComponent extends BaseComponent implements OnIni
   }
 
   save() {
+    this.testStep.deserializeCommonProperties(this.stepForm.getRawValue());
     this.testStep.forLoopTestDataId = this.loopForm.get("testDataId")?.value;
     this.testStep.forLoopStartIndex = this.loopForm.get("startIndex").value;
     this.testStep.forLoopEndIndex = this.loopForm.get("endIndex").value;
@@ -172,6 +174,7 @@ export class TestStepForLoopFormComponent extends BaseComponent implements OnIni
   }
 
   update() {
+    this.testStep.deserializeCommonProperties(this.stepForm.getRawValue());
     this.testStep.forLoopTestDataId = this.loopForm.get("testDataId").value;
     this.testStep.forLoopStartIndex = this.loopForm.get("startIndex").value;
     this.testStep.forLoopEndIndex = this.loopForm.get("endIndex").value;
@@ -182,7 +185,7 @@ export class TestStepForLoopFormComponent extends BaseComponent implements OnIni
       step.siblingStep = this.testStep.siblingStep;
       step.stepDisplayNumber = this.testStep.stepDisplayNumber;
       this.onSave.emit(step);
-      this.saving = false
+      this.saving = false;
     }, error => {
       this.translate.get('message.common.update.failure', {FieldName: 'Test Step'}).subscribe((res) => {
         this.showAPIError(error, res);

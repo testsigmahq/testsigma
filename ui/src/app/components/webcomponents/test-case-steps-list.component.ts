@@ -266,6 +266,9 @@ export abstract class TestCaseStepsListComponent extends BaseComponent implement
         if (previousStep.isForLoop || previousStep.isConditionalIf || previousStep.isConditionalElseIf || previousStep.isConditionalElse || previousStep.isConditionalWhileLoop || previousStep.isWhileLoop) {
           event.item.data.parentStep = previousStep;
           event.item.data.parentId = previousStep.id;
+          if(previousStep.disabled) {
+            event.item.data.disabled = previousStep.disabled;
+          }
         } else if (previousStep.parentStep) {
           event.item.data.parentStep = previousStep.parentStep;
           event.item.data.parentId = previousStep.parentStep.id;

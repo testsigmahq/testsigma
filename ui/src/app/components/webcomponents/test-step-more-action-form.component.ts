@@ -51,7 +51,7 @@ export class TestStepMoreActionFormComponent implements OnInit {
       this.testStep.ignoreStepResult = true;
     }
 
-    this.prerequisiteList = this.options.steps.filter(step => step.position < this.testStep.position && !step.isWhileLoop);
+    this.prerequisiteList = this.options.steps.filter(step => step.position < this.testStep.position);
   }
 
   addPriorityControl() {
@@ -145,5 +145,10 @@ export class TestStepMoreActionFormComponent implements OnInit {
       this.form.controls.priority.setValue(TestStepPriority.MINOR);
       this.priorityControl.setValue(undefined);
     }
+  }
+
+  get canAllowDisableStep() {
+    return this.testStep?.isConditionalWhileLoop ? this.options?.testStep?.parentStep?.parentStep ?
+      this.options?.testStep?.parentStep?.parentStep?.disabled : false : this.options?.parentDisabled;
   }
 }

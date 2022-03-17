@@ -73,10 +73,10 @@
       </div>
       <div>
         <mat-checkbox
-          [matTooltip]="options?.parentDisabled ? ('test_step.results.cant_enable_hint'|translate):''"
+          [matTooltip]="canAllowDisableStep ? ('test_step.results.cant_enable_hint'|translate):''"
           [matTooltipPosition]="'right'"
-          [class.disabled]="options?.parentDisabled"
-          [disabled]="options?.parentDisabled"
+          [class.disabled]="canAllowDisableStep"
+          [disabled]="canAllowDisableStep"
           [formControlName]="['disabled']">
           <span [translate]="'test_step.results.disable_label'"></span></mat-checkbox>
       </div>

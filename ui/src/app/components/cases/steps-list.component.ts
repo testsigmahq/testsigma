@@ -281,15 +281,6 @@ export class StepsListComponent extends BaseComponent implements OnInit {
 
   onStepType(obj) {
     this.currentStepType = obj;
-    let step = obj.step;
-    if((step?.conditionType == TestStepConditionType.LOOP_WHILE && step?.isEditing) || step?.type == TestStepType.WHILE_LOOP ) {
-      let query = ",stepActionType:"+ StepActionType.WHILE_LOOP;
-      this.fetchNLActions(query);
-      this.fetchAddonAction(query)
-    } else {
-      this.fetchNLActions();
-      this.fetchAddonAction()
-    }
   }
 
   get isActionText() {

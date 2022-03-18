@@ -134,6 +134,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
       this.fetchEmptyElements();
       this.validateNavigationUrls();
       this.fetchSavedConfigurations();
+      this.setConfigurationId(null);
     });
   }
 
@@ -191,7 +192,6 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
     this.dryRunSavedConfigurationService.findAll(this.version.workspace.workspaceType).subscribe(res => {
       this.configurations = res;
       this.noneConfiguration = new AdhocRunConfiguration();
-      this.setConfigurationId(null);
     }, (error) => {
       this.noneConfiguration = new AdhocRunConfiguration();
       this.setConfigurationId(null);
@@ -203,12 +203,14 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
     let configId = this.configuration?.id;
     this.configuration = new AdhocRunConfiguration().deserializeDryRunForm(this.dryExecutionForm.getRawValue());
     this.configuration.id = configId;
-    this.dryRunSavedConfigurationService.update(this.configuration).subscribe(() => {
+    this.dryRunSavedConfigurationService.update(this.configuration).subscribe((res) => {
         this.savingConfig = false;
+        this.configuration = res;
         this.translate.get('message.common.update.success', {FieldName: 'Favorite Ad-hoc Run Config'}).subscribe((res) => {
           this.showNotification(NotificationType.Success, res);
         })
         this.fetchSavedConfigurations();
+        this.setConfigurationId(this.configuration);
       },
       error => {
         this.savingConfig = false;
@@ -223,7 +225,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
     this.configuration = undefined;
     if(configuration?.id) {
       this.configuration = configuration;
-      if(configuration!=null && configuration.platformOsVersionId!=null && configuration.platform==null) {
+      if(configuration!=null && configuration.platformOsVersionId!=null) {
         this.platformService.findOsVersion(configuration.platformOsVersionId, this.testPlan.testPlanLabType).subscribe((platformOsversion) => {
           configuration.platform = platformOsversion.platform;
           this.setDryFormValues(configuration);
@@ -275,7 +277,6 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
     console.log(this.dryExecutionForm.getRawValue());
     this.configuration.workspaceType = this.version.workspace.workspaceType;
     let environment = this.dryExecutionForm.getRawValue().environments[0];
-    console.log(environment);
     if(this.isHybrid){
       this.agentService.findAll("id:"+ this.dryExecutionForm.getRawValue().environments[0].agentId).subscribe(res => {
         this.configuration.name = this.configuration.formattedHybridName(res.content[0].name, environment);
@@ -301,6 +302,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
         if (res) {
           this.configuration = res;
           this.fetchSavedConfigurations();
+          this.setConfigurationId(this.configuration);
         }
       });
   }

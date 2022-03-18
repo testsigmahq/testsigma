@@ -267,18 +267,35 @@ export abstract class TestCaseStepsListComponent extends BaseComponent implement
           event.item.data.parentStep = previousStep;
           event.item.data.parentId = previousStep.id;
           if(previousStep.disabled) {
+            event.item.data.isAutoDisabled = event.item.data.isAutoDisabled ? event.item.data.isAutoDisabled
+              : event.item.data.disabled ? false : true;
             event.item.data.disabled = previousStep.disabled;
+          } else if(event.item.data.isAutoDisabled) {
+            event.item.data.disabled = false;
           }
         } else if (previousStep.parentStep) {
           event.item.data.parentStep = previousStep.parentStep;
           event.item.data.parentId = previousStep.parentStep.id;
+          if(previousStep.parentStep.disabled) {
+            event.item.data.isAutoDisabled = event.item.data.isAutoDisabled ? event.item.data.isAutoDisabled
+              : event.item.data.disabled ? false : true;
+            event.item.data.disabled = previousStep.disabled;
+          } else if(event.item.data.isAutoDisabled) {
+            event.item.data.disabled = false;
+          }
         } else {
           event.item.data.parentStep = undefined;
           event.item.data.parentId = undefined;
+          if(event.item.data.isAutoDisabled) {
+            event.item.data.disabled = false;
+          }
         }
       } else {
         event.item.data.parentStep = undefined;
         event.item.data.parentId = undefined;
+        if(event.item.data.isAutoDisabled) {
+          event.item.data.disabled = false;
+        }
       }
       this.onStepDrag.emit(this.testSteps.content.filter(step => step.isDirty));
     }

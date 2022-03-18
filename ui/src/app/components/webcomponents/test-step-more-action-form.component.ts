@@ -72,7 +72,7 @@ export class TestStepMoreActionFormComponent implements OnInit {
     this.form.addControl('priority', new FormControl(this.options.testStep.priority, []));
     this.form.addControl('preRequisiteStepId', new FormControl(this.options.testStep.preRequisiteStepId, []));
     this.form.addControl('conditionType', new FormControl(this.options.testStep.conditionType, []));
-    this.form.addControl('disabled', new FormControl(this.options.testStep.disabled, []));
+    this.form.addControl('disabled', new FormControl((Boolean(this.options?.testStep?.parentStep?.disabled)||this.canAllowDisableStep? true :this.options.testStep.disabled), []));
     this.form.addControl("conditionIf", new FormControl(this.options.testStep.conditionIf,[]));
     this.form.addControl('ignoreStepResult', new FormControl(this.options.testStep.ignoreStepResult, []));
     this.dataMapGroup = new FormGroup({

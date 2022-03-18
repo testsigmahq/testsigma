@@ -161,7 +161,6 @@ export class TestStep extends Base implements PageObject {
   public template: NaturalTextActions;
   public addonTemplate: AddonNaturalTextAction;
 
-  @serializable(optional(object(TestStep)))
   public parentStep: TestStep;
   public childStep: TestStep;
   public stepGroup: TestCase;

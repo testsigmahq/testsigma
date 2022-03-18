@@ -14,8 +14,8 @@ public class SearchCriteria {
   private Object value;
 
   public Object getValue() {
-    value = java.net.URLDecoder.decode(value.toString());
     if(value instanceof String) {
+      value = java.net.URLDecoder.decode(value.toString());
       return value.toString()
               .replaceAll("ts_like", "~")
               .replaceAll("ts_negation", "!")

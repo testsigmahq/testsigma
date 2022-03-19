@@ -78,7 +78,7 @@ export class ElementFilterFormComponent extends BaseComponent implements OnInit 
         this.dialogRef.close(res);
       }, error => {
         this.translate.get('message.common.created.failure', {FieldName:'Element View'}).subscribe((key: string) => {
-          this.showAPIError(error, key);
+          this.showAPIError(error, key,'Element View');
         });
       });
     },(error) => {

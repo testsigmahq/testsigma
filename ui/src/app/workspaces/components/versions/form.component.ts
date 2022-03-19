@@ -81,7 +81,7 @@ export class FormComponent extends BaseComponent implements OnInit {
       _err => {
         this.saving = false;
         this.translate.get('message.common.created.failure', {FieldName: "Version"})
-          .subscribe(msg => this.showAPIError(_err, msg))
+          .subscribe(msg => this.showAPIError(_err, msg,'Workspace Version'))
       }
     );
   }

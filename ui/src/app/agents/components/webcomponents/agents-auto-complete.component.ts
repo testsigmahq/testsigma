@@ -101,6 +101,7 @@ export class AgentsAutoCompleteComponent implements OnInit {
   @Input('value') value: Agent;
   @Output('onAgentChange') onAgentChange = new EventEmitter<Agent>();
   @Output('onAgents') onAgents = new EventEmitter<Page<Agent>>();
+  @Output('isAgentOnline') isAgentOnline = new EventEmitter<boolean>();
   @Input('version') version: WorkspaceVersion;
   @ViewChild('tooltip') tooltip: MatTooltip;
   public agents: Page<Agent>;
@@ -149,6 +150,7 @@ export class AgentsAutoCompleteComponent implements OnInit {
     if (term) {
       searchName = ",title:*" + term + "*";
     }
+    let isAgentAvailable = false;
     this.agentService.findAll(searchName,"updatedDate,desc").subscribe(res => {
       if(searchName?.length == 0)
         this.agentsEmpty = res.empty;
@@ -157,6 +159,7 @@ export class AgentsAutoCompleteComponent implements OnInit {
         if(agent.isOutOfSync() || !agent.isOnline()) {
           agent['isDisabled'] = true;
           agent['suffixNext'] = agent.isOutOfSync()?" (Out of Sync)":'';
+          if (!isAgentAvailable) isAgentAvailable = false;
         }
         else if(this.agent == null && this.formControl.value) {
           if(agent.id == this.formControl.value) {
@@ -167,6 +170,8 @@ export class AgentsAutoCompleteComponent implements OnInit {
           this.agent = agent;
           this.setAgent(this.agent)
         }
+
+        if (agent.isOnline() && !agent.isOutOfSync()) isAgentAvailable = true;
       });
       this.onAgents.emit(this.agents);
       if (this.value)
@@ -179,6 +184,7 @@ export class AgentsAutoCompleteComponent implements OnInit {
         });
       }
       this.loadingSearch = false;
+      this.isAgentOnline.emit(isAgentAvailable);
     }, error => {
       this.onAgents.emit(this.agents);
       this.loadingSearch = false;

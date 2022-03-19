@@ -432,7 +432,7 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
         this.selectAllToggle(false);
       },
       (err) => {
-        this.translate.get("element.notification.bulk_delete.failure").subscribe(res => this.showAPIError(err, res));
+        this.translate.get("element.notification.bulk_delete.failure").subscribe(res => this.showAPIError(err, res,"Elements","Test Case"));
         this.fetchElements();
         this.selectAllToggle(false);
       })

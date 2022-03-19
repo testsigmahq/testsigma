@@ -124,6 +124,7 @@
         *ngIf="environmentFormGroup && version"
         (onAgentChange)="setAgent($event)"
         (onAgents)="setAgents($event)"
+        (isAgentOnline)="setAgentStatus($event)"
         [value]="agent"
         [version]="version"
         [formGroup]="environmentFormGroup"

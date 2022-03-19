@@ -575,7 +575,7 @@
   "element.notification.delete.success": "Element deleted successfully",
   "element.notification.delete.failure": "Failed to delete the Element",
   "element.notification.bulk_delete.success": "Selected Elements deleted successfully",
-  "element.notification.bulk_delete.failure": "A few Elements that you have selected are already in use and cannot be deleted. You may delete the ones in use from your Test Steps.",
+  "element.notification.bulk_delete.failure": "Few Elements that you have selected are already in use and cannot be deleted. Please delete the ones which are in use from your Test Steps and try again.",
   "element.notification.update.success": "Successfully updated the Element",
   "element.notification.update.failure": "Failed to update the Element",
   "element.notification.save.success": "Element saved successfully",

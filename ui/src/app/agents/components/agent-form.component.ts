@@ -172,12 +172,10 @@ export class AgentFormComponent extends BaseComponent implements OnInit {
       error: (err: any) => {
         this.registering = false;
         this.loading = false;
-        if(true){
-          err.status == 0
-          this.agentUnreachable = true;
-        }
+        err.status == 0
+        this.agentUnreachable = true;
         this.translate.get("agents.form.register.failure").subscribe((res: string) => {
-          this.showNotification(NotificationType.Error, res);
+          this.showAPIError(err, res);
         });
       }
     });

@@ -92,7 +92,13 @@
       </button>
     </div>
     <br *ngIf="!advancedSettings">
-
+    <div class="theme-warning text-danger border-rds-4 px-10 py-5 fz-12 mt-2 mb-40 text-center"
+         *ngIf="isHybrid && agentIsOffline">
+      <div class="mx-auto w-fit-content d-flex align-items-center">
+        <i class="fa-warning fz-20 pl-15 pr-8"></i>
+        <span class="p-10 text-left" [innerHTML]="'ad_hoc.inactive_agents' | translate"></span>
+      </div>
+    </div>
     <div class="pb-30" *ngIf="showAddEnvironmentForm || isEditEnvironmentActive">
       <span [translate]="isEditEnvironmentActive?'test_plan.environments.configuration.title.edit':
         'test_plan.environments.configuration.title.add'"></span>
@@ -110,6 +116,7 @@
       [formGroup]="activeEnvironmentFormGroup"
       [version]="version"
       [isAvailableCheck]="false"
+      (setAgentOnline)="setAgentStatus($event)"
       [testPlanLabType]="testPlanLabType"></app-test-plan-test-machine-form>
     <app-test-plan-device-form
       *ngIf="version?.workspace?.isMobile"
@@ -130,7 +137,7 @@
     <div class="text-right">
       <button
         *ngIf="!advancedSettings && !isEditEnvironmentActive"
-        [disabled]="isActiveEnvironmentInValid"
+        [disabled]="isActiveEnvironmentInValid || agentIsOffline"
         [translate]="'btn.common.add'"
         class="theme-btn-primary pl-30 pr-30" (click)="saveEnvironment()"></button>
     </div>

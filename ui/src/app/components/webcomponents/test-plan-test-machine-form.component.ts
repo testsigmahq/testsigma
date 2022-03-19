@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, SimpleChanges} from '@angular/core';
 import {PlatformService} from "../../agents/services/platform.service";
 import {PlatformScreenResolution} from "../../agents/models/platform-screen-resolution.model";
 import {TestPlanPlatformOsVersionFormComponent} from "./test-plan-platform-os-version-form.component";
@@ -13,6 +13,7 @@ export class TestPlanTestMachineFormComponent extends TestPlanPlatformOsVersionF
   public screenResolutions: PlatformScreenResolution[];
   public screenResolution: PlatformScreenResolution;
   @Input('isAvailableCheck') isAvailableCheck: Boolean;
+  @Output() setAgentOnline = new EventEmitter<Boolean>();
 
 
   constructor(
@@ -56,5 +57,9 @@ export class TestPlanTestMachineFormComponent extends TestPlanPlatformOsVersionF
 
   setResolution(screenResolution){
     this.environmentFormGroup?.controls['resolution'].setValue(screenResolution.resolution);
+  }
+
+  setAgentStatus(isAgentOnline: boolean){
+    this.setAgentOnline.emit(isAgentOnline);
   }
 }

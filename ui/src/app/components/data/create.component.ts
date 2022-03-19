@@ -53,8 +53,8 @@ export class CreateComponent extends BaseComponent implements OnInit {
       });
       this.router.navigate(['/td', 'data', res.id]);
     }, (ex)=> {
-      this.translate.get('message.common.created.failure', {FieldName: 'Test Data Profile'}).subscribe((res) => {
-        this.showAPIError(ex, res);
+      this.translate.get('message.common.created.failure', {FieldName: 'Test Data Profiles'}).subscribe((res) => {
+        this.showAPIError(ex, res,'Test Data Profile');
         this.saving = false;
       });
     });

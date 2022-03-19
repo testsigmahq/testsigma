@@ -586,7 +586,9 @@ public class AgentExecutionService {
   public void processResultEntries(List<TestDeviceResult> testDeviceResults, StatusConstant inStatus)
     throws Exception {
     for (TestDeviceResult testDeviceResult : testDeviceResults) {
-      if (this.getTestPlan().getTestPlanLabType().isHybrid() && !agentService.isAgentActive(testDeviceResult.getTestDevice().getAgentId())) {
+      if (testDeviceResult.getTestDevice().getAgent() == null && this.getTestPlan().getTestPlanLabType().isHybrid()) {
+        testDeviceResultService.markEnvironmentResultAsFailed(testDeviceResult, AutomatorMessages.AGENT_HAS_BEEN_REMOVED, StatusConstant.STATUS_CREATED);
+      } else if (this.getTestPlan().getTestPlanLabType().isHybrid() && !agentService.isAgentActive(testDeviceResult.getTestDevice().getAgentId())) {
           testDeviceResultService.markEnvironmentResultAsFailed(testDeviceResult,
             AutomatorMessages.AGENT_INACTIVE, StatusConstant.STATUS_CREATED);
       } else if(this.getTestPlan().getTestPlanLabType().isHybrid() && testDeviceResult.getTestDevice().getDeviceId()!=null &&

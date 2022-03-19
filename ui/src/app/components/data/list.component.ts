@@ -196,7 +196,7 @@ export class ListComponent extends BaseComponent implements OnInit {
         this.selectedDataProfiles = []
       },
       (err) => {
-        this.translate.get("message.common.deleted.failure", {FieldName: "Test Data Profiles"}).subscribe(msg => this.showAPIError(err, msg));
+        this.translate.get("message.common.deleted.failure", {FieldName: "Test Data Profiles"}).subscribe(msg => this.showAPIError(err, msg,"Test Data Profile","Test Case"));
         this.fetchDataProfiles();
         this.selectedDataProfiles = [];
       })

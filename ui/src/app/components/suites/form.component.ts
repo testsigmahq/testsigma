@@ -154,7 +154,7 @@ export class FormComponent extends BaseComponent implements OnInit {
       err => {
         this.formSubmitted = false;
         this.translate.get('message.common.created.failure', {FieldName: "Test Suite"})
-          .subscribe(res => this.showAPIError(err, res))
+          .subscribe(res => this.showAPIError(err, res,'Test suite'))
       }
     )
   }

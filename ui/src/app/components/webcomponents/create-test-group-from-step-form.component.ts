@@ -103,7 +103,7 @@ export class CreateTestGroupFromStepFormComponent extends BaseComponent implemen
       },
       (exception) => {
         this.translate.get('message.common.created.failure', {FieldName: 'Step Group'}).subscribe((res) => {
-          this.showAPIError(exception, res);
+          this.showAPIError(exception, res, 'Step Group');
           this.saving = false;
         });
       }

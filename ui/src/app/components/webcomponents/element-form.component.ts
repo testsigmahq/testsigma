@@ -226,7 +226,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
       error => {
         this.saving = false;
         this.translate.get('message.common.created.failure', {FieldName: 'Element'}).subscribe((res) => {
-          this.showAPIError(error, res);
+          this.showAPIError(error, res,'Element');
         })
       });
   }

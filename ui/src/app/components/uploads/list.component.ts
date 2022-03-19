@@ -227,7 +227,7 @@ export class ListComponent extends BaseComponent implements OnInit {
         this.fetchUploads();
         this.selectedUploads = []
       },
-      (err) => this.translate.get("message.common.deleted.failure", {FieldName: "Uploads"}).subscribe(res => this.showNotification(NotificationType.Error, res)))
+      (err) => this.translate.get("message.common.deleted.failure", {FieldName: "Uploads"}).subscribe(res => this.showAPIError(NotificationType.Error, res,"Uploads","Test Case")))
   }
 
   private goToPreviousPageIfEmpty(res) {

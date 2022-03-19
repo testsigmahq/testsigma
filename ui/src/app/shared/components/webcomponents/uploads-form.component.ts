@@ -108,7 +108,7 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
       err => {
         this.uploading = false;
         this.translate.get(updateDetailsOnly ? "message.common.update.failure" : "message.common.upload.failure", {FieldName: "File"})
-          .subscribe(key => this.showAPIError(NotificationType.Error, key))
+          .subscribe(key => this.showAPIError(NotificationType.Error, key,'Upload'))
       }
     );
   }
@@ -140,7 +140,7 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
       err => {
         this.uploading = false;
         this.translate.get("message.common.upload.failure", {FieldName: "File"})
-          .subscribe(key => this.showAPIError(err, key))
+          .subscribe(key => this.showAPIError(err, key,'Upload'))
       }
     );
   }

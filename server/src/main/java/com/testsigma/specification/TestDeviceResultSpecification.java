@@ -65,7 +65,7 @@ public class TestDeviceResultSpecification extends BaseSpecification<TestDeviceR
       return s.get("testPlanResultId");
     } else if(criteria.getKey().equals("entityType")) {
       Join s = root.join("testDevice",JoinType.INNER);
-      Join s1 = s.join("execution",JoinType.INNER);
+      Join s1 = s.join("testPlan",JoinType.INNER);
       return s1.get("entityType");
     }
     return root.get(criteria.getKey());

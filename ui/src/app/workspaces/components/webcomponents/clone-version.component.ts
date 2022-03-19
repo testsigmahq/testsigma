@@ -62,7 +62,7 @@ export class CloneVersionComponent extends BaseComponent implements OnInit {
       (exception) => {
         this.saving = false;
         this.translate.get('message.common.created.failure', {FieldName: 'Version'}).subscribe((res) => {
-          this.showAPIError(exception, res);
+          this.showAPIError(exception, res,'Workspace Version');
         });
       }
     )

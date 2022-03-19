@@ -101,10 +101,16 @@ export class BaseComponent implements OnInit {
     })
   }
 
-  showAPIError(exception, internalErrorMSG) {
-    if (exception['status'] == 422 || exception['status'] == 451)
-      this.showNotification(NotificationType.Error, exception['error']['error']);
-    else if (exception['status'] == 500)
+  showAPIError(exception, internalErrorMSG, entityName?: string, parentEntity?:string) {
+    if (exception['status'] == 422 || exception['status'] == 451) {
+      let errorMessage = exception['error']['error'];
+      if (errorMessage == "Entity with same name already exists, Please use different name" && Boolean(entityName)) {
+        errorMessage = errorMessage.replace("Entity", entityName);
+      } else if (errorMessage == "Entity has some relation please check it out" && Boolean(entityName)) {
+        errorMessage = "Few " + entityName + " that you have selected are already in use and cannot be deleted. Please delete the ones which are in use from your " + parentEntity + " and try again ."
+      }
+      this.showNotification(NotificationType.Error, errorMessage);
+    } else if (exception['status'] == 500)
       this.showNotification(NotificationType.Error, (exception?.error?.code ? this.translate.instant(exception?.error?.code) : internalErrorMSG) || internalErrorMSG);
     else if (exception?.error?.objectErrors?.length > 0)
       this.showNotification(NotificationType.Error, this.translate.instant('message.duplicate_entity'));

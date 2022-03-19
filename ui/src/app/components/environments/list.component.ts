@@ -160,7 +160,7 @@ export class ListComponent extends BaseComponent implements OnInit {
         this.fetchEnvironments();
         this.selectedEnvironments = []
       },
-      (err) => this.translate.get("message.common.deleted.failure", {FieldName: "Environment"}).subscribe(res => this.showAPIError(err, res)))
+      (err) => this.translate.get("message.common.deleted.failure", {FieldName: "Environment"}).subscribe(res => this.showAPIError(err, res,"Environments","Test Plan")))
   }
 
   private goToPreviousPageIfEmpty(res) {

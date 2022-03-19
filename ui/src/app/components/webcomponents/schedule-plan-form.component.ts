@@ -122,7 +122,7 @@ export class SchedulePlanFormComponent extends BaseComponent implements OnInit {
           },
           error => {
             this.translate.get('message.common.created.failure', {FieldName: 'Schedule Plan'}).subscribe((res: string) => {
-              this.showAPIError(error, res)
+              this.showAPIError(error, res,'Schedule Plan')
               this.saving = false;
             });
           })

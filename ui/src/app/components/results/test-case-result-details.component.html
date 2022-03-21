@@ -90,7 +90,7 @@
             class="btn icon-btn border-rds-2 ml-14">
             <i class="fa-bug"></i>
           </button>
-          <button
+          <button *ngIf="!testCaseResult?.isExecuting"
             (click)="openUpdateStatus()"
             [translate]="'testcase.status.update.btn'"
             class="btn icon-btn border-rds-2 ml-14">

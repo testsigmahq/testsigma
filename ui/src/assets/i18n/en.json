@@ -1642,6 +1642,7 @@
   "agents.mobile.inspection.switch_to_web_view_context_while_using": "Selected Element is in Web Context({{name}}), Make sure Switch to Appropriate Context",
   "test_case.linked_with_suites": "This Test Case is used in the below Test suites,<br>Please remove the mapping and try again.",
   "environments.list.linked_with_test_plans": "This Test Suite is used in the below Test plans, <br> Please remove the mapping and try again.",
+  "suite.linked_with_test_plans": "This Test Suite is used in the below Test plans, <br> Please remove the mapping and try again.",
   "usage_details.mobile_inspections.stop.success": "Mobile inspector session stopped successfully",
   "usage_details.mobile_inspections.stop.failure": "Failed to stop mobile inspector session",
   "linked_entities.open_test_suite": "Open Test Suite in new Tab",

@@ -11,8 +11,9 @@ import {ConfirmationModalComponent} from "../../shared/components/webcomponents/
 import {MatDialog} from '@angular/material/dialog';
 import {InfiniteScrollableDataSource} from "../../data-sources/infinite-scrollable-data-source";
 import {TestCaseService} from "../../services/test-case.service";
-import {TestCase} from "../../models/test-case.model";
 import {ToastrService} from "ngx-toastr";
+import {LinkedEntitiesModalComponent} from "../../shared/components/webcomponents/linked-entities-modal.component";
+import {TestPlanService} from "../../services/test-plan.service";
 
 @Component({
   selector: 'app-details',
@@ -32,6 +33,7 @@ export class DetailsComponent extends BaseComponent implements OnInit {
     public translate: TranslateService,
     public toastrService: ToastrService,
     private testSuiteService: TestSuiteService,
+    private testPlanService: TestPlanService,
     private route: ActivatedRoute,
     private router: Router,
     private testCaseService: TestCaseService,
@@ -84,6 +86,38 @@ export class DetailsComponent extends BaseComponent implements OnInit {
       (err) => this.translate.get('message.common.deleted.failure', {FieldName: "Test Suite"})
         .subscribe(res => this.showNotification(NotificationType.Error, res))
     );
+  }
+
+  public fetchLinkedPlans() {
+    let testPlans: InfiniteScrollableDataSource;
+    testPlans = new InfiniteScrollableDataSource(this.testPlanService, "suiteId:" + this.testSuiteId , "name,asc" );
+    waitTillRequestResponds();
+    let _this = this;
+
+    function waitTillRequestResponds() {
+      if (testPlans.isFetching)
+        setTimeout(() => waitTillRequestResponds(), 100);
+      else {
+        if (testPlans.isEmpty)
+          _this.openDeleteDialog();
+        else
+          _this.openLinkedTestPlansDialog(testPlans);
+      }
+    }
+  }
+
+  private openLinkedTestPlansDialog(list) {
+    this.translate.get("suite.linked_with_test_plans").subscribe((res) => {
+      this.matDialog.open(LinkedEntitiesModalComponent, {
+        width: '568px',
+        height: 'auto',
+        data: {
+          description: res,
+          linkedEntityList: list,
+        },
+        panelClass: ['mat-dialog', 'rds-none']
+      });
+    });
   }
 
 }

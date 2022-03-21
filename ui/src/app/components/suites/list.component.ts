@@ -192,7 +192,7 @@ export class ListComponent extends BaseComponent implements OnInit {
 
 
   private openLinkedTestPlansDialog(list) {
-    this.translate.get("elements.linked_with_cases").subscribe((res) => {
+    this.translate.get("suite.linked_with_test_plans").subscribe((res) => {
       this.matDialog.open(LinkedEntitiesModalComponent, {
         width: '568px',
         height: 'auto',

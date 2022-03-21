@@ -114,7 +114,11 @@ public class OnPremiseStorageService extends StorageService {
   public Optional<URL> generatePreSignedURLIfExists(String relativeFilePathFromBase, StorageAccessLevel storageAccessLevel, Integer expiryTimeInMinutes) {
     log.debug("Generating File URL if exists:" + relativeFilePathFromBase);
     Optional<URL> returnURL = Optional.empty();
-    File file = Paths.get(getRootDirectory(), relativeFilePathFromBase).toFile();
+    String rootDirectory = getRootDirectory();
+    if (rootDirectory.contains("\\")){
+     relativeFilePathFromBase = relativeFilePathFromBase.replaceAll("/","\\");
+    }
+    File file = Paths.get(rootDirectory, relativeFilePathFromBase).toFile();
     if (file.exists()) {
       log.debug("File exists, generating pre-signed URL for:" + relativeFilePathFromBase);
       returnURL = Optional.ofNullable(generatePreSignedURL(relativeFilePathFromBase, storageAccessLevel, expiryTimeInMinutes));

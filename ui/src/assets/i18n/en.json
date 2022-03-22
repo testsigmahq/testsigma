@@ -716,6 +716,8 @@
   "elements.filter.form.label.screenName": "Screen Name",
   "elements.filter.form.label.labels": "Labels",
   "elements.filter.form.label.unused_elements": "Usage in Test Case",
+  "elements.filter.form.placeholder.value": "Search Value",
+  "elements.filter.form.label.locator_value": "Value",
   "element.name.invalid.message": "Special characters {}.+*?^$%`'/()| are not allowed in the Element name",
   "why_failed.popup.title": "Why this test case failed?",
   "result.hint.menu_icon": "Menu",

@@ -283,7 +283,7 @@
           </div>
         </div>
       </div>
-      <div *ngIf="!testStepResult.isRestStep">
+      <div *ngIf="!testStepResult?.isRestStep && testStepResult?.stepDetails?.dataMap?.elementString && !testStepResult?.addonElements">
         <div class="fz-16 pt-10 theme-text pointer"
              (click)="toggleElementDetails()">
           <i class="fz-12"

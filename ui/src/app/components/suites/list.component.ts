@@ -169,7 +169,10 @@ export class ListComponent extends BaseComponent implements OnInit {
         this.fetchTestSuites();
         this.selectedSuites = []
       },
-      (err) => this.translate.get("test_suite.notification.bulk_delete.failure").subscribe(res => this.showAPIError(err, res, "Test Suites","Test Plan")))
+      (err) => this.translate.get("test_suite.notification.bulk_delete.failure").subscribe(res => {
+        this.showAPIError(err, res);
+        this.fetchTestSuites();
+      }))
   }
 
   public fetchLinkedPlans(id) {

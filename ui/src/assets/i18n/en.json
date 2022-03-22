@@ -1871,7 +1871,7 @@
   "settings.auth.api_key": "API Key",
   "settings.auth.api_details": "API Details",
   "settings.auth.regenerate": "Regenerate",
-  "settings.auth.jwt": "Primary Secrete Key",
+  "settings.auth.jwt": "Primary Secret Key",
   "work_space.switcher.title": "Switch Workspace",
   "work_space.switcher.web_app.title": "Web Application",
   "work_space.switcher.web_app.description": "This Workspace will help for doing the web application. Most of the test cases valid through this workspace.",

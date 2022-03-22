@@ -179,6 +179,7 @@ public class RestAPIRunTimeDataProcessor {
         } catch (PathNotFoundException e) {
           jsonPathValidationsFailed = true;
           failedJsonPathsList.add(path);
+          exceptionStr = exceptionStr+", <br>"+name+"="+path;
           log.error("JSON Path Error while saving response to runtime variable.", e);
         }
       }

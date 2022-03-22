@@ -37,7 +37,7 @@ export class TestPlanFormComponent extends BaseComponent implements OnInit {
   }
 
   get isInValid() {
-    return this.testPlanForm.controls['name'].invalid;
+    return this.testPlanForm?.controls['name']?.invalid;
   }
 
   next() {

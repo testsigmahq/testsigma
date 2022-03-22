@@ -23,7 +23,6 @@
         [testSteps]="testSteps"
         [templates]="templates"
         [addonTemplates]="addonTemplates"
-        [isSearchEnabled]="isSearchEnabled"
         [stepNumber]="stepNumber+1"
         [stepRecorderView]="stepRecorderView"
         [stepForm]="stepForm"></app-action-test-step-list-item>
@@ -40,7 +39,7 @@
     <app-placeholder-loader *ngIf="!isStepFetchComplete"></app-placeholder-loader>
     <app-test-step-form-container
       class="pr-45 d-block mt-n10"
-      *ngIf="workspaceVersion && testSteps && !isAnyStepEditing && !hideFormContainer && !isAnyStepAfter && !isDragEnabled && !isSearchEnabled"
+      *ngIf="workspaceVersion && testSteps && !isAnyStepEditing && !hideFormContainer && !isAnyStepAfter && !isDragEnabled && !searchTerm?.length"
       (onSuccessfulStepSave)="onSuccessfulStepSave($event)"
       (onStepType)="onStepChangeAction($event)"
       [testCase]="testCase"

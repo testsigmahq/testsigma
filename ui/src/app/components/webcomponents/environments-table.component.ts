@@ -75,6 +75,11 @@ export class EnvironmentsTableComponent implements OnInit {
   public removeMultipleParameters(): void {
     let selectedRows = this.selectedList.reverse();
     for (let i of selectedRows ) this.removeRowControl(i);
+    if (this.rowControls().length ==0) {
+      this.addRowControl();
+    }
+    this.selectAll = false;
+    this.selectedList = [];
   }
 
   public selectAllToggle(selectAll: Boolean): void {

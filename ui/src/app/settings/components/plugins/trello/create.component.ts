@@ -51,7 +51,7 @@ export class CreateComponent extends BaseComponent implements OnInit {
 
             this.integrationsService.create(this.plug).subscribe((element: Integrations) => {
                 this.saving = false;
-                this.translate.get('message.common.integration.success', {FieldName: this.plug.name}).subscribe((res) => {
+                this.translate.get('message.common.plugin_integration_configuration.success', {FieldName: this.plug.name}).subscribe((res) => {
                   this.showNotification(NotificationType.Success, res);
                   this.dialogRef.close(element);
                 })

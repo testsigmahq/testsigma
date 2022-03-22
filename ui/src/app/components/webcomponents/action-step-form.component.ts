@@ -112,7 +112,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     "WebApplication": "https://testsigma.com/docs/test-cases/create-steps-recorder/web-apps/overview/",
     "MobileWeb": "https://testsigma.com/docs/test-cases/create-steps-recorder/web-apps/overview/",
     "AndroidNative": "https://testsigma.com/docs/test-cases/create-steps-recorder/android-apps/",
-    "IOSNative": "https://testsigma.com/docs/test-cases/create-steps-recorder/ios-apps/",
+    "IOSNative": "https://testsigma.com/docs/test-cases/create-steps-recorder/ios-apps/overview/",
     "Rest": "https://testsigma.com/tutorials/getting-started/automate-rest-apis/"
   }
   public stepArticleUrl = "";

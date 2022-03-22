@@ -24,7 +24,6 @@ export abstract class TestCaseStepsListComponent extends BaseComponent implement
   @Input('version') public workspaceVersion: WorkspaceVersion;
   @Input('searchTerm') public searchTerm?: string;
   @Input('isDragEnabled') public isDragEnabled: boolean = false;
-  @Input('isSearchEnabled') isSearchEnabled: any;
   @Output('onStepsFetch') public onStepsFetch = new EventEmitter<number>();
   @Output('onStepSelection') public onStepSelection = new EventEmitter<TestStep[]>();
   @Output('onStepDrag') public onStepDrag = new EventEmitter<TestStep[]>();

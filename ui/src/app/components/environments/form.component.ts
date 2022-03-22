@@ -138,6 +138,7 @@ export class FormComponent extends BaseComponent implements OnInit {
   }
 
   showTable() {
+    this.environmentForm.controls["paramsJson"].disable();
     this.showJSON = false;
     this.parseJSON();
   }
@@ -156,6 +157,7 @@ export class FormComponent extends BaseComponent implements OnInit {
   }
 
   showJSONFormat() {
+    this.environmentForm.controls["paramsJson"].enable();
     this.showJSON = true;
     this.stringifyJSON();
   }

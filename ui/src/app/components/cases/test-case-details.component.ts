@@ -24,6 +24,7 @@ import {DryRunFormComponent} from '../webcomponents/dry-run-form.component';
 import {TestStep} from '../../models/test-step.model';
 import {ChromeRecorderService} from "../../services/chrome-recoder.service";
 import {ToastrService} from "ngx-toastr";
+import {TestStepService} from "../../services/test-step.service";
 
 @Component({
   selector: 'app-test-case-details',
@@ -211,26 +212,26 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
   }
 
   public fetchLinkedCases() {
-    let testSuites: InfiniteScrollableDataSource;
-    testSuites = new InfiniteScrollableDataSource(this.testSuiteService, "workspaceVersionId:" + this.testCase.workspaceVersionId + ",testCaseId:" + this.testCaseId);
+    let testCases: InfiniteScrollableDataSource;
+    testCases = new InfiniteScrollableDataSource(this.testCaseService, ",stepGroupId:" + this.testCaseId);
     waitTillRequestResponds();
     let _this = this;
 
     function waitTillRequestResponds() {
-      if (testSuites.isFetching)
+      if (testCases.isFetching)
         setTimeout(() => waitTillRequestResponds(), 100);
       else {
-        if (testSuites.isEmpty)
+        if (testCases.isEmpty)
           _this.deleteTestCase(true);
         else
-          _this.openLinkedTestSuitesDialog(testSuites);
+          _this.openLinkedTestCasesDialog(testCases);
       }
     }
   }
 
 
-  private openLinkedTestSuitesDialog(list) {
-    this.translate.get("test_case.linked_with_suites").subscribe((res) => {
+  private openLinkedTestCasesDialog(list) {
+    this.translate.get("test_case.linked_with_cases").subscribe((res) => {
       this.matModal.open(LinkedEntitiesModalComponent, {
         width: '568px',
         height: '55vh',
@@ -242,7 +243,6 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
       });
     });
   }
-
 
   get canShowRunResult() {
     return this.testCase && !this.testCase.isStepGroup;

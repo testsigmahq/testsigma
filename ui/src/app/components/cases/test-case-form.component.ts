@@ -203,7 +203,7 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
         error => {
           this.saving = false;
           this.translate.get('message.common.created.failure', {FieldName: fieldName}).subscribe((res) => {
-            this.showAPIError(error, res,fieldName);
+            this.showAPIError(error, res,'Test Case or Step Group');
           })
         })
     }

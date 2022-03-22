@@ -1641,6 +1641,7 @@
   "agents.mobile.inspection.has_web_view_context_warn": "Your App has opened in Web View Context. In case of issues during element inspection, please switch to Hybrid View Mode(N/H) from the Toolbar Section.",
   "agents.mobile.inspection.switch_to_web_view_context_while_using": "Selected Element is in Web Context({{name}}), Make sure Switch to Appropriate Context",
   "test_case.linked_with_suites": "This Test Case is used in the below Test suites,<br>Please remove the mapping and try again.",
+  "test_case.linked_with_cases": "This Test Case is used in the below Test cases,<br>Please remove the mapping and try again.",
   "environments.list.linked_with_test_plans": "This Test Suite is used in the below Test plans, <br> Please remove the mapping and try again.",
   "suite.linked_with_test_plans": "This Test Suite is used in the below Test plans, <br> Please remove the mapping and try again.",
   "usage_details.mobile_inspections.stop.success": "Mobile inspector session stopped successfully",

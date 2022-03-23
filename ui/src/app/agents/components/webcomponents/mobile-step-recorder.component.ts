@@ -459,8 +459,8 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
           (mobileElement.id ? ElementLocatorType.id_value : ElementLocatorType.xpath);
         let element = new Element();
         element.locatorValue = mobileElement[this.locatorTypes[locatorType].variableName];
-        let query = 'workspaceVersionId:' + this.version.id + ',locatorType:' + this.element.locatorType +
-        ',locatorValue:' + this.element.locatorValueWithSpecialCharacters;
+        let query = 'workspaceVersionId:' + this.version.id + ',locatorType:' + locatorType +
+        ',locatorValue:' + element.locatorValueWithSpecialCharacters;
         query = this.byPassSpecialCharacters(query);
         this.elementService.findAll(query).subscribe(res => {
           if(res?.content?.length){
@@ -497,7 +497,7 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
             currentStep.element = elements[0].name;
             this.createStep(currentStep);
           })
-        } else {
+        } else if(result!=undefined) {
           currentStep.element = res[0].name;
           this.createStep(currentStep);
         }

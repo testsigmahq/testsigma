@@ -223,6 +223,7 @@ export class TestStepFormContainerComponent extends BaseComponent implements OnI
     this.testStep.position = this.position;
     this.testStep.waitTime = 30;
     this.testStep.priority = TestStepPriority.MAJOR;
+    this.testStep.conditionIf = [];
     if (commonData['preRequisiteStepId']) {
       this.testStep.preRequisiteStepId = commonData['preRequisiteStepId']
     }

@@ -432,7 +432,7 @@ export class TestStep extends Base implements PageObject {
       this.disabled = input['disabled'];
       this.ignoreStepResult = input['ignoreStepResult'];
       if (input['dataMap'])
-        this.conditionIf = input['conditionIf'];
+        this.conditionIf = input['dataMap']['conditionIf'];
     }
   }
 

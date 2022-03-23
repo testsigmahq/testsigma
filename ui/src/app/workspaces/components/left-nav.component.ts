@@ -34,25 +34,7 @@ import {WorkspaceVersionService} from "../../shared/services/workspace-version.s
         </div>
         <div class="ts-col-100 position-relative d-flex pt-18">
           <div class="details-container md value-lg ts-col-90">
-            <div class="details-items">
-              <label class="details-title" [translate]="'application_settings.details.created_on'"></label>
-              <div class="details-info">
-                <div class="d-flex">
-                  <div class="light-text-color rb-regular-i-d"
-                       [textContent]="(application?.createdAt | date : 'MMM d, yyyy')"></div>
-                </div>
-              </div>
-            </div>
-            <div class="details-items pl-50">
-              <label class="details-title" [translate]="'application_settings.details.updated_on'"></label>
-              <div class="details-info">
-                <div class="d-flex">
-                  <div class="text-t-secondary rb-regular-i-d"
-                       [textContent]="(application?.updatedAt | date : 'MMM d, yyyy')"></div>
-                </div>
-              </div>
-            </div>
-            <div class="details-items pl-50" *ngIf="versions">
+            <div class="details-items" *ngIf="versions">
               <label class="details-title" [translate]="'application_settings.application_details.version'"></label>
               <div class="details-info">
                 <div class="d-flex">

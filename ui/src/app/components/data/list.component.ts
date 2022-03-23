@@ -165,6 +165,10 @@ export class ListComponent extends BaseComponent implements OnInit {
   public fetchLinkedCases(id) {
     let testCases: InfiniteScrollableDataSource;
     testCases = new InfiniteScrollableDataSource(this.testCaseService, "workspaceVersionId:" + this.versionId + ",deleted:false,testDataId:" + id);
+
+    let testCasesWithProfileInForLoop :InfiniteScrollableDataSource;
+    testCasesWithProfileInForLoop = new InfiniteScrollableDataSource(this.testCaseService, "workspaceVersionId:" + this.versionId + ",deleted:false,forLoopTestDataId:" + id);
+
     waitTillRequestResponds();
     let _this = this;
 
@@ -172,8 +176,12 @@ export class ListComponent extends BaseComponent implements OnInit {
       if (testCases.isFetching)
         setTimeout(() => waitTillRequestResponds(), 100);
       else {
-        if (testCases.isEmpty)
+        if (testCases.isEmpty && testCasesWithProfileInForLoop.isEmpty)
           _this.openDeleteDialog(id);
+        else if (!testCases.isEmpty)
+          _this.openLinkedTestCasesDialog(testCases);
+        else if(!testCasesWithProfileInForLoop.isEmpty)
+          _this.openLinkedTestCasesDialog(testCasesWithProfileInForLoop);
         else
           _this.openLinkedTestCasesDialog(testCases);
       }

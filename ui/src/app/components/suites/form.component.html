@@ -24,8 +24,14 @@
           formControlName="name"
           autofocus/>
         <div class="error"
-             *ngIf="testSuiteForm.controls.name.errors?.maxlength"
+             *ngIf="testSuiteForm?.controls?.name?.errors?.maxlength"
              [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'126'}"></div>
+        <div class="error"
+             *ngIf="testSuiteForm?.controls?.name?.errors?.minlength"
+             [textContent]="'form.validation.common.min_length' | translate: {FieldName:'Name' , min:'4'}"></div>
+        <div class="error"
+             *ngIf="testSuiteForm?.touched && testSuiteForm?.controls?.name?.errors?.required"
+             [textContent]="'form.validation.common.required' | translate: {FieldName:'Name'}"></div>
       </div>
       <div class="form-group">
         <span

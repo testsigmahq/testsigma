@@ -209,7 +209,7 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
       title: new FormControl(environment?.title, []),
       createSessionAtCaseLevel: new FormControl(environment?.createSessionAtCaseLevel, []),
       browser: new FormControl(environment?.browser, [this.requiredIfValidator(() => !this.version?.workspace.isMobile && !this.isRest && this.isHybrid)]),
-      platform: new FormControl(environment?.platform, [this.requiredIfValidator(() => !this.isRest && this.isHybrid)]),
+      platform: new FormControl(environment?.platform, []),
       osVersion: new FormControl(environment?.osVersion, []),
       browserVersion: new FormControl(environment?.browserVersion, []),
       deviceName : new FormControl(environment?.deviceName, []),

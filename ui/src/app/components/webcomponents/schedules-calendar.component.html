@@ -74,7 +74,7 @@
             class="details-title"
             [translate]="'schedule.title.schedule_on'"></label>
           <div class="details-info d-flex">
-            <div [textContent]="eventDetails?.data?.scheduleTime | date : 'EEE d MMM'"></div>
+            <div [textContent]="eventDetails?.data?.scheduleTime | date : 'EEE d MMM'"></div>&nbsp;
             <div
               [textContent]="'message.common.at_a_time'| translate: {time: (eventDetails?.data?.scheduleTime | date: 'hh:mm a')}"></div>
           </div>

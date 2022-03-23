@@ -305,7 +305,8 @@ export class TestStepFormContainerComponent extends BaseComponent implements OnI
         formSubmitted: true,
         steps: this.testSteps.content,
         parentDisabled: testStep.parentStep?.disabled,
-        isStepRecordView: this.stepRecorderView
+        isStepRecordView: this.stepRecorderView,
+        isTestStepResultsView: !!this.testCaseResultId
       },
       panelClass: ['mat-dialog', 'rds-none'],
       ...this.alterStyleIfStepRecorder()

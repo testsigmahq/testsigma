@@ -39,8 +39,10 @@
       </div>
       <div class="form-group">
         <label class="control-label" [translate]="'test_step.results.prerequisite'"></label>
-        <mat-form-field class="mat-select-custom w-100" appearance="fill">
+        <mat-form-field class="mat-select-custom w-100" appearance="fill"  [class.disabled]="options.isTestStepResultsView">
           <mat-select [placeholder]="'None'"
+                      [disabled]="options.isTestStepResultsView"
+                      [class.disabled-pointer-events]="options.isTestStepResultsView"
                       disableOptionCentering panelClass="single"
                       [formControlName]="['preRequisiteStepId']"
                       (selectionChange)="resetOnPreRequisiteNone($event)">

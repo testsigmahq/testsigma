@@ -27,18 +27,18 @@
     </div>
   </div>
   <div class="d-flex justify-content-between py-10" [class.ts-col-50]="fullScreenDetails" *ngIf="version.createdAt">
-          <div>
-            <div class="text-t-secondary pb-10" [translate]="'message.common.created_on'"></div>
-            <div class="rb-medium"
-              [textContent]="'message.common.time'| translate : { time: (version.createdAt | date : 'MMM d, yyyy')}"></div>
-          </div>
+    <div>
+      <div class="text-t-secondary pb-10" [translate]="'message.common.created_on'"></div>
+      <div class="rb-medium"
+           [textContent]="'message.common.time'| translate : { time: (version.createdAt | date : 'MMM d, yyyy')}"></div>
+    </div>
   </div>
   <div class="d-flex justify-content-between py-10" [class.ts-col-50]="fullScreenDetails" *ngIf="version.updatedAt">
     <div>
-    <div class="text-t-secondary pb-10" [translate]="'message.common.updated_on'"></div>
-    <div class="rb-medium"
-      [textContent]="'message.common.time'| translate : { time: (version.updatedAt | date : 'MMM d, yyyy')}"></div>
-  </div>
+      <div class="text-t-secondary pb-10" [translate]="'message.common.updated_on'"></div>
+      <div class="rb-medium"
+           [textContent]="'message.common.time'| translate : { time: (version.updatedAt | date : 'MMM d, yyyy')}"></div>
+    </div>
   </div>
   <div class="mat-content pt-10 pr-10 h-100 overflow-y-auto flex-column">
     <div class="text-t-secondary pb-10 fz-15 rb-regular-i-d" [translate]="'message.common.description'"></div>

@@ -30,6 +30,7 @@ export class TestStepMoreActionFormComponent implements OnInit {
       formSubmitted: Boolean,
       steps: TestStep[],
       parentDisabled: Boolean,
+      isTestStepResultsView: Boolean
     },
     private matDialog: MatDialogRef<TestStepMoreActionFormComponent>) {
     this.form = this.options.form;

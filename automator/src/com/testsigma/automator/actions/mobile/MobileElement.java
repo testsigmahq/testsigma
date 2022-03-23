@@ -221,7 +221,8 @@ public class MobileElement {
 
   private void populateIosAttributes(RemoteWebElement remoteWebElement) {
     this.setName(remoteWebElement.getAttribute("name"));
-    this.setAccessibilityId(this.name);
+    this.setId(name);
+    this.setAccessibilityId(name);
     this.setType(remoteWebElement.getAttribute("type"));
     this.setLabel(remoteWebElement.getAttribute("label"));
   }
@@ -230,6 +231,7 @@ public class MobileElement {
     this.setName(remoteWebElement.getTagName());
     this.setType(remoteWebElement.getAttribute("class"));
     this.setResourceId(remoteWebElement.getAttribute("resource-id"));
+    this.setId(resourceId);
     this.setContentDesc(remoteWebElement.getAttribute("content-desc"));
     this.setAccessibilityId(this.contentDesc);
     this.setPassword(Boolean.valueOf(remoteWebElement.getAttribute("password")));

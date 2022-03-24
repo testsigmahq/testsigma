@@ -40,7 +40,10 @@ public class OnPremiseStorageService extends StorageService {
 
   private String getFilePathRelativeToRoot(String filePath) {
     if (!filePath.trim().toLowerCase().startsWith(FILE_PROTOCOL)) {
-      filePath = getRootDirectory() + File.separator + filePath;
+      if (getRootDirectory().contains("\\")) {
+        filePath = getRootDirectory() + filePath.replaceAll("/", "\\\\");
+      } else
+        filePath = getRootDirectory() + File.separator + filePath;
     } else {
       filePath = filePath.substring(5);
     }
@@ -116,7 +119,7 @@ public class OnPremiseStorageService extends StorageService {
     Optional<URL> returnURL = Optional.empty();
     String rootDirectory = getRootDirectory();
     if (rootDirectory.contains("\\")){
-     relativeFilePathFromBase = relativeFilePathFromBase.replaceAll("/","\\");
+     relativeFilePathFromBase = relativeFilePathFromBase.replaceAll("/","\\\\");
     }
     File file = Paths.get(rootDirectory, relativeFilePathFromBase).toFile();
     if (file.exists()) {

@@ -1,11 +1,10 @@
 <div class="list-container w-100 mt-n14" *ngIf="refreshedView">
   <cdk-virtual-scroll-viewport
     minBufferPx="10000" maxBufferPx="30000"
-    itemSize="63" class="virtual-scroll-viewport list-container"
+    itemSize="63" class="virtual-scroll-viewport list-container cdk-content"
     *ngIf="!isDragEnabled">
     <div
-      *ngIf="testSteps?.content?.length"
-      class="drag-list pr-45 py-10">
+      class="pr-45">
       <app-action-test-step-list-item
         class="w-100 scroll-item flex-wrap"
         *cdkVirtualFor='let testStep of testSteps?.content; let stepNumber = index; trackBy: trackByIdx'

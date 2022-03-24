@@ -4,7 +4,7 @@
     <input #searchInput class="form-control border-0 ts-col-85"
            [placeholder]="'common.place_holder.search' | translate"/>
     <button class="theme-btn-clear-default" (click)="selectSuites()"
-            [translate]="'test_plan.environment.select_suite.title'"></button>
+            [innerHTML]="'test_plan.environment.select_suite.title'| translate"></button>
   </div>
   <div class="list-container lg-h theme-w-o-h-scroll" *ngIf="suitesList?.totalElements">
     <cdk-virtual-scroll-viewport

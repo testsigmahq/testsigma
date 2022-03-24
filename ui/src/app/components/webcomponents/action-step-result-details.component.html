@@ -110,6 +110,10 @@
         </div>
           <div *ngIf="testStepResult?.isOpen && getElementDetails()" class="ts-col-100">
             <div class="details-item ts-col-100  align-item-center">
+              <span [translate]="'elements.name'" class="details-title ts-col-30 rb-medium"></span>
+              <span class="details-info m-0 pl-5" [textContent]="elementName"></span>
+            </div>
+            <div class="details-item ts-col-100  align-item-center">
               <span [translate]="'common.value'" class="details-title ts-col-30 rb-medium"></span>
               <span class="details-info m-0 pl-5" [textContent]="elementValue"></span>
             </div>

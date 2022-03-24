@@ -4,7 +4,6 @@ import {TestStepType} from "../../enums/test-step-type.enum";
 import {MatDialog} from "@angular/material/dialog";
 import {ElementFormComponent} from "./element-form.component";
 import {ScreenShortOverlayComponent} from "./screen-short-overlay.component";
-import {ElementAutoHealingListComponent} from "./element-auto-healing-list.component";
 import {defaultPageScrollConfig, PageScrollService} from "ngx-page-scroll-core";
 import {DOCUMENT} from "@angular/common";
 import {TestStepResultService} from "../../services/test-step-result.service";
@@ -25,7 +24,6 @@ import {AddonTestStepTestData} from "../../models/addon-test-step-test-data.mode
 import {TestDeviceResultService} from "../../shared/services/test-device-result.service";
 import {TestDeviceResult} from "../../models/test-device-result.model";
 import {UploadService} from "../../shared/services/upload.service";
-import {SubmitElementReviewComponent} from "./submit-element-review.component";
 
 @Component({
   selector: 'app-action-step-result-details',
@@ -131,7 +129,7 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
 
   getElementDetails() {
     if (!this.ElementDetails)
-      this.ElementDetails = this.getElements(this.testStepResult?.ElementDetails, true);
+      this.ElementDetails = this.getElements(this.testStepResult?.elementDetails, true);
     return this.ElementDetails.length || this.element?.locatorValue;//TODO Fallback element details need to clean
   }
 
@@ -349,6 +347,10 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
   }
 
   //TODO Fallback element details need to clean
+  get elementName(){
+    return this.ElementDetails[0]?.elementName ? this.ElementDetails[0]?.elementName : this.element.name;
+  }
+
   get elementValue() {
     return this.ElementDetails[0]?.locatorValue ? this.ElementDetails[0]?.locatorValue : this.element.locatorValue;
   }
@@ -358,16 +360,11 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
   }
 
   fetchElementDetails(elementName){
-    this.elementService.findAll('name:' + encodeURIComponent(elementName)
-      + ',workspaceVersionId:' + this.testStepResult.testCase.workspaceVersionId).subscribe(
-      (elements) => {
-        let currentStepElement = elements.content[0];
-        this.elementDetails = {
-          'element name': currentStepElement.name,
-          'locator type': currentStepElement.locatorType,
-          'locator': currentStepElement.locatorValue
-        };
-      });
+    this.elementDetails = {
+      'element name': this.testStepResult.elementDetails['element'].elementName,
+      'locator type': this.testStepResult.elementDetails['element'].locatorStrategyName,
+      'locator': this.testStepResult.elementDetails['element'].locatorValue
+    }
   }
 
   toggleElementDetails() {

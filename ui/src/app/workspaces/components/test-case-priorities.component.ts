@@ -157,7 +157,7 @@ export class TestCasePrioritiesComponent extends BaseComponent implements OnInit
         this.ngOnInit();
       },
       _err => this.translate.get('message.common.created.failure', {FieldName: "Test Case Priority"})
-        .subscribe(res => this.showAPIError(_err, res))
+        .subscribe(res => this.showAPIError(_err, res, 'Test Case Priority'))
     )
   }
 

@@ -60,7 +60,7 @@
         [cdkDropListData]="activeExecutionEnvironment?.testSuites" cdkDropList
         class="form-group border-rds-4 list-container">
         <div
-          [translate]="'test_plan.environment.select_suite.title'"
+          [innerHTML]="'test_plan.environment.select_suite.title'| translate"
           class="fz-14 rb-medium pb-10"
           [class.theme-border-b]="activeExecutionEnvironment?.testSuites?.length"></div>
         <div

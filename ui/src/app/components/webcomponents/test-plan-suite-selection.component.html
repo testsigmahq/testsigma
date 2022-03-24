@@ -159,7 +159,7 @@
       <div class="d-flex justify-content-between pb-10 theme-border-b">
         <div
           class="fz-14 rb-medium"
-          [translate]="'test_plan.environment.select_suite.title'"></div>
+          [innerHTML]="'test_plan.environment.select_suite.title'| translate"></div>
         <div *ngIf="version?.workspace?.isWeb && false">
           <button (click)="openCaseLevelParallelDialog()" type="button" cdkOverlayOrigin
                   [class.d-none]="version?.workspace?.isWeb && activeExecutionEnvironment?.testSuites.length == 0"

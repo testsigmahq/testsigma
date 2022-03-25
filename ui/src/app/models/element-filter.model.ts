@@ -4,6 +4,18 @@ import {PageObject} from "../shared/models/page-object";
 import {FilterQuery} from "./filter-query";
 import {FilterOperation} from "../enums/filter.operation.enum";
 import * as moment from "moment";
+function byPassSpecialCharacters(definition) {
+  return definition.replace(/\*/,"ts_asterisk")
+    .replace(/,/,"ts_comma")
+    .replace(/!/g, 'ts_negation')
+    .replace(/~/g, 'ts_like')
+    .replace(/:/g, 'ts_colon')
+    .replace(/;/g, 'ts_semicolon')
+    .replace(/>/g, 'ts_greater_than')
+    .replace(/</g, 'ts_lesser_than')
+    .replace(/@/g, 'ts_at_sign')
+    .replace(/\$/g, 'ts_dollar_sign');
+}
 
 export class ElementFilter extends Base implements PageObject {
   @serializable
@@ -14,6 +26,11 @@ export class ElementFilter extends Base implements PageObject {
     let filter: FilterQuery[] = [];
     v = JSON.parse(v);
     v.forEach(query => {
+      if(query["key"] == "locatorValue"){
+        query.value = "*" +
+          byPassSpecialCharacters(query.value.slice(1, query.value.length-1))
+          + "*";
+      }
       filter.push(new FilterQuery().deserialize(query));
     });
     return filter;
@@ -83,6 +100,8 @@ export class ElementFilter extends Base implements PageObject {
       } else {
         normalizedQuery.value = query.split(separator)[1];
       }
+      if (normalizedQuery.key == "locatorValue")
+          normalizedQuery.value = decodeURIComponent(<string>normalizedQuery.value);
 
       normalizedQueryHash.push(normalizedQuery);
     });
@@ -107,13 +126,20 @@ export class ElementFilter extends Base implements PageObject {
       queryString += ",updatedDate<" + moment(<number>this.normalizedQuery.find(query => query.key == "updatedDate" && query.operation == FilterOperation.LESS_THAN).value).format("YYYY-MM-DD");
     if (this.normalizedQuery.find(query => query.key == "updatedDate" && query.operation == FilterOperation.GREATER_THAN))
       queryString += ",updatedDate>" + moment(<number>this.normalizedQuery.find(query => query.key == "updatedDate" && query.operation == FilterOperation.GREATER_THAN).value).format("YYYY-MM-DD");
-    if (this.normalizedQuery.find(query => query.key == "definition"))
-      queryString += ",locatorValue:" + this.normalizedQuery.find(query => query.key == "definition").value
+    if (this.normalizedQuery.find(query => query.key == "locatorValue")) {
+      queryString += ",locatorValue:" +
+        byPassSpecialCharacters(this.normalizedQuery.find(query => query.key == "locatorValue").value.toString())
+        + "*";
+    }
     if (this.normalizedQuery.find(query => query.key == "tagId"))
       queryString += ",tagId@" + (<number[]>this.normalizedQuery.find(query => query.key == "tagId").value).join("#")
     if (this.normalizedQuery.find(query => query.key == "isUsed"))
       queryString += ",isUsed:" + this.normalizedQuery.find(query => query.key == "isUsed").value;
     return queryString;
+  }
+
+  byPassSpecialCharacters(definition){
+    return byPassSpecialCharacters(definition);
   }
 
   deserialize(input: any): this {

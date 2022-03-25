@@ -87,7 +87,7 @@ export class ElementFiltersComponent extends BaseComponent implements OnInit {
   constructQueryString() {
     let queryString = "";
     if (this.filterLocatorValue)
-      queryString += ",locatorValue:*" + encodeURIComponent(this.filterLocatorValue) + "*";
+      queryString += ",locatorValue:*" +encodeURIComponent(new ElementFilter().byPassSpecialCharacters(this.filterLocatorValue))  + "*";
     if (this.filterScreenName)
       queryString += ",screenName:*" + encodeURIComponent(this.filterScreenName) + "*"
     if (this.filterName)
@@ -144,10 +144,9 @@ export class ElementFiltersComponent extends BaseComponent implements OnInit {
       this.filterScreenName =  this.filterScreenName.includes("*")? this.filterScreenName.split("*")[1] : this.filterScreenName;
       this.filterScreenName = decodeURIComponent(this.filterScreenName);
     }
-    if (this.data.filter.normalizedQuery.find(query => query.key == "definition")) {
-      this.filterLocatorValue = <string>this.data.filter.normalizedQuery.find(query => query.key == "definition").value;
+    if (this.data.filter.normalizedQuery.find(query => query.key == "locatorValue")) {
+      this.filterLocatorValue = <string>this.data.filter.normalizedQuery.find(query => query.key == "locatorValue").value;
       this.filterLocatorValue = this.decodeCustomSpecialCharacters(decodeURIComponent(this.filterLocatorValue.split("*")[1]));
-
     }
     if (this.data.filter.normalizedQuery.find(query => query.key == "createdDate" && query.operation == FilterOperation.LESS_THAN))
       this.createdDateRange.controls['end'].setValue(moment(<number>this.data.filter.normalizedQuery.find(query => query.key == "createdDate" && query.operation == FilterOperation.LESS_THAN).value).format("YYYY-MM-DD"));

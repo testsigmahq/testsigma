@@ -48,7 +48,7 @@ export class ElementFilterFormComponent extends BaseComponent implements OnInit 
   save(): void {
     let filter = this.filter;
     filter.queryHash.forEach( (queryHash, i) => {
-      if(queryHash.key == "definition") {
+      if(queryHash.key == "locatorValue") {
         filter.queryHash[i].value = this.decodeCustomSpecialCharacters(queryHash.value.toString())
       }
     })

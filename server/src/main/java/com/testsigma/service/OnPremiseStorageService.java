@@ -100,6 +100,8 @@ public class OnPremiseStorageService extends StorageService {
       String token = jwtTokenService.generateAttachmentToken(relativeFilePathFromBase, cal.getTime(), getHttpMethod(storageAccessLevel));
       MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
       queryParams.add(STORAGE_SIGNATURE, token);
+      if (relativeFilePathFromBase.contains("\\"))
+          relativeFilePathFromBase = relativeFilePathFromBase.replaceAll("\\\\", "/");
       UriComponents uriComponents =
         UriComponentsBuilder.fromUriString(URLConstants.PRESIGNED_BASE_URL + "/{key}").queryParams(queryParams)
           .build().expand(relativeFilePathFromBase).encode();

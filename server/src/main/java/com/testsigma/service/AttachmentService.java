@@ -98,7 +98,7 @@ public class AttachmentService extends XMLExportService<Attachment> {
     String originalFileName = Objects.requireNonNull(fileContent.getOriginalFilename()).replaceAll("\\s+", "_");
     StringBuffer path = new StringBuffer(attachmentRequest.getEntity().replaceAll("_", "-")).append(File.separator)
       .append(attachmentRequest.getEntityId()).append(File.separator).append(originalFileName);
-    String s3Key = "/attachments/" + attachmentRequest.getEntity().replaceAll("_", "-") + "/" + attachmentRequest.getEntityId() + "/" + originalFileName;
+    String s3Key = "attachments/" + attachmentRequest.getEntity().replaceAll("_", "-") + "/" + attachmentRequest.getEntityId() + "/" + originalFileName;
     InputStream myInputStream = new ByteArrayInputStream(fileContent.getBytes());
     storageServiceFactory.getStorageService().addFile(s3Key, myInputStream);
     Attachment attachment = attachmentMapper.map(attachmentRequest);

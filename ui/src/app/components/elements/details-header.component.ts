@@ -128,7 +128,7 @@ export class DetailsHeaderComponent extends BaseComponent implements OnInit {
   checkForLinkedTestCases() {
     let testCases: InfiniteScrollableDataSource;
     testCases = new InfiniteScrollableDataSource(this.testCaseService, "workspaceVersionId:" +
-      this.element.workspaceVersionId + ",deleted:false,element:" + this.element.name);
+      this.element.workspaceVersionId + ",element:" + this.element.name);
     waitTillRequestResponds();
     let _this = this;
 

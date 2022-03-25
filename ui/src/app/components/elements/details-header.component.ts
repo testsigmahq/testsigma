@@ -145,7 +145,7 @@ export class DetailsHeaderComponent extends BaseComponent implements OnInit {
   }
 
   private openLinkedTestCasesDialog(list) {
-    this.translate.get("elements.linked_with_cases").subscribe((res) => {
+    this.translate.get("elements_linked_with_cases").subscribe((res) => {
       this.matDialog.open(LinkedEntitiesModalComponent, {
         width: '568px',
         height: 'auto',

@@ -127,7 +127,7 @@ public abstract class XMLExportService<T> {
   public void exportToStorage(BackupDetail backupDetail) throws IOException {
     File outputFile = null;
     try {
-      String s3Key = "backup/" + backupDetail.getName();
+      String s3Key = "/backup/" + backupDetail.getName();
       log.debug("backup zip process initiated");
       outputFile = new ZipUtil().zipFile(backupDetail.getSrcFiles(), fileName, backupDetail.getDestFiles());
       log.debug("backup zip process completed");

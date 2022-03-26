@@ -123,7 +123,9 @@ public class OnPremiseStorageService extends StorageService {
     Optional<URL> returnURL = Optional.empty();
     String rootDirectory = getRootDirectory();
     if (rootDirectory.contains("\\")){
-     relativeFilePathFromBase = relativeFilePathFromBase.replaceAll("/","\\\\");
+      relativeFilePathFromBase = String.valueOf(rootDirectory.charAt(rootDirectory.length() - 1)).equals("\\") ? rootDirectory +
+              relativeFilePathFromBase.replaceAll("/", "\\\\").substring(1) :
+              rootDirectory + relativeFilePathFromBase.replaceAll("/", "\\\\");
     }
     File file = Paths.get(rootDirectory, relativeFilePathFromBase).toFile();
     if (file.exists()) {

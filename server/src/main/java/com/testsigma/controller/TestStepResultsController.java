@@ -61,7 +61,7 @@ public class TestStepResultsController {
     TestStepResult testStepResult = testStepResultService.find(id);
     if (testStepResult.getScreenshotName() != null) {
       String fileFullPath =
-        "executions/" + testStepResult.getTestCaseResultId() + "/" + testStepResult.getScreenshotName();
+        "/executions/" + testStepResult.getTestCaseResultId() + "/" + testStepResult.getScreenshotName();
       Calendar cal = Calendar.getInstance();
       cal.add(Calendar.MINUTE, 10);
       URL preSignedURL = storageServiceFactory.getStorageService().generatePreSignedURL(fileFullPath, StorageAccessLevel.READ);

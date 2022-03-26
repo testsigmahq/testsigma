@@ -19,15 +19,14 @@ import com.testsigma.model.Upload;
 import com.testsigma.repository.BackupDetailRepository;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -131,7 +130,8 @@ public abstract class XMLExportService<T> {
       log.debug("backup zip process initiated");
       outputFile = new ZipUtil().zipFile(backupDetail.getSrcFiles(), fileName, backupDetail.getDestFiles());
       log.debug("backup zip process completed");
-      storageServiceFactory.getStorageService().addFile(s3Key, outputFile);
+      InputStream fileInputStream = new ByteArrayInputStream(FileUtils.readFileToByteArray(outputFile));
+      storageServiceFactory.getStorageService().addFile(s3Key, fileInputStream);
       backupDetail.setStatus(BackupStatus.SUCCESS);
       backupDetail.setMessage(MessageConstants.BACKUP_IS_SUCCESS);
       backupDetailsRepository.save(backupDetail);

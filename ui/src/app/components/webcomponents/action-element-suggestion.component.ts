@@ -316,7 +316,7 @@ export class ActionElementSuggestionComponent implements OnInit {
     dialogRef.afterClosed()
       .subscribe((res) => {
         if (res) {
-          this.fetchElement();
+          this.dialogRef.close(res);
         }
       });
   }

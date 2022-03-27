@@ -44,8 +44,9 @@ public class OnPremiseStorageService extends StorageService {
       if (root.contains("\\")) {
         filePath = String.valueOf(root.charAt(root.length() - 1)).equals("\\") ? root +
                 filePath.replaceAll("/", "\\\\").substring(1) : root + filePath.replaceAll("/", "\\\\");
+        filePath =  filePath.substring(0, 8) + filePath.substring(8).replaceAll ("\\\\\\\\", "\\\\");
       } else
-        filePath = getRootDirectory() + File.separator + filePath;
+        filePath = root + File.separator + filePath;
     } else {
       filePath = filePath.substring(5);
     }

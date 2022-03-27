@@ -82,10 +82,10 @@ export class DetailsComponent extends BaseComponent implements OnInit {
 
   public fetchLinkedCases() {
     let testCases: InfiniteScrollableDataSource;
-    testCases = new InfiniteScrollableDataSource(this.testCaseService, "workspaceVersionId:" + this.versionId + ",deleted:false,testDataId:" + this.testDataId);
+    testCases = new InfiniteScrollableDataSource(this.testCaseService, "workspaceVersionId:" + this.versionId + ",testDataId:" + this.testDataId);
 
     let testCasesWithProfileInForLoop :InfiniteScrollableDataSource;
-    testCasesWithProfileInForLoop = new InfiniteScrollableDataSource(this.testCaseService, "workspaceVersionId:" + this.versionId + ",deleted:false,forLoopTestDataId:" + this.testDataId);
+    testCasesWithProfileInForLoop = new InfiniteScrollableDataSource(this.testCaseService, "workspaceVersionId:" + this.versionId + ",forLoopTestDataId:" + this.testDataId);
 
     waitTillRequestResponds();
     let _this = this;

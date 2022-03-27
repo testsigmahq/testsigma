@@ -77,6 +77,8 @@ public class TestDataProfileService extends XMLExportService<TestData> {
 
   public void destroy(Long id) throws ResourceNotFoundException {
     TestData testData = this.find(id);
+    Long count = testDataProfileRepository.countAllTestDataProfilesUsedInForLoopSteps(testData.getVersionId(),id);
+    if (count > 0) return;
     this.testDataProfileRepository.delete(testData);
     publishEvent(testData, EventType.DELETE);
   }

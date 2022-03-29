@@ -24,11 +24,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -78,7 +81,7 @@ public class TestDataProfileService extends XMLExportService<TestData> {
   public void destroy(Long id) throws ResourceNotFoundException {
     TestData testData = this.find(id);
     Long count = testDataProfileRepository.countAllTestDataProfilesUsedInForLoopSteps(testData.getVersionId(),id);
-    if (count > 0) return;
+    if (count > 0) throw new DataIntegrityViolationException("Cannot delete or update a parent row");
     this.testDataProfileRepository.delete(testData);
     publishEvent(testData, EventType.DELETE);
   }

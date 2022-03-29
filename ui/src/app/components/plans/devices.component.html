@@ -4,7 +4,7 @@
     <input #searchInput class="form-control border-0 ts-col-85"
            [placeholder]="'common.place_holder.search' | translate"/>
     <button class="theme-btn-clear-default"
-            [innerHTML]="isMobile ? 'test_plan.environment.device.title' : 'test_plan.environment.machine.title' | translate"
+            [translate]="isMobile ? 'test_plan.environment.device.title' : 'test_plan.environment.machine.title'"
             (click)="openSelectTestMachineForm(executionEnvironments?.cachedItems[0])"></button>
   </div>
   <div class="list-container theme-w-o-h-scroll lg-h" *ngIf="!executionEnvironments.isEmpty">

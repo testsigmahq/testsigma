@@ -3,7 +3,7 @@
   class="form-group pb-lg">
   <div
     class="fz-14 rb-medium pb-30"
-    [innerHTML]="'test_plan.environment.device.title'|translate"></div>
+    [translate]="'test_plan.environment.device.title'"></div>
   <div class="d-flex align-items-center" *ngIf="testPlanLabType && !isHybrid">
     <div
       class="ts-col-20 pr-14" *ngIf="version?.workspace?.isMobileWeb">

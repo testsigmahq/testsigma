@@ -1088,7 +1088,7 @@ public class AgentExecutionService {
       } else {
         index = (testCaseStepEntity.getIndex() == null) ? 0 : testCaseStepEntity.getIndex();
       }
-      String screenShotPath = String.format("executions/%s/%s_%s_%s_%s.%s", testCaseEntity.getTestCaseResultId(),
+      String screenShotPath = String.format("/executions/%s/%s_%s_%s_%s.%s", testCaseEntity.getTestCaseResultId(),
         testCaseStepEntity.getId(), stepGroupStepID, testCaseStepEntity.getPosition(), index, "jpeg");
 
       URL presignedURL = storageService.generatePreSignedURL(screenShotPath, StorageAccessLevel.WRITE, 600);
@@ -1125,7 +1125,7 @@ public class AgentExecutionService {
       } else {
         index = (testCaseStep.getIndex() == null) ? 0 : testCaseStep.getIndex();
       }
-      String screenShotPath = String.format("executions/%s/%s_%s_%s_%s_%s.%s", testCaseEntity.getTestCaseResultId(),
+      String screenShotPath = String.format("/executions/%s/%s_%s_%s_%s_%s.%s", testCaseEntity.getTestCaseResultId(),
         testCaseStep.getId(), parentGroupStepId, iteration, testCaseStep.getPosition(), index, "jpeg");
       URL preSignedURL = storageService.generatePreSignedURL(screenShotPath, StorageAccessLevel.WRITE, 600);
       String iterationKey = String.format("%s_%s", iteration, testCaseStep.getIndex());

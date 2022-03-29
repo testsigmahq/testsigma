@@ -41,7 +41,7 @@ public class OnPremiseStorageService extends StorageService {
   private String getFilePathRelativeToRoot(String filePath) {
     if (!filePath.trim().toLowerCase().startsWith(FILE_PROTOCOL)) {
       String root = getRootDirectory();
-      if (root.contains("\\")) {
+      if (root.contains("\\") || root.contains("\\\\")) {
         filePath = String.valueOf(root.charAt(root.length() - 1)).equals("\\") ? root +
                 filePath.replaceAll("/", "\\\\").substring(1) : root + filePath.replaceAll("/", "\\\\");
         filePath =  filePath.substring(0, 8) + filePath.substring(8).replaceAll ("\\\\\\\\", "\\\\");
@@ -103,8 +103,9 @@ public class OnPremiseStorageService extends StorageService {
       String token = jwtTokenService.generateAttachmentToken(relativeFilePathFromBase, cal.getTime(), getHttpMethod(storageAccessLevel));
       MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
       queryParams.add(STORAGE_SIGNATURE, token);
-      if (relativeFilePathFromBase.contains("\\"))
+      if (relativeFilePathFromBase.contains("\\") || relativeFilePathFromBase.contains("\\\\") )
           relativeFilePathFromBase = relativeFilePathFromBase.replaceAll("\\\\", "/");
+          relativeFilePathFromBase = relativeFilePathFromBase.replaceAll("\\\\\\\\", "/");
       UriComponents uriComponents =
         UriComponentsBuilder.fromUriString(URLConstants.PRESIGNED_BASE_URL + "/{key}").queryParams(queryParams)
           .build().expand(relativeFilePathFromBase).encode();
@@ -123,8 +124,9 @@ public class OnPremiseStorageService extends StorageService {
     log.debug("Generating File URL if exists:" + relativeFilePathFromBase);
     Optional<URL> returnURL = Optional.empty();
     String rootDirectory = getRootDirectory();
-    if (rootDirectory.contains("\\")){
-      relativeFilePathFromBase = String.valueOf(rootDirectory.charAt(rootDirectory.length() - 1)).equals("\\") ?
+    if (rootDirectory.contains("\\") || rootDirectory.contains("\\\\") ){
+      String lastChar = String.valueOf(rootDirectory.charAt(rootDirectory.length() - 1));
+      relativeFilePathFromBase = lastChar.equals("\\") || lastChar.equals("\\\\")  ?
               relativeFilePathFromBase.replaceAll("/", "\\\\").substring(1) :
               relativeFilePathFromBase.replaceAll("/", "\\\\");
     }

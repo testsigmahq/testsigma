@@ -67,6 +67,6 @@ export class Element extends Base implements PageObject {
   }
 
   get locatorValueWithSpecialCharacters() {
-    return this.locatorValue.replace(/\*/, 'ts_asterisk').replace(/,/, 'ts_comma');
+    return this.locatorValue?.replace(/\*/, 'ts_asterisk').replace(/,/, 'ts_comma');
   }
 }

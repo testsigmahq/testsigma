@@ -61,7 +61,7 @@ public class AdditionalPropertiesConfig {
   public void init() {
     try {
       touchConfigFile();
-      log.info("Using authentication.properties file from - " + testsigmaDataPath);
+      log.info("Using authentication.properties file from - " + testsigmaDataPath +" - "+ System.getProperty("TS_DATA_DIR"));
       String propertiesPath = testsigmaDataPath + File.separator + "authentication.properties";
       Properties properties = AdditionalPropertiesConfig.loadProperties(new FileInputStream(propertiesPath));
       this.populateMissingValues(properties);
@@ -73,7 +73,7 @@ public class AdditionalPropertiesConfig {
   }
 
   private void touchConfigFile() {
-    log.info("Touching authentication.properties file from - " + testsigmaDataPath);
+    log.info("Touching authentication.properties file from - " + testsigmaDataPath +" - "+ System.getProperty("TS_DATA_DIR"));
     File configFile = new File(testsigmaDataPath + File.separator + "authentication.properties");
     try {
       FileUtils.touch(configFile);

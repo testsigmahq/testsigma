@@ -70,9 +70,13 @@ public class TestSuitesController {
   @ResponseStatus(HttpStatus.ACCEPTED)
   public TestSuiteDTO update(@PathVariable(value = "id") Long id, @RequestBody TestSuiteRequest request) throws TestsigmaException {
     TestSuite testSuite = this.testSuiteService.find(id);
+    Long preRequisiteId = testSuite.getPreRequisite();
     testSuiteMapper.merge(request, testSuite);
     testSuite.setUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
     testSuite = this.testSuiteService.update(testSuite);
+    if(testSuite.getPreRequisite()!=null && !testSuite.getPreRequisite().equals(preRequisiteId)) {
+      testSuiteService.handlePrequisiteChange(testSuite);
+    }
     return testSuiteMapper.mapToDTO(testSuite);
   }
 

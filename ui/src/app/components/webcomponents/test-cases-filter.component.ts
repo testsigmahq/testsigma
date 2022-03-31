@@ -64,7 +64,10 @@ export class TestCasesFilterComponent implements OnInit {
   });
   maxDate = new Date();
   @Output('filterAction') filterEvent = new EventEmitter<string>();
-
+  public disableStatus:boolean = false;
+  public disableTestcaseType:boolean = false;
+  public disablePriority:boolean = false;
+  public disableRunResult:boolean = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { version: WorkspaceVersion, filter: TestCaseFilter, query: string, isStepGroup:boolean },
@@ -104,6 +107,14 @@ export class TestCasesFilterComponent implements OnInit {
     this.fetchTestCaseTypes();
     this.fetchTestCasePriorities();
     this.fetchTags();
+    this.disableSingleSelectedFields();
+  }
+
+  disableSingleSelectedFields(){
+    if (this.filterStatuses.length == 1) this.disableStatus = true;
+    if (this.filterTestCaseTypes.length ==1) this.disableTestcaseType = true;
+    if (this.filterTestCasePriorities.length ==1) this.disablePriority = true;
+    if (this.filterByResult.length ==1) this.disableRunResult = true;
   }
 
   constructQueryString() {

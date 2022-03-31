@@ -26,6 +26,10 @@ import {Page} from "../../shared/models/page";
 import {TestCaseStatus} from "../../enums/test-case-status.enum";
 import {Pageable} from "../../shared/models/pageable";
 import {ToastrService} from "ngx-toastr";
+import {InfiniteScrollableDataSource} from "../../data-sources/infinite-scrollable-data-source";
+import {TestPlanService} from "../../services/test-plan.service";
+import {LinkedEntitiesModalComponent} from "../../shared/components/webcomponents/linked-entities-modal.component";
+import {PrerequisiteChangeComponent} from "../../shared/components/webcomponents/prerequisite-change.component";
 
 @Component({
   selector: 'app-form',
@@ -51,6 +55,7 @@ export class FormComponent extends BaseComponent implements OnInit {
   public suiteList: Page<TestSuite>;
   public tagsFiltered: boolean = false;
   currentPage = new Pageable();
+  private originalPreRequisite: number;
 
   constructor(
     public authGuard: AuthenticationGuard,
@@ -64,6 +69,7 @@ export class FormComponent extends BaseComponent implements OnInit {
     private testCaseService: TestCaseService,
     private testSuiteService: TestSuiteService,
     private testSuiteTagService: TestSuiteTagService,
+    private testPlanService: TestPlanService,
     private location: Location) {
     super(authGuard, notificationsService, translate, toastrService);
   }
@@ -104,6 +110,7 @@ export class FormComponent extends BaseComponent implements OnInit {
   fetchSuite() {
     this.testSuiteService.show(this.testSuiteId).subscribe(suite => {
       this.testSuite = suite;
+      this.originalPreRequisite = suite.preRequisite;
       this.currentPage.pageSize = 1000;
       this.testCaseService.findAll("suiteId:"+this.testSuiteId, '', this.currentPage).subscribe(res => {
         this.activeTestCases = res.content;
@@ -124,12 +131,60 @@ export class FormComponent extends BaseComponent implements OnInit {
   update() {
     this.formSubmitted = true;
     if (this.testSuiteForm.invalid) return;
+    if (this.testSuite.preRequisite != this.originalPreRequisite)
+      this.fetchLinkedPlans(this.testSuite.id);
+    else
+      this.populateAndUpdate();
+  }
+
+  public fetchLinkedPlans(id) {
+    let testPlans: InfiniteScrollableDataSource;
+    testPlans = new InfiniteScrollableDataSource(this.testPlanService, "suiteId:" + id , "name,asc" );
+    waitTillRequestResponds();
+    let _this = this;
+
+    function waitTillRequestResponds() {
+      if (testPlans.isFetching)
+        setTimeout(() => waitTillRequestResponds(), 100);
+      else {
+        if (!testPlans.isEmpty)
+          _this.openPrerequisiteChangeWarning(testPlans);
+        else
+          _this.populateAndUpdate();
+      }
+    }
+  }
+
+  private openPrerequisiteChangeWarning(executions) {
+    let description = this.translate.instant('test_suites.prerequisite_linked_with_plans');
+    const dialogRef = this.matDialog.open(PrerequisiteChangeComponent, {
+      width: '568px',
+      height: 'auto',
+      data: {
+        description: description,
+        executions: executions,
+      },
+      panelClass: ['mat-dialog', 'rds-none']
+    });
+    dialogRef.afterClosed()
+      .subscribe(result => {
+        if (result) {
+          this.populateAndUpdate(executions);
+        } else {
+          this.formSubmitted = false;
+        }
+      });
+  }
+
+  populateAndUpdate(executions?) {
     this.populateTestSuiteRequest();
     this.testSuiteService.update(this.testSuite).subscribe(
       () => {
-        console.log("TestSuite"+this.testSuite.tags);
-        this.translate.get('message.common.update.success', {FieldName: "Test Suite"})
-          .subscribe(res => this.showNotification(NotificationType.Success, res));
+        let msg = this.testSuite.preRequisite == this.originalPreRequisite || !Boolean(executions)?
+          this.translate.instant('message.common.update.success', {FieldName: "Test Suite"}):
+          this.translate.instant('test_suite.prerequisite.update.success', {SuiteName: this.testSuite.name,
+            executions:(executions.cachedItems.map(execution=>execution.name).join(", ") )+ (executions.cachedItems.length==executions.totalElements?"":", ...")});
+        this.showNotification(NotificationType.Success, msg);
         this.router.navigate(['/td', 'suites', this.testSuite.id])
       },
       err => {

@@ -51,6 +51,7 @@ public class DryTestPlansController {
     testDevice.setTitle(new Timestamp(Calendar.getInstance().getTimeInMillis()).toString());
     testDevice.setCreatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
     testDevice.setTestPlanId(dryTestPlan.getId());
+    testDevice.setId(null);
     dryTestPlan = this.service.create(dryTestPlan, testDevice);
     AgentExecutionService agentExecutionService = agentExecutionServiceObjectFactory.getObject();
     agentExecutionService.setTestPlan(dryTestPlan);

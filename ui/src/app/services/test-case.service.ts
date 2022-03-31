@@ -114,7 +114,10 @@ export class TestCaseService implements FilterableDataSourceService {
   }
 
   restore(testCaseId: number): Observable<void> {
-    return this.http.put<void>(this.URLConstants.testCasesUrl + '/' + testCaseId + '/restore', {});
+    return this.http.put<void>(this.URLConstants.testCasesUrl + '/' + testCaseId + '/restore', {}).pipe(
+      map(_data => {}),
+      catchError((error) => throwError(error))
+    );
   }
 
   copy(copyRequest: { name: string; stepIds?: number[]; testCaseId: number,  isStepGroup: boolean}) : Observable<TestCase>{

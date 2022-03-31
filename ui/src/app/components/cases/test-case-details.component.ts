@@ -191,7 +191,7 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
             this.showNotification(NotificationType.Error, error.error);
           } else {
             this.translate.get("message.common.restore.failure", {FieldName: this.isGroup }).subscribe((res: string) => {
-              this.showNotification(NotificationType.Error, res);
+              this.showAPIError(error, res, this.isGroup);
             });
           }
         }

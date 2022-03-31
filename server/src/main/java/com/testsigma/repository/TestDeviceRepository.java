@@ -43,4 +43,9 @@ public interface TestDeviceRepository extends BaseRepository<TestDevice, Long> {
   @Modifying
   @Query(value = "UPDATE test_devices td INNER JOIN test_plans tp ON td.test_plan_id = tp.id SET td.agent_id = NULL WHERE td.agent_id = :agentId and tp.entity_type = 'ADHOC_TEST_PLAN'", nativeQuery = true)
   void resetAgentIdToNull(@Param("agentId") Long agentId);
+
+  @Query("SELECT testDevice FROM TestDevice testDevice " +
+          " LEFT JOIN TestDeviceSuite testDeviceSuite ON testDevice.id = testDeviceSuite.testDeviceId " +
+          " WHERE testDeviceSuite.suiteId =:suiteId")
+  List<TestDevice> findAllByTestSuiteId(Long suiteId);
 }

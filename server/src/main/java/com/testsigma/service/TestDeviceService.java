@@ -92,7 +92,7 @@ public class TestDeviceService extends XMLExportService<TestDevice> {
     this.testDeviceRepository.deleteAllByIds(executionEnvironmentIds);
   }
 
-  private void handleEnvironmentSuiteMappings(TestDevice testDevice) {
+  public void handleEnvironmentSuiteMappings(TestDevice testDevice) {
     int position = 0;
     List<TestDeviceSuite> newMappings = new ArrayList<>();
     List<TestDeviceSuite> updatedMappings = new ArrayList<>();
@@ -177,5 +177,9 @@ public class TestDeviceService extends XMLExportService<TestDevice> {
 
   public void resetAgentIdToNull(Long agentId) {
     this.testDeviceRepository.resetAgentIdToNull(agentId);
+  }
+
+  public List<TestDevice> findAllByTestSuiteId(Long id) {
+    return testDeviceRepository.findAllByTestSuiteId(id);
   }
 }

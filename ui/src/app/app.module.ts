@@ -251,6 +251,7 @@ import {FreshChatWidgetComponent} from "./components/webcomponents/fresh-chat-wi
 import {ClickUpIssueFormComponent} from "./components/webcomponents/click-up-issue-form.component";
 import {ClickUpIssueDetailsComponent} from "./components/webcomponents/click-up-issue-details.component";
 import {DuplicateLocatorWarningComponent} from "./components/webcomponents/duplicate-locator-warning.component";
+import {PrerequisiteChangeComponent} from "./shared/components/webcomponents/prerequisite-change.component";
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -481,7 +482,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     FreshChatWidgetComponent,
     ClickUpIssueFormComponent,
     ClickUpIssueDetailsComponent,
-    DuplicateLocatorWarningComponent
+    DuplicateLocatorWarningComponent,
+    PrerequisiteChangeComponent
   ],
   imports: [
     BrowserModule,

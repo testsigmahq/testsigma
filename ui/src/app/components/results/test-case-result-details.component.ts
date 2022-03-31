@@ -164,11 +164,19 @@ export class TestCaseResultDetailsComponent extends BaseComponent implements OnI
         console.log("TestCaseResult", this.testCaseResult);
         this.isTestCaseFetchingCompleted = true;
         this.handleAutoRefresh();
+        this.fetchEnvironment();
       }
       if (this.testCaseResult?.testCaseId) {
         this.postTestCaseFetch();
       }
     })
+  }
+
+  fetchEnvironment() {
+    if (this.testCaseResult.testDeviceResult.testPlanResult.environmentId)
+      this.environmentService.show(this.testCaseResult.testDeviceResult.testPlanResult.environmentId).subscribe(res => {
+        this.testCaseResult.testDeviceResult.testPlanResult.environment = res;
+      });
   }
 
   handleAutoRefresh() {

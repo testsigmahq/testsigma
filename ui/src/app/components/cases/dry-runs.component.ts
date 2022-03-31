@@ -123,9 +123,8 @@ export class DryRunsComponent extends BaseComponent implements OnInit {
   reRun(execution: DryTestPlan) {
     this.inTransit=true;
     let dryExecution = new DryTestPlan().deserialize(execution.serialize());
-    this.executionEnvironmentService.findAll("testPlanId:"+execution.id).subscribe((res)=> {
-      dryExecution.environments = res.content;
       dryExecution.testCaseId = this.testCase.id;
+      dryExecution.environments = execution.environments;
       delete dryExecution.id;
       this.dryTestPlanService.create(dryExecution).subscribe((res: TestPlanResult) => {
         this.translate.get("execution.initiate.success").subscribe((message: string) => {
@@ -137,7 +136,6 @@ export class DryRunsComponent extends BaseComponent implements OnInit {
       }, error => {
         this.showAPIError(error, this.translate.instant("execution.initiate.failure"))
       })
-    });
   }
 
 

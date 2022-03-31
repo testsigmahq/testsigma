@@ -32,4 +32,7 @@ public interface TestDeviceSuiteRepository extends JpaRepository<TestDeviceSuite
 
   @Query("SELECT suiteMapping FROM TestDeviceSuite suiteMapping WHERE suiteMapping.suiteId IN (:suiteIds) and suiteMapping.testDeviceId = :testDeviceId ")
   List<TestDeviceSuite> findByTestDeviceIdAndSuiteIds(@Param("testDeviceId") Long testDeviceId, @Param("suiteIds") List<Long> suiteIds);
+
+  @Query("SELECT testDevice.suiteId FROM TestDeviceSuite testDevice WHERE testDevice.testDeviceId = :id ")
+  List<Long> findSuiteIdsByTestDeviceId(Long id);
 }

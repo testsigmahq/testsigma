@@ -33,4 +33,9 @@ public interface TestSuiteRepository extends PagingAndSortingRepository<TestSuit
 
   List<TestSuite> findAllByPreRequisite(Long prerequisite);
 
+  @Query("SELECT testSuite FROM TestSuite testSuite " +
+          " LEFT JOIN SuiteTestCaseMapping suiteTestCaseMapping ON testSuite.id = suiteTestCaseMapping.suiteId " +
+          " WHERE suiteTestCaseMapping.testCaseId =:testCaseId")
+  List<TestSuite> findAllByTestCaseId(Long testCaseId);
+
 }

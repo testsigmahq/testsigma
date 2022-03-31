@@ -49,6 +49,6 @@ public class TestPlanDTO {
   Boolean retrySessionCreation;
   Integer retrySessionCreationTimeout;
   private Long lastRunId;
-  private List<TestDeviceDTO> environments = new ArrayList<>();
+  private List<TestDeviceDTO> testDevices = new ArrayList<>();
   private String entityType;
 }

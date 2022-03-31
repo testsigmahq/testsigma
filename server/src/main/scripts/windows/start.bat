@@ -21,4 +21,14 @@ IF NOT EXIST %TS_DATA_DIR% (
     mkdir %TS_DATA_DIR%
 )
 
+IF EXIST %TS_ROOT_DIR%\authentication.properties (
+    IF NOT EXIST %TS_DATA_DIR%\authentication.properties (
+        echo %TS_ROOT_DIR%\authentication.properties
+        echo %TS_DATA_DIR%\authentication.properties
+        echo "Identified the misplaced authentication.properties. Copying to correct location"
+        copy %TS_ROOT_DIR%\authentication.properties %TS_DATA_DIR%\authentication.properties
+
+    )
+)
+
 "%TS_ROOT_DIR%\jre\bin\java" -Djavax.net.ssl.trustStoreType=WINDOWS-ROOT -DTS_DATA_DIR="%TS_DATA_DIR%" -Dlogging.level.="%LOGGING_LEVEL%" -cp "%WORKING_FOLDER%\lib\*;%MAIN_JAR_FILE%" com.testsigma.TestsigmaWebApplication

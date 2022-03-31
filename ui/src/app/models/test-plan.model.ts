@@ -63,7 +63,7 @@ export class TestPlan extends Base implements PageObject {
   public retrySessionCreation: Boolean;
   @serializable(optional())
   public retrySessionCreationTimeout: number;
-  @serializable(alias('testDevices',optional(list(object(TestDevice)))))
+  @serializable(optional(list(object(TestDevice))))
   public environments: TestDevice[];
 
   @serializable

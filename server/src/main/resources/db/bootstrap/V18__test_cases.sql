@@ -6,6 +6,7 @@ CREATE TABLE `test_cases`
   `end_time`               DATETIME            DEFAULT NULL,
   `is_data_driven`         BIT(1)     NOT NULL DEFAULT 0,
   `is_step_group`      BIT(1)     NOT NULL DEFAULT 0,
+  `is_active`              tinyint(1)          DEFAULT 1,
   `priority_id`            BIGINT(20)          DEFAULT NULL,
   `description`            TEXT                DEFAULT NULL,
   `name`                   VARCHAR(250)        DEFAULT NULL,

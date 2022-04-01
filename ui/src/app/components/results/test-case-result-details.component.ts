@@ -55,6 +55,7 @@ export class TestCaseResultDetailsComponent extends BaseComponent implements OnI
   public isParallelExecution: boolean = false;
   public startSync: boolean = false;
   public queueSizeErrorMessage: string;
+  public hasSteps: boolean = true;
 
   @ViewChild(RouterOutlet) outlet: RouterOutlet;
 
@@ -323,4 +324,8 @@ export class TestCaseResultDetailsComponent extends BaseComponent implements OnI
     return !!this.testCaseResult?.testDeviceResult?.testPlanResult?.dryTestPlan;
   }
 
+  setStepsCount(hasSteps:boolean){
+    this.hasSteps = hasSteps;
+    console.log(hasSteps);
+  }
 }

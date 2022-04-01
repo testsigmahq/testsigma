@@ -34,4 +34,5 @@ public class ElementDTO {
   private Timestamp updatedDate;
   private Long screenNameId;
   private ElementScreenNameDTO screenNameObj;
+  private Boolean isDuplicated;
 }

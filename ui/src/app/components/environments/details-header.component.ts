@@ -10,6 +10,9 @@ import { MatDialog } from '@angular/material/dialog';
 import {BaseComponent} from "../../shared/components/base.component";
 import {ConfirmationModalComponent} from "../../shared/components/webcomponents/confirmation-modal.component";
 import {ToastrService} from "ngx-toastr";
+import {InfiniteScrollableDataSource} from "../../data-sources/infinite-scrollable-data-source";
+import {LinkedEntitiesModalComponent} from "../../shared/components/webcomponents/linked-entities-modal.component";
+import {TestPlanService} from "../../services/test-plan.service";
 
 @Component({
   selector: 'app-details-header',
@@ -29,6 +32,7 @@ export class DetailsHeaderComponent extends BaseComponent implements OnInit {
     public translate: TranslateService,
     public toastrService: ToastrService,
     private environmentsService: EnvironmentService,
+    private testPlanService: TestPlanService,
     private route: ActivatedRoute,
     private router: Router,
     private matDialog: MatDialog) {
@@ -79,6 +83,38 @@ export class DetailsHeaderComponent extends BaseComponent implements OnInit {
           this.showAPIError(err, res);
         })
     );
+  }
+
+  checkForLinkedTestPlans() {
+    let testPlans: InfiniteScrollableDataSource;
+    testPlans = new InfiniteScrollableDataSource(this.testPlanService, ",environmentId:" + this.environmentId);
+    waitTillRequestResponds();
+    let _this = this;
+
+    function waitTillRequestResponds() {
+      if (testPlans.isFetching)
+        setTimeout(() => waitTillRequestResponds(), 100);
+      else {
+        if (testPlans.isEmpty)
+          _this.openDeleteDialog();
+        else
+          _this.openLinkedTestPlansDialog(testPlans);
+      }
+    }
+  }
+
+  private openLinkedTestPlansDialog(list) {
+    this.translate.get("environments.list.linked_with_test_plans").subscribe((res) => {
+      this.matDialog.open(LinkedEntitiesModalComponent, {
+        width: '568px',
+        height: 'auto',
+        data: {
+          description: res,
+          linkedEntityList: list,
+        },
+        panelClass: ['mat-dialog', 'rds-none']
+      });
+    });
   }
 
 }

@@ -50,14 +50,14 @@
             (change)="changeTriStateCheckBox(priorityCheckBox, bulkUpdateForm.get('priority'))">
             <span [translate]="'test_step.priority.MAJOR_STOP'"></span></mat-checkbox>
         </div>
-<!--        <div class="pb-10">-->
-<!--          <mat-checkbox-->
-<!--            #isMandatoryCheckBox-->
-<!--            name="isMandatory"-->
-<!--            [indeterminate]="bulkUpdateForm.get('isMandatory')?.value==null"-->
-<!--            (change)="changeTriStateCheckBox(isMandatoryCheckBox,bulkUpdateForm.get('isMandatory'))">-->
-<!--            <span [translate]="'test_step.results.mandatory_label'"></span></mat-checkbox>-->
-<!--        </div>-->
+      <div class="pb-10">
+        <mat-checkbox
+          #isIgnoreStepResult
+          name="ignoreStepResult"
+          [indeterminate]="bulkUpdateForm.get('ignoreStepResult')?.value==null"
+          (change)="changeTriStateCheckBox(isIgnoreStepResult,bulkUpdateForm.get('ignoreStepResult'))">
+          <span [translate]="'test_step.results.ignore_step_result_label'"></span></mat-checkbox>
+      </div>
         <div class="pb-20">
           <mat-checkbox
             #disabledCheckBox

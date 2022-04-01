@@ -27,6 +27,7 @@ public class AutomatorMessages {
   public final static String MSG_CONDITION_ELSE_IF_SUCCESS = "\"Else If\" condition matched to proceed with the steps under this condition.";
   public final static String MSG_CONDITION_ELSE_SUCCESS = "\"Else\" condition matched to proceed with the steps under this condition.";
   public static final String EXCEPTION_WEBDRIVER_NOTCREATED = "Unable to create a new Test Session due to unexpected failure(0x537). Please contact Support for more details.";
+  public static final String NO_PARALLEL_RUNS = "Parallel Executions Limit exceeded.Please upgrade to community edition for more parallel runs or Please contact support team for more details.";
   public static final String EXCEPTION_INVALID_PARAMETER_FORMAT = "Invalid value ?1 entered for parameter ?2 while executing the Custom Test Data Function \"?3\"";
   public static final String EXCEPTION_INVALID_CLASS_NAME = "Unsupported class \"?1\" used to generate test data from custom function";
   public static final String EXCEPTION_METHOD_NOT_FOUND = "No implementation found for this template";

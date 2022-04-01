@@ -15,7 +15,6 @@ import {AddonTestStepTestData} from "./addon-test-step-test-data.model";
 import {AddonElementData} from "./addon-element-data.model";
 import {ResultConstant} from "../enums/result-constant.enum";
 import {AddonNaturalTextActionParameter} from "./addons-parameter.model";
-import {StepDetailsDataMap} from "./step-details-data-map.model";
 
 export class TestStep extends Base implements PageObject {
   @serializable
@@ -152,11 +151,16 @@ export class TestStep extends Base implements PageObject {
     return v;
   }, v => v))
   public disabled: boolean;
+  @serializable(custom(v => {
+    if(v == null)
+      return false;
+    return v;
+  }, v => v))
+  public ignoreStepResult: boolean;
 
   public template: NaturalTextActions;
   public addonTemplate: AddonNaturalTextAction;
 
-  @serializable(optional(object(TestStep)))
   public parentStep: TestStep;
   public childStep: TestStep;
   public stepGroup: TestCase;
@@ -426,8 +430,9 @@ export class TestStep extends Base implements PageObject {
       this.preRequisiteStepId = input['preRequisiteStepId'];
       this.conditionType = input['conditionType'];
       this.disabled = input['disabled'];
+      this.ignoreStepResult = input['ignoreStepResult'];
       if (input['dataMap'])
-        this.conditionIf = input['conditionIf'];
+        this.conditionIf = input['dataMap']['conditionIf'];
     }
   }
 

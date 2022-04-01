@@ -174,4 +174,8 @@ public class TestDeviceService extends XMLExportService<TestDevice> {
   public void resentAppUploadIdToNull(Long appUploadId){
     this.testDeviceRepository.resentAppUploadIdToNull(appUploadId);
   }
+
+  public void resetAgentIdToNull(Long agentId) {
+    this.testDeviceRepository.resetAgentIdToNull(agentId);
+  }
 }

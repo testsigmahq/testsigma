@@ -43,6 +43,8 @@ export class StepDetails extends Base implements Deserializable {
   @serializable(alias('step_group_id'))
   public stepGroupId: number;
 
+  @serializable
+  public ignoreStepResult: boolean;
 
   deserialize(input: any): this {
     return Object.assign(this, deserialize(StepDetails, input));

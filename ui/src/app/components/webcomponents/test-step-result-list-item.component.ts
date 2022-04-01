@@ -45,6 +45,7 @@ import {NaturalTextActionsService} from "../../services/natural-text-actions.ser
          [class.ml-45]="!isStepGroupChild"
          [class.ml-60]="isStepGroupChild"
          [class.pr-45]="isEditEnabled"
+         [class.ignore-result]="testStepResult?.stepDetails?.ignoreStepResult && !testStepResult?.stepDetails?.conditionType"
          [target]="isExpandStepGroup? '_blank' : undefined"
          [routerLink]="isExpandStepGroup? ['/td/cases', this.testStepResult?.stepGroupId, 'steps'] : ['..', testStepResult.testCaseResultId, 'step_results', testStepResult.id]">
         <div
@@ -104,6 +105,10 @@ import {NaturalTextActionsService} from "../../services/natural-text-actions.ser
           </div>
 
           <div class="hide-on-hover text-wrap d-flex ml-auto">
+            <span
+              class="pr-10 btn icon-btn rounded-pill mr-4"
+              *ngIf="testStepResult?.stepDetails?.ignoreStepResult && testStepResult?.canShowIgnoreStepResultLabel" [translate]="'test_step.details.ignore_step_result_label'" >
+            </span>
             <span
               class="pr-7"
               *ngIf="testStepResult?.canShowMatchNotMatchLabel">

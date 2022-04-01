@@ -15,6 +15,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -145,40 +146,48 @@ public class RestAPIRunTimeDataProcessor {
   }
   }
 
-  public void storeResponseData(HttpResponse<String> response) throws AutomatorException {
+  public void storeResponseData(HttpResponse<String> response,Map<String,String> envSettings) throws AutomatorException {
     String responseStr = response.getResponseText();
     Map<String, String> responseHeadersMap = response.getHeadersMap();
     String responseHeaders = new ObjectMapperService().convertToJson(responseHeadersMap);
-    storeRuntimeVariblesJsonPath(restfulStepEntity.getHeaderRuntimeData(), responseHeaders);
-    storeRuntimeVariblesJsonPath(restfulStepEntity.getBodyRuntimeData(), responseStr);
+    storeRuntimeVariblesJsonPath(restfulStepEntity.getHeaderRuntimeData(), responseHeaders,envSettings);
+    storeRuntimeVariblesJsonPath(restfulStepEntity.getBodyRuntimeData(), responseStr,envSettings);
   }
 
-  private void storeRuntimeVariblesJsonPath(String expectedStr, String actualStr) throws AutomatorException{
+  private void storeRuntimeVariblesJsonPath(String expectedStr, String actualStr,Map<String,String> envSettings) throws AutomatorException{
 
     if (StringUtils.isNotBlank(expectedStr) && StringUtils.isNotBlank(actualStr)) {
       boolean jsonPathValidationsFailed = false;
       List<String> failedJsonPathsList = new ArrayList<>();
+      Map<String,String> runtimeVariablesMap = new HashMap<>();
+      boolean isPathNotFound = false;
+      String exceptionStr = "";
       Map<String, String> pathMap = new ObjectMapperService().parseJson(expectedStr, new TypeReference<>() {
       });
       for (Map.Entry<String, String> map : pathMap.entrySet()) {
         String name = map.getKey();
         String path = map.getValue();
-        Object pathResult;
         try {
+          Object pathResult;
           if (path.equals(JSON_PATH_ALL)) {
             pathResult = actualStr;
           } else {
             pathResult = JsonPath.parse(actualStr).read(path);
           }
           new RuntimeDataProvider().storeRuntimeVariable(name, pathResult.toString());
+          runtimeVariablesMap.put(name,String.valueOf(pathResult));
         } catch (PathNotFoundException e) {
           jsonPathValidationsFailed = true;
           failedJsonPathsList.add(path);
+          exceptionStr = exceptionStr+", <br>"+name+"="+path;
           log.error("JSON Path Error while saving response to runtime variable.", e);
         }
       }
       if(jsonPathValidationsFailed){
         throw new AutomatorException(String.format(MSG_REST_RESPONSE_JSON_PATH_NOT_EXIST,failedJsonPathsList));
+      }
+      if(!StringUtils.isEmpty(exceptionStr)){
+        throw new AutomatorException("Not able to find the json paths::"+exceptionStr);
       }
     }
 

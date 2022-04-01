@@ -73,6 +73,8 @@ public class AdditionalPropertiesConfig {
   }
 
   private void touchConfigFile() {
+    this.testsigmaDataPath = System.getProperty("TS_DATA_DIR")!=null ? System.getProperty("TS_DATA_DIR") :
+            System.getenv("TS_DATA_DIR")!=null ? System.getenv("TS_DATA_DIR") : this.testsigmaDataPath;
     log.info("Touching authentication.properties file from - " + testsigmaDataPath);
     File configFile = new File(testsigmaDataPath + File.separator + "authentication.properties");
     try {

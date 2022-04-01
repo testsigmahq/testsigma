@@ -2,7 +2,7 @@
   *ngIf="environmentFormGroup"
   class="form-group">
   <div
-    [translate]="'test_plan.environment.machine.title'"
+    [innerHTML]="'test_plan.environment.machine.title'| translate"
     class="fz-14 rb-medium pb-30"></div>
   <div *ngIf="testPlanLabType && !isHybrid" class="d-flex">
     <div
@@ -124,6 +124,7 @@
         *ngIf="environmentFormGroup && version"
         (onAgentChange)="setAgent($event)"
         (onAgents)="setAgents($event)"
+        (isAgentOnline)="setAgentStatus($event)"
         [value]="agent"
         [version]="version"
         [formGroup]="environmentFormGroup"

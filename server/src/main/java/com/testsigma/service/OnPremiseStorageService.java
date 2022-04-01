@@ -40,7 +40,13 @@ public class OnPremiseStorageService extends StorageService {
 
   private String getFilePathRelativeToRoot(String filePath) {
     if (!filePath.trim().toLowerCase().startsWith(FILE_PROTOCOL)) {
-      filePath = getRootDirectory() + File.separator + filePath;
+      String root = getRootDirectory();
+      if (root.contains("\\") || root.contains("\\\\")) {
+        filePath = String.valueOf(root.charAt(root.length() - 1)).equals("\\") ? root +
+                filePath.replaceAll("/", "\\\\").substring(1) : root + filePath.replaceAll("/", "\\\\");
+        filePath =  filePath.substring(0, 8) + filePath.substring(8).replaceAll ("\\\\\\\\", "\\\\");
+      } else
+        filePath = root + File.separator + filePath;
     } else {
       filePath = filePath.substring(5);
     }
@@ -97,6 +103,9 @@ public class OnPremiseStorageService extends StorageService {
       String token = jwtTokenService.generateAttachmentToken(relativeFilePathFromBase, cal.getTime(), getHttpMethod(storageAccessLevel));
       MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
       queryParams.add(STORAGE_SIGNATURE, token);
+      if (relativeFilePathFromBase.contains("\\") || relativeFilePathFromBase.contains("\\\\") )
+          relativeFilePathFromBase = relativeFilePathFromBase.replaceAll("\\\\", "/");
+          relativeFilePathFromBase = relativeFilePathFromBase.replaceAll("\\\\\\\\", "/");
       UriComponents uriComponents =
         UriComponentsBuilder.fromUriString(URLConstants.PRESIGNED_BASE_URL + "/{key}").queryParams(queryParams)
           .build().expand(relativeFilePathFromBase).encode();
@@ -114,7 +123,14 @@ public class OnPremiseStorageService extends StorageService {
   public Optional<URL> generatePreSignedURLIfExists(String relativeFilePathFromBase, StorageAccessLevel storageAccessLevel, Integer expiryTimeInMinutes) {
     log.debug("Generating File URL if exists:" + relativeFilePathFromBase);
     Optional<URL> returnURL = Optional.empty();
-    File file = Paths.get(getRootDirectory(), relativeFilePathFromBase).toFile();
+    String rootDirectory = getRootDirectory();
+    if (rootDirectory.contains("\\") || rootDirectory.contains("\\\\") ){
+      String lastChar = String.valueOf(rootDirectory.charAt(rootDirectory.length() - 1));
+      relativeFilePathFromBase = lastChar.equals("\\") || lastChar.equals("\\\\")  ?
+              relativeFilePathFromBase.replaceAll("/", "\\\\").substring(1) :
+              relativeFilePathFromBase.replaceAll("/", "\\\\");
+    }
+    File file = Paths.get(rootDirectory, relativeFilePathFromBase).toFile();
     if (file.exists()) {
       log.debug("File exists, generating pre-signed URL for:" + relativeFilePathFromBase);
       returnURL = Optional.ofNullable(generatePreSignedURL(relativeFilePathFromBase, storageAccessLevel, expiryTimeInMinutes));

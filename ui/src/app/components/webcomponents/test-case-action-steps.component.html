@@ -1,11 +1,10 @@
 <div class="list-container w-100 mt-n14" *ngIf="refreshedView">
   <cdk-virtual-scroll-viewport
     minBufferPx="10000" maxBufferPx="30000"
-    itemSize="63" class="virtual-scroll-viewport list-container"
+    itemSize="63" class="virtual-scroll-viewport list-container cdk-content"
     *ngIf="!isDragEnabled">
     <div
-      *ngIf="testSteps?.content?.length"
-      class="drag-list pr-45 py-10">
+      class="pr-45">
       <app-action-test-step-list-item
         class="w-100 scroll-item flex-wrap"
         *cdkVirtualFor='let testStep of testSteps?.content; let stepNumber = index; trackBy: trackByIdx'
@@ -23,7 +22,6 @@
         [testSteps]="testSteps"
         [templates]="templates"
         [addonTemplates]="addonTemplates"
-        [isSearchEnabled]="isSearchEnabled"
         [stepNumber]="stepNumber+1"
         [stepRecorderView]="stepRecorderView"
         [stepForm]="stepForm"></app-action-test-step-list-item>
@@ -40,7 +38,7 @@
     <app-placeholder-loader *ngIf="!isStepFetchComplete"></app-placeholder-loader>
     <app-test-step-form-container
       class="pr-45 d-block mt-n10"
-      *ngIf="workspaceVersion && testSteps && !isAnyStepEditing && !hideFormContainer && !isAnyStepAfter && !isDragEnabled && !isSearchEnabled"
+      *ngIf="workspaceVersion && testSteps && !isAnyStepEditing && !hideFormContainer && !isAnyStepAfter && !isDragEnabled && !searchTerm?.length"
       (onSuccessfulStepSave)="onSuccessfulStepSave($event)"
       (onStepType)="onStepChangeAction($event)"
       [testCase]="testCase"

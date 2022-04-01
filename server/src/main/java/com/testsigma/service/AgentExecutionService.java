@@ -586,7 +586,9 @@ public class AgentExecutionService {
   public void processResultEntries(List<TestDeviceResult> testDeviceResults, StatusConstant inStatus)
     throws Exception {
     for (TestDeviceResult testDeviceResult : testDeviceResults) {
-      if (this.getTestPlan().getTestPlanLabType().isHybrid() && !agentService.isAgentActive(testDeviceResult.getTestDevice().getAgentId())) {
+      if (testDeviceResult.getTestDevice().getAgent() == null && this.getTestPlan().getTestPlanLabType().isHybrid()) {
+        testDeviceResultService.markEnvironmentResultAsFailed(testDeviceResult, AutomatorMessages.AGENT_HAS_BEEN_REMOVED, StatusConstant.STATUS_CREATED);
+      } else if (this.getTestPlan().getTestPlanLabType().isHybrid() && !agentService.isAgentActive(testDeviceResult.getTestDevice().getAgentId())) {
           testDeviceResultService.markEnvironmentResultAsFailed(testDeviceResult,
             AutomatorMessages.AGENT_INACTIVE, StatusConstant.STATUS_CREATED);
       } else if(this.getTestPlan().getTestPlanLabType().isHybrid() && testDeviceResult.getTestDevice().getDeviceId()!=null &&
@@ -1086,7 +1088,7 @@ public class AgentExecutionService {
       } else {
         index = (testCaseStepEntity.getIndex() == null) ? 0 : testCaseStepEntity.getIndex();
       }
-      String screenShotPath = String.format("executions/%s/%s_%s_%s_%s.%s", testCaseEntity.getTestCaseResultId(),
+      String screenShotPath = String.format("/executions/%s/%s_%s_%s_%s.%s", testCaseEntity.getTestCaseResultId(),
         testCaseStepEntity.getId(), stepGroupStepID, testCaseStepEntity.getPosition(), index, "jpeg");
 
       URL presignedURL = storageService.generatePreSignedURL(screenShotPath, StorageAccessLevel.WRITE, 600);
@@ -1123,7 +1125,7 @@ public class AgentExecutionService {
       } else {
         index = (testCaseStep.getIndex() == null) ? 0 : testCaseStep.getIndex();
       }
-      String screenShotPath = String.format("executions/%s/%s_%s_%s_%s_%s.%s", testCaseEntity.getTestCaseResultId(),
+      String screenShotPath = String.format("/executions/%s/%s_%s_%s_%s_%s.%s", testCaseEntity.getTestCaseResultId(),
         testCaseStep.getId(), parentGroupStepId, iteration, testCaseStep.getPosition(), index, "jpeg");
       URL preSignedURL = storageService.generatePreSignedURL(screenShotPath, StorageAccessLevel.WRITE, 600);
       String iterationKey = String.format("%s_%s", iteration, testCaseStep.getIndex());

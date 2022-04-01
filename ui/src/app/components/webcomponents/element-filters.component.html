@@ -73,6 +73,13 @@
              [translate]="'form.validation.common.invalid' | translate:{FieldName: 'Updated Date'}" ></div>
       </div>
       <div class="form-group">
+        <input class="form-control" (keyup)="constructQueryString()" [(ngModel)]="filterLocatorValue"
+               [ngModelOptions]="{standalone: true}"
+               [placeholder]="'elements.filter.form.placeholder.value' | translate">
+        <label class="control-label" [translate]="'elements.filter.form.label.locator_value'"></label>
+      </div>
+
+      <div class="form-group">
         <mat-form-field class="mat-select-custom w-100" appearance="fill">
           <mat-select
             (selectionChange)="constructQueryString()"

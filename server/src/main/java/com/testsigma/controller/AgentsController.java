@@ -96,6 +96,7 @@ public class AgentsController {
 
   @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
   public ResponseEntity<String> delete(@PathVariable("id") Long agentId) throws ResourceNotFoundException {
+    testDeviceService.resetAgentIdToNull(agentId);
     Agent agent = agentService.find(agentId);
     final List<TestDevice> testDeviceList =
       testDeviceService.findByTargetMachine(agent.getId());

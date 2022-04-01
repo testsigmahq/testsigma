@@ -20,7 +20,6 @@ import {TestStep} from "./test-step.model";
 import {AddonNaturalTextAction} from "./addon-natural-text-action.model";
 import {AddonElementData} from "./addon-element-data.model";
 import {AddonTestStepTestData} from "./addon-test-step-test-data.model";
-import {TestStepResultMetaSelfHealing} from "./test-step-result-meta-self-healing.model";
 import {TestDataDetails} from "./step-details-test-data-map.model";
 import {ElementDetails} from "./element-details.model";
 
@@ -109,11 +108,26 @@ export class TestStepResult extends ResultBase implements PageObject {
     }
   ))
   public testDataDetails: Map<string, TestDataDetails>;
-  @serializable(custom(v => SKIP, v => {
+  @serializable(custom(v => {
+    if (!v)
       return v;
+    let returnValue = new Map<string, ElementDetails>();
+    for (const key in v) {
+      if (v.hasOwnProperty(key))
+        returnValue[key] = new ElementDetails().deserialize(v[key]);
     }
-  ))
-  public ElementDetails: Map<string, ElementDetails>;
+    return v;
+  }, v => {
+    if (!v)
+      return v;
+    let returnValue = new Map<string, JSON>();
+    for (const key in v) {
+      if (v.hasOwnProperty(key))
+        returnValue[key] = new ElementDetails().serialize();
+    }
+    return v;
+  }))
+  public elementDetails: Map<string, ElementDetails>;
 
   public template: NaturalTextActions;
   public addonTemplate: AddonNaturalTextAction;
@@ -330,6 +344,10 @@ export class TestStepResult extends ResultBase implements PageObject {
 
   get canShowConditionalStepActions() {
     return (this?.isConditionalIf || this?.isConditionalElse || this?.isConditionalElseIf || this?.isConditionalWhileLoop)
+  }
+
+  get canShowIgnoreStepResultLabel() {
+    return !(this.stepDetail?.isConditionalIf || this.stepDetail?.isConditionalElse || this.stepDetail?.isConditionalElseIf || this.stepDetail?.isConditionalWhile || this.stepDetail?.isForLoop)
   }
 
   setResultStepDisplayNumber(testStepResults: TestStepResult[]) {

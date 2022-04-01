@@ -24,6 +24,7 @@ import {DomSanitizer} from "@angular/platform-browser";
 import {ElementScreenName} from "../../models/element-screen-name.model";
 import {ChromeRecorderService} from "../../services/chrome-recoder.service";
 import {WorkspaceType} from "../../enums/workspace-type.enum";
+import {DuplicateLocatorWarningComponent} from "./duplicate-locator-warning.component";
 
 @Component({
   selector: 'app-element-form',
@@ -52,6 +53,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
   public screenNameOptions: Observable<Set<ElementScreenName>>;
   public screenNames: Set<ElementScreenName>;
   public isInProgress: Boolean;
+  public isElementsChanged:Boolean;
 
   constructor(
     public authGuard: AuthenticationGuard,
@@ -179,10 +181,12 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
   addValidations() {
     this.elementForm = new FormGroup({
       created_type: new FormControl(this.element.createdType),
-      name: new FormControl(this.element.name, [Validators.required, Validators.minLength(4)]),
+      name: new FormControl(this.element.name, [Validators.required, Validators.minLength(4),
+        Validators.pattern('[a-zA-Z0-9_\\\- ]+$'), Validators.maxLength(250)]),
       definition: new FormControl(this.element.locatorValue),
       locatorType: new FormControl(this.element.locatorType),
-      screen_name: new FormControl(this.element.screenNameObj.name, [Validators.required]),
+      screen_name: new FormControl(this.element.screenNameObj.name, [Validators.required,
+        Validators.minLength(4),Validators.maxLength(250)]),
     });
     this.element.createdType = this.options.isStepRecordView ? ElementCreateType.MANUAL : this.element.createdType;
   }
@@ -192,47 +196,57 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
     if (this.elementForm.valid && this.nameIsValid(this.element.name)) {
       this.saving = true;
       this.checkIsDynamic()
+      let query = 'workspaceVersionId:' + this.workspaceVersion.id + ',locatorType:' + this.element.locatorType +
+        ',locatorValue:' + this.element.locatorValueWithSpecialCharacters + ',screenNameId:' + this.element.screenNameId ;
+      query = this.byPassSpecialCharacters(query);
       this.element.workspaceVersionId = this.workspaceVersion.id;
       this.element.createdType = this.options.isStepRecordView ? ElementCreateType.MOBILE_INSPECTOR : this.element.createdType;
-      this.elementService.create(this.element).subscribe((element: Element) => {
+      this.elementService.findAll(query).subscribe(res => {
+        if(res?.content.length){
           this.saving = false;
-          this.translate.get('message.common.created.success', {FieldName: 'Element'}).subscribe((res) => {
-            this.showNotification(NotificationType.Success, res);
-            this.stopCapture();
-            this.dialogRef.close(element);
-          })
-        },
-        error => {
-          this.saving = false;
-          this.translate.get('message.common.created.failure', {FieldName: 'Element'}).subscribe((res) => {
-            this.showAPIError(error, res)
-          })
-        })
+          this.openDuplicateLocatorWarning(res.content);
+        } else
+          this.saveAfterValidation();
+      });
     }
+  }
+
+  private saveAfterValidation(){
+    this.checkIsDynamic()
+    this.element.workspaceVersionId = this.workspaceVersion.id;
+    this.element.createdType = this.options.isStepRecordView?ElementCreateType.MOBILE_INSPECTOR:this.element.createdType;
+    this.elementService.create(this.element).subscribe((element: Element) => {
+        this.saving = false;
+        this.translate.get('message.common.created.success', {FieldName: 'Element'}).subscribe((res) => {
+          this.showNotification(NotificationType.Success, res);
+          this.stopCapture();
+          this.dialogRef.close(element);
+        })
+      },
+      error => {
+        this.saving = false;
+        this.translate.get('message.common.created.failure', {FieldName: 'Element'}).subscribe((res) => {
+          this.showAPIError(error, res,'Element');
+        })
+      });
   }
 
   updateElement() {
     this.formSubmitted = true;
     if (this.elementForm.valid && this.nameIsValid(this.element.name)) {
       this.saving = true;
-      this.checkIsDynamic()
-      this.element.createdType = this.options.isStepRecordView ? ElementCreateType.MOBILE_INSPECTOR : this.element.createdType;
-      this.elementService.update(this.elementId, this.element).subscribe(
-        (element: Element) => {
+      let query = 'workspaceVersionId:' + this.workspaceVersion.id + ',locatorType:' + this.element.locatorType +
+        ',locatorValue:' + this.element.locatorValueWithSpecialCharacters +
+        ',screenNameId:' + this.element.screenNameId + ',id!'+ this.element.id;
+      query = this.byPassSpecialCharacters(query);
+      this.elementService.findAll(query).subscribe(res => {
+        if(res?.content.length){
           this.saving = false;
-          this.translate.get('message.common.update.success', {FieldName: 'Element'}).subscribe((res: string) => {
-            this.showNotification(NotificationType.Success, res);
-            this.stopCapture();
-            this.dialogRef.close(element);
-          });
-        },
-        error => {
-          this.saving = false;
-          this.translate.get('message.common.update.failure', {FieldName: 'Element'}).subscribe((res) => {
-            this.showAPIError(error, res)
-          })
-        });
-
+          this.openDuplicateLocatorWarning(res.content);
+        } else{
+          this.updateAfterValidation();
+        }
+      });
     }
   }
 
@@ -330,6 +344,8 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
 
   public filterData(target: any) {
     let name: String = target.value;
+    this.element.screenNameObj.name = name;
+    this.isElementsChanged=true;
     if (!name.length) {
       this.element.screenNameId = null;
     }
@@ -338,7 +354,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
       res.content.forEach(screenName => {
         arrSet.add(screenName);
       })
-      this.screenNameOptions = of(arrSet)
+      this.screenNameOptions = of(arrSet);
     })
   }
 
@@ -390,7 +406,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
       this.formSubmitted = true;
       if (this.elementForm.invalid)
         return;
-      if (this.element.screenNameId) {
+      if (this.element.screenNameId && !this.isElementsChanged) {
         let updatedScreenName =this.elementForm.get("screen_name").value;
         this.element.screenNameObj.name =  updatedScreenName;
         screenName = new ElementScreenName();
@@ -425,6 +441,57 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
     return this.workspaceVersion.workspace.workspaceType == WorkspaceType.IOSNative;
   }
 
+  private openDuplicateLocatorWarning(res: Element[]) {
+    let elementType = this.translate.instant('element.locator_type.'+this.element.locatorType);
+    let description = this.elementId ?
+      this.translate.instant('element.update_confirmation_with_screen_name.description',
+        {elementType: elementType, definition: this.element.locatorValue,
+          screenName: this.element.screenNameObj.name}) :
+      this.translate.instant('element.create_confirmation_with_screen_name.description',
+        {elementType: elementType, definition: this.element.locatorValue,
+          screenName: this.element.screenNameObj.name});
+    const dialogRef = this.matDialog.open(DuplicateLocatorWarningComponent, {
+      width: '568px',
+      height: 'auto',
+      data: {
+        description: description,
+        elements: res,
+        isRecorder: false,
+        isUpdate: Boolean(this.elementId)
+      },
+      panelClass: ['mat-dialog', 'rds-none']
+    });
+    dialogRef.afterClosed()
+      .subscribe(result => {
+        if (result) {
+          this.saving = true;
+          if (this.elementId)
+            this.updateAfterValidation();
+          else
+            this.saveAfterValidation();
+        }
+      });
+  }
+
+  private updateAfterValidation() {
+    this.checkIsDynamic();
+    this.element.createdType = this.options.isStepRecordView?ElementCreateType.MOBILE_INSPECTOR:this.element.createdType;
+    this.elementService.update(this.elementId, this.element).subscribe(
+      (element: Element) => {
+        this.saving = false;
+        this.translate.get('message.common.update.success', {FieldName: 'Element'}).subscribe((res: string) => {
+          this.showNotification(NotificationType.Success, res);
+          this.stopCapture()
+          this.dialogRef.close(element);
+        });
+      },
+      error => {
+        this.saving = false;
+        this.translate.get('message.common.update.failure', {FieldName: 'Element'}).subscribe((res) => {
+          this.showAPIError(error, res)
+        })
+      });
+  }
 
 }
 

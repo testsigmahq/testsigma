@@ -6,12 +6,9 @@ import {Pageable} from "../shared/models/pageable";
 import {Observable, throwError} from "rxjs";
 import {Page} from "../shared/models/page";
 import {catchError, map} from "rxjs/operators";
-import {StepDetails} from "../models/step-details.model";
 import {TestStep} from "../models/test-step.model";
 import {TestStepPriority} from "../enums/test-step-priority.enum";
 import {RestStepEntity} from "../models/rest-step-entity.model";
-import {TestData} from "../models/test-data.model";
-
 @Injectable({
   providedIn: 'root'
 })
@@ -93,7 +90,7 @@ export class TestStepService {
     );
   }
 
-  public bulkUpdateProperties(steps: TestStep[], priority?: TestStepPriority, waitTime?: number,disable?:Boolean): Observable<void> {
+  public bulkUpdateProperties(steps: TestStep[], priority?: TestStepPriority, waitTime?: number, disable?: Boolean, ignoreStepResult?: Boolean): Observable<void> {
     let params = steps.map(step => step.id).reduce((p, id) => p.append('ids[]', id.toString()), new HttpParams());
     if (priority)
       params = params.append("priority", priority);
@@ -101,6 +98,8 @@ export class TestStepService {
       params = params.append("waitTime", waitTime.toString());
     if (disable != undefined)
       params = params.append("disabled", disable.toString());
+    if (ignoreStepResult != undefined)
+      params = params.append("ignoreStepResult", ignoreStepResult.toString());
     return this.http.put<void>(this.URLConstants.testStepsUlr + "/bulk_update_properties", {}, {
       headers: this.httpHeaders.contentTypeApplication,
       params: params
@@ -120,7 +119,7 @@ export class TestStepService {
 
   public fetchApiResponse(restStepEntity: RestStepEntity): Observable<RestStepEntity> {
     let request = restStepEntity.serialize()
-    return this.http.post<RestStepEntity>(this.URLConstants.testStepsUlr + "/fetch_rest_response", restStepEntity.serializeRawValueSendApi(request), {
+    return this.http.post<RestStepEntity>(this.URLConstants.testStepsUlr + "/fetch_rest_response", restStepEntity.serializeRawValueForDryAPICall(request), {
       headers: this.httpHeaders.contentTypeApplication
     }).pipe(
       catchError((error) => throwError(error))

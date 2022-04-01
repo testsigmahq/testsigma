@@ -7,6 +7,7 @@ import com.testsigma.automator.constants.AutomatorMessages;
 import com.testsigma.automator.constants.SessionErrorType;
 import com.testsigma.automator.entity.*;
 import com.testsigma.automator.exceptions.AutomatorException;
+import com.testsigma.automator.exceptions.TestsigmaNoParallelRunException;
 import com.testsigma.automator.runners.EnvironmentRunner;
 import com.testsigma.automator.utilities.RuntimeDataProvider;
 import com.testsigma.automator.utilities.TimeUtil;
@@ -22,7 +23,7 @@ import java.time.Instant;
 @Data
 public abstract class DriverManager {
   public static final String MSG_LAB_MINUTES_EXCEEDED = "Allowed test execution duration on cloud devices/machines exceeded.";
-  public static final String MSG_NO_PARALLEL_RUN = "Parallel runs are not allowed in Open Source, Please Change to Community edition for parallel Execution or Contact Support Team.";
+  public static final String MSG_NO_PARALLEL_RUN = "Parallel Executions Limit exceeded.Please upgrade to community edition for more parallel runs.";
   public static final String MSG_OS_NOT_SUPPORTED = "Selected device OS and version combination is no longer supported. Please edit the device and choose a supported OS and Version.";
   public static final String MSG_BROWSER_NOT_SUPPORTED = "Selected browser and version combination is no longer supported. Please edit the device and choose a supported browser and Version.";
 
@@ -136,7 +137,10 @@ public abstract class DriverManager {
       String errorMessage = parseErrorMessage(e.getMessage());
       if (StringUtils.isBlank(errorMessage)) {
         errorMessage = AutomatorMessages.EXCEPTION_WEBDRIVER_NOTCREATED + " - " + e.getMessage();
-      } else {
+      } else if(e.getMessage().contains("NO_PARALLEL_RUN")){
+        errorMessage = AutomatorMessages.NO_PARALLEL_RUNS;
+        throw new TestsigmaNoParallelRunException(ErrorCodes.NO_PARALLEL_RUN,errorMessage);
+      }else {
         errorMessage = "Unable to create a new Test Session due to unexpected failure(0x537). " + errorMessage;
       }
       endSession();

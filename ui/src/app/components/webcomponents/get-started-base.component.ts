@@ -67,7 +67,7 @@ export class GetStartedBaseComponent extends BaseComponent implements OnInit {
           titleKey: "get_started.cross_browser",
           source: "https://s3.amazonaws.com/assets.testsigma.com/videos/get-started/web/cross-browser-testing.mp4",
           descriptionKey: "get_started.cross_browser_description",
-          articleLink: "https://testsigma.com/docs/test-management/test-plans/",
+          articleLink: "https://testsigma.com/docs/test-management/test-plans/overview/",
           countKey: "crossExecutionCount",
           navigateToTry: "plans/new"
         },
@@ -75,7 +75,7 @@ export class GetStartedBaseComponent extends BaseComponent implements OnInit {
           titleKey: "get_started.manage_suites",
           source: "https://s3.amazonaws.com/assets.testsigma.com/videos/get-started/web/create-test-suite.mp4",
           descriptionKey: "get_started.manage_suites_description",
-          articleLink: "https://testsigma.com/docs/test-management/test-suites/",
+          articleLink: "https://testsigma.com/docs/test-management/test-suites/overview/",
           countKey: "testSuiteCount",
           navigateToTry: "suites/new"
         },
@@ -143,7 +143,7 @@ export class GetStartedBaseComponent extends BaseComponent implements OnInit {
           titleKey: "get_started.cross_device",
           source: "https://s3.amazonaws.com/assets.testsigma.com/videos/get-started/mobile-web/cross-device-testing.mp4",
           descriptionKey: "get_started.cross_device_description",
-          articleLink: "https://testsigma.com/docs/test-management/test-plans/",
+          articleLink: "https://testsigma.com/docs/test-management/test-plans/overview/",
           countKey: "crossExecutionCount",
           navigateToTry: "plans/new"
         },
@@ -151,7 +151,7 @@ export class GetStartedBaseComponent extends BaseComponent implements OnInit {
           titleKey: "get_started.manage_suites",
           source: "https://s3.amazonaws.com/assets.testsigma.com/videos/get-started/mobile-web/create-test-suite.mp4",
           descriptionKey: "get_started.manage_suites_description",
-          articleLink: "https://testsigma.com/docs/test-management/test-suites/",
+          articleLink: "https://testsigma.com/docs/test-management/test-suites/overview/",
           countKey: "testSuiteCount",
           navigateToTry: "suites/new"
         },
@@ -219,7 +219,7 @@ export class GetStartedBaseComponent extends BaseComponent implements OnInit {
           titleKey: "get_started.cross_device",
           source: "https://s3.amazonaws.com/assets.testsigma.com/videos/get-started/android/cross-device-testing.mp4",
           descriptionKey: "get_started.cross_device_description",
-          articleLink: "https://testsigma.com/docs/test-management/test-plans/",
+          articleLink: "https://testsigma.com/docs/test-management/test-plans/overview/",
           countKey: "crossExecutionCount",
           navigateToTry: "plans/new"
         },
@@ -227,7 +227,7 @@ export class GetStartedBaseComponent extends BaseComponent implements OnInit {
           titleKey: "get_started.manage_suites",
           source: "https://s3.amazonaws.com/assets.testsigma.com/videos/get-started/android/create-test-suite.mp4",
           descriptionKey: "get_started.manage_suites_description",
-          articleLink: "https://testsigma.com/docs/test-management/test-suites/",
+          articleLink: "https://testsigma.com/docs/test-management/test-suites/overview/",
           countKey: "testSuiteCount",
           navigateToTry: "suites/new"
         },
@@ -263,7 +263,7 @@ export class GetStartedBaseComponent extends BaseComponent implements OnInit {
           titleKey: "get_started.overview",
           source: "https://s3.amazonaws.com/assets.testsigma.com/videos/get-started/ios/overview.mp4",
           descriptionKey: "get_started.overview_description",
-          articleLink: "https://testsigma.com/docs/test-cases/create-steps-recorder/ios-apps/",
+          articleLink: "https://testsigma.com/docs/test-cases/create-steps-recorder/ios-apps/overview/",
           countKey: "testCasesCount",
           navigateToTry: "cases"
         },
@@ -271,7 +271,7 @@ export class GetStartedBaseComponent extends BaseComponent implements OnInit {
           titleKey: "get_started.create_automated_test",
           source: "https://s3.amazonaws.com/assets.testsigma.com/videos/get-started/ios/create-testcase.mp4",
           descriptionKey: "get_started.create_automated_test_description",
-          articleLink: "https://testsigma.com/docs/test-cases/create-steps-recorder/ios-apps/",
+          articleLink: "https://testsigma.com/docs/test-cases/create-steps-recorder/ios-apps/overview/",
           countKey: "testCasesCount",
           navigateToTry: "cases/create"
         },
@@ -295,7 +295,7 @@ export class GetStartedBaseComponent extends BaseComponent implements OnInit {
           titleKey: "get_started.cross_device",
           source: "https://s3.amazonaws.com/assets.testsigma.com/videos/get-started/ios/cross-device-testing.mp4",
           descriptionKey: "get_started.cross_device_description",
-          articleLink: "https://testsigma.com/docs/test-management/test-plans/",
+          articleLink: "https://testsigma.com/docs/test-management/test-plans/overview/",
           countKey: "crossExecutionCount",
           navigateToTry: "plans/new"
         },
@@ -303,7 +303,7 @@ export class GetStartedBaseComponent extends BaseComponent implements OnInit {
           titleKey: "get_started.manage_suites",
           source: "https://s3.amazonaws.com/assets.testsigma.com/videos/get-started/ios/create-test-suite.mp4",
           descriptionKey: "get_started.manage_suites_description",
-          articleLink: "https://testsigma.com/docs/test-management/test-suites/",
+          articleLink: "https://testsigma.com/docs/test-management/test-suites/overview/",
           countKey: "testSuiteCount",
           navigateToTry: "suites/new"
         },

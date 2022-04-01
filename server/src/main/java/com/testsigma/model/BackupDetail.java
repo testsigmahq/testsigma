@@ -21,7 +21,7 @@ public class BackupDetail implements Serializable {
   private Long id;
 
   @Column
-  private String name = "back_up_" + String.join("_", new Timestamp(java.lang.System.currentTimeMillis()).toString().split(" ")) + ".zip";
+  private String name = "back_up_" + String.join("_", new Timestamp(java.lang.System.currentTimeMillis()).toString().split(" ")).replaceAll(":|\\.", "-") + ".zip";
 
   @Column(name = "is_test_case_enabled")
   private Boolean isTestCaseEnabled;

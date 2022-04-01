@@ -99,7 +99,7 @@ export class FormComponent extends BaseComponent implements OnInit {
       (err) => {
         this.saving = false;
         this.translate.get('message.common.created.failure', {FieldName: "Environment"})
-          .subscribe(msg => this.showAPIError(err, msg))
+          .subscribe(msg => this.showAPIError(err, msg,'Environment'))
       }
     );
   }
@@ -138,6 +138,7 @@ export class FormComponent extends BaseComponent implements OnInit {
   }
 
   showTable() {
+    this.environmentForm.controls["paramsJson"].disable();
     this.showJSON = false;
     this.parseJSON();
   }
@@ -156,6 +157,7 @@ export class FormComponent extends BaseComponent implements OnInit {
   }
 
   showJSONFormat() {
+    this.environmentForm.controls["paramsJson"].enable();
     this.showJSON = true;
     this.stringifyJSON();
   }

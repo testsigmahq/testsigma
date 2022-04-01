@@ -48,6 +48,7 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
 
   public showAddEnvironmentForm:boolean = true;
   public showAddSuiteForm:boolean = true;
+  public agentIsOffline:boolean;
   isOpen = false;
   @ViewChild('caseLevelParallelDialog') overlayDir: CdkConnectedOverlay;
 
@@ -208,7 +209,7 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
       title: new FormControl(environment?.title, []),
       createSessionAtCaseLevel: new FormControl(environment?.createSessionAtCaseLevel, []),
       browser: new FormControl(environment?.browser, [this.requiredIfValidator(() => !this.version?.workspace.isMobile && !this.isRest && this.isHybrid)]),
-      platform: new FormControl(environment?.platform, [this.requiredIfValidator(() => !this.isRest && this.isHybrid)]),
+      platform: new FormControl(environment?.platform, []),
       osVersion: new FormControl(environment?.osVersion, []),
       browserVersion: new FormControl(environment?.browserVersion, []),
       deviceName : new FormControl(environment?.deviceName, []),
@@ -456,5 +457,9 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
 
   showAddEnvButton():boolean {
     return !this.showAddEnvironmentForm && this.executionEnvironments.length > 0 && !this.isEditEnvironmentActive;
+  }
+
+  setAgentStatus(isAgentOnline:boolean){
+    this.agentIsOffline = !isAgentOnline;
   }
 }

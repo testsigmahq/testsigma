@@ -7,8 +7,8 @@ CREATE TABLE `provisioning_profiles`
     `status`       VARCHAR(255) NOT NULL,
     `created_date` DATETIME     DEFAULT CURRENT_TIMESTAMP,
     `updated_date` DATETIME     DEFAULT CURRENT_TIMESTAMP,
-
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `index_provisioning_profiles_name` (`name`)
 ) ENGINE = InnoDB
   CHARSET = utf8
   COLLATE = utf8_unicode_ci;

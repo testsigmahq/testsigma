@@ -107,9 +107,9 @@ public class TestDeviceResultService {
     this.testDeviceResultRepository.updateVisualResult(testDeviceResult.getId(), visualResult);
   }
 
-  public void updateResultOnError(String message, Long environmentResultId) {
-    testSuiteResultService.stopTestSuiteResultsByEnvironmentResult(message, environmentResultId);
-    testCaseResultService.stopTestCaseResultsByEnvironmentResult(message, environmentResultId);
+  public void updateResultOnError(String message, ResultConstant result, Long environmentResultId) {
+    testSuiteResultService.stopTestSuiteResultsByEnvironmentResult(message, result, environmentResultId);
+    testCaseResultService.stopTestCaseResultsByEnvironmentResult(message, result, environmentResultId);
   }
 
   public void markEnvironmentResultAsStopped(TestDeviceResult testDeviceResult, String message) {
@@ -414,7 +414,7 @@ public class TestDeviceResultService {
     testDeviceResultMapper.merge(environmentResultRequest, testDeviceResult);
     testDeviceResult = update(testDeviceResult);
     if (environmentResultRequest.getErrorCode() != null) {
-      updateResultOnError(environmentResultRequest.getMessage(), environmentResultRequest.getId());
+      updateResultOnError(environmentResultRequest.getMessage(),environmentResultRequest.getResult(), environmentResultRequest.getId());
     }
     updateEnvironmentConsolidatedResults(testDeviceResult);
     updateExecutionConsolidatedResults(testDeviceResult.getTestPlanResultId(),

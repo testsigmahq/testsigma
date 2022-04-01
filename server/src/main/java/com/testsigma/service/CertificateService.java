@@ -124,7 +124,7 @@ public class CertificateService {
   }
 
   public String s3Prefix(Long profileId) {
-    return "provisioning_profiles/" + profileId;
+    return "/provisioning_profiles/" + profileId;
   }
 
   public List<File> unzipFiles(HttpResponse response, File csrOutput, File privateKeyOutput) throws IOException {

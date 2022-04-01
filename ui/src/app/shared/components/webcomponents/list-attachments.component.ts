@@ -75,7 +75,7 @@ export class ListAttachmentsComponent extends BaseComponent implements OnInit {
         });
       }, error => {
         this.translate.get("message.common.upload.failure", {FieldName: 'Attachments'}).subscribe((res: string) => {
-          this.showAPIError(error, res);
+          this.showAPIError(error, res,'Attachment');
           this.fetchAttachments();
         });
       })

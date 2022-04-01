@@ -127,7 +127,7 @@ export class TestPlanSettingsFormComponent extends BaseComponent implements OnIn
       }, (exception) => {
         this.saving = false;
         this.translate.get('message.common.created.failure', {FieldName: "Test Plan"})
-          .subscribe(res => this.showAPIError(exception, res));
+          .subscribe(res => this.showAPIError(exception, res,'Test Plan'));
       })
     }
   }

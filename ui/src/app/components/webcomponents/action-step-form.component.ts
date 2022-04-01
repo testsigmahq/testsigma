@@ -112,7 +112,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     "WebApplication": "https://testsigma.com/docs/test-cases/create-steps-recorder/web-apps/overview/",
     "MobileWeb": "https://testsigma.com/docs/test-cases/create-steps-recorder/web-apps/overview/",
     "AndroidNative": "https://testsigma.com/docs/test-cases/create-steps-recorder/android-apps/",
-    "IOSNative": "https://testsigma.com/docs/test-cases/create-steps-recorder/ios-apps/",
+    "IOSNative": "https://testsigma.com/docs/test-cases/create-steps-recorder/ios-apps/overview/",
     "Rest": "https://testsigma.com/tutorials/getting-started/automate-rest-apis/"
   }
   public stepArticleUrl = "";
@@ -464,6 +464,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     whileStep.waitTime = 30;
     whileStep.priority = TestStepPriority.MINOR;
     whileStep.type = TestStepType.WHILE_LOOP;
+    whileStep.ignoreStepResult = whileStep.ignoreStepResult === undefined ? true : whileStep.ignoreStepResult;
     this.testStepService.create(whileStep).subscribe(res => {
       this.testStep.parentId = res.id
       this.testStep.position = res.position + 1;

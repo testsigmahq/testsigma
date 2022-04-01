@@ -276,6 +276,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
   public ResponseEntity<Object> handleDuplicateName(final DataIntegrityViolationException ex) {
     ex.printStackTrace();
     log.error(ex.getMessage(), ex);
+
+    if (ex.getMessage().contains("Cannot delete or update a parent row")){
+      final APIErrorDTO apiError = new APIErrorDTO();
+      apiError.setError("Entity has some relation please check it out");
+      return new ResponseEntity<>(apiError, new HttpHeaders(), HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS);
+    }
+
     if (ex.getCause().getCause().getClass().equals(java.sql.SQLIntegrityConstraintViolationException.class) &&
       ex.getCause().getCause().getMessage().contains("Duplicate entry")) {
       final APIErrorDTO apiError = new APIErrorDTO();

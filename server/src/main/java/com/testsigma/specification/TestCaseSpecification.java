@@ -87,8 +87,12 @@ public class TestCaseSpecification extends BaseSpecification<TestCase> {
     } else if (criteria.getKey().equals("customStep")) {
       Join s = root.join("testSteps", JoinType.INNER);
       return s.get("dataMap");
-    } else if (criteria.getKey().equals("caseId"))
+    } else if (criteria.getKey().equals("caseId")) {
       return root.get("id");
+    } else if(criteria.getKey().equals("forLoopTestDataId")){
+      Join s = root.join("testSteps",JoinType.INNER);
+      return s.get("forLoopTestDataId");
+    }
     return root.get(criteria.getKey());
   }
 

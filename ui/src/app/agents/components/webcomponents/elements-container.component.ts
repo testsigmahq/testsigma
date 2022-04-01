@@ -6,7 +6,6 @@ import {StepSummaryComponent} from "../../../components/webcomponents/step-summa
 import {MatDialog} from "@angular/material/dialog";
 import {ConfirmationModalComponent} from "../../../shared/components/webcomponents/confirmation-modal.component";
 import {TranslateService} from '@ngx-translate/core';
-import {ToastrService} from "ngx-toastr";
 import {MobileRecordingComponent} from "./mobile-recording.component";
 import {Element} from "../../../models/element.model";
 import {ElementLocatorType} from "../../../enums/element-locator-type.enum";
@@ -15,12 +14,17 @@ import {ElementScreenNameService} from "../../../shared/services/element-screen-
 import {ElementScreenName} from "../../../models/element-screen-name.model";
 import {ElementCreateType} from "../../../enums/element-create-type.enum";
 import {Observable, of} from "rxjs";
+import {BaseComponent} from "../../../shared/components/base.component";
+import {AuthenticationGuard} from "../../../shared/guards/authentication.guard";
+import {NotificationsService} from "angular2-notifications";
+import {ToastrService} from "ngx-toastr";
+import {DuplicateLocatorWarningComponent} from "../../../components/webcomponents/duplicate-locator-warning.component";
 
 @Component({
   selector: 'app-save-elements',
   templateUrl: './elements-container.component.html'
 })
-export class ElementsContainerComponent implements OnInit {
+export class ElementsContainerComponent extends BaseComponent implements OnInit {
   @Input() uiId: number;
   @Input() isEdit: boolean;
   @Input() versionId: number
@@ -53,17 +57,20 @@ export class ElementsContainerComponent implements OnInit {
     class_name: {variableName: "type"},
     name: {variableName: "name"}
   };
-  public  screenNameOptions : Observable<Set<ElementScreenName>>;
-  public  screenNames : Set<ElementScreenName>;
-  public isElementChanged:Boolean;
+  public screenNameOptions: Observable<Set<ElementScreenName>>;
+  public screenNames: Set<ElementScreenName>;
+  public isElementChanged: Boolean;
 
 
   constructor(
+    public authGuard: AuthenticationGuard,
+    public notificationsService: NotificationsService,
+    public translate: TranslateService,
+    public toastrService: ToastrService,
     private elementService: ElementService,
     private elementScreenNameService: ElementScreenNameService,
-    private dialog: MatDialog,
-    private translate: TranslateService,
-  ) {
+    private dialog: MatDialog) {
+    super(authGuard, notificationsService, translate, toastrService);
     this.screenNameOptions = new Observable<Set<ElementScreenName>>();
     this.screenNames = new Set<ElementScreenName>();
   }
@@ -75,28 +82,36 @@ export class ElementsContainerComponent implements OnInit {
     }
   }
 
-  public setScreenName(screenName: any) {
+  get creationDuplicateQuery(): string {
+    let element = new Element();
+    element.locatorValue = this.element.locatorValue;
+    return this.byPassSpecialCharacters('workspaceVersionId:' + this.versionId + ',locatorType:' + this.element.locatorType +
+      ',locatorValue:' + this.element.locatorValueWithSpecialCharacters +
+      (this.element.screenNameId ? ',screenNameId:' + this.element.screenNameId : ''));
+  }
 
-    if(screenName?.id != null){
+  public setScreenName(screenName: any, query?, create?, update?, addToList?) {
+
+    if (screenName?.id != null) {
       this.element.screenNameObj.name = screenName.name;
       this.element.screenNameId = screenName.id;
       this.elementForm.get('screen_name').setValue(this.element.screenNameObj.name);
-    }else{
-      let screenNameBean:ElementScreenName = new ElementScreenName();
-      screenNameBean.name = screenName.name;
-      screenNameBean.workspaceVersionId = this.element.workspaceVersionId;
-      this.elementScreenNameService.create(screenNameBean).subscribe(screenNameBean =>{
+    } else {
+      this.createScreenName(screenName.name).subscribe(screenNameBean => {
         this.element.screenNameObj.name = screenNameBean.name;
         this.element.screenNameId = screenNameBean.id;
         this.elementForm.get('screen_name').setValue(this.element.screenNameObj.name);
-        // this.isInProgress =false;
+        if (Boolean(query)) {
+          query += ',screenNameId:' + this.element.screenNameId;
+          this.fetchDuplicateLocators(query, create, update, addToList);
+        }
       })
     }
 
   }
 
   private fetchScreenNames() {
-    this.elementScreenNameService.findAll('workspaceVersionId:'+this.versionId).subscribe(res => {
+    this.elementScreenNameService.findAll('workspaceVersionId:' + this.versionId).subscribe(res => {
       res.content.forEach(screenName => {
         this.screenNames.add(screenName);
       })
@@ -105,19 +120,22 @@ export class ElementsContainerComponent implements OnInit {
     })
   }
 
-  public filterData(target:any){
-    let name:String = target.value;
+  public filterData(target: any) {
+    let name: String = target.value;
     this.element.screenNameObj.name = name;
-    this.isElementChanged=true
-    if(!name.length){
+    this.isElementChanged = true;
+    if (!name.length) {
       this.element.screenNameId = null;
     }
-    let arrSet:Set<ElementScreenName> = new Set<ElementScreenName>();
-    this.elementScreenNameService.findAll('workspaceVersionId:'+this.versionId+(name?.length >0 ? ",name~"+name : '')).subscribe(res => {
+    let arrSet: Set<ElementScreenName> = new Set<ElementScreenName>();
+    this.elementScreenNameService.findAll('workspaceVersionId:' + this.versionId + (name?.length > 0 ? ",name~" + name : '')).subscribe(res => {
       res.content.forEach(screenName => {
         arrSet.add(screenName);
       })
-      this.screenNameOptions = of(arrSet)
+      this.screenNameOptions = of(arrSet);
+      if (res.empty) {
+        this.element.screenNameId = null;
+      }
     })
   }
 
@@ -141,21 +159,6 @@ export class ElementsContainerComponent implements OnInit {
     this.editedIndex = index;
   }
 
-  public addToList() {
-    this.formSubmitted = true;
-    if (this.elementForm.valid) {
-      if (this.editedIndex == -1) {
-        this.elements.push(this.element);
-      } else {
-        this.element.errors = null;
-        this.elements[this.editedIndex] = Object.assign(new Element(), this.element);
-        this.editedIndex = -1;
-      }
-      this.element = null;
-      this.formSubmitted = false;
-    }
-  }
-
   public removeFromList(index: number) {
     const dialogRef = this.dialog.open(ConfirmationModalComponent, {
       width: '450px',
@@ -169,41 +172,13 @@ export class ElementsContainerComponent implements OnInit {
     });
   }
 
-  public createElement() {
-    this.formSubmitted = true;
-    if (this.elementForm.invalid) return;
-    this.fetchedElement = this.element;
-    let screenNameBean: ElementScreenName = new ElementScreenName();
-    screenNameBean.name = this.element.name;
-    screenNameBean.workspaceVersionId = this.element.workspaceVersionId;
-    this.elementScreenNameService.create(screenNameBean).subscribe(screenNameBean => {
-      this.element.screenNameId = screenNameBean.id
-      this.elementService.create(this.element).subscribe(
-        (res) => this.handleSave(res, true), (err) => this.handleError(err, true));
-    });
-  }
-
-  public updateElement() {
-    this.formSubmitted = true;
-    if (this.elementForm.invalid) return;
-    this.elementService.update(this.uiId, this.element).subscribe(
-      (res) => this.handleSave(res, false), (err) => this.handleError(err, false))
-    let screenNameBean:ElementScreenName = new ElementScreenName();
-    screenNameBean.name = this.elementForm.get('screen_name').value;
-    screenNameBean.workspaceVersionId = this.element.workspaceVersionId;
-    this.setScreenName(screenNameBean);
-  }
-
   public saveElements() {
     this.elements.forEach((element: Element, $index) => {
       if (!element.saved && !element.errors) {
         this.formSubmitted = true;
         if (element.name.match('^[a-zA-Z0-9_\\\- ]+$')) {
           element.saving = true;
-          let screenNameBean: ElementScreenName = new ElementScreenName();
-          screenNameBean.name = element.screenNameObj.name;
-          screenNameBean.workspaceVersionId = element.workspaceVersionId;
-          this.elementScreenNameService.create(screenNameBean).subscribe((screenName) => {
+          this.createScreenName(element.screenNameObj.name.toString()).subscribe((screenName) => {
             element.screenNameId = screenName.id;
             this.elementService.create(element).subscribe(() => {
               element.saved = true;
@@ -247,14 +222,13 @@ export class ElementsContainerComponent implements OnInit {
       screenName.name = this.selectElement?.screenNameObj.name;
       screenName.workspaceVersionId = this.element.workspaceVersionId;
       this.element.screenNameObj = screenName;
-      this.elementScreenNameService.create(screenName).subscribe(screenName => {
-        this.element.screenNameId = screenName.id;
-        this.element.name = this.selectElement?.name;
-        if (!this.element.locatorValue) {
-          this.element.locatorType = ElementLocatorType[this.selectElement?.locatorType];
-          this.element.locatorValue = this.selectElement?.locatorValue;
-        }
-      })
+      this.element.screenNameObj = screenName;
+      this.element.screenNameId = screenName.id;
+      this.element.name = this.selectElement?.name;
+      if (!this.element.locatorValue) {
+        this.element.locatorType = ElementLocatorType[this.selectElement?.locatorType];
+        this.element.locatorValue = this.selectElement?.locatorValue;
+      }
     }
 
     this.elementForm = new FormGroup({
@@ -305,5 +279,105 @@ export class ElementsContainerComponent implements OnInit {
     this.elementEventEmitter.emit(this.element);
     this.elementsEventEmitter.emit(this.elements);
     this.elementFormEventEmitter.emit(this.elementForm);
+  }
+
+  private addToListAfterDuplicateValidation() {
+    if (this.editedIndex == -1) {
+      this.elements.push(this.element);
+    } else {
+      this.element.errors = null;
+      this.elements[this.editedIndex] = Object.assign(new Element(), this.elements);
+      this.editedIndex = -1;
+    }
+    this.element = null;
+    this.formSubmitted = false;
+  }
+
+  private updateElementAfterDuplicateValidation() {
+    this.elementService.update(this.uiId, this.element).subscribe(
+      (res) => this.handleSave(res, false), (err) => this.handleError(err, false))
+  }
+
+  private createElementAfterDuplicateValidation() {
+    this.elementService.create(this.element).subscribe(
+      (res) => this.handleSave(res, true), (err) => this.handleError(err, true));
+  }
+
+  private openDuplicateLocatorWarning(res: Element[]) {
+    let elementType = this.translate.instant('element.locator_type.' + this.element.locatorType);
+    let description = this.uiId ?
+      this.translate.instant('element.update_confirmation_with_screen_name.description',
+        {
+          elementType: elementType, definition: this.element.locatorValue,
+          screenName: this.element.screenNameObj.name
+        }) :
+      this.translate.instant('element.create_confirmation_with_screen_name.description',
+        {
+          elementType: elementType, definition: this.element.locatorValue,
+          screenName: this.element.screenNameObj.name
+        });
+    const dialogRef = this.dialog.open(DuplicateLocatorWarningComponent, {
+      width: '568px',
+      height: 'auto',
+      data: {
+        description: description,
+        elements: res,
+        isRecorder: false,
+        isUpdate: Boolean(this.uiId)
+      },
+      panelClass: ['mat-dialog', 'rds-none']
+    });
+    dialogRef.afterClosed()
+      .subscribe(result => {
+        if (result) {
+          if (this.uiId)
+            this.updateElementAfterDuplicateValidation()
+          else {
+            (Boolean(this.isEdit)) ? this.createElementAfterDuplicateValidation() : this.addToListAfterDuplicateValidation()
+          }
+        }
+      });
+  }
+
+  public createElement = () => this.validateAndSave(true);
+
+  public updateElement = () => this.validateAndSave(false, true);
+
+  public addToList = () => this.validateAndSave(false, false, true);
+
+  private validateAndSave(create, update = false, addToList = false) {
+    let query = this.creationDuplicateQuery + (update ? ',id!' + this.uiId : '');
+    this.formSubmitted = true;
+    if (this.elementForm.invalid) return;
+    let screenNameBean: ElementScreenName = new ElementScreenName();
+    screenNameBean.name = this.elementForm.get('screen_name').value;
+    screenNameBean.workspaceVersionId = this.element.workspaceVersionId;
+    if (Boolean(this.element.screenNameId) || addToList)
+      this.fetchDuplicateLocators(query, create, update, addToList);
+    else
+      this.setScreenName(screenNameBean, query, create, update, addToList);
+  }
+
+  private fetchDuplicateLocators(query, create, update, addToList) {
+    this.elementService.findAll(query).subscribe(res => {
+      if (res?.content?.length) {
+        this.openDuplicateLocatorWarning(res.content);
+      } else {
+        if (create) {
+          this.createElementAfterDuplicateValidation();
+        } else if (update) {
+          this.updateElementAfterDuplicateValidation();
+        } else if (addToList) {
+          this.addToListAfterDuplicateValidation();
+        }
+      }
+    });
+  }
+
+  public createScreenName(screenName: string): Observable<ElementScreenName> {
+    let screenNameBean: ElementScreenName = new ElementScreenName();
+    screenNameBean.name = screenName;
+    screenNameBean.workspaceVersionId = this.versionId;
+    return this.elementScreenNameService.create(screenNameBean);
   }
 }

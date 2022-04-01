@@ -101,10 +101,16 @@ export class BaseComponent implements OnInit {
     })
   }
 
-  showAPIError(exception, internalErrorMSG) {
-    if (exception['status'] == 422 || exception['status'] == 451)
-      this.showNotification(NotificationType.Error, exception['error']['error']);
-    else if (exception['status'] == 500)
+  showAPIError(exception, internalErrorMSG, entityName?: string, parentEntity?:string) {
+    if (exception['status'] == 422 || exception['status'] == 451) {
+      let errorMessage = exception['error']['error'];
+      if (errorMessage == "Entity with same name already exists, Please use different name" && Boolean(entityName)) {
+        errorMessage = errorMessage.replace("Entity", entityName);
+      } else if (errorMessage == "Entity has some relation please check it out" && Boolean(entityName)) {
+        errorMessage = "Few " + entityName + " that you have selected are already in use and cannot be deleted. Please delete the ones which are in use from your " + parentEntity + " and try again ."
+      }
+      this.showNotification(NotificationType.Error, errorMessage);
+    } else if (exception['status'] == 500)
       this.showNotification(NotificationType.Error, (exception?.error?.code ? this.translate.instant(exception?.error?.code) : internalErrorMSG) || internalErrorMSG);
     else if (exception?.error?.objectErrors?.length > 0)
       this.showNotification(NotificationType.Error, this.translate.instant('message.duplicate_entity'));
@@ -122,5 +128,41 @@ export class BaseComponent implements OnInit {
     } else {
       return this.getScrollParent(node.parentElement);
     }
+  }
+
+  byPassSpecialCharacters(query: string) {
+    let returnData = [],
+      keys =[];
+    query?.split(',')?.forEach(item => {
+      let operatorIndex = item.match(/!|~|:|;|>|<|@|\$/).index;
+      let searchValue = item.slice(operatorIndex+1);
+      let searchKeyWithOperator = item.slice(0,operatorIndex+1);
+      if(keys.indexOf(item.slice(0,operatorIndex))>-1) return;
+      keys.push(item.slice(0,operatorIndex));
+      item = searchKeyWithOperator + encodeURIComponent(searchValue.replace(/'/g, 'ts_single_quote')
+        .replace(/!/g, 'ts_negation')
+        .replace(/~/g, 'ts_like')
+        .replace(/:/g, 'ts_colon')
+        .replace(/;/g, 'ts_semicolon')
+        .replace(/>/g, 'ts_greater_than')
+        .replace(/</g, 'ts_lesser_than'))
+        .replace(/@/g, 'ts_at_sign')
+        .replace(/\$/g, 'ts_dollar_sign');
+      returnData.push(item);
+    } );
+    return returnData.toString();
+  }
+
+  decodeCustomSpecialCharacters(query: string) {
+    return query.replace("ts_asterisk", "*")
+      .replace("ts_comma", ",")
+      .replace("ts_negation", "!")
+      .replace("ts_like", "~")
+      .replace("ts_colon", ":")
+      .replace("ts_semicolon", ";")
+      .replace("ts_greater_than", ">")
+      .replace("ts_lesser_than", "<")
+      .replace("ts_at_sign", "@")
+      .replace("ts_dollar_sign","$") ;
   }
 }

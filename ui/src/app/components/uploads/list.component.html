@@ -108,10 +108,19 @@
       </div>
       <div class="text-t-secondary d-flex w-100 mt-0">
         <div class="ts-col-35 pl-60 ml-3">
-
+          
         </div>
         <div class="ts-col-45 d-flex" *ngIf="!upload.isInProgress">
           <span [textContent]="upload.sizeInWords"></span>
+          <span class="d-flex justify-content-end ml-10" *ngIf="upload.createdAt">
+            <span [translate]="'message.common.created_on'"></span>
+            <span
+              [textContent]="'message.common.time'| translate : { time: (upload.createdAt | date : 'MMM d, yyyy')}"></span>
+          </span>
+          <span class="d-flex justify-content-end ml-10" *ngIf="upload.updatedAt">
+            <span [translate]="'message.common.updated_on'"></span><span
+              [textContent]="'message.common.time'| translate : { time: (upload.updatedAt | date : 'MMM d, yyyy')}"></span>
+          </span>
         </div>
       </div>
     </div>

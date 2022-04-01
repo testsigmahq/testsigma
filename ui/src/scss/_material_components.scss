@@ -923,3 +923,8 @@ mat-expansion-panel {
     }
   }
 }
+.cdk-content {
+  .cdk-virtual-scroll-content-wrapper {
+    contain: unset;
+  }
+}

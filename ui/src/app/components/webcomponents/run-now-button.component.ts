@@ -9,6 +9,9 @@ import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
 import {NotificationsService, NotificationType} from 'angular2-notifications';
 import {TranslateService} from '@ngx-translate/core';
 import {ToastrService} from "ngx-toastr";
+import {TestDeviceService} from "../../services/test-device.service";
+import {TestDevice} from "../../models/test-device.model";
+import {AgentService} from "../../agents/services/agent.service";
 
 @Component({
   selector: 'app-run-now-button',
@@ -51,6 +54,8 @@ export class RunNowButtonComponent extends BaseComponent implements OnInit {
     public notificationsService: NotificationsService,
     public translate: TranslateService,
     public toastrService: ToastrService,
+    public agentService: AgentService,
+    private executionEnvironmentService: TestDeviceService,
     private testPlanResultService: TestPlanResultService,) {
     super(authGuard, notificationsService, translate, toastrService);
   }
@@ -80,6 +85,23 @@ export class RunNowButtonComponent extends BaseComponent implements OnInit {
   }
 
   start() {
+    if (this.testPlan.isHybrid) {
+      this.executionEnvironmentService.findAll("disable:false,testPlanId:" + this.testPlan.id, undefined).subscribe(res => {
+        let testDevice: TestDevice = res.content[0];
+        this.agentService.find(testDevice.agentId).subscribe(res => {
+          if (!res.isOnline() || res.isOutOfSync()) {
+            this.showNotification(NotificationType.Error, "None of the Machine are active, Please activate one machine to continue");
+          }else {
+            this.startExecution();
+          }
+        })
+      });
+    }else{
+      this.startExecution();
+    }
+  }
+
+  startExecution(){
     this.inTransit = true;
     let testPlanResult = new TestPlanResult();
     testPlanResult.testPlanId = this.testPlan.id;

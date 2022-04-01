@@ -250,7 +250,7 @@ ngx-json-viewer.custom-json-view {
 
   &.custom-stature {
     > .ngx-json-viewer {
-      @extend .pr-40;
+      @extend .pr-30;
       @extend .pl-0;
     }
 
@@ -260,7 +260,7 @@ ngx-json-viewer.custom-json-view {
 
       .segment-main {
         @extend .d-flex, .align-items-center, .justify-content-start, .py-5;
-        @extend .pl-25;
+        @extend .pl-10;
         .toggler {
           position: relative !important;
           left: -5px;

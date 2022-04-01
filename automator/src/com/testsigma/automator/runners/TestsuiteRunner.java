@@ -1,12 +1,13 @@
 package com.testsigma.automator.runners;
 
 import com.testsigma.automator.AutomatorConfig;
+import com.testsigma.automator.constants.AutomatorMessages;
 import com.testsigma.automator.constants.DriverSessionType;
 import com.testsigma.automator.constants.ErrorCodes;
-import com.testsigma.automator.constants.AutomatorMessages;
 import com.testsigma.automator.drivers.DriverManager;
 import com.testsigma.automator.entity.*;
 import com.testsigma.automator.exceptions.AutomatorException;
+import com.testsigma.automator.exceptions.TestsigmaNoParallelRunException;
 import com.testsigma.automator.http.HttpClient;
 import com.testsigma.automator.utilities.ErrorUtil;
 import lombok.Data;
@@ -189,6 +190,12 @@ public abstract class TestsuiteRunner {
             testCaseEntity = getTestCase(testCaseEntity, this.testCaseFetchMaxTries);
             new ErrorUtil().checkError(testCaseEntity.getErrorCode(), testCaseEntity.getMessage());
           }
+        } catch (TestsigmaNoParallelRunException e) {
+          log.error(e.getMessage(), e);
+          testCaseRunFailed = true;
+          resultFailureMessage = e.getMessage();
+          testCaseResult.setResult(ResultConstant.STOPPED);
+          testCaseResult.setMessage(resultFailureMessage);
         } catch (AutomatorException e) {
           log.error(e.getMessage(), e);
           testCaseRunFailed = true;

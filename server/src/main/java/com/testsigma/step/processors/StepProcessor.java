@@ -287,6 +287,7 @@ public class StepProcessor {
     stepDetails.setTestDataName(testCaseStepEntityDTO.getTestDataName());
     stepDetails.setTestDataValue(testCaseStepEntityDTO.getTestDataValue());
     stepDetails.setDataMap(testStepMapper.mapDataMap(testStepDTO.getDataMapBean()));
+    stepDetails.setIgnoreStepResult(testStepDTO.getIgnoreStepResult());
     testCaseStepEntityDTO.setStepDetails(stepDetails);
   }
 

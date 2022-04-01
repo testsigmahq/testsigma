@@ -57,7 +57,7 @@ export class StepsListComponent extends BaseComponent implements OnInit {
     "WebApplication": "https://testsigma.com/docs/test-cases/create-steps-recorder/web-apps/overview/",
     "MobileWeb": "https://testsigma.com/docs/test-cases/create-steps-recorder/web-apps/overview/",
     "AndroidNative": "https://testsigma.com/docs/test-cases/create-steps-recorder/android-apps/",
-    "IOSNative": "https://testsigma.com/docs/test-cases/create-steps-recorder/ios-apps/",
+    "IOSNative": "https://testsigma.com/docs/test-cases/create-steps-recorder/ios-apps/overview/",
     "Rest": "https://testsigma.com/tutorials/getting-started/automate-rest-apis/"
   }
   private stepVideoResources = {
@@ -281,15 +281,6 @@ export class StepsListComponent extends BaseComponent implements OnInit {
 
   onStepType(obj) {
     this.currentStepType = obj;
-    let step = obj.step;
-    if((step?.conditionType == TestStepConditionType.LOOP_WHILE && step?.isEditing) || step?.type == TestStepType.WHILE_LOOP ) {
-      let query = ",stepActionType:"+ StepActionType.WHILE_LOOP;
-      this.fetchNLActions(query);
-      this.fetchAddonAction(query)
-    } else {
-      this.fetchNLActions();
-      this.fetchAddonAction()
-    }
   }
 
   get isActionText() {

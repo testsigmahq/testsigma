@@ -41,13 +41,18 @@ export class ElementFilterFormComponent extends BaseComponent implements OnInit 
     }
     if (this.data.query) {
       this.filter.normalizeCustomQuery(this.data.query);
-      console.log(this.filter);
       this.filter.queryHash = this.filter.normalizedQuery;
     }
   }
 
   save(): void {
-    if (this.filter.id)
+    let filter = this.filter;
+    filter.queryHash.forEach( (queryHash, i) => {
+      if(queryHash.key == "locatorValue") {
+        filter.queryHash[i].value = this.decodeCustomSpecialCharacters(queryHash.value.toString())
+      }
+    })
+    if (filter.id)
       this.updateFilter();
     else
       this.createFilter();
@@ -73,7 +78,7 @@ export class ElementFilterFormComponent extends BaseComponent implements OnInit 
         this.dialogRef.close(res);
       }, error => {
         this.translate.get('message.common.created.failure', {FieldName:'Element View'}).subscribe((key: string) => {
-          this.showAPIError(error, key);
+          this.showAPIError(error, key,'Element View');
         });
       });
     },(error) => {

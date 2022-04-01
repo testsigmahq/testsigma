@@ -82,7 +82,11 @@ export class DetailsComponent extends BaseComponent implements OnInit {
 
   public fetchLinkedCases() {
     let testCases: InfiniteScrollableDataSource;
-    testCases = new InfiniteScrollableDataSource(this.testCaseService, "workspaceVersionId:" + this.versionId + ",deleted:false,testDataId:" + this.testDataId);
+    testCases = new InfiniteScrollableDataSource(this.testCaseService, "workspaceVersionId:" + this.versionId + ",testDataId:" + this.testDataId);
+
+    let testCasesWithProfileInForLoop :InfiniteScrollableDataSource;
+    testCasesWithProfileInForLoop = new InfiniteScrollableDataSource(this.testCaseService, "workspaceVersionId:" + this.versionId + ",forLoopTestDataId:" + this.testDataId);
+
     waitTillRequestResponds();
     let _this = this;
 
@@ -90,8 +94,12 @@ export class DetailsComponent extends BaseComponent implements OnInit {
       if (testCases.isFetching)
         setTimeout(() => waitTillRequestResponds(), 100);
       else {
-        if (testCases.isEmpty)
+        if (testCases.isEmpty && testCasesWithProfileInForLoop.isEmpty)
           _this.openDeleteDialog();
+        else if (!testCases.isEmpty)
+          _this.openLinkedTestCasesDialog(testCases);
+        else if(!testCasesWithProfileInForLoop.isEmpty)
+          _this.openLinkedTestCasesDialog(testCasesWithProfileInForLoop);
         else
           _this.openLinkedTestCasesDialog(testCases);
       }

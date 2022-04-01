@@ -80,6 +80,9 @@ public class Element implements Serializable {
   @Column(name = "screen_name_id")
   private Long screenNameId;
 
+  @Column(name = "is_duplicated")
+  private Boolean isDuplicated = false;
+
   @OneToMany(mappedBy = "element", fetch = FetchType.LAZY)
   @EqualsAndHashCode.Exclude
   @ToString.Exclude

@@ -98,7 +98,7 @@ export class ActionElementSuggestionComponent implements OnInit {
     } else if(term){
       isNotMatched = true;
       this.elements.cachedItems.forEach((element: Element) => {
-        if (element.name == term)
+        if (element.name.toLowerCase() == term.toLowerCase())
           isNotMatched = false;
       })
     }
@@ -316,7 +316,7 @@ export class ActionElementSuggestionComponent implements OnInit {
     dialogRef.afterClosed()
       .subscribe((res) => {
         if (res) {
-          this.fetchElement();
+          this.dialogRef.close(res);
         }
       });
   }

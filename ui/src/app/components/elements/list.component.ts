@@ -164,7 +164,15 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
 
   fetchElements() {
     let sortBy = this.sortedBy + this.direction;
-    if (this.query) this.query = this.query + (this.currentFilter.normalizedQuery? this.currentFilter.queryString: '');
+    let query = ""
+    if (this.query) {
+      this.query +=  (this.currentFilter.normalizedQuery? this.currentFilter.queryString: '');
+      query = this.byPassSpecialCharacters(this.query);
+      this.query = query;
+      if(!query.includes('applicationVersionId:')) {
+        query += ',applicationVersionId:'+this.versionId;
+      }
+    }
     this.elements = new FilterableInfiniteDataSource(this.elementService, this.query, sortBy, 50, this.filterId, this.versionId);
     this.selectAllToggle(false);
   }
@@ -213,7 +221,7 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
 
   checkForLinkedTestCases(element?) {
     let testCases: InfiniteScrollableDataSource;
-    testCases = new InfiniteScrollableDataSource(this.testCaseService, "workspaceVersionId:" + this.versionId + ",deleted:false,element:" + encodeURI(element.name));
+    testCases = new InfiniteScrollableDataSource(this.testCaseService, "workspaceVersionId:" + this.versionId + ",element:" + encodeURI(element.name));
     waitTillRequestResponds();
     let _this = this;
 
@@ -424,7 +432,7 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
         this.selectAllToggle(false);
       },
       (err) => {
-        this.translate.get("element.notification.bulk_delete.failure").subscribe(res => this.showAPIError(err, res));
+        this.translate.get("element.notification.bulk_delete.failure").subscribe(res => this.showAPIError(err, res,"Elements","Test Case"));
         this.fetchElements();
         this.selectAllToggle(false);
       })
@@ -475,7 +483,7 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
   }
 
   private openLinkedTestCasesDialog(list) {
-    this.translate.get("elements.linked_with_cases").subscribe((res) => {
+    this.translate.get("elements_linked_with_cases").subscribe((res) => {
       this.matDialog.open(LinkedEntitiesModalComponent, {
         width: '568px',
         height: 'auto',
@@ -499,8 +507,9 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
     else if(this.query.indexOf("screenName")==-1)
       this.query += ",workspaceVersionId:" + this.version.id + ",screenName:" + screenName;
     else if(this.router.url.indexOf(encodedScreenName)!==-1)
-      this.notificationsService.error("Screen name already filtered","List already filtered with screen name!",
-          {timeOut: 3000, showProgressBar: true, pauseOnHover: true},null);
+      this.translate.get("element.name.already.filtered").subscribe((res: string) => {
+        this.showNotification(NotificationType.Error, res);
+      });
     this.elements = new FilterableInfiniteDataSource(this.elementService, encodedQuery, sortBy, 50,1, this.versionId);
   }
 

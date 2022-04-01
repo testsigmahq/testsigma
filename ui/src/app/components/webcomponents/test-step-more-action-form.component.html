@@ -39,8 +39,10 @@
       </div>
       <div class="form-group">
         <label class="control-label" [translate]="'test_step.results.prerequisite'"></label>
-        <mat-form-field class="mat-select-custom w-100" appearance="fill">
+        <mat-form-field class="mat-select-custom w-100" appearance="fill"  [class.disabled]="options.isTestStepResultsView">
           <mat-select [placeholder]="'None'"
+                      [disabled]="options.isTestStepResultsView"
+                      [class.disabled-pointer-events]="options.isTestStepResultsView"
                       disableOptionCentering panelClass="single"
                       [formControlName]="['preRequisiteStepId']"
                       (selectionChange)="resetOnPreRequisiteNone($event)">
@@ -59,19 +61,24 @@
           [formControl]="priorityControl"
         ><span [translate]="'test_step.priority.MAJOR_STOP'"></span></mat-checkbox>
       </div>
-<!--      <div-->
-<!--        *ngIf="!testStep.isConditionalType && !conditionalIf"-->
-<!--        class="form-group d-flex align-items-center">-->
-<!--        <mat-checkbox-->
-<!--          [formControlName]="['isMandatory']"-->
-<!--        ><span [translate]="'test_step.results.mandatory_label'"></span></mat-checkbox>-->
-<!--      </div>-->
+      <div class="form-group d-flex align-items-center">
+        <mat-checkbox
+          [matTooltip]="testStep?.isConditionalType ? ('test_step.results.ignore_step_result_hint'|translate):''"
+          [matTooltipPosition]="'right'"
+          [class.disabled]="testStep?.isConditionalType"
+          [disabled]="testStep?.isConditionalType"
+          [formControlName]="['ignoreStepResult']"
+          (change)="changePriorityOverIgnoreResult($event)">
+          <span [translate]="'test_step.results.ignore_step_result_label'"></span>
+          <i [matTooltip]="'test_step.details.ignore_step_result_hint' | translate"
+             class="fa-question-circle-solid ml-8"></i></mat-checkbox>
+      </div>
       <div>
         <mat-checkbox
-          [matTooltip]="options?.parentDisabled ? ('test_step.results.cant_enable_hint'|translate):''"
+          [matTooltip]="canAllowDisableStep ? ('test_step.results.cant_enable_hint'|translate):''"
           [matTooltipPosition]="'right'"
-          [class.disabled]="options?.parentDisabled"
-          [disabled]="options?.parentDisabled"
+          [class.disabled]="canAllowDisableStep"
+          [disabled]="canAllowDisableStep"
           [formControlName]="['disabled']">
           <span [translate]="'test_step.results.disable_label'"></span></mat-checkbox>
       </div>

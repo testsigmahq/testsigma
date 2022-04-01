@@ -54,6 +54,7 @@ public class TestCaseStepEntityDTO implements Cloneable {
   private Boolean snippetEnabled;
   private Boolean disabled;
   private String snippetClass;
+  private Boolean ignoreStepResult;
   private StepDetailsDTO stepDetails;
   private Map<String, AddonTestStepTestData> addonTestData;
   private Map<String, AddonElementData> addonElements;

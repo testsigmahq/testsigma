@@ -189,14 +189,19 @@ export class TestStepFormContainerComponent extends BaseComponent implements OnI
     this.testStep.conditionType = TestStepConditionType.LOOP_WHILE;
     this.testStep.conditionIf = [ResultConstant.SUCCESS];
     this.testStep.priority = TestStepPriority.MINOR;
+    this.testStep.ignoreStepResult = true;
   }
 
   changeStepType(stepType: string, isWhile?: boolean) {
     if (this.testStep.isConditionalWhileLoop) {
       delete this.testStep.conditionType;
     }
-    if (this.testStep.isConditionalIf) {
+    if (this.testStep.isConditionalIf || this.stepType==TestStepType.FOR_LOOP || isWhile) {
       this.testStep.priority = TestStepPriority.MINOR;
+      this.testStep.ignoreStepResult = true;
+    }
+    else{
+      this.testStep.ignoreStepResult = undefined;
     }
     this.stepType = stepType;
     this.showForm = true;
@@ -218,6 +223,7 @@ export class TestStepFormContainerComponent extends BaseComponent implements OnI
     this.testStep.position = this.position;
     this.testStep.waitTime = 30;
     this.testStep.priority = TestStepPriority.MAJOR;
+    this.testStep.conditionIf = [];
     if (commonData['preRequisiteStepId']) {
       this.testStep.preRequisiteStepId = commonData['preRequisiteStepId']
     }
@@ -237,6 +243,7 @@ export class TestStepFormContainerComponent extends BaseComponent implements OnI
     if (this.testStep.isConditionalType) {
       this.testStep.priority = TestStepPriority.MINOR;
       this.testStep.conditionIf = [ResultConstant.SUCCESS];
+      this.testStep.ignoreStepResult = true;
     }
     if (!this.isForLoop) {
       delete this.testStep.forLoopEndIndex;
@@ -257,6 +264,7 @@ export class TestStepFormContainerComponent extends BaseComponent implements OnI
     if(!this.testStep?.id) {
       delete this.testStep.conditionType;
       this.stepForm.removeControl('conditionType');
+      this.testStep.ignoreStepResult = false;
       this.stepType = this.version.workspace.isRest ? TestStepType.REST_STEP : TestStepType.ACTION_TEXT;
       this.changeStepType(this.stepType);
     }
@@ -297,7 +305,8 @@ export class TestStepFormContainerComponent extends BaseComponent implements OnI
         formSubmitted: true,
         steps: this.testSteps.content,
         parentDisabled: testStep.parentStep?.disabled,
-        isStepRecordView: this.stepRecorderView
+        isStepRecordView: this.stepRecorderView,
+        isTestStepResultsView: !!this.testCaseResultId
       },
       panelClass: ['mat-dialog', 'rds-none'],
       ...this.alterStyleIfStepRecorder()
@@ -382,11 +391,12 @@ export class TestStepFormContainerComponent extends BaseComponent implements OnI
       this.testStep.conditionType = TestStepConditionType.CONDITION_IF;
       this.testStep.priority = TestStepPriority.MINOR;
       this.testStep.conditionIf = [ResultConstant.SUCCESS];
+      this.testStep.ignoreStepResult = true;
     } else {
       this.testStep.priority = TestStepPriority.MAJOR;
       this.testStep.conditionType = undefined;
       this.testStep.conditionIf = undefined;
-
+      this.testStep.ignoreStepResult = undefined;
     }
   }
 

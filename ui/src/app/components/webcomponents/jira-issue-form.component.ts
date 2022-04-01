@@ -228,6 +228,7 @@ export class JiraIssueFormComponent extends BaseComponent implements OnInit {
     this.isProjectShow = false;
     this.issueTypes = project.issueTypes;
     this.setBugIssueType();
+    this.fields = this.selectedIssueType.formFields;
     this.initFormControl();
     if (this.isLinkToIssue) {
       this.fetchIssuesByTerm().subscribe(data => {

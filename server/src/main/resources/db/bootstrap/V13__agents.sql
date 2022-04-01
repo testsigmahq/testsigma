@@ -17,8 +17,9 @@ CREATE TABLE `agents`
   `ip_address`            VARCHAR(255)                         DEFAULT NULL,
   `os_type`               VARCHAR(255)                         DEFAULT NULL,
   `type`                  INT(11)                              DEFAULT 4,
-  `title`                 VARCHAR(255) NULL,
+  `title`                 VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `index_agents_on_title` (`title`),
   UNIQUE KEY `index_agents_on_unique_id` (`unique_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8

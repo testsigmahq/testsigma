@@ -50,6 +50,7 @@ public class ElementSpecificationsBuilder extends BaseSpecificationsBuilder {
       normalizeAppVersion(criteria, version);
       normalizeOperation(criteria);
       normalizeEnums(criteria);
+      normalizeBoolean(criteria);
       result = Specification.where(result).and(new ElementSpecification(criteria));
     }
     return result;
@@ -93,6 +94,12 @@ public class ElementSpecificationsBuilder extends BaseSpecificationsBuilder {
       } else {
         criteria.setValue(Long.parseLong((String) criteria.getValue()));
       }
+    }
+  }
+
+  private void normalizeBoolean(SearchCriteria criteria) {
+    if (criteria.getKey().equals("isDuplicated") && criteria.getOperation().equals(SearchOperation.EQUALITY)) {
+      criteria.setValue(Boolean.parseBoolean(criteria.getValue().toString()));
     }
   }
 }

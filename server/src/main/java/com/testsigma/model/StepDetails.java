@@ -45,6 +45,8 @@ public class StepDetails {
   private String testDataName;
   @JsonProperty("test_data_value")
   private String testDataValue;
+  @JsonProperty("ignore_step_result")
+  private Boolean ignoreStepResult;
 
   public TestStepConditionType getConditionType() {
     return conditionType != null ? conditionType : null;

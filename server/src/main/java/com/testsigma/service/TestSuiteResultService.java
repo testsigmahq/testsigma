@@ -107,12 +107,12 @@ public class TestSuiteResultService {
       environmentRunId, statusConstant);
   }
 
-  public void stopTestSuiteResultsByEnvironmentResult(String message, Long environmentRunId) {
+  public void stopTestSuiteResultsByEnvironmentResult(String message, ResultConstant result, Long environmentRunId) {
     log.info(String.format("Updating test suites with result - %s, status - %s, message - %s with environment result " +
-      "id - %s ", ResultConstant.NOT_EXECUTED, StatusConstant.STATUS_COMPLETED, message, environmentRunId));
+      "id - %s ", result, StatusConstant.STATUS_COMPLETED, message, environmentRunId));
 
     Timestamp currentTime = new Timestamp(java.lang.System.currentTimeMillis());
-    testSuiteResultRepository.updateResultForStopped(ResultConstant.NOT_EXECUTED, message,
+    testSuiteResultRepository.updateResultForStopped(result, message,
       currentTime, currentTime, 0L, environmentRunId);
   }
 

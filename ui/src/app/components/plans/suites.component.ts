@@ -64,6 +64,7 @@ export class SuitesComponent extends BaseComponent implements OnInit {
     if (term)
       query += ",name:*" + term + "*";
     this.suitesList = new InfiniteScrollableDataSource(this.testSuiteService, query);
+    this.isFetching = false;
   }
 
   attachSearchEvents() {

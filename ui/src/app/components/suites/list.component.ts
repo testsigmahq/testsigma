@@ -169,7 +169,10 @@ export class ListComponent extends BaseComponent implements OnInit {
         this.fetchTestSuites();
         this.selectedSuites = []
       },
-      (err) => this.translate.get("message.common.deleted.failure", {FieldName: "Test Suites"}).subscribe(res => this.showAPIError(err, res)))
+      (err) => this.translate.get("test_suite.notification.bulk_delete.failure").subscribe(res => {
+        this.showAPIError(err, res);
+        this.fetchTestSuites();
+      }))
   }
 
   public fetchLinkedPlans(id) {
@@ -192,7 +195,7 @@ export class ListComponent extends BaseComponent implements OnInit {
 
 
   private openLinkedTestPlansDialog(list) {
-    this.translate.get("elements.linked_with_cases").subscribe((res) => {
+    this.translate.get("suite.linked_with_test_plans").subscribe((res) => {
       this.matDialog.open(LinkedEntitiesModalComponent, {
         width: '568px',
         height: 'auto',

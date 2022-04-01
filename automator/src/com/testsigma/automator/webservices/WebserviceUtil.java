@@ -7,6 +7,7 @@ import com.jayway.jsonpath.PathNotFoundException;
 import com.testsigma.automator.constants.AuthorizationTypes;
 import com.testsigma.automator.constants.AutomatorMessages;
 import com.testsigma.automator.entity.*;
+import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.exceptions.TestsigmaFileNotFoundException;
 import com.testsigma.automator.exceptions.TestsigmaTestdataNotFoundException;
 import com.testsigma.automator.http.HttpResponse;
@@ -57,6 +58,7 @@ public class WebserviceUtil {
     RestfulStepEntity entity = new ObjectMapper().convertValue(testcaseStep.getAdditionalData()
       .get(TestCaseStepEntity.REST_DETAILS_KEY), RestfulStepEntity.class);
     result.setResult(ResultConstant.SUCCESS);
+    WebserviceResponse resObj = new WebserviceResponse();
     try {
       log.debug("Updating Rest step variables for RestStepEntity:" + entity);
       new RestAPIRunTimeDataProcessor(entity,result).processRestAPIStep();
@@ -76,7 +78,6 @@ public class WebserviceUtil {
       log.debug("Method - " + entity.getMethod().toUpperCase() + "response - " + new ObjectMapperService().convertToJson(response));
       ((Map<String, Object>) (testcaseStep.getAdditionalData().get(TestCaseStepEntity.REST_DETAILS_KEY))).put("url", entity.getUrl());
 
-      WebserviceResponse resObj = new WebserviceResponse();
       resObj.setStatus(response.getStatusCode());
 
       if (entity.getStoreMetadata()) {
@@ -86,15 +87,20 @@ public class WebserviceUtil {
       result.getMetadata().setRestResult(resObj);
 
       new RestApiResponseValidator(entity, result, response).validateResponse();
-      new RestAPIRunTimeDataProcessor(entity,result).storeResponseData(response);
+      new RestAPIRunTimeDataProcessor(entity,result).storeResponseData(response,envSettings);
 
     } catch (Exception e) {
       log.error("Error while executing Rest Step:"+testcaseStep, e);
-      String genericExceptionMessage = getExceptionSpecificMessage(e,result);
-      result.setResult(ResultConstant.FAILURE);
-      result.setMessage(genericExceptionMessage);
+      if (e instanceof AutomatorException) {
+        result.setResult(ResultConstant.FAILURE);
+        result.setMessage(e.getMessage());
+      } else {
+        String genericExceptionMessage = getExceptionSpecificMessage(e, result);
+        result.setResult(ResultConstant.FAILURE);
+        result.setMessage(genericExceptionMessage);
+      }
     }
-
+    result.getMetadata().setRestResult(resObj);
     log.debug("Test Step Result :: " + new ObjectMapperService().convertToJson(result));
   }
 

@@ -79,9 +79,9 @@ export class RestStepEntity extends Base implements PageObject {
     return returnValue;
   }
 
-  serializeRawValueSendApi(input) {
+  serializeRawValueForDryAPICall(input) {
     let returnValue = {};
-    returnValue["url"] = input["url"];
+    returnValue["url"] = encodeURI(input["url"])  ;
     returnValue["request_method"] = input["method"];
     returnValue["request_headers"] = input["requestHeaders"];
     returnValue["follow_redirects"] = input["followRedirects"];

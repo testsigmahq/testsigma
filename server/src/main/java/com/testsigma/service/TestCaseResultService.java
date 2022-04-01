@@ -296,12 +296,12 @@ public class TestCaseResultService {
     });
   }
 
-  public void stopTestCaseResultsByEnvironmentResult(String message, Long environmentRunId) {
+  public void stopTestCaseResultsByEnvironmentResult(String message, ResultConstant result, Long environmentRunId) {
     log.info(String.format("Updating test cases with result - %s, message - %s with environment result id %s",
-      ResultConstant.NOT_EXECUTED, message, environmentRunId));
+      result, message, environmentRunId));
 
     Timestamp currentTime = new Timestamp(java.lang.System.currentTimeMillis());
-    testCaseResultRepository.updateResultForStopped(ResultConstant.NOT_EXECUTED, message, currentTime, currentTime,
+    testCaseResultRepository.updateResultForStopped(result, message, currentTime, currentTime,
       0L, environmentRunId);
   }
 

@@ -53,6 +53,9 @@
         type="checkbox"/>
       <span
         class="pl-10"
+        class="pl-10 sort-header"
+        [appSort]="sortedBy!='name'? undefined : direction == ',asc'"
+        (click)="sortBy('name', ((sortedBy!='name' || direction == ',desc')?',asc':',desc'))"
         [translate]="'message.common.label.name'"></span>
     </div>
     <div

@@ -31,6 +31,8 @@ export class ResultsListComponent extends BaseComponent implements OnInit {
   public isRunning: boolean;
   public isFiltered: boolean = false;
   public version: WorkspaceVersion
+  public direction = ",asc";
+  public sortedBy = "name";
 
   constructor(
     private testPlanService: TestPlanService,
@@ -96,6 +98,15 @@ export class ResultsListComponent extends BaseComponent implements OnInit {
       else
         this.fetchingCompleted = true;
     });
+  }
+
+  sortThisBy(value, direction) {
+    if (!(this.sortedBy != value || this.direction != direction))
+      return;
+    this.direction = direction;
+    this.sortedBy = value;
+    this.sortBy = this.sortedBy + this.direction ;
+    this.fetchTestPlans(this.searchQuery);
   }
 
   fetchExecutionEnvironments() {

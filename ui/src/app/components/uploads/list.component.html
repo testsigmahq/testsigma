@@ -50,11 +50,16 @@
         (change)="selectAllToggle(selectAll)"
         [checked]="selectedUploads.length == uploads?.content?.length"></mat-checkbox>
       <span
-        class="pl-15"
+        class="pl-15 sort-header"
+        [appSort]="sortedBy!='name'? undefined : direction == ',asc'"
+        (click)="sortBy('name', ((sortedBy!='name' || direction == ',desc')?',asc':',desc'))"
         [translate]="'message.common.text.title'"></span>
     </div>
-    <span class="ts-col-45 pl-5" [translate]="'uploads.list.header.file_path'"></span>
-    <span class="ts-col-20 pl-4" [translate]="'uploads.list.header.upload_status'"></span>
+    <span class="ts-col-55 pl-5 sort-header"
+          [appSort]="sortedBy!='fileName'? undefined : direction == ',asc'"
+          (click)="sortBy('fileName', ((sortedBy!='fileName' || direction == ',desc')?',asc':',desc'))"
+          [translate]="'uploads.list.header.file_path'"></span>
+    <span class="ts-col-10 pl-4"></span>
   </div>
   <app-placeholder-loader
     *ngIf="!fetchingCompleted"></app-placeholder-loader>
@@ -108,7 +113,7 @@
       </div>
       <div class="text-t-secondary d-flex w-100 mt-0">
         <div class="ts-col-35 pl-60 ml-3">
-          
+
         </div>
         <div class="ts-col-45 d-flex" *ngIf="!upload.isInProgress">
           <span [textContent]="upload.sizeInWords"></span>

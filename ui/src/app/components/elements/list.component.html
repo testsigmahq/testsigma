@@ -97,18 +97,27 @@
         </div>
         <span
           *ngSwitchCase="false"
-          class="pl-15"
+          class="pl-15 sort-header"
+          [appSort]="sortedBy!='name'? undefined : direction == ',asc'"
+          (click)="sortBy('name', ((sortedBy!='name' || direction == ',desc')?',asc':',desc'))"
           [translate]="'elements.element_name'"></span>
       </div>
       <div
-        class="ts-col-10 d-flex align-items-center"
+        class="ts-col-10 d-flex align-items-center sort-header"
+        [appSort]="sortedBy!='locatorType'? undefined : direction == ',asc'"
+        (click)="sortBy('locatorType', ((sortedBy!='locatorType' || direction == ',desc')?',asc':',desc'))"
         [translate]="'elements.created_type'"></div>
       <div
-        class="ts-col-25 px-10 d-flex align-items-center"
+        class="ts-col-25 px-10 d-flex align-items-center sort-header"
+        [appSort]="sortedBy!='screenNameId'? undefined : direction == ',asc'"
+        (click)="sortBy('screenNameId', ((sortedBy!='screenNameId' || direction == ',desc')?',asc':',desc'))"
         [translate]="'elements.screen_name'"></div>
       <div
-        class="ts-col-10 d-flex align-items-center"
-        [translate]="'elements.created_at'"></div>
+        class="ts-col-10 d-flex align-items-center sort-header"
+        [appSort]="sortedBy!='createdDate'? undefined : direction == ',asc'"
+        (click)="sortBy('createdDate', ((sortedBy!='createdDate' || direction == ',desc')?',asc':',desc'))"
+        [translate]="'elements.created_at'">
+      </div>
     </div>
   </div>
   <cdk-virtual-scroll-viewport

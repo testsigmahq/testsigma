@@ -221,7 +221,10 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
 
   checkForLinkedTestCases(element?) {
     let testCases: InfiniteScrollableDataSource;
-    testCases = new InfiniteScrollableDataSource(this.testCaseService, "workspaceVersionId:" + this.versionId + ",element:" + encodeURI(element.name));
+    let query = "workspaceVersionId:" + this.versionId + ",deleted:false,uiIdentifier:" + encodeURI(element.name)
+    query = this.byPassSpecialCharacters(query);
+    testCases = new InfiniteScrollableDataSource(this.testCaseService,query);
+
     waitTillRequestResponds();
     let _this = this;
 

@@ -148,6 +148,7 @@ public class TestCaseService extends XMLExportService<TestCase> {
 
   public TestCase create(TestCaseRequest testCaseRequest) throws TestsigmaException, SQLException {
     TestCase testCase = testCaseMapper.map(testCaseRequest);
+    testCase.setIsActive(true);
     testCase.setCreatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
     setStatusTimeAndBy(testCaseRequest, testCase);
     List<Long> preReqList = new ArrayList<>();

@@ -91,6 +91,7 @@ import {RestFormStoreDetailsComponent} from "../components/webcomponents/rest-fo
 import {RestStepHeadersComponent} from "../components/webcomponents/rest-step-headers.component";
 import {PromptModalComponent} from "./components/webcomponents/prompt-modal.component";
 import {ToastrModule} from "ngx-toastr";
+import {SortDirective} from "./directives/sort.directive";
 
 @NgModule({
     declarations: [
@@ -122,6 +123,7 @@ import {ToastrModule} from "ngx-toastr";
         WarningModalComponent,
         SanitizeHtmlPipe,
         AsyncBtnDirective,
+        SortDirective,
         InspectionModalComponent,
       UploadsFormComponent,
       MultiSelectAutocomplete,
@@ -244,6 +246,7 @@ import {ToastrModule} from "ngx-toastr";
     UploadEntitiesModalComponent,
     SanitizeHtmlPipe,
     AsyncBtnDirective,
+    SortDirective,
     InspectionModalComponent,
     UploadsFormComponent,
     MultiSelectAutocomplete,

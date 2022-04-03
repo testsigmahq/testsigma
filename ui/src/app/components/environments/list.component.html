@@ -51,7 +51,9 @@
         [checked]="selectedEnvironments.length == environments?.content?.length"
         class="mat-checkbox"></mat-checkbox>
       <span
-        class="pl-15"
+        class="pl-15 sort-header"
+        [appSort]="sortedBy!='name'? undefined : direction == ',asc'"
+        (click)="sortBy('name', ((sortedBy!='name' || direction == ',desc')?',asc':',desc'))"
         [translate]="'message.common.text.title'"></span>
     </div>
   </div>

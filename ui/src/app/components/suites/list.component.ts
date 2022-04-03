@@ -31,6 +31,7 @@ export class ListComponent extends BaseComponent implements OnInit {
   sortByColumns = ["name", "createdDate", "updatedDate"];
   direction = ",asc";
   sortedBy = "name";
+  public sortByQuery:string
   selectAll = false;
   currentPage = new Pageable();
   fetchingCompleted: boolean;

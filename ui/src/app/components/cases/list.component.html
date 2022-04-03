@@ -147,14 +147,18 @@
         </div>
         <span
           *ngIf="!selectedTestCases.length"
-          class="ts-col-100-61"
+          [appSort]="sortedBy!='name'? undefined : direction == ',asc'"
+          (click)="sortBy('name', ((sortedBy!='name' || direction == ',desc')?',asc':',desc'))"
+          class="ts-col-100-61 sort-header"
           [translate]="'message.common.text.title'"></span>
       </div>
       <div *ngIf="!isStepGroup"
         class="ts-col-15"
         [translate]="'message.common.text.result'"></div>
       <div
-        class="ts-col-15 px-25"
+        class="ts-col-15 px-25 sort-header"
+        [appSort]="sortedBy!='status'? undefined : direction == ',asc'"
+        (click)="sortBy('status', ((sortedBy!='status' || direction == ',desc')?',asc':',desc'))"
         [translate]="'message.common.text.status'"></div>
     </div>
     <div

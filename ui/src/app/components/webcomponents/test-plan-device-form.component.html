@@ -3,7 +3,7 @@
   class="form-group pb-lg">
   <div
     class="fz-14 rb-medium pb-30"
-    [translate]="'test_plan.environment.device.title'"></div>
+    [translate]="'test_plan.environment.device.title' | translate"></div>
   <div class="d-flex align-items-center" *ngIf="testPlanLabType && !isHybrid">
     <div
       class="ts-col-20 pr-14" *ngIf="version?.workspace?.isMobileWeb">
@@ -54,7 +54,7 @@
         [items]="cloudDevicePage"
         (onSearch)="fetchCloudDevices($event)"
         (onValueChange)="setCloudDevice($event)"></app-auto-complete>
-      <label class="control-label required" [translate]="'test_plan.environment.device.name'"></label>
+      <label class="control-label required" [translate]="'test_plan.environment.device.name' | translate"></label>
       <mat-progress-spinner
         class="search-spinner" mode="indeterminate" style="margin-left: -10px" diameter="20" *ngIf="this.isDeviceListInProgress">
       </mat-progress-spinner>

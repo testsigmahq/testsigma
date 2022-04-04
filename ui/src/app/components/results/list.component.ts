@@ -158,4 +158,9 @@ export class ResultsListComponent extends BaseComponent implements OnInit {
     }
     this.fetchTestPlans(this.searchQuery)
   }
+
+  checkIfLastRunExsists(testPlan: TestPlan){
+    return !(testPlan?.lastRun == null && testPlan?.lastRun?.id == null);
+
+  }
 }

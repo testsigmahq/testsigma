@@ -169,8 +169,8 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
       this.query +=  (this.currentFilter.normalizedQuery? this.currentFilter.queryString: '');
       query = this.byPassSpecialCharacters(this.query);
       this.query = query;
-      if(!query.includes('applicationVersionId:')) {
-        query += ',applicationVersionId:'+this.versionId;
+      if(!query.includes('workspaceVersionId:')) {
+        query += ',workspaceVersionId:'+this.versionId;
       }
     }
     this.elements = new FilterableInfiniteDataSource(this.elementService, this.query, sortBy, 50, this.filterId, this.versionId);
@@ -221,7 +221,10 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
 
   checkForLinkedTestCases(element?) {
     let testCases: InfiniteScrollableDataSource;
-    testCases = new InfiniteScrollableDataSource(this.testCaseService, "workspaceVersionId:" + this.versionId + ",element:" + encodeURI(element.name));
+    let query = "workspaceVersionId:" + this.versionId + ",deleted:false,uiIdentifier:" + encodeURI(element.name)
+    query = this.byPassSpecialCharacters(query);
+    testCases = new InfiniteScrollableDataSource(this.testCaseService,query);
+
     waitTillRequestResponds();
     let _this = this;
 

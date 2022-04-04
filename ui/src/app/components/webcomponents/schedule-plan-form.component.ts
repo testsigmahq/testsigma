@@ -64,6 +64,10 @@ export class SchedulePlanFormComponent extends BaseComponent implements OnInit {
     if(this.testPlan){
       this.fetchSchedulePlanList(this.testPlan.id);
     }
+
+    this.scheduleForm.valueChanges.subscribe(res => {
+      this.saving = false;
+    })
   }
 
   createSchedule()

@@ -119,9 +119,15 @@ export class FormComponent extends BaseComponent implements OnInit {
     })
   }
 
+  public noWhitespaceValidator(control: FormControl) {
+    const isWhitespace = (control.value || '').trim().length === 0;
+    const isValid = !isWhitespace;
+    return isValid ? null : { 'whitespace': true };
+  }
+
   initFormControls() {
     this.testSuiteForm = new FormGroup({
-      name: new FormControl(this.testSuite.name, [Validators.required, Validators.minLength(4), Validators.maxLength(125)]),
+      name: new FormControl(this.testSuite.name, [Validators.required, Validators.minLength(4), Validators.maxLength(125),this.noWhitespaceValidator]),
       description: new FormControl(this.testSuite.description),
       preRequisite: new FormControl(this.testSuite.preRequisite),
       activeTestCases: new FormControl(this.activeTestCases, [Validators.required])

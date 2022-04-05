@@ -132,6 +132,7 @@ export class SchedulePlanFormComponent extends BaseComponent implements OnInit {
           })
       }
       else{
+        this.saving = false;
         return false;
       }
     }

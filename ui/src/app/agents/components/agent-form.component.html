@@ -44,7 +44,7 @@
                  *ngIf="alreadyRegisteredAsPublic && agent.ipAddress !=''">
             </div>
             <div class="note text-danger mb-30"
-                 [translate]="'agents.form.active_agent_already_present'"
+                 [translate]="'agents.form.active_agent_already_present' | translate"
                  *ngIf="agent.isOnline">
             </div>
             <div class="note text-danger mb-30"

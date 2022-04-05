@@ -111,10 +111,10 @@ export class TestCasesFilterComponent implements OnInit {
   }
 
   disableSingleSelectedFields(){
-    if (this.filterStatuses.length == 1) this.disableStatus = true;
-    if (this.filterTestCaseTypes.length ==1) this.disableTestcaseType = true;
-    if (this.filterTestCasePriorities.length ==1) this.disablePriority = true;
-    if (this.filterByResult.length ==1) this.disableRunResult = true;
+    if (this.filterStatuses.length > 0) this.disableStatus = true;
+    if (this.filterTestCaseTypes.length > 0) this.disableTestcaseType = true;
+    if (this.filterTestCasePriorities.length > 0) this.disablePriority = true;
+    if (this.filterByResult.length >0) this.disableRunResult = true;
   }
 
   constructQueryString() {

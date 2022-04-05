@@ -2,7 +2,8 @@
   <button (click)="loading?'':quit()"
           [disabled]="deleteClicked"
           [matTooltip]="(loading?'agents.mobile.inspection.quit_session_later':'agents.mobile.inspection.quit_session')| translate"
-          class="btn btn-clear mobile-ins-close-recording">&times;
+          class="btn btn-delete mobile-ins-close-recording d-flex mr-10">
+    <span class="fz-14 pr-7" [translate]="'agents.mobile.inspection.quit_session'"></span> &times;
   </button>
   <div [class.ts-col-60]="fullScreenMode"
        class="mirroring-section ts-col-40">

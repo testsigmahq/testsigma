@@ -41,11 +41,11 @@
             [translate]="'element.message.name.required'" class="error">
           </div>
           <div
-            *ngIf="elementForm.controls.name.errors?.minlength && formSubmitted"
+            *ngIf="elementForm.controls.name.errors?.minlength && !elementForm.controls.name.errors?.pattern && formSubmitted"
             [translate]="'element.message.name.minlength'" class="error">
           </div>
           <div
-            *ngIf="elementForm.controls.name.errors?.maxlength && formSubmitted "
+            *ngIf="elementForm.controls.name.errors?.maxlength && formSubmitted && !elementForm.controls.name.errors?.pattern "
             class="error" [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'250'}">
           </div>
           <div

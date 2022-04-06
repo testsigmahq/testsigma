@@ -1316,6 +1316,8 @@
   "uploads.form.label.select_file_type": "Select Type",
   "uploads.form.progress": "App Upload in Progress",
   "uploads.form.max_size": "(Max. File Size : {{max}} MB)",
+  "uploads.form.version.name": "Version",
+  "uploads.form.pick_other": "Click here to pick older versions.",
   "nl_action.list.title": "Natural Text Actions",
   "action.element.screen.name.suggestion.placeholder": "Search Using Screen Name",
   "nl_actions.list.header.action": "Action",

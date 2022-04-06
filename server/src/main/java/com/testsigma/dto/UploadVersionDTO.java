@@ -7,9 +7,8 @@
  *
  */
 
-package com.testsigma.dto.api;
+package com.testsigma.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.testsigma.model.UploadStatus;
 import com.testsigma.model.UploadType;
 import lombok.Data;
@@ -17,15 +16,18 @@ import lombok.Data;
 import java.sql.Timestamp;
 
 @Data
-public class APIUploadDTO {
+public class UploadVersionDTO {
   Long id;
-  @JsonProperty("created_date")
   Timestamp createdDate;
-  @JsonProperty("updated_date")
   Timestamp updatedDate;
-  @JsonProperty("name")
   String name;
-  @JsonProperty("latest_version_id")
-  Long latestVersionId;
-
+  String path;
+  String fileName;
+  UploadType type;
+  String version;
+  Long fileSize;
+  String preSignedURL;
+  Boolean signed = Boolean.FALSE;
+  UploadStatus uploadStatus;
+  Long uploadId;
 }

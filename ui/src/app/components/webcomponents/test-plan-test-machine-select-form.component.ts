@@ -235,6 +235,7 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
           resolution : new FormControl(environment?.resolution, []),
           capabilities : new FormControl(this.formBuilder.array(environment?.capabilities || [])),
           appUploadId : new FormControl(environment?.appUploadId, [this.requiredIfValidator(() => this.isAppUploadIdRequired && this.isMobileNative)]),
+          appUploadVersionId: new FormControl(environment?.appUploadVersionId, []),
           appPathType : new FormControl(environment?.appPathType || (ApplicationPathType.UPLOADS), [this.requiredIfValidator(() => this.isMobileNative)]),
           appUrl: new FormControl(environment?.appUrl, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.USE_PATH), Validators.pattern(/^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/)]),
           appPackage: new FormControl(environment?.appPackage, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.APP_DETAILS)]),

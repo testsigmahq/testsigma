@@ -53,10 +53,12 @@ public class IosCapabilities extends MobileCapabilities {
   private String getIosResignedPresignedUrlFromUpload(TestDevice testDevice)
     throws TestsigmaException {
     Upload upload = uploadService.find(Long.valueOf(testDevice.getAppUploadId()));
+    UploadVersion uploadVersion = testDevice.getAppUploadVersionId() == null ? upload.getLatestVersion() : uploadVersionService.find(testDevice.getAppUploadVersionId());
+
     ProvisioningProfileUpload profileUpload = provisioningProfileUploadService
       .findByDeviceIdAndUploadId(testDevice.getDeviceId(), upload.getId());
     ProvisioningProfile provisioningProfile = provisioningProfileService.find(profileUpload.getProvisioningProfileId());
-    return storageServiceFactory.getStorageService().generatePreSignedURL(upload.getResignedAppS3PathSuffix(provisioningProfile.getId()),
+    return storageServiceFactory.getStorageService().generatePreSignedURL(uploadVersion.getResignedAppS3PathSuffix(provisioningProfile.getId()),
       StorageAccessLevel.READ, 300).toString();
   }
 

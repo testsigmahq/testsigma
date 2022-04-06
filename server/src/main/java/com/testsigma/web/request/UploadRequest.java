@@ -23,4 +23,5 @@ public class UploadRequest {
   @NotNull UploadType uploadType;
   @Nullable MultipartFile fileContent;
   @NotNull Long workspaceId;
+  String version;
 }

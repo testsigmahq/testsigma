@@ -16,7 +16,7 @@ public interface ProvisioningProfileUploadRepository extends BaseRepository<Prov
 
   List<ProvisioningProfileUpload> findAllByProvisioningProfileId(Long profileId);
 
-  ProvisioningProfileUpload findByProvisioningProfileIdAndUploadId(Long provisioningProfileId, Long uploadId);
+  ProvisioningProfileUpload findByProvisioningProfileIdAndUploadVersionId(Long provisioningProfileId, Long uploadId);
 
-  List<ProvisioningProfileUpload> findAllByUploadId(Long uploadId);
+  List<ProvisioningProfileUpload> findAllByUploadVersionId(Long uploadId);
 }

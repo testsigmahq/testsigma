@@ -26,6 +26,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
                       [class.d-none]="isEmptyUploads"
                       [formGroup]="environmentFormGroup"
                       [formCtrl]="environmentFormGroup?.controls['appUploadId']"
+                      [versionFormCtrl]="environmentFormGroup?.controls['appUploadVersionId']"
                       [version]="version"
                       [testPlanLabType]="testPlanLabType"
                       [deviceId]="deviceId"

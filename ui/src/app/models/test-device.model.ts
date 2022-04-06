@@ -34,6 +34,9 @@ export class TestDevice extends Base implements PageObject {
   public udid: String
   @serializable
   public appUploadId: Number;
+
+  @serializable
+  public appUploadVersionId: Number;
   @serializable
   public appPackage: String;
   @serializable

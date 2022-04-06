@@ -68,6 +68,9 @@ public class TestDevice {
   @Column(name = "app_upload_id")
   private Long appUploadId;
 
+  @Column(name = "app_upload_version_id")
+  private Long appUploadVersionId;
+
   @Column(name = "app_package")
   private String appPackage;
 

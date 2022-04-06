@@ -2,10 +2,7 @@ package com.testsigma.service;
 
 import com.testsigma.config.StorageServiceFactory;
 import com.testsigma.exception.TestsigmaException;
-import com.testsigma.model.ProvisioningProfile;
-import com.testsigma.model.ProvisioningProfileDevice;
-import com.testsigma.model.ProvisioningProfileUpload;
-import com.testsigma.model.Upload;
+import com.testsigma.model.*;
 import com.testsigma.repository.ProvisioningProfileUploadRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -22,7 +19,7 @@ import java.util.List;
 public class ProvisioningProfileUploadService {
   private final ProvisioningProfileUploadRepository repository;
   private final StorageServiceFactory storageServiceFactory;
-  private final UploadService uploadService;
+  private final UploadVersionService uploadVersionService;
   private final ProvisioningProfileDeviceService provisioningProfileDeviceService;
 
   public List<ProvisioningProfileUpload> findAllByProvisioningProfileId(Long profileId) {
@@ -30,18 +27,18 @@ public class ProvisioningProfileUploadService {
   }
 
   public List<ProvisioningProfileUpload> findAllByUploadId(Long uploadId) {
-    return repository.findAllByUploadId(uploadId);
+    return repository.findAllByUploadVersionId(uploadId);
   }
 
   public ProvisioningProfileUpload findByDeviceIdAndUploadId(Long deviceId, Long uploadId) {
     ProvisioningProfileDevice profile = provisioningProfileDeviceService.findByAgentDeviceId(deviceId);
-    return this.repository.findByProvisioningProfileIdAndUploadId(profile.getProvisioningProfileId(), uploadId);
+    return this.repository.findByProvisioningProfileIdAndUploadVersionId(profile.getProvisioningProfileId(), uploadId);
   }
 
-  public void create(ProvisioningProfile profile, Upload upload) {
+  public void create(ProvisioningProfile profile, UploadVersion version) {
     ProvisioningProfileUpload profileUpload = new ProvisioningProfileUpload();
     profileUpload.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-    profileUpload.setUploadId(upload.getId());
+    profileUpload.setUploadVersionId(version.getId());
     profileUpload.setProvisioningProfileId(profile.getId());
     repository.save(profileUpload);
   }
@@ -50,7 +47,7 @@ public class ProvisioningProfileUploadService {
     repository.deleteAll(provisioningProfileUploads);
   }
 
-  public void removeEntitiesForUpload(Upload upload) {
+  public void removeEntitiesForUpload(UploadVersion upload) {
     List<ProvisioningProfileUpload> provisioningProfileUploads = findAllByUploadId(upload.getId());
 
     for (ProvisioningProfileUpload profileUpload : provisioningProfileUploads) {
@@ -62,7 +59,7 @@ public class ProvisioningProfileUploadService {
   public void removeEntitiesForProfile(ProvisioningProfile profile) throws TestsigmaException {
     List<ProvisioningProfileUpload> provisioningProfileUploads = findAllByProvisioningProfileId(profile.getId());
     for (ProvisioningProfileUpload provisioningProfileUpload : provisioningProfileUploads) {
-      Upload originalUpload = uploadService.find(provisioningProfileUpload.getUploadId());
+      UploadVersion originalUpload = uploadVersionService.find(provisioningProfileUpload.getUploadVersionId());
       storageServiceFactory.getStorageService().deleteFile(originalUpload.getResignedAppS3PathSuffix(provisioningProfileUpload.getProvisioningProfileId()));
     }
     remove(provisioningProfileUploads);

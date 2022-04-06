@@ -19,6 +19,7 @@
           (change)="isEnvironmentAvailable || environment.disable ? toggleMachineEnable(environment) : ''"
           class="ts-col-5 z-in-2" [ngModel]="!environment.disable"></mat-slide-toggle>
         <div class="pr-10 ts-col-50 text-decoration-none rb-medium">
+          <span [textContent]="'#'+environment.id" class="pr-10"></span>
           <span [textContent]="environment.title"></span>
           <a
             *ngIf="isCustomPlan"

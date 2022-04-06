@@ -502,7 +502,7 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
   filterByScreenName(screenName:string) {
     let sortBy = this.sortedBy + this.direction;
     let encodedScreenName = encodeURIComponent(screenName)
-    this.query = "screenName:" + encodedScreenName ;
+    this.query = "workspaceVersionId:" + this.version.id + ",screenName:" + encodedScreenName ;
     this.navigateToQueryBasedUrl();
     let encodedQuery = ",workspaceVersionId:" + this.version.id + ",screenName:" + encodedScreenName;
     if(this.query===undefined)

@@ -1711,6 +1711,7 @@
   "settings.ios_settings.apple_id.generate": "Generate",
   "settings.ios_settings.csr_request": "Certificate Signing Request (CSR)",
   "settings.ios_settings.csr_certificate": "Certificate",
+  "settings.ios_settings.csr_certificate_not_available": "Certificate not available with the current Storage Type, change Storage Type and try again.",
   "settings.ios_settings.csr_profile": "Provisioning Profile",
   "settings.ios_settings.provisioned_devices": "Provisioned Devices",
   "settings.ios_settings.apple.team_id": "Apple Team ID",

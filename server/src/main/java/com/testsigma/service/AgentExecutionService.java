@@ -757,7 +757,7 @@ public class AgentExecutionService {
   }
 
   public void checkTestCaseIsInReadyState(TestCase testCase) throws TestsigmaException {
-    if (!testCase.getStatus().equals(TestCaseStatus.READY)) {
+    if (!testCase.getStatus().equals(TestCaseStatus.READY) && testPlan.getEntityType()=="TEST_PLAN") {
       String message = testCase.getIsStepGroup() ? com.testsigma.constants.MessageConstants.getMessage(MessageConstants.STEP_GROUP_NOT_READY, testCase.getName()) :
         MessageConstants.TESTCASE_NOT_READY;
       throw new TestsigmaException(message, message);

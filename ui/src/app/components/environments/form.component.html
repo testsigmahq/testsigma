@@ -24,7 +24,7 @@
       <div class="error" *ngIf="formSubmitted && environmentForm.controls.name.errors?.required"
            [translate]="'validation.required.message' | translate: {field: 'Name'}"></div>
       <div class="error"
-           *ngIf="formSubmitted && environmentForm.controls.name.errors?.minlength"
+           *ngIf="environmentForm.invalid && environmentForm.controls.name.errors?.minlength"
            [textContent]="'form.validation.common.min_length' | translate: {FieldName:'Name' , min:'4'}"></div>
       <div class="error"
            *ngIf="formSubmitted && environmentForm.controls.name.errors?.maxlength"

@@ -1278,7 +1278,7 @@
   "test_plans.form.suites.title": "Test Machines & Suites Selection",
   "test_plans.no_associated_schedules": "This Test Plan does not have any Schedules",
   "test_plan.form.help.testsigma_lab": "<span class='rb-bold'>Testsigma Lab:</span> This option allows you to run tests in Testsigma′s own cloud infrastructure.",
-  "test_plan.form.help.hybrid": "<span class='rb-bold'>Local Devices:</span> This option allows you to run tests in your local machine., Refer the <a href='https://testsigma.com/tutorials/test-plans/using-local-devices/' target='_blank'>help document</a> to set up Test Plans to run on Local Devices.",
+  "test_plan.form.help.hybrid": "<span class='rb-bold'>Local Devices:</span> This option allows you to run tests in your local machine., Refer the <a href='https://testsigma.com/docs/getting-started/introduction-cloud/' target='_blank'>help document</a> to set up Test Plans to run on Local Devices.",
   "test_plan.form.help.distributed_testing": "Split your Test Suites across multiple Test Machines and run your tests in parallel to reduce overall execution time.<br>More details - <a href='https://testsigma.com/docs/test-management/test-plans/distributed-testing/' target='_blank'>Distributed Testing Guide</a>.",
   "schedule.view_type.calendar": "Calendar View",
   "schedule.calendar.monthly": "Monthly",

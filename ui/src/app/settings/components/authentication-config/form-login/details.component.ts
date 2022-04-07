@@ -9,6 +9,7 @@ import {AuthenticationConfig} from "../../../../models/authentication-config.mod
 import {AuthenticationConfigService} from "../../../../services/authentication-config.service";
 import {ConfirmationModalComponent} from "../../../../shared/components/webcomponents/confirmation-modal.component";
 import {AuthenticationType} from "../../../../shared/enums/authentication-type.enum";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-details',
@@ -22,6 +23,7 @@ export class DetailsComponent extends BaseComponent implements OnInit {
   saving = false;
   sending=false;
   public coping : Map<string, boolean>;
+  updateForm: FormGroup;
 
   constructor(
     private authConfigService: AuthenticationConfigService,
@@ -38,6 +40,10 @@ export class DetailsComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.coping = new Map<string, boolean>();
     this.authConfig=this.options.authConfig;
+    this.updateForm = new FormGroup({
+      'username': new FormControl(this.authConfig?.userName,  Validators.required),
+      'password':new FormControl(this.authConfig?.password, Validators.required)
+    })
   }
 
   delete(){
@@ -67,15 +73,15 @@ export class DetailsComponent extends BaseComponent implements OnInit {
 
   update(){
     this.saving = true;
-    this.authConfig.userName=null;
-    this.authConfig.password = null;
-
+    this.authConfig.userName = this.updateForm.value.username;
+    this.authConfig.password = this.updateForm.value.password;
+    console.log(this.authConfig);
     this.authConfigService.update(this.authConfig).subscribe({
         next: () => {
           this.saving = false;
           this.dialogRef.close(true);
 
-          this.translate.get("message.common.deleted.success", {FieldName: 'Username Password Auth'}).subscribe((res: string) => {
+          this.translate.get("message.common.update.success", {FieldName: 'Username Password Auth'}).subscribe((res: string) => {
             this.showNotification(NotificationType.Success, res);
           });
         },

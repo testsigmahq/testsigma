@@ -67,21 +67,18 @@ export class DetailsComponent extends BaseComponent implements OnInit {
 
   update(){
     this.saving = true;
-    this.authConfig.googleClientId=null;
-    this.authConfig.googleClientSecret = null;
-
     this.authConfigService.update(this.authConfig).subscribe({
         next: () => {
           this.saving = false;
           this.dialogRef.close(true);
 
-          this.translate.get("message.common.deleted.success", {FieldName: 'Aws Config Details'}).subscribe((res: string) => {
+          this.translate.get("message.common.update.success", {FieldName: 'Google SSO Config Details'}).subscribe((res: string) => {
             this.showNotification(NotificationType.Success, res);
           });
         },
         error: (error) => {
           this.saving = false;
-          this.translate.get("message.common.deleted.failure", {FieldName: 'Aws Config Details'}).subscribe((res: string) => {
+          this.translate.get("message.common.deleted.failure", {FieldName: 'Google SSO Details'}).subscribe((res: string) => {
             this.showAPIError(error, res);
           });
         }

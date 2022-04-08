@@ -252,6 +252,7 @@ import {ClickUpIssueFormComponent} from "./components/webcomponents/click-up-iss
 import {ClickUpIssueDetailsComponent} from "./components/webcomponents/click-up-issue-details.component";
 import {DuplicateLocatorWarningComponent} from "./components/webcomponents/duplicate-locator-warning.component";
 import {PrerequisiteChangeComponent} from "./shared/components/webcomponents/prerequisite-change.component";
+import {InlineSortComponent} from "./components/webcomponents/inline-sort.component";
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -483,7 +484,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     ClickUpIssueFormComponent,
     ClickUpIssueDetailsComponent,
     DuplicateLocatorWarningComponent,
-    PrerequisiteChangeComponent
+    PrerequisiteChangeComponent,
+    InlineSortComponent
   ],
   imports: [
     BrowserModule,

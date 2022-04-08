@@ -139,6 +139,7 @@
   "message.common.description": "Description",
   "message.common.sort_by.ascending": "Ascending",
   "message.common.sort_by.descending": "Descending",
+  "message.common.sort": "Sort",
   "message.common.sort_by.old": "Old",
   "message.common.sort_by.new": "New",
   "message.common.character_limit_info": "{{charactersUsed}}/5000 characters (minimum 50)",

@@ -50,11 +50,12 @@
         (change)="selectAllToggle(selectAll)"
         [checked]="selectedSuites.length == testSuites?.content?.length"
         class="mat-checkbox"></mat-checkbox>
-      <span
-        [appSort]="sortedBy!='name'? undefined : direction == ',asc'"
+      <span class="pl-15">
+      <app-inline-sort
+        [ascending]="sortedBy!='name'? undefined : direction == ',asc'"
         (click)="sortBy('name', ((sortedBy!='name' || direction == ',desc')?',asc':',desc'))"
-        [translate]="'message.common.text.title'"
-        class="pl-15 sort-header"></span>
+        [heading]="'message.common.text.title'"></app-inline-sort>
+      </span>
     </div>
     <div
       class="ts-col-25 pl-40"

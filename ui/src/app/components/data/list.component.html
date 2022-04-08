@@ -50,10 +50,12 @@
         [checked]="selectedDataProfiles.length == dataProfiles?.content?.length"
           class="mat-checkbox"></mat-checkbox>
       <span
-        class="pl-15 sort-header"
-        [appSort]="sortedBy!='testDataName'? undefined : direction == ',asc'"
+        class="pl-15">
+        <app-inline-sort
+        [ascending]="sortedBy!='testDataName'? undefined : direction == ',asc'"
         (click)="sortBy('testDataName', ((sortedBy!='testDataName' || direction == ',desc')?',asc':',desc'))"
-        [translate]="'message.common.text.title'"></span>
+        [heading]="'message.common.text.title'"></app-inline-sort>
+      </span>
     </div>
   </div>
   <app-placeholder-loader

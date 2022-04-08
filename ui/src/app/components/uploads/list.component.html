@@ -46,20 +46,18 @@
           [(ngModel)]="selectAll" [ngModelOptions]="{standalone: true}"
           (change)="selectAllToggle(selectAll)"
           [checked]="selectedUploads.length == uploads?.cachedItems?.length"></mat-checkbox>
-        <span
-          class="pl-15"
-          [translate]="'message.common.text.title'"></span>
+        <span class="pl-15">
+          <app-inline-sort
+            [ascending]="sortedBy!='name'? undefined : direction == ',asc'"
+            [heading]="'message.common.text.title'"
+            (click)="sortBy('name', ((sortedBy!='name' || direction == ',desc')?',asc':',desc'))"></app-inline-sort>
+        </span>
       </div>
-      <span class="ts-col-55 pl-5" [translate]="'uploads.list.header.file_path'"></span>
-      <span class="ts-col-10 pl-4" ></span>
-    </div>
     <span class="ts-col-55 pl-5 sort-header"
-          [appSort]="sortedBy!='fileName'? undefined : direction == ',asc'"
-          (click)="sortBy('fileName', ((sortedBy!='fileName' || direction == ',desc')?',asc':',desc'))"
           [translate]="'uploads.list.header.file_path'"></span>
     <span class="ts-col-10 pl-4"></span>
   </div>
-
+  </div>
   <cdk-virtual-scroll-viewport
     *ngIf="uploads?.totalElements"
     itemSize="59"

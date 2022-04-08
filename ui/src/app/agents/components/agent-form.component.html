@@ -44,10 +44,6 @@
                  *ngIf="alreadyRegisteredAsPublic && agent.ipAddress !=''">
             </div>
             <div class="note text-danger mb-30"
-                 [translate]="'agents.form.active_agent_already_present' | translate"
-                 *ngIf="agent.isOnline">
-            </div>
-            <div class="note text-danger mb-30"
                  *ngIf="agentUnreachable">
               <span [translate]="'agents.form.register.unreachable.failure'"></span>
                &nbsp;<a href="https://testsigma.com/docs/agent/setup-on-windows-mac-linux/"

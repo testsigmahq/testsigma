@@ -22,11 +22,12 @@
       <div
         class="ts-col-15"
         [textContent]="'runs.list_view.last_run' | translate"></div>
-      <div
-        class="ts-col-35 pl-10 pr-7 sort-header"
-        [appSort]="sortedBy!='name'? undefined : direction == ',asc'"
+      <div class="ts-col-35 pl-10 pr-7 ">
+        <app-inline-sort
+        [ascending]="sortedBy!='name'? undefined : direction == ',asc'"
         (click)="sortThisBy('name', ((sortedBy!='name' || direction == ',desc')?',asc':',desc'))"
-        [textContent]="'runs.list_view.title' | translate"></div>
+        [heading]="'runs.list_view.title' | translate"></app-inline-sort>
+      </div>
       <div
         class="ts-col-15"
         [textContent]="'runs.list_view.test_lab' | translate"></div>

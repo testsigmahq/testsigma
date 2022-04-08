@@ -35,28 +35,29 @@
       (sortAction)="sortBy($event.sortBy, $event.direction)"></app-sort-by-button>
   </div>
 </div>
-<div class="page-content page-virtual-scroll">
-  <div class="px-40">
-    <div
-      *ngIf="!uploads?.isEmpty"
-      class="list-header" style="margin-bottom: 0px !important;">
-      <div class="ts-col-35 d-flex align-items-center">
-        <mat-checkbox
-          class="mat-checkbox"
-          [(ngModel)]="selectAll" [ngModelOptions]="{standalone: true}"
-          (change)="selectAllToggle(selectAll)"
-          [checked]="selectedUploads.length == uploads?.cachedItems?.length"></mat-checkbox>
-        <span
-          class="pl-15"
-          [translate]="'message.common.text.title'"></span>
-      </div>
-      <span class="ts-col-55 pl-5" [translate]="'uploads.list.header.file_path'"></span>
-      <span class="ts-col-10 pl-4" ></span>
+<div class="page-content">
+  <div
+    *ngIf="!uploads?.isEmpty"
+    class="list-header" style="margin-bottom: 0px !important;">
+    <div class="ts-col-35 d-flex align-items-center">
+      <mat-checkbox
+        class="mat-checkbox"
+        [(ngModel)]="selectAll" [ngModelOptions]="{standalone: true}"
+        (change)="selectAllToggle(selectAll)"
+        [checked]="selectedUploads.length == uploads?.content?.length"></mat-checkbox>
+      <span class="pl-15">
+      <app-inline-sort
+        [ascending]="sortedBy!='name'? undefined : direction == ',asc'"
+        (click)="sortBy('name', ((sortedBy!='name' || direction == ',desc')?',asc':',desc'))"
+        [heading]="'message.common.text.title'"></app-inline-sort>
+      </span>
     </div>
-    <span class="ts-col-55 pl-5 sort-header"
-          [appSort]="sortedBy!='fileName'? undefined : direction == ',asc'"
+    <span class="ts-col-55 pl-5">
+      <app-inline-sort
+          [ascending]="sortedBy!='fileName'? undefined : direction == ',asc'"
           (click)="sortBy('fileName', ((sortedBy!='fileName' || direction == ',desc')?',asc':',desc'))"
-          [translate]="'uploads.list.header.file_path'"></span>
+          [heading]="'uploads.list.header.file_path'"></app-inline-sort>
+    </span>
     <span class="ts-col-10 pl-4"></span>
   </div>
 

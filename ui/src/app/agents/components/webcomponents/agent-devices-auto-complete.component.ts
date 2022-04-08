@@ -81,10 +81,19 @@ export class AgentDevicesAutoCompleteComponent implements OnInit {
         } else {
           //mobile web
           if(!this.device) {
-            this.device = this.devices.content[0];
-            if(this.formControl.value)
-              this.device = this.devices.content.find((dev)=> dev.id == this.formControl.value?.id || dev.id == this.formControl.value)
-            this.setDevice(this.device)
+            this.devices.content.forEach(device => {
+              if (device.isOnline) {
+                this.device = this.device? this.device : device ;
+                device['isDisabled'] = false;
+              }else{
+                device['isDisabled'] = true;
+              }
+            })
+            if (this.device) {
+              if (this.formControl.value)
+                this.device = this.devices.content.find((dev) => dev.id == this.formControl.value?.id || dev.id == this.formControl.value)
+              this.setDevice(this.device)
+            }
           }
         }
         this.onDeviceList.emit(this.devices)

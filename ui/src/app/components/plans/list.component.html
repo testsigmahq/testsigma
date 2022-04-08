@@ -52,11 +52,13 @@
         class="d-none"
         type="checkbox"/>
       <span
-        class="pl-10"
-        class="pl-10 sort-header"
-        [appSort]="sortedBy!='name'? undefined : direction == ',asc'"
+        class="pl-10">
+      <app-inline-sort
+        [ascending]="sortedBy!='name'? undefined : direction == ',asc'"
         (click)="sortBy('name', ((sortedBy!='name' || direction == ',desc')?',asc':',desc'))"
-        [translate]="'message.common.label.name'"></span>
+        [heading]="'message.common.label.name'">
+      </app-inline-sort>
+      </span>
     </div>
     <div
       class="ts-col-25 px-10"

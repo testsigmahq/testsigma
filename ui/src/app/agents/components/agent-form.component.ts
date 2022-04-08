@@ -195,7 +195,7 @@ export class AgentFormComponent extends BaseComponent implements OnInit {
   }
 
   disableAgentCreation() {
-    return this.agent.isOnline() || this.unableToConnectLocalAgent || this.loading || this.alreadyRegisteredAsPrivate
+    return this.unableToConnectLocalAgent || this.loading || this.alreadyRegisteredAsPrivate
     || this.alreadyRegisteredAsPublic || (this.duplicateAgent && this.duplicateAgent == this.agent.title)
   }
 

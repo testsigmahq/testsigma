@@ -309,12 +309,9 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
       });
   }
 
-  saveMultipleElements(elements: Element[]) {
-    elements.forEach(element => element.workspaceVersionId = this.versionId);
-    this.elementService.bulkCreate(elements).subscribe((res) => {
-      this.fetchElements();
-    }, error => {
-    });
+  saveMultipleElements() {
+    this.elementCapture = false;
+    this.fetchElements();
   }
 
   discard() {

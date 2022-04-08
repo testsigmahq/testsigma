@@ -74,7 +74,7 @@ export class TestCaseCoverageCountComponent implements OnInit {
     this.totalTestCases = new InfiniteScrollableDataSource(this.testCaseService, "deleted:false,isStepGroup:false,workspaceVersionId:"+this.version.id, undefined, 1);
     this.passedTestCases = new InfiniteScrollableDataSource(this.testCaseService, "deleted:false,isStepGroup:false,result:SUCCESS,workspaceVersionId:"+this.version.id, undefined, 1);
     this.failedTestCases = new InfiniteScrollableDataSource(this.testCaseService, "deleted:false,isStepGroup:false,result@FAILURE#ABORTED,workspaceVersionId:"+this.version.id, undefined, 1);
-    this.notExecutedTestCases = new InfiniteScrollableDataSource(this.testCaseService, "deleted:false,isStepGroup:false,result@ QUEUED#STOPPED#NOT_EXECUTED#null,workspaceVersionId:"+this.version.id, undefined, 1);
+    this.notExecutedTestCases = new InfiniteScrollableDataSource(this.testCaseService, "deleted:false,isStepGroup:false,result@QUEUED#STOPPED#NOT_EXECUTED#null,workspaceVersionId:"+this.version.id, undefined, 1);
   }
 
   fetchUserPreference() {

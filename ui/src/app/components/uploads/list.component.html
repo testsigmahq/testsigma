@@ -35,29 +35,28 @@
       (sortAction)="sortBy($event.sortBy, $event.direction)"></app-sort-by-button>
   </div>
 </div>
-<div class="page-content">
-  <div
-    *ngIf="!uploads?.isEmpty"
-    class="list-header" style="margin-bottom: 0px !important;">
-    <div class="ts-col-35 d-flex align-items-center">
-      <mat-checkbox
-        class="mat-checkbox"
-        [(ngModel)]="selectAll" [ngModelOptions]="{standalone: true}"
-        (change)="selectAllToggle(selectAll)"
-        [checked]="selectedUploads.length == uploads?.content?.length"></mat-checkbox>
-      <span class="pl-15">
-      <app-inline-sort
-        [ascending]="sortedBy!='name'? undefined : direction == ',asc'"
-        (click)="sortBy('name', ((sortedBy!='name' || direction == ',desc')?',asc':',desc'))"
-        [heading]="'message.common.text.title'"></app-inline-sort>
-      </span>
+<div class="page-content page-virtual-scroll">
+  <div class="px-40">
+    <div
+      *ngIf="!uploads?.isEmpty"
+      class="list-header" style="margin-bottom: 0px !important;">
+      <div class="ts-col-35 d-flex align-items-center">
+        <mat-checkbox
+          class="mat-checkbox"
+          [(ngModel)]="selectAll" [ngModelOptions]="{standalone: true}"
+          (change)="selectAllToggle(selectAll)"
+          [checked]="selectedUploads.length == uploads?.cachedItems?.length"></mat-checkbox>
+        <span
+          class="pl-15"
+          [translate]="'message.common.text.title'"></span>
+      </div>
+      <span class="ts-col-55 pl-5" [translate]="'uploads.list.header.file_path'"></span>
+      <span class="ts-col-10 pl-4" ></span>
     </div>
-    <span class="ts-col-55 pl-5">
-      <app-inline-sort
-          [ascending]="sortedBy!='fileName'? undefined : direction == ',asc'"
+    <span class="ts-col-55 pl-5 sort-header"
+          [appSort]="sortedBy!='fileName'? undefined : direction == ',asc'"
           (click)="sortBy('fileName', ((sortedBy!='fileName' || direction == ',desc')?',asc':',desc'))"
-          [heading]="'uploads.list.header.file_path'"></app-inline-sort>
-    </span>
+          [translate]="'uploads.list.header.file_path'"></span>
     <span class="ts-col-10 pl-4"></span>
   </div>
 
@@ -65,34 +64,34 @@
     *ngIf="uploads?.totalElements"
     itemSize="59"
     class="list-container virtual-scroll-viewport">
-  <div class="list-container">
-    <div class="list-view green-highlight lg-pm pl-10 pointer align-items-center"
-         *cdkVirtualFor="let upload of uploads; let i = index">
-      <div class="ts-col-100 d-flex">
-        <div class="ts-col-35 list-title lh-2 text-truncate pr-10">
+    <div class="list-container">
+      <div class="list-view green-highlight lg-pm pl-10 pointer align-items-center"
+           *cdkVirtualFor="let upload of uploads; let i = index">
+        <div class="ts-col-100 d-flex">
+          <div class="ts-col-35 list-title lh-2 text-truncate pr-10">
             <mat-checkbox
               class="mat-checkbox"
               [(ngModel)]="upload.selected" [ngModelOptions]="{standalone: true}"
               (change)="setSelectedList(upload.id,upload.selected)">
               <span class="pl-7 list-title" [textContent]="upload.name"></span>
             </mat-checkbox>
-        </div>
-        <div class="ts-col-45 pl-2 d-flex" [ngSwitch]="upload.isInProgress">
-          <div *ngSwitchCase="false"
-               class="text-truncate ts-col-55" [textContent]="'testsigma-storage:/.../'+upload.fName"></div>
-          <div class="rb-regular-i-d mr-auto ml-20 ts-col-20 ng-star-inserted fa-copy"
-               *ngSwitchCase="false"
-               [class.result-status-text-7]="upload.filePathCopied"
-               [class.text-link]="!upload.filePathCopied"
-               [matTooltip]="upload.filePathCopied ? ('uploads.list.message.copied' | translate) : ('uploads.list.copy_path' | translate) "
-               [cdkCopyToClipboard]="'testsigma-storage:/'+upload.appPath"
-               (click)="showCopyTooltip(upload)"></div>
-          <div *ngSwitchCase="true" [translate]="'(refresh)'" class="text-link" (click)="fetchUploads()"></div>
-        </div>
-        <div class="ts-col-20 d-flex">
-          <span [textContent]="upload.uploadStatus"></span>
-          <span class="ml-auto text-center action-icons mr-20"
-                *ngIf="!selectedUploads || !selectedUploads.length">
+          </div>
+          <div class="ts-col-45 pl-2 d-flex" [ngSwitch]="upload.isInProgress">
+            <div *ngSwitchCase="false"
+                 class="text-truncate ts-col-55" [textContent]="'testsigma-storage:/.../'+upload.fName"></div>
+            <div class="rb-regular-i-d mr-auto ml-20 ts-col-20 ng-star-inserted fa-copy"
+                 *ngSwitchCase="false"
+                 [class.result-status-text-7]="upload.filePathCopied"
+                 [class.text-link]="!upload.filePathCopied"
+                 [matTooltip]="upload.filePathCopied ? ('uploads.list.message.copied' | translate) : ('uploads.list.copy_path' | translate) "
+                 [cdkCopyToClipboard]="'testsigma-storage:/'+upload.appPath"
+                 (click)="showCopyTooltip(upload)"></div>
+            <div *ngSwitchCase="true" [translate]="'(refresh)'" class="text-link" (click)="fetchUploads()"></div>
+          </div>
+          <div class="ts-col-20 d-flex">
+            <span [textContent]="upload.uploadStatus"></span>
+            <span class="ml-auto text-center action-icons mr-20"
+                  *ngIf="!selectedUploads || !selectedUploads.length">
             <a
               data-placement="bottom"
               [matTooltip]="'pagination.edit' | translate"
@@ -111,27 +110,27 @@
               target="_blank"
               class="fa-download-thin action-icon"></a>
           </span>
+          </div>
         </div>
-      </div>
-      <div class="text-t-secondary d-flex w-100 mt-0">
-        <div class="ts-col-35 pl-60 ml-3">
+        <div class="text-t-secondary d-flex w-100 mt-0">
+          <div class="ts-col-35 pl-60 ml-3">
 
-        </div>
-        <div class="ts-col-45 d-flex" *ngIf="!upload.isInProgress">
-          <span [textContent]="upload.sizeInWords"></span>
-          <span class="d-flex justify-content-end ml-10" *ngIf="upload.createdAt">
+          </div>
+          <div class="ts-col-45 d-flex" *ngIf="!upload.isInProgress">
+            <span [textContent]="upload.sizeInWords"></span>
+            <span class="d-flex justify-content-end ml-10" *ngIf="upload.createdAt">
             <span [translate]="'message.common.created_on'"></span>
             <span
               [textContent]="'message.common.time'| translate : { time: (upload.createdAt | date : 'MMM d, yyyy')}"></span>
           </span>
-          <span class="d-flex justify-content-end ml-10" *ngIf="upload.updatedAt">
+            <span class="d-flex justify-content-end ml-10" *ngIf="upload.updatedAt">
             <span [translate]="'message.common.updated_on'"></span><span
               [textContent]="'message.common.time'| translate : { time: (upload.updatedAt | date : 'MMM d, yyyy')}"></span>
           </span>
+          </div>
         </div>
       </div>
     </div>
-  </div>
   </cdk-virtual-scroll-viewport>
   <div *ngIf="uploads?.isEmpty" class="h-100">
     <div *ngIf="fetchingCompleted"

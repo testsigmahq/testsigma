@@ -137,6 +137,10 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
       this.upload.latestVersion = this.upload.latestVersion || new UploadVersion();
       this.upload.latestVersion.fileSize = this.uploadedFileObject.size;
     }
+    if (this.upload.id){
+      this.upload.latestVersion = this.upload.latestVersion || new UploadVersion();
+        this.upload.latestVersion.fileSize = this.uploadedFileObject.size;
+    }
   }
 
   public getRawValue = () => this.uploadForm.getRawValue();

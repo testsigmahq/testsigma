@@ -24,7 +24,7 @@
               class="form-control"/>
           </div>
           <button
-            [cdkCopyToClipboard]="authConfig?.userName"
+            [cdkCopyToClipboard]="updateForm.get('username')?.value"
             (click)="showCopied('name')"
             [translate]="coping?.['name'] ? 'uploads.list.message.copied' : 'btn.common.copy'"
             class="theme-btn-clear-default"></button>
@@ -44,7 +44,7 @@
           </div>
           <button
             (click)="showCopied('password')"
-            [cdkCopyToClipboard]="authConfig?.password"
+            [cdkCopyToClipboard]="updateForm.get('password')?.value"
             [translate]="coping?.['password'] ? 'uploads.list.message.copied' :'btn.common.copy'"
             class="theme-btn-clear-default"></button>
         </div>

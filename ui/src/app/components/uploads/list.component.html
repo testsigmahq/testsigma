@@ -33,15 +33,11 @@
       [direction]="direction"
       [translatePreFix]="'environments.list.sort_by.'"
       (sortAction)="sortBy($event.sortBy, $event.direction)"></app-sort-by-button>
-    <div class="pl-15 theme-border-l">
-      <app-pagination *ngIf="uploads?.totalElements" [paginationData]="uploads"
-                      [currentPage]="currentPage" (paginationAction)="fetchUploads()"></app-pagination>
-    </div>
   </div>
 </div>
 <div class="page-content">
   <div
-    *ngIf="uploads?.content.length != 0"
+    *ngIf="!uploads?.isEmpty"
     class="list-header" style="margin-bottom: 0px !important;">
     <div class="ts-col-35 d-flex align-items-center">
       <mat-checkbox
@@ -64,11 +60,14 @@
     </span>
     <span class="ts-col-10 pl-4"></span>
   </div>
-  <app-placeholder-loader
-    *ngIf="!fetchingCompleted"></app-placeholder-loader>
+
+  <cdk-virtual-scroll-viewport
+    *ngIf="uploads?.totalElements"
+    itemSize="59"
+    class="list-container virtual-scroll-viewport">
   <div class="list-container">
     <div class="list-view green-highlight lg-pm pl-10 pointer align-items-center"
-         *ngFor="let upload of uploads?.content; let i = index">
+         *cdkVirtualFor="let upload of uploads; let i = index">
       <div class="ts-col-100 d-flex">
         <div class="ts-col-35 list-title lh-2 text-truncate pr-10">
             <mat-checkbox
@@ -108,7 +107,7 @@
             <a
               data-placement="bottom"
               [matTooltip]="'hint.message.common.download' | translate"
-              [href]="'/uploads/'+upload.id+'/download'"
+              [href]="'/upload_versions/'+upload.latestVersion?.id+'/download'"
               target="_blank"
               class="fa-download-thin action-icon"></a>
           </span>
@@ -133,7 +132,8 @@
       </div>
     </div>
   </div>
-  <div *ngIf="!uploads?.content.length" class="h-100">
+  </cdk-virtual-scroll-viewport>
+  <div *ngIf="uploads?.isEmpty" class="h-100">
     <div *ngIf="fetchingCompleted"
          class="empty-full-container">
       <div class="empty-run-md"></div>
@@ -147,4 +147,6 @@
       </button>
     </div>
   </div>
+  <app-placeholder-loader
+    *ngIf="!fetchingCompleted"></app-placeholder-loader>
 </div>

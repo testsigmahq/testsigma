@@ -4,65 +4,41 @@ import {deserialize, serializable} from 'serializr';
 import {UploadType} from "../enums/upload-type.enum";
 import {PlatformType} from "../enums/platform-type.enum";
 import {UploadStatus} from "../enums/upload-status.enum";
+import {UploadVersion} from "./upload-version.model";
 
 export class Upload extends Base implements PageObject {
   @serializable
   public name: String;
+
   @serializable
-  public appPath: String;
-  @serializable
-  public fileName: String;
-  @serializable
-  public type: UploadType;
-  @serializable
-  public platformType: PlatformType;
-  @serializable
-  public uploadStatus: UploadStatus;
-  @serializable
-  public version: String;
-  @serializable
-  public isPublic: Boolean;
-  @serializable
-  public comments: String;
-  @serializable
-  public message: String;
-  @serializable
-  public fileSize: number;
-  @serializable
-  public preSignedURL: String;
-  @serializable
-  public signed: boolean;
+  public latestVersionId: number;
 
   public selected: Boolean;
   public filePathCopied: boolean;
   public isDisabled: boolean;
+  public latestVersion: UploadVersion;
 
   deserialize(input: any): this {
     return Object.assign(this, deserialize(Upload, input));
   }
 
   get sizeInWords() {
-    const extensions = ['Bytes', 'KB', 'MB', 'GB'];
-    if (this.fileSize == 0) return '0 Byte';
-    if (!this.fileSize) return '';
-    let i = parseInt(String(Math.floor(Math.log(this.fileSize) / Math.log(1024))));
-    return (Math.round((this.fileSize / Math.pow(1024, i))*100)/100) + ' ' + extensions[i];
+    return this.latestVersion?.sizeInWords;
   }
 
   get fName(): String {
-    let fileParts = this.appPath?.split("/");
+    let fileParts = this.latestVersion?.path?.split("/");
     return fileParts ? fileParts[fileParts.length-1] : '';
   }
 
   get isInProgress() {
-    return this.uploadStatus == UploadStatus.InProgress;
-  }
+    return this.latestVersion?.isInProgress;  }
 
   get isCompleted(){
-    return this.uploadStatus == UploadStatus.Completed;
+    return this.latestVersion?.isCompleted;
   }
 
-  get isFailed(){
-    return this.uploadStatus == UploadStatus.Failed;
+  get signed() {
+    return this.latestVersion?.signed;
   }
 }

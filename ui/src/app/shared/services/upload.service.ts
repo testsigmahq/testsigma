@@ -9,7 +9,6 @@ import {Observable} from 'rxjs/internal/Observable';
 import {map} from 'rxjs/internal/operators/map';
 import {throwError} from 'rxjs/internal/observable/throwError';
 import {catchError} from 'rxjs/internal/operators/catchError';
-import {Element} from "../../models/element.model";
 
 @Injectable({
   providedIn: 'root'

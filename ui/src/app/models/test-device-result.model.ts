@@ -5,7 +5,6 @@ import {TestPlanResult} from "./test-plan-result.model";
 import {StatusConstant} from "../enums/status-constant.enum";
 import {TestDeviceSettings} from "./test-device-settings.model";
 import {ResultBase} from "./result-base.model";
-import {TestPlan} from "./test-plan.model";
 
 export class TestDeviceResult extends ResultBase implements PageObject {
 
@@ -50,6 +49,8 @@ export class TestDeviceResult extends ResultBase implements PageObject {
   public reRunParentId: number;
   @serializable
   public isVisuallyPassed: boolean;
+  @serializable(custom(v => SKIP, v => v))
+  public appUploadVersionId: Number;
 
   deserialize(input: any): this {
     return Object.assign(this, deserialize(TestDeviceResult, input));

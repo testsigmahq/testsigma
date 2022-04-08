@@ -17,5 +17,4 @@ import java.util.List;
 @Repository
 @Transactional
 public interface UploadRepository extends BaseRepository<Upload, Long> {
-  List<Upload> findAllByType(UploadType type);
 }

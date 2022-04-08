@@ -117,6 +117,9 @@ public class TestDeviceResult implements Serializable {
   @UpdateTimestamp
   private Timestamp updatedDate;
 
+  @Column(name = "app_upload_version_id")
+  private Long appUploadVersionId;
+
   @ManyToOne
   @Fetch(value = FetchMode.SELECT)
   @JoinColumn(name = "test_plan_result_id", referencedColumnName = "id", insertable = false, updatable = false)

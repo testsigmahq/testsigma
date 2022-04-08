@@ -108,7 +108,7 @@ public class TestsigmaOsStatsService {
     uploadStatEntity.setServerUuid(server.getServerUuid());
     uploadStatEntity.setEventType(eventType);
     uploadStatEntity.setUploadId(upload.getId());
-    uploadStatEntity.setUploadExtension(FilenameUtils.getExtension(upload.getFileName()));
+    uploadStatEntity.setUploadExtension(FilenameUtils.getExtension(upload.getLatestVersion().getFileName()));
     httpClient.post(testsigmaOSConfigService.getUrl() +
       UrlConstants.TESTSIGMA_OS_UPLOAD_STATS_URL, getHeaders(), uploadStatEntity, new TypeReference<String>() {
     });

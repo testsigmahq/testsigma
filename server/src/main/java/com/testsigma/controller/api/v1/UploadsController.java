@@ -41,6 +41,8 @@ public class UploadsController {
   @RequestMapping(method = RequestMethod.POST)
   public APIUploadDTO create(@ModelAttribute @Valid UploadRequest uploadRequest)
     throws TestsigmaException {
+    if(uploadRequest.getVersion() == null)
+      uploadRequest.setVersion(uploadRequest.getName());
     Upload upload = uploadService.create(uploadRequest);
     return uploadMapper.mapApi(upload);
   }
@@ -62,6 +64,8 @@ public class UploadsController {
   public APIUploadDTO update(@PathVariable("id") Long id, @ModelAttribute UploadRequest uploadRequest)
     throws TestsigmaException {
     Upload upload = uploadService.find(id);
+    if(uploadRequest.getVersion() == null)
+      uploadRequest.setVersion(upload.getLatestVersion().getName()+".1");
     upload = uploadService.update(upload, uploadRequest);
     return uploadMapper.mapApi(upload);
   }

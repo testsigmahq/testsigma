@@ -3,8 +3,12 @@ package com.testsigma.model;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.testsigma.service.ObjectMapperService;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.json.JSONObject;
 
@@ -46,8 +50,8 @@ public class MobileInspection {
   @Column(name = "bundle_id")
   private String bundleId;
 
-  @Column(name = "app_upload_id")
-  private Long appUploadId;
+  @Column(name = "upload_version_id")
+  private Long uploadVersionId;
 
   @Column(name = "session_id")
   private String sessionId;
@@ -75,6 +79,13 @@ public class MobileInspection {
   @Column(name = "updated_date")
   @UpdateTimestamp
   private Timestamp updatedDate;
+
+  @ManyToOne
+  @Fetch(value = FetchMode.SELECT)
+  @JoinColumn(name = "upload_version_id", referencedColumnName = "id", insertable = false, updatable = false)
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  private UploadVersion uploadVersion;
 
   @Column
   private String capabilities;

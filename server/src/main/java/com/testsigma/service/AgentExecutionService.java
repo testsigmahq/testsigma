@@ -87,6 +87,8 @@ public class AgentExecutionService {
   private final IntegrationsService integrationsService;
   private final ApplicationConfig applicationConfig;
   private final JWTTokenService jwtTokenService;
+  private final UploadService uploadService;
+  private final UploadVersionService uploadVersionService;
   public AbstractTestPlan testPlan;
   private JSONObject runTimeData;
   private TestPlanResult testPlanResult;
@@ -456,11 +458,41 @@ public class AgentExecutionService {
     testDeviceResult.setMessage(AutomatorMessages.MSG_EXECUTION_CREATED);
     testDeviceResult.setStartTime(new Timestamp(System.currentTimeMillis()));
     testDeviceResult.setTestDeviceId(testDevice.getId());
+    Long uploadVersionId = testDevice.getAppUploadVersionId();
+    testDeviceResult.setAppUploadVersionId(getUploadVersionId(testDevice));
+    testDeviceResult.setAppUploadVersionId(uploadVersionId);
     testDeviceResult.setTestDeviceSettings(getExecutionTestDeviceSettings(testDevice));
     testDeviceResult = testDeviceResultService.create(testDeviceResult);
     testDeviceResult.setTestDevice(testDevice);
     return testDeviceResult;
   }
+
+  private Long getUploadVersionId(TestDevice testDevice) throws ResourceNotFoundException {
+    Long uploadVersionId = getUploadVersionIdFromRuntime(testDevice.getId());
+    if (uploadVersionId != null) {
+      log.debug("Got uploadVersionId from runTimeData ", uploadVersionId, testDevice.getId());
+      uploadVersionId = this.uploadVersionService.find(uploadVersionId).getId();
+    } else {
+      uploadVersionId = testDevice.getAppUploadVersionId();
+      if (uploadVersionId == null && testDevice.getAppUploadId() != null)
+        uploadVersionId = uploadService.find(testDevice.getAppUploadId()).getLatestVersionId();
+    }
+    return uploadVersionId;
+  }
+
+  private Long getUploadVersionIdFromRuntime(Long environmentId) {
+    log.debug("Fetching uploadVersionId from runTimeData for EnvironmentId::"+environmentId);
+    if (getRunTimeData() != null) {
+      JSONObject uploadVersions = getRunTimeData().optJSONObject("uploadVersions");
+      log.debug("Fetching uploadVersionId from runTimeData for uploadVersions::", uploadVersions);
+      if (uploadVersions != null) {
+        log.debug("Fetching uploadVersionId from runTimeData for uploadVersions::", uploadVersions);
+        return uploadVersions.optLong(environmentId+"");
+      }
+    }
+    return null;
+  }
+
 
   private TestPlanResult createTestPlanResult() throws ResourceNotFoundException {
     TestPlanResult testPlanResult = new TestPlanResult();

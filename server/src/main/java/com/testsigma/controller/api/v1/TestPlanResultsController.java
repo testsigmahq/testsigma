@@ -57,6 +57,9 @@ public class TestPlanResultsController {
       JSONObject runtimeDataObject = new JSONObject(testPlanResultRequest.getRuntimeData());
       runTimeData.put("runtime_data", runtimeDataObject);
     }
+    if(testPlanResultRequest.getUploadVersions() != null){
+      runTimeData.put("uploadVersions", testPlanResultRequest.getUploadVersions());
+    }
     agentExecutionService.setRunTimeData(runTimeData);
     agentExecutionService.setTriggeredType(ExecutionTriggeredType.API);
     agentExecutionService.start();

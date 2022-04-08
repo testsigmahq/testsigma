@@ -10,6 +10,9 @@ import {AuthenticationConfigService} from "../../../../services/authentication-c
 import {ConfirmationModalComponent} from "../../../../shared/components/webcomponents/confirmation-modal.component";
 import {AuthenticationType} from "../../../../shared/enums/authentication-type.enum";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {ConfirmComponent} from "../confirm.component";
+import {SessionService} from "../../../../shared/services/session.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-details',
@@ -26,6 +29,8 @@ export class DetailsComponent extends BaseComponent implements OnInit {
   updateForm: FormGroup;
 
   constructor(
+    private sessionService:SessionService,
+    private router: Router,
     private authConfigService: AuthenticationConfigService,
     public authGuard: AuthenticationGuard,
     public notificationsService: NotificationsService,
@@ -75,12 +80,11 @@ export class DetailsComponent extends BaseComponent implements OnInit {
     this.saving = true;
     this.authConfig.userName = this.updateForm.value.username;
     this.authConfig.password = this.updateForm.value.password;
-    console.log(this.authConfig);
     this.authConfigService.update(this.authConfig).subscribe({
         next: () => {
           this.saving = false;
           this.dialogRef.close(true);
-
+          this.openRestartConfirmComponent();
           this.translate.get("message.common.update.success", {FieldName: 'Username Password Auth'}).subscribe((res: string) => {
             this.showNotification(NotificationType.Success, res);
           });
@@ -97,5 +101,18 @@ export class DetailsComponent extends BaseComponent implements OnInit {
   showCopied(copyText: string) {
     this.coping[copyText] = true;
     setTimeout(() => this.coping[copyText] = false, 10000);
+  }
+
+  openRestartConfirmComponent() {
+    const dialogRef = this.matModal.open<ConfirmComponent>(ConfirmComponent, {
+      height: '30vh',
+      width: '50%',
+      disableClose:true,
+      panelClass: ['mat-dialog', 'rds-none']
+    });
+    dialogRef.afterClosed()
+      .subscribe((res) => {
+        this.sessionService.logout().subscribe(()=> this.router.navigate(['login']));
+      });
   }
 }

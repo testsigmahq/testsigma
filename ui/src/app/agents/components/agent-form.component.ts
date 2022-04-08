@@ -9,6 +9,7 @@ import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
 import {NotificationsService, NotificationType} from 'angular2-notifications';
 import {TranslateService} from '@ngx-translate/core';
 import {ToastrService} from "ngx-toastr";
+import {Page} from "../../shared/models/page";
 
 @Component({
   selector: 'agent-form',
@@ -37,6 +38,7 @@ export class AgentFormComponent extends BaseComponent implements OnInit {
   public alreadyCreatedAsPrivate: boolean;
   public alreadyCreatedAsPublic: boolean;
   public duplicateAgent: String;
+  public liveAgentPresent: boolean;
 
   constructor(
     public authGuard: AuthenticationGuard,
@@ -74,6 +76,11 @@ export class AgentFormComponent extends BaseComponent implements OnInit {
       }
     });
     this.pingAgent();
+    this.agentService.findAll('', undefined, undefined).subscribe((res: Page<Agent>) => {
+      res.content.forEach(agent  => {
+        if (!(!agent.isOnline() || agent.isOutOfSync()) && !this.liveAgentPresent) this.liveAgentPresent = true;
+      })
+    })
   }
 
   addValidations() {
@@ -195,7 +202,7 @@ export class AgentFormComponent extends BaseComponent implements OnInit {
   }
 
   disableAgentCreation() {
-    return this.unableToConnectLocalAgent || this.loading || this.alreadyRegisteredAsPrivate
+    return this.liveAgentPresent ||  this.unableToConnectLocalAgent || this.loading || this.alreadyRegisteredAsPrivate
     || this.alreadyRegisteredAsPublic || (this.duplicateAgent && this.duplicateAgent == this.agent.title)
   }
 

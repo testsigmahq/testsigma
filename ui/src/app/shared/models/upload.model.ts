@@ -27,8 +27,7 @@ export class Upload extends Base implements PageObject {
   }
 
   get fName(): String {
-    let fileParts = this.latestVersion?.path?.split("/");
-    return fileParts ? fileParts[fileParts.length-1] : '';
+    return this.latestVersion?.path;
   }
 
   get isInProgress() {

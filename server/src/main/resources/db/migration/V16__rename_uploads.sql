@@ -7,10 +7,11 @@ ALTER TABLE `provisioning_profile_uploads` RENAME `provisioning_profile_upload_v
 
 
 ALTER TABLE `upload_versions` ADD COLUMN `upload_id` BIGINT(20) DEFAULT NULL;
-ALTER TABLE `upload_versions` ADD COLUMN `last_uploaded_time` DATETIME DEFAULT NULL,
+ALTER TABLE `upload_versions` ADD COLUMN `last_uploaded_time` DATETIME DEFAULT NULL;
+ALTER TABLE `upload_versions` MODIFY `upload_status` VARCHAR(100);
 
 
-UPDATE `upload_versions` SET upload_id=id;
+UPDATE `upload_versions` SET upload_id:=id;
 
 Update upload_versions SET `type` = 
 CASE `type`

@@ -458,9 +458,7 @@ public class AgentExecutionService {
     testDeviceResult.setMessage(AutomatorMessages.MSG_EXECUTION_CREATED);
     testDeviceResult.setStartTime(new Timestamp(System.currentTimeMillis()));
     testDeviceResult.setTestDeviceId(testDevice.getId());
-    Long uploadVersionId = testDevice.getAppUploadVersionId();
     testDeviceResult.setAppUploadVersionId(getUploadVersionId(testDevice));
-    testDeviceResult.setAppUploadVersionId(uploadVersionId);
     testDeviceResult.setTestDeviceSettings(getExecutionTestDeviceSettings(testDevice));
     testDeviceResult = testDeviceResultService.create(testDeviceResult);
     testDeviceResult.setTestDevice(testDevice);

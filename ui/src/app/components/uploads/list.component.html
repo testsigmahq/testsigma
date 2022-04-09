@@ -82,7 +82,7 @@
                  [class.result-status-text-7]="upload.filePathCopied"
                  [class.text-link]="!upload.filePathCopied"
                  [matTooltip]="upload.filePathCopied ? ('uploads.list.message.copied' | translate) : ('uploads.list.copy_path' | translate) "
-                 [cdkCopyToClipboard]="'testsigma-storage:/'+upload.appPath"
+                 [cdkCopyToClipboard]="'testsigma-storage:/'+upload?.fName"
                  (click)="showCopyTooltip(upload)"></div>
             <div *ngSwitchCase="true" [translate]="'(refresh)'" class="text-link" (click)="fetchUploads()"></div>
           </div>

@@ -73,7 +73,7 @@
         <span
           class="vi-title"
           [translate]="'visual_test.title.current_image'"></span>
-        <div class="ml-auto" *ngIf="this.screenshotComparison.diffCoordinates?.length">
+        <div class="ml-auto" *ngIf="this.screenshotComparison?.diffCoordinates?.length">
           <mat-checkbox [(ngModel)]="isApproveBaseImage" (change)="setAsBaseImage()">{{'visual_test.message.make_base_image' | translate}}</mat-checkbox>
         </div>
       </div>

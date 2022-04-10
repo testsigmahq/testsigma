@@ -64,7 +64,7 @@ public class VisualTestingService {
     return inputString;
   }
 
-  public void initScreenshotComparision(TestCaseResult testCaseResult) throws Exception {
+  public void initScreenshotComparison(TestCaseResult testCaseResult) throws Exception {
     log.debug("Starting Screenshot comparision for testCaseResult" + testCaseResult);
     List<TestStepResult> stepResultList = testStepResultService.findAllByTestCaseResultIdAndScreenshotNameIsNotNull(testCaseResult.getId());
     if (stepResultList.isEmpty()) {
@@ -72,7 +72,7 @@ public class VisualTestingService {
       return;
     }
     for (TestStepResult stepResult : stepResultList) {
-      initScreenshotComparision(stepResult, testCaseResult);
+      initScreenshotComparison(stepResult, testCaseResult);
     }
     List<StepResultScreenshotComparison> failedList = stepResultScreenshotComparisonService.findAllByTestCaseResultIdAndDiffCoordinatesNot(testCaseResult.getId(), "[]");
     if (failedList.isEmpty()) {
@@ -104,13 +104,14 @@ public class VisualTestingService {
     return Double.parseDouble(df.format(input));
   }
 
-  private void initScreenshotComparision(TestStepResult testStepResult, TestCaseResult testCaseResult) throws Exception {
+  private void initScreenshotComparison(TestStepResult testStepResult, TestCaseResult testCaseResult) throws Exception {
     TestDeviceSettings envSettings = testCaseResult.getTestDeviceResult().getTestDeviceSettings();
+    String entityType = testCaseResult.getTestPlanResult().getTestPlan().getEntityType();
     log.info("Starting Screenshot comparision for testStepResult" + testStepResult + " | with envSettings::" + envSettings.toString());
-    Optional<TestStepScreenshot> baseScreenshot = getBaseScreenshot(testCaseResult, testStepResult, envSettings);
+    Optional<TestStepScreenshot> baseScreenshot = getBaseScreenshot(testCaseResult, testStepResult, envSettings, entityType);
     if ((!baseScreenshot.isPresent() || baseScreenshot.get().getBaseImageName() == null) && testStepResult.getResult().equals(ResultConstant.SUCCESS)) {
       log.info("Base Screenshot identified just now so saving to for future runs... :");
-      saveAsBaseScreenshot(testCaseResult, testStepResult, envSettings);
+      saveAsBaseScreenshot(testCaseResult, testStepResult, envSettings,entityType);
       return;
     }
     if (baseScreenshot.isPresent()) {
@@ -119,7 +120,7 @@ public class VisualTestingService {
     }
   }
 
-  private Optional<TestStepScreenshot> getBaseScreenshot(TestCaseResult testCaseResult, TestStepResult testStepResult, TestDeviceSettings settings) throws Exception {
+  private Optional<TestStepScreenshot> getBaseScreenshot(TestCaseResult testCaseResult, TestStepResult testStepResult, TestDeviceSettings settings,String entityType) throws Exception {
     String deviceName = checkNull(settings.getDeviceName(), null);
     String browserVersion = checkNull(settings.getBrowser(), null);
     String resolution = checkNull(settings.getResolution(), null);
@@ -132,7 +133,7 @@ public class VisualTestingService {
     String testDataSetName = getTestDataSetName(testCaseResult, testStepResult);
     Long testDataId = getTestDataId(testCaseResult, testStepResult);
     Optional<TestStepScreenshot> baseScreenshot;
-    baseScreenshot = testStepScreenshotService.findBaseScreenshotForWeb(testStepResult.getStepId(),deviceName, browserVersion, resolution, testDataSetName, testDataId, imageSize);
+    baseScreenshot = testStepScreenshotService.findBaseScreenshotForWeb(testStepResult.getStepId(),deviceName, browserVersion, resolution, testDataSetName, testDataId, imageSize,entityType);
     return baseScreenshot;
   }
 
@@ -190,7 +191,7 @@ public class VisualTestingService {
     return testDataSetName;
   }
 
-  private void saveAsBaseScreenshot(TestCaseResult testCaseResult, TestStepResult testStepResult, TestDeviceSettings envSettings) throws Exception {
+  private void saveAsBaseScreenshot(TestCaseResult testCaseResult, TestStepResult testStepResult, TestDeviceSettings envSettings,String entityTyoe) throws Exception {
     Double browserVer = 0.0;
     try {
       browserVer = Double.parseDouble(checkNull(envSettings.getBrowserVersion(), ""));
@@ -216,6 +217,7 @@ public class VisualTestingService {
     entity.setTestDataSetName(testDataSetName);
     entity.setTestDataId(testDataId);
     entity.setBaseImageSize(baseImageSize);
+    entity.setEntityType(entityTyoe);
     testStepScreenshotService.create(entity);
   }
 
@@ -255,13 +257,13 @@ public class VisualTestingService {
   private String getBaseScreenshotURL(TestStepScreenshot testStepScreenshot) {
     String baseLineImageName = testStepScreenshot.getBaseImageName();
     String screenShotPath =
-      "executions/" + testStepScreenshot.getTestCaseResultId() + "/" + baseLineImageName;
+      "/executions/" + testStepScreenshot.getTestCaseResultId() + "/" + baseLineImageName;
     return storageServiceFactory.getStorageService().generatePreSignedURL(screenShotPath, StorageAccessLevel.READ).toString();
   }
 
   private String getCurrentRunScreenshotPath(TestStepResult testStepResult) {
     String currentScreenShotPath =
-      "executions/" + testStepResult.getTestCaseResultId() + "/" + testStepResult.getScreenshotName();
+      "/executions/" + testStepResult.getTestCaseResultId() + "/" + testStepResult.getScreenshotName();
     return storageServiceFactory.getStorageService().generatePreSignedURL(currentScreenShotPath, StorageAccessLevel.READ).toString();
   }
 

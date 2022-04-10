@@ -146,6 +146,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
       pageTimeOut: new FormControl(this.testPlan.pageTimeOut, [Validators.required]),
       elementTimeOut: new FormControl(this.testPlan.elementTimeOut, [Validators.required]),
       environmentId: new FormControl(this.testPlan.environmentId, []),
+      visualTestingEnabled: new FormControl(this.testPlan.visualTestingEnabled,[]),
       environments: this.formBuilder.array([
         this.formBuilder.group({
           agentId : new FormControl(this.testPlan.environments[0].agentId, [this.requiredIfValidator(() => this.isHybrid)]),

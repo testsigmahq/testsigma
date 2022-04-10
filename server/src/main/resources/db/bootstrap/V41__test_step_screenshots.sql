@@ -7,6 +7,7 @@ CREATE TABLE `test_step_screenshots`
   `test_device_result_id` BIGINT(20) NOT NULL,
   `testcase_result_id`    BIGINT(20) NOT NULL,
   `base_image_size`       VARCHAR(50)   DEFAULT NULL,
+  `entity_type`           VARCHAR(30) DEFAULT NULL,
   `test_data_set_name`    VARCHAR(1000) DEFAULT NULL,
   `test_data_id`          BIGINT(20)    DEFAULT NULL,
   `base_image_name`       TEXT,

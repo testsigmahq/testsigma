@@ -13,13 +13,6 @@ ALTER TABLE `upload_versions` MODIFY `upload_status` VARCHAR(100);
 
 UPDATE `upload_versions` SET upload_id:=id;
 
-Update upload_versions SET `type` = 
-CASE `type`
- WHEN 1 THEN 'APK'
- WHEN 2 THEN 'IPA'
- WHEN 3 THEN 'Attachment'
-END ;
-
 
 CREATE TABLE `uploads` 
 (

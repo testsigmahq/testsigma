@@ -191,7 +191,7 @@ public class VisualTestingService {
     return testDataSetName;
   }
 
-  private void saveAsBaseScreenshot(TestCaseResult testCaseResult, TestStepResult testStepResult, TestDeviceSettings envSettings,String entityTyoe) throws Exception {
+  private void saveAsBaseScreenshot(TestCaseResult testCaseResult, TestStepResult testStepResult, TestDeviceSettings envSettings,String entityType) throws Exception {
     Double browserVer = 0.0;
     try {
       browserVer = Double.parseDouble(checkNull(envSettings.getBrowserVersion(), ""));
@@ -217,7 +217,7 @@ public class VisualTestingService {
     entity.setTestDataSetName(testDataSetName);
     entity.setTestDataId(testDataId);
     entity.setBaseImageSize(baseImageSize);
-    entity.setEntityType(entityTyoe);
+    entity.setEntityType(entityType);
     testStepScreenshotService.create(entity);
   }
 

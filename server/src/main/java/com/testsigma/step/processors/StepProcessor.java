@@ -255,7 +255,7 @@ public class StepProcessor {
         if (testDataValue == null) {
           throw new TestsigmaException(ExceptionErrorCodes.TEST_DATA_NOT_FOUND,
             MessageConstants.getMessage(MessageConstants.MSG_UNKNOWN_TEST_DATA_PARAMETER_IN_TEST_STEP,
-              testDataName, testCaseEntityDTO.getTestCaseName(), dataProfile));
+                    originalTestDataValue, testCaseEntityDTO.getTestCaseName(), dataProfile));
         }
 
         break;

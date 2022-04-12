@@ -25,19 +25,7 @@ public class APIUploadDTO {
   Timestamp updatedDate;
   @JsonProperty("name")
   String name;
-  @JsonProperty("app_path")
-  String appPath;
-  @JsonProperty("file_name")
-  String fileName;
-  @JsonProperty("type")
-  UploadType type;
-  @JsonProperty("version")
-  String version;
-  @JsonProperty("file_size")
-  Integer fileSize;
-  @JsonProperty("pre_signed_url")
-  String preSignedURL;
-  Boolean signed = Boolean.FALSE;
-  @JsonProperty("upload_status")
-  UploadStatus uploadStatus;
+  @JsonProperty("latest_version_id")
+  Long latestVersionId;
+
 }

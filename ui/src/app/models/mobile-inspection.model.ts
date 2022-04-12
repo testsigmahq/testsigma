@@ -27,6 +27,8 @@ export class MobileInspection extends Base implements PageObject {
   @serializable(primitive())
   appUploadId: number;
   @serializable(primitive())
+  uploadVersionId: number;
+  @serializable(primitive())
   sessionId: string;
   @serializable(primitive())
   applicationPackage: String;

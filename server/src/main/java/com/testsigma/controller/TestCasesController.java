@@ -122,6 +122,7 @@ public class TestCasesController {
     if(testCaseCountByPreRequisite==0){
       TestCase testCase = testCaseService.find(id);
       testCase.setDeleted(true);
+      testCase.setIsActive(null);
       testCaseService.update(testCase);
       return new ResponseEntity<>("", HttpStatus.OK);
     }

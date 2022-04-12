@@ -76,10 +76,12 @@ export class AuthenticationConfigComponent extends BaseComponent implements OnIn
         }
         else{
           this.authConfig.authenticationType = authType;
+          if (this.authConfig.authenticationType == this.AuthenticationType.NO_AUTH) window.location.reload();
         }
         this.updateAuthConfig();
         if(authType != AuthenticationType.NO_AUTH)
           this.openRestartConfirmComponent()
+        if (this.authConfig.authenticationType == this.AuthenticationType.NO_AUTH) window.location.reload();
       }
     }
   }

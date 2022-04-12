@@ -15,6 +15,7 @@ export class UrlConstantsService {
   public sessionUrl = this.apiBase + '/sessions';
   public agentsUrl = this.apiBase + '/settings/agents';
   public uploadsUrl = this.apiBase + "/uploads";
+  public uploadVersionsUrl = this.apiBase + "/upload_versions";
   public elementURL = this.apiBase + "/elements";
   public elementScreenNameURL = this.apiBase + "/elements_screen_name";
   public workspaceVersionsURL = this.apiBase + "/workspace_versions";

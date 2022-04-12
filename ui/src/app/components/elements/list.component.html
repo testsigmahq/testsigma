@@ -95,20 +95,37 @@
             <i class="fa-trash-thin"></i>
           </button>
         </div>
-        <span
+        <span class="pl-15">
+        <app-inline-sort
           *ngSwitchCase="false"
-          class="pl-15"
-          [translate]="'elements.element_name'"></span>
+          [ascending]="sortedBy!='name'? undefined : direction == ',asc'"
+          (click)="sortBy('name', ((sortedBy!='name' || direction == ',desc')?',asc':',desc'))"
+          [heading]="'elements.element_name'"></app-inline-sort>
+        </span>
       </div>
       <div
-        class="ts-col-10 d-flex align-items-center"
-        [translate]="'elements.created_type'"></div>
+        class="ts-col-10 d-flex align-items-center ">
+        <app-inline-sort
+          [ascending]="sortedBy!='locatorType'? undefined : direction == ',asc'"
+          (click)="sortBy('locatorType', ((sortedBy!='locatorType' || direction == ',desc')?',asc':',desc'))"
+          [heading]="'elements.created_type'">
+        </app-inline-sort>
+      </div>
       <div
-        class="ts-col-25 px-10 d-flex align-items-center"
-        [translate]="'elements.screen_name'"></div>
+        class="ts-col-25 px-10 d-flex align-items-center ">
+        <app-inline-sort
+          [ascending]="sortedBy!='screenNameId'? undefined : direction == ',asc'"
+          (click)="sortBy('screenNameId', ((sortedBy!='screenNameId' || direction == ',desc')?',asc':',desc'))"
+          [heading]="'elements.screen_name'"></app-inline-sort>
+      </div>
       <div
-        class="ts-col-10 d-flex align-items-center"
-        [translate]="'elements.created_at'"></div>
+        class="ts-col-10 d-flex align-items-center ">
+        <app-inline-sort
+          [ascending]="sortedBy!='createdDate'? undefined : direction == ',asc'"
+          (click)="sortBy('createdDate', ((sortedBy!='createdDate' || direction == ',desc')?',asc':',desc'))"
+          [heading]="'elements.created_at'">
+        </app-inline-sort>
+      </div>
     </div>
   </div>
   <cdk-virtual-scroll-viewport

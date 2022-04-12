@@ -102,8 +102,7 @@ public class TestStepService extends XMLExportService<TestStep> {
   public TestStep find(Long id) throws ResourceNotFoundException {
     return this.repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("TestStep missing with id:" + id));
   }
-
-  public TestStep update(TestStep testStep) {
+  private TestStep updateDetails(TestStep testStep){
     RestStep restStep = testStep.getRestStep();
     testStep.setRestStep(null);
     testStep = this.repository.save(testStep);
@@ -112,6 +111,11 @@ public class TestStepService extends XMLExportService<TestStep> {
       restStep = this.restStepService.update(restStep);
       testStep.setRestStep(restStep);
     }
+    return testStep;
+  }
+
+  public TestStep update(TestStep testStep) {
+    testStep = updateDetails(testStep);
     this.updateDisablePropertyForChildSteps(testStep);
     publishEvent(testStep, EventType.UPDATE);
     return testStep;
@@ -156,15 +160,22 @@ public class TestStepService extends XMLExportService<TestStep> {
   private void bulkUpdateDisableAndIgnoreResultProperties(Long[] ids, Boolean disabled, Boolean ignoreStepResult) {
     List<TestStep> testSteps = this.repository.findAllByIdInOrderByPositionAsc(ids);
     for (TestStep testStep : testSteps) {
-      if (disabled != null && (testStep.getParentId() == null || (testStep.getParentId() != null && testStep.getParentStep().getDisabled() != true))) {
-        testStep.setDisabled(disabled);
+      if (disabled != null) {
+        if(!disabled && testStep.getParentStep() == null){
+          testStep.setDisabled(false);
+        } else if(!disabled && testStep.getParentStep() != null){
+          testStep.setDisabled(testStep.getParentStep().getDisabled());
+        } else {
+          testStep.setDisabled(disabled);
+        }
       }
       if (ignoreStepResult != null) {
         testStep.setIgnoreStepResult(ignoreStepResult);
       }
-      this.update(testStep);
+      this.updateDetails(testStep);
     }
   }
+
 
   public List<TestStep> findAllByTestCaseIdAndIdIn(Long testCaseId, List<Long> stepIds) {
     return this.repository.findAllByTestCaseIdAndIdInOrderByPosition(testCaseId, stepIds);

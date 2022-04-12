@@ -122,7 +122,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   private environmentSuggestion: MatDialogRef<ActionTestDataEnvironmentSuggestionComponent>;
   public localUrlVerifying: boolean;
   public localUrlValid: number = -1;
-  private currentTestDataType: TestDataType;
+  public currentTestDataType: TestDataType;
   public currentTestDataFunction: DefaultDataGenerator;
   public isValidAttribute: Boolean;
   public isValidElement: Boolean;
@@ -139,6 +139,14 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
 
   get mobileStepRecorder(): MobileStepRecorderComponent {
     return this.matModal.openDialogs.find(dialog => dialog.componentInstance instanceof MobileStepRecorderComponent).componentInstance;
+  }
+
+  get isTestDataRunTimeParameterType(){
+    return this.currentTestDataType && this.currentTestDataType == TestDataType.runtime;
+  }
+
+  get isTestDataRandomParameterType(){
+    return this.currentTestDataType && this.currentTestDataType == TestDataType.random;
   }
 
   public currentTestDataFunctionParameters: AddonTestDataFunctionParameter[];

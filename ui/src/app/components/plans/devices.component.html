@@ -4,7 +4,7 @@
     <input #searchInput class="form-control border-0 ts-col-85"
            [placeholder]="'common.place_holder.search' | translate"/>
     <button class="theme-btn-clear-default"
-            [translate]="isMobile ? 'test_plan.environment.device.title' : 'test_plan.environment.machine.title'"
+            [translate]="isMobile ? 'test_plan.environment.device.title' : 'test_plan.environment.machine.title' | translate"
             (click)="openSelectTestMachineForm(executionEnvironments?.cachedItems[0])"></button>
   </div>
   <div class="list-container theme-w-o-h-scroll lg-h" *ngIf="!executionEnvironments.isEmpty">
@@ -19,6 +19,7 @@
           (change)="isEnvironmentAvailable || environment.disable ? toggleMachineEnable(environment) : ''"
           class="ts-col-5 z-in-2" [ngModel]="!environment.disable"></mat-slide-toggle>
         <div class="pr-10 ts-col-50 text-decoration-none rb-medium">
+          <span [textContent]="'#'+environment.id" class="pr-10"></span>
           <span [textContent]="environment.title"></span>
           <a
             *ngIf="isCustomPlan"

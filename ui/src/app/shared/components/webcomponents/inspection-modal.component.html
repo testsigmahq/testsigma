@@ -143,6 +143,7 @@
                 [deviceId]="deviceId"
                 [testPlanLabType]="testPlanLabType"
                 [formCtrl]="uploadSelectionForm?.controls['app_upload_id']"
+                [versionFormCtrl]="uploadSelectionForm?.controls['upload_version_id']"
                 [formGroup]="uploadSelectionForm"
                 [upload]="upload? upload:null"
                 [version]="version"
@@ -150,7 +151,7 @@
               ></app-uploads-auto-complete>
               <div [class.h-47p]="!uploads?.content?.length"
                    [class.pl-30]="uploads?.content?.length"
-                   class="ts-col-35 pl-30 py-4 d-flex">
+                   class="ts-col-35 pl-30 py-4 d-flex pb-18">
                 <mat-divider *ngSwitchCase="true" [vertical]="true" class="mr-30"></mat-divider>
                 <span *ngSwitchCase="true" [translate]="'message.common.or'"
                       class="bg-white border-brand-1 circle fz-14 ml-n12 mt-8 position-absolute text-dark pb-2"></span>

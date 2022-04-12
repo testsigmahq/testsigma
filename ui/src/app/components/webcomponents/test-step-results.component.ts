@@ -390,7 +390,7 @@ export class TestStepResultsComponent extends TestCaseStepsListComponent impleme
   }
 
   fetchVisualResults(testStepResults: Page<TestStepResult>) {
-    let query = "testStepResultId@:" + testStepResults.content.map(key => key.id).join("#");
+    let query = "testStepResultId@" + testStepResults.content.map(key => key.id).join("#");
     let pageable = new Pageable();
     pageable.pageSize = testStepResults.content.length;
     this.stepResultScreenshotComparisionService.findAll(query, undefined, pageable).subscribe(res => {

@@ -87,6 +87,8 @@ public class AgentExecutionService {
   private final IntegrationsService integrationsService;
   private final ApplicationConfig applicationConfig;
   private final JWTTokenService jwtTokenService;
+  private final UploadService uploadService;
+  private final UploadVersionService uploadVersionService;
   public AbstractTestPlan testPlan;
   private JSONObject runTimeData;
   private TestPlanResult testPlanResult;
@@ -456,11 +458,39 @@ public class AgentExecutionService {
     testDeviceResult.setMessage(AutomatorMessages.MSG_EXECUTION_CREATED);
     testDeviceResult.setStartTime(new Timestamp(System.currentTimeMillis()));
     testDeviceResult.setTestDeviceId(testDevice.getId());
+    testDeviceResult.setAppUploadVersionId(getUploadVersionId(testDevice));
     testDeviceResult.setTestDeviceSettings(getExecutionTestDeviceSettings(testDevice));
     testDeviceResult = testDeviceResultService.create(testDeviceResult);
     testDeviceResult.setTestDevice(testDevice);
     return testDeviceResult;
   }
+
+  private Long getUploadVersionId(TestDevice testDevice) throws ResourceNotFoundException {
+    Long uploadVersionId = getUploadVersionIdFromRuntime(testDevice.getId());
+    if (uploadVersionId != null) {
+      log.debug("Got uploadVersionId from runTimeData ", uploadVersionId, testDevice.getId());
+      uploadVersionId = this.uploadVersionService.find(uploadVersionId).getId();
+    } else {
+      uploadVersionId = testDevice.getAppUploadVersionId();
+      if (uploadVersionId == null && testDevice.getAppUploadId() != null)
+        uploadVersionId = uploadService.find(testDevice.getAppUploadId()).getLatestVersionId();
+    }
+    return uploadVersionId;
+  }
+
+  private Long getUploadVersionIdFromRuntime(Long environmentId) {
+    log.debug("Fetching uploadVersionId from runTimeData for EnvironmentId::"+environmentId);
+    if (getRunTimeData() != null) {
+      JSONObject uploadVersions = getRunTimeData().optJSONObject("uploadVersions");
+      log.debug("Fetching uploadVersionId from runTimeData for uploadVersions::", uploadVersions);
+      if (uploadVersions != null) {
+        log.debug("Fetching uploadVersionId from runTimeData for uploadVersions::", uploadVersions);
+        return uploadVersions.optLong(environmentId+"");
+      }
+    }
+    return null;
+  }
+
 
   private TestPlanResult createTestPlanResult() throws ResourceNotFoundException {
     TestPlanResult testPlanResult = new TestPlanResult();
@@ -757,7 +787,7 @@ public class AgentExecutionService {
   }
 
   public void checkTestCaseIsInReadyState(TestCase testCase) throws TestsigmaException {
-    if (!testCase.getStatus().equals(TestCaseStatus.READY)) {
+    if (!testCase.getStatus().equals(TestCaseStatus.READY) && testPlan.getEntityType()=="TEST_PLAN") {
       String message = testCase.getIsStepGroup() ? com.testsigma.constants.MessageConstants.getMessage(MessageConstants.STEP_GROUP_NOT_READY, testCase.getName()) :
         MessageConstants.TESTCASE_NOT_READY;
       throw new TestsigmaException(message, message);

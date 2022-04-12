@@ -147,15 +147,23 @@
         </div>
         <span
           *ngIf="!selectedTestCases.length"
-          class="ts-col-100-61"
-          [translate]="'message.common.text.title'"></span>
+          class="ts-col-100-61">
+        <app-inline-sort
+          [ascending]="sortedBy!='name'? undefined : direction == ',asc'"
+          (click)="sortBy('name', ((sortedBy!='name' || direction == ',desc')?',asc':',desc'))"
+          [heading]="'message.common.text.title'"></app-inline-sort>
+        </span>
       </div>
       <div *ngIf="!isStepGroup"
         class="ts-col-15"
         [translate]="'message.common.text.result'"></div>
       <div
-        class="ts-col-15 px-25"
-        [translate]="'message.common.text.status'"></div>
+        class="ts-col-15 px-25 ">
+        <app-inline-sort
+        [ascending]="sortedBy!='status'? undefined : direction == ',asc'"
+        (click)="sortBy('status', ((sortedBy!='status' || direction == ',desc')?',asc':',desc'))"
+        [heading]="'message.common.text.status'"></app-inline-sort>
+      </div>
     </div>
     <div
       class="list-container h-90">

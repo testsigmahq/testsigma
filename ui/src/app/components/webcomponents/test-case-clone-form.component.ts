@@ -79,7 +79,7 @@ export class TestCaseCloneFormComponent extends BaseComponent implements OnInit 
       },
       (exception) => {
         let testCaseTpe = this.testCase.isStepGroup? 'Step Group' : 'Test Case'
-        this.translate.get('message.common.copied.failure', {FieldName: testCaseTpe}).subscribe(res => {
+        this.translate.get('message.common.copied.failure', {FieldName: testCaseTpe,FieldName2:copyStepGroup.name}).subscribe(res => {
           this.showAPIError(exception, res, testCaseTpe);
         });
       }

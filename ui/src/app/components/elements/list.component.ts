@@ -59,8 +59,8 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
   public selectAll: Boolean;
   public selectedElements = [];
   public sortByColumns = ["name", "createdDate", "updatedDate"];
-  public direction = ",asc";
-  public sortedBy = "name";
+  public direction = ",desc";
+  public sortedBy = "createdDate";
   public tooltipPositionLeft: TooltipPosition = 'left';
 
   constructor(
@@ -169,8 +169,8 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
       this.query +=  (this.currentFilter.normalizedQuery? this.currentFilter.queryString: '');
       query = this.byPassSpecialCharacters(this.query);
       this.query = query;
-      if(!query.includes('applicationVersionId:')) {
-        query += ',applicationVersionId:'+this.versionId;
+      if(!query.includes('workspaceVersionId:')) {
+        query += ',workspaceVersionId:'+this.versionId;
       }
     }
     this.elements = new FilterableInfiniteDataSource(this.elementService, this.query, sortBy, 50, this.filterId, this.versionId);
@@ -221,7 +221,7 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
 
   checkForLinkedTestCases(element?) {
     let testCases: InfiniteScrollableDataSource;
-    let query = "workspaceVersionId:" + this.versionId + ",deleted:false,uiIdentifier:" + encodeURI(element.name)
+    let query = "workspaceVersionId:" + this.versionId + ",deleted:false,element:" + encodeURI(element.name)
     query = this.byPassSpecialCharacters(query);
     testCases = new InfiniteScrollableDataSource(this.testCaseService,query);
 
@@ -309,12 +309,9 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
       });
   }
 
-  saveMultipleElements(elements: Element[]) {
-    elements.forEach(element => element.workspaceVersionId = this.versionId);
-    this.elementService.bulkCreate(elements).subscribe((res) => {
-      this.fetchElements();
-    }, error => {
-    });
+  saveMultipleElements() {
+    this.elementCapture = false;
+    this.fetchElements();
   }
 
   discard() {
@@ -502,7 +499,7 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
   filterByScreenName(screenName:string) {
     let sortBy = this.sortedBy + this.direction;
     let encodedScreenName = encodeURIComponent(screenName)
-    this.query = "screenName:" + encodedScreenName ;
+    this.query = "workspaceVersionId:" + this.version.id + ",screenName:" + encodedScreenName ;
     this.navigateToQueryBasedUrl();
     let encodedQuery = ",workspaceVersionId:" + this.version.id + ",screenName:" + encodedScreenName;
     if(this.query===undefined)

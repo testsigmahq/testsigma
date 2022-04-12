@@ -30,6 +30,7 @@ public class TestDeviceDTO {
   private String browser;
   private String udid;
   private String appUploadId;
+  private Long appUploadVersionId;
   private String appPackage;
   private String appActivity;
   private String appUrl;

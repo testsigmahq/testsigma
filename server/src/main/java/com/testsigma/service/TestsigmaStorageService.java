@@ -110,7 +110,8 @@ public class TestsigmaStorageService extends StorageService {
       response = httpClient.get(String.format("%s%s?key=%s", getRequestURI(), TS_KEY_EXISTS, relativeFilePathFromBase),
         getHeaders(true), new TypeReference<>() {
         });
-      if (response.getResponseEntity()) {
+      if (Boolean.parseBoolean(response.getResponseText()))
+ {
         log.debug("File exists, generating presigned URL for: " + relativeFilePathFromBase);
         returnURL = Optional.ofNullable(generatePreSignedURL(relativeFilePathFromBase, storageAccessLevel, expiryTimeInMinutes));
       }

@@ -22,6 +22,8 @@ public class MobileCapabilities extends Capabilities {
   @Autowired
   protected UploadService uploadService;
   @Autowired
+  protected UploadVersionService uploadVersionService;
+  @Autowired
   protected StorageServiceFactory storageServiceFactory;
   @Autowired
   protected StorageServiceFactory storageService;
@@ -39,16 +41,17 @@ public class MobileCapabilities extends Capabilities {
 
   public String getPreSignedUrl(TestDevice testDevice) throws ResourceNotFoundException {
     Upload upload = this.uploadService.find(Long.valueOf(testDevice.getAppUploadId()));
+    UploadVersion uploadVersion = testDevice.getAppUploadVersionId() == null ? upload.getLatestVersion() : uploadVersionService.find(testDevice.getAppUploadVersionId());
     Optional<URL> newPreSignedURL =
-      this.storageServiceFactory.getStorageService().generatePreSignedURLIfExists(upload.getAppPath(),
+      this.storageServiceFactory.getStorageService().generatePreSignedURLIfExists(uploadVersion.getPath(),
         StorageAccessLevel.READ, 300
       );
     return newPreSignedURL.get().toString();
   }
 
   private String copyUploadToLocal(TestDevice testDevice) throws TestsigmaException {
-    Upload upload = this.uploadService.find(testDevice.getAppUploadId());
-    return storageServiceFactory.getStorageService().downloadToLocal(upload.getAppPath(),
+    UploadVersion upload = this.uploadVersionService.find(testDevice.getAppUploadVersionId());
+    return storageServiceFactory.getStorageService().downloadToLocal(upload.getPath(),
       StorageAccessLevel.READ);
   }
 

@@ -101,7 +101,7 @@ public class AbstractTestPlan implements Serializable {
   @EqualsAndHashCode.Exclude
   @ToString.Exclude
   private Environment environment;
-  @OneToMany(mappedBy = "testPlan", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "testPlan", fetch = FetchType.EAGER)
   @EqualsAndHashCode.Exclude
   @ToString.Exclude
   @JsonIgnore

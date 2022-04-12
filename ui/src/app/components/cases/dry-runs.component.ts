@@ -126,11 +126,13 @@ export class DryRunsComponent extends BaseComponent implements OnInit {
     this.executionEnvironmentService.findAll("testPlanId:"+execution.id).subscribe((res)=> {
       dryExecution.environments = res.content;
       dryExecution.testCaseId = this.testCase.id;
+      // dryExecution.environments = execution.environments;
       delete dryExecution.id;
+      dryExecution.environments.map(e => delete e.id);
       this.dryTestPlanService.create(dryExecution).subscribe((res: TestPlanResult) => {
         this.translate.get("execution.initiate.success").subscribe((message: string) => {
           this.showNotification(NotificationType.Success, message);
-          this.testCaseResultService.findAll("testPlanResultId:"+res.id+",iteration:null", "id,desc").subscribe((res: Page<TestCaseResult>) => {
+          this.testCaseResultService.findAll("testPlanResultId:" + res.id + ",iteration:null", "id,desc").subscribe((res: Page<TestCaseResult>) => {
             this.router.navigate(['/td', 'test_case_results', res?.content[0]?.id]);
           });
         })

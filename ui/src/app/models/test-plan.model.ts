@@ -1,4 +1,4 @@
-import {custom, deserialize, object, serializable, SKIP, list, optional} from 'serializr';
+import {custom, deserialize, object, serializable, SKIP, list, optional, alias} from 'serializr';
 import {WorkspaceVersion} from "./workspace-version.model";
 import {TestPlanLabType} from "../enums/test-plan-lab-type.enum";
 import {TestPlanType} from "../enums/execution-type.enum";

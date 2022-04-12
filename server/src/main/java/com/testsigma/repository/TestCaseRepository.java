@@ -51,13 +51,13 @@ public interface TestCaseRepository extends PagingAndSortingRepository<TestCase,
   List<TestCase> findAllFailureBytestPlanResultId(@Param("testPlanResultId") Long testPlanResultId);
 
   @Modifying
-  @Query("UPDATE TestCase tc SET tc.deleted = true WHERE tc.id in :ids")
+  @Query("UPDATE TestCase tc SET tc.deleted = true, tc.isActive = NULL WHERE tc.id in :ids")
   Integer markAsDelete(@Param("ids") List<Long> ids);
 
   void deleteAllByWorkspaceVersionId(@Param("workspaceVersionId") Long workspaceVersionId);
 
   @Modifying
-  @Query("UPDATE TestCase tc SET tc.deleted = false WHERE tc.id =:id")
+  @Query("UPDATE TestCase tc SET tc.deleted = false, tc.isActive = true WHERE tc.id =:id")
   Integer markAsRestored(@Param("id") Long id);
 
   Page<TestCase> findAllByTestDataId(Long testDataId, Pageable pageable);

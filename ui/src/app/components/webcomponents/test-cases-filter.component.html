@@ -44,8 +44,10 @@
       </div>
       <div
         class="form-group ts-col-100">
-        <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill">
+        <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill"
+         [style]="disableStatus ? {'opacity':'0.4 !important','cursor':'not-allowed'} : null"  >
           <mat-select
+            [disabled]="disableStatus"
             (selectionChange)="constructQueryString()"
             multiple
             disableOptionCentering panelClass="multiple"
@@ -60,8 +62,10 @@
         <label class="control-label" [translate]="'testcase.summary.test_case_status'"></label>
       </div>
       <div class="form-group">
-        <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill">
+        <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill"
+          [style]="disableTestcaseType ? {'opacity':'0.4 !important','cursor':'not-allowed'} : null" >
           <mat-select
+            [disabled]="disableTestcaseType"
             (selectionChange)="constructQueryString()"
             disableOptionCentering panelClass="multiple"
             [placeholder]="'message.common.any' | translate"
@@ -75,8 +79,10 @@
         <label class="control-label" [translate]="'testcase.summary.test_case_type'"></label>
       </div>
       <div class="form-group">
-        <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill">
+        <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill"
+          [style]="disablePriority ? {'opacity':'0.4 !important','cursor':'not-allowed'} : null" >
           <mat-select
+            [disabled]="disablePriority"
             (selectionChange)="constructQueryString()"
             disableOptionCentering panelClass="multiple"
             [placeholder]="'message.common.any' | translate"
@@ -91,8 +97,10 @@
       </div>
 
       <div class="form-group" *ngIf="!isStepGroup">
-        <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill">
+        <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill"
+          [style]="disableRunResult ? {'opacity':'0.4 !important','cursor':'not-allowed'} : null" >
           <mat-select
+            [disabled]="disableRunResult"
             (selectionChange)="constructQueryString()"
             [placeholder]="'message.common.any' | translate"
             disableOptionCentering panelClass="multiple"

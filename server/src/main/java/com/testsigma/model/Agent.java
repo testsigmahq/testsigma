@@ -123,6 +123,8 @@ public class Agent implements Serializable {
       }
     }
     osVersionStr = platform.getVersionPrefix() + " " + osVersionStr;
+    if (osVersionStr.startsWith("macOS 11."))
+      osVersionStr = "macOS 11.0";
     if(osVersionStr.startsWith("macOS 12."))
       osVersionStr = "macOS 12.0";
     osVersionStr = osVersionStr.trim();

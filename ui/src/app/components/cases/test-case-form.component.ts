@@ -118,10 +118,16 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
     this.testCase.deleted = false;
   }
 
+  public noWhitespaceValidator(control: FormControl) {
+    const isWhitespace = (control.value || '').trim().length === 0;
+    const isValid = !isWhitespace;
+    return isValid ? null : { 'whitespace': true };
+  }
+
   addValidations() {
     this.testCaseForm = new FormGroup({
       name: new FormControl(this.testCase.name, [
-        Validators.required, Validators.maxLength(125) , Validators.minLength(4)
+        Validators.required, Validators.maxLength(125) , Validators.minLength(4),this.noWhitespaceValidator
       ]),
       description: new FormControl(this.testCase.description, []),
       priority: new FormControl(this.testCase.priorityId, []),

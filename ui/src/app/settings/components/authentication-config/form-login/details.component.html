@@ -9,19 +9,19 @@
     </div>
 
     <div class="theme-overlay-content">
-      <form class="ts-form pt-30">
+      <form class="ts-form pt-30" [formGroup]="updateForm">
         <div
           class="form-group ts-col-100 combined-control">
           <div class="p-0 field mb-0">
+            <label for="password" class="control-label required">
+              <span [translate]="'login_form.username'"></span>
+            </label>
             <input
               type="text"
               id="userName"
               name="userName"
-              [value]="authConfig?.userName"
+              formControlName="username"
               class="form-control"/>
-            <label
-              [translate]="'login_form.username'"
-              for="userName"></label>
           </div>
           <button
             [cdkCopyToClipboard]="authConfig?.userName"
@@ -32,15 +32,15 @@
         <div
           class="form-group ts-col-100 combined-control p-0">
           <div class="p-0 field mb-0">
+            <label for="password" class="control-label required">
+              <span [translate]="'login_form.password'"></span>
+            </label>
             <input
-              type="text"
+              type="password"
               id="password"
               name="password"
-              [value]="authConfig?.password"
+              formControlName="password"
               class="form-control"/>
-            <label
-              [translate]="'login_form.password'"
-              for="password"></label>
           </div>
           <button
             (click)="showCopied('password')"
@@ -62,6 +62,7 @@
           type="submit"
           appAsyncBtn
           [isLoading]="saving"
+          [disabled]="!updateForm.valid"
           [message]="'message.common.updating'"
           [textContent]="'btn.common.update' | translate"
           class="theme-btn-primary" (click)="update()">

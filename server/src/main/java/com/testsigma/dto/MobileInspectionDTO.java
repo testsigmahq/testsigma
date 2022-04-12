@@ -20,7 +20,7 @@ public class MobileInspectionDTO {
   private TestPlanLabType labType;
   private Long platformDeviceId;
   private String appActivity;
-  private Long appUploadId;
+  private Long uploadVersionId;
   private String sessionId;
   private Timestamp startedAt;
   private Timestamp finishedAt;

@@ -59,6 +59,7 @@ public class TestCaseService extends XMLExportService<TestCase> {
   private final TestCaseFilterService testCaseFilterService;
   private final StepGroupFilterService stepGroupFilterService;
   private final WorkspaceVersionService workspaceVersionService;
+  private final TestSuiteService testSuiteService;
 
   public Page<TestCase> findAll(Specification<TestCase> specification, Pageable pageable) {
     return testCaseRepository.findAll(specification, pageable);
@@ -147,6 +148,7 @@ public class TestCaseService extends XMLExportService<TestCase> {
 
   public TestCase create(TestCaseRequest testCaseRequest) throws TestsigmaException, SQLException {
     TestCase testCase = testCaseMapper.map(testCaseRequest);
+    testCase.setIsActive(true);
     testCase.setCreatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
     setStatusTimeAndBy(testCaseRequest, testCase);
     List<Long> preReqList = new ArrayList<>();
@@ -171,6 +173,7 @@ public class TestCaseService extends XMLExportService<TestCase> {
 
   public TestCase update(TestCaseRequest testCaseRequest, Long id) throws TestsigmaException, SQLException {
     TestCase testCase = testCaseRepository.findById(id).get();
+    Long oldPreRequisite = testCase.getPreRequisite();
     testCase.setUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
     setStatusTimeAndBy(testCaseRequest, testCase);
     testCaseMapper.map(testCaseRequest, testCase);
@@ -180,6 +183,9 @@ public class TestCaseService extends XMLExportService<TestCase> {
     testCase = update(testCase);
     if (testCaseRequest.getTags() != null) {
       tagService.updateTags(testCaseRequest.getTags(), TagType.TEST_CASE, testCase.getId());
+    }
+    if (testCase.getPreRequisite() != null && !testCase.getPreRequisite().equals(oldPreRequisite)){
+        testSuiteService.handlePreRequisiteChange(testCase);
     }
     return testCase;
   }

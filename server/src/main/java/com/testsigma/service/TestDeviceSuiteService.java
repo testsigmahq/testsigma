@@ -12,6 +12,7 @@ package com.testsigma.service;
 import com.testsigma.model.AbstractTestSuite;
 import com.testsigma.model.TestDevice;
 import com.testsigma.model.TestDeviceSuite;
+import com.testsigma.model.TestSuite;
 import com.testsigma.repository.TestDeviceSuiteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import java.util.Optional;
 public class TestDeviceSuiteService {
 
   private final TestDeviceSuiteRepository testDeviceSuiteRepository;
+  private final TestDeviceService testDeviceService;
 
   public Optional<TestDeviceSuite> findFirstByTestDeviceAndTestSuite(
     TestDevice testDevice, AbstractTestSuite testSuite) {
@@ -50,5 +52,18 @@ public class TestDeviceSuiteService {
   public Boolean deleteAll(List<TestDeviceSuite> deletableMaps) {
     this.testDeviceSuiteRepository.deleteAll(deletableMaps);
     return true;
+  }
+
+  public void handlePreRequisiteChange(TestSuite testSuite) {
+    List<TestDevice> executionEnvironments = this.testDeviceService.findAllByTestSuiteId(testSuite.getId());
+    executionEnvironments.forEach(testDevice -> {
+      List<Long> suiteIds = testDeviceSuiteRepository.findSuiteIdsByTestDeviceId(testDevice.getId());
+      if (!suiteIds.contains(testSuite.getPreRequisite())) {
+        int indexOfSuiteId = suiteIds.indexOf(testSuite.getId());
+        suiteIds.add(indexOfSuiteId, testSuite.getPreRequisite());
+        testDevice.setSuiteIds(suiteIds);
+        testDeviceService.handleEnvironmentSuiteMappings(testDevice);
+      }
+    });
   }
 }

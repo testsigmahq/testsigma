@@ -540,3 +540,11 @@
     @extend .text-muted;
   }
 }
+
+.sort-header{
+  @extend .hover-list-action, .d-flex, .pointer;
+  .opaque-50 {
+    @extend .action-icons;
+    opacity: 0.5;
+  }
+}

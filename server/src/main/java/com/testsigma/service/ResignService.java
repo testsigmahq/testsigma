@@ -4,12 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.Lists;
 import com.testsigma.config.StorageServiceFactory;
 import com.testsigma.config.URLConstants;
-import com.testsigma.model.StorageAccessLevel;
-import com.testsigma.model.StorageType;
+import com.testsigma.model.*;
 import com.testsigma.dto.ResignRequestUsingUrlsDTO;
 import com.testsigma.exception.TestsigmaException;
-import com.testsigma.model.ProvisioningProfile;
-import com.testsigma.model.Upload;
 import com.testsigma.util.HttpClient;
 import com.testsigma.util.HttpResponse;
 import lombok.RequiredArgsConstructor;
@@ -50,6 +47,7 @@ public class ResignService {
   private final HttpClient httpClient;
   private final CertificateService certificateService;
   private final UploadService uploadService;
+  private final UploadVersionService uploadVersionService;
   private final StorageServiceFactory storageServiceFactory;
   private final TestsigmaOSConfigService testsigmaOSConfigService;
 
@@ -68,20 +66,20 @@ public class ResignService {
     }
   }
 
-  public void reSignUpload(ProvisioningProfile profile, Upload upload) throws TestsigmaException {
+  public void reSignUpload(ProvisioningProfile profile, UploadVersion uploadVersion) throws TestsigmaException {
     log.info(String.format("Resigning Upload [%s] - [%s] file for provisioning profile [%s] - [%s]",
-      upload.getId(), upload.getName(), profile.getId(), profile.getName()));
+            uploadVersion.getId(), uploadVersion.getName(), profile.getId(), profile.getName()));
 
     certificateService.setPreSignedURLs(profile);
-    String ipaName = profile.getId() + "_" + upload.getId();
-    String resignedPathPrefix = upload.getResignedAppS3PathSuffix(profile.getId());
+    String ipaName = profile.getId() + "_" + uploadVersion.getId();
+    String resignedPathPrefix = uploadVersion.getResignedAppS3PathSuffix(profile.getId());
 
     try {
       if (storageServiceFactory.getStorageService().getStorageType() == StorageType.ON_PREMISE) {
-        File resignedIpa = resignUsingFiles(profile, ipaName, new URL(uploadService.getPreSignedURL(upload)));
+        File resignedIpa = resignUsingFiles(profile, ipaName, new URL(uploadVersionService.getPreSignedURL(uploadVersion)));
         storageServiceFactory.getStorageService().addFile(resignedPathPrefix, resignedIpa);
       } else {
-        resignUsingUrls(profile, ipaName, new URL(uploadService.getPreSignedURL(upload)),
+        resignUsingUrls(profile, ipaName, new URL(uploadVersionService.getPreSignedURL(uploadVersion)),
           storageServiceFactory.getStorageService().generatePreSignedURL(resignedPathPrefix, StorageAccessLevel.WRITE, 60));
       }
     } catch (MalformedURLException e) {
@@ -104,7 +102,7 @@ public class ResignService {
     }
   }
 
-  public void reSignForAllProfiles(Upload upload, List<ProvisioningProfile> profiles) throws TestsigmaException {
+  public void reSignForAllProfiles(UploadVersion upload, List<ProvisioningProfile> profiles) throws TestsigmaException {
     provisioningProfileUploadService.removeEntitiesForUpload(upload);
     for (ProvisioningProfile profile : profiles) {
       reSignUpload(profile, upload);
@@ -112,13 +110,13 @@ public class ResignService {
     }
   }
 
-  public void reSignAllUploads(ProvisioningProfile profile, List<Upload> uploads)
+  public void reSignAllUploads(ProvisioningProfile profile, List<UploadVersion> uploadVersions)
     throws TestsigmaException {
     provisioningProfileUploadService.removeEntitiesForProfile(profile);
-    for (Upload upload : uploads) {
+    for (UploadVersion uploadVersion : uploadVersions) {
       try {
-        reSignUpload(profile, upload);
-        provisioningProfileUploadService.create(profile, upload);
+        reSignUpload(profile, uploadVersion);
+        provisioningProfileUploadService.create(profile, uploadVersion);
       } catch (Exception e) {
         log.error(e.getMessage(), e);
       }

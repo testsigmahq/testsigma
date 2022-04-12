@@ -36,6 +36,10 @@
                  [translate]="'agents.local_agent_unable_to_connect'">
             </div>
             <div class="note text-danger mb-30"
+                 *ngIf="liveAgentPresent"
+                 [translate]="'agents.form.active_agent_already_present' | translate">
+            </div>
+            <div class="note text-danger mb-30"
                  [translate]="'agents.connecting_to_agent'"
                  *ngIf="connectingToAgent">
             </div>

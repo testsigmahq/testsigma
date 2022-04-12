@@ -13,6 +13,7 @@ CREATE TABLE `test_device_results`
   `message`                      TEXT,
   `agent_start_time`             TIMESTAMP    NULL DEFAULT NULL,
   `agent_end_time`               TIMESTAMP    NULL DEFAULT NULL,
+  `app_upload_version_id`        BIGINT(20)     DEFAULT NULL,
   `environment_settings`         JSON,
   `execution_initiated_on`       TIMESTAMP    NULL DEFAULT NULL,
   `agent_picked_on`              TIMESTAMP    NULL DEFAULT NULL,

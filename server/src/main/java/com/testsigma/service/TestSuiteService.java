@@ -53,6 +53,7 @@ public class TestSuiteService extends XMLExportService<TestSuite> {
   private final SuiteTestCaseMappingRepository suiteTestCaseMappingRepository;
   private final TestPlanService testPlanService;
   private final ApplicationEventPublisher applicationEventPublisher;
+  private final TestDeviceSuiteService suiteMappingService;
   private final TestSuiteMapper mapper;
 
   public Page<TestSuite> findAll(Specification spec, Pageable pageble) {
@@ -104,6 +105,10 @@ public class TestSuiteService extends XMLExportService<TestSuite> {
     return testSuite;
   }
 
+  public void handlePrequisiteChange(TestSuite testSuite){
+    this.suiteMappingService.handlePreRequisiteChange(testSuite);
+  }
+
   private void validatePreRequisiteIsValid(TestSuite testSuite, List<Long> preReqList) throws TestsigmaException {
     Long preRequsiteId = testSuite.getPreRequisite();
     if (preRequsiteId != null) {
@@ -136,7 +141,7 @@ public class TestSuiteService extends XMLExportService<TestSuite> {
     this.repository.deleteById(id);
   }
 
-  private void handleTestCaseMappings(TestSuite testSuite) {
+  public void handleTestCaseMappings(TestSuite testSuite) {
     int position = 0;
     List<SuiteTestCaseMapping> newMappings = new ArrayList<>();
     List<SuiteTestCaseMapping> updatedMappings = new ArrayList<>();
@@ -234,5 +239,18 @@ public class TestSuiteService extends XMLExportService<TestSuite> {
   @Override
   protected List<TestSuiteXMLDTO> mapToXMLDTOList(List<TestSuite> list) {
     return mapper.mapTestSuites(list);
+  }
+
+  public void handlePreRequisiteChange(TestCase testCase) {
+    List<TestSuite> testSuites =repository.findAllByTestCaseId(testCase.getId());
+    testSuites.forEach(testSuite -> {
+      List<Long> testCaseIds = suiteTestCaseMappingRepository.findTestCaseIdsByTestSuiteId(testSuite.getId());
+      if (!testCaseIds.contains(testCase.getPreRequisite())) {
+        int indexOfCaseId = testCaseIds.indexOf(testCase.getId());
+        testCaseIds.add(indexOfCaseId, testCase.getPreRequisite());
+        testSuite.setTestCaseIds(testCaseIds);
+        handleTestCaseMappings(testSuite);
+      }
+    });
   }
 }

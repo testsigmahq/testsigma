@@ -1,85 +1,80 @@
 <div class="ts-col-100">
-<div class="theme-overlay-container" *ngIf="!uploading">
-  <div class="theme-overlay-header" *ngIf="!this.version">
-    <div
-      class="theme-overlay-title"
-      [translate]="upload.id ? 'uploads.form.edit_title' : 'uploads.form.create_title'">
-    </div>
-    <button
-      class="close"
-      [matTooltip]="'hint.message.common.close' | translate"
-      mat-dialog-close>
-    </button>
-  </div>
-
-  <div class="theme-overlay-content">
-  <form
-    class="ts-form align-items-center"
-    [formGroup]="uploadForm" *ngIf="uploadForm">
-    <div class="d-flex align-items-center pb-20 flex-column"
-         *ngIf=" !uploadedFileObject?.name && uploadTypes.length > 1 && !data.version?.workspace.isMobileNative">
-      <div class="rb-medium mb-10" [translate]="'uploads.form.label.select_file_type'"></div>
-      <mat-button-toggle-group appearance="legacy" class="custom-mat-button-toggle" #group="matButtonToggleGroup" formControlName="type">
-        <mat-button-toggle *ngFor="let type of uploadTypes" [value]="type">{{type}}</mat-button-toggle>
-      </mat-button-toggle-group>
-    </div>
-    <div class="align-items-baseline d-flex form-group pt-5 pb-0">
-      <label class="mt-20 mb-30 theme-btn-clear-default overflow-x-hidden" *ngIf="!upload.fileName" @fade>
-        <i class="fa-pin pr-5"></i> Choose File
-        <input class="d-none" type="file" required
-               [accept]="getRawValue().type == uploadTypes[0] ? attachmentTypes :  '.' + getRawValue().type.toLowerCase() "
-               (change)="uploadedFile($event)">
-      </label>
-      <span class="max_limit pl-10" *ngIf="!upload.fileName && data.version?.workspace.isMobileNative"
-        [textContent]=" 'uploads.form.max_size'| translate: {max:(getRawValue().type == uploadTypes[0] ? 75 : 500)}"></span>
-      <div class="overflow-x-hidden mt-10 mb-30 p-16 pt-0 border-rds-2 f-medium d-inline-flex align-items-center
-                  bg-grey-x-light mw-100 w-100"
-           *ngIf="upload.fileName" @fade>
-        <span [textContent]="upload?.fileName + ' ( size : ' + upload?.sizeInWords + ' ) '"
-              class="pr-10 text-truncate"></span>
-        <i class="fa-trash-thin pointer ml-auto" (click)="removeUpload()"></i>
+  <div class="theme-overlay-container" *ngIf="!uploading">
+    <div class="theme-overlay-header" *ngIf="!this.version">
+      <div
+        class="theme-overlay-title"
+        [translate]="upload.id ? 'uploads.form.edit_title' : 'uploads.form.create_title'">
       </div>
-      <div class="error mt-30" *ngIf="maxSizeError"
-           [translate]="'form.validation.common.max_file_size'| translate: {FieldName: getRawValue().type ,max:(getRawValue().type == uploadTypes[0] ? 75 : 500) }"></div>
-    </div>
-    <div class="form-group pb-18" *ngIf="getRawValue().name || (!upload.id && uploadedFileObject?.name) || (getRawValue().name=='' && upload.id!=null)" @fade>
-      <input class="form-control" formControlName="name">
-      <label class="control-label required" [translate]="'uploads.form.label.name'"></label>
-      <div class="error" *ngIf="uploadForm.controls.name.invalid"
-           [textContent]="'form.validation.common.min_length'| translate: {FieldName: 'Name' ,min: '4' }"></div>
+      <button
+        class="close"
+        [matTooltip]="'hint.message.common.close' | translate"
+        mat-dialog-close>
+      </button>
     </div>
 
-  </form>
+    <div class="theme-overlay-content">
+      <form
+        class="ts-form align-items-center"
+        [formGroup]="uploadForm" *ngIf="uploadForm">
+        <div class="align-items-baseline d-flex form-group pt-5 pb-0">
+          <label class="mt-20 mb-30 theme-btn-clear-default overflow-x-hidden" *ngIf="!uploadedFileObject" @fade>
+            <i class="fa-pin pr-5"></i> Choose File
+            <input class="d-none" type="file" required
+                   [accept]="fileTypes"
+                   (change)="uploadedFile($event)">
+          </label>
+          <div class="overflow-x-hidden mt-10 mb-30 p-16 pt-0 border-rds-2 f-medium d-inline-flex align-items-center
+                  bg-grey-x-light mw-100 w-100"
+               *ngIf="uploadedFileObject" @fade>
+                <span [textContent]="upload?.name + ' ( size : ' + upload?.sizeInWords + ' ) '"
+                      class="pr-10 text-truncate"></span>
+            <i class="fa-trash-thin pointer ml-auto" (click)="removeUpload()"></i>
+          </div>
+          <div class="error mt-30" *ngIf="maxSizeError"
+               [translate]="'form.validation.common.max_file_size'| translate: {FieldName: getRawValue().type ,max:500 }">
+          </div>
+        </div>
+        <div class="form-group pb-18 upload-file-name"
+             *ngIf="getRawValue().name || (!upload.id && uploadedFileObject?.name)" @fade>
+          <input class="form-control" formControlName="name">
+          <label class="control-label required" [translate]="'uploads.form.label.name'"></label>
+          <div class="error" *ngIf="uploadForm.controls.name.invalid"
+               [textContent]="'form.validation.common.min_length'| translate: {FieldName: 'Name' ,min: '4' }"></div>
+        </div>
+        <div class="form-group pb-18" *ngIf="(upload.id && uploadedFileObject?.name)" @fade>
+          <input class="form-control" formControlName="version">
+          <label class="control-label required" [translate]="'uploads.form.version.name'"></label>
+        </div>
 
+      </form>
+    </div>
 
+    <div class="theme-overlay-footer mb-10">
+      <button *ngIf="!this.version"
+              class="theme-btn-clear-default"
+              mat-dialog-close
+              [translate]="'btn.common.cancel'"></button>
+      <button *ngIf="this.version"
+              class="theme-btn-clear-default"
+              (click)="onCancel()"
+              [translate]="'btn.common.cancel'"></button>
+      <button *ngIf="uploadForm"
+              [disabled]="uploadForm.invalid || !upload.name || maxSizeError"
+              (click)="(upload.id)? update(): create()"
+              class="theme-btn-primary"
+              [translate]="uploading? 'message.common.uploading':( upload.id ? 'btn.common.update' : 'btn.common.upload')"></button>
+    </div>
   </div>
 
-  <div class="theme-overlay-footer mb-10">
-    <button *ngIf="!this.version"
-      class="theme-btn-clear-default"
-      mat-dialog-close
-      [translate]="'btn.common.cancel'"></button>
-    <button *ngIf="this.version"
-            class="theme-btn-clear-default"
-            (click)="onCancel()"
-            [translate]="'btn.common.cancel'"></button>
-    <button *ngIf="uploadForm"
-            [disabled]="uploadForm.invalid || !upload.fileName || maxSizeError"
-            (click)="(upload.id)? update(): create()"
-            class="theme-btn-primary"
-            [translate]="uploading? 'message.common.uploading':( upload.id ? 'btn.common.update' : 'btn.common.upload')"></button>
+  <div class="theme-overlay-container" *ngIf="uploading">
+    <div class="ts-col-100 theme-overlay-header"></div>
+    <div class="theme-overlay-content mt-50">
+      <app-placeholder-loader
+        class="ts-form align-items-center mt-20"
+        [isLogoLoader]="true"
+        [displayText]="('uploads.form.progress' | translate)"
+      ></app-placeholder-loader>
+    </div>
+    <div class="ts-col-100 theme-overlay-footer"></div>
   </div>
-</div>
-
-<div class="theme-overlay-container" *ngIf="uploading">
-  <div class="ts-col-100 theme-overlay-header"></div>
-  <div class="theme-overlay-content mt-50">
-    <app-placeholder-loader
-      class="ts-form align-items-center mt-20"
-      [isLogoLoader]="true"
-      [displayText]="('uploads.form.progress' | translate)"
-    ></app-placeholder-loader>
-  </div>
-  <div class="ts-col-100 theme-overlay-footer"></div>
-</div>
 </div>

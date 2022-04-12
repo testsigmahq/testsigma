@@ -44,7 +44,11 @@
             <button class="theme-btn-primary" [disabled]="!nameFormControl.valid || provisioningProfile.isAwaitingCertificate" (click)="generateCsr()" [translate]="'settings.ios_settings.apple_id.generate'"></button>
             <div class="pl-20" *ngIf="provisioningProfile.status !== 'CSR_REQUESTED'">
               <div class="rb-medium fz-15">
-                <a class="text-link text-decoration-none" href="{{provisioningProfile.csrPresignedUrl}}">
+                <a class="text-link text-decoration-none" href="{{provisioningProfile.csrPresignedUrl}}" *ngIf="provisioningProfile?.csrPresignedUrl">
+                  <span [translate]="'btn.common.download'"></span>
+                  <i class="fa-download-thin text-link pl-15"></i>
+                </a>
+                <a class="text-link text-decoration-none" *ngIf="!provisioningProfile?.csrPresignedUrl" [matTooltip]="translate.instant('settings.ios_settings.csr_certificate_not_available')" >
                   <span [translate]="'btn.common.download'"></span>
                   <i class="fa-download-thin text-link pl-15"></i>
                 </a>
@@ -76,7 +80,12 @@
             </div>
             <div class="pl-20" *ngIf="provisioningProfile.isProvisionReadyUpload">
               <div class="rb-medium fz-15">
-                <a class="text-link text-decoration-none" href="{{provisioningProfile.certificateCrtPresignedUrl}}">
+                <a class="text-link text-decoration-none" href="{{provisioningProfile.certificateCrtPresignedUrl}}"
+                   *ngIf="provisioningProfile?.certificateCerPresignedUrl">
+                  <span [translate]="'btn.common.download'"></span>
+                  <i class="fa-download-thin text-link pl-15"></i>
+                </a>
+                <a class="text-link text-decoration-none" *ngIf="!provisioningProfile?.certificateCrtPresignedUrl" [matTooltip]="translate.instant('settings.ios_settings.csr_certificate_not_available')" >
                   <span [translate]="'btn.common.download'"></span>
                   <i class="fa-download-thin text-link pl-15"></i>
                 </a>

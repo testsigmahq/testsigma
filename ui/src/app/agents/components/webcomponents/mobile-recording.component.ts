@@ -58,7 +58,7 @@ export class MobileRecordingComponent extends BaseComponent implements OnInit {
   public currentPageSource: MobileElement;
   public devicesService: DevicesService; //CloudDevicesService
   public fullScreenMode: boolean;
-  public uiElementForm: FormGroup;
+  public ElementForm: FormGroup;
   public selectedIndex: number = 2;
   public selectedElement1: Element;
   public mobileRecorderComponentInstance: any;

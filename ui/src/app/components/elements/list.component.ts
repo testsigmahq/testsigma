@@ -59,8 +59,8 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
   public selectAll: Boolean;
   public selectedElements = [];
   public sortByColumns = ["name", "createdDate", "updatedDate"];
-  public direction = ",asc";
-  public sortedBy = "name";
+  public direction = ",desc";
+  public sortedBy = "createdDate";
   public tooltipPositionLeft: TooltipPosition = 'left';
 
   constructor(

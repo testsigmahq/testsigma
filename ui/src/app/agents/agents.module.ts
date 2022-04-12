@@ -24,6 +24,7 @@ import { AppSourceContainerComponent } from './components/webcomponents/app-sour
 import { MirroringContainerComponent } from './components/webcomponents/mirroring-container.component';
 import { MobileInspectionComponent } from './components/webcomponents/mobile-inspection.component';
 import { MobileStepRecorderComponent } from './components/webcomponents/mobile-step-recorder.component';
+import {SaveWorkWarningComponent} from "./components/webcomponents/save-work-warning.component";
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { MobileStepRecorderComponent } from './components/webcomponents/mobile-s
     AppSourceContainerComponent,
     MirroringContainerComponent,
     MobileInspectionComponent,
+    SaveWorkWarningComponent,
     MobileStepRecorderComponent
   ],
   providers: [

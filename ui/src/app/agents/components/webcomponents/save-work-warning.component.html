@@ -1,0 +1,15 @@
+<mat-dialog-content>
+  <div
+    class="confirm-message"
+    [translate]="'message.common.confirmation.warning' | translate"></div>
+  <div class="p-14 pb-0-i"
+       [innerHTML]="(data?.number == 0? 'agents.mobile.inspection.quit_warning':'agents.mobile.inspection.numbered_quit_warning')|translate:{number:data?.number}"></div>
+</mat-dialog-content>
+<mat-dialog-actions class="confirm-actions">
+  <button class="theme-btn-primary"
+          [mat-dialog-close]="false"
+          [translate]="'agents.mobile.inspection.save_n_quit'"></button>
+  <button class="border-0 p-8 pl-12 pr-12 btn btn-delete text-white theme-btn-clear-default"
+          [translate]="'agents.mobile.inspection.quit'"
+          [mat-dialog-close]="true"></button>
+</mat-dialog-actions>

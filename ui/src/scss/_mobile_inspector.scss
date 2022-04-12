@@ -90,7 +90,7 @@
 }
 
 .mobile-ins-close-recording {
-  @extend .border-0, .position-absolute, .fz-26, .pointer, .line-height-none, .p-20, .right-0, .top-0, .z-in-2, .h-30p, .mt-10;
+  @extend .border-0, .position-absolute, .fz-26, .pointer, .line-height-none, .px-10, .right-0, .top-0, .z-in-2, .h-30p, .mt-14, .pt-14, .mr-16, .d-flex-wrap;
 }
 
 .device-connect-container, .agent-connect-container {

@@ -207,7 +207,6 @@ export class FormComponent extends BaseComponent implements OnInit {
     this.populateTestSuiteRequest();
     this.testSuiteService.create(this.testSuite).subscribe(
       (testSuite) => {
-        console.log("TestSuite"+this.testSuite);
         this.translate.get('message.common.created.success', {FieldName: "Test Suite"})
           .subscribe(res => this.showNotification(NotificationType.Success, res));
         this.router.navigate(['/td', 'suites', testSuite.id])

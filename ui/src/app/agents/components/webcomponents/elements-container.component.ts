@@ -60,6 +60,7 @@ export class ElementsContainerComponent extends BaseComponent implements OnInit 
   public screenNameOptions: Observable<Set<ElementScreenName>>;
   public screenNames: Set<ElementScreenName>;
   public isElementChanged: Boolean;
+  private byPassDuplicateCheck: boolean;
 
 
   constructor(
@@ -339,11 +340,20 @@ export class ElementsContainerComponent extends BaseComponent implements OnInit 
       });
   }
 
-  public createElement = () => this.validateAndSave(true);
+  public createElement(byPassDuplicateCheck?: boolean) {
+    this.byPassDuplicateCheck = Boolean(byPassDuplicateCheck);
+    this.validateAndSave(true);
+  }
 
-  public updateElement = () => this.validateAndSave(false, true);
+  public updateElement(byPassDuplicateCheck?: boolean) {
+    this.byPassDuplicateCheck = Boolean(byPassDuplicateCheck);
+    this.validateAndSave(false, true);
+  }
 
-  public addToList = () => this.validateAndSave(false, false, true);
+  public addToList(byPassDuplicateCheck?: boolean) {
+    this.byPassDuplicateCheck = Boolean(byPassDuplicateCheck);
+    this.validateAndSave(false, false, true);
+  }
 
   private validateAndSave(create, update = false, addToList = false) {
     let query = this.creationDuplicateQuery + (update ? ',id!' + this.uiId : '');
@@ -359,18 +369,15 @@ export class ElementsContainerComponent extends BaseComponent implements OnInit 
   }
 
   private fetchDuplicateLocators(query, create, update, addToList) {
+    if(this.byPassDuplicateCheck){
+      this.save(create, update, addToList);
+      return;
+    }
     this.elementService.findAll(query).subscribe(res => {
       if (res?.content?.length) {
         this.openDuplicateLocatorWarning(res.content);
       } else {
-        if (create) {
-          this.createElementAfterDuplicateValidation();
-        } else if (update) {
-          this.updateElementAfterDuplicateValidation();
-        } else if (addToList) {
-          this.addToListAfterDuplicateValidation();
-        }
-      }
+        this.save(create, update, addToList);      }
     });
   }
 
@@ -379,5 +386,15 @@ export class ElementsContainerComponent extends BaseComponent implements OnInit 
     screenNameBean.name = screenName;
     screenNameBean.workspaceVersionId = this.versionId;
     return this.elementScreenNameService.create(screenNameBean);
+  }
+
+  private save(create, update, addToList){
+    if(create){
+      this.createElementAfterDuplicateValidation();
+    } else if(update){
+      this.createElementAfterDuplicateValidation();
+    } else if(addToList){
+      this.addToListAfterDuplicateValidation();
+    }
   }
 }

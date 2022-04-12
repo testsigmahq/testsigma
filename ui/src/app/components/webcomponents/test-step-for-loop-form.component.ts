@@ -36,6 +36,7 @@ export class TestStepForLoopFormComponent extends BaseComponent implements OnIni
   public searchQuery: string = '';
   public isFetching: Boolean = false;
   private oldData: TestStepForLoop;
+  private currentTestDataList: TestData;
 
   constructor(
     public authGuard: AuthenticationGuard,
@@ -68,11 +69,13 @@ export class TestStepForLoopFormComponent extends BaseComponent implements OnIni
     this.testDataService.findAll("versionId:" + this.version.id + this.searchQuery).subscribe(res => {
       this.testDataList = res;
       if (this.testDataList && this.testDataList.content && this.testDataList.content.length && setFirst) {
+        this.currentTestDataList = this.testDataList?.content[0];
         let dataset = this.testDataList.content[0];
         let startIndex:number=0;
         let endIndex:number=-1;
         if(this.testStep?.id) {
           dataset = this.testDataList.content.find(data => data.id == this.testStep.forLoopTestDataId)
+          this.currentTestDataList = dataset;
           if(!dataset){
             this.fetchTDPById(dataset, startIndex, endIndex)
           } else {
@@ -116,6 +119,7 @@ export class TestStepForLoopFormComponent extends BaseComponent implements OnIni
 
   toggleDataProfile(testData: TestData) {
     this.testStep.testData = testData;
+    this.currentTestDataList = testData;
     this.setStartValue(testData);
   }
 

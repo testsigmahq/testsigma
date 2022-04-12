@@ -208,9 +208,9 @@
                       <mat-option [value]="-1" [textContent]="'testcase.form.iteration_from.option_start' | translate">
                       </mat-option>
                       <mat-option
-                        *ngFor="let startIndex of startArray"
+                        *ngFor="let startIndex of startArray;let i=index"
                         [value]="startIndex.index"
-                        [textContent]="startIndex.setName">
+                        [textContent]="startIndex.setName+ ' (#'+ (i+1) +')'">
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
@@ -223,9 +223,9 @@
                       [formControlName]="['endIndex']"
                       [(ngModel)]="testCase.testDataEndIndex">
                       <mat-option
-                        *ngFor="let endIndex of endArray"
+                        *ngFor="let endIndex of endArray; let i=index"
                         [value]="endIndex.index"
-                        [textContent]="endIndex.setName">
+                        [textContent]="endIndex.setName+ ' (#'+ (2 +i) +')'">
                       </mat-option>
                       <mat-option [value]="-1" [textContent]="'testcase.form.iteration_to.option_end' | translate">
                       </mat-option>

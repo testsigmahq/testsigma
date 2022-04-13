@@ -68,7 +68,7 @@
               class="error" [translate]="'agents.mobile.inspection.screen_name.required'">
             </div>
             <div
-              *ngIf="elementForm.controls.screen_name.errors?.minlength && formSubmitted"
+              *ngIf="elementForm.controls.screen_name.errors?.minlength"
               [translate]="'agents.mobile.inspection.screen_name.minlength'" class="error"></div>
             <div
               *ngIf="elementForm.controls.screen_name.errors?.maxlength && formSubmitted "
@@ -81,7 +81,7 @@
                  class="control-label required mat-proxy-label"></label>
           <mat-form-field appearance="outline" class="w-100">
             <mat-select
-              (selectionChange)="element.locatorValue = element.mobileElementRect.mobileElement[locatorTypes[$event.value].variableName]"
+              (selectionChange)="element.locatorValue = element?.mobileElementRect?.mobileElement[locatorTypes[$event?.value]?.variableName]"
               [(ngModel)]="element.locatorType"
               [formControlName]="['locatorType']">
               <mat-option *ngFor="let locatorType of availableLocatorTypes"

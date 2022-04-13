@@ -86,9 +86,9 @@ export class ElementsContainerComponent extends BaseComponent implements OnInit 
   get creationDuplicateQuery(): string {
     let element = new Element();
     element.locatorValue = this.element.locatorValue;
-    return this.byPassSpecialCharacters('workspaceVersionId:' + this.versionId + ',locatorType:' + this.element.locatorType +
-      ',locatorValue:' + this.element.locatorValueWithSpecialCharacters +
-      (this.element.screenNameId ? ',screenNameId:' + this.element.screenNameId : ''));
+    return this.byPassSpecialCharacters('workspaceVersionId:' + this.versionId + ',locatorType:' + this.element?.locatorType +
+      ',locatorValue:' + this.element?.locatorValueWithSpecialCharacters +
+      (this.element?.screenNameId ? ',screenNameId:' + this.element?.screenNameId : ''));
   }
 
   public setScreenName(screenName: any, query?, create?, update?, addToList?) {
@@ -287,7 +287,7 @@ export class ElementsContainerComponent extends BaseComponent implements OnInit 
       this.elements.push(this.element);
     } else {
       this.element.errors = null;
-      this.elements[this.editedIndex] = Object.assign(new Element(), this.elements);
+      this.elements[this.editedIndex] = Object.assign(new Element(), this.element);
       this.editedIndex = -1;
     }
     this.element = null;
@@ -355,7 +355,7 @@ export class ElementsContainerComponent extends BaseComponent implements OnInit 
     this.validateAndSave(false, false, true);
   }
 
-  private validateAndSave(create, update = false, addToList = false) {
+  private validateAndSave(create, update ?:boolean , addToList ?:boolean) {
     let query = this.creationDuplicateQuery + (update ? ',id!' + this.uiId : '');
     this.formSubmitted = true;
     if (this.elementForm.invalid) return;

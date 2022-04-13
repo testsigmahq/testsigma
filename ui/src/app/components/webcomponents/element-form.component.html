@@ -200,6 +200,13 @@
                   *ngIf="formSubmitted && elementForm.get('screen_name').hasError('required')"
                   class="error" [translate]="'agents.message.title.required'">
                 </div>
+                <div
+                  *ngIf="elementForm.controls.screen_name.errors?.minlength"
+                  [translate]="'agents.mobile.inspection.screen_name.minlength'" class="error"></div>
+                <div
+                  *ngIf="elementForm.controls.screen_name.errors?.maxlength && formSubmitted "
+                  class="error" [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Screen Name' , max:'250'}">
+                </div>
               </div>
 
             </div>

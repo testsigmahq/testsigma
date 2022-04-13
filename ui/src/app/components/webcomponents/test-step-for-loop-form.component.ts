@@ -36,7 +36,7 @@ export class TestStepForLoopFormComponent extends BaseComponent implements OnIni
   public searchQuery: string = '';
   public isFetching: Boolean = false;
   private oldData: TestStepForLoop;
-  private currentTestDataList: TestData;
+  public currentTestDataList: TestData;
 
   constructor(
     public authGuard: AuthenticationGuard,

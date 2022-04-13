@@ -29,7 +29,7 @@ import {ToastrService} from "ngx-toastr";
 import {InfiniteScrollableDataSource} from "../../data-sources/infinite-scrollable-data-source";
 import {TestPlanService} from "../../services/test-plan.service";
 import {LinkedEntitiesModalComponent} from "../../shared/components/webcomponents/linked-entities-modal.component";
-import {PrerequisiteChangeComponent} from "../../shared/components/webcomponents/prerequisite-change.component";
+import {TestSuitePrerequisiteChangeComponent} from "../../shared/components/webcomponents/test-suite-prerequisite-change.component";
 
 @Component({
   selector: 'app-form',
@@ -163,7 +163,7 @@ export class FormComponent extends BaseComponent implements OnInit {
 
   private openPrerequisiteChangeWarning(executions) {
     let description = this.translate.instant('test_suites.prerequisite_linked_with_plans');
-    const dialogRef = this.matDialog.open(PrerequisiteChangeComponent, {
+    const dialogRef = this.matDialog.open(TestSuitePrerequisiteChangeComponent, {
       width: '568px',
       height: 'auto',
       data: {

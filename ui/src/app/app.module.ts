@@ -251,7 +251,8 @@ import {FreshChatWidgetComponent} from "./components/webcomponents/fresh-chat-wi
 import {ClickUpIssueFormComponent} from "./components/webcomponents/click-up-issue-form.component";
 import {ClickUpIssueDetailsComponent} from "./components/webcomponents/click-up-issue-details.component";
 import {DuplicateLocatorWarningComponent} from "./components/webcomponents/duplicate-locator-warning.component";
-import {PrerequisiteChangeComponent} from "./shared/components/webcomponents/prerequisite-change.component";
+import {TestSuitePrerequisiteChangeComponent} from "./shared/components/webcomponents/test-suite-prerequisite-change.component";
+import {TestCasePrerequisiteChangeComponent} from "./components/webcomponents/test-case-prerequisite-change.component";
 import {InlineSortComponent} from "./components/webcomponents/inline-sort.component";
 
 export function momentAdapterFactory() {
@@ -484,8 +485,9 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     ClickUpIssueFormComponent,
     ClickUpIssueDetailsComponent,
     DuplicateLocatorWarningComponent,
-    PrerequisiteChangeComponent,
-    InlineSortComponent
+    InlineSortComponent,
+    TestSuitePrerequisiteChangeComponent,
+    TestCasePrerequisiteChangeComponent
   ],
   imports: [
     BrowserModule,

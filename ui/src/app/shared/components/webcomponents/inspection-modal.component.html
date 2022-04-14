@@ -1,14 +1,21 @@
-<div class="w-100 h-100 d-flex-wrap align-content-start">
-  <div mat-dialog-title *ngIf="!elementInspection" class="ts-col-100">
-    <div [textContent]="isStepGroup? ('agents.mobile.inspection.record_test_step_title' | translate):('agents.mobile.inspection.record_title' | translate)"></div>
-    <button class="close" mat-dialog-close [matTooltip]="'btn.common.close'|translate">
+<div class="theme-overlay-container">
+  <div class="theme-overlay-header">
+    <div class="theme-overlay-title"
+         [translate]="isStepRecord ? 'agents.mobile.inspection.step_record_title':'agents.mobile.inspection.record_title'">
+  </div>
+    <button
+      class="theme-overlay-close"
+      type="button"
+      [matTooltip]="'hint.message.common.close' | translate"
+      mat-dialog-close>
     </button>
   </div>
 
-  <mat-dialog-content class="ts-col-100 p-20 m-auto"
-                      [class.px-40]="!showInlineLaunch" >
+<div class="theme-overlay-content theme-border-y only-content">
+<!--  <mat-dialog-content class="ts-col-100 p-20 m-auto"-->
+<!--                      [class.px-40]="!showInlineLaunch" >-->
 
-    <form class="ts-form align-items-center border-rds-10 bg-light p-40"
+  <form class="ts-form align-items-center justify-content-betweenposition-relative bg-light h-100 px-35 py-15"
           [formGroup]="physicalDeviceForm"
           [ngSwitch]="isPhysicalDevice">
       <div class="d-flex justify-content-between mb-20" *ngIf="elementInspection">
@@ -149,7 +156,7 @@
                 [version]="version"
                 class="ts-col-40"
               ></app-uploads-auto-complete>
-              <div [class.h-47p]="!uploads?.content?.length"
+              <div
                    [class.pl-30]="uploads?.content?.length"
                    class="ts-col-35 pl-30 py-4 d-flex pb-18">
                 <mat-divider *ngSwitchCase="true" [vertical]="true" class="mr-30"></mat-divider>
@@ -176,6 +183,7 @@
               <app-uploads-form (onUpload)="uploadSuccess($event)"
                                 [upload]="upload"
                                 [version]="version"
+                                [inline]="true"
                                 class="ts-col-100"></app-uploads-form>
             </div>
 
@@ -254,15 +262,15 @@
         </div>
       </ng-template>
     </form>
-  </mat-dialog-content>
+<!--  </mat-dialog-content>-->
+</div>
+  <div class="theme-overlay-footer" *ngIf="show(agentChecksFailed,isPhysicalDevice) && !elementInspection">
 
-  <mat-dialog-actions *ngIf="show(agentChecksFailed,isPhysicalDevice) && !elementInspection"
-                      align="end" class="w-100">
     <button class="theme-btn-clear-default my-6" [textContent]="'btn.common.cancel' | translate" mat-dialog-close></button>
     <button class="theme-btn-primary" (click)="launch()" [disabled]="disableRecordButton">
       <i class="fa-launch"></i>
       <span [textContent]="'agents.mobile.recorder.launch' | translate"></span>
     </button>
-  </mat-dialog-actions>
+  </div>
 <!--  <simple-notifications></simple-notifications>-->
 </div>

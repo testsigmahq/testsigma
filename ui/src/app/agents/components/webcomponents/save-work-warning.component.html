@@ -1,7 +1,7 @@
 <mat-dialog-content>
   <div
     class="confirm-message"
-    [translate]="'message.common.confirmation.warning' | translate"></div>
+    [translate]="'message.common.confirmation.warning'"></div>
   <div class="p-14 pb-0-i"
        [innerHTML]="(data?.number == 0? 'agents.mobile.inspection.quit_warning':'agents.mobile.inspection.numbered_quit_warning')|translate:{number:data?.number}"></div>
 </mat-dialog-content>

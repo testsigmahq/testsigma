@@ -75,6 +75,8 @@ export class InspectionModalComponent extends BaseComponent implements OnInit {
   public uploading: boolean = false;
   public selectedTestsigmaLab:boolean = false;
   public isStepGroup:boolean;
+  public isStepRecord: Boolean;
+
 
   get showInlineLaunch() {
     return this.show(this.agentChecksFailed, this.isPhysicalDevice) && this.elementInspection;
@@ -100,6 +102,7 @@ export class InspectionModalComponent extends BaseComponent implements OnInit {
 
   ngOnInit() {
     let id;
+    this.isStepRecord = this.data.isStepRecord;
     if (this.data.workspaceVersionId == undefined) {
       id = this.versionId;
     } else {

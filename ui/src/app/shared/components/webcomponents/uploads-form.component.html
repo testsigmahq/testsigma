@@ -1,4 +1,4 @@
-<div class="ts-col-100">
+<div class="ts-col-100" [class.inline-upload]="inline">
   <div class="theme-overlay-container" *ngIf="!uploading">
     <div class="theme-overlay-header" *ngIf="!this.version">
       <div
@@ -15,8 +15,9 @@
     <div class="theme-overlay-content">
       <form
         class="ts-form align-items-center"
+        [class.pt-4]="inline"
         [formGroup]="uploadForm" *ngIf="uploadForm">
-        <div class="align-items-baseline d-flex form-group pt-5 pb-0">
+        <div class="align-items-baseline d-flex form-group pt-5 pb-0 upload-file">
           <label class="mt-20 mb-30 theme-btn-clear-default overflow-x-hidden" *ngIf="!uploadedFileObject" @fade>
             <i class="fa-pin pr-5"></i> Choose File
             <input class="d-none" type="file" required
@@ -41,7 +42,7 @@
           <div class="error" *ngIf="uploadForm.controls.name.invalid"
                [textContent]="'form.validation.common.min_length'| translate: {FieldName: 'Name' ,min: '4' }"></div>
         </div>
-        <div class="form-group pb-18" *ngIf="(upload.id && uploadedFileObject?.name)" @fade>
+        <div class="form-group pb-18 upload-version" *ngIf="(upload.id && uploadedFileObject?.name)" @fade>
           <input class="form-control" formControlName="version">
           <label class="control-label required" [translate]="'uploads.form.version.name'"></label>
         </div>
@@ -50,31 +51,37 @@
     </div>
 
     <div class="theme-overlay-footer mb-10">
-      <button *ngIf="!this.version"
-              class="theme-btn-clear-default"
+      <button *ngIf="inline? (uploadedFileObject && !version) : !this.version"
+              class="theme-btn-clear-default" [class.mb-n5]="inline"
               mat-dialog-close
               [translate]="'btn.common.cancel'"></button>
-      <button *ngIf="this.version"
+      <button *ngIf="inline? (uploadedFileObject && version) : this.version"
               class="theme-btn-clear-default"
+              [class.mb-n5]="inline"
               (click)="onCancel()"
               [translate]="'btn.common.cancel'"></button>
-      <button *ngIf="uploadForm"
+      <button *ngIf="inline? (uploadedFileObject && uploadForm) : uploadForm"
               [disabled]="uploadForm.invalid || !upload.name || maxSizeError"
               (click)="(upload.id)? update(): create()"
               class="theme-btn-primary"
+              [class.mb-n5]="inline"
               [translate]="uploading? 'message.common.uploading':( upload.id ? 'btn.common.update' : 'btn.common.upload')"></button>
     </div>
   </div>
 
-  <div class="theme-overlay-container" *ngIf="uploading">
-    <div class="ts-col-100 theme-overlay-header"></div>
-    <div class="theme-overlay-content mt-50">
+  <div
+    [class.flex-wrap]="inline"
+    class="theme-overlay-container" *ngIf="uploading">
+    <div *ngIf="!inline" class="ts-col-100 theme-overlay-header"></div>
+    <div
+      [class.mt-50]="!inline"
+      class="theme-overlay-content ts-col-100">
       <app-placeholder-loader
         class="ts-form align-items-center mt-20"
         [isLogoLoader]="true"
         [displayText]="('uploads.form.progress' | translate)"
       ></app-placeholder-loader>
     </div>
-    <div class="ts-col-100 theme-overlay-footer"></div>
+    <div *ngIf="!inline" class="ts-col-100 theme-overlay-footer"></div>
   </div>
 </div>

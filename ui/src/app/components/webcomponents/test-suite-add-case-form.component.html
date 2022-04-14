@@ -243,6 +243,7 @@
         [translate]="'btn.common.cancel'"
         class="theme-btn-clear-default" mat-dialog-close></button>
       <button
+        [class.disabled]="selectedTestCases.length==0"
         (click)="save()"
         class="theme-btn-primary"
         type="button"

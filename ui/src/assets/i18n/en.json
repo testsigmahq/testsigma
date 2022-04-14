@@ -1056,6 +1056,7 @@
   "test_plan.environment.settings.element_timeout": "Element Timeout",
   "test_plan.environment.settings.page_timeout": "Page Load Timeout",
   "test_plan.application.path_type.USE_PATH": "Use Path",
+  "agents.mobile.inspection.step_record_title": "Record Test Steps",
   "test_plan.application.path_type.UPLOADS": "Use Uploads",
   "test_plan.hybrid.match_browser_version": "Run only if the configured browser version is available in the Agent machine",
   "test_plan.testsigmalab.requires_access_to_cloud": "Testsigma Lab requires access to Testsigma Cloud. ",

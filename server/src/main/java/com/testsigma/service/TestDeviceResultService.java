@@ -429,4 +429,18 @@ public class TestDeviceResultService {
     update(testDeviceResult);
 
   }
+
+  public TestDeviceResult getLastReRunResult(TestDeviceResult parentRunResult){
+    if(parentRunResult.getChildResult() == null)
+      return parentRunResult;
+    return getLastReRunResult(parentRunResult.getChildResult());
+
+  }
+
+  public TestDeviceResult getFirstParentResult(Long childResultId) throws ResourceNotFoundException {
+    TestDeviceResult childResult = find(childResultId);
+    if(childResult.getReRunParentId() == null)
+      return childResult;
+    return getFirstParentResult(childResult.getReRunParentId());
+  }
 }

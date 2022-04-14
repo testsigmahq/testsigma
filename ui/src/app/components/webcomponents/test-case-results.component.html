@@ -61,9 +61,9 @@
              class="fa-close-alt text-t-secondary fz-12 pt-2 mr-5 pointer visibility-hidden" (click)="clearSearch()"></i>
         </div>
       </div>
-<!--      <app-re-run-button-->
-<!--        *ngIf="testPlanResult.canReRun"-->
-<!--        [testPlanResult]="testPlanResult"></app-re-run-button>-->
+      <app-re-run-button
+        *ngIf="testPlanResult.canReRun"
+        [testPlanResult]="testPlanResult"></app-re-run-button>
       <div class="position-relative">
         <span
           [class.active]="showFilter"

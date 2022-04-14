@@ -148,8 +148,8 @@ export class TestCaseResultDetailsComponent extends BaseComponent implements OnI
 
   fetchTestCaseResult() {
     this.testCaseResultService.show(this.testCaseResultId).subscribe(res => {
-      if(res.childResult)
-        this.router.navigate(['/td/test_case_results', res.childResult.id]);
+      if(res.checkIfChildRunExists())
+        this.router.navigate(['/td/test_case_results', res.lastRun.id]);
       if (res.isDataDriven) {
         this.testCaseResultService.findAll("parentId:" + res.id).subscribe(res => {
           if(res.content[0])
@@ -161,7 +161,6 @@ export class TestCaseResultDetailsComponent extends BaseComponent implements OnI
           this.queueSizeErrorMessage = "Your current plan reached max allowed queue size. Please <a class= 'text-link text-decoration-none px-2' href='javascript:fcWidget.open()' style='text-decoration: none;'>" +
             "contact support</a> to upgrade for higher limits"
         }
-        console.log("TestCaseResult", this.testCaseResult);
         this.isTestCaseFetchingCompleted = true;
         this.handleAutoRefresh();
         this.fetchEnvironment();

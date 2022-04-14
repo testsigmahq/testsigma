@@ -371,6 +371,8 @@ public class AgentExecutionService {
     if (getIsReRun() && (testSuiteResult.getReRunParentId() != null)) {
       TestCaseResult reRunParentTestCaseResult = testCaseResultsReRunList.stream().filter(
         er -> er.getTestCaseId().equals(testCase.getId()) && er.getIteration() == null).findAny().orElse(null);
+      if(getReRunType() == ReRunType.ALL_TESTS)
+        reRunParentTestCaseResult = testCaseResultService.getLastReRunResult(reRunParentTestCaseResult);
       if (reRunParentTestCaseResult != null) {
         testCaseResult.setReRunParentId(reRunParentTestCaseResult.getId());
       } else {
@@ -439,12 +441,13 @@ public class AgentExecutionService {
   private TestDeviceResult createEnvironmentResult(TestPlanResult testPlanResult,
                                                    TestDevice testDevice) throws TestsigmaException {
     TestDeviceResult testDeviceResult = new TestDeviceResult();
-
-    if (getIsReRun() && (testPlanResult.getReRunParentId() != null)) {
+    TestPlanResult parentExecutionResult = testPlanResultService.getFirstParentResult(testPlanResult);
+    if (getIsReRun() && (parentExecutionResult.getId() != null)) {
       TestDeviceResult parentTestDeviceResult = testDeviceResultsReRunList.stream().filter(
         er -> er.getTestDeviceId().equals(testDevice.getId())).findAny().orElse(null);
       if (parentTestDeviceResult != null) {
-        testDeviceResult.setReRunParentId(parentTestDeviceResult.getId());
+        TestDeviceResult childTestDevResult = testDeviceResultService.getLastReRunResult(parentTestDeviceResult);
+        testDeviceResult.setReRunParentId(childTestDevResult.getId());
         fetchTestSuitesResultsReRunList(parentTestDeviceResult.getId());
       } else {
         log.info("Execution Environment (" + testDevice.getId() + ") is not eligible for Re-run. Skipping...");

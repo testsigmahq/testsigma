@@ -46,6 +46,16 @@ export class TestSuiteResult extends ResultBase implements PageObject {
   @serializable
   public isVisuallyPassed: boolean;
 
+  get lastRun(){
+    return this.getLastChildResult(this);
+  }
+
+  getLastChildResult(testSuiteResult: TestSuiteResult){
+    if(testSuiteResult.childResult == null)
+      return testSuiteResult;
+    return this.getLastChildResult(testSuiteResult.childResult);
+  }
+
   deserialize(input: any): this {
     return Object.assign(this, deserialize(TestSuiteResult, input));
   }

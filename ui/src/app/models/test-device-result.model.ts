@@ -55,4 +55,8 @@ export class TestDeviceResult extends ResultBase implements PageObject {
   deserialize(input: any): this {
     return Object.assign(this, deserialize(TestDeviceResult, input));
   }
+
+  get lastRun(){
+    return null;
+  }
 }

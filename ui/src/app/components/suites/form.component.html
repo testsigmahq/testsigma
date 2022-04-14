@@ -112,6 +112,11 @@
                *ngIf="formSubmitted && activeTestCases?.length == 0"
                [translate]="'test_suite.form.add_test_case_validation'"></div>
         </div>
+        <div class="form-group pb-0">
+          <div class="error left left-0 w-fit-content top-0 mt-8"
+               *ngIf="formSubmitted && activeTestCases?.length == 0"
+               [translate]="'test_suite.form.add_test_case_validation'"></div>
+        </div>
       </div>
       <div class="form-group">
         <label
@@ -162,7 +167,7 @@
     <button
       class="theme-btn-primary"
       appAsyncBtn
-      [isLoading]="formSubmitted"
+      [isLoading]="formSubmitted && testSuiteForm.valid"
       [message]="'message.common.saving'"
       [textContent]="(testSuite?.id ?  'btn.common.update' : 'btn.common.create') | translate"
       (click)=" testSuite?.id ? update() : create()">

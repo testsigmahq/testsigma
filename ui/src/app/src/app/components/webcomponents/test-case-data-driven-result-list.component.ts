@@ -41,7 +41,7 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
          [class.with-bg-3]="testCaseDataDrivenResult?.iterationResult?.isNotExecuted"
          [class.with-bg-5]="testCaseDataDrivenResult?.iterationResult?.isQueued"
          [class.with-bg-6]="testCaseDataDrivenResult?.iterationResult?.isStopped"
-         [routerLink]="[currentUrl[1], currentUrl[2], testCaseDataDrivenResult.iterationResultId]"
+         [routerLink]="[currentUrl[1], currentUrl[2], testCaseDataDrivenResult.iterationResult?.lastRun?.id || testCaseDataDrivenResult.iterationResultId]"
          [routerLinkActive]="'active'"
          (click)="setIteration(testCaseDataDrivenResult?.iterationResultId)"
          [class.active]="isIterationActive(testCaseDataDrivenResult.iterationResultId)"
@@ -59,7 +59,7 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
             class="row-chart-status test123"
             [width]="20"
             [height]="20"
-            [resultEntity]="testCaseDataDrivenResult?.iterationResult?.childResult || testCaseDataDrivenResult?.iterationResult"></app-result-pie-chart-column>
+            [resultEntity]="testCaseDataDrivenResult?.iterationResult?.lastRun || testCaseDataDrivenResult?.iterationResult"></app-result-pie-chart-column>
           <div class="ml-auto fz-12 text-t-secondary d-flex">
             <app-re-run-icon [resultEntity]="testCaseDataDrivenResult?.iterationResult"></app-re-run-icon>
             <app-duration-format

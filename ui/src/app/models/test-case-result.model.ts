@@ -85,4 +85,18 @@ export class TestCaseResult extends ResultBase implements PageObject {
   deserialize(input: any): this {
     return Object.assign(this, deserialize(TestCaseResult, input));
   }
+
+  get lastRun(){
+    return this.getLastTestCaseResult(this);
+  }
+
+  getLastTestCaseResult(testCaseResult: TestCaseResult){
+    if(testCaseResult.childResult == null)
+      return testCaseResult;
+    return this.getLastTestCaseResult(testCaseResult.childResult);
+  }
+
+  checkIfChildRunExists(){
+    return this.lastRun.id != this.id;
+  }
 }

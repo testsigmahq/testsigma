@@ -55,7 +55,7 @@ export class RunDetailsQuickInfoComponent extends BaseComponent implements OnIni
       page.pageSize = 100;
       this.environmentResultService.findAll("testPlanResultId:" + this.testPlanResult.id, undefined, page).subscribe(res => {
         this.results = res;
-        if (this.testPlanResult.childResult) new TestPlanResult().consolidateListCount(res);
+        if (this.testPlanResult?.lastRun) new TestPlanResult().consolidateListCount(res);
       });
     } else if (this.showList == 'TSR') {
       let page = new Pageable();

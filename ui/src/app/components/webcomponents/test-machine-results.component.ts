@@ -55,7 +55,8 @@ export class TestMachineResultsComponent extends BaseComponent implements OnInit
     if (changes["showFilter"] && !changes["showFilter"].firstChange) {
       return
     }
-    this.testDeviceResults = new InfiniteScrollableDataSource(this.environmentResultService, ",testPlanResultId:" + this.testPlanResult.id);
+    this.testDeviceResults = new InfiniteScrollableDataSource(this.environmentResultService, ",testPlanResultId:"
+      + this.testPlanResult.lastRun.id);
     this.isRunMachineFetchComplete = true;
   }
 
@@ -79,7 +80,7 @@ export class TestMachineResultsComponent extends BaseComponent implements OnInit
 
   clearSearch() {
     this.testDeviceResults = undefined;
-    let query = "testPlanResultId:" + this.testPlanResult.id;
+    let query = "testPlanResultId:" + this.testPlanResult.lastRun.id;
     this.testDeviceResults = new InfiniteScrollableDataSource(this.environmentResultService, query);
     this.inputClear();
   }
@@ -111,7 +112,7 @@ export class TestMachineResultsComponent extends BaseComponent implements OnInit
   filter(event) {
     let applyFilter: boolean = event.applyFilter;
     let filterResult: ResultConstant[] = event.filterResult;
-    let query = "testPlanResultId:" + this.testPlanResult.id;
+    let query = "testPlanResultId:" + this.testPlanResult.lastRun.id;
     this.isFilterApplied = false;
     this.filterResult = undefined;
     if (applyFilter) {
@@ -127,7 +128,7 @@ export class TestMachineResultsComponent extends BaseComponent implements OnInit
 
   toggleSearch() {
     this.isSearchEnable = !this.isSearchEnable;
-    let query = "testPlanResultId:" + this.testPlanResult.id;
+    let query = "testPlanResultId:" + this.testPlanResult.lastRun.id;
     if (this.isSearchEnable) {
       setTimeout(() => {
         this.searchMachineInput.nativeElement.focus();
@@ -145,7 +146,7 @@ export class TestMachineResultsComponent extends BaseComponent implements OnInit
         debounceTime(500),
         distinctUntilChanged(),
         tap((event: KeyboardEvent) => {
-          let query = "testPlanResultId:" + this.testPlanResult.id;
+          let query = "testPlanResultId:" + this.testPlanResult.lastRun.id;
           if (this.searchMachineInput.nativeElement.value) {
             query += ",environmentName:*" + this.searchMachineInput.nativeElement.value + "*";
             this.testDeviceResults = new InfiniteScrollableDataSource(this.environmentResultService, query);

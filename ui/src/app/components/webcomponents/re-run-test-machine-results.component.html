@@ -28,12 +28,12 @@
               class="ml-auto"
               [width]="24"
               [height]="24"
-              [resultEntity]="testMachineResult.childResult"></app-result-pie-chart-column>
+              [resultEntity]="testMachineResult.lastRun"></app-result-pie-chart-column>
             <div class="text-right text-t-secondary fz-12 ml-auto mr-10">
-              <div [textContent]="testMachineResult.childResult.startTime | date:'MMM d, h:mm:ss'"></div>
+              <div [textContent]="testMachineResult.lastRun.startTime | date:'MMM d, h:mm:ss'"></div>
               <div class="pt-4">
                 <app-duration-format
-                  [duration]="testMachineResult.childResult.duration"></app-duration-format>
+                  [duration]="testMachineResult.lastRun.duration"></app-duration-format>
               </div>
             </div>
           </div>

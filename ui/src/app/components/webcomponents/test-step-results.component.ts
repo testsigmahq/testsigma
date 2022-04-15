@@ -97,7 +97,7 @@ export class TestStepResultsComponent extends TestCaseStepsListComponent impleme
   }
 
   ngOnChanges() {
-    this.resultEntity = this.resultEntity.childResult? this.resultEntity.childResult : this.resultEntity;
+    this.resultEntity = this.resultEntity.lastRun? this.resultEntity.lastRun : this.resultEntity;
     if(this.resultEntity) {
       this.fetchSteps();
       this.fetchVersion();

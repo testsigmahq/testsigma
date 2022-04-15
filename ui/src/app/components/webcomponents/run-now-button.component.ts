@@ -61,7 +61,7 @@ export class RunNowButtonComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.testPlanResult =(this.testPlanResult) ? this.testPlanResult : this.testPlan?.lastRun;
+    this.testPlanResult =(this.testPlanResult) ? this.testPlanResult : this.testPlan.lastRun;
   }
 
   startOrStop() {

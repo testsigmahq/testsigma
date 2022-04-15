@@ -2,9 +2,6 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {TestPlanResult} from "../../models/test-plan-result.model";
 import {TestPlanResultService} from "../../services/test-plan-result.service";
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
-import {NotificationsService} from 'angular2-notifications';
-import {TranslateService} from '@ngx-translate/core';
 import {BaseComponent} from "../../shared/components/base.component";
 
 import {TestCaseResultsComponent} from "../webcomponents/test-case-results.component";
@@ -71,11 +68,11 @@ export class RunDetailsComponent extends BaseComponent implements OnInit {
   }
 
   addAutoRefresh(listenerChangeTrue?:boolean) {
-    if (listenerChangeTrue && this.testPlanResult?.isExecuting && !this.isDisabledAutoRefresh){
+    if (listenerChangeTrue && this.testPlanResult?.lastRun?.isExecuting && !this.isDisabledAutoRefresh){
       this.fetchExecutionResult();
     }
     this.removeAutoRefresh();
-    if ((this.testPlanResult?.isExecuting || this.testPlanResult?.childResult?.isExecuting) && !this.isDisabledAutoRefresh)
+    if ((this.testPlanResult?.lastRun?.isExecuting || this.testPlanResult?.isExecuting) && !this.isDisabledAutoRefresh)
       this.autoRefreshSubscription = interval(this.autoRefreshInterval).subscribe(() => {
         this.fetchExecutionResult();
       });
@@ -106,11 +103,17 @@ export class RunDetailsComponent extends BaseComponent implements OnInit {
     this.testPlanResultService.show(this.runId).subscribe(result => {
       this.testPlanResult = result;
       Object.assign(this.originalExecutionResult, result);
-      if(this.testPlanResult?.reRunParentId)
-        this.router.navigate(['/td', 'runs', this.testPlanResult?.reRunParentId]);
-      if (!this.testPlanResult.isExecuting && !this.testPlanResult?.childResult?.isExecuting) {
+      if(this.testPlanResult?.reRunParentId){
+        let firstParentResult;
+      this.testPlanResultService.findFirstParentExecutionResult(this.testPlanResult.id).subscribe(
+        (res) => {
+          firstParentResult = res;
+          this.router.navigate(['/td', 'runs', firstParentResult.id]);
+        });
+    }
+      if (!this.testPlanResult.isExecuting && !this.testPlanResult?.lastRun?.isExecuting) {
         this.removeAutoRefresh();
-      } else if ((this.testPlanResult?.isExecuting || this.testPlanResult?.childResult?.isExecuting) && this.testPlanResult?.testPlan) {
+      } else if ((this.testPlanResult?.isExecuting || this.testPlanResult?.lastRun?.isExecuting) && this.testPlanResult?.testPlan) {
         this.isExecutionRunning = true;
         this.addAutoRefresh();
       }

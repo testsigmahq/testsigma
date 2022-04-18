@@ -77,7 +77,7 @@ export class TestPlanSettingsFormComponent extends BaseComponent implements OnIn
     }
     if(this.isRest)
       this.testPlan.testPlanType = TestPlanType.DISTRIBUTED;
-    this.testPlan.environments.forEach((env, index) => {
+    this.testPlan.testDevices.forEach((env, index) => {
       env.matchBrowserVersion = this.testPlan.matchBrowserVersion
       if(this.version.workspace.isMobileNative){
         if(Boolean(json.environments[index].settings.app_upload_id)) env.settings.appUploadId = json.environments[index].settings.app_upload_id;
@@ -103,7 +103,7 @@ export class TestPlanSettingsFormComponent extends BaseComponent implements OnIn
     this.saving = true;
     let json = this.formGroup.getRawValue();
     this.testPlan = new TestPlan().deserialize(json);
-    this.testPlan?.environments?.forEach((environment, index) => {
+    this.testPlan?.testDevices?.forEach((environment, index) => {
       environment.testSuites = json.environments[index].suiteIds
       environment.matchBrowserVersion = this.testPlan.matchBrowserVersion;
       if(this.version.workspace.isMobileNative){
@@ -140,8 +140,8 @@ export class TestPlanSettingsFormComponent extends BaseComponent implements OnIn
       return false;
     }
 
-    if(!this.testPlan?.environments?.length ||
-      this.testPlan?.environments?.filter(environment => !environment?.suiteIds?.length)?.length) {
+    if(!this.testPlan?.testDevices?.length ||
+      this.testPlan?.testDevices?.filter(environment => !environment?.suiteIds?.length)?.length) {
       this.stepper.selectedIndex = 1;
       this.saving = false;
       return false;

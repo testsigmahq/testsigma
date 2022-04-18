@@ -34,9 +34,9 @@
         </div>
         <div class="ts-col-25 px-10">
           <app-lab-environments-info
-            *ngIf="testPlan.environments"
+            *ngIf="testPlan.testDevices"
             [testPlan]="testPlan"
-            [executionEnvironments]="testPlan.environments"></app-lab-environments-info>
+            [executionEnvironments]="testPlan.testDevices"></app-lab-environments-info>
           <div
             [textContent]="('execution.type.'+testPlan.testPlanType) | translate"
             class="pt-4 text-t-secondary"></div>

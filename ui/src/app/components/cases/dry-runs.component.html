@@ -74,7 +74,7 @@
           <button
             class="theme-btn-clear-default"
             *ngIf="!dryTestCaseResult?.isQueued"
-            (click)="reRun(dryTestCaseResult.testDeviceResult?.testPlanResult?.testPlan)">
+            (click)="reRun(dryTestCaseResult.testDeviceResult?.testPlanResult?.dryTestPlan)">
             <i class="fa-play fz-10 mr-10 text-t-secondary"></i>
             <span [translate]="'testcase.details.dry_runs.re-run'"></span>
           </button>

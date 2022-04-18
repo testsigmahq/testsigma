@@ -8,6 +8,8 @@ import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
 import {NotificationsService} from 'angular2-notifications';
 import {TranslateService} from '@ngx-translate/core';
 import {ToastrService} from "ngx-toastr";
+import {StorageConfigService} from "../../services/storage-config.service";
+import {StorageType} from "../../enums/storage-type.enum";
 
 @Component({
   selector: 'app-test-plan-time-out-settings',
@@ -19,6 +21,7 @@ export class TestPlanTimeOutSettingsComponent extends BaseComponent implements O
   @Input('version') version: WorkspaceVersion;
   @Input('environment') environment?: Environment;
   @Input('environmentId') environmentId: number;
+  public disableVisualTesting: Boolean =false;
 
   public panelOpenState: Boolean = false;
 
@@ -26,6 +29,7 @@ export class TestPlanTimeOutSettingsComponent extends BaseComponent implements O
     public authGuard: AuthenticationGuard,
     public notificationsService: NotificationsService,
     public translate: TranslateService,
+    public storageConfigService: StorageConfigService,
     public toastrService: ToastrService) {
     super(authGuard, notificationsService, translate, toastrService);
   }
@@ -35,6 +39,9 @@ export class TestPlanTimeOutSettingsComponent extends BaseComponent implements O
   }
 
   ngOnInit(): void {
+    this.storageConfigService.find().subscribe(res => {
+      this.disableVisualTesting =  res.storageType == StorageType.ON_PREMISE
+    })
   }
 
   get isRest() {

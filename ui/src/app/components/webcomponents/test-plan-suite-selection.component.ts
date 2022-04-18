@@ -162,8 +162,8 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
     }, 200);
     if(this.executionEnvironments.length > 0)
       return
-    if (this.testPlan?.environments) {
-      this.testPlan.environments.forEach(environment => {
+    if (this.testPlan?.testDevices) {
+      this.testPlan.testDevices.forEach(environment => {
         this.executionEnvironments.push(environment);
         (<FormArray>this.testPlanForm.controls['environments']).push(this.createEnvironmentFormGroup(environment))
       });

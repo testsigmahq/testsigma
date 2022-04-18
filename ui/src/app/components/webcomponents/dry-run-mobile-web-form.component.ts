@@ -47,11 +47,11 @@ export class DryRunMobileWebFormComponent extends BaseComponent implements OnIni
   }
 
   ngOnInit(): void {
-    this.environmentFormGroup.addControl('platform', new FormControl(this.dryExecution.environments[0].platform, [this.requiredIfValidator(() => !this.isRest)]));
-    this.environmentFormGroup.addControl('browser', new FormControl(this.dryExecution.environments[0].browser, [this.requiredIfValidator(() => !this.version?.workspace.isMobileNative && !this.isRest )]));
-    this.environmentFormGroup.addControl('osVersion', new FormControl(this.dryExecution.environments[0].osVersion, [this.requiredIfValidator(() => !this.isRest)]));
-    this.environmentFormGroup.addControl('deviceName', new FormControl(this.dryExecution.environments[0].deviceName, [this.requiredIfValidator(() => !this.version?.workspace.isWeb && !this.isRest)]));
-    (<FormGroup>(<FormGroup>this.mobileWebForm?.controls['environments']).controls[0]).addControl('deviceId', new FormControl(this.dryExecution.environments[0].deviceId, [this.requiredIfValidator(() => this.isHybrid)]));
+    this.environmentFormGroup.addControl('platform', new FormControl(this.dryExecution.testDevices[0].platform, [this.requiredIfValidator(() => !this.isRest)]));
+    this.environmentFormGroup.addControl('browser', new FormControl(this.dryExecution.testDevices[0].browser, [this.requiredIfValidator(() => !this.version?.workspace.isMobileNative && !this.isRest )]));
+    this.environmentFormGroup.addControl('osVersion', new FormControl(this.dryExecution.testDevices[0].osVersion, [this.requiredIfValidator(() => !this.isRest)]));
+    this.environmentFormGroup.addControl('deviceName', new FormControl(this.dryExecution.testDevices[0].deviceName, [this.requiredIfValidator(() => !this.version?.workspace.isWeb && !this.isRest)]));
+    (<FormGroup>(<FormGroup>this.mobileWebForm?.controls['environments']).controls[0]).addControl('deviceId', new FormControl(this.dryExecution.testDevices[0].deviceId, [this.requiredIfValidator(() => this.isHybrid)]));
   }
 
   requiredIfValidator(predicate) {

@@ -1051,6 +1051,7 @@
   "test_plan.testsigmalab.requires_access_to_cloud": "Testsigma Lab requires access to Testsigma Cloud. ",
   "test_plan.testsigmalab.learn_more": "Learn more ",
   "test_plan.testsigmalab.register": " to register",
+  "test_plan.testsigmalab.enable": " to enable other storage services.",
   "test_plan.testsigmalab.communityEdition": "about Community Edition Cloud.",
   "dry_test_plan.testsigamlab.requires_access_to_cloud": "To use Testsigma Lab, you need to register for the free <b>Community Edition Cloud</b> services.",
   "test_plan.test_plan_settings.additional_settings.visual_testing_hint": "Visual Testing requires access to Testsigma Cloud. ",

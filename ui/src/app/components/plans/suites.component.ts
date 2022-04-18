@@ -125,14 +125,14 @@ export class SuitesComponent extends BaseComponent implements OnInit {
     let query = "testPlanId:" + this.testPlan.id;
     this.executionEnvironmentService.findAll(query).subscribe(res => {
       this.executionEnvironments = res.content;
-      this.testPlan.environments = this.executionEnvironments
+      this.testPlan.testDevices = this.executionEnvironments
     });
   }
 
   private updateSuites() {
     let suiteIds =this.executionEnvironment.testSuites.map(suite => suite.id);
-    for(let i in this.testPlan.environments)
-      this.testPlan.environments[i].suiteIds =suiteIds;
+    for(let i in this.testPlan.testDevices)
+      this.testPlan.testDevices[i].suiteIds =suiteIds;
     this.testPlanService.update(this.testPlan).subscribe(
       () => {
         this.translate.get('message.common.update.success', {FieldName: 'Test Suites'})

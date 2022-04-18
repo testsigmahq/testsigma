@@ -7,10 +7,6 @@ export class DryTestPlan extends TestPlan implements PageObject {
   @serializable
   public testCaseId: number;
 
-  @serializable(alias('testDevices', optional(list(object(DryTestDevice)))))
-  public environments: DryTestDevice[];
-
-
   deserialize(input: any): this {
     return Object.assign(this, deserialize(DryTestPlan, input));
   }

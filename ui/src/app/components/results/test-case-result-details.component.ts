@@ -236,22 +236,19 @@ export class TestCaseResultDetailsComponent extends BaseComponent implements OnI
   startExecution(execution: DryTestPlan) {
     this.startSync = true;
     let dryTestPlan = new DryTestPlan().deserialize(execution.serialize());
-    this.executionEnvironmentService.findAll("testPlanId:"+execution.id).subscribe((res)=> {
-      dryTestPlan.environments = res.content;
-      dryTestPlan.testCaseId = this.testCaseResult.testCaseId;
-      delete dryTestPlan.id;
-      this.dryTestPlanService.create(dryTestPlan).subscribe((res: TestPlanResult) => {
-        this.startSync = false;
-        this.translate.get("execution.initiate.success").subscribe((message: string) => {
-          this.showNotification(NotificationType.Success, message);
-          this.testCaseResultService.findAll("testPlanResultId:"+res.id+",iteration:null", "id,desc").subscribe((res: Page<TestCaseResult>) => {
-            this.router.navigate(['/td', 'test_case_results', res?.content[0]?.id]);
-          });
-        })
-      }, error => {
-        this.startSync = false;
-        this.showAPIError(error, this.translate.instant("execution.initiate.failure"))
+    dryTestPlan.testCaseId = this.testCaseResult.testCaseId;
+    delete dryTestPlan.id;
+    this.dryTestPlanService.create(dryTestPlan).subscribe((res: TestPlanResult) => {
+      this.startSync = false;
+      this.translate.get("execution.initiate.success").subscribe((message: string) => {
+        this.showNotification(NotificationType.Success, message);
+        this.testCaseResultService.findAll("testPlanResultId:" + res.id + ",iteration:null", "id,desc").subscribe((res: Page<TestCaseResult>) => {
+          this.router.navigate(['/td', 'test_case_results', res?.content[0]?.id]);
+        });
       })
+    }, error => {
+      this.startSync = false;
+      this.showAPIError(error, this.translate.instant("execution.initiate.failure"))
     })
   }
 

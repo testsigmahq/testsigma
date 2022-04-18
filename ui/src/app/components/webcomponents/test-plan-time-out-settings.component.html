@@ -50,7 +50,7 @@
         <div class="ts-col-35 d-inline-block" *ngIf="visualTestingEnabledControl" >
           <div class="ts-col-100 pl-10 d-flex">
             <mat-slide-toggle
-              [disabled]="!authGuard.openSource.isEnabled"
+              [disabled]="disableVisualTesting"
               (change)="setScreenshot()"
               [formControl]="visualTestingEnabledControl">
               <span class="md-title" [translate]="'test_plan.enable_visual_testing'"></span>
@@ -58,7 +58,7 @@
             <div
               class="dropdown mouse-over d-inline-block">
               <div
-                *ngIf="!authGuard.openSource.isEnabled"
+                *ngIf="disableVisualTesting"
                 style="margin-top: 0.2em;"
                 class="btn-group pointer">
                 <i class="fa-question-circle-solid text-t-secondary pl-7"></i>
@@ -66,13 +66,13 @@
               <div
                 class="dropdown-menu">
                 <div
-                  style="box-shadow: none;width:367px;Height :125px;margin-top: -28px;margin-left: 0px;"
+                  style="box-shadow: none;width:367px;Height :125px;margin-top: -28px;margin-left: -200px;"
                   class="bg-white border-rds-4 ng-scope p-25 shadow-all2-b4 d-flex">
                   <i class="fa-help fz-18 text-t-secondary"></i>
                   <div class="rb-regular-i-d ts-col-90 ml-auto my-0 p-0 theme-text" style="list-style: none">
                     <span [innerHTML]="'test_plan.test_plan_settings.additional_settings.visual_testing_hint' | translate"></span>
-                    <a class="rb-medium" [routerLink]="['/settings/testsigma']" [translate]="'message.common.click_here'" ></a>
-                    <span [innerHTML]="'test_plan.test_plan_settings.additional-seeting.visual_testing_hint_learn_more' | translate:{LINK_LEARN_MORE: 'https://testsigma.com/docs/getting-started/testsigma-community-cloud/'}"></span>
+                    <a class="rb-medium" [routerLink]="['/settings/storage']" [translate]="'message.common.click_here'" ></a>
+                    <span [innerHTML]="'test_plan.testsigmalab.enable' | translate"></span>
                   </div>
                 </div>
               </div>

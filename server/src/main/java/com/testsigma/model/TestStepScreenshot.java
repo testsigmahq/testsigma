@@ -75,6 +75,9 @@ public class TestStepScreenshot {
   @Column(name = "base_image_size")
   private String baseImageSize;
 
+  @Column(name = "entity_type")
+  private String entityType;
+
   @Column(name = "created_date")
   @CreationTimestamp
   private Timestamp createdDate;

@@ -42,13 +42,13 @@ public class TestStepScreenshotService {
   }
 
   public Optional<TestStepScreenshot> findBaseScreenshotForMobile(Long stepId, String deviceName, String testDataSetName,
-                                                                  Long testDataId, String imageSize) {
-    return this.repository.findBaseScreenshotForMobile(stepId, deviceName, testDataSetName, testDataId, imageSize);
+                                                                  Long testDataId, String imageSize,String entityType) {
+    return this.repository.findBaseScreenshotForMobile(stepId, deviceName, testDataSetName, testDataId, imageSize,entityType);
   }
 
   public Optional<TestStepScreenshot> findBaseScreenshotForWeb(Long stepId, String deviceName, String browser, String resolution, String testDataSetName,
-                                                               Long testDataId, String imageSize) {
-    return this.repository.findBaseScreenshotForWeb(stepId, deviceName, browser, resolution, testDataSetName, testDataId, imageSize);
+                                                               Long testDataId, String imageSize,String entityType) {
+    return this.repository.findBaseScreenshotForWeb(stepId, deviceName, browser, resolution, testDataSetName, testDataId, imageSize,entityType);
   }
 }
 

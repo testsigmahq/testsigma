@@ -30,11 +30,11 @@ export class DryRunMobileNativeFormComponent extends BaseComponent implements On
   }
 
   get environmentFormGroup(): FormGroup {
-    return <FormGroup>(<FormGroup>(<FormGroup>this.nativeForm.controls['environments']).controls[0]);
+    return <FormGroup>(<FormGroup>(<FormGroup>this.nativeForm.controls['testDevices']).controls[0]);
   }
 
   get deviceId(): number {
-    return (<FormGroup>(<FormGroup>this.nativeForm.controls['environments']).controls[0]).controls['deviceId']?.value;
+    return (<FormGroup>(<FormGroup>this.nativeForm.controls['testDevices']).controls[0]).controls['deviceId']?.value;
   }
 
   get testPlanLabType(): TestPlanLabType {
@@ -72,19 +72,19 @@ export class DryRunMobileNativeFormComponent extends BaseComponent implements On
   }
 
   addControls() {
-    this.environmentFormGroup.addControl('osVersion', new FormControl(this.dryExecution.environments[0].osVersion, []));
-    this.environmentFormGroup.addControl('deviceName', new FormControl(this.dryExecution.environments[0].deviceName, []));
-    this.environmentFormGroup.addControl('appUploadId', new FormControl(this.dryExecution.environments[0].appUploadId, [this.requiredIfValidator(() => this.isAppUploadIdRequired)]));
+    this.environmentFormGroup.addControl('osVersion', new FormControl(this.dryExecution.testDevices[0].osVersion, []));
+    this.environmentFormGroup.addControl('deviceName', new FormControl(this.dryExecution.testDevices[0].deviceName, []));
+    this.environmentFormGroup.addControl('appUploadId', new FormControl(this.dryExecution.testDevices[0].appUploadId, [this.requiredIfValidator(() => this.isAppUploadIdRequired)]));
     this.environmentFormGroup.addControl('appUploadVersionId', new FormControl(this.dryExecution.environments[0].appUploadVersionId, []));
-    (<FormGroup>(<FormGroup>this.nativeForm?.controls['environments']).controls[0]).addControl('deviceId', new FormControl(this.dryExecution.environments[0].deviceId, [this.requiredIfValidator(() => {
+    (<FormGroup>(<FormGroup>this.nativeForm?.controls['testDevices']).controls[0]).addControl('deviceId', new FormControl(this.dryExecution.testDevices[0].deviceId, [this.requiredIfValidator(() => {
       return this.isHybrid;
     })]));
-    this.environmentFormGroup.addControl('appPathType', new FormControl(this.dryExecution.environments[0].appPathType || (ApplicationPathType.UPLOADS), [Validators.required]));
-    this.environmentFormGroup.addControl('appUrl', new FormControl(this.dryExecution.environments[0].appUrl, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.USE_PATH), Validators.pattern(/^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/)]));
-    this.environmentFormGroup.addControl('appPackage', new FormControl(this.dryExecution.environments[0].appPackage, [this.requiredIfValidator(() => (this.appPathType == ApplicationPathType.APP_DETAILS && this.isAndroidNative))]));
-    this.environmentFormGroup.addControl('appActivity', new FormControl(this.dryExecution.environments[0].appActivity, [this.requiredIfValidator(() => (this.appPathType == ApplicationPathType.APP_DETAILS && this.isAndroidNative))]));
-    this.environmentFormGroup.addControl('platform', new FormControl(this.dryExecution.environments[0].platform, [this.requiredIfValidator(() => !this.isRest)]));
-    this.environmentFormGroup.addControl('appBundleId', new FormControl(this.dryExecution.environments[0]?.appBundleId, [this.requiredIfValidator(() => (this.appPathType == ApplicationPathType.APP_DETAILS && this.isIosNative))]));
+    this.environmentFormGroup.addControl('appPathType', new FormControl(this.dryExecution.testDevices[0].appPathType || (ApplicationPathType.UPLOADS), [Validators.required]));
+    this.environmentFormGroup.addControl('appUrl', new FormControl(this.dryExecution.testDevices[0].appUrl, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.USE_PATH), Validators.pattern(/^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/)]));
+    this.environmentFormGroup.addControl('appPackage', new FormControl(this.dryExecution.testDevices[0].appPackage, [this.requiredIfValidator(() => (this.appPathType == ApplicationPathType.APP_DETAILS && this.isAndroidNative))]));
+    this.environmentFormGroup.addControl('appActivity', new FormControl(this.dryExecution.testDevices[0].appActivity, [this.requiredIfValidator(() => (this.appPathType == ApplicationPathType.APP_DETAILS && this.isAndroidNative))]));
+    this.environmentFormGroup.addControl('platform', new FormControl(this.dryExecution.testDevices[0].platform, [this.requiredIfValidator(() => !this.isRest)]));
+    this.environmentFormGroup.addControl('appBundleId', new FormControl(this.dryExecution.testDevices[0]?.appBundleId, [this.requiredIfValidator(() => (this.appPathType == ApplicationPathType.APP_DETAILS && this.isIosNative))]));
   }
 
   requiredIfValidator(predicate) {

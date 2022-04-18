@@ -64,7 +64,7 @@ export class TestPlan extends Base implements PageObject {
   @serializable(optional())
   public retrySessionCreationTimeout: number;
   @serializable(optional(list(object(TestDevice))))
-  public environments: TestDevice[];
+  public testDevices: TestDevice[];
 
   @serializable
   public matchBrowserVersion: boolean;

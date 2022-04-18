@@ -86,7 +86,7 @@ export class TestPlanListComponent extends BaseComponent implements OnInit {
       this.testPlans.content.forEach((exe) => {
         let filteredEnvs = environments.content.filter((exeEnv) => exeEnv.testPlanId === exe.id);
         if (filteredEnvs)
-          exe.environments = filteredEnvs;
+          exe.testDevices = filteredEnvs;
       });
       this.fetchingCompleted = true;
     })

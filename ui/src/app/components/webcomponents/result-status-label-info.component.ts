@@ -7,8 +7,8 @@ import {TestDeviceResult} from "../../models/test-device-result.model";
   selector: 'app-result-status-label-info',
   template: `
     <app-re-run-icon class="fz-18 mt-2 position-absolute" [resultEntity]="resultEntity"></app-re-run-icon>
-    <div class="mr-5"
-         [class.ml-25]="resultEntity?.lastRun"
+    <div class="mr-5 px-10"
+         [class.ml-25]="resultEntity?.childResult"
          [class.running]="resultEntity?.isRunning"
          [class.passed]="resultEntity?.isPassed"
          [class.stopped]="resultEntity?.isStopped"

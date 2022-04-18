@@ -1062,6 +1062,7 @@
   "test_plan.testsigmalab.requires_access_to_cloud": "Testsigma Lab requires access to Testsigma Cloud. ",
   "test_plan.testsigmalab.learn_more": "Learn more ",
   "test_plan.testsigmalab.register": " to register",
+  "test_plan.testsigmalab.enable": " to enable other storage services.",
   "test_plan.testsigmalab.communityEdition": "about Community Edition Cloud.",
   "test_suite.form.add_test_case_validation":"Please add a minimum of 1 Test Case to create a Test Suite",
   "agents.mobile.inspection.quit": "Quit",

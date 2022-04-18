@@ -26,7 +26,7 @@ public class VisualTestingTask extends Thread {
   @Override
   public void run() {
     try {
-      this.visualTestingService.initScreenshotComparision(testCaseResult);
+      this.visualTestingService.initScreenshotComparison(testCaseResult);
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       log.error("Exception while handling ImageComparison for testCaseResult:" + testCaseResult, e);

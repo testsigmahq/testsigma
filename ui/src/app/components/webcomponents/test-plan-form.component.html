@@ -21,6 +21,9 @@
       <div class="error left w-fit-content" style="left: 193px"
            *ngIf="testPlanForm.controls.name.errors?.maxlength"
            [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'120'}"></div>
+      <div class="error left w-fit-content" style="left: 193px"
+           *ngIf="testPlanForm.controls.name.hasError('whitespace')"
+           [textContent]="'form.validation.cannot_have_white_spaces' | translate: {FieldName:'Name'}"></div>
     </div>
   </div>
   <div class="ts-col-100 form-group">

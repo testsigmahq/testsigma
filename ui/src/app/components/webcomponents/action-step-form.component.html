@@ -26,7 +26,7 @@
     <div class="ml-auto d-flex pt-14 text-t-secondary fz-24">
       <i
         *ngIf="actionTextLength"
-        (click)="clearSelection(true)"
+        (click)="clearSelection(true);isAttachTestDataEvent = false"
         [matTooltip]="'message.common.clear' | translate"
         class="fa-eraser pointer fz-13"></i>
     </div>
@@ -166,6 +166,15 @@
     class="d-flex align-items-center theme-gray-light action-error-content p-sm mt-13 ts-col-100-63"
     *ngIf="(showActions ||testStep?.id && testStep?.action?.length || (currentAddonTemplate || currentTemplate))  && showHelps">
     <div
+      class="ts-col-80 pr-10"
+      *ngIf="(isTestDataRunTimeParameterType || isTestDataRandomParameterType); else otherWarnings">
+      <span class="result-status-text-2 text-break">
+        <i class="fa-lightbulb-solid pr-7"></i>
+        <span [innerHTML]="('action.step.message.'+ currentTestDataType +'.note')|translate"></span>
+      </span>
+    </div>
+    <ng-template #otherWarnings>
+    <div
       *ngIf="(currentAddonTemplate || currentTemplate) && testDataPlaceholder() && !navigateTemplate.includes(currentTemplate?.id)"
       [class.mr-50]="elementPlaceholder()?.length"
       class="dropdown mouse-over d-inline-block">
@@ -242,6 +251,7 @@
         target="_blank"
         [translate]="'step.create.help.note'"></a>
     </span>
+    </ng-template>
 
     <div class="ml-auto text-nowrap ts-col-20 text-right" (mouseover)="navigateUrlValidation()">
       <button

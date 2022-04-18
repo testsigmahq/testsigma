@@ -36,6 +36,10 @@
                  [translate]="'agents.local_agent_unable_to_connect'">
             </div>
             <div class="note text-danger mb-30"
+                 *ngIf="liveAgentPresent && !agentId"
+                 [translate]="'agents.form.active_agent_already_present' | translate">
+            </div>
+            <div class="note text-danger mb-30"
                  [translate]="'agents.connecting_to_agent'"
                  *ngIf="connectingToAgent">
             </div>
@@ -84,7 +88,7 @@
           class="theme-btn-clear-default" [routerLink]="[(agentId)?'../../../':'/agents']"
           [translate]="'btn.common.cancel'"></button>
         <button class="theme-btn-primary" (click)="(agentId) ? updateAgent() : saveAgent()"
-                [disabled]="disableAgentCreation()">
+                [disabled]="(agentId ? null : disableAgentCreation())">
           <span [translate]="(agentId ? 'btn.common.update' : 'btn.common.save')" *ngIf="!loading"></span>
           <span [translate]="'btn.common.please_wait'" *ngIf="loading"></span>
         </button>

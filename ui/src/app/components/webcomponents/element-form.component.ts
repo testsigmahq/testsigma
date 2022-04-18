@@ -237,7 +237,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
       this.saving = true;
       let query = 'workspaceVersionId:' + this.workspaceVersion.id + ',locatorType:' + this.element.locatorType +
         ',locatorValue:' + this.element.locatorValueWithSpecialCharacters +
-        ',screenNameId:' + this.element.screenNameId + ',id!'+ this.element.id;
+        ',screenNameId:' + this.element.screenNameId + ',id!'+ this.elementId;
       query = this.byPassSpecialCharacters(query);
       this.elementService.findAll(query).subscribe(res => {
         if(res?.content.length){

@@ -12,7 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
       [class.icon-btn]="!displayText"
       [class.theme-btn-clear-default]="displayText"
       [class.schedule-align]="displayText"
-      [disabled]="testPlan?.lastRun?.isExecuting"
+      [disabled]="testPlan.lastRun?.isExecuting"
       [matTooltip]="displayText ? '' : 'runs.list_view.run_later' | translate">
       <i class="fa-schedule pt-1"></i>
       <span class="pl-8"

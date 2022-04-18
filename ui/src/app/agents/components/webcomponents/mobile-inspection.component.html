@@ -1,8 +1,20 @@
 <div class="d-flex flex-row position-relative h-100">
-  <button (click)="loading?'':quit()"
+  <button *ngIf="!loading && isMultipleRecorder"
+          (click)="loading?'':saveAndQuit()"
+          [style.right.px]="quitButton.clientWidth+10"
+          [disabled]="deleteClicked||!saveElementsComponent?.inspectedElement"
+          [matTooltip]="(loading?'agents.mobile.inspection.quit_session_later':
+          (saveElementsComponent?.formSubmitted? 'agents.mobile.inspection.save_n_quit':'agents.mobile.inspection.quit_session'))| translate"
+          class="btn btn-primary mobile-ins-close-recording">
+    <span class="fz-14 pr-4" [translate]="'agents.mobile.inspection.save_n_quit'"></span> &times;
+  </button>
+
+  <button (click)="loading?'':openUnsavedWorkWarning()"
+          #quitButton
           [disabled]="deleteClicked"
           [matTooltip]="(loading?'agents.mobile.inspection.quit_session_later':'agents.mobile.inspection.quit_session')| translate"
-          class="btn btn-clear mobile-ins-close-recording">&times;
+          class="btn btn-delete mobile-ins-close-recording d-flex mr-10">
+    <span class="fz-14 pr-7" [translate]="'agents.mobile.inspection.quit_session'"></span> &times;
   </button>
   <div [class.ts-col-60]="fullScreenMode"
        class="mirroring-section ts-col-40">
@@ -100,7 +112,7 @@
                      [(inspectedElement)]="mirroringContainerComponent.inspectedElement"
                      [(element)]="element"
                      [(elements)]="elements"
-                     [(elementForm)]="uiElementForm"
+                     [(elementForm)]="ElementForm"
                      [(selectElement)]="selectedElement1"
                      [versionId]="data?.workspaceVersionId"
                      [uiId]="uiId"

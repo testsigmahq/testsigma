@@ -9,7 +9,7 @@ CREATE TABLE `mobile_inspections`
   `platform_device_id`    BIGINT(20)   NULL,
   `app_activity`          VARCHAR(256) NULL,
   `bundle_id`             VARCHAR(256) NULL,
-  `app_upload_id`         BIGINT(20)   NULL,
+  `upload_version_id`     bigint(20) NULL,
   `capabilities`          JSON     DEFAULT NULL,
   `cookies`               JSON     DEFAULT NULL,
   `session_id`            VARCHAR(256) NULL,

@@ -49,7 +49,6 @@ public class UploadsController {
     Specification<Upload> spec = builder.build();
     Page<Upload> uploads = uploadService.findAll(spec, pageable);
     List<UploadDTO> uploadDTOS = uploadMapper.map(uploads.getContent());
-    uploadDTOS = uploadService.setSignedFlag(uploadDTOS, builder);
     return new PageImpl<>(uploadDTOS, pageable, uploads.getTotalElements());
   }
 
@@ -87,12 +86,4 @@ public class UploadsController {
       uploadService.delete(uploadService.find(id));
     }
   }
-
-  @GetMapping(value = "/{id}/download")
-  public void download(@PathVariable("id") Long id, HttpServletResponse response) throws ResourceNotFoundException, IOException {
-    Upload upload = this.uploadService.find(id);
-    String preSignedURL = this.uploadService.getPreSignedURL(upload);
-    response.sendRedirect(preSignedURL);
-  }
-
 }

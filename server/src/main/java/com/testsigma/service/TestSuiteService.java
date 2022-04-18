@@ -250,6 +250,13 @@ public class TestSuiteService extends XMLExportService<TestSuite> {
         testCaseIds.add(indexOfCaseId, testCase.getPreRequisite());
         testSuite.setTestCaseIds(testCaseIds);
         handleTestCaseMappings(testSuite);
+      } else if (testCaseIds.contains(testCase.getPreRequisite())){
+        int indexOfTestCaseId = testCaseIds.indexOf(testCase.getId());
+        int indexOfPrerquisiteId = testCaseIds.indexOf(testCase.getPreRequisite());
+        testCaseIds.remove(indexOfPrerquisiteId);
+        testCaseIds.add(indexOfTestCaseId,testCase.getPreRequisite());
+        testSuite.setTestCaseIds(testCaseIds);
+        handleTestCaseMappings(testSuite);
       }
     });
   }

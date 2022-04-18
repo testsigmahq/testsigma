@@ -25,7 +25,7 @@ import { Router } from '@angular/router';
         style="box-shadow: none;margin-top: -6px;padding-top: .5rem;background:
            transparent;left: -110px;">
         <ul
-          class="bg-white border-rds-4 ng-scope p-15 shadow-all2-b4">
+          class="bg-white border-rds-4 ng-scope p-10 shadow-all2-b4">
           <li
             class="border-rds-10 btn rb-medium grey-on-hover text-dark ml-0">
             <a
@@ -66,7 +66,11 @@ export class ReRunButtonComponent extends BaseComponent implements OnInit {
   reRun(reRunType: ReRunType) {
     this.inTransit = true;
     let testPlanResult = new TestPlanResult();
-    testPlanResult.parenttestPlanResultId = this.parentExecutionResult.id;
+    let lastRunId = this.parentExecutionResult.lastRun?.id;
+    if(lastRunId)
+      testPlanResult.parenttestPlanResultId = lastRunId;
+    else
+      testPlanResult.parenttestPlanResultId = this.parentExecutionResult.id;
     testPlanResult.testPlanId = this.parentExecutionResult.testPlanId;
     testPlanResult.isReRun = true;
     testPlanResult.reRunType = reRunType;

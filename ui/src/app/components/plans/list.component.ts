@@ -26,6 +26,9 @@ export class TestPlanListComponent extends BaseComponent implements OnInit {
   public isFiltered: boolean;
   public fetchingCompleted: Boolean = false;
   public isSearchEnable: boolean;
+  public sortByColumns = ['name'];
+  public sortedBy: string = 'name';
+  public direction: string = ",asc";
 
 
   constructor(
@@ -55,7 +58,7 @@ export class TestPlanListComponent extends BaseComponent implements OnInit {
   fetchTestPlans(search?: string, pageable?: Pageable) {
     this.fetchingCompleted = false;
     let query = "workspaceVersionId:" + this.versionId + (search ? search : '');
-    this.testPlanService.findAll(query, "name", pageable || this.currentPage)
+    this.testPlanService.findAll(query, this.sortedBy + this.direction, pageable || this.currentPage)
       .subscribe(res => {
         this.testPlans = res;
         this.currentPage = res.pageable;
@@ -64,6 +67,14 @@ export class TestPlanListComponent extends BaseComponent implements OnInit {
         else
           this.fetchingCompleted = true;
       });
+  }
+
+  sortBy(value, direction) {
+    if (!(this.sortedBy != value || this.direction != direction))
+      return;
+    this.direction = direction;
+    this.sortedBy = value;
+    this.fetchTestPlans(this.searchQuery);
   }
 
 

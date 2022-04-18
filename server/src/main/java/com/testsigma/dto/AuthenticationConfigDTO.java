@@ -17,7 +17,8 @@ public class AuthenticationConfigDTO {
 
   public void setPassword(String password) {
     if (password != null)
-      this.password = password.replaceAll("[\\s\\S]", "*");
+      //this.password = password.replaceAll("[\\s\\S]", "*");
+       this.password = password;
     else
       this.password = null;
   }

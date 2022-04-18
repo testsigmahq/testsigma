@@ -10,6 +10,7 @@ CREATE TABLE `test_devices`
   `platform_device_id`            BIGINT(20)            DEFAULT NULL,
   `udid`                          VARCHAR(255)          DEFAULT NULL,
   `app_upload_id`                 BIGINT(20)            DEFAULT NULL,
+  `app_upload_version_id`         BIGINT(20)            DEFAULT NULL,
   `app_package`                   VARCHAR(255)          DEFAULT NULL,
   `app_activity`                  VARCHAR(255)          DEFAULT NULL,
   `app_url`                       VARCHAR(255)          DEFAULT NULL,

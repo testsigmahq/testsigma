@@ -41,11 +41,11 @@
             [translate]="'element.message.name.required'" class="error">
           </div>
           <div
-            *ngIf="elementForm.controls.name.errors?.minlength && formSubmitted"
+            *ngIf="elementForm.controls.name.errors?.minlength && !elementForm.controls.name.errors?.pattern && formSubmitted"
             [translate]="'element.message.name.minlength'" class="error">
           </div>
           <div
-            *ngIf="elementForm.controls.name.errors?.maxlength && formSubmitted "
+            *ngIf="elementForm.controls.name.errors?.maxlength && formSubmitted && !elementForm.controls.name.errors?.pattern "
             class="error" [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'250'}">
           </div>
           <div
@@ -68,7 +68,7 @@
               class="error" [translate]="'agents.mobile.inspection.screen_name.required'">
             </div>
             <div
-              *ngIf="elementForm.controls.screen_name.errors?.minlength && formSubmitted"
+              *ngIf="elementForm.controls.screen_name.errors?.minlength"
               [translate]="'agents.mobile.inspection.screen_name.minlength'" class="error"></div>
             <div
               *ngIf="elementForm.controls.screen_name.errors?.maxlength && formSubmitted "
@@ -81,7 +81,7 @@
                  class="control-label required mat-proxy-label"></label>
           <mat-form-field appearance="outline" class="w-100">
             <mat-select
-              (selectionChange)="element.locatorValue = element.mobileElementRect.mobileElement[locatorTypes[$event.value].variableName]"
+              (selectionChange)="element.locatorValue = element?.mobileElementRect?.mobileElement[locatorTypes[$event?.value]?.variableName]"
               [(ngModel)]="element.locatorType"
               [formControlName]="['locatorType']">
               <mat-option *ngFor="let locatorType of availableLocatorTypes"
@@ -113,7 +113,7 @@
         <button
           (click)="(uiId)?updateElement():((isEdit)?createElement():addToList())"
           [disabled]="isEdit && elementForm?.pristine && (element?.locatorValue==fetchedElement?.locatorValue)"
-          [translate]="(uiId)?'agents.mobile.inspection.update_and_close':(isEdit)?'agents.mobile.inspection.save_and_close':'btn.common.done'"
+          [translate]="(uiId)?'agents.mobile.inspection.update_and_close':(isEdit)?'agents.mobile.inspection.save_and_close':'agents.mobile.inspection.save_element'"
           class="theme-btn-primary ts-col-50 border-rds-1 m-0 border-0 pointer"></button>
       </div>
     </div>

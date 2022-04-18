@@ -5,7 +5,6 @@ import {TestPlan} from "../../models/test-plan.model";
 import {MatHorizontalStepper} from '@angular/material/stepper';
 import {TestPlanLabType} from "../../enums/test-plan-lab-type.enum";
 import {TestDevice} from "../../models/test-device.model";
-import {TestDeviceSettings} from "../../models/test-device-settings.model";
 import {ApplicationPathType} from "../../enums/application-path-type.enum";
 import {MatDialog} from '@angular/material/dialog';
 import {TestPlanAddSuiteFormComponent} from "./test-plan-add-suite-form.component";
@@ -15,9 +14,6 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {TestPlanType} from "../../enums/execution-type.enum";
 import {DevicesService} from "../../agents/services/devices.service";
 import {CdkConnectedOverlay} from "@angular/cdk/overlay";
-import {DryTestDevice} from "../../models/dry-test-device.model";
-import {DryTestPlan} from "../../models/dry-test-plan.model";
-import {Capability} from "../../shared/models/capability.model";
 import {PlatformOsVersion} from "../../agents/models/platform-os-version.model";
 import {PlatformService} from "../../agents/services/platform.service";
 import {PlatformBrowserVersion} from "../../agents/models/platform-browser-version.model";
@@ -201,6 +197,7 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
       platformBrowserVersionId :new FormControl(environment?.platformBrowserVersionId, [this.requiredIfValidator(() => !this.version?.workspace.isMobile && !this.isRest && !this.isHybrid)]),
       platformDeviceId : new FormControl(environment?.platformDeviceId,  [this.requiredIfValidator(() => !this.isWeb && !this.isRest && !this.isHybrid)]),
       appUploadId : new FormControl(environment?.appUploadId, [this.requiredIfValidator(() => this.isAppUploadIdRequired)]),
+      appUploadVersionId: new FormControl(environment?.appUploadVersionId, []),
       appPathType : new FormControl(environment?.appPathType || (ApplicationPathType.UPLOADS), [this.requiredIfValidator(() => this.isMobileNative)]),
       appUrl: new FormControl(environment?.appUrl, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.USE_PATH), Validators.pattern(/^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/)]),
       appPackage: new FormControl(environment?.appPackage, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.APP_DETAILS)]),

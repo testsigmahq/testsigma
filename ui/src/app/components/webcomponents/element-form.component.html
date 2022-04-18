@@ -171,11 +171,18 @@
               </div>
               <div
                 *ngIf="formSubmitted && elementForm.get('name').hasError('required')"
-                class="error" [translate]="'agents.message.title.required'">
+                class="error" [translate]="'element.message.title.required'">
+              </div>
+              <div *ngIf="elementForm.controls.name.errors?.pattern && elementForm?.get('name')?.touched"
+                   [translate]="'element.message.name.invalid_characters'" class="error">
               </div>
               <div
-                *ngIf="elementForm?.get('name')?.touched && elementForm?.controls?.name?.errors?.minlength "
-                class="error" [translate]="'agents.message.title.minlength' | translate: {FieldName:'Name' , min:'4'}">
+                *ngIf="elementForm.controls.name.errors?.minlength && !elementForm.controls.name.errors?.pattern && elementForm?.get('name')?.touched"
+                [translate]="'element.message.name.minlength'" class="error">
+              </div>
+              <div
+                *ngIf="elementForm.controls.name.errors?.maxlength && !elementForm.controls.name.errors?.pattern && elementForm?.get('name')?.touched "
+                class="error" [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'250'}">
               </div>
             </div>
             <div class="form-group ts-col-50 pl-20" matAutocompleteOrigin #origin="matAutocompleteOrigin">
@@ -192,6 +199,13 @@
                 <div
                   *ngIf="formSubmitted && elementForm.get('screen_name').hasError('required')"
                   class="error" [translate]="'agents.message.title.required'">
+                </div>
+                <div
+                  *ngIf="elementForm.controls.screen_name.errors?.minlength"
+                  [translate]="'agents.mobile.inspection.screen_name.minlength'" class="error"></div>
+                <div
+                  *ngIf="elementForm.controls.screen_name.errors?.maxlength && formSubmitted "
+                  class="error" [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Screen Name' , max:'250'}">
                 </div>
               </div>
 

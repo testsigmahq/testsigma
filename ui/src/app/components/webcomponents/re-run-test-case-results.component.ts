@@ -28,7 +28,7 @@ export class ReRunTestCaseResultsComponent implements OnInit {
     private testCaseResultService: TestCaseResultService) { }
 
   ngOnInit(): void {
-    let query = "childRunId:"+this.testPlanResult.childResult.id+",iteration:null,testPlanResultId:" + this.testPlanResult.id;
+    let query = "childRunId:,iteration:null,testPlanResultId:" + this.testPlanResult.id;
     if(this.environmentResult)
       query+=",environmentResultId:"+this.environmentResult.id;
     if(this.testSuiteResult)

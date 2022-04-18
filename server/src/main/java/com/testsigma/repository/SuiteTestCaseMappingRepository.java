@@ -34,6 +34,6 @@ public interface SuiteTestCaseMappingRepository extends JpaRepository<SuiteTestC
   @Query("SELECT suiteTestCaseMapping FROM SuiteTestCaseMapping suiteTestCaseMapping WHERE suiteTestCaseMapping.testCaseId IN(:testCaseIds) and suiteTestCaseMapping.suiteId = :suiteId")
   List<SuiteTestCaseMapping> findBySuiteIdAndTestCaseIds(@Param("suiteId") Long suiteId, @Param("testCaseIds") List<Long> testCaseIds);
 
-  @Query("SELECT suiteTestCaseMapping.testCaseId FROM SuiteTestCaseMapping suiteTestCaseMapping WHERE suiteTestCaseMapping.suiteId = :id ")
+  @Query("SELECT suiteTestCaseMapping.testCaseId FROM SuiteTestCaseMapping suiteTestCaseMapping WHERE suiteTestCaseMapping.suiteId = :id ORDER BY suiteTestCaseMapping.position")
   List<Long> findTestCaseIdsByTestSuiteId(Long id);
 }

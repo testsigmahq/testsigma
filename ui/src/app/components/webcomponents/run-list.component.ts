@@ -70,7 +70,7 @@ export class RunListComponent extends BaseComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (((this.testPlanResult?.isExecuting || this.testPlanResult?.childResult?.isExecuting)) || this.getStatus(changes)) {
+    if (((this.testPlanResult?.isExecuting || this.testPlanResult?.lastRun?.isExecuting)) || this.getStatus(changes)) {
       this.testPlanResults = new InfiniteScrollableDataSource(this.testPlanResultService, "reRunParentId:null,testPlanId:" + this.testPlan.id, this.sortBy);
       this.isRunListFetchCompleted = true;
     }

@@ -14,7 +14,7 @@
       <span
         *ngIf="!activeTestCaseResult && !activeTestSuiteResult && !activeEnvironmentResult"
         class="ml-5 rb-light text-t-secondary"
-        [textContent]="'('+ ('re_run.'+options.testPlanResult?.childResult?.reRunType | translate)+')'"></span>
+        [textContent]="'('+ ('re_run.'+options.testPlanResult?.lastRun?.reRunType | translate)+')'"></span>
       <span  class="pointer"
         *ngIf="activeTestCaseResult || activeTestSuiteResult"
         (click)="showTestMachineResult(activeTestCaseResult?.testDeviceResult || activeTestSuiteResult?.testDeviceResult)"
@@ -33,15 +33,15 @@
       <app-result-pie-chart-column
         [width]="24"
         [height]="24"
-        [resultEntity]="activeExecutionResult?.childResult || activeTestSuiteResult?.childResult || activeEnvironmentResult?.childResult || activeTestCaseResult?.childResult"></app-result-pie-chart-column>
+        [resultEntity]="activeExecutionResult?.lastRun || activeTestSuiteResult?.lastRun || activeEnvironmentResult?.lastRun || activeTestCaseResult?.lastRun"></app-result-pie-chart-column>
     </div>
     <div class="text-right text-t-secondary fz-12 pr-20">
       <div
         class="text-nowrap"
-        [textContent]="(activeExecutionResult?.childResult || activeExecutionResult?.childResult || activeTestSuiteResult?.childResult || activeEnvironmentResult?.childResult || activeTestCaseResult?.childResult).startTime | date:'MMM d, h:mm:ss'"></div>
+        [textContent]="(activeExecutionResult?.lastRun || activeExecutionResult?.lastRun || activeTestSuiteResult?.lastRun || activeEnvironmentResult?.lastRun || activeTestCaseResult?.lastRun).startTime | date:'MMM d, h:mm:ss'"></div>
       <div class="pt-4">
         <app-duration-format
-          [duration]="(activeExecutionResult?.childResult || activeTestSuiteResult?.childResult || activeEnvironmentResult?.childResult || activeTestCaseResult?.childResult).duration"></app-duration-format>
+          [duration]="(activeExecutionResult?.lastRun || activeTestSuiteResult?.lastRun || activeEnvironmentResult?.lastRun || activeTestCaseResult?.lastRun).duration"></app-duration-format>
       </div>
     </div>
 

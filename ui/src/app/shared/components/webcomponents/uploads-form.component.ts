@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnInit, Optional, Output} from '@angular/core';
 import {Upload} from "../../models/upload.model";
 import {UploadService} from "../../services/upload.service";
 import {FormControl, FormGroup, Validators} from '@angular/forms';
@@ -10,11 +10,9 @@ import {AuthenticationGuard} from "../../guards/authentication.guard";
 import {TranslateService} from '@ngx-translate/core';
 import {ToastrService} from "ngx-toastr";
 import {NotificationsService, NotificationType} from 'angular2-notifications';
-import {PlatformType} from "../../enums/platform-type.enum";
 import {WorkspaceVersion} from "../../../models/workspace-version.model";
-import {UploadStatus} from "../../enums/upload-status.enum";
-import {WorkspaceType} from "../../../enums/workspace-type.enum";
-import {TestCaseResultExternalMapping} from "../../../models/test-case-result-external-mapping.model";
+import {UploadVersion} from "../../models/upload-version.model";
+import {UploadVersionService} from "../../services/upload-version.service";
 
 @Component({
   selector: 'app-uploads-form',
@@ -25,12 +23,14 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
   @Input('version') version: WorkspaceVersion;
   public uploadedFileObject;
   @Input('upload') upload: Upload;
+  @Optional() @Input('inline') inline?: Boolean;
   @Output('onUpload') uploadCallBack = new EventEmitter<any>();
   public uploadTypes = [UploadType.Attachment];
   public uploadForm: FormGroup;
   public uploading: boolean;
-  public attachmentTypes= ".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf,.mp4,.3gp";
-
+  public attachmentTypes = ".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf,.mp4,.3gp";
+  public apkTypes = ".apk";
+  public ipaTypes = ".ipa";
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { version: WorkspaceVersion, upload: Upload, isInspection: boolean  },
     public dialogRef: MatDialogRef<UploadsFormComponent>,
@@ -38,26 +38,19 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
     public notificationsService: NotificationsService,
     public translate: TranslateService,
     public toastrService: ToastrService,
-    private uploadService: UploadService) {
+    private uploadService: UploadService,
+    public uploadVersionService: UploadVersionService) {
     super(authGuard, notificationsService, translate, toastrService);
   }
 
   ngOnInit(): void {
     if(!this.upload)
       this.upload = new Upload();
-    this.upload.type = UploadType.Attachment;
     if(this.version){
       this.data.version = this.version;
     }
     if(this.data.upload) {
       this.upload = this.data.upload;
-    }
-    if (this.data.version.workspace.isAndroidNative) {
-      this.uploadTypes.push(UploadType.APK);
-      this.upload.type = UploadType.APK;
-    } else if (this.data.version.workspace.isIosNative) {
-      this.uploadTypes.push(UploadType.IPA);
-      this.upload.type = UploadType.IPA;
     }
     this.initiateForm();
   }
@@ -65,19 +58,19 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
   private initiateForm(): void {
     this.uploadForm = new FormGroup({
       name: new FormControl(this.upload.name, [Validators.required, Validators.minLength(4)]),
-      type: new FormControl(this.upload.type)
-    });
+      version: new FormControl(undefined, [this.requiredIfValidator(() => this.uploadedFileObject && this.upload.id)])    });
   }
 
   private get formData(): FormData {
+    let version = this.version || this.data.version;
     let formData = new FormData(),
-        rawData = this.getRawValue()
+      rawData = this.getRawValue()
     formData.append("fileContent", this.uploadedFileObject || new File([""], ""));
     formData.append("name", rawData.name);
-    formData.append("uploadType", rawData.type );
-    formData.append("workspaceId", this.data.version.workspace.id.toString())
-    formData.append("platformType", PlatformType.TestsigmaLab)
-    return formData
+    formData.append("workspaceId", this.data.version.workspace.id.toString());
+    formData.append("version", rawData.version || rawData.name);
+    formData.append("uploadType", version.workspace.isAndroidNative ? UploadType.APK : version.workspace.isIosNative ? UploadType.IPA : UploadType.Attachment);
+    return formData;
   }
 
   public update(): void {
@@ -85,25 +78,7 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
     let updateDetailsOnly = !this.uploadedFileObject?.name;
     this.uploadService.save(this.upload.id, this.formData).subscribe(
       (upload) => {
-        if(upload.isInProgress||updateDetailsOnly) {
-          this.fetchUpload(upload.id);
-        } else if(upload.isCompleted) {
-          this.uploadCallBack.emit(upload);
-          if(!this.version){
-            this.uploading = false;
-            this.translate.get("message.common.upload.success", {FieldName: "File"})
-              .subscribe(key => this.showNotification(NotificationType.Success, key))
-            this.dialogRef.close(upload);
-          }
-        } else {
-          this.uploadCallBack.emit(this.upload);
-          if(!this.version){
-            this.uploading = false;
-            this.dialogRef.close(true);
-            this.translate.get("message.common.upload.failure", {FieldName: "File"})
-              .subscribe(key => this.showAPIError('UnExpected Error', key));
-          }
-        }
+        this.fetchUpload(upload.id);
       },
       err => {
         this.uploading = false;
@@ -117,25 +92,7 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
     this.uploading = true;
     this.uploadService.create(this.formData).subscribe(
       (upload) => {
-        if(upload.isInProgress) {
-          this.fetchUpload(upload.id);
-        } else if(upload.isCompleted) {
-          this.uploadCallBack.emit(upload);
-          if(!this.version){
-            this.uploading = false;
-            this.translate.get("message.common.upload.success", {FieldName: "File"})
-              .subscribe(key => this.showNotification(NotificationType.Success, key))
-            this.dialogRef.close(upload);
-          }
-        } else {
-          this.uploadCallBack.emit(this.upload);
-          if(!this.version){
-            this.uploading = false;
-            this.dialogRef.close(true);
-            this.translate.get("message.common.upload.failure", {FieldName: "File"})
-              .subscribe(key => this.showAPIError('UnExpected Error', key));
-          }
-        }
+        this.fetchUpload(upload.id);
       },
       err => {
         this.uploading = false;
@@ -147,37 +104,43 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
 
   fetchUpload(id: number){
     this.uploadService.find(id).subscribe(upload => {
-      if(upload.isCompleted) {
-        this.uploadCallBack.emit(upload);
-        if(!this.version){
-          this.uploading = false;
-          this.translate.get("message.common.upload.success", {FieldName: "File"})
-            .subscribe(key => this.showNotification(NotificationType.Success, key))
-          this.dialogRef.close(upload);
+      this.uploadVersionService.find(upload.latestVersionId).subscribe((version)=> {
+        upload.latestVersion = version;
+        if (upload.isCompleted || !this.data.version.workspace.isMobileNative) {
+          this.uploadCallBack.emit(upload);
+          if (!this.version) {
+            this.uploading = false;
+            this.translate.get("message.common.upload.success", {FieldName: "File"})
+              .subscribe(key => this.showNotification(NotificationType.Success, key))
+            this.dialogRef.close(upload);
+          }
+        } else if (upload.isInProgress) {
+          setTimeout(() => {
+            this.fetchUpload(upload.id);
+          }, 5000);
+        } else {
+          this.uploadCallBack.emit(this.upload);
+          if (!this.version) {
+            this.uploading = false;
+            this.dialogRef.close(true);
+            this.translate.get("message.common.upload.failure", {FieldName: "File"}).subscribe(key => this.showAPIError('UnExpected Error', key));
+          }
         }
-      }else if(upload.isInProgress){
-        setTimeout(() => {
-          this.fetchUpload(upload.id);
-        }, 1000);
-      }else{
-        this.uploadCallBack.emit(this.upload);
-        if(!this.version){
-          this.uploading = false;
-          this.dialogRef.close(true);
-          this.translate.get("message.common.upload.failure", {FieldName: "File"})
-            .subscribe(key => this.showAPIError('UnExpected Error', key));
-        }
-      }
     });
+  });
   }
 
   public uploadedFile(event): void {
     this.uploadedFileObject = event.target.files ? event.target.files[0] : null;
-    this.upload.fileSize = this.uploadedFileObject.size;
-    this.upload.fileName = this.uploadedFileObject.name;
-    if(!this.upload.id) {
-      this.upload.name = this.upload.fileName;
-      this.uploadForm.controls.name.setValue(this.upload.fileName);
+    if (!this.upload.id) {
+      this.upload.name = this.uploadedFileObject.name;
+      this.uploadForm.controls.name.setValue(this.uploadedFileObject.name);
+      this.upload.latestVersion = this.upload.latestVersion || new UploadVersion();
+      this.upload.latestVersion.fileSize = this.uploadedFileObject.size;
+    }
+    if (this.upload.id){
+      this.upload.latestVersion = this.upload.latestVersion || new UploadVersion();
+        this.upload.latestVersion.fileSize = this.uploadedFileObject.size;
     }
   }
 
@@ -185,8 +148,7 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
 
   public removeUpload() {
     this.uploadedFileObject = null;
-    this.upload.fileName = '';
-    if(!this.upload.id)
+    if (!this.upload.id)
       this.uploadForm.controls.name.setValue('');
   }
 
@@ -195,7 +157,12 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
   }
 
   get maxSizeError() {
-   return this.uploadedFileObject?.size > (1024 * 1024 * (this.getRawValue().type == this.uploadTypes[0] ? 75 : 500));
+    return this.uploadedFileObject?.size > (1024 * 1024 * (500));
+  }
+
+  get fileTypes() {
+    let version = this.version || this.data.version;
+    return version?.workspace?.isAndroidNative ? this.apkTypes : version?.workspace?.isIosNative ? this.ipaTypes : this.attachmentTypes;
   }
 
 }

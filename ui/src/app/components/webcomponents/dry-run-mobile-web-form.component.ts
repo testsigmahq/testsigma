@@ -4,13 +4,10 @@ import {DryTestPlan} from "../../models/dry-test-plan.model";
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {TestPlanLabType} from "../../enums/test-plan-lab-type.enum";
 import {Environment} from "../../models/environment.model";
-import {ApplicationPathType} from "../../enums/application-path-type.enum";
-import {Platform} from "../../enums/platform.enum";
 import {BaseComponent} from "../../shared/components/base.component";
 import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
 import {NotificationsService} from "angular2-notifications";
 import {TranslateService} from '@ngx-translate/core';
-import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-dry-run-mobile-web-form',

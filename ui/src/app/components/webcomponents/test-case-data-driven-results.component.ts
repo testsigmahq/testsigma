@@ -51,7 +51,7 @@ export class TestCaseDataDrivenResultsComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (((this.resultEntity?.isExecuting || this.resultEntity?.childResult?.isExecuting)) || this.getStatus(changes)) {
+    if (((this.resultEntity?.isExecuting || this.resultEntity?.lastRun?.isExecuting)) || this.getStatus(changes)) {
      this.fetchTestCaseResult()
     }
     this.fetchIterations("")
@@ -62,7 +62,7 @@ export class TestCaseDataDrivenResultsComponent implements OnInit {
       return false
     } else if(changes["resultEntity"] && changes["resultEntity"]["previousValue"]) {
       return  changes["resultEntity"]["previousValue"]["result"] == ResultConstant.QUEUED ||
-        changes["resultEntity"]["previousValue"]["childResult"]?.result == ResultConstant.QUEUED;
+        changes["resultEntity"]["previousValue"]["execution"]["lastRun"]?.result == ResultConstant.QUEUED;
     }
   }
 

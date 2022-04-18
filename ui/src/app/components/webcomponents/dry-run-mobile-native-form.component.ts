@@ -75,6 +75,7 @@ export class DryRunMobileNativeFormComponent extends BaseComponent implements On
     this.environmentFormGroup.addControl('osVersion', new FormControl(this.dryExecution.testDevices[0].osVersion, []));
     this.environmentFormGroup.addControl('deviceName', new FormControl(this.dryExecution.testDevices[0].deviceName, []));
     this.environmentFormGroup.addControl('appUploadId', new FormControl(this.dryExecution.testDevices[0].appUploadId, [this.requiredIfValidator(() => this.isAppUploadIdRequired)]));
+    this.environmentFormGroup.addControl('appUploadVersionId', new FormControl(this.dryExecution.environments[0].appUploadVersionId, []));
     (<FormGroup>(<FormGroup>this.nativeForm?.controls['testDevices']).controls[0]).addControl('deviceId', new FormControl(this.dryExecution.testDevices[0].deviceId, [this.requiredIfValidator(() => {
       return this.isHybrid;
     })]));

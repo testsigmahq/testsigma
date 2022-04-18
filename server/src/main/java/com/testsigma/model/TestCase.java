@@ -82,6 +82,8 @@ public class TestCase {
   private Timestamp readyAt;
   @Column(name = "last_run_id")
   private Long lastRunId;
+  @Column(name = "is_active", columnDefinition = "bit default 0", nullable = false)
+  private Boolean isActive;
   @Column(name = "created_date")
   @CreationTimestamp
   private Timestamp createdDate;

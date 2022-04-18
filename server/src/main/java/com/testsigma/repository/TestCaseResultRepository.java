@@ -54,7 +54,7 @@ public interface TestCaseResultRepository extends JpaRepository<TestCaseResult, 
     "WHERE environmenResult.testPlanResultId = :testPlanResultId AND caseResult.isStepGroup = FALSE AND " +
     "caseResult.iteration IS NULL"
   )
-  List<TestCaseResult> findAllBytestPlanResultId(@Param("testPlanResultId") Long testPlanResultId);
+  List<TestCaseResult> findAllByTestPlanResultId(@Param("testPlanResultId") Long testPlanResultId);
 
   @Query("SELECT tcr FROM TestCaseResult AS tcr JOIN tcr.testCase AS tc WHERE tcr.parentId is NULL " +
     "AND tcr.suiteResultId = :suiteResultId AND tcr.status = :status ORDER BY tcr.position ASC")

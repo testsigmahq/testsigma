@@ -16,7 +16,7 @@
         class="row-chart-status test123 mr-10"
         [width]="20"
         [height]="20"
-        [resultEntity]="currentTestCaseDataDrivenResult?.iterationResult?.childResult || currentTestCaseDataDrivenResult?.iterationResult"></app-result-pie-chart-column>
+        [resultEntity]="currentTestCaseDataDrivenResult?.iterationResult?.lastRun || currentTestCaseDataDrivenResult?.iterationResult"></app-result-pie-chart-column>
       <span class="rb-medium" [textContent]="currentTestCaseDataDrivenResult?.iterationResult?.testDataSetName || currentTestCaseDataDrivenResult?.testData?.name"></span>
       <span class="pl-7 fz-11">(
         <i class="fa-info fz-9 mr-2" [matTooltip]="'hint.test_data.expected_to_fail'| translate"></i>

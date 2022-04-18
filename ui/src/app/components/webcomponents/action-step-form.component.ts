@@ -122,7 +122,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   private environmentSuggestion: MatDialogRef<ActionTestDataEnvironmentSuggestionComponent>;
   public localUrlVerifying: boolean;
   public localUrlValid: number = -1;
-  private currentTestDataType: TestDataType;
+  public currentTestDataType: TestDataType;
   public currentTestDataFunction: DefaultDataGenerator;
   public isValidAttribute: Boolean;
   public isValidElement: Boolean;
@@ -136,9 +136,18 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   @Input() stepRecorderView?: boolean;
   private eventEmitterAlreadySubscribed: Boolean = false;
   private oldStepData: TestStep;
+  isAttachTestDataEvent: boolean = false;
 
   get mobileStepRecorder(): MobileStepRecorderComponent {
     return this.matModal.openDialogs.find(dialog => dialog.componentInstance instanceof MobileStepRecorderComponent).componentInstance;
+  }
+
+  get isTestDataRunTimeParameterType(){
+    return this.currentTestDataType && this.currentTestDataType == TestDataType.runtime;
+  }
+
+  get isTestDataRandomParameterType(){
+    return this.currentTestDataType && this.currentTestDataType == TestDataType.random;
   }
 
   public currentTestDataFunctionParameters: AddonTestDataFunctionParameter[];
@@ -508,6 +517,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       this.assignOldData();
     }
     this.clearSelection();
+    this.isAttachTestDataEvent = false;
     this.showActions = false;
     this.showTemplates = false;
     this.replacer.nativeElement.blur();
@@ -740,6 +750,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     setTimeout(() => {
       this.attachElementEvent();
       this.attachTestDataEvent();
+      this.isAttachTestDataEvent = true;
       this.attachAttributeEvent();
       //this.appropriatePopup();
       this.setCursorAtTestData();
@@ -1061,6 +1072,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
 
   setTempPosition() {
     let element = this.replacer.nativeElement.querySelector('div.actiontext span span.test_data_place');
+    this.replacer.nativeElement.contentEditable = false;
     element.contentEditable = true;
     this.setMeddlePosition(element);
   }
@@ -1229,11 +1241,12 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       if (elementName && elementName.length)
         targetElement.innerHTML = elementName;
       if (this.testDataPlaceholder()?.length && !this.isEdit) {
-        this.testDataPlaceholder()[this.currentDataItemIndex || 0].click();
+        this.testDataPlaceholder()?.[this.currentDataItemIndex || 0]?.click();
         this.selectTestDataPlaceholder();
       }
     }
   }
+
 
   private assignDataValue(dataName) {
     this.showDataTypes = false;
@@ -1728,5 +1741,6 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   ngOnDestroy() {
     this.eventEmitterAlreadySubscribed = true;
   }
+
 
 }

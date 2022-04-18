@@ -20,6 +20,7 @@
                 id="googleClientId"
                 name="googleClientId"
                 [value]="authConfig.googleClientId"
+                [(ngModel)]="this.authConfig.googleClientId"
                 class="form-control"/>
               <label
                 [translate]="'settings.auth.google.client_id'"

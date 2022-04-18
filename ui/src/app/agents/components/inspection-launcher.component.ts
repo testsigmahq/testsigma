@@ -60,7 +60,7 @@ export class InspectionLauncherComponent extends BaseComponent  implements OnIni
 
       const dialogRef = this.dialog.open(InspectionModalComponent, {
         maxWidth: '50rem',
-        minHeight: '32rem',
+        minHeight: '28rem',
         panelClass: ['inspection-launcher-dialog', 'rds-none'],
         data: this.data,
         disableClose: true

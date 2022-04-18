@@ -22,9 +22,12 @@
       <div
         class="ts-col-15"
         [textContent]="'runs.list_view.last_run' | translate"></div>
-      <div
-        class="ts-col-35 pl-10  pr-7"
-        [textContent]="'runs.list_view.title' | translate"></div>
+      <div class="ts-col-35 pl-10 pr-7 ">
+        <app-inline-sort
+        [ascending]="sortedBy!='name'? undefined : direction == ',asc'"
+        (click)="sortThisBy('name', ((sortedBy!='name' || direction == ',desc')?',asc':',desc'))"
+        [heading]="'runs.list_view.title' | translate"></app-inline-sort>
+      </div>
       <div
         class="ts-col-15"
         [textContent]="'runs.list_view.test_lab' | translate"></div>
@@ -36,6 +39,7 @@
     <div class="card-container">
       <div
         class="list-card bordered lg-pm"
+        [style.pointer-events]="checkIfLastRunExsists(testPlan) ? 'auto' : 'not-allowed'"
         *ngFor="let testPlan of testPlans?.content">
         <div class="ts-col-15 d-flex">
           <a
@@ -44,7 +48,8 @@
             *ngIf="testPlan.lastRun"
             [resultEntity]="testPlan.lastRun"></app-result-pie-chart-column>
           </a>
-          <div *ngIf="!testPlan.lastRun">
+          <div
+            *ngIf="!testPlan.lastRun">
             <div
               class="empty-chart-placeholder"
               [translate]="'message.common.not_available'">
@@ -54,7 +59,8 @@
         <div class="ts-col-35 pr-7 pl-0 text-break">
           <a
             class="list-title"
-            [routerLink]="[testPlan.lastRun ? '/td/runs': null, testPlan.lastRun ? testPlan.lastRun.id : null]"
+            [style.cursor]="checkIfLastRunExsists(testPlan) ? 'cursor': 'not-allowed'"
+            [routerLink]="checkIfLastRunExsists(testPlan) ? [testPlan.lastRun ? '/td/runs': null, testPlan.lastRun ? testPlan.lastRun.id : null] : []"
             [matTooltip]="(!testPlan.lastRun ? 'result.hint.not_run' : '') | translate"
             [textContent]="testPlan.name"></a>
           <div

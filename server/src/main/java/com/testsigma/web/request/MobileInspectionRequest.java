@@ -16,7 +16,7 @@ public class MobileInspectionRequest {
   private Long platformDeviceId;
   private String appActivity;
   private String bundleId;
-  private Long appUploadId;
+  private Long uploadVersionId;
   private String sessionId;
   private String applicationPackage;
   private AppPathType applicationPathType;

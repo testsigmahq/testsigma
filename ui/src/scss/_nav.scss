@@ -275,3 +275,33 @@
 
 
 }
+
+
+
+.inline-upload {
+  .theme-overlay-container {
+    @extend .d-flex, .align-items-center;
+    .theme-overlay-content:not(.ts-col-100) {
+      @extend .p-0, .ts-col-75;
+
+      .ts-form {
+        @extend .d-flex, .justify-content-between;
+        .upload-file {
+          @extend .ts-col-45, .pt-0;
+
+          .bg-grey-x-light {
+            @extend .my-0;
+          }
+        }
+
+        .upload-file-name {
+          @extend .ts-col-50, .pb-0;
+        }
+      }
+    }
+
+    .theme-overlay-footer {
+      @extend .p-0, .pl-15, .theme-overlay-footer, .ts-col-25, .mb-0;
+    }
+  }
+}

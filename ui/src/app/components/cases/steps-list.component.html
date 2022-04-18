@@ -74,7 +74,7 @@
 <div
   class="d-flex flex-wrap theme-w-o-h-scroll">
   <div
-    [class.ts-col-100]="version?.workspace?.isRest || isRest || canDrag || !isHelpWidgetShowed"
+    [class.ts-col-100]="version?.workspace?.isRest || isRest || isForLoop || canDrag || !isHelpWidgetShowed"
     class="ts-col-70 h-100 overflow-hidden">
     <div
       [class.showed]="canShowBulkActions"
@@ -153,7 +153,7 @@
     </div>
   </div>
   <div
-    *ngIf="(!version?.workspace?.isRest  || !isRest || canDrag || !isHelpWidgetShowed ) && !isReorder"
+    *ngIf="(!version?.workspace?.isRest  || !isRest || !isForLoop || canDrag || !isHelpWidgetShowed ) && !isReorder"
     [class.ts-col-30]="isHelpWidgetShowed"
     class="h-100">
     <app-test-step-help

@@ -45,7 +45,8 @@ export class TestSuiteResultsComponent implements OnInit {
     if (changes["showFilter"] && !changes["showFilter"].firstChange) {
       return
     }
-    this.suiteResults = new InfiniteScrollableDataSource(this.testSuiteResultService, ",testPlanResultId:" + this.testPlanResult.id);
+    this.suiteResults = new InfiniteScrollableDataSource(this.testSuiteResultService, "testPlanResultId:"
+      + this.testPlanResult.id);
     this.isRunSuiteFetchComplete = true;
   }
 

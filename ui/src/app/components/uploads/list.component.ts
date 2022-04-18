@@ -21,6 +21,7 @@ import {InfiniteScrollableDataSource} from "../../data-sources/infinite-scrollab
 import {UploadEntitiesModalComponent} from "../../shared/components/webcomponents/upload-entities-modal.component";
 import {TestDeviceService} from "../../services/test-device.service";
 import {ToastrService} from "ngx-toastr";
+import {UploadVersionService} from "../../shared/services/upload-version.service";
 
 @Component({
   selector: 'app-uploads',
@@ -28,7 +29,7 @@ import {ToastrService} from "ngx-toastr";
   host: {'class': 'page-content-container'},
 })
 export class ListComponent extends BaseComponent implements OnInit {
-  public uploads: Page<Upload>;
+  public uploads: InfiniteScrollableDataSource;
   public currentPage: Pageable = new Pageable();
   public versionId: number;
   public version: WorkspaceVersion;
@@ -51,6 +52,7 @@ export class ListComponent extends BaseComponent implements OnInit {
     public toastrService: ToastrService,
     public route: ActivatedRoute,
     private uploadService: UploadService,
+    private uploadVersionService: UploadVersionService,
     private matDialog: MatDialog,
     private workspaceVersionService: WorkspaceVersionService,
     private _snackBar: MatSnackBar,
@@ -61,7 +63,7 @@ export class ListComponent extends BaseComponent implements OnInit {
 
   get hideHeaderToolBar() {
     return (this.selectedUploads.length ||
-      (!this.uploads?.content.length && !this.searchQuery))
+      (!this.uploads?.cachedItems.length && !this.searchQuery))
   };
 
   ngOnInit(): void {
@@ -76,19 +78,42 @@ export class ListComponent extends BaseComponent implements OnInit {
     });
   }
 
+  waitTillRequestRespondsForUploads() {
+    if (this.uploads?.isFetching)
+      setTimeout(() => this.waitTillRequestRespondsForUploads(), 100);
+    else {
+      this.fetchingCompleted = true;
+      this.selectAllToggle(false);
+      this.setLatestVersions();
+    }
+  }
+
+  setLatestVersions() {
+    let latestVersionId = [];
+    this.uploads.cachedItems.forEach((data: Upload) => {
+      if (data.latestVersionId)
+        latestVersionId.push(data.latestVersionId)
+    })
+    if (latestVersionId.length == 0)
+      return;
+    this.uploadVersionService.findAll("id@" + latestVersionId.join("#")).subscribe(res => {
+      res.content.forEach(version => {
+        this.uploads.cachedItems.find((upload: Upload, i) => {
+          if (upload.latestVersionId == version.id) {
+            (<Upload>this.uploads.cachedItems[i]).latestVersion = version;
+          }
+        })
+      })
+    });
+  }
+
   fetchUploads() {
     this.fetchingCompleted = false;
     this.currentPage.pageSize = 10;
     let sortBy = this.sortedBy + this.direction;
     let query = this.defaultQuery + this.searchQuery;
-    this.uploadService.findAll(query, sortBy, this.currentPage)
-      .subscribe((res: Page<Upload>) => {
-        this.fetchingCompleted = true;
-        this.goToPreviousPageIfEmpty(res);
-        this.uploads = res;
-        this.currentPage = res.pageable;
-        this.selectAllToggle(false);
-      });
+    this.uploads = new InfiniteScrollableDataSource(this.uploadService, query, sortBy, this.currentPage.pageNumber);
+    this.waitTillRequestRespondsForUploads();
   }
 
   sortBy(value, direction) {
@@ -101,9 +126,9 @@ export class ListComponent extends BaseComponent implements OnInit {
 
   selectAllToggle(selectAll: Boolean) {
     let testDataProfileIds = [];
-    this.uploads.content.find((testData, i) => {
-      this.uploads.content[i].selected = selectAll;
-      testDataProfileIds.push(this.uploads.content[i].id);
+    this.uploads.cachedItems.find((testData: Upload, i) => {
+      (<Upload>this.uploads.cachedItems[i]).selected = selectAll;
+      testDataProfileIds.push((<Upload>this.uploads.cachedItems[i]).id);
     })
     this.selectedUploads = selectAll ? testDataProfileIds : [];
   }

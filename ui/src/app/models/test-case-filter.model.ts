@@ -117,10 +117,14 @@ export class TestCaseFilter extends Base implements PageObject {
 
   get queryString() {
     let queryString = "";
-    if (this.normalizedQuery.find(query => query.key == "status"))
-      queryString += ",status@" + (<TestCaseStatus[]>this.normalizedQuery.find(query => query.key == "status").value).join("#");
-    if (this.normalizedQuery.find(query => query.key == "result"))
-      queryString += ",result@" + (<ResultConstant[]>this.normalizedQuery.find(query => query.key == "result").value).join("#");
+    if (this.normalizedQuery.find(query => query.key == "status")) {
+      let statuses = <TestCaseStatus[]>this.normalizedQuery.find(query => query.key == "status").value;
+      if (statuses) queryString += ",status@" + statuses.join("#");
+    }
+    if (this.normalizedQuery.find(query => query.key == "result")) {
+      let results = <ResultConstant[]>this.normalizedQuery.find(query => query.key == "result").value
+      if (results) queryString += ",result@" + results.join("#");
+    }
     if (this.normalizedQuery.find(query => query.key == "isStepGroup"))
       queryString += ",isStepGroup:" + <boolean>this.normalizedQuery.find(query => query.key == "isStepGroup").value;
     if (this.normalizedQuery.find(query => query.key == "deleted") || this.isDeleted)
@@ -129,12 +133,18 @@ export class TestCaseFilter extends Base implements PageObject {
       queryString += ",suiteMapping:" + <boolean>this.normalizedQuery.find(query => query.key == "suiteMapping").value;
     if (this.normalizedQuery.find(query => query.key == "workspaceVersionId"))
       queryString += ",workspaceVersionId:" + <number>this.normalizedQuery.find(query => query.key == "workspaceVersionId").value;
-    if (this.normalizedQuery.find(query => query.key == "priority"))
-      queryString += ",priority@" + (<TestCaseStatus[]>this.normalizedQuery.find(query => query.key == "priority").value).join("#");
-    if (this.normalizedQuery.find(query => query.key == "type"))
-      queryString += ",type@" + (<number[]>this.normalizedQuery.find(query => query.key == "type").value).join("#")
-    if (this.normalizedQuery.find(query => query.key == "tagId"))
-      queryString += ",tagId@" + (<number[]>this.normalizedQuery.find(query => query.key == "tagId").value).join("#")
+    if (this.normalizedQuery.find(query => query.key == "priority")) {
+      let priorities = <TestCaseStatus[]>this.normalizedQuery.find(query => query.key == "priority").value;
+      if (priorities) queryString += ",priority@" + priorities.join("#");
+    }
+    if (this.normalizedQuery.find(query => query.key == "type")) {
+      let types = (<number[]>this.normalizedQuery.find(query => query.key == "type").value);
+      if (types) queryString += ",type@" + types.join("#")
+    }
+    if (this.normalizedQuery.find(query => query.key == "tagId")) {
+      let tagIds = (<number[]>this.normalizedQuery.find(query => query.key == "tagId").value)
+      if (tagIds) queryString += ",tagId@" + tagIds.join("#");
+    }
     if (this.normalizedQuery.find(query => query.key == "createdDate" && query.operation == FilterOperation.LESS_THAN))
       queryString += ",createdDate<" + moment(<number>this.normalizedQuery.find(query => query.key == "createdDate" && query.operation == FilterOperation.LESS_THAN).value).format("YYYY-MM-DD");
     if (this.normalizedQuery.find(query => query.key == "createdDate" && query.operation == FilterOperation.GREATER_THAN))

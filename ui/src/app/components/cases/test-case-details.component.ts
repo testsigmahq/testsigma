@@ -213,7 +213,7 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
 
   public fetchLinkedCases() {
     let testCases: InfiniteScrollableDataSource;
-    testCases = new InfiniteScrollableDataSource(this.testCaseService, ",stepGroupId:" + this.testCaseId);
+    testCases = new InfiniteScrollableDataSource(this.testSuiteService, ",testcaseId:" + this.testCaseId);
     waitTillRequestResponds();
     let _this = this;
 

@@ -23,10 +23,14 @@
         itemSize="27"
         style="max-height:261px;height:261px">
         <div
-          *cdkVirtualFor="let element of modalData.executions ; let index=index; let first=first"
+          *cdkVirtualFor="let execution of modalData.executions ; let index=index; let first=first"
           [class.border-separator-t-1]="first"
           class="list-view md-pm green-highlight">
-          <div [textContent]="element.name" class="ts-col-50 text-truncate pr-20"></div>
+          <div [textContent]="execution.name" class="ts-col-50 text-truncate pr-20"></div>
+          <i class="fa-external-link-alt-solid pl-5 pointer"
+             (click)="openLinkedEntity(execution.id)"
+             target="_blank"
+          ></i>
         </div>
       </cdk-virtual-scroll-viewport>
     </div>

@@ -16,7 +16,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "provisioning_profile_uploads")
+@Table(name = "provisioning_profile_upload_versions")
 @Data
 @ToString
 @EqualsAndHashCode
@@ -29,8 +29,8 @@ public class ProvisioningProfileUpload implements Serializable {
   @Column(name = "provisioning_profile_id")
   private Long provisioningProfileId;
 
-  @Column(name = "upload_id")
-  private Long uploadId;
+  @Column(name = "upload_version_id")
+  private Long uploadVersionId;
 
   @Column(name = "created_date")
   @CreationTimestamp
@@ -38,7 +38,7 @@ public class ProvisioningProfileUpload implements Serializable {
 
   @ManyToOne
   @Fetch(value = FetchMode.SELECT)
-  @JoinColumn(name = "upload_id", referencedColumnName = "id", insertable = false, updatable = false)
+  @JoinColumn(name = "upload_version_id", referencedColumnName = "id", insertable = false, updatable = false)
   @EqualsAndHashCode.Exclude
   @ToString.Exclude
   private Upload upload;

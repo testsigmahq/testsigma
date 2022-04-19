@@ -29,7 +29,7 @@ export class DryRunWebFormComponent extends BaseComponent implements OnInit {
   }
 
   get environmentFormGroup(): FormGroup {
-    return (<FormGroup>(<FormGroup>(<FormGroup>(<FormGroup>this.webForm.controls['environments']).controls[0])));
+    return (<FormGroup>(<FormGroup>(<FormGroup>(<FormGroup>this.webForm.controls['testDevices']).controls[0])));
   }
 
   get testPlanLabType(): TestPlanLabType {

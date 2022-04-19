@@ -80,8 +80,8 @@ export class TestPlanSettingsFormComponent extends BaseComponent implements OnIn
     this.testPlan.testDevices.forEach((env, index) => {
       env.matchBrowserVersion = this.testPlan.matchBrowserVersion
       if(this.version.workspace.isMobileNative){
-        if(Boolean(json.environments[index].settings.app_upload_id)) env.settings.appUploadId = json.environments[index].settings.app_upload_id;
-        env.settings.appPathType = this.formGroup.getRawValue().environments[index].settings.appPathType;
+        if(Boolean(json.testDevices[index].settings.app_upload_id)) env.settings.appUploadId = json.testDevices[index].settings.app_upload_id;
+        env.settings.appPathType = this.formGroup.getRawValue().testDevices[index].settings.appPathType;
       }
     });
     if(this.checkNameEnvironment()) {
@@ -111,7 +111,7 @@ export class TestPlanSettingsFormComponent extends BaseComponent implements OnIn
           environment.settings.appUploadId = json.testDevices[index].settings.app_upload_id;
           environment.appUploadVersionId = json.testDevices[index].appUploadVersionId;
         }
-        environment.settings.appPathType = this.formGroup.getRawValue().environments[index].settings.appPathType;
+        environment.settings.appPathType = this.formGroup.getRawValue().testDevices[index].settings.appPathType;
       }
     })
     if(this.isRest)

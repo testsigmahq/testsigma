@@ -126,6 +126,7 @@ export class AdhocRunConfiguration extends Base implements PageObject {
   public browserVersion : String;
   public deviceName : String;
   public resolution : String;
+  public executionEnvironment : TestDevice;
 
 
   deserialize(input: any): this {
@@ -192,11 +193,7 @@ export class AdhocRunConfiguration extends Base implements PageObject {
     return !changed;
   }
 
-  executionEnvironment(): TestDevice {
-    let json = this.serialize();
-    json['capabilities'] = json['desiredCapabilities']
-    return new TestDevice().deserialize(json);
-  }
+
 
   formattedName(environment): String {
     let name = environment.platform + " (" + environment.osVersion + ") ";

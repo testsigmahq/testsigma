@@ -310,6 +310,7 @@ export class ActionElementSuggestionComponent implements OnInit {
       position: {top: '0px', right: '0px'},
       data: {
         versionId: this.option.version.id,
+        isStepRecordView: this.option.isStepRecordView
       },
       panelClass: ['mat-dialog', 'rds-none']
     });

@@ -12,6 +12,7 @@ import {MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
 
 import {Workspace} from "../../models/workspace.model";
 import {ConfirmationModalComponent} from "../../shared/components/webcomponents/confirmation-modal.component";
+import {TestDevice} from "../../models/test-device.model";
 
 @Component({
   selector: 'app-saved-configuration-list',
@@ -67,7 +68,7 @@ import {ConfirmationModalComponent} from "../../shared/components/webcomponents/
           <div
             class="ts-col-35 d-flex">
             <app-test-machine-info-column
-              [executionEnvironment]="configuration?.executionEnvironment()"></app-test-machine-info-column>
+              [executionEnvironment]="configuration?.executionEnvironment"></app-test-machine-info-column>
             <i
               [matTooltip]="'hint.message.common.delete' | translate"
               class="ml-auto pointer fa-trash-thin action-icons"
@@ -120,9 +121,17 @@ export class DryRunSavedConfigListComponent extends BaseComponent implements OnI
     this.dryRunSavedConfigurationService.findAll(this.options.application.workspaceType).subscribe(res => {
       this.configurations = res;
       this.allConfigs = res;
+      this.enRichExecutionEnvironments();
     })
   }
 
+  enRichExecutionEnvironments() {
+    this.configurations.forEach(config => {
+      let json = config.serialize();
+      json['capabilities'] = json['desiredCapabilities']
+      config.executionEnvironment = new TestDevice().deserialize(json);
+    })
+  }
 
   delete(id) {
     this.translate.get("save_configuration.delete.confirmation").subscribe((res) => {

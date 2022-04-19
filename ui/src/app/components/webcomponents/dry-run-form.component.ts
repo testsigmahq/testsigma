@@ -326,7 +326,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
   }
 
   private normalizeFormValue() {
-    const environment = new DryTestDevice().deserialize(this.dryExecutionForm.getRawValue()['environments'][0]);
+    const environment = new DryTestDevice().deserialize(this.dryExecutionForm.getRawValue()['testDevices'][0]);
     this.testPlan = new DryTestPlan().deserialize(this.dryExecutionForm.getRawValue());
     this.testPlan.workspaceVersionId = this.version.id;
     this.testPlan.testCaseId = this.testCase.id;
@@ -354,9 +354,9 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
       environment.deviceId = null;
       environment.browser = null;
     }
-    if (this.dryExecutionForm.getRawValue()['environments'][0]) {
+    if (this.dryExecutionForm.getRawValue()['testDevices'][0]) {
       let capabilities = [];
-      this.dryExecutionForm.getRawValue()['environments'][0].capabilities.forEach(capability => {
+      this.dryExecutionForm.getRawValue()['testDevices'][0].capabilities.forEach(capability => {
         if (!!capability['name'] && !!capability['value'])
           capabilities.push(new Capability().deserialize(capability));
       })

@@ -78,7 +78,7 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
   }
 
   get environmentsFormControls(): FormGroup[] {
-    return (<FormGroup[]>(<FormArray>this.testPlanForm.controls['environments']).controls);
+    return (<FormGroup[]>(<FormArray>this.testPlanForm.controls['testDevices']).controls);
   }
 
   get isAppUploadIdRequired() {
@@ -161,7 +161,7 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
     if (this.testPlan?.testDevices) {
       this.testPlan.testDevices.forEach(environment => {
         this.executionEnvironments.push(environment);
-        (<FormArray>this.testPlanForm.controls['environments']).push(this.createEnvironmentFormGroup(environment))
+        (<FormArray>this.testPlanForm.controls['testDevices']).push(this.createEnvironmentFormGroup(environment))
       });
     } else if (this.environmentsFormControls?.length > 0) {
       this.environmentsFormControls.forEach((environmentGroup: FormGroup) => {
@@ -308,7 +308,7 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
     if(index > -1) {
       this.executionEnvironments.splice(index, 1, executionEnvironment);
     } else {
-      (<FormArray>this.testPlanForm.controls['environments']).push(this.activeEnvironmentFormGroup);
+      (<FormArray>this.testPlanForm.controls['testDevices']).push(this.activeEnvironmentFormGroup);
       this.executionEnvironments.push(executionEnvironment);
     }
     console.log("testPlanFrom", this.testPlanForm);
@@ -431,9 +431,9 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
   setCaseLevelNdParallelFlags(event, value) {
     if(!this.advancedSettings){
       if(!this.isEditEnvironmentActive){
-        const length = ( <FormArray> this.testPlanForm.controls['environments']).length;
+        const length = ( <FormArray> this.testPlanForm.controls['testDevices']).length;
         for (let index = 0; index < length; index++) {
-          const environmentFormGroup = ( <FormGroup> ( <FormArray> this.testPlanForm.controls['environments']).at(index));
+          const environmentFormGroup = ( <FormGroup> ( <FormArray> this.testPlanForm.controls['testDevices']).at(index));
           environmentFormGroup.controls[value].setValue(event.checked);
         }
       }

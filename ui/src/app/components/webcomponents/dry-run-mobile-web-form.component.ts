@@ -28,7 +28,7 @@ export class DryRunMobileWebFormComponent extends BaseComponent implements OnIni
   }
 
   get environmentFormGroup(): FormGroup {
-    return <FormGroup>(<FormGroup>(<FormGroup>this.mobileWebForm.controls['environments']).controls[0]);
+    return <FormGroup>(<FormGroup>(<FormGroup>this.mobileWebForm.controls['testDevices']).controls[0]);
   }
 
   get testPlanLabType(): TestPlanLabType {
@@ -48,7 +48,7 @@ export class DryRunMobileWebFormComponent extends BaseComponent implements OnIni
     this.environmentFormGroup.addControl('browser', new FormControl(this.dryExecution.testDevices[0].browser, [this.requiredIfValidator(() => !this.version?.workspace.isMobileNative && !this.isRest )]));
     this.environmentFormGroup.addControl('osVersion', new FormControl(this.dryExecution.testDevices[0].osVersion, [this.requiredIfValidator(() => !this.isRest)]));
     this.environmentFormGroup.addControl('deviceName', new FormControl(this.dryExecution.testDevices[0].deviceName, [this.requiredIfValidator(() => !this.version?.workspace.isWeb && !this.isRest)]));
-    (<FormGroup>(<FormGroup>this.mobileWebForm?.controls['environments']).controls[0]).addControl('deviceId', new FormControl(this.dryExecution.testDevices[0].deviceId, [this.requiredIfValidator(() => this.isHybrid)]));
+    (<FormGroup>(<FormGroup>this.mobileWebForm?.controls['testDevices']).controls[0]).addControl('deviceId', new FormControl(this.dryExecution.testDevices[0].deviceId, [this.requiredIfValidator(() => this.isHybrid)]));
   }
 
   requiredIfValidator(predicate) {

@@ -66,7 +66,7 @@ public class TestPlansController {
     TestPlan testPlan = this.testPlanService.find(id);
     testPlan.setTestDevices(testDeviceService.findByTestPlanId(testPlan.getId()));
     Set<Long> existingIds = testPlan.getTestDevices().stream().map(TestDevice::getId).collect(Collectors.toSet());
-    Set<Long> newIds = request.getEnvironments().stream().map(TestDeviceRequest::getId).collect(Collectors.toSet());
+    Set<Long> newIds = request.getTestDevices().stream().map(TestDeviceRequest::getId).collect(Collectors.toSet());
     existingIds.removeAll(newIds);
     testPlan.setOrphanTestDeviceIds(existingIds);
     testPlanMapper.merge(testPlan, request);

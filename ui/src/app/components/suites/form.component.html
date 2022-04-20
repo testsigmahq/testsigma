@@ -167,7 +167,7 @@
     <button
       class="theme-btn-primary"
       appAsyncBtn
-      [isLoading]="formSubmitted && testSuiteForm.valid"
+      [isLoading]="saving && testSuiteForm.valid"
       [message]="'message.common.saving'"
       [textContent]="(testSuite?.id ?  'btn.common.update' : 'btn.common.create') | translate"
       (click)=" testSuite?.id ? update() : create()">

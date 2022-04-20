@@ -207,7 +207,6 @@ import {UsageDetailsComponent} from './components/webcomponents/usage-details.co
 import {LoginFormComponent} from './components/login-form.component';
 import {RecaptchaModule} from 'ng-recaptcha';
 import {CommonModule} from "@angular/common";
-import {TrialExpiryNotificationComponent} from './components/webcomponents/trial-expiry-notification.component';
 import {ElementMetadataComponent} from "./components/webcomponents/element-metadata.component";
 import {MantisIssueFormComponent} from './components/webcomponents/mantis-issue-form.component';
 import {MantisIssueDetailsComponent} from './components/webcomponents/mantis-issue-details.component';
@@ -443,7 +442,6 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     ReRunTestStepResultItemComponent,
     UsageDetailsComponent,
     LoginFormComponent,
-    TrialExpiryNotificationComponent,
     ElementDetailsHeaderComponent,
     ElementAttributeDetailsComponent,
     ElementMetadataComponent,

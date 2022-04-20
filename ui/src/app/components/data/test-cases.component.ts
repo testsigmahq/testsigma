@@ -4,7 +4,7 @@ import {TestCaseService} from "../../services/test-case.service";
 import {InfiniteScrollableDataSource} from "../../data-sources/infinite-scrollable-data-source";
 
 @Component({
-  selector: 'app-test-data-profiles',
+  selector: 'app-test-cases',
   templateUrl: './test-cases.component.html',
   host: {'class': 'ts-col-100'},
 })

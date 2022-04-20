@@ -169,7 +169,7 @@ export class TestCasesListComponent extends BaseComponent implements OnInit {
     if (this.resultFilter) {
       this.query = this.query ? this.query : '';
       if (this.resultFilter == 'passed')
-        this.query += ",deleted:false,isStepGroup:false,result:SUCCESS,workspaceVersionId:" + this.versionId;
+        this.query += ",deleted:false,isStepGroup:false,result@SUCCESS,workspaceVersionId:" + this.versionId;
       else if (this.resultFilter == 'failed')
         this.query += ",deleted:false,isStepGroup:false,result@FAILURE#ABORTED,workspaceVersionId:" + this.versionId;
       else if (this.resultFilter == 'notExecuted')

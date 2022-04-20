@@ -57,7 +57,7 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
 
   private initiateForm(): void {
     this.uploadForm = new FormGroup({
-      name: new FormControl(this.upload.name, [Validators.required, Validators.minLength(4)]),
+      name: new FormControl(this.upload.name, [Validators.required, Validators.minLength(4), this.noWhitespaceValidator]),
       version: new FormControl(undefined, [this.requiredIfValidator(() => this.uploadedFileObject && this.upload.id)])    });
   }
 

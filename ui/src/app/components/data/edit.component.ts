@@ -48,7 +48,8 @@ export class EditComponent extends BaseComponent implements OnInit {
       this.oldTestDataSet =this.testData.data[0];
       this.versionId = this.testData.versionId;
       this.testDataForm = this.formBuilder.group({
-        name: new FormControl(this.testData.name, [Validators.required, Validators.minLength(4), Validators.maxLength(125)])
+        name: new FormControl(this.testData.name, [Validators.required, Validators.minLength(4),
+          Validators.maxLength(125), this.noWhitespaceValidator])
       });
     });
   }

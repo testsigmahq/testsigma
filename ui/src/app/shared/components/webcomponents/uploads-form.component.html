@@ -41,6 +41,9 @@
           <label class="control-label required" [translate]="'uploads.form.label.name'"></label>
           <div class="error" *ngIf="uploadForm.controls.name.invalid"
                [textContent]="'form.validation.common.min_length'| translate: {FieldName: 'Name' ,min: '4' }"></div>
+          <div class="error"
+               *ngIf="uploadForm?.touched  && uploadForm.controls.name.hasError('whitespace')"
+               [textContent]="'form.validation.cannot_have_white_spaces' | translate: {FieldName:'Name'}"></div>
         </div>
         <div class="form-group pb-18 upload-version" *ngIf="(upload.id && uploadedFileObject?.name)" @fade>
           <input class="form-control" formControlName="version">

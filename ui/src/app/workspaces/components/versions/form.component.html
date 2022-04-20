@@ -33,6 +33,9 @@
         <div
           class="error mt-30" *ngIf="versionForm.controls.versionName.errors?.minLength && submitted"
           [textContent]="'form.validation.common.min_length' | translate: {FieldName:'Name' , min:'4'}"></div>
+        <div class="error"
+             *ngIf="versionForm?.touched  && versionForm.controls.name.hasError('whitespace')"
+             [textContent]="'form.validation.cannot_have_white_spaces' | translate: {FieldName:'Version Name'}"></div>
       </div>
       <div class="form-group mb-10">
         <app-description [formCtrlName]="versionForm.controls.description"></app-description>

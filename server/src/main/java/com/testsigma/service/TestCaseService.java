@@ -284,31 +284,33 @@ public class TestCaseService extends XMLExportService<TestCase> {
     List<String> tags = tagService.list(TagType.TEST_CASE, parentCase.getId());
     tagService.updateTags(tags, TagType.TEST_CASE, testCase.getId());
     List<TestStep> steps = this.fetchTestSteps(parentCase, testCaseRequest.getStepIds());
-    List<TestStep> newSteps = new ArrayList<>();
-    Map<Long, TestStep> parentStepIds = new HashMap<Long, TestStep>();
-    Integer position = 0;
-    TestStep firstStep = steps.get(0);
-    if(firstStep.getConditionType() == TestStepConditionType.LOOP_WHILE){
-      TestStep whileStep = this.testStepService.find(firstStep.getParentId());
-      steps.add(0, whileStep);
-    }
-    for (TestStep parent : steps) {
-      if (testCase.getIsStepGroup() && parent.getStepGroupId() != null)
-        continue;
-      TestStep step = this.testStepMapper.copy(parent);
-      step.setPosition(position);
-      step.setCreatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-      step.setTestCaseId(testCase.getId());
-      TestStep parentStep = parentStepIds.get(parent.getParentId());
-      step.setParentId(parentStep != null ? parentStep.getId() : null);
-      TestStep prerequiste = parentStepIds.get(parentStep != null ? parent.getPreRequisiteStepId() : null);
-      step.setPreRequisiteStepId(prerequiste != null ? prerequiste.getId() : null);
-      step.setId(null);
-      step.setParentStep(parentStep);
-      step = this.testStepService.create(step);
-      parentStepIds.put(parent.getId(), step);
-      newSteps.add(step);
-      position++;
+    if (steps.size()>0) {
+      List<TestStep> newSteps = new ArrayList<>();
+      Map<Long, TestStep> parentStepIds = new HashMap<Long, TestStep>();
+      Integer position = 0;
+      TestStep firstStep = steps.get(0);
+      if (firstStep.getConditionType() == TestStepConditionType.LOOP_WHILE) {
+        TestStep whileStep = this.testStepService.find(firstStep.getParentId());
+        steps.add(0, whileStep);
+      }
+      for (TestStep parent : steps) {
+        if (testCase.getIsStepGroup() && parent.getStepGroupId() != null)
+          continue;
+        TestStep step = this.testStepMapper.copy(parent);
+        step.setPosition(position);
+        step.setCreatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+        step.setTestCaseId(testCase.getId());
+        TestStep parentStep = parentStepIds.get(parent.getParentId());
+        step.setParentId(parentStep != null ? parentStep.getId() : null);
+        TestStep prerequiste = parentStepIds.get(parentStep != null ? parent.getPreRequisiteStepId() : null);
+        step.setPreRequisiteStepId(prerequiste != null ? prerequiste.getId() : null);
+        step.setId(null);
+        step.setParentStep(parentStep);
+        step = this.testStepService.create(step);
+        parentStepIds.put(parent.getId(), step);
+        newSteps.add(step);
+        position++;
+      }
     }
     return testCase;
   }

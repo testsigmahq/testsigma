@@ -234,7 +234,7 @@ export class ElementsContainerComponent extends BaseComponent implements OnInit 
 
     this.elementForm = new FormGroup({
       name: new FormControl(this.element.name, [Validators.required, Validators.minLength(4), Validators.maxLength(250),
-        Validators.pattern('[a-zA-Z0-9_\\\- ]+$'), this.isNameDuplicate(),]),
+        Validators.pattern('[a-zA-Z0-9_\\\- ]+$'), this.isNameDuplicate(), this.noWhitespaceValidator]),
       screen_name: new FormControl(this.element.screenNameObj?.name, [Validators.required,
         Validators.minLength(4)]),
       definition: new FormControl(this.element.locatorValue, [Validators.required]),

@@ -8,7 +8,6 @@ import {NotificationsService, NotificationType} from 'angular2-notifications';
 import {TranslateService} from '@ngx-translate/core';
 import {ToastrService} from "ngx-toastr";
 import {BaseComponent} from "../../../shared/components/base.component";
-import * as moment from 'moment';
 
 @Component({
   selector: 'app-form',
@@ -53,7 +52,7 @@ export class FormComponent extends BaseComponent implements OnInit {
   setForm() {
     this.versionForm = this.formBuilder.group({
       workspaceId: new FormControl(this.version.workspaceId, []),
-      versionName: new FormControl(this.version.versionName, [Validators.required]),
+      versionName: new FormControl(this.version.versionName, [Validators.required, this.noWhitespaceValidator]),
       description: new FormControl(this.version.description, [])
     });
   }

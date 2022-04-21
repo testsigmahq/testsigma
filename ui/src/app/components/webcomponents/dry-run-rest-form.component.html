@@ -9,7 +9,7 @@
     class="ts-col-40 mr-10 pr-15 pb-20" *ngIf="restForm?.controls['testPlanLabType'] && isHybrid"
     [formGroup]="restForm"
     [version]="version"
-    [formCtrl]="restForm?.controls['environments'].controls[0].controls['agentId']"
+    [formCtrl]="restForm?.controls['testDevices'].controls[0].controls['agentId']"
     [labelText]="'test_plan.environment.test_machine' | translate"
     [isAvailableCheck]="true">
   </app-agents-auto-complete>

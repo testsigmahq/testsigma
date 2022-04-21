@@ -26,13 +26,11 @@ import java.util.List;
   nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
   nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface TestPlanMapper {
-  @Mapping(source = "environments", target = "testDevices")
   TestPlan map(TestPlanRequest testPlanRequest);
 
   List<TestPlanXMLDTO> mapToXMLDTOList(List<TestPlan> applications);
 
   @Mapping(target = "environmentId", expression = "java(testPlanRequest.getEnvironmentId())")
-  @Mapping(target = "testDevices", expression = "java(merge(testPlanRequest.getEnvironments(), testPlan.getTestDevices()))")
   void merge(@MappingTarget TestPlan testPlan, TestPlanRequest testPlanRequest);
 
   default List<TestDevice> merge(List<TestDeviceRequest> sourceList, List<TestDevice> targetList) {

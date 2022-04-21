@@ -29,6 +29,9 @@
       <div class="error"
            *ngIf="formSubmitted && environmentForm.controls.name.errors?.maxlength"
            [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'126'}"></div>
+      <div class="error"
+           *ngIf="environmentForm?.touched  && environmentForm.controls.name.hasError('whitespace')"
+           [textContent]="'form.validation.cannot_have_white_spaces' | translate: {FieldName:'Name'}"></div>
     </div>
     <div class="form-group">
       <app-description [formCtrlName]="environmentForm.controls.description"></app-description>

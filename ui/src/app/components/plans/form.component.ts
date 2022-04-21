@@ -91,7 +91,7 @@ export class FormComponent implements OnInit {
       description: new FormControl(this.testPlan.description, []),
       testPlanLabType: new FormControl(this.testPlan.testPlanLabType, [Validators.required]),
       matchBrowserVersion: new FormControl(this.testPlan.matchBrowserVersion, []),
-      environments: this.formBuilder.array([]),
+      testDevices: this.formBuilder.array([]),
       mailList: this.formBuilder.array([]),
       testPlanType: new FormControl(this.testPlan.testPlanType, [Validators.required])
     })

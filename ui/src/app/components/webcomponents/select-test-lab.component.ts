@@ -124,7 +124,7 @@ export class SelectTestLabComponent implements OnInit {
     });
   }
   get isNewTestPlan(){
-    return !this.selectTestLabForm.controls['environments'];
+    return !this.selectTestLabForm.controls['testDevices'];
   }
 
   get isTestsigmaLabInstalled() {

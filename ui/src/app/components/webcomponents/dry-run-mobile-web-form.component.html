@@ -4,7 +4,7 @@
   [formGroup]="mobileWebForm"
   [isDry]="true"></app-select-test-lab>
 <app-test-plan-device-form
-  *ngIf="isHybrid || (!isHybrid && authGuard.openSource.isEnabled)"
+  *ngIf="environmentFormGroup && (isHybrid || (!isHybrid && authGuard.openSource.isEnabled))"
   [version]="version"
   [formGroup]="environmentFormGroup"
   [testPlanLabType]="testPlanLabType"

@@ -27,7 +27,6 @@ import {Environment} from "../../models/environment.model";
 import {EnvironmentService} from "../../services/environment.service";
 import {ElementService} from "../../shared/services/element.service";
 import {AgentService} from "../../agents/services/agent.service";
-import {ApplicationPathType} from "../../enums/application-path-type.enum";
 import {TestCaseResultService} from "../../services/test-case-result.service";
 import {TestCaseResult} from "../../models/test-case-result.model";
 import {TestPlanResult} from "../../models/test-plan-result.model";
@@ -147,7 +146,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
       elementTimeOut: new FormControl(this.testPlan.elementTimeOut, [Validators.required]),
       environmentId: new FormControl(this.testPlan.environmentId, []),
       visualTestingEnabled: new FormControl(this.testPlan.visualTestingEnabled,[]),
-      environments: this.formBuilder.array([
+      testDevices: this.formBuilder.array([
         this.formBuilder.group({
           agentId : new FormControl(this.testPlan.testDevices[0].agentId, [this.requiredIfValidator(() => this.isHybrid)]),
           deviceId: new FormControl(this.testPlan.testDevices[0]?.deviceId, [this.requiredIfValidator(() => this.isHybrid && this.version?.workspace.isMobile)]),
@@ -193,6 +192,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
     this.dryRunSavedConfigurationService.findAll(this.version.workspace.workspaceType).subscribe(res => {
       this.configurations = res;
       this.noneConfiguration = new AdhocRunConfiguration();
+      this.setConfigurationId(null);
     }, (error) => {
       this.noneConfiguration = new AdhocRunConfiguration();
       this.setConfigurationId(null);
@@ -277,9 +277,10 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
     this.configuration = new AdhocRunConfiguration().deserializeDryRunForm(this.dryExecutionForm.getRawValue());
     console.log(this.dryExecutionForm.getRawValue());
     this.configuration.workspaceType = this.version.workspace.workspaceType;
-    let environment = this.dryExecutionForm.getRawValue().environments[0];
+    let environment = this.dryExecutionForm.getRawValue().testDevices[0];
+    console.log(environment);
     if(this.isHybrid){
-      this.agentService.findAll("id:"+ this.dryExecutionForm.getRawValue().environments[0].agentId).subscribe(res => {
+      this.agentService.findAll("id:"+ this.dryExecutionForm.getRawValue().testDevices[0].agentId).subscribe(res => {
         this.configuration.name = this.configuration.formattedHybridName(res.content[0].name, environment);
         this.openSaveConfigForm();
       });
@@ -325,7 +326,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
   }
 
   private normalizeFormValue() {
-    const environment = new DryTestDevice().deserialize(this.dryExecutionForm.getRawValue()['environments'][0]);
+    const environment = new DryTestDevice().deserialize(this.dryExecutionForm.getRawValue()['testDevices'][0]);
     this.testPlan = new DryTestPlan().deserialize(this.dryExecutionForm.getRawValue());
     this.testPlan.workspaceVersionId = this.version.id;
     this.testPlan.testCaseId = this.testCase.id;
@@ -353,9 +354,9 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
       environment.deviceId = null;
       environment.browser = null;
     }
-    if (this.dryExecutionForm.getRawValue()['environments'][0]) {
+    if (this.dryExecutionForm.getRawValue()['testDevices'][0]) {
       let capabilities = [];
-      this.dryExecutionForm.getRawValue()['environments'][0].capabilities.forEach(capability => {
+      this.dryExecutionForm.getRawValue()['testDevices'][0].capabilities.forEach(capability => {
         if (!!capability['name'] && !!capability['value'])
           capabilities.push(new Capability().deserialize(capability));
       })

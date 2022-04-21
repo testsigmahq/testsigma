@@ -94,14 +94,6 @@ export class GetStartedBaseComponent extends BaseComponent implements OnInit {
           articleLink: "https://testsigma.com/docs/continuous-integration/jenkins/",
           countKey: "ciCdCount",
           navigateToTry: "plans"
-        },
-        {
-          titleKey: "get_started.local_test_plans",
-          source: "",
-          descriptionKey: "get_started.local_test_plans_description",
-          articleLink: "https://support.testsigma.com/support/solutions/articles/32000019920-how-to-execute-web-application-tests-in-hybrid-model-",
-          countKey: "hybridExecutionCount",
-          navigateToTry: "plans/new"
         }]
     },
     {
@@ -170,14 +162,6 @@ export class GetStartedBaseComponent extends BaseComponent implements OnInit {
           articleLink: "https://testsigma.com/docs/continuous-integration/jenkins/",
           countKey: "ciCdCount",
           navigateToTry: "plans"
-        },
-        {
-          titleKey: "get_started.local_test_plans",
-          source: "",
-          descriptionKey: "get_started.local_test_plans_description",
-          articleLink: "https://support.testsigma.com/support/solutions/articles/32000023451-how-to-execute-android-web-application-tests-in-hybrid-model-",
-          countKey: "hybridExecutionCount",
-          navigateToTry: "plans/new"
         }]
     },
     {
@@ -246,14 +230,6 @@ export class GetStartedBaseComponent extends BaseComponent implements OnInit {
           articleLink: "https://testsigma.com/docs/continuous-integration/jenkins/",
           countKey: "ciCdCount",
           navigateToTry: "plans"
-        },
-        {
-          titleKey: "get_started.local_test_plans",
-          source: "",
-          descriptionKey: "get_started.local_test_plans_description",
-          articleLink: "https://support.testsigma.com/support/solutions/articles/32000023286-how-to-execute-native-android-application-tests-in-hybrid-model-",
-          countKey: "hybridExecutionCount",
-          navigateToTry: "plans/new"
         }]
     },
     {
@@ -322,14 +298,6 @@ export class GetStartedBaseComponent extends BaseComponent implements OnInit {
           articleLink: "https://testsigma.com/docs/continuous-integration/jenkins/",
           countKey: "ciCdCount",
           navigateToTry: "plans"
-        },
-        {
-          titleKey: "get_started.local_test_plans",
-          source: "",
-          descriptionKey: "get_started.local_test_plans_description",
-          articleLink: "https://support.testsigma.com/support/solutions/articles/32000023616-how-to-execute-native-ios-application-tests-in-hybrid-model-",
-          countKey: "hybridExecutionCount",
-          navigateToTry: "plans/new"
         }]
     }];
   public getStartedFeatureTypes = GetStartedFeatureType;

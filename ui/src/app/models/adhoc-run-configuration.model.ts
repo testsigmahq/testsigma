@@ -126,6 +126,7 @@ export class AdhocRunConfiguration extends Base implements PageObject {
   public browserVersion : String;
   public deviceName : String;
   public resolution : String;
+  public executionEnvironment : TestDevice;
 
 
   deserialize(input: any): this {
@@ -138,29 +139,29 @@ export class AdhocRunConfiguration extends Base implements PageObject {
     convert['elementTimeOut'] = input['elementTimeOut'];
     convert['environmentId'] = input['environmentId'];
     convert['type'] = input['testPlanLabType'];
-    convert['browser'] = input['environments'][0]['browser'];
-    convert['platformOsVersionId'] = input['environments'][0]['platformOsVersionId'];
-    convert['platformBrowserVersionId'] = input['environments'][0]['platformBrowserVersionId'];
-    convert['platformScreenResolutionId'] = input['environments'][0]['platformScreenResolutionId'];
-    convert['platformDeviceId'] = input['environments'][0]['platformDeviceId'];
+    convert['browser'] = input['testDevices'][0]['browser'];
+    convert['platformOsVersionId'] = input['testDevices'][0]['platformOsVersionId'];
+    convert['platformBrowserVersionId'] = input['testDevices'][0]['platformBrowserVersionId'];
+    convert['platformScreenResolutionId'] = input['testDevices'][0]['platformScreenResolutionId'];
+    convert['platformDeviceId'] = input['testDevices'][0]['platformDeviceId'];
     convert['captureScreenshots'] = input['screenshot'];
-    convert['desiredCapabilities'] = input['environments'][0]['capabilities'];
-    convert['agentId'] = input['environments'][0]['agentId'];
-    convert['deviceId'] = input['environments'][0]['deviceId'];
-    convert['appName'] = input['environments'][0]['appName'];
-    convert['udId'] = input['environments'][0]['udid'];
-    convert['appUploadId'] = input['environments'][0]['appUploadId'];
-    convert['appPackage'] = input['environments'][0]['appPackage'];
-    convert['appActivity'] = input['environments'][0]['appActivity'];
-    convert['appUrl']   = input['environments'][0]['appUrl'];
-    convert['appBundleId'] = input['environments'][0]['appBundleId'];
-    convert['appPathType'] = input['environments'][0]['appPathType'];
+    convert['desiredCapabilities'] = input['testDevices'][0]['capabilities'];
+    convert['agentId'] = input['testDevices'][0]['agentId'];
+    convert['deviceId'] = input['testDevices'][0]['deviceId'];
+    convert['appName'] = input['testDevices'][0]['appName'];
+    convert['udId'] = input['testDevices'][0]['udid'];
+    convert['appUploadId'] = input['testDevices'][0]['appUploadId'];
+    convert['appPackage'] = input['testDevices'][0]['appPackage'];
+    convert['appActivity'] = input['testDevices'][0]['appActivity'];
+    convert['appUrl']   = input['testDevices'][0]['appUrl'];
+    convert['appBundleId'] = input['testDevices'][0]['appBundleId'];
+    convert['appPathType'] = input['testDevices'][0]['appPathType'];
 
     return Object.assign(this, deserialize(AdhocRunConfiguration, convert));
   }
 
   equals(input: JSON) {
-    let envSettings = input['environments'][0];
+    let envSettings = input['testDevices'][0];
     let changed =
       this.pageTimeOut != input['pageTimeOut'] ||
       this.elementTimeOut != input['elementTimeOut'] ||
@@ -192,11 +193,7 @@ export class AdhocRunConfiguration extends Base implements PageObject {
     return !changed;
   }
 
-  executionEnvironment(): TestDevice {
-    let json = this.serialize();
-    json['capabilities'] = json['desiredCapabilities']
-    return new TestDevice().deserialize(json);
-  }
+
 
   formattedName(environment): String {
     let name = environment.platform + " (" + environment.osVersion + ") ";

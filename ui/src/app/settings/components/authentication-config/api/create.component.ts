@@ -38,8 +38,8 @@ export class CreateComponent extends BaseComponent implements OnInit {
     this.authConfig = this.options.authConfig;
     const reg = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
     this.updateForm = new FormGroup({
-      'key': new FormControl(null,  Validators.required),
-      'confirmKey':new FormControl(null, Validators.required),
+      'key': new FormControl(null,  [Validators.required, this.noWhitespaceValidator]),
+      'confirmKey':new FormControl(null, [Validators.required, this.noWhitespaceValidator]),
 
     })
   }

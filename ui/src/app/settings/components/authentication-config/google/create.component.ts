@@ -37,8 +37,8 @@ export class CreateComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.authConfig = this.options.authConfig;
     this.updateForm = new FormGroup({
-      'clientId': new FormControl(null,  Validators.required),
-      'clientSecret':new FormControl(null, Validators.required),
+      'clientId': new FormControl(null,  [Validators.required, this.noWhitespaceValidator]),
+      'clientSecret':new FormControl(null,[Validators.required, this.noWhitespaceValidator]),
 
     })
   }

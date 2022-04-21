@@ -23,6 +23,9 @@
             <button (click)="enableInputForm()" class="btn-clear border-0 pointer icon-btn fa-pencil-on-paper" [matTooltip]="'hint.message.common.edit' | translate" >
             </button>
           </div>
+          <div class="error"
+               *ngIf="nameFormControl?.hasError('whitespace') && !showNameInput "
+               [textContent]="'form.validation.cannot_have_white_spaces' | translate: {FieldName:'Profile Name'}"></div>
           <div class="ts-col-60" *ngIf="showNameInput">
             <input type="text" #name [formControl]="nameFormControl" class="form-control theme-border border-rds-4 py-8 w-70"/>
             <button (click)="saveProvisioningProfile()" *ngIf="provisioningProfile?.id && nameFormControl.valid" class="btn-clear border-0 ml-20 pointer fa-tick icon-btn" [matTooltip]="'hint.message.common.save' | translate" >

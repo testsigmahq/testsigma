@@ -27,7 +27,6 @@ import {Environment} from "../../models/environment.model";
 import {EnvironmentService} from "../../services/environment.service";
 import {ElementService} from "../../shared/services/element.service";
 import {AgentService} from "../../agents/services/agent.service";
-import {ApplicationPathType} from "../../enums/application-path-type.enum";
 import {TestCaseResultService} from "../../services/test-case-result.service";
 import {TestCaseResult} from "../../models/test-case-result.model";
 import {TestPlanResult} from "../../models/test-plan-result.model";
@@ -278,9 +277,10 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
     this.configuration = new AdhocRunConfiguration().deserializeDryRunForm(this.dryExecutionForm.getRawValue());
     console.log(this.dryExecutionForm.getRawValue());
     this.configuration.workspaceType = this.version.workspace.workspaceType;
-    let environment = this.dryExecutionForm.getRawValue().environments[0];
+    let environment = this.dryExecutionForm.getRawValue().testDevices[0];
+    console.log(environment);
     if(this.isHybrid){
-      this.agentService.findAll("id:"+ this.dryExecutionForm.getRawValue().environments[0].agentId).subscribe(res => {
+      this.agentService.findAll("id:"+ this.dryExecutionForm.getRawValue().testDevices[0].agentId).subscribe(res => {
         this.configuration.name = this.configuration.formattedHybridName(res.content[0].name, environment);
         this.openSaveConfigForm();
       });

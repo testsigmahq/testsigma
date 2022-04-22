@@ -476,7 +476,7 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
   }
 
   private fetchLinkedSuites() {
-    let query = "appVersionId:" + this.versionId + "&testcaseId:" + this.testCaseId;
+    let query = "workspaceId:" + this.versionId + "&testcaseId:" + this.testCaseId;
     this.linkedTestSuites = new InfiniteScrollableDataSource(this.testSuiteService, query, "name");
   }
 

@@ -43,7 +43,7 @@ export class FormComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.nameFormControl = new FormControl('', [Validators.required]);
+    this.nameFormControl = new FormControl('', [Validators.required, this.noWhitespaceValidator]);
     this.route.params.subscribe((params: Params) => {
       if(params.id){
         this.enableForm=false;

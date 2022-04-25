@@ -55,6 +55,8 @@ public class TestSuiteService extends XMLExportService<TestSuite> {
   private final ApplicationEventPublisher applicationEventPublisher;
   private final TestDeviceSuiteService suiteMappingService;
   private final TestSuiteMapper mapper;
+  private final TestSuiteRepository testSuiteRepository;
+
 
   public Page<TestSuite> findAll(Specification spec, Pageable pageble) {
     return repository.findAll(spec, pageble);
@@ -242,15 +244,17 @@ public class TestSuiteService extends XMLExportService<TestSuite> {
   }
 
   public void handlePreRequisiteChange(TestCase testCase) {
-    List<TestSuite> testSuites =repository.findAllByTestCaseId(testCase.getId());
-    testSuites.forEach(testSuite -> {
-      List<Long> testCaseIds = suiteTestCaseMappingRepository.findTestCaseIdsByTestSuiteId(testSuite.getId());
-      if (!testCaseIds.contains(testCase.getPreRequisite())) {
-        int indexOfCaseId = testCaseIds.indexOf(testCase.getId());
-        testCaseIds.add(indexOfCaseId, testCase.getPreRequisite());
+    Long testCaseId = testCase.getId();
+    Long prerequisiteId = testCase.getPreRequisite();
+    List<TestSuite> affectedTestSuites = this.testSuiteRepository.findAllByTestCaseIds(testCaseId);
+    affectedTestSuites.forEach(testSuite -> {
+      List<Long> testCaseIds = testSuite.getTestSuiteMappings().stream().map(SuiteTestCaseMapping::getTestCaseId).collect(Collectors.toList());
+      if(testCaseIds.indexOf(prerequisiteId) == -1) {
+        testCaseIds.add(testCaseIds.indexOf(testCaseId), prerequisiteId);
         testSuite.setTestCaseIds(testCaseIds);
-        handleTestCaseMappings(testSuite);
+        this.handleTestCaseMappings(testSuite);
       }
     });
   }
+
 }

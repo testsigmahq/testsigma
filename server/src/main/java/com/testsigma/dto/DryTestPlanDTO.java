@@ -14,6 +14,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import java.util.List;
+
 @Data
 @ToString
 @EqualsAndHashCode
@@ -34,4 +36,6 @@ public class DryTestPlanDTO {
   TestPlanLabType testPlanLabType;
   TestPlanType testPlanType;
   WorkspaceVersionDTO workspaceVersion;
+  List<TestDeviceDTO> testDevices;
+  boolean visualTestingEnabled;
 }

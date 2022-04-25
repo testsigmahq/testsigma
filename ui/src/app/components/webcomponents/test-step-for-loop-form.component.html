@@ -24,7 +24,7 @@
       <span
         class="bg-white rb-medium py-10"
         [translate]="'test_step.for_loop.start'"></span>
-      <div class="pr-15 pt-5" style="width: 80px">
+      <div class="pr-15 pt-5" style="width: 280px">
         <mat-form-field
           class="mat-select-custom inline-no-border sm w-100" appearance="fill">
           <mat-select
@@ -34,7 +34,7 @@
             <mat-option
               *ngFor="let startIndex of startArray"
               [value]="startIndex"
-              [textContent]="startIndex">
+              [textContent]="currentTestDataList.data[startIndex-1]?.name+' (#'+(startIndex)+')'">
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -44,7 +44,7 @@
       <span
         class="bg-white rb-medium py-10"
         [translate]="'test_step.for_loop.end'"></span>
-      <div class="pl-15 pt-5" style="width: 80px">
+      <div class="pl-15 pt-5" style="width: 280px">
         <mat-form-field
           class="mat-select-custom inline-no-border sm w-100" appearance="fill">
           <mat-select
@@ -53,7 +53,7 @@
             <mat-option
               *ngFor="let endIndex of endArray"
               [value]="endIndex"
-              [textContent]="endIndex">
+              [textContent]="currentTestDataList.data[endIndex-1]?.name+' (#'+(endIndex)+')'">
             </mat-option>
             <mat-option [value]="-1" [textContent]="'test_step.for_loop.option_end' | translate"></mat-option>
           </mat-select>

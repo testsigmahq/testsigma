@@ -18,6 +18,7 @@ import com.testsigma.exception.TestsigmaDatabaseException;
 import com.testsigma.mapper.TestPlanMapper;
 import com.testsigma.model.TestDevice;
 import com.testsigma.model.TestPlan;
+import com.testsigma.model.TestPlanResult;
 import com.testsigma.repository.TestPlanRepository;
 import com.testsigma.specification.SearchCriteria;
 import com.testsigma.specification.SearchOperation;
@@ -146,4 +147,5 @@ public class TestPlanService extends XMLExportService<TestPlan> {
     testPlanSpecificationsBuilder.params = params;
     return testPlanSpecificationsBuilder.build();
   }
+
 }

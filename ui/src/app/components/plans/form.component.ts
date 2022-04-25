@@ -60,19 +60,19 @@ export class FormComponent implements OnInit {
 
   fetchEnvironments() {
     this.executionEnvironmentService.findAll("testPlanId:"+this.testPlanId).subscribe(res => {
-      this.testPlan.environments = res.content;
+      this.testPlan.testDevices = res.content;
       this.fetchSuites();
     })
   }
 
   fetchSuites() {
-    this.testPlan.environments.forEach((environment: TestDevice, index: number) => {
+    this.testPlan.testDevices.forEach((environment: TestDevice, index: number) => {
       this.testSuiteService.findAll("testPlanId:" + environment.testPlanId).subscribe(res => {
         let page = new Pageable();
         page.pageSize = 500;
         this.testSuiteService.findAll("testPlanId:" + environment.testPlanId, undefined, page).subscribe(res => {
           environment.testSuites = res.content;
-          if (index == this.testPlan.environments.length - 1)
+          if (index == this.testPlan.testDevices.length - 1)
             this.initForControls();
         })
       })
@@ -91,7 +91,7 @@ export class FormComponent implements OnInit {
       description: new FormControl(this.testPlan.description, []),
       testPlanLabType: new FormControl(this.testPlan.testPlanLabType, [Validators.required]),
       matchBrowserVersion: new FormControl(this.testPlan.matchBrowserVersion, []),
-      environments: this.formBuilder.array([]),
+      testDevices: this.formBuilder.array([]),
       mailList: this.formBuilder.array([]),
       testPlanType: new FormControl(this.testPlan.testPlanType, [Validators.required])
     })

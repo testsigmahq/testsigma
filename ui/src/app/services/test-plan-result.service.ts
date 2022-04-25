@@ -30,6 +30,16 @@ export class TestPlanResultService implements DataSourceService {
     )
   }
 
+  public findFirstParentExecutionResult(childResultId : number) : Observable<TestPlanResult>{
+    let url = this.URLConstants.testPlanResultsUrl + "/get_first_parent_result/" + childResultId;
+    return this.http.get<TestPlanResult>(url, {
+      headers: this.httpHeaders.contentTypeApplication,
+    }).pipe(
+      map(data => new TestPlanResult().deserialize(data)),
+      catchError(() => throwError('Problem while fetching Execution Results'))
+    )
+  }
+
   public getRunningCounts(): Observable<Page<TestPlanResult>> {
     return this.http.get<Page<TestPlanResult>>(this.URLConstants.testPlanResultsUrl+"/running-counts", {
       headers: this.httpHeaders.contentTypeApplication

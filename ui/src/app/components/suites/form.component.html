@@ -30,10 +30,10 @@
              *ngIf="testSuiteForm?.controls?.name?.errors?.minlength"
              [textContent]="'form.validation.common.min_length' | translate: {FieldName:'Name' , min:'4'}"></div>
         <div class="error"
-             *ngIf="testSuiteForm?.touched && testSuiteForm?.controls?.name?.errors?.required && !testSuiteForm?.controls?.name?.errors?.minlength"
+             *ngIf="(testSuiteForm?.touched || formSubmitted) && testSuiteForm?.controls?.name?.errors?.required && !testSuiteForm?.controls?.name?.errors?.minlength"
              [textContent]="'form.validation.common.required' | translate: {FieldName:'Name'}"></div>
         <div class="error"
-             *ngIf="testSuiteForm?.touched  && testSuiteForm.controls.name.hasError('whitespace')"
+             *ngIf="(testSuiteForm?.touched || formSubmitted)  && testSuiteForm.controls.name.hasError('whitespace')"
              [textContent]="'form.validation.cannot_have_white_spaces' | translate: {FieldName:'Name'}"></div>
       </div>
       <div class="form-group">
@@ -76,7 +76,7 @@
           [innerHTML]="'test_suites.form.select_case.title' | translate"></div>
         <div
           class="form-group list-container ts-col-100 overflow-y-auto mb-20"
-          [class.hide]="!activeTestCases?.length" style="height: 300px;"
+          [class.hide]="!activeTestCases?.length" style="max-height: 200px;"
           cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListData]="testCases">
           <div
             class="p-10 theme-border-b align-items-center d-flex green-highlight list-view pointer" style="cursor: move"
@@ -106,6 +106,16 @@
             class="theme-btn-clear-default"
             (click)="addSuites()"
             [textContent]="'+ '+('test_suite.form.add_test_case' | translate)"></button>
+        </div>
+        <div class="form-group pb-0">
+          <div class="error left left-0 w-fit-content top-0 mt-8"
+               *ngIf="formSubmitted && activeTestCases?.length == 0"
+               [translate]="'test_suite.form.add_test_case_validation'"></div>
+        </div>
+        <div class="form-group pb-0">
+          <div class="error left left-0 w-fit-content top-0 mt-8"
+               *ngIf="formSubmitted && activeTestCases?.length == 0"
+               [translate]="'test_suite.form.add_test_case_validation'"></div>
         </div>
       </div>
       <div class="form-group">
@@ -155,10 +165,9 @@
       class="theme-btn-clear-default"
       (click)="goBack()"></a>
     <button
-      [disabled]="testSuiteForm?.invalid || !activeTestCases?.length || formSubmitted"
       class="theme-btn-primary"
       appAsyncBtn
-      [isLoading]="formSubmitted"
+      [isLoading]="saving && testSuiteForm.valid"
       [message]="'message.common.saving'"
       [textContent]="(testSuite?.id ?  'btn.common.update' : 'btn.common.create') | translate"
       (click)=" testSuite?.id ? update() : create()">

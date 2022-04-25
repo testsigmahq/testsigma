@@ -1,0 +1,49 @@
+<div class="theme-overlay-container">
+  <div class="theme-overlay-header">
+    <div
+      class="theme-overlay-title">
+      <i class="fa-warning text-danger fz-20"></i>
+      <span [translate]="'test_suite.prerequisite_change_warning'" class="pl-8 fz-16 rb-medium"></span>
+    </div>
+    <button
+      [mat-dialog-close]="false"
+      [matTooltip]="'hint.message.common.close' | translate"
+      class="theme-overlay-close"
+      type="button">
+    </button>
+  </div>
+
+  <div class="theme-overlay-content confirmation-model">
+    <div
+      [innerHTML]="modalData.description"
+      class="text-t-secondary pb-15 lh-2"></div>
+    <div class="list-content overflow-x-hidden  theme-only-items-scroll">
+      <cdk-virtual-scroll-viewport
+        class="list-container virtual-scroll-viewport"
+        itemSize="27"
+        style="max-height:261px;height:261px">
+        <div
+          *cdkVirtualFor="let testSuite of modalData.testSuites ; let index=index; let first=first"
+          [class.border-separator-t-1]="first"
+          class="list-view md-pm green-highlight">
+          <div [textContent]="testSuite.name" class="ts-col-90 text-truncate pr-20"></div>
+          <i class="fa-external-link-alt-solid pl-5 pointer"
+             (click)="openLinkedEntity(testSuite.id)"
+             target="_blank"
+          ></i>
+        </div>
+      </cdk-virtual-scroll-viewport>
+    </div>
+  </div>
+
+  <div class="theme-overlay-footer">
+    <button
+      [mat-dialog-close]="false"
+      [translate]="'btn.common.cancel'"
+      class="theme-btn-primary"></button>
+    <button
+      [mat-dialog-close]="true"
+      [translate]="'btn.common.yes_update'"
+      class="border-0 p-8 pl-12 pr-12 btn btn-delete text-white theme-btn-clear-default"></button>
+  </div>
+</div>

@@ -21,6 +21,7 @@ public interface TestStepScreenshotRepository extends JpaRepository<TestStepScre
   Optional<TestStepScreenshot> findByTestStepIdAndBrowserAndScreenResolution(Long testStepId, String browser, String screenResolution);
 
   @Query("SELECT testStepScreenshot FROM  TestStepScreenshot testStepScreenshot where testStepScreenshot.testStepId = :stepId  " +
+          "AND testStepScreenshot.entityType =:entityType "+
     "AND (:deviceName is null OR testStepScreenshot.deviceName = :deviceName) " +
     "AND (:testDataSetName is null OR testStepScreenshot.testDataSetName = :testDataSetName) " +
     "AND (:testDataId is null OR testStepScreenshot.testDataId = :testDataId)" +
@@ -29,9 +30,11 @@ public interface TestStepScreenshotRepository extends JpaRepository<TestStepScre
                                                            @Param("deviceName") String deviceName,
                                                            @Param("testDataSetName") String testDataSetName,
                                                            @Param("testDataId") Long testDataId,
-                                                           @Param("baseImageSize") String baseImageSize);
+                                                           @Param("baseImageSize") String baseImageSize,
+                                                           @Param("entityType")String entityType);
 
   @Query("SELECT testStepScreenshot FROM  TestStepScreenshot testStepScreenshot where testStepScreenshot.testStepId = :stepId  " +
+          "AND testStepScreenshot.entityType = :entityType " +
     "AND (:deviceName is null OR testStepScreenshot.deviceName = :deviceName) " +
     "AND (:browser is null OR testStepScreenshot.browser = :browser) AND (:screenResolution is null OR testStepScreenshot.screenResolution = :screenResolution) " +
     "AND (:testDataSetName is null OR testStepScreenshot.testDataSetName = :testDataSetName) " +
@@ -43,6 +46,7 @@ public interface TestStepScreenshotRepository extends JpaRepository<TestStepScre
                                                         @Param("screenResolution") String screenResolution,
                                                         @Param("testDataSetName") String testDataSetName,
                                                         @Param("testDataId") Long testDataId,
-                                                        @Param("baseImageSize") String baseImageSize);
+                                                        @Param("baseImageSize") String baseImageSize,
+                                                        @Param("entityType")String entityType);
 
 }

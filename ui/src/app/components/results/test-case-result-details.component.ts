@@ -148,8 +148,8 @@ export class TestCaseResultDetailsComponent extends BaseComponent implements OnI
 
   fetchTestCaseResult() {
     this.testCaseResultService.show(this.testCaseResultId).subscribe(res => {
-      if(res.childResult)
-        this.router.navigate(['/td/test_case_results', res.childResult.id]);
+      if(res.checkIfChildRunExists())
+        this.router.navigate(['/td/test_case_results', res.lastRun.id]);
       if (res.isDataDriven) {
         this.testCaseResultService.findAll("parentId:" + res.id).subscribe(res => {
           if(res.content[0])
@@ -161,7 +161,6 @@ export class TestCaseResultDetailsComponent extends BaseComponent implements OnI
           this.queueSizeErrorMessage = "Your current plan reached max allowed queue size. Please <a class= 'text-link text-decoration-none px-2' href='javascript:fcWidget.open()' style='text-decoration: none;'>" +
             "contact support</a> to upgrade for higher limits"
         }
-        console.log("TestCaseResult", this.testCaseResult);
         this.isTestCaseFetchingCompleted = true;
         this.handleAutoRefresh();
         this.fetchEnvironment();
@@ -237,22 +236,19 @@ export class TestCaseResultDetailsComponent extends BaseComponent implements OnI
   startExecution(execution: DryTestPlan) {
     this.startSync = true;
     let dryTestPlan = new DryTestPlan().deserialize(execution.serialize());
-    this.executionEnvironmentService.findAll("testPlanId:"+execution.id).subscribe((res)=> {
-      dryTestPlan.environments = res.content;
-      dryTestPlan.testCaseId = this.testCaseResult.testCaseId;
-      delete dryTestPlan.id;
-      this.dryTestPlanService.create(dryTestPlan).subscribe((res: TestPlanResult) => {
-        this.startSync = false;
-        this.translate.get("execution.initiate.success").subscribe((message: string) => {
-          this.showNotification(NotificationType.Success, message);
-          this.testCaseResultService.findAll("testPlanResultId:"+res.id+",iteration:null", "id,desc").subscribe((res: Page<TestCaseResult>) => {
-            this.router.navigate(['/td', 'test_case_results', res?.content[0]?.id]);
-          });
-        })
-      }, error => {
-        this.startSync = false;
-        this.showAPIError(error, this.translate.instant("execution.initiate.failure"))
+    dryTestPlan.testCaseId = this.testCaseResult.testCaseId;
+    delete dryTestPlan.id;
+    this.dryTestPlanService.create(dryTestPlan).subscribe((res: TestPlanResult) => {
+      this.startSync = false;
+      this.translate.get("execution.initiate.success").subscribe((message: string) => {
+        this.showNotification(NotificationType.Success, message);
+        this.testCaseResultService.findAll("testPlanResultId:" + res.id + ",iteration:null", "id,desc").subscribe((res: Page<TestCaseResult>) => {
+          this.router.navigate(['/td', 'test_case_results', res?.content[0]?.id]);
+        });
       })
+    }, error => {
+      this.startSync = false;
+      this.showAPIError(error, this.translate.instant("execution.initiate.failure"))
     })
   }
 

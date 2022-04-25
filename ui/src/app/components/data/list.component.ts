@@ -164,10 +164,10 @@ export class ListComponent extends BaseComponent implements OnInit {
 
   public fetchLinkedCases(id) {
     let testCases: InfiniteScrollableDataSource;
-    testCases = new InfiniteScrollableDataSource(this.testCaseService, "workspaceVersionId:" + this.versionId + ",deleted:false,testDataId:" + id);
+    testCases = new InfiniteScrollableDataSource(this.testCaseService, "workspaceVersionId:" + this.versionId + ",testDataId:" + id);
 
     let testCasesWithProfileInForLoop :InfiniteScrollableDataSource;
-    testCasesWithProfileInForLoop = new InfiniteScrollableDataSource(this.testCaseService, "workspaceVersionId:" + this.versionId + ",deleted:false,forLoopTestDataId:" + id);
+    testCasesWithProfileInForLoop = new InfiniteScrollableDataSource(this.testCaseService, "workspaceVersionId:" + this.versionId + ",forLoopTestDataId:" + id);
 
     waitTillRequestResponds();
     let _this = this;

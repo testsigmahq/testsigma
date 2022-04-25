@@ -57,6 +57,9 @@
         <div class="error left"
              *ngIf="formSubmitted && testDataForm.controls.name.errors?.maxlength"
              [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'126'}"></div>
+        <div class="error"
+             *ngIf="testDataForm?.touched  && testDataForm.controls.name.hasError('whitespace')"
+             [textContent]="'form.validation.cannot_have_white_spaces' | translate: {FieldName:'Name'}"></div>
       </div>
       <app-test-data-grid
         class="add-data-grid"

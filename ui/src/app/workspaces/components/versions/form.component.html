@@ -26,13 +26,13 @@
       class="ts-form overflow-y-auto px-30 pb-30 h-100-91">
       <div class="form-group">
         <label class="label fz-14 rb-medium" [translate]="'version.form.label.version_name'"></label>
-        <input type="text" class="form-control mt-10" [formControlName]="['versionName']"/>
+        <input type="text" class="form-control mt-10" [formControlName]="['versionName']"  required/>
         <div
-          class="error mt-30" *ngIf="versionForm.controls.versionName.errors?.required && submitted"
-          [textContent]="'form.validation.common.required' | translate:{FieldName: 'Name'}"></div>
-        <div
-          class="error mt-30" *ngIf="versionForm.controls.versionName.errors?.minLength && submitted"
+          class="error" *ngIf="versionForm?.controls.versionName.errors?.minLength"
           [textContent]="'form.validation.common.min_length' | translate: {FieldName:'Name' , min:'4'}"></div>
+        <div class="error"
+             *ngIf="(versionForm?.touched || submitted)  && versionForm?.controls?.versionName?.hasError('whitespace')"
+             [textContent]="'form.validation.cannot_have_white_spaces' | translate: {FieldName:'Version Name'}"></div>
       </div>
       <div class="form-group mb-10">
         <app-description [formCtrlName]="versionForm.controls.description"></app-description>

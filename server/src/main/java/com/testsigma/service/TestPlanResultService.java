@@ -196,4 +196,11 @@ public class TestPlanResultService {
     return this.testPlanResultRepository.countOngoingParallelTestSuiteResultsGroupByTestPlanResult(
             Collections.singletonList(StatusConstant.STATUS_QUEUED));
   }
+
+  public TestPlanResult getFirstParentResult(TestPlanResult childResult){
+    if(childResult.getParentResult() == null)
+      return childResult;
+    return getFirstParentResult(childResult.getParentResult());
+  }
+
 }

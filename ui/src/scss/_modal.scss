@@ -460,7 +460,7 @@
 }
 
 .delete-confirm {
-  delete-dialog, app-warning-modal {
+  delete-dialog, app-warning-modal, app-save-work-warning {
     @extend .p-30, .d-block;
     .mat-dialog-content {
       @extend .p-0;

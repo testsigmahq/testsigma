@@ -53,8 +53,8 @@ public class TestCaseResultService {
     return this.testCaseResultRepository.findAll(spec, pageable);
   }
 
-  public List<TestCaseResult> findAllBytestPlanResultId(Long testPlanResultId) {
-    return this.testCaseResultRepository.findAllBytestPlanResultId(testPlanResultId);
+  public List<TestCaseResult> findAllByTestPlanResultId(Long testPlanResultId) {
+    return this.testCaseResultRepository.findAllByTestPlanResultId(testPlanResultId);
   }
 
   public Timestamp findMinTimeStampByEnvironmentResultId(Long environmentResultId) {
@@ -317,5 +317,12 @@ public class TestCaseResultService {
     TestCaseResult testCaseResult = find(testCaseResultRequest.getId());
     testCaseResultMapper.merge(testCaseResultRequest, testCaseResult);
     update(testCaseResult);
+  }
+
+  public TestCaseResult getLastReRunResult(TestCaseResult parentRunResult){
+    if(parentRunResult.getChildResult() == null)
+      return parentRunResult;
+    return getLastReRunResult(parentRunResult.getChildResult());
+
   }
 }

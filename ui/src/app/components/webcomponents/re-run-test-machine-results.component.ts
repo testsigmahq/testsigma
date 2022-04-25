@@ -18,7 +18,7 @@ export class ReRunTestMachineResultsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let query = "childRunId:"+this.testPlanResult.childResult.id;
+    let query = "childRunId:"+this.testPlanResult.lastRun.id;
     this.testMachineResults = new InfiniteScrollableDataSource(this.environmentResultService, query);
   }
 

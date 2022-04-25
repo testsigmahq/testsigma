@@ -177,7 +177,8 @@ import {NaturalTextActionsService} from "../../services/natural-text-actions.ser
               <a
                 *ngIf="testStepResult.stepResultScreenshotComparison"
                 [matTooltip]="(testStepResult.isVisualFailed ? 'visual_test.hint.differences' : 'visual_test.hint.no_differences') | translate"
-                class="fa-camera action-icon py-5 ml-5"
+                class="
+                fa-camera action-icon py-5 ml-5"
                 (click)="openViComparison(testStepResult)"
                 [class.result-status-text-1]="testStepResult.isVisualFailed"
                 [class.result-status-text-0]="!testStepResult.isVisualFailed">
@@ -297,7 +298,7 @@ export class TestStepResultListItemComponent extends TestStepListItemComponent i
       height: '100vh',
       position: {top: '0', left: '0', right: '0', bottom: '0'},
       data: {
-        screenshotComparisonId: testStepResult.stepResultScreenshotComparison.id,
+        screenshotComparisonId: testStepResult?.stepResultScreenshotComparison?.id,
         filteredTestStepResult: this.filteredTestStepResult
       },
       panelClass: ['mat-dialog', 'full-width', 'rds-none']

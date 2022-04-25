@@ -59,8 +59,8 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
   public selectAll: Boolean;
   public selectedElements = [];
   public sortByColumns = ["name", "createdDate", "updatedDate"];
-  public direction = ",asc";
-  public sortedBy = "name";
+  public direction = ",desc";
+  public sortedBy = "createdDate";
   public tooltipPositionLeft: TooltipPosition = 'left';
 
   constructor(
@@ -221,7 +221,7 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
 
   checkForLinkedTestCases(element?) {
     let testCases: InfiniteScrollableDataSource;
-    let query = "workspaceVersionId:" + this.versionId + ",deleted:false,element:" + encodeURI(element.name)
+    let query = "workspaceVersionId:" + this.versionId + ",element:" + encodeURI(element.name)
     query = this.byPassSpecialCharacters(query);
     testCases = new InfiniteScrollableDataSource(this.testCaseService,query);
 

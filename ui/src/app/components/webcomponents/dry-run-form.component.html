@@ -117,9 +117,9 @@
       [environment]="environment"
       [version]="version"></app-dry-run-web-form>
     <app-desired-capabilities
-      *ngIf="dryExecutionForm?.controls['environments']?.controls[0] && (isHybrid || (!isHybrid && authGuard.openSource.isEnabled))"
-      [capabilities]="this.testPlan?.environments[0]?.capabilities"
-      [formGroup]="dryExecutionForm?.controls['environments']?.controls[0]"></app-desired-capabilities>
+      *ngIf="dryExecutionForm?.controls['testDevices']?.controls[0] && (isHybrid || (!isHybrid && authGuard.openSource.isEnabled))"
+      [capabilities]="this.testPlan?.testDevices[0]?.capabilities"
+      [formGroup]="dryExecutionForm?.controls['testDevices']?.controls[0]"></app-desired-capabilities>
   </div>
 
   <!--Footer actions-->

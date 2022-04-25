@@ -11,7 +11,7 @@ import {ResultConstant} from "../../enums/result-constant.enum";
 import {AuthenticationGuard} from "../guards/authentication.guard";
 import {NotificationsService, NotificationType} from 'angular2-notifications';
 import {TranslateService} from '@ngx-translate/core';
-import {Validators} from '@angular/forms';
+import {FormControl, Validators} from '@angular/forms';
 import {ToastrService} from "ngx-toastr";
 import {ProgressAnimationType} from "ngx-toastr/toastr/toastr-config";
 
@@ -164,5 +164,11 @@ export class BaseComponent implements OnInit {
       .replace("ts_lesser_than", "<")
       .replace("ts_at_sign", "@")
       .replace("ts_dollar_sign","$") ;
+  }
+
+  public noWhitespaceValidator(control: FormControl) {
+    const isWhitespace = (control.value || '').trim().length === 0;
+    const isValid = !isWhitespace;
+    return isValid ? null : { 'whitespace': true };
   }
 }

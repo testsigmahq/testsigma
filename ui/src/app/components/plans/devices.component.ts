@@ -125,12 +125,12 @@ export class DevicesComponent extends BaseComponent implements OnInit {
 
   deleteEnvironment(environment) {
     this.executionEnvironments['cachedItems'].splice(this.executionEnvironments['cachedItems'].indexOf(environment), 1);
-    this.testPlan.environments = <TestDevice[]>this.executionEnvironments['cachedItems'];
+    this.testPlan.testDevices = <TestDevice[]>this.executionEnvironments['cachedItems'];
     this.updateEnvironments(true);
   }
 
   updateEnvironments(isDelete?) {
-    this.testPlan.environments = <TestDevice[]>this.executionEnvironments['cachedItems'];
+    this.testPlan.testDevices = <TestDevice[]>this.executionEnvironments['cachedItems'];
     let fieldName = this.testPlan.workspaceVersion.workspace.isWeb ?'Test Machine':'Test Device';
     let typeOfOperation;
     if (isDelete){

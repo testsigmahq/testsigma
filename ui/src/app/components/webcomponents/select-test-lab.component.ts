@@ -78,7 +78,6 @@ import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
         <div style="font-size:medium;font-weight: 400;" class="ml-5">
             <span [innerHTML]="'test_plan.testsigmalab.requires_access_to_cloud' | translate"></span>
             <a (click)="closeDialog()" [innerHTML]="'message.common.click_here' | translate" [routerLink]="['/settings/testsigma']"></a>
-            <br/><br/><span> to register. </span>
             <a [innerHTML]="'test_plan.testsigmalab.learn_more' | translate"
                href="https://testsigma.com/docs/getting-started/testsigma-community-cloud/" target="_blank"></a>
             <span [innerHTML]="'test_plan.testsigmalab.communityEdition' | translate"></span>
@@ -89,8 +88,8 @@ import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
         <span [innerHTML]="'dry_test_plan.testsigamlab.requires_access_to_cloud' | translate"></span>
           <br><br>
           <span>
-            <a (click)="closeDialog()" [innerHTML]="'message.common.click_here' | translate" [routerLink]="['/settings/testsigma']"></a>
-            <span [innerHTML]="'test_plan.testsigmalab.register' | translate"></span>
+            <a (click)="closeDialog()" [innerHTML]="'message.common.click_here' | translate" [routerLink]="['/settings/storage']"></a>
+            <span [innerHTML]="'test_plan.testsigmalab.enable' | translate"></span>
           </span>
         </div>
       </div>
@@ -125,7 +124,7 @@ export class SelectTestLabComponent implements OnInit {
     });
   }
   get isNewTestPlan(){
-    return !this.selectTestLabForm.controls['environments'];
+    return !this.selectTestLabForm.controls['testDevices'];
   }
 
   get isTestsigmaLabInstalled() {

@@ -52,41 +52,57 @@ export class TestPlanResult extends ResultBase implements PageObject {
   public totalRunningCount:number;
   @serializable
   public totalQueuedCount:number;
+  public lastChildResult: TestPlanResult;
 
   deserialize(input: any): this {
     return Object.assign(this, deserialize(TestPlanResult, input));
   }
 
   get canReRun(){
-    return !this.childResult && (this.isFailed || this.isAborted
-        || (this.isNotExecuted && (this.notExecutedCount != this.totalCount)) || (this.isStopped && (this.stoppedCount != this.totalCount)));
+   return (this.lastRun.status == StatusConstant.STATUS_COMPLETED)
+    && (this.isFailed || this.isAborted
+      || (this.isNotExecuted && (this.notExecutedCount != this.totalCount))
+      || (this.isStopped && (this.stoppedCount != this.totalCount)));
   }
 
   consolidateCount(result?: TestPlanResult | TestDeviceResult | TestSuiteResult) {
     if(!Boolean(result)){
       result = this;
     }
-    if (result.childResult){
-      result.message = result.childResult.message;
-      result.result = result.childResult.result;
-      result.failedCount = result.childResult.failedCount;
-      result.abortedCount = result.childResult.abortedCount;
-      result.stoppedCount = result.childResult.stoppedCount;
-      result.notExecutedCount = result.childResult.notExecutedCount;
-      result.queuedCount = result.childResult.queuedCount;
-      if( result instanceof TestPlanResult && result.childResult.reRunType == ReRunType.ONLY_FAILED_TESTS ||
-        result instanceof TestDeviceResult && result.testPlanResult.childResult.reRunType == ReRunType.ONLY_FAILED_TESTS ||
-        result instanceof TestSuiteResult && result.testDeviceResult.testPlanResult.childResult.reRunType == ReRunType.ONLY_FAILED_TESTS){
-        result.passedCount += result.childResult.passedCount;
+
+    if (result.lastRun){
+      result.message = result.lastRun.message;
+      result.result = result.lastRun.result;
+      result.failedCount = result.lastRun.failedCount;
+      result.abortedCount = result.lastRun.abortedCount;
+      result.stoppedCount = result.lastRun.stoppedCount;
+      result.notExecutedCount = result.lastRun.notExecutedCount;
+      result.queuedCount = result.lastRun.queuedCount;
+      if( result instanceof TestPlanResult && result.lastRun.reRunType == ReRunType.ONLY_FAILED_TESTS ||
+        result instanceof TestDeviceResult && result.lastRun.reRunType == ReRunType.ONLY_FAILED_TESTS ||
+        ( result instanceof TestSuiteResult &&
+          result.testDeviceResult?.lastRun?.reRunType == ReRunType.ONLY_FAILED_TESTS)){
+        result.passedCount += result.lastRun.passedCount;
       } else {
-        result.passedCount = result.childResult.passedCount;
+        result.passedCount = result.lastRun.passedCount;
       }
-    }
+      }
   }
 
   consolidateListCount(res: Page<TestDeviceResult>|Page<TestSuiteResult>) {
     res.content.forEach( result =>{
       this.consolidateCount(result);
     });
+  }
+
+  get lastRun(){
+    if(this.lastChildResult == null)
+      this.lastChildResult = this.getLastChildResult(this);
+    return this.lastChildResult;  }
+
+  getLastChildResult(testPlanResult: TestPlanResult){
+    if(testPlanResult.childResult == null)
+      return testPlanResult
+    return this.getLastChildResult(testPlanResult.childResult);
   }
 }

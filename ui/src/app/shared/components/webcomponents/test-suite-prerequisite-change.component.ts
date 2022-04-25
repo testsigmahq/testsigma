@@ -4,11 +4,11 @@ import {TestPlan} from "../../../models/test-plan.model";
 
 @Component({
   selector: 'app-prerequisite-change',
-  templateUrl: './prerequisite-change.component.html',
+  templateUrl: './test-suite-prerequisite-change.component.html',
   styles: [
   ]
 })
-export class PrerequisiteChangeComponent{
+export class TestSuitePrerequisiteChangeComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public modalData: {
@@ -19,4 +19,8 @@ export class PrerequisiteChangeComponent{
   }
 
 
+  openLinkedEntity(id: number) {
+    let entityUrl = "/ui/td/plans/"+ id +"/suites";
+    window.open(window.location.origin + entityUrl, "_blank");
+  }
 }

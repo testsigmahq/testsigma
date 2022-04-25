@@ -27,7 +27,6 @@ import {Environment} from "../../models/environment.model";
 import {EnvironmentService} from "../../services/environment.service";
 import {ElementService} from "../../shared/services/element.service";
 import {AgentService} from "../../agents/services/agent.service";
-import {ApplicationPathType} from "../../enums/application-path-type.enum";
 import {TestCaseResultService} from "../../services/test-case-result.service";
 import {TestCaseResult} from "../../models/test-case-result.model";
 import {TestPlanResult} from "../../models/test-plan-result.model";
@@ -146,14 +145,15 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
       pageTimeOut: new FormControl(this.testPlan.pageTimeOut, [Validators.required]),
       elementTimeOut: new FormControl(this.testPlan.elementTimeOut, [Validators.required]),
       environmentId: new FormControl(this.testPlan.environmentId, []),
-      environments: this.formBuilder.array([
+      visualTestingEnabled: new FormControl(this.testPlan.visualTestingEnabled,[]),
+      testDevices: this.formBuilder.array([
         this.formBuilder.group({
-          agentId : new FormControl(this.testPlan.environments[0].agentId, [this.requiredIfValidator(() => this.isHybrid)]),
-          deviceId: new FormControl(this.testPlan.environments[0]?.deviceId, [this.requiredIfValidator(() => this.isHybrid && this.version?.workspace.isMobile)]),
-          platformOsVersionId :new FormControl(this.testPlan.environments[0].platformOsVersionId,  [this.requiredIfValidator(() => !this.isRest && !this.isHybrid)]),
-          platformScreenResolutionId : new FormControl(this.testPlan.environments[0].platformScreenResolutionId, [this.requiredIfValidator(() => this.version?.workspace.isWeb && !this.isHybrid)]),
-          platformBrowserVersionId :new FormControl(this.testPlan.environments[0].platformBrowserVersionId, [this.requiredIfValidator(() => !this.version?.workspace.isMobile && !this.isRest && !this.isHybrid)]),
-          platformDeviceId : new FormControl(this.testPlan.environments[0].platformDeviceId,  [this.requiredIfValidator(() => !this.version?.workspace.isWeb && !this.isRest && !this.isHybrid)])
+          agentId : new FormControl(this.testPlan.testDevices[0].agentId, [this.requiredIfValidator(() => this.isHybrid)]),
+          deviceId: new FormControl(this.testPlan.testDevices[0]?.deviceId, [this.requiredIfValidator(() => this.isHybrid && this.version?.workspace.isMobile)]),
+          platformOsVersionId :new FormControl(this.testPlan.testDevices[0].platformOsVersionId,  [this.requiredIfValidator(() => !this.isRest && !this.isHybrid)]),
+          platformScreenResolutionId : new FormControl(this.testPlan.testDevices[0].platformScreenResolutionId, [this.requiredIfValidator(() => this.version?.workspace.isWeb && !this.isHybrid)]),
+          platformBrowserVersionId :new FormControl(this.testPlan.testDevices[0].platformBrowserVersionId, [this.requiredIfValidator(() => !this.version?.workspace.isMobile && !this.isRest && !this.isHybrid)]),
+          platformDeviceId : new FormControl(this.testPlan.testDevices[0].platformDeviceId,  [this.requiredIfValidator(() => !this.version?.workspace.isWeb && !this.isRest && !this.isHybrid)])
         })
       ])
     })
@@ -192,6 +192,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
     this.dryRunSavedConfigurationService.findAll(this.version.workspace.workspaceType).subscribe(res => {
       this.configurations = res;
       this.noneConfiguration = new AdhocRunConfiguration();
+      this.setConfigurationId(null);
     }, (error) => {
       this.noneConfiguration = new AdhocRunConfiguration();
       this.setConfigurationId(null);
@@ -265,7 +266,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
     executionEnvironment.agentId = configuration.agentId;
     executionEnvironment.deviceId = configuration.deviceId;
     executionEnvironment.settings = new TestDeviceSettings();
-    this.testPlan.environments = [executionEnvironment];
+    this.testPlan.testDevices = [executionEnvironment];
     this.environment = configuration.environment;
     console.log("Execution Environment", this.testPlan, this.environment);
     this.dryExecutionForm = undefined;
@@ -276,9 +277,10 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
     this.configuration = new AdhocRunConfiguration().deserializeDryRunForm(this.dryExecutionForm.getRawValue());
     console.log(this.dryExecutionForm.getRawValue());
     this.configuration.workspaceType = this.version.workspace.workspaceType;
-    let environment = this.dryExecutionForm.getRawValue().environments[0];
+    let environment = this.dryExecutionForm.getRawValue().testDevices[0];
+    console.log(environment);
     if(this.isHybrid){
-      this.agentService.findAll("id:"+ this.dryExecutionForm.getRawValue().environments[0].agentId).subscribe(res => {
+      this.agentService.findAll("id:"+ this.dryExecutionForm.getRawValue().testDevices[0].agentId).subscribe(res => {
         this.configuration.name = this.configuration.formattedHybridName(res.content[0].name, environment);
         this.openSaveConfigForm();
       });
@@ -324,12 +326,12 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
   }
 
   private normalizeFormValue() {
-    const environment = new DryTestDevice().deserialize(this.dryExecutionForm.getRawValue()['environments'][0]);
+    const environment = new DryTestDevice().deserialize(this.dryExecutionForm.getRawValue()['testDevices'][0]);
     this.testPlan = new DryTestPlan().deserialize(this.dryExecutionForm.getRawValue());
     this.testPlan.workspaceVersionId = this.version.id;
     this.testPlan.testCaseId = this.testCase.id;
     environment.matchBrowserVersion = this.testPlan.matchBrowserVersion;
-    this.testPlan.environments = [environment];
+    this.testPlan.testDevices = [environment];
     if(!environment.isAppUploadType) {
       environment.appUploadId = null;
     }
@@ -352,9 +354,9 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
       environment.deviceId = null;
       environment.browser = null;
     }
-    if (this.dryExecutionForm.getRawValue()['environments'][0]) {
+    if (this.dryExecutionForm.getRawValue()['testDevices'][0]) {
       let capabilities = [];
-      this.dryExecutionForm.getRawValue()['environments'][0].capabilities.forEach(capability => {
+      this.dryExecutionForm.getRawValue()['testDevices'][0].capabilities.forEach(capability => {
         if (!!capability['name'] && !!capability['value'])
           capabilities.push(new Capability().deserialize(capability));
       })
@@ -373,7 +375,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
     this.testPlan.testCaseId = this.testCase.id;
     let environment = new DryTestDevice();
     environment.settings = new TestDeviceSettings();
-    this.testPlan.environments = [environment];
+    this.testPlan.testDevices = [environment];
   }
 
   private fetchEmptyElements() {

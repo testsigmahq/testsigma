@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnInit, Optional, Output} from '@angular/core';
 import {Upload} from "../../models/upload.model";
 import {UploadService} from "../../services/upload.service";
 import {FormControl, FormGroup, Validators} from '@angular/forms';
@@ -23,6 +23,7 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
   @Input('version') version: WorkspaceVersion;
   public uploadedFileObject;
   @Input('upload') upload: Upload;
+  @Optional() @Input('inline') inline?: Boolean;
   @Output('onUpload') uploadCallBack = new EventEmitter<any>();
   public uploadTypes = [UploadType.Attachment];
   public uploadForm: FormGroup;
@@ -56,7 +57,7 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
 
   private initiateForm(): void {
     this.uploadForm = new FormGroup({
-      name: new FormControl(this.upload.name, [Validators.required, Validators.minLength(4)]),
+      name: new FormControl(this.upload.name, [Validators.required, Validators.minLength(4), this.noWhitespaceValidator]),
       version: new FormControl(undefined, [this.requiredIfValidator(() => this.uploadedFileObject && this.upload.id)])    });
   }
 

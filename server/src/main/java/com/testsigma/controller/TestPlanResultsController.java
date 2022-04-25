@@ -27,6 +27,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -156,4 +157,14 @@ public class TestPlanResultsController {
   public void destroy(@PathVariable("id") Long id) throws ResourceNotFoundException {
     testPlanResultService.destroy(id);
   }
+
+  @GetMapping(value = "/get_first_parent_result/{executionId}")
+  @PreAuthorize("hasPermission('RESULTS','READ')")
+  public TestPlanResultDTO getFirstParentResult(@PathVariable(value = "executionId") Long executionId)
+          throws ResourceNotFoundException {
+    TestPlanResult childExecutionResult = testPlanResultService.find(executionId);
+    TestPlanResult firstParentResult = testPlanResultService.getFirstParentResult(childExecutionResult);
+    return testPlanResultMapper.mapTo(firstParentResult);
+  }
+
 }

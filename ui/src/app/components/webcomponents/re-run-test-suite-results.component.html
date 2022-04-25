@@ -37,12 +37,12 @@
               class="ml-auto"
               [width]="24"
               [height]="24"
-              [resultEntity]="suiteResult.childResult"></app-result-pie-chart-column>
+              [resultEntity]="suiteResult?.lastRun"></app-result-pie-chart-column>
             <div class="text-right text-t-secondary fz-12 ml-auto mr-10">
-              <div [textContent]="suiteResult.childResult.startTime | date:'MMM d, h:mm:ss'"></div>
+              <div [textContent]="suiteResult?.lastRun.startTime | date:'MMM d, h:mm:ss'"></div>
               <div class="pt-4">
                 <app-duration-format
-                  [duration]="suiteResult.childResult.duration"></app-duration-format>
+                  [duration]="suiteResult?.lastRun.duration"></app-duration-format>
               </div>
             </div>
           </div>

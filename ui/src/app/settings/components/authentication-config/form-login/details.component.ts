@@ -46,8 +46,8 @@ export class DetailsComponent extends BaseComponent implements OnInit {
     this.coping = new Map<string, boolean>();
     this.authConfig=this.options.authConfig;
     this.updateForm = new FormGroup({
-      'username': new FormControl(this.authConfig?.userName,  Validators.required),
-      'password':new FormControl(this.authConfig?.password, Validators.required)
+      'username': new FormControl(this.authConfig?.userName,  [Validators.required, this.noWhitespaceValidator]),
+      'password':new FormControl(this.authConfig?.password, [Validators.required, this.noWhitespaceValidator])
     })
   }
 

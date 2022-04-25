@@ -29,6 +29,10 @@ import {BaseComponent} from "../../shared/components/base.component";
 import {PromptModalComponent} from "../../shared/components/webcomponents/prompt-modal.component";
 import {ConfirmationModalComponent} from "../../shared/components/webcomponents/confirmation-modal.component";
 import {ToastrService} from "ngx-toastr";
+import {list} from "serializr";
+import {TestCasePrerequisiteChangeComponent} from "../webcomponents/test-case-prerequisite-change.component";
+import {InfiniteScrollableDataSource} from "../../data-sources/infinite-scrollable-data-source";
+import {TestSuiteService} from "../../services/test-suite.service";
 
 @Component({
   selector: 'app-test-case-form',
@@ -58,6 +62,10 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
   private originalTestDataId: number = 0;
   private testDataCanBeChanged: boolean = false;
   public associatedParametersPopupOpen: boolean = false;
+  private oldPreRequisite: number;
+  private confirmedStatusChange: boolean = false;
+  private linkedTestSuites: InfiniteScrollableDataSource;
+  private oldStatus: TestCaseStatus;
 
   constructor(
     private matModal: MatDialog,
@@ -75,6 +83,7 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
     public tagService: TestCaseTagService,
     private workspaceVersionService: WorkspaceVersionService,
     private testDataService: TestDataService,
+    private testSuiteService: TestSuiteService,
     public userPreferenceService: UserPreferenceService,
     private dialog: MatDialog,
   ) {
@@ -158,6 +167,7 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
       this.testCase = res;
       if(this.originalTestDataId == 0)
         this.originalTestDataId = res.testDataId;
+      this.oldPreRequisite = res.preRequisite;
       this.isStepGroup = this.testCase.isStepGroup;
       this.versionId = this.testCase.workspaceVersionId;
       this.pushToParent(this.route, {...this.route.snapshot.params, ...{versionId: this.versionId}});
@@ -215,7 +225,7 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
     }
   }
 
-  updateTestCase() {
+  updateTestCase(list?:InfiniteScrollableDataSource) {
     this.testCase.description = this.testCaseForm.controls.description.value;
     this.formSubmitted = true;
     if (this.testCaseForm.invalid) {
@@ -228,21 +238,36 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
         delete this.testCase.testDataId;
       }
       let fieldName = this.isStepGroupUrl ? 'Step Group' : 'Test Case';
-      this.testCaseService.update(this.testCase).subscribe(
-        (testcase) => {
-          this.saving = false;
+     if(this.preRequisiteChanged()) {
+        this.fetchLinkedSuites();
+        this.setPreRequisiteAffectsTestSuites(fieldName)
+      } else
+        this.updateAfterValidation(fieldName, list);
+    }
+  }
+
+  private updateAfterValidation(fieldName, list?:any) {
+    this.testCaseService.update(this.testCase).subscribe(
+      (testcase) => {
+        this.saving = false;
+        if(this.oldPreRequisite != this.testCase.preRequisite && Boolean(list)){
+          let msg =
+            this.translate.instant('test_case.prerequisite.update.success', {CaseName: this.testCase.name,
+              suites:(list.cachedItems.map(execution=>execution.name).join(", ") )+ (list.cachedItems.length==list.totalElements?"":", ...")});
+          this.showNotification(NotificationType.Success, msg);
+        } else {
           this.translate.get('message.common.update.success', {FieldName: fieldName}).subscribe((res: string) => {
             this.showNotification(NotificationType.Success, res);
           });
-          this.router.navigate(['/td', 'cases', testcase.id])
-        },
-        error => {
-          this.saving = false;
-          this.translate.get('message.common.update.failure', {FieldName: fieldName}).subscribe((res) => {
-            this.showAPIError(error, res)
-          })
-        });
-    }
+        }
+        this.router.navigate(['/td', 'cases', testcase.id])
+      },
+      error => {
+        this.saving = false;
+        this.translate.get('message.common.update.failure', {FieldName: fieldName}).subscribe((res) => {
+          this.showAPIError(error, res, fieldName)
+        })
+      });
   }
 
   toggleDataProfile(testData?) {
@@ -446,4 +471,48 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
     }
   }
 
+  private preRequisiteChanged(): boolean {
+    return !this.confirmedStatusChange && this.oldPreRequisite != this.testCase.preRequisite;
+  }
+
+  private fetchLinkedSuites() {
+    let query = "workspaceId:" + this.versionId + "&testcaseId:" + this.testCaseId;
+    this.linkedTestSuites = new InfiniteScrollableDataSource(this.testSuiteService, query, "name");
+  }
+
+  private setPreRequisiteAffectsTestSuites(fieldName) {
+    setTimeout(() => {
+      if (this.linkedTestSuites.isFetching)
+        this.setPreRequisiteAffectsTestSuites(fieldName);
+      else {
+        if (this.linkedTestSuites.isEmpty)
+          this.updateAfterValidation(fieldName);
+        else {
+          this.saving = false;
+          this.openPreRequisiteChangeConfirmBox(this.linkedTestSuites);
+        }
+      }
+    }, 200);
+  }
+
+  private openPreRequisiteChangeConfirmBox(list: InfiniteScrollableDataSource) {
+    let description = this.translate.instant('testcase.prerequisite_linked_with_plans', {status: this.translate.instant('testcase.status_' + this.testCase.status)});
+    const dialogRef = this.dialog.open(TestCasePrerequisiteChangeComponent, {
+      width: '468px',
+      height: 'auto',
+      data: {
+        description: description,
+        testSuites: list,
+        testCaseId: this.testCaseId
+      },
+      panelClass: ['mat-dialog', 'rds-none']
+    });
+    dialogRef.afterClosed()
+      .subscribe(result => {
+        if (result) {
+          this.oldPreRequisite = this.testCase.preRequisite;
+          this.updateTestCase(list);
+        }
+      });
+  }
 }

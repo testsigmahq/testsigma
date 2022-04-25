@@ -9,6 +9,7 @@ package com.testsigma.repository;
 
 import com.testsigma.model.AbstractTestSuite;
 import com.testsigma.model.TestSuite;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -38,4 +39,10 @@ public interface TestSuiteRepository extends PagingAndSortingRepository<TestSuit
           " WHERE suiteTestCaseMapping.testCaseId =:testCaseId")
   List<TestSuite> findAllByTestCaseId(Long testCaseId);
 
+  @EntityGraph(attributePaths = {"testSuiteMappings"})
+  @Query("SELECT testSuite FROM TestSuite AS testSuite " +
+          "JOIN FETCH SuiteTestCaseMapping AS suiteCaseMapping " +
+          "ON suiteCaseMapping.id.testCaseId = :testCaseId AND suiteCaseMapping.id.suiteId = testSuite.id " +
+          "ORDER BY suiteCaseMapping.position ASC")
+  List<TestSuite> findAllByTestCaseIds(@Param("testCaseId") Long testCaseId);
 }

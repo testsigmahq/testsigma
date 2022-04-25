@@ -70,7 +70,7 @@
             <button
               [disabled]="startSync"
               *ngIf="(testCaseResult.iteration && !testCaseResult.parentResult?.isExecuting||!testCaseResult.iteration) && !testCaseResult?.isExecuting && isDry"
-              (click)="startExecution(getTestCaseResult()?.testDeviceResult?.testPlanResult?.dryTestPlan)"
+              (click)=" startExecution(getTestCaseResult()?.testDeviceResult?.testPlanResult?.dryTestPlan)"
               class="theme-btn-primary py-6">
               <i class="fa-filled-circled-play pr-4"></i>
               <span [translate]="'dry.testcase.btn.re_run'"></span>

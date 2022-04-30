@@ -221,12 +221,12 @@ public abstract class XMLExportImportService<T> {
             String originalFileName = ObjectUtils.defaultIfNull(uploadedFile.getName(), "tmp")
                     .replaceAll("\\s+", "_");
             StringBuilder storageFilePath =
-                    new StringBuilder().append("/backup/").append(originalFileName);
+                    new StringBuilder().append("/backup/").append(backupDetail.getName());
             log.info(String.format("Uploading import file:%s to storage path %s", uploadedFile.getAbsolutePath(), storageFilePath));
             InputStream fileInputStream = new ByteArrayInputStream(FileUtils.readFileToByteArray(uploadedFile));
             storageServiceFactory.getStorageService().addFile(storageFilePath.toString(), fileInputStream);
-            backupDetail.setStatus(BackupStatus.SUCCESS);
-            backupDetail.setMessage(MessageConstants.IMPORT_IS_SUCCESS);
+            backupDetail.setStatus(BackupStatus.IN_PROGRESS);
+            backupDetail.setMessage(MessageConstants.IMPORT_IS_IN_PROGRESS);
             this.backupDetailsRepository.save(backupDetail);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -303,7 +303,7 @@ public abstract class XMLExportImportService<T> {
 
     void importFiles(String fileName, BackupDTO importDTO) throws IOException, ResourceNotFoundException {
         FileFilter fileFilter = new RegexFileFilter("^" + fileName + "_\\d+.xml$");
-        File[] files = importDTO.getDestFiles().listFiles(fileFilter);
+        File[] files = importDTO.getDestFiles().listFiles()[0].listFiles(fileFilter);
         for (File file : files) {
             importFile(importDTO, file);
         }

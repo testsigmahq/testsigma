@@ -199,14 +199,14 @@ public class WorkspaceVersionService extends XMLExportImportService<WorkspaceVer
     FileFilter applicationFilter = new RegexFileFilter("^application_\\d+.xml$");
     FileFilter workspaceFilter = new RegexFileFilter("^workspace_\\d+.xml$");
     List<Object> applicationXMLDTOS;
-    File[] applicationFiles = importDTO.getDestFiles().listFiles(applicationFilter);
-    File[] workspaceFiles = importDTO.getDestFiles().listFiles(workspaceFilter);
+    File[] applicationFiles = importDTO.getDestFiles().listFiles()[0].listFiles(applicationFilter);
+    File[] workspaceFiles = importDTO.getDestFiles().listFiles()[0].listFiles(workspaceFilter);
     if (applicationFiles != null && applicationFiles.length>0) {
       applicationXMLDTOS = getXMLDTOs(applicationFiles[0], new TypeReference<List<ApplicationCloudXMLDTO>>() {
       });
       ApplicationCloudXMLDTO applicationXMLDTO = (ApplicationCloudXMLDTO) applicationXMLDTOS.get(0);
       FileFilter fileFilter = new RegexFileFilter("^version_\\d+.xml$");
-      File[] files = importDTO.getDestFiles().listFiles(fileFilter);
+      File[] files = importDTO.getDestFiles().listFiles()[0].listFiles(fileFilter);
       if (files != null && files.length > 0) {
         List<Object> applicationVersionXMLDTOS = getXMLDTOs(files[0], new TypeReference<List<ApplicationVersionCloudXMLDTO>>() {
         });
@@ -223,7 +223,7 @@ public class WorkspaceVersionService extends XMLExportImportService<WorkspaceVer
       });
       ApplicationXMLDTO applicationXMLDTO = (ApplicationXMLDTO) applicationXMLDTOS.get(0);
     FileFilter fileFilter = new RegexFileFilter("^version_\\d+.xml$");
-    File[] files = importDTO.getDestFiles().listFiles(fileFilter);
+    File[] files = importDTO.getDestFiles().listFiles()[0].listFiles(fileFilter);
     if (files != null && files.length > 0) {
       List<Object> applicationVersionXMLDTOS = getXMLDTOs(files[0], new TypeReference<List<ApplicationVersionXMLDTO>>() {
       });

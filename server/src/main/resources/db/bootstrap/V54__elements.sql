@@ -11,6 +11,7 @@ CREATE TABLE `elements`
   `metadata`               JSON,
   `attributes`             JSON,
   `is_dynamic`             BIT(1)        DEFAULT FALSE,
+  `imported_id`            BIGINT(20) DEFAULT NULL,
   `copied_from`            BIGINT(20)    DEFAULT NULL,
   `screen_name_id`         BIGINT(20) NOT NULL,
   `is_duplicated`          BIT(1)        DEFAULT 0,

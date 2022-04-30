@@ -7,7 +7,13 @@
 
 package com.testsigma.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.testsigma.dto.BackupDTO;
+import com.testsigma.dto.export.TestCaseTypeCloudXMLDTO;
+import com.testsigma.dto.export.TestCaseTypeXMLDTO;
+import com.testsigma.dto.export.TestStepCloudXMLDTO;
 import com.testsigma.dto.export.TestStepXMLDTO;
 import com.testsigma.event.EventType;
 import com.testsigma.event.TestStepEvent;
@@ -32,16 +38,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @Log4j2
 @RequiredArgsConstructor(onConstructor = @__({@Autowired, @Lazy}))
-public class TestStepService extends XMLExportService<TestStep> {
+public class TestStepService extends XMLExportImportService<TestStep> {
   private final TestStepRepository repository;
   private final RestStepService restStepService;
   private final RestStepMapper mapper;
@@ -50,6 +53,8 @@ public class TestStepService extends XMLExportService<TestStep> {
   private final ApplicationEventPublisher applicationEventPublisher;
   private final TestCaseService testCaseService;
   private final TestStepMapper exportTestStepMapper;
+  private final TestDataProfileService testDataService;
+  private final NaturalTextActionsService naturalTextActionsService;
 
   public List<TestStep> findAllByTestCaseId(Long testCaseId) {
     return this.repository.findAllByTestCaseIdOrderByPositionAsc(testCaseId);
@@ -262,4 +267,158 @@ public class TestStepService extends XMLExportService<TestStep> {
     event.setEventType(eventType);
     return event;
   }
+
+  public void importXML(BackupDTO importDTO) throws IOException, ResourceNotFoundException {
+    if (!importDTO.getIsTestStepEnabled()) return;
+    log.debug("import process for Test step initiated");
+    importFiles("test_steps", importDTO);
+    log.debug("import process for Test step completed");
+  }
+
+  @Override
+  public List<TestStep> readEntityListFromXmlData(String xmlData, XmlMapper xmlMapper, BackupDTO importDTO) throws JsonProcessingException {
+    if (importDTO.getIsCloudImport()) {
+      return mapper.mapTestStepsCloudList(xmlMapper.readValue(xmlData, new TypeReference<List<TestStepCloudXMLDTO>>() {
+      }));
+    }
+    else{
+      return mapper.mapTestStepsList(xmlMapper.readValue(xmlData,  new TypeReference<List<TestStepXMLDTO>>() {
+      }));
+    }
+  }
+
+
+  @Override
+  public Optional<TestStep> findImportedEntity(TestStep testStep, BackupDTO importDTO) {
+    Optional<TestCase> testCase = testCaseService.getRecentImportedEntity(importDTO, testStep.getTestCaseId());
+    if (testCase.isEmpty()) {
+      return Optional.empty();
+    }
+    Optional<TestStep> previous = repository.findByTestCaseIdInAndImportedId(List.of(testCase.get().getId()), testStep.getId());
+    return previous;
+  }
+
+  @Override
+  public TestStep processBeforeSave(Optional<TestStep> previous, TestStep present, TestStep toImport, BackupDTO importDTO) throws ResourceNotFoundException {
+    present.setImportedId(present.getId());
+    if (previous.isPresent() && importDTO.isHasToReset()) {
+      present.setId(previous.get().getId());
+    } else {
+      present.setId(null);
+    }
+    setTemplateId(present, importDTO);
+    processTestDataMap(present, importDTO);
+    Optional<TestCase> testCase = testCaseService.getRecentImportedEntity(importDTO, present.getTestCaseId());
+    if (testCase.isPresent())
+      present.setTestCaseId(testCase.get().getId());
+    if (present.getStepGroupId() != null) {
+      Optional<TestCase> testComponent = testCaseService.getRecentImportedEntity(importDTO, present.getStepGroupId());
+      if (testComponent.isPresent())
+        present.setStepGroupId(testComponent.get().getId());
+    }
+    if (present.getParentId() != null) {
+      Optional<TestStep> testStep = getRecentImportedEntity(importDTO, present.getParentId());
+      if (testStep.isPresent()){
+        present.setParentId(testStep.get().getId());
+        if(testStep.get().getDisabled()){
+          present.setDisabled(true);
+        }
+      }
+
+    }
+
+    return present;
+  }
+
+  public boolean hasToSkip(TestStep testStep, BackupDTO importDTO) {
+    Optional<TestCase> testCase = testCaseService.getRecentImportedEntity(importDTO, testStep.getTestCaseId());
+    return testCase.isEmpty();
+  }
+
+  @Override
+  void updateImportedId(TestStep testStep, TestStep previous, BackupDTO importDTO) {
+    previous.setImportedId(testStep.getId());
+    save(previous);
+  }
+
+  private void processTestDataMap(TestStep present, BackupDTO importDTO) {
+    TestStepDataMap testStepDataMap = present.getDataMapBean();
+    if (testStepDataMap != null) {
+
+      if ((testStepDataMap.getForLoop() != null || testStepDataMap.getWhileCondition() != null)
+              && testStepDataMap.getForLoop() != null && testStepDataMap.getForLoop().getTestDataId() != null) {
+        Optional<TestData> testData = testDataService.getRecentImportedEntity(importDTO, testStepDataMap.getForLoop().getTestDataId());
+        if (testData.isPresent())
+          testStepDataMap.getForLoop().setTestDataId(testData.get().getId());
+      }
+    }
+
+  }
+
+  private void setTemplateId(TestStep present, BackupDTO importDTO) {
+    if (!importDTO.getIsSameApplicationType() && present.getNaturalTextActionId() != null && present.getNaturalTextActionId() > 0) {
+      NaturalTextActions nlpTemplate = naturalTextActionsService.findById(present.getNaturalTextActionId().longValue());
+      try {
+        if (importDTO.getWorkspaceType().equals(WorkspaceType.WebApplication)) {
+          present.setNaturalTextActionId(nlpTemplate.getImportToWeb().intValue());
+          if (nlpTemplate.getImportToWeb().intValue() == 0) {
+            present.setDisabled(true);
+          }
+        } else if (importDTO.getWorkspaceType().equals(WorkspaceType.MobileWeb)) {
+          present.setNaturalTextActionId(nlpTemplate.getImportToMobileWeb().intValue());
+          if (nlpTemplate.getImportToMobileWeb().intValue() == 0) {
+            present.setDisabled(true);
+          }
+        } else if (importDTO.getWorkspaceType().equals(WorkspaceType.AndroidNative)) {
+          present.setNaturalTextActionId(nlpTemplate.getImportToAndroidNative().intValue());
+          if (nlpTemplate.getImportToAndroidNative().intValue() == 0) {
+            present.setDisabled(true);
+          }
+        } else if (importDTO.getWorkspaceType().equals(WorkspaceType.IOSNative)) {
+          present.setNaturalTextActionId(nlpTemplate.getImportToIosNative().intValue());
+          if (nlpTemplate.getImportToIosNative().intValue() == 0) {
+            present.setDisabled(true);
+          }
+        }
+      } catch (Exception e) {
+        log.error(e.getMessage(), e);
+        log.debug("mapping failed for templateId   " + present.getNaturalTextActionId().longValue());
+        present.setNaturalTextActionId(0);
+        present.setDisabled(true);
+      }
+    }
+  }
+
+  @Override
+  public TestStep copyTo(TestStep testStep) {
+    return mapper.copy(testStep);
+  }
+
+  @Override
+  public TestStep save(TestStep testStep) {
+    return repository.save(testStep);
+  }
+
+  @Override
+  public Optional<TestStep> getRecentImportedEntity(BackupDTO importDTO, Long... ids) {
+    Long importedId = ids[0];
+    List<Long> testcaseIds = new ArrayList<>();
+    testCaseService.findAllByWorkspaceVersionId(importDTO.getWorkspaceVersionId()).stream().forEach(testCase -> testcaseIds.add(testCase.getId()));
+    Optional<TestStep> previous = repository.findByTestCaseIdInAndImportedId(testcaseIds, importedId);
+    return previous;
+
+  }
+
+  public Optional<TestStep> findImportedEntityHavingSameName(Optional<TestStep> previous, TestStep current, BackupDTO importDTO) {
+    return previous;
+  }
+
+  public boolean hasImportedId(Optional<TestStep> previous) {
+    return previous.isPresent() && previous.get().getImportedId() != null;
+  }
+
+  public boolean isEntityAlreadyImported(Optional<TestStep> previous, TestStep current) {
+    return previous.isPresent() && previous.get().getImportedId() != null && previous.get().getImportedId().equals(current.getId());
+  }
+
 }

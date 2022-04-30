@@ -20,6 +20,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Transactional
@@ -96,4 +97,6 @@ public interface TestStepRepository extends JpaRepository<TestStep, Long> {
   Integer countAllByAddonActionIdIn(List<Long> ids);
 
   List<TestStep> findAllByTestCaseIdAndDisabledIsNotAndStepGroupIdIsNotNullOrderByPositionAsc(Long testCaseId, boolean notDisabled);
+
+    Optional<TestStep> findByTestCaseIdInAndImportedId(List<Long> id, Long id1);
 }

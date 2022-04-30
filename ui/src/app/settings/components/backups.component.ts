@@ -13,6 +13,7 @@ import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import {BackupFormComponent} from "../../components/webcomponents/backup-form.component";
 import { Subscription } from 'rxjs';
+import {ImportFormComponent} from "../../components/webcomponents/import-form.component";
 
 @Component({
   selector: 'app-backups',
@@ -74,6 +75,21 @@ export class BackupsComponent extends BaseComponent implements OnInit {
 
   openBackupForm() {
     let matDialogRef = this.matDialog.open(BackupFormComponent, {
+      backdropClass: 'cdk-overlay-transparent-backdrop',
+      width: '60%',
+      height: '63%',
+      panelClass: ['mat-dialog', 'rds-none'],
+      data: {}
+    });
+    const matDialogConfig = new MatDialogConfig();
+    matDialogRef.updatePosition(matDialogConfig.position);
+    matDialogRef.afterClosed().subscribe(res => {
+      this.fetchBackups();
+    })
+  }
+
+  openImportForm() {
+    let matDialogRef = this.matDialog.open(ImportFormComponent, {
       backdropClass: 'cdk-overlay-transparent-backdrop',
       width: '60%',
       height: '63%',

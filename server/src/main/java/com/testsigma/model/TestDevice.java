@@ -107,6 +107,9 @@ public class TestDevice {
   @Column(name = "create_session_at_case_level")
   private Boolean createSessionAtCaseLevel = Boolean.FALSE;
 
+  @Column(name = "imported_id")
+  private Long importedId;
+
   @ManyToOne
   @Fetch(value = FetchMode.SELECT)
   @JoinColumn(name = "test_plan_id", referencedColumnName = "id", insertable = false, updatable = false)

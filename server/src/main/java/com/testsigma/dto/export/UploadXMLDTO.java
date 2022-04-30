@@ -23,36 +23,12 @@ import java.sql.Timestamp;
 public class UploadXMLDTO extends BaseXMLDTO {
   @JsonProperty("id")
   private Long id;
-  @JsonProperty("project-id")
-  private Long projectId;
   @JsonProperty("workspace-id")
   private Long workspaceId;
   @JsonProperty("name")
   private String name;
-  @JsonProperty("app-path")
-  private String appPath;
-  @JsonProperty("file-name")
-  private String fileName;
-  @JsonProperty("upload-type")
-  private UploadType uploadType;
   @JsonProperty("version")
   private String version;
-  @JsonProperty("is-public")
-  private Boolean isPublic;
-  @JsonProperty("upload-status")
-  private UploadStatus uploadStatus;
-  @JsonProperty("comments")
-  private String comments;
-  @JsonProperty("message")
-  private String message;
-  @JsonProperty("status")
-  private Integer status;
-  @JsonProperty("name-from-app")
-  private String nameFromApp;
-  @JsonProperty("version-from-app")
-  private String versionFromApp;
-  @JsonProperty("file-size")
-  private Integer fileSize;
   @JsonProperty("created-date")
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd@HH:mm:ss.SSSZ")
   private Timestamp createdDate;

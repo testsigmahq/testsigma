@@ -32,6 +32,7 @@ CREATE TABLE `test_steps`
   `addon_plugin_tdf_data` LONGTEXT DEFAULT NULL,
   `addon_natural_text_action_data` JSON             DEFAULT NULL,
   `addon_action_id`   BIGINT(20)       DEFAULT NULL,
+  `imported_id`            BIGINT(20) DEFAULT NULL,
   `created_date`           DATETIME         DEFAULT CURRENT_TIMESTAMP,
   `updated_date`           DATETIME         DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),

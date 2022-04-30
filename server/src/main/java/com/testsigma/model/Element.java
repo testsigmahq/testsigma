@@ -63,6 +63,8 @@ public class Element implements Serializable {
   @Enumerated(EnumType.STRING)
   private ElementCreateType createdType;
 
+  @Column(name = "imported_id")
+  private Long importedId;
 
   @Column(name = "locator_type")
   @Enumerated(EnumType.STRING)

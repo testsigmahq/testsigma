@@ -8,6 +8,7 @@
 package com.testsigma.mapper;
 
 import com.testsigma.dto.AgentDTO;
+import com.testsigma.dto.export.AgentCloudXMLDTO;
 import com.testsigma.dto.export.AgentXMLDTO;
 import com.testsigma.model.Agent;
 import com.testsigma.model.AgentBrowser;
@@ -38,4 +39,10 @@ public interface AgentMapper {
 
   @IterableMapping(qualifiedByName = "mapAgent")
   List<AgentDTO> map(List<Agent> agents);
+
+    Agent copy(Agent testCase);
+
+  List<Agent> mapCloudXMLList(List<AgentCloudXMLDTO> readValue);
+
+  List<Agent> mapXMLList(List<AgentXMLDTO> readValue);
 }

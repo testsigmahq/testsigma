@@ -24,6 +24,7 @@ CREATE TABLE `test_devices`
   `match_browser_version`         TINYINT(1)            DEFAULT 0,
   `copied_from`                   BIGINT(20)            DEFAULT null,
   `create_session_at_case_level`  TINYINT(1)            DEFAULT 0 NOT NULL,
+  `imported_id`                   BIGINT(20) DEFAULT NULL,
   `created_date`                  DATETIME              DEFAULT CURRENT_TIMESTAMP,
   `updated_date`                  DATETIME              DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),

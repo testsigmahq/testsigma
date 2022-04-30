@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -48,4 +49,10 @@ public interface TestDeviceRepository extends BaseRepository<TestDevice, Long> {
           " LEFT JOIN TestDeviceSuite testDeviceSuite ON testDevice.id = testDeviceSuite.testDeviceId " +
           " WHERE testDeviceSuite.suiteId =:suiteId")
   List<TestDevice> findAllByTestSuiteId(Long suiteId);
+
+    Optional<TestDevice> findAllByTestPlanIdAndImportedId(Long id, Long testPlanId);
+
+  Optional<TestDevice> findAllByTestPlanIdInAndImportedId(List<Long> executionIds, Long importedId);
+
+  Optional<TestDevice> findAllByTestPlanIdAndTitle(Long id, String title);
 }

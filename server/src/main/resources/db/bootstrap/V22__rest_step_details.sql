@@ -19,6 +19,7 @@ CREATE TABLE `rest_step_details`
   `follow_redirects`      BIT(1)       DEFAULT TRUE,
   `authorization_type`    VARCHAR(255) DEFAULT 'NONE',
   `authorization_value`   JSON,
+  `imported_id`            BIGINT(20) DEFAULT NULL,
   `created_date`           DATETIME     DEFAULT CURRENT_TIMESTAMP,
   `updated_date`           DATETIME     DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),

@@ -5,6 +5,7 @@ CREATE TABLE `test_case_priorities`
   `display_name`   VARCHAR(250) DEFAULT NULL,
   `name`           VARCHAR(250) DEFAULT NULL,
   `workspace_id` BIGINT(20) NOT NULL,
+  `imported_id`   bigint(20) DEFAULT NULL,
   `created_date`   DATETIME      DEFAULT CURRENT_TIMESTAMP,
   `updated_date`   DATETIME      DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),

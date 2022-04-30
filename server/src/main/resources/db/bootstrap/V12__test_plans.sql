@@ -24,6 +24,7 @@ CREATE TABLE `test_plans`
   `match_browser_version`                      TINYINT(1)                            DEFAULT '0',
   `copied_from`                                BIGINT(20)                            default null,
   `entity_type`                                VARCHAR(255) COLLATE utf8_unicode_ci  DEFAULT 'TEST_PLAN',
+  `imported_id`                                BIGINT(20) DEFAULT NULL,
   `created_date`                               DATETIME                              DEFAULT CURRENT_TIMESTAMP,
   `updated_date`                               DATETIME                              DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),

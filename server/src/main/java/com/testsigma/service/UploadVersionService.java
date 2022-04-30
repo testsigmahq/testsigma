@@ -7,11 +7,13 @@
 
 package com.testsigma.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.testsigma.config.StorageServiceFactory;
 import com.testsigma.dto.BackupDTO;
 import com.testsigma.dto.export.UploadVersionXMLDTO;
 import com.testsigma.event.EventType;
-import com.testsigma.event.UploadEvent;
 import com.testsigma.event.UploadVersionEvent;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaException;
@@ -22,6 +24,7 @@ import com.testsigma.specification.SearchCriteria;
 import com.testsigma.specification.SearchOperation;
 import com.testsigma.specification.UploadVersionSpecificationsBuilder;
 import com.testsigma.tasks.ReSignTask;
+import com.testsigma.util.HttpClient;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -44,13 +47,14 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.util.*;
 
 @Service
 @Log4j2
 @RequiredArgsConstructor(onConstructor = @__({@Autowired, @Lazy}))
-public class UploadVersionService extends XMLExportService<UploadVersion> {
+public class UploadVersionService extends XMLExportImportService<UploadVersion> {
   private final WebApplicationContext webApplicationContext;
   private final StorageServiceFactory storageServiceFactory;
   private final ProvisioningProfileUploadService profileUploadService;
@@ -59,6 +63,7 @@ public class UploadVersionService extends XMLExportService<UploadVersion> {
   private final WorkspaceVersionService workspaceVersionService;
   private final UploadMapper mapper;
   private final UploadVersionRepository uploadVersionRepository;
+  private final HttpClient client;
 
   @Getter
   @Setter
@@ -234,5 +239,100 @@ public class UploadVersionService extends XMLExportService<UploadVersion> {
   public void delete(UploadVersion version) {
     this.uploadVersionRepository.delete(version);
   }
+
+  public void importXML(BackupDTO importDTO) throws IOException, ResourceNotFoundException {
+    if (!importDTO.getIsUploadsEnabled()) return;
+    log.debug("import process for ui-identifier screen name initiated");
+    importFiles("uploads", importDTO);
+    log.debug("import process for ui-identifier  screen name completed");
+  }
+
+  @Override
+  public List<UploadVersion> readEntityListFromXmlData(String xmlData, XmlMapper xmlMapper, BackupDTO importDTO) throws JsonProcessingException, ResourceNotFoundException {
+    List<UploadVersionXMLDTO> uploads = xmlMapper.readValue(xmlData, new TypeReference<>() {
+    });
+    if (!hasToSkip(null, importDTO)) {
+      return mapper.mapUploadVersionsList(uploads);
+    } else {
+      return new ArrayList<>();
+    }
+  }
+
+  @Override
+  public boolean hasToSkip(UploadVersion upload, BackupDTO importDTO) {
+    return !importDTO.getIsSameApplicationType();
+  }
+
+  @Override
+  void updateImportedId(UploadVersion upload, UploadVersion previous, BackupDTO importDTO) {
+    previous.setImportedId(upload.getId());
+    save(previous);
+  }
+
+  @Override
+  UploadVersion processAfterSave(Optional<UploadVersion> previous, UploadVersion present, UploadVersion toImport, BackupDTO importDTO) {
+    try {
+      String originalFileName = ObjectUtils.defaultIfNull(present.getFileName(), "tmp")
+              .replaceAll("\\s+", "_");
+      String downloadPath = Files.createTempDirectory(present.getFileName()).toFile().getAbsolutePath() + "/" + originalFileName;
+      client.downloadRedirectFile(present.getDownloadURL(), downloadPath, new HashMap<>());
+      uploadFile(new File(downloadPath), present);
+    } catch (IOException | TestsigmaException e) {
+      log.error("Failed to upload file", e.getMessage(), e);
+    }
+    return present;
+  }
+
+  @Override
+  public Optional<UploadVersion> findImportedEntity(UploadVersion version, BackupDTO importDTO) {
+    return uploadVersionRepository.findAllByUploadIdAndImportedId(version.getUpload().getImportedId(), version.getId());
+  }
+
+  @Override
+  public UploadVersion processBeforeSave(Optional<UploadVersion> previous, UploadVersion present, UploadVersion toImport, BackupDTO importDTO) throws ResourceNotFoundException {
+    present.setImportedId(present.getId());
+    if (previous.isPresent() && importDTO.isHasToReset()) {
+      present.setId(previous.get().getId());
+    } else {
+      present.setId(null);
+    }
+    return present;
+  }
+
+
+  @Override
+  public UploadVersion copyTo(UploadVersion version) {
+    return mapper.copyVersion(version);
+  }
+
+  @Override
+  public UploadVersion save(UploadVersion version) {
+    return uploadVersionRepository.save(version);
+  }
+
+  @Override
+  public Optional<UploadVersion> getRecentImportedEntity(BackupDTO importDTO, Long... ids) {
+    // NEED TO CHECK WITH CHANDRA ONCE HOW BEST WE CAN HANDLE THIS
+//    Long importedId = ids[0];
+//    return uploadVersionRepository.findAllByApplicationIdAndImportedId(importDTO.getApplicationId(), importedId);
+    return Optional.empty();
+  }
+
+
+  @Override
+  public Optional<UploadVersion> findImportedEntityHavingSameName(Optional<UploadVersion> previous, UploadVersion current, BackupDTO importDTO) throws ResourceNotFoundException {
+    return uploadVersionRepository.findByNameAndUploadId(current.getName(), current.getUpload().getImportedId());
+  }
+
+  @Override
+  public boolean hasImportedId(Optional<UploadVersion> previous) {
+    return previous.isPresent() && previous.get().getImportedId() != null;
+  }
+
+  @Override
+  public boolean isEntityAlreadyImported(Optional<UploadVersion> previous, UploadVersion current) {
+    return previous.isPresent() && previous.get().getImportedId() != null && previous.get().getImportedId().equals(current.getId());
+  }
+
 
 }

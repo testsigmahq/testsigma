@@ -7,9 +7,12 @@
 
 package com.testsigma.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.testsigma.config.ApplicationConfig;
 import com.testsigma.dto.BackupDTO;
+import com.testsigma.dto.export.AgentCloudXMLDTO;
 import com.testsigma.dto.export.AgentXMLDTO;
 import com.testsigma.event.AgentEvent;
 import com.testsigma.event.EventType;
@@ -45,16 +48,13 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Log4j2
 @Service
 @RequiredArgsConstructor(onConstructor = @__({@Autowired, @Lazy}))
-public class AgentService extends XMLExportService<Agent> {
+public class AgentService extends XMLExportImportService<Agent> {
 
   private final AgentRepository agentRepository;
   private final AgentMapper mapper;
@@ -193,5 +193,84 @@ public class AgentService extends XMLExportService<Agent> {
     ArrayList<Header> headers = new ArrayList<>();
     headers.add(new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/json"));
     return headers;
+  }
+
+  public void importXML(BackupDTO importDTO) throws IOException, ResourceNotFoundException {
+    if (!importDTO.getIsAgentEnabled()) return;
+    log.debug("import process for agent initiated");
+    importFiles("agent", importDTO);
+    log.debug("import process for agent completed");
+  }
+
+  @Override
+  public List<Agent> readEntityListFromXmlData(String xmlData, XmlMapper xmlMapper, BackupDTO importDTO) throws JsonProcessingException {
+    if (importDTO.getIsCloudImport()) {
+      return mapper.mapCloudXMLList(xmlMapper.readValue(xmlData, new TypeReference<List<AgentCloudXMLDTO>>() {
+      }));
+    }
+    else{
+      return mapper.mapXMLList(xmlMapper.readValue(xmlData, new TypeReference<List<AgentXMLDTO>>() {
+      }));
+    }
+  }
+
+  @Override
+  public Optional<Agent> findImportedEntity(Agent agent, BackupDTO importDTO) {
+    Optional<Agent> previous = agentRepository.findAllByImportedId(agent.getId());
+    return previous;
+  }
+
+  @Override
+  public Agent processBeforeSave(Optional<Agent> previous, Agent present, Agent toImport, BackupDTO importDTO) {
+    present.setImportedId(present.getId());
+    if (previous.isPresent() && importDTO.isHasToReset()) {
+      present.setId(previous.get().getId());
+    } else {
+      present.setId(null);
+    }
+    return present;
+  }
+
+  @Override
+  public Agent copyTo(Agent testCase) {
+    return mapper.copy(testCase);
+  }
+
+
+  public Agent save(Agent testCase) {
+    testCase = agentRepository.save(testCase);
+    return testCase;
+  }
+
+  @Override
+  public Optional<Agent> getRecentImportedEntity(BackupDTO importDTO, Long... ids) {
+    Long importedId = ids[0];
+    return agentRepository.findAllByImportedId(importedId);
+  }
+
+  @Override
+  public Optional<Agent> findImportedEntityHavingSameName(Optional<Agent> previous, Agent current, BackupDTO importDTO) {
+    return previous;
+  }
+
+  @Override
+  public boolean hasImportedId(Optional<Agent> previous) {
+    return previous.isPresent() && previous.get().getImportedId() != null;
+  }
+
+  @Override
+  public boolean isEntityAlreadyImported(Optional<Agent> previous, Agent current) {
+    return previous.isPresent() && previous.get().getImportedId() != null && previous.get().getImportedId().equals(current.getId());
+  }
+
+  @Override
+  public boolean hasToSkip(Agent agent, BackupDTO importDTO) {
+    return false;
+  }
+
+  @Override
+  void updateImportedId(Agent agent, Agent previous, BackupDTO importDTO) {
+    previous.setImportedId(agent.getId());
+    save(previous);
   }
 }

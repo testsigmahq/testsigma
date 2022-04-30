@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Transactional
@@ -38,5 +39,10 @@ public interface ElementRepository extends BaseRepository<Element, Long> {
           "element.screenNameId =:snId")
   List<Element> findAllMatchedElements(@Param("versionId") Long applicationVersionId, @Param("locValue") String locatorValue,
                                             @Param("locType") LocatorType locatorType, @Param("snId") Long screenNameId);
+
+  Optional<Element> findAllByWorkspaceVersionIdAndImportedId(Long applicationVersionId, Long id);
+
+  Optional<Element> findByNameAndWorkspaceVersionId(String name, Long workspaceVersionId);
+
 }
 

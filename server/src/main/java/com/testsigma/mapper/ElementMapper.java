@@ -12,6 +12,7 @@ package com.testsigma.mapper;
 import com.testsigma.dto.api.APIElementDTO;
 import com.testsigma.dto.ElementDTO;
 import com.testsigma.dto.ElementNotificationDTO;
+import com.testsigma.dto.export.ElementCloudXMLDTO;
 import com.testsigma.dto.export.ElementXMLDTO;
 import com.testsigma.model.Element;
 import com.testsigma.model.ElementMetaData;
@@ -47,4 +48,8 @@ public interface ElementMapper {
   @Mapping(target = "screenName", expression = "java(element.getScreenNameObj().equals(null)? null: element.getScreenNameObj().getName())")
   ElementNotificationDTO mapNotificationDTO(Element element);
 
+  List<Element> mapElementsList(List<ElementXMLDTO> readValue);
+  List<Element> mapCloudElementsList(List<ElementCloudXMLDTO> readValue);
+
+  Element copy(Element element);
 }

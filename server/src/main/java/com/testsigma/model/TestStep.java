@@ -138,6 +138,10 @@ public class TestStep {
   @Column(name = "ignore_step_result")
   private Boolean ignoreStepResult;
 
+  @Column(name = "imported_id")
+  private Long importedId;
+
+
   @ManyToOne
   @Fetch(value = FetchMode.SELECT)
   @JoinColumn(name = "test_case_id", referencedColumnName = "id", insertable = false, updatable = false)

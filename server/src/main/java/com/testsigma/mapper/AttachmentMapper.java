@@ -8,6 +8,7 @@
 package com.testsigma.mapper;
 
 import com.testsigma.dto.AttachmentDTO;
+import com.testsigma.dto.export.AttachmentCloudXMLDTO;
 import com.testsigma.dto.export.AttachmentXMLDTO;
 import com.testsigma.model.Attachment;
 import com.testsigma.service.AttachmentService;
@@ -59,4 +60,9 @@ public interface AttachmentMapper {
     }
     return list;
   }
+
+  List<Attachment> mapCloudAttachmentsList(List<AttachmentCloudXMLDTO> readValue);
+  List<Attachment> mapAttachmentsList(List<AttachmentXMLDTO> readValue);
+
+  Attachment copy(Attachment attachment);
 }

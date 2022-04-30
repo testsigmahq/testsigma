@@ -89,6 +89,10 @@ public class AbstractTestPlan implements Serializable {
   private Timestamp updatedDate;
   @Column(name = "match_browser_version")
   private Boolean matchBrowserVersion = Boolean.FALSE;
+
+  @Column(name = "imported_id")
+  private Long importedId;
+
   @ManyToOne
   @Fetch(value = FetchMode.SELECT)
   @JoinColumn(name = "workspace_version_id", referencedColumnName = "id", insertable = false, updatable = false)

@@ -33,10 +33,18 @@ export class BackupService {
   }
 
   public create(backupModel:BackupVersionModel): Observable<Backup> {
-    return this.http.post<Backup>(this.URLConstants.backupUrl, backupModel.serialize(), {
+    return this.http.post<Backup>(this.URLConstants.backupExportUrl, backupModel.serialize(), {
       headers: this.httpHeaders.contentTypeApplication
     }).pipe(
       map(data => new Backup().deserialize(data)),
+      catchError((exception) => throwError(exception))
+    );
+  }
+
+  public importXml(formData:FormData): Observable<BackupVersionModel> {
+    return this.http.post<BackupVersionModel>(this.URLConstants.backupUrl, formData, {
+    }).pipe(
+      map(data => new BackupVersionModel().deserialize(data)),
       catchError((exception) => throwError(exception))
     );
   }

@@ -8,6 +8,7 @@ CREATE TABLE `attachments`
   `path`         TEXT         NOT NULL,
   `name`         VARCHAR(250) NOT NULL,
   `description`  TEXT,
+  `imported_id`  BIGINT(20) DEFAULT NULL,
   `created_date` DATETIME              DEFAULT CURRENT_TIMESTAMP,
   `updated_date` DATETIME              DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),

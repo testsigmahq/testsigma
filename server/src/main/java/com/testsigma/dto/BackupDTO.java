@@ -6,6 +6,8 @@
  */
 package com.testsigma.dto;
 
+import com.testsigma.model.BackupActionType;
+import com.testsigma.model.WorkspaceType;
 import lombok.Data;
 
 import java.io.File;
@@ -38,4 +40,15 @@ public class BackupDTO {
   private String versionURL;
   private File srcFiles;
   private File destFiles;
+  private BackupActionType actionType;
+  private String importFileUrl;
+  private Boolean skipEntityExists;
+  private boolean hasToReset;
+  private Long workspaceId;
+  private Boolean isSameApplicationType = false;
+  private Boolean isSameVersion = false;
+  private Boolean resetName = false;
+  private WorkspaceType workspaceType;
+  private String serverUrl;
+  private Boolean isCloudImport = false;
 }

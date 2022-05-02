@@ -18,6 +18,11 @@
       <i class="fa-export-thin mr-8"></i>
       <span [translate]="'settings.backup.xml'"></span>
     </button>
+    <button (click)="openImportForm()"
+            class="btn ml-15 theme-btn-clear-default position-relative">
+      <i class="fa-download-thin mr-8"></i>
+      <span [translate]="'settings.import.xml'"></span>
+    </button>
     <div class=" ml-15 pl-15 theme-border-l">
       <app-pagination
         *ngIf="backups?.totalElements" [paginationData]="backups"

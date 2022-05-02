@@ -5,6 +5,7 @@ CREATE TABLE `uploads`
     `name`           VARCHAR(256) DEFAULT NULL,
     `workspace_id`   BIGINT(20)   DEFAULT NULL,
     `latest_version_id` BIGINT(20) DEFAULT NULL,
+    `imported_id`            BIGINT(20) DEFAULT NULL,
     `created_date`   DATETIME     DEFAULT CURRENT_TIMESTAMP,
     `updated_date`   DATETIME     DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),

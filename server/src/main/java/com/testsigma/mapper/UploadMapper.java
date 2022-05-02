@@ -13,6 +13,7 @@ import com.testsigma.dto.BackupDTO;
 import com.testsigma.dto.UploadVersionDTO;
 import com.testsigma.dto.api.APIUploadDTO;
 import com.testsigma.dto.UploadDTO;
+import com.testsigma.dto.export.UploadCloudXMLDTO;
 import com.testsigma.dto.export.UploadVersionXMLDTO;
 import com.testsigma.dto.export.UploadXMLDTO;
 import com.testsigma.model.Upload;
@@ -102,4 +103,9 @@ public interface UploadMapper {
 
     UploadVersionDTO mapVersion(UploadVersion version);
 
+    List<Upload> mapUploadsXMLList(List<UploadXMLDTO> readValue);
+
+    List<Upload> mapUploadsCloudXMLList(List<UploadCloudXMLDTO> readValue);
+
+    List<UploadVersion> mapUploadVersionsList(List<UploadVersionXMLDTO> uploads);
 }

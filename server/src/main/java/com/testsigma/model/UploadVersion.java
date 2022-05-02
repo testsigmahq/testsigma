@@ -47,6 +47,9 @@ public class UploadVersion extends BaseModel {
   @Enumerated(EnumType.STRING)
   private UploadType uploadType;
 
+  @Column(name = "imported_id")
+  private Long importedId;
+
   @Column(name = "last_uploaded_time")
   private Timestamp lastUploadedTime;
 

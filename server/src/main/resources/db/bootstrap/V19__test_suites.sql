@@ -11,6 +11,7 @@ CREATE TABLE `test_suites`
   `created_date`   DATETIME                             DEFAULT CURRENT_TIMESTAMP,
   `updated_date`   DATETIME                             DEFAULT CURRENT_TIMESTAMP,
   `entity_type`    VARCHAR(255) COLLATE utf8_unicode_ci,
+  `imported_id`    BIGINT(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_test_suites_on_workspace_version_id` (`workspace_version_id`),
   UNIQUE KEY `index_test_suites_on_workspace_version_id_and_name` (`workspace_version_id`, `name`),

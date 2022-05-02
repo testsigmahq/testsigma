@@ -18,5 +18,6 @@ public enum TestStepType {
   FOR_LOOP,
   WHILE_LOOP,
   BREAK_LOOP,
-  CONTINUE_LOOP
+  CONTINUE_LOOP,
+  NLP_TEXT
 }

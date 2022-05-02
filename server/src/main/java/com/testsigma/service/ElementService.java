@@ -9,7 +9,11 @@
 
 package com.testsigma.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.testsigma.dto.BackupDTO;
+import com.testsigma.dto.export.ElementCloudXMLDTO;
 import com.testsigma.dto.export.ElementXMLDTO;
 import com.testsigma.event.ElementEvent;
 import com.testsigma.event.EventType;
@@ -35,15 +39,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service("elementService")
 @Log4j2
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class ElementService extends XMLExportService<Element> {
+public class ElementService extends XMLExportImportService<Element> {
   private final ElementRepository elementRepository;
   private final TestCaseService testCaseService;
   private final TagService tagService;
@@ -68,10 +69,6 @@ public class ElementService extends XMLExportService<Element> {
 
   public Page<Element> findAll(Specification<Element> specification, Pageable pageable) {
     return elementRepository.findAll(specification, pageable);
-  }
-
-  public Element save(Element element) {
-    return elementRepository.save(element);
   }
 
   public Element create(Element element) {
@@ -233,4 +230,88 @@ public class ElementService extends XMLExportService<Element> {
     element.setIsDuplicated(false);
     this.save(element);
   }
+
+  public void importXML(BackupDTO importDTO) throws IOException, ResourceNotFoundException {
+    if (!importDTO.getIsElementEnabled()) return;
+    log.debug("import process for ui-identifier initiated");
+    if (importDTO.getIsCloudImport())
+    importFiles("ui_identifiers", importDTO);
+    else
+      importFiles("elements", importDTO);
+    log.debug("import process for elements completed");
+  }
+
+  @Override
+  public List<Element> readEntityListFromXmlData(String xmlData, XmlMapper xmlMapper, BackupDTO importDTO) throws JsonProcessingException {
+    if (importDTO.getIsCloudImport()) {
+      return elementMapper.mapCloudElementsList(xmlMapper.readValue(xmlData, new TypeReference<List<ElementCloudXMLDTO>>() {
+      }));
+    }
+    else{
+      return elementMapper.mapElementsList(xmlMapper.readValue(xmlData, new TypeReference<List<ElementXMLDTO>>() {
+      }));
+    }
+  }
+
+  @Override
+  public Optional<Element> findImportedEntity(Element element, BackupDTO importDTO) {
+    Optional<Element> previous = elementRepository.findAllByWorkspaceVersionIdAndImportedId(importDTO.getWorkspaceVersionId(), element.getId());
+    return previous;
+  }
+
+  @Override
+  public Element processBeforeSave(Optional<Element> previous, Element present, Element toImport, BackupDTO importDTO) {
+    present.setImportedId(present.getId());
+    if (previous.isPresent() && importDTO.isHasToReset()) {
+      present.setId(previous.get().getId());
+    } else {
+      present.setId(null);
+    }
+    Optional<ElementScreenName> uiIdentifierScreenName = screenNameService.getRecentImportedEntity(importDTO, present.getScreenNameId());
+    present.setScreenNameId(uiIdentifierScreenName.get().getId());
+    present.setWorkspaceVersionId(importDTO.getWorkspaceVersionId());
+    return present;
+  }
+
+
+  @Override
+  public Element copyTo(Element element) {
+    return elementMapper.copy(element);
+  }
+
+  @Override
+  public Element save(Element element) {
+    return elementRepository.save(element);
+  }
+
+
+  @Override
+  public Optional<Element> getRecentImportedEntity(BackupDTO importDTO, Long... ids) {
+    Long importedId = ids[0];
+    return elementRepository.findAllByWorkspaceVersionIdAndImportedId(importDTO.getWorkspaceVersionId(), importedId);
+  }
+
+  public Optional<Element> findImportedEntityHavingSameName(Optional<Element> previous, Element current, BackupDTO importDTO) {
+    return elementRepository.findByNameAndWorkspaceVersionId(current.getName(), importDTO.getWorkspaceVersionId());
+  }
+
+  public boolean hasImportedId(Optional<Element> previous) {
+    return previous.isPresent() && previous.get().getImportedId() != null;
+  }
+
+  public boolean isEntityAlreadyImported(Optional<Element> previous, Element current) {
+    return previous.isPresent() && previous.get().getImportedId() != null && previous.get().getImportedId().equals(current.getId());
+  }
+
+  @Override
+  public boolean hasToSkip(Element element, BackupDTO importDTO) {
+    return false;
+  }
+
+  @Override
+  void updateImportedId(Element element, Element previous, BackupDTO importDTO) {
+    previous.setImportedId(element.getId());
+    save(previous);
+  }
+
 }

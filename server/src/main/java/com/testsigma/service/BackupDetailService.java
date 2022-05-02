@@ -7,7 +7,10 @@
 
 package com.testsigma.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.testsigma.config.StorageServiceFactory;
+import com.testsigma.model.BackupActionType;
 import com.testsigma.model.StorageAccessLevel;
 import com.testsigma.constants.MessageConstants;
 import com.testsigma.dto.BackupDTO;
@@ -22,11 +25,14 @@ import com.testsigma.web.request.BackupRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Timestamp;
@@ -36,7 +42,7 @@ import java.util.Optional;
 @Log4j2
 @Service
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
-public class BackupDetailService extends XMLExportService<BackupDetail> {
+public class BackupDetailService extends XMLExportImportService<BackupDetail> {
 
   private final BackupDetailRepository repository;
   private final StorageServiceFactory storageServiceFactory;
@@ -57,6 +63,10 @@ public class BackupDetailService extends XMLExportService<BackupDetail> {
   private final UploadService uploadService;
   private final UploadVersionService uploadVersionService;
   private final BackupDetailMapper exportBackupEntityMapper;
+  private final TestSuiteService testSuiteService;
+
+  @Value("${unzip.dir}")
+  private String unzipDir;
 
   public BackupDetail find(Long id) throws ResourceNotFoundException {
     return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Backup is not found with id:" + id));
@@ -79,8 +89,49 @@ public class BackupDetailService extends XMLExportService<BackupDetail> {
     return backupDetail;
   }
 
+  public void create(BackupRequest request, MultipartFile file) throws IOException {
+
+    BackupDTO importDTO = exportBackupEntityMapper.map(request);
+    BackupDetail backupDetail = exportBackupEntityMapper.map(importDTO);
+    backupDetail.setMessage(MessageConstants.BACKUP_IS_IN_PROGRESS);
+    backupDetail.setStatus(BackupStatus.IN_PROGRESS);
+    backupDetail.setActionType(BackupActionType.EXPORT);
+
+    if (file != null && !file.isEmpty()) {
+      backupDetail.setMessage(MessageConstants.IMPORT_IS_IN_PROGRESS);
+      backupDetail.setStatus(BackupStatus.IN_PROGRESS);
+      backupDetail.setActionType(BackupActionType.IMPORT);
+      backupDetail = this.repository.save(backupDetail);
+      try {
+        File uploadedFile = this.copyZipFileToTemp(file);
+        this.uploadImportFileToStorage(uploadedFile, backupDetail);
+        this.importBackup(backupDetail);
+      } catch (Exception e) {
+          log.error(e.getMessage(), e);
+        }
+    } else {
+      backupDetail = this.repository.save(backupDetail);
+    }
+
+  }
+
   public BackupDetail save(BackupDetail backupDetail) {
     return this.repository.save(backupDetail);
+  }
+
+  @Override
+  Optional<BackupDetail> getRecentImportedEntity(BackupDTO importDTO, Long... ids) {
+    return Optional.empty();
+  }
+
+  @Override
+  boolean hasToSkip(BackupDetail backupDetail, BackupDTO importDTO) {
+    return false;
+  }
+
+  @Override
+  void updateImportedId(BackupDetail backupDetail, BackupDetail previous, BackupDTO importDTO) {
+
   }
 
 
@@ -129,6 +180,7 @@ public class BackupDetailService extends XMLExportService<BackupDetail> {
         testcaseService.export(backupDTO);
         teststepService.export(backupDTO);
         reststepService.export(backupDTO);
+        testSuiteService.export(backupDTO);
         testPlanService.export(backupDTO);
         testDeviceService.export(backupDTO);
         backupDetail.setSrcFiles(backupDTO.getSrcFiles());
@@ -145,8 +197,93 @@ public class BackupDetailService extends XMLExportService<BackupDetail> {
         log.error(error.getMessage(), error);
       } finally {
         destroy(backupDTO);
-        log.debug("backup process for completed");
+        log.debug("backup process completed");
       }
     }).start();
   }
+
+  public void importBackup(BackupDetail importOp) throws IOException, TestsigmaException {
+    log.debug("initiating import - " + importOp.getId());
+    final BackupDTO importDTO = exportBackupEntityMapper.mapTo(importOp);
+    new Thread(() -> {
+      try {
+        log.debug("import process started for ::" + importOp.getId());
+        importDTO.setImportFileUrl(storageServiceFactory.getStorageService().generatePreSignedURLIfExists(
+                "/backup/" + importDTO.getName(), StorageAccessLevel.READ, 300).get().toString());
+        initImportFolder(importDTO,unzipDir);
+       // workspaceService.setXmlImportVersionPrerequisites(importDTO);
+        versionService.setXmlImportVersionPrerequisites(importDTO);
+        testCasePriorityService.importXML(importDTO);
+        testCaseTypeService.importXML(importDTO);
+        elementScreenService.importXML(importDTO);
+        elementService.importXML(importDTO);
+        testDataProfileService.importXML(importDTO);
+        attachmentService.importXML(importDTO);
+        agentService.importXML(importDTO);
+        uploadService.importXML(importDTO);
+        uploadVersionService.importXML(importDTO);
+        testcaseService.importXML(importDTO);
+        teststepService.importXML(importDTO);
+        reststepService.importXML(importDTO);
+        testSuiteService.importXML(importDTO);
+        testPlanService.importXML(importDTO);
+        testDeviceService.importXML(importDTO);
+        updateSuccess(importOp);
+        log.debug("import process completed");
+      } catch (Exception e) {
+        log.error(e.getMessage(), e);
+        importOp.setStatus(BackupStatus.FAILURE);
+        importOp.setMessage(e.getMessage());
+        repository.save(importOp);
+        XMLExportImportService.destroyImport(importDTO);;
+      } catch (Error error) {
+        log.error(error.getMessage(), error);
+      } finally {
+        XMLExportImportService.destroyImport(importDTO);
+        log.debug("import process completed");
+      }
+    }).start();
+  }
+
+  private void updateSuccess(BackupDetail backupDetail) {
+    backupDetail.setStatus(BackupStatus.SUCCESS);
+    backupDetail.setMessage(MessageConstants.IMPORT_IS_SUCCESS);
+    this.save(backupDetail);
+  }
+
+  @Override
+  List<BackupDetail> readEntityListFromXmlData(String xmlData, XmlMapper xmlMapper, BackupDTO importDTO) throws JsonProcessingException, ResourceNotFoundException {
+    return null;
+  }
+
+  @Override
+  Optional<BackupDetail> findImportedEntity(BackupDetail backupDetail, BackupDTO importDTO) {
+    return Optional.empty();
+  }
+
+  @Override
+  Optional<BackupDetail> findImportedEntityHavingSameName(Optional<BackupDetail> previous, BackupDetail backupDetail, BackupDTO importDTO) throws ResourceNotFoundException {
+    return Optional.empty();
+  }
+
+  @Override
+  boolean hasImportedId(Optional<BackupDetail> previous) {
+    return false;
+  }
+
+  @Override
+  boolean isEntityAlreadyImported(Optional<BackupDetail> previous, BackupDetail backupDetail) {
+    return false;
+  }
+
+  @Override
+  BackupDetail processBeforeSave(Optional<BackupDetail> previous, BackupDetail present, BackupDetail importEntity, BackupDTO importDTO) throws ResourceNotFoundException {
+    return null;
+  }
+
+  @Override
+  BackupDetail copyTo(BackupDetail backupDetail) {
+    return null;
+  }
+
 }

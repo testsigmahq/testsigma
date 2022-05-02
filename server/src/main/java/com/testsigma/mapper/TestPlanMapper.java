@@ -10,6 +10,7 @@ package com.testsigma.mapper;
 import com.testsigma.dto.TestPlanSettingEntityDTO;
 import com.testsigma.dto.TestDeviceSettingsDTO;
 import com.testsigma.dto.TestPlanDTO;
+import com.testsigma.dto.export.TestPlanCloudXMLDTO;
 import com.testsigma.dto.export.TestPlanXMLDTO;
 import com.testsigma.model.AbstractTestPlan;
 import com.testsigma.model.TestDevice;
@@ -67,4 +68,10 @@ public interface TestPlanMapper {
 
   @Mapping(target = "lastRun.testPlan", ignore = true)
   TestPlanDTO mapTo(TestPlan testPlan);
+
+    TestPlan copy(TestPlan execution);
+
+  List<TestPlan> mapTestPlanCloudList(List<TestPlanCloudXMLDTO> readValue);
+
+  List<TestPlan> mapTestPlanList(List<TestPlanXMLDTO> readValue);
 }

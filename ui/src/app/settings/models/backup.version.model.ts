@@ -37,6 +37,8 @@ export class BackupVersionModel extends Base implements PageObject {
   public workspaceVersionId: Number;
   @serializable
   public filterId: Number;
+  @serializable
+  public skipEntityExists: Boolean=true;
 
   deserialize(input: any): this {
     return Object.assign(this, deserialize(BackupVersionModel, input));

@@ -11,6 +11,7 @@ package com.testsigma.mapper;
 
 import com.testsigma.dto.TestSuiteDTO;
 import com.testsigma.dto.TestSuiteEntityDTO;
+import com.testsigma.dto.export.TestSuiteCloudXMLDTO;
 import com.testsigma.dto.export.TestSuiteXMLDTO;
 import com.testsigma.model.TestSuite;
 import com.testsigma.web.request.TestSuiteRequest;
@@ -37,5 +38,11 @@ public interface TestSuiteMapper {
 
   @Mapping(target = "preRequisite", expression = "java(request.getPreRequisite())")
   void merge(TestSuiteRequest request, @MappingTarget TestSuite testSuite);
+
+    TestSuite copy(TestSuite testSuite);
+
+  List<TestSuite> mapCloudTestSuiteList(List<TestSuiteCloudXMLDTO> readValue);
+
+  List<TestSuite> mapTestSuiteList(List<TestSuiteXMLDTO> readValue);
 }
 

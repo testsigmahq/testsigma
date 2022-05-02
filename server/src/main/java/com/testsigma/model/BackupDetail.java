@@ -81,8 +81,15 @@ public class BackupDetail implements Serializable {
   @Enumerated(EnumType.ORDINAL)
   private BackupStatus status;
 
+  @Column(name = "action_type")
+  @Enumerated(EnumType.STRING)
+  private BackupActionType actionType;
+
   @Column
   private String message;
+
+  @Column(name = "skip_entity_exists")
+  private Boolean skipEntityExists;
 
   @Column(name = "created_date")
   @CreationTimestamp

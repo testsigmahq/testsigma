@@ -10,6 +10,7 @@ CREATE TABLE `upload_versions`
   `file_size`      INT(11),
   `upload_id`      BIGINT(20) DEFAULT NULL,
   `workspace_id`   BIGINT(20)   DEFAULT NULL,
+  `imported_id`    BIGINT(20) DEFAULT NULL,
   `created_date`   DATETIME     DEFAULT CURRENT_TIMESTAMP,
   `updated_date`   DATETIME     DEFAULT CURRENT_TIMESTAMP,
   `upload_status`  VARCHAR(100) DEFAULT NULL,

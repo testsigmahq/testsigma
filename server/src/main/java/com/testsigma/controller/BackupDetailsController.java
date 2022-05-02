@@ -24,6 +24,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -51,9 +52,14 @@ public class BackupDetailsController {
     response.sendRedirect(s3Url.get().toString());
   }
 
-  @PostMapping
+  @PostMapping(path ="/export")
   public void backup(@RequestBody BackupRequest request) throws IOException, TestsigmaException {
     service.export(request);
+  }
+
+  @PostMapping(consumes = {"multipart/form-data"})
+  public void create(@RequestPart BackupRequest request, @RequestPart(name = "file", required = false) MultipartFile file) throws IOException {
+    service.create(request, file);
   }
 
   @DeleteMapping(path = "/{id}")

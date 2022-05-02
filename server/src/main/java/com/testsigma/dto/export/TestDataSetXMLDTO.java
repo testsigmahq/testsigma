@@ -7,6 +7,7 @@
 
 package com.testsigma.dto.export;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.testsigma.annotation.JsonListRootName;
@@ -14,7 +15,9 @@ import lombok.Data;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @JsonListRootName(name = "test-data-sets")
@@ -29,11 +32,21 @@ public class TestDataSetXMLDTO extends BaseXMLDTO {
   @JsonProperty("data")
   private List<Entry> data;
 
+  private Map<String, Object> map = new HashMap<>();
+
   public void setData(JSONObject data) {
     this.data = new ArrayList();
     data.keySet().forEach((k) -> {
       this.data.add(new Entry(k, data.optString(k)));
     });
+  }
+
+  @JsonIgnore
+  public JSONObject getData() {
+    this.data.forEach((entry) -> {
+      map.put(entry.getKey(), entry.getValue());
+    });
+    return new JSONObject(data);
   }
 }
 

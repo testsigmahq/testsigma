@@ -7,7 +7,13 @@
 
 package com.testsigma.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.testsigma.dto.BackupDTO;
+import com.testsigma.dto.export.TestCasePriorityCloudXMLDTO;
+import com.testsigma.dto.export.TestCasePriorityXMLDTO;
+import com.testsigma.dto.export.TestCaseTypeCloudXMLDTO;
 import com.testsigma.dto.export.TestCaseTypeXMLDTO;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.mapper.TestCaseTypeMapper;
@@ -29,11 +35,12 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Log4j2
 @Service
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
-public class TestCaseTypeService extends XMLExportService<TestCaseType> {
+public class TestCaseTypeService extends XMLExportImportService<TestCaseType> {
 
   private final TestCaseTypeRepository testCaseTypeRepository;
   private final WorkspaceVersionService workspaceVersionService;
@@ -84,5 +91,84 @@ public class TestCaseTypeService extends XMLExportService<TestCaseType> {
     TestCaseTypeSpecificationsBuilder applicationSpecificationsBuilder = new TestCaseTypeSpecificationsBuilder();
     applicationSpecificationsBuilder.params = params;
     return applicationSpecificationsBuilder.build();
+  }
+
+  public void importXML(BackupDTO importDTO) throws IOException, ResourceNotFoundException {
+    if (!importDTO.getIsTestCaseTypeEnabled()) return;
+    log.debug("import process for testcase type initiated");
+    importFiles("testcase_types", importDTO);
+    log.debug("import process for testcase type  completed");
+  }
+
+  @Override
+  public List<TestCaseType> readEntityListFromXmlData(String xmlData, XmlMapper xmlMapper, BackupDTO importDTO) throws JsonProcessingException {
+    if (importDTO.getIsCloudImport()) {
+      return mapper.mapTestCaseTypeCloudList(xmlMapper.readValue(xmlData, new TypeReference<List<TestCaseTypeCloudXMLDTO>>() {
+      }));
+    }
+    else{
+      return mapper.mapTestCaseTypeList(xmlMapper.readValue(xmlData,  new TypeReference<List<TestCaseTypeXMLDTO>>() {
+      }));
+    }
+  }
+
+  @Override
+  public Optional<TestCaseType> findImportedEntity(TestCaseType testCasePriority, BackupDTO importDTO) {
+    return testCaseTypeRepository.findAllByWorkspaceIdAndImportedId(importDTO.getWorkspaceId(), testCasePriority.getId());
+  }
+
+  @Override
+  public TestCaseType processBeforeSave(Optional<TestCaseType> previous, TestCaseType present, TestCaseType toImport, BackupDTO importDTO) throws ResourceNotFoundException {
+    present.setImportedId(present.getId());
+    if (previous.isPresent() && importDTO.isHasToReset()) {
+      present.setId(previous.get().getId());
+    } else {
+      present.setId(null);
+    }
+    present.setWorkspaceId(importDTO.getWorkspaceId());
+
+    return present;
+  }
+
+
+  @Override
+  public TestCaseType copyTo(TestCaseType testCasePriority) {
+    return mapper.copy(testCasePriority);
+  }
+
+  @Override
+  public TestCaseType save(TestCaseType testCasePriority) {
+    return testCaseTypeRepository.save(testCasePriority);
+  }
+
+  @Override
+  public Optional<TestCaseType> getRecentImportedEntity(BackupDTO importDTO, Long... ids) {
+    Long importedFrom = ids[0];
+    return testCaseTypeRepository.findAllByWorkspaceIdAndImportedId(importDTO.getWorkspaceId(), importedFrom);
+  }
+
+
+  public Optional<TestCaseType> findImportedEntityHavingSameName(Optional<TestCaseType> previous, TestCaseType current, BackupDTO importDTO) {
+    Optional<TestCaseType> oldEntity = testCaseTypeRepository.findAllByWorkspaceIdAndName(importDTO.getWorkspaceId(), current.getName());
+    return oldEntity;
+  }
+
+  public boolean hasImportedId(Optional<TestCaseType> previous) {
+    return previous.isPresent() && previous.get().getImportedId() != null;
+  }
+
+  public boolean isEntityAlreadyImported(Optional<TestCaseType> previous, TestCaseType current) {
+    return previous.isPresent() && previous.get().getImportedId() != null && previous.get().getImportedId().equals(current.getId());
+  }
+
+  @Override
+  public boolean hasToSkip(TestCaseType requirementType, BackupDTO importDTO) {
+    return false;
+  }
+
+  @Override
+  void updateImportedId(TestCaseType testCaseType, TestCaseType previous, BackupDTO importDTO) {
+    previous.setImportedId(testCaseType.getId());
+    save(previous);
   }
 }

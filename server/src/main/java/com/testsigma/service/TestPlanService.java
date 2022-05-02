@@ -9,7 +9,11 @@
 
 package com.testsigma.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.testsigma.dto.BackupDTO;
+import com.testsigma.dto.export.TestPlanCloudXMLDTO;
 import com.testsigma.dto.export.TestPlanXMLDTO;
 import com.testsigma.event.EventType;
 import com.testsigma.event.TestPlanEvent;
@@ -18,7 +22,6 @@ import com.testsigma.exception.TestsigmaDatabaseException;
 import com.testsigma.mapper.TestPlanMapper;
 import com.testsigma.model.TestDevice;
 import com.testsigma.model.TestPlan;
-import com.testsigma.model.TestPlanResult;
 import com.testsigma.repository.TestPlanRepository;
 import com.testsigma.specification.SearchCriteria;
 import com.testsigma.specification.SearchOperation;
@@ -42,7 +45,7 @@ import java.util.Set;
 @Service
 @Log4j2
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class TestPlanService extends XMLExportService<TestPlan> {
+public class TestPlanService extends XMLExportImportService<TestPlan> {
 
   private final TestPlanRepository testPlanRepository;
   private final TestDeviceService testDeviceService;
@@ -146,6 +149,87 @@ public class TestPlanService extends XMLExportService<TestPlan> {
     TestPlanSpecificationsBuilder testPlanSpecificationsBuilder = new TestPlanSpecificationsBuilder();
     testPlanSpecificationsBuilder.params = params;
     return testPlanSpecificationsBuilder.build();
+  }
+
+  public void importXML(BackupDTO importDTO) throws
+          IOException, ResourceNotFoundException, ResourceNotFoundException {
+    if (!importDTO.getIsTestPlanEnabled()) return;
+    log.debug("import process for execution  initiated");
+    importFiles("test_plans", importDTO);
+    log.debug("import process for execution  completed");
+  }
+
+  @Override
+  public List<TestPlan> readEntityListFromXmlData(String xmlData, XmlMapper xmlMapper, BackupDTO importDTO) throws
+          JsonProcessingException {
+    if (importDTO.getIsCloudImport()) {
+      return mapper.mapTestPlanCloudList(xmlMapper.readValue(xmlData, new TypeReference<List<TestPlanCloudXMLDTO>>() {
+      }));
+    }
+    else {
+      return mapper.mapTestPlanList(xmlMapper.readValue(xmlData, new TypeReference<List<TestPlanXMLDTO>>() {
+      }));
+    }
+  }
+
+  @Override
+  public Optional<TestPlan> findImportedEntity(TestPlan execution, BackupDTO importDTO) {
+    return testPlanRepository.findAllByWorkspaceVersionIdAndImportedId(importDTO.getWorkspaceVersionId(), execution.getId());
+  }
+
+  @Override
+  public TestPlan processBeforeSave(Optional<TestPlan> previous, TestPlan present, TestPlan
+          toImport, BackupDTO importDTO) throws ResourceNotFoundException {
+    present.setImportedId(present.getId());
+    if (previous.isPresent() && importDTO.isHasToReset()) {
+      present.setId(previous.get().getId());
+    } else {
+      present.setId(null);
+    }
+    present.setLastRunId(null);
+    present.setWorkspaceVersionId(importDTO.getWorkspaceVersionId());
+    return present;
+  }
+
+  @Override
+  public Optional<TestPlan> getRecentImportedEntity(BackupDTO importDTO, Long... ids) {
+    Long importedId = ids[0];
+    return testPlanRepository.findAllByWorkspaceVersionIdAndImportedId(importDTO.getWorkspaceVersionId(), importedId);
+  }
+
+  @Override
+  public boolean hasToSkip(TestPlan execution, BackupDTO importDTO) {
+    return !importDTO.getIsSameApplicationType();
+  }
+
+  @Override
+  void updateImportedId(TestPlan execution, TestPlan previous, BackupDTO importDTO) {
+    previous.setImportedId(execution.getId());
+    save(previous);
+  }
+
+  @Override
+  public TestPlan copyTo(TestPlan execution) {
+    return mapper.copy(execution);
+  }
+
+  @Override
+  TestPlan save(TestPlan testPlan) {
+    return this.testPlanRepository.save(testPlan);
+  }
+
+  public Optional<TestPlan> findImportedEntityHavingSameName(Optional<TestPlan> previous, TestPlan
+          current, BackupDTO importDTO) {
+    Optional<TestPlan> oldEntity = testPlanRepository.findAllByWorkspaceVersionIdAndName(importDTO.getWorkspaceVersionId(), current.getName());
+    return oldEntity;
+  }
+
+  public boolean hasImportedId(Optional<TestPlan> previous) {
+    return previous.isPresent() && previous.get().getImportedId() != null;
+  }
+
+  public boolean isEntityAlreadyImported(Optional<TestPlan> previous, TestPlan current) {
+    return previous.isPresent() && previous.get().getImportedId() != null && previous.get().getImportedId().equals(current.getId());
   }
 
 }

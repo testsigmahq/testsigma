@@ -17,5 +17,7 @@ import java.util.Optional;
 @Transactional
 public interface ElementScreenNameRepository extends BaseRepository<ElementScreenName, Long> {
   Optional<ElementScreenName> findByNameAndWorkspaceVersionId(String name, Long workspaceVersionId);
+  Optional<ElementScreenName> findAllByWorkspaceVersionIdAndImportedId(Long applicationVersionId, Long id);
+
 }
 

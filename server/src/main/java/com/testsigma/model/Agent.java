@@ -76,6 +76,9 @@ public class Agent implements Serializable {
   @Column(name = "os_version")
   private String osVersion;
 
+  @Column(name = "imported_id")
+  private Long importedId;
+
   public String generateJwtApiKey(String serverUuid) {
     AgentType agentType = AgentType.HYBRID;
     return JWTTokenService.generateToken(new APIToken(uniqueId,

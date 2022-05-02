@@ -66,6 +66,13 @@ public class AbstractTestSuite implements Serializable {
   private Timestamp updatedDate;
   @Column(name = "last_run_id")
   private Long lastRunId;
+
+  @Column(name = "imported_id")
+  private Long importedId;
+
+  @Column(name = "entity_type", insertable = false, updatable = false)
+  private String entityType;
+
   @OneToMany(mappedBy = "testSuite", fetch = FetchType.LAZY)
   @EqualsAndHashCode.Exclude
   @ToString.Exclude

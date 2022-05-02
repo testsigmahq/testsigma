@@ -35,4 +35,7 @@ public interface TestDataProfileRepository extends JpaRepository<TestData, Long>
 
   @Query(value = "SELECT COUNT(*) FROM test_cases tc JOIN test_steps ts ON tc.id =ts.test_case_id WHERE tc.workspace_version_id =:workspaceVersionId AND ts.for_loop_test_data_id =:testDataProfileId",nativeQuery = true)
   Long countAllTestDataProfilesUsedInForLoopSteps(Long workspaceVersionId,Long testDataProfileId);
+
+  Optional<TestData> findAllByVersionIdAndImportedId(Long versionId, Long id);
+
 }

@@ -24,6 +24,8 @@ CREATE TABLE `backup_details`
   `workspace_version_id`         BIGINT(20)    DEFAULT '0',
   `filter_id`                      BIGINT(20)    DEFAULT NULL,
   `entity_id`                      VARCHAR(50)   DEFAULT NULL,
+  `skip_entity_exists`             BIT(1)        DEFAULT NULL,
+  `action_type`                    VARCHAR (1000) DEFAULT NULL,
   `created_date`                   DATETIME      DEFAULT CURRENT_TIMESTAMP,
   `updated_date`                   DATETIME      DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)

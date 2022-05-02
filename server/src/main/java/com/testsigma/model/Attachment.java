@@ -43,6 +43,9 @@ public class Attachment implements Serializable {
   @Column(name = "type")
   private Integer type = 1;
 
+  @Column(name = "imported_id")
+  private Long importedId;
+
   @Column
   private String description;
 

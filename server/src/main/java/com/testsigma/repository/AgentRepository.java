@@ -14,6 +14,8 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Repository
 @Transactional
 public interface AgentRepository extends JpaSpecificationExecutor<Agent>, PagingAndSortingRepository<Agent, Long>, JpaRepository<Agent, Long> {
@@ -21,4 +23,6 @@ public interface AgentRepository extends JpaSpecificationExecutor<Agent>, Paging
   Agent findByUniqueId(String uniqueId);
 
   Page<Agent> findAll(Specification specification, Pageable pageable);
+
+    Optional<Agent> findAllByImportedId(Long id);
 }

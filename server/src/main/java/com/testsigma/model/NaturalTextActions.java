@@ -61,6 +61,18 @@ public class NaturalTextActions {
   @Enumerated(EnumType.STRING)
   private StepActionType stepActionType;
 
+  @Column(name = "import_to_web")
+  private Long importToWeb;
+
+  @Column(name = "import_to_mobile_web")
+  private Long importToMobileWeb;
+
+  @Column(name = "import_to_android_native")
+  private Long importToAndroidNative;
+
+  @Column(name = "import_to_ios_native")
+  private Long importToIosNative;
+
   public void setAllowedValues(List allowedValues){
     this.allowedValues = new ObjectMapperService().convertToJson(allowedValues);
   }

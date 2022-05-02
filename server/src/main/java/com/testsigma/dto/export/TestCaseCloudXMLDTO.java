@@ -10,6 +10,7 @@
 package com.testsigma.dto.export;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -24,7 +25,7 @@ import java.util.List;
 @Data
 @JsonListRootName(name = "TestCases")
 @JsonRootName(value = "TestCase")
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TestCaseCloudXMLDTO extends BaseXMLDTO {
   @JacksonXmlElementWrapper(localName = "Tags")
   @JacksonXmlProperty(localName = "Tag")

@@ -56,6 +56,7 @@ public class TestStepService extends XMLExportImportService<TestStep> {
   private final TestDataProfileService testDataService;
   private final NaturalTextActionsService naturalTextActionsService;
 
+
   public List<TestStep> findAllByTestCaseId(Long testCaseId) {
     return this.repository.findAllByTestCaseIdOrderByPositionAsc(testCaseId);
   }
@@ -276,13 +277,25 @@ public class TestStepService extends XMLExportImportService<TestStep> {
   }
 
   @Override
-  public List<TestStep> readEntityListFromXmlData(String xmlData, XmlMapper xmlMapper, BackupDTO importDTO) throws JsonProcessingException {
+  public List<TestStep> readEntityListFromXmlData(String xmlData, XmlMapper xmlMapper, BackupDTO importDTO) throws JsonProcessingException, ResourceNotFoundException {
     if (importDTO.getIsCloudImport()) {
-      return mapper.mapTestStepsCloudList(xmlMapper.readValue(xmlData, new TypeReference<List<TestStepCloudXMLDTO>>() {
+      List<TestStep> steps = mapper.mapTestStepsCloudList(xmlMapper.readValue(xmlData, new TypeReference<List<TestStepCloudXMLDTO>>() {
       }));
-    }
-    else{
-      return mapper.mapTestStepsList(xmlMapper.readValue(xmlData,  new TypeReference<List<TestStepXMLDTO>>() {
+      List<TestStep> stepsCopy = new ArrayList<TestStep>(steps);
+      for (TestStep step : stepsCopy) {
+        if (step.getAddonActionId() != null && step.getAddonActionId() > 0) {
+          try {
+            addonNaturalTextActionService.findById(step.getAddonActionId());
+          } catch (Exception e) {
+            log.error(e.getMessage());
+            steps.remove(step);
+            log.info("deleting addon test step to avoid further issues, since addon is not installed");
+          }
+        }
+      }
+      return steps;
+    } else {
+      return mapper.mapTestStepsList(xmlMapper.readValue(xmlData, new TypeReference<List<TestStepXMLDTO>>() {
       }));
     }
   }

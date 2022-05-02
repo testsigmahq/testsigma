@@ -461,7 +461,6 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
   @Override
   public Optional<TestCase> getRecentImportedEntity(BackupDTO importDTO, Long... ids) {
     Long importedId = ids[0];
-    Long entityId = ids[1];
     Optional<TestCase> previous = testCaseRepository.findAllByWorkspaceVersionIdAndImportedId(importDTO.getWorkspaceVersionId(), importedId);
     return previous;
 

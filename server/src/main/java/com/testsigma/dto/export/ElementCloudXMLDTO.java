@@ -9,10 +9,7 @@
 
 package com.testsigma.dto.export;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -29,6 +26,7 @@ import java.sql.Timestamp;
 @Log4j2
 @JsonListRootName(name = "Elements")
 @JsonRootName(value = "Element")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ElementCloudXMLDTO extends BaseXMLDTO {
   @JsonProperty("Id")
   private Long id;

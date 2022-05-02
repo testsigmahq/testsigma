@@ -9,10 +9,7 @@ package com.testsigma.dto.export;
 
 import com.fasterxml.jackson.annotation.*;
 import com.testsigma.annotation.JsonListRootName;
-import com.testsigma.model.TestStepConditionType;
-import com.testsigma.model.TestStepDataMap;
-import com.testsigma.model.TestStepPriority;
-import com.testsigma.model.TestStepType;
+import com.testsigma.model.*;
 import com.testsigma.service.ObjectMapperService;
 import lombok.Data;
 
@@ -88,11 +85,11 @@ public class TestStepCloudXMLDTO extends BaseXMLDTO {
   private String typeName;
 
 
-  public TestStepDataMap getDataMap() {
-    return new ObjectMapperService().parseJson(dataMap, TestStepDataMap.class);
+  public TestStepCloudDataMap getDataMap() {
+    return new ObjectMapperService().parseJson(dataMap, TestStepCloudDataMap.class);
   }
 
-  public void setDataMap(TestStepDataMap testStepDataMap) {
+  public void setDataMap(TestStepCloudDataMap testStepDataMap) {
     this.dataMap = new ObjectMapperService().convertToJson(testStepDataMap);
   }
 

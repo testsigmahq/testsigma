@@ -58,7 +58,7 @@ public abstract class XMLExportImportService<T> {
     private String fileName = "backup.zip";
 
     public static void initImportFolder(BackupDTO importDTO, String unzipDir) throws IOException, UnZipException {
-        File destFolder = Files.createTempDirectory(importDTO.getName() + "_" + importDTO.getId()).toFile();
+        File destFolder = Files.createTempDirectory("import_" + importDTO.getId()).toFile();
         File unZippedFolder = unZipFile(importDTO.getImportFileUrl(), destFolder, unzipDir);
         importDTO.setDestFiles(unZippedFolder);
     }
@@ -303,7 +303,7 @@ public abstract class XMLExportImportService<T> {
 
     void importFiles(String fileName, BackupDTO importDTO) throws IOException, ResourceNotFoundException {
         FileFilter fileFilter = new RegexFileFilter("^" + fileName + "_\\d+.xml$");
-        File[] files = importDTO.getDestFiles().listFiles()[0].listFiles(fileFilter);
+        File[] files = importDTO.getDestFiles().listFiles(fileFilter);
         for (File file : files) {
             importFile(importDTO, file);
         }

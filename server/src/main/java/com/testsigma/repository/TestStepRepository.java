@@ -99,4 +99,6 @@ public interface TestStepRepository extends JpaRepository<TestStep, Long> {
   List<TestStep> findAllByTestCaseIdAndDisabledIsNotAndStepGroupIdIsNotNullOrderByPositionAsc(Long testCaseId, boolean notDisabled);
 
     Optional<TestStep> findByTestCaseIdInAndImportedId(List<Long> id, Long id1);
+
+    List<TestStep> findAllByTestCaseIdInOrderByPositionAsc(List<Long> testCaseIds);
 }

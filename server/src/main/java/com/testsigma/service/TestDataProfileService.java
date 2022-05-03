@@ -151,11 +151,11 @@ public class TestDataProfileService extends XMLExportImportService<TestData> {
   @Override
   public List<TestData> readEntityListFromXmlData(String xmlData, XmlMapper xmlMapper, BackupDTO importDTO) throws JsonProcessingException {
     if (importDTO.getIsCloudImport()) {
-      return mapper.mapTestDataList(xmlMapper.readValue(xmlData, new TypeReference<List<TestDataXMLDTO>>() {
+      return mapper.mapCloudTestDataList(xmlMapper.readValue(xmlData, new TypeReference<List<TestDataCloudXMLDTO>>() {
       }));
     }
     else{
-      return mapper.mapCloudTestDataList(xmlMapper.readValue(xmlData, new TypeReference<List<TestDataCloudXMLDTO>>() {
+      return mapper.mapTestDataList(xmlMapper.readValue(xmlData, new TypeReference<List<TestDataXMLDTO>>() {
       }));
     }
   }

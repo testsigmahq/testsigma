@@ -9,10 +9,7 @@
 
 package com.testsigma.dto.export;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -39,6 +36,7 @@ import java.util.Map;
 @Log4j2
 @JsonListRootName(name = "TestDatalist")
 @JsonRootName(value = "TestData")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TestDataCloudXMLDTO extends BaseXMLDTO {
   @JsonProperty("TestDataSets")
   List<TestDataSetCloudXMLDTO> testDataSets;

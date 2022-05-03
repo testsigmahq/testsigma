@@ -105,10 +105,10 @@ public interface TestDataProfileMapper {
 
   List<TestDataSet> mapDataSet(List<TestDataSetRequest> data);
 
-  @Mapping(target = "data", expression = "java(map(testDataXMLDTO.getTestDataSets()))")
+  @Mapping(target = "data", expression = "java(map(testDataXMLDTO.getTestDataSetList()))")
   TestData mapTestData(TestDataXMLDTO testDataXMLDTO) throws JsonProcessingException;
 
-  @Mapping(target = "data", expression = "java(map2(testDataCloudXMLDTO.getTestDataSets()))")
+  @Mapping(target = "data", expression = "java(map2(testDataCloudXMLDTO.getTestDataSetList()))")
   TestData mapTestData2(TestDataCloudXMLDTO testDataCloudXMLDTO) throws JsonProcessingException;
 
     default List<TestData> mapTestDataList(List<TestDataXMLDTO> xmlDTOs) throws JsonProcessingException {

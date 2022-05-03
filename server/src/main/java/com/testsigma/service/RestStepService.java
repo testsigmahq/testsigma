@@ -73,7 +73,8 @@ public class RestStepService extends XMLExportImportService<RestStep> {
   public Specification<RestStep> getExportXmlSpecification(BackupDTO backupDTO) {
     List<TestCase> testCaseList = testCaseService.findAllByWorkspaceVersionId(backupDTO.getWorkspaceVersionId());
     List<Long> testcaseIds = testCaseList.stream().map(testCase -> testCase.getId()).collect(Collectors.toList());
-    SearchCriteria criteria = new SearchCriteria("testCaseId", SearchOperation.IN, testcaseIds);
+    List<Long> stepIds = testStepService.findAllByTestCaseIdIn(testcaseIds).stream().map(testStep -> testStep.getId()).collect(Collectors.toList());
+    SearchCriteria criteria = new SearchCriteria("stepId", SearchOperation.IN, stepIds);
     List<SearchCriteria> params = new ArrayList<>();
     params.add(criteria);
     RestStepSpecificationsBuilder testStepSpecificationsBuilder = new RestStepSpecificationsBuilder();

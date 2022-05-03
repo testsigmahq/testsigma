@@ -7,10 +7,7 @@
 
 package com.testsigma.dto.export;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.testsigma.annotation.JsonListRootName;
@@ -26,6 +23,7 @@ import java.util.Map;
 @JsonListRootName(name = "TestDataSets")
 @JsonRootName(value = "TestDataset")
 @JsonFilter("myFilter")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TestDataSetCloudXMLDTO extends BaseXMLDTO {
   @JsonProperty("Name")
   private String name;

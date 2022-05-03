@@ -69,8 +69,15 @@ public interface RestStepMapper {
     }
 
     default ResultConstant[] getIfConditionExpectedResults(Object constant) {
-        if (constant!=null && Objects.equals(constant.toString(), "0"))
-            return new ResultConstant[]{ResultConstant.SUCCESS};
-        else return new ResultConstant[]{ResultConstant.FAILURE};
+        if (constant != null) {
+            try {
+                return (ResultConstant[]) constant;
+            } catch (Exception e) {
+                if (constant.toString().equals("0"))
+                    return new ResultConstant[]{ResultConstant.SUCCESS};
+                else return new ResultConstant[]{ResultConstant.FAILURE};
+            }
+        }
+        return null;
     }
 }

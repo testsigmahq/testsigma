@@ -21,6 +21,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Optional;
 
 @Log4j2
 @Converter//(autoApply = true)
@@ -53,7 +54,8 @@ public class TestDataSetConverter implements AttributeConverter<List<TestDataSet
         map.setAccessible(false);
         TestDataSet testDataSet = new TestDataSet();
         testDataSet.setName(node.get("name").asText());
-        testDataSet.setDescription(node.get("description").asText());
+        Optional<JsonNode> desc = Optional.ofNullable(node.get("description"));
+        testDataSet.setDescription(desc.isPresent() ? desc.get().asText() : "");
         testDataSet.setExpectedToFail(node.get("expectedToFail").asBoolean());
         testDataSet.setData(dataObj);
         testDataSets.add(testDataSet);

@@ -63,6 +63,7 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
   private final WorkspaceVersionService workspaceVersionService;
   private final UploadMapper mapper;
   private final UploadVersionRepository uploadVersionRepository;
+  private final UploadService uploadService;
   private final HttpClient client;
 
   @Getter
@@ -207,7 +208,7 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
   public void export(BackupDTO backupDTO) throws IOException, ResourceNotFoundException {
     if (!backupDTO.getIsUploadsEnabled()) return;
     log.debug("backup process for upload initiated");
-    writeXML("uploads", backupDTO, PageRequest.of(0, 25));
+    writeXML("upload_version", backupDTO, PageRequest.of(0, 25));
     log.debug("backup process for upload completed");
   }
 
@@ -243,7 +244,7 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
   public void importXML(BackupDTO importDTO) throws IOException, ResourceNotFoundException {
     if (!importDTO.getIsUploadsEnabled()) return;
     log.debug("import process for ui-identifier screen name initiated");
-    importFiles("uploads", importDTO);
+    importFiles("upload_version", importDTO);
     log.debug("import process for ui-identifier  screen name completed");
   }
 
@@ -285,7 +286,7 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
 
   @Override
   public Optional<UploadVersion> findImportedEntity(UploadVersion version, BackupDTO importDTO) {
-    return uploadVersionRepository.findAllByUploadIdAndImportedId(version.getUpload().getImportedId(), version.getId());
+    return uploadVersionRepository.findAllByUploadIdAndImportedId(version.getImportedId(), version.getId());
   }
 
   @Override
@@ -295,6 +296,12 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
       present.setId(previous.get().getId());
     } else {
       present.setId(null);
+    }
+    Upload importedUpload =
+            uploadService.findByImportedIdAndWorkspaceId(present.getUploadId(),importDTO.getWorkspaceVersionId());
+    if (importedUpload!=null){
+    present.setUploadId(importedUpload.getId());
+    present.setUpload(importedUpload);
     }
     return present;
   }
@@ -321,7 +328,7 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
 
   @Override
   public Optional<UploadVersion> findImportedEntityHavingSameName(Optional<UploadVersion> previous, UploadVersion current, BackupDTO importDTO) throws ResourceNotFoundException {
-    return uploadVersionRepository.findByNameAndUploadId(current.getName(), current.getUpload().getImportedId());
+    return uploadVersionRepository.findByNameAndUploadId(current.getName(), current.getImportedId());
   }
 
   @Override

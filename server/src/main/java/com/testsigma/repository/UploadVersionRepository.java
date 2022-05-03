@@ -27,5 +27,5 @@ public interface UploadVersionRepository extends BaseRepository<UploadVersion, L
 
   Optional<UploadVersion> findByNameAndUploadId(String name, Long importedId);
 
-    Optional<UploadVersion> findAllByUploadIdAndImportedId(Long importedId, Long id);
+    Optional<UploadVersion> findAllByUploadIdAndImportedId(Long uploadId, Long id);
 }

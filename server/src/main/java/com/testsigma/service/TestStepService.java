@@ -25,6 +25,7 @@ import com.testsigma.repository.TestStepRepository;
 import com.testsigma.specification.SearchCriteria;
 import com.testsigma.specification.SearchOperation;
 import com.testsigma.specification.TestStepSpecificationsBuilder;
+import io.grpc.MethodDescriptor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
@@ -434,4 +435,7 @@ public class TestStepService extends XMLExportImportService<TestStep> {
     return previous.isPresent() && previous.get().getImportedId() != null && previous.get().getImportedId().equals(current.getId());
   }
 
+  public List<TestStep> findAllByTestCaseIdIn(List<Long> testCaseIds) {
+    return this.repository.findAllByTestCaseIdInOrderByPositionAsc(testCaseIds);
+  }
 }

@@ -97,18 +97,18 @@ public abstract class XMLExportImportService<T> {
     public void initExportFolder(BackupDTO backupDTO) throws IOException {
         String path = System.getProperty("java.io.tmpdir");
 
-        String sourcePtah = path + File.separator + "xmls" + File.separator
-                + backupDTO.getId();
-        String destPtah = path + File.separator + "zip" + File.separator
-                + backupDTO.getId();
+        String sourcePath = path + File.separator + "xmls" + File.separator
+                + backupDTO.getName();
+        String destPath = path + File.separator + "zip" + File.separator
+                + backupDTO.getName();
 
-        File folder = new File(sourcePtah);
+        File folder = new File(sourcePath);
         if (!folder.isDirectory() && !folder.exists()) {
             folder.mkdirs();
         }
         backupDTO.setSrcFiles(folder);
 
-        File dest = new File(destPtah);
+        File dest = new File(destPath);
         if (!dest.isDirectory() && !dest.exists()) {
             dest.mkdirs();
         }

@@ -230,4 +230,9 @@ public class UploadService extends XMLExportImportService<Upload> {
     return previous.isPresent() && previous.get().getImportedId() != null && previous.get().getImportedId().equals(current.getId());
   }
 
+  public Upload findByImportedIdAndWorkspaceId(Long importedId,
+                                                 Long applicationId) {
+    return uploadRepository.findByImportedIdAndWorkspaceId(importedId,applicationId);
+  }
+
 }

@@ -71,6 +71,11 @@ public class TestDataXMLDTO extends BaseXMLDTO {
 
   }
 
+  public List<TestDataSetXMLDTO> getTestDataSetList() {
+    return testDataSets;
+  }
+
+
   public List<TestDataSetXMLDTO> getTestDataSets() {
     try {
       if ((this.data == null) || StringUtils.isBlank(this.data)) {

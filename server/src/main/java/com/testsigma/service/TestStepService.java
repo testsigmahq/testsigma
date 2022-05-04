@@ -345,6 +345,11 @@ public class TestStepService extends XMLExportImportService<TestStep> {
 
     }
 
+    if (present.getPreRequisiteStepId() != null) {
+      Optional<TestStep> recentPrerequisite = getRecentImportedEntityForPreq(present.getTestCaseId(), present.getPreRequisiteStepId());
+      if (recentPrerequisite.isPresent())
+        present.setPreRequisiteStepId(recentPrerequisite.get().getId());
+    }
     return present;
   }
 
@@ -424,7 +429,11 @@ public class TestStepService extends XMLExportImportService<TestStep> {
     testCaseService.findAllByWorkspaceVersionId(importDTO.getWorkspaceVersionId()).stream().forEach(testCase -> testcaseIds.add(testCase.getId()));
     Optional<TestStep> previous = repository.findByTestCaseIdInAndImportedId(testcaseIds, importedId);
     return previous;
+  }
 
+  public Optional<TestStep> getRecentImportedEntityForPreq(Long testcaseId, Long importedId) {
+    Optional<TestStep> previous = repository.findAllByTestCaseIdAndImportedId(testcaseId, importedId);
+    return previous;
   }
 
   public Optional<TestStep> findImportedEntityHavingSameName(Optional<TestStep> previous, TestStep current, BackupDTO importDTO) {

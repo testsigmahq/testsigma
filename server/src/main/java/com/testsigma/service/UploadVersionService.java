@@ -108,7 +108,6 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
               .replaceAll("\\s+", "_");
       StringBuilder storageFilePath =
               new StringBuilder().append("/uploads/").append(uploadVersion.getId()).append("/").append(originalFileName);
-
       uploadToStorage(storageFilePath.toString(), uploadedFile, uploadVersion);
       uploadVersion.setPath(storageFilePath.toString());
       this.uploadVersionRepository.save(uploadVersion);
@@ -118,6 +117,14 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
       log.error(e.getMessage(), e);
       throw new TestsigmaException(e.getMessage(), e);
     }
+  }
+
+  private void updateUploadWithLatestUploadVersion(UploadVersion uploadVersion,
+                                                   Long uploadId) throws TestsigmaException {
+    Upload upload = uploadService.findById(uploadId);
+    upload.setLatestVersionId(uploadVersion.getId());
+    upload.setLatestVersion(uploadVersion);
+    uploadService.update(upload);
   }
 
 
@@ -243,9 +250,9 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
 
   public void importXML(BackupDTO importDTO) throws IOException, ResourceNotFoundException {
     if (!importDTO.getIsUploadsEnabled()) return;
-    log.debug("import process for ui-identifier screen name initiated");
+    log.debug("import process for upload versions initiated");
     importFiles("upload_version", importDTO);
-    log.debug("import process for ui-identifier  screen name completed");
+    log.debug("import process for upload versions completed");
   }
 
   @Override
@@ -278,6 +285,7 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
       String downloadPath = Files.createTempDirectory(present.getFileName()).toFile().getAbsolutePath() + "/" + originalFileName;
       client.downloadRedirectFile(present.getDownloadURL(), downloadPath, new HashMap<>());
       uploadFile(new File(downloadPath), present);
+      this.updateUploadWithLatestUploadVersion(present, present.getUploadId());
     } catch (IOException | TestsigmaException e) {
       log.error("Failed to upload file", e.getMessage(), e);
     }
@@ -297,12 +305,9 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
     } else {
       present.setId(null);
     }
-    Upload importedUpload =
-            uploadService.findByImportedIdAndWorkspaceId(present.getUploadId(),importDTO.getWorkspaceVersionId());
-    if (importedUpload!=null){
+    Upload importedUpload = uploadService.findByImportedIdAndWorkspaceId(present.getUploadId(),importDTO.getWorkspaceId());
     present.setUploadId(importedUpload.getId());
     present.setUpload(importedUpload);
-    }
     return present;
   }
 

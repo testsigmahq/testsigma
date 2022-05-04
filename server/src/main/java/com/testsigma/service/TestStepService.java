@@ -293,6 +293,10 @@ public class TestStepService extends XMLExportImportService<TestStep> {
             log.info("deleting addon test step to avoid further issues, since addon is not installed");
           }
         }
+        if (step.getType()==TestStepType.CUSTOM_FUNCTION){
+          steps.remove(step);
+          log.info("deleting Custom function test step to avoid further issues, since CSF are deprecated");
+        }
       }
       return steps;
     } else {

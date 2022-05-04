@@ -4,7 +4,7 @@
     [translate]="'settings.backup.title'">
   </div>
 
-  <div class="short-hand-actions" *ngIf="backups?.totalElements">
+  <div class="short-hand-actions">
     <button
       *ngIf="hasIncomplete"
       (click)="fetchBackups()"

@@ -29,6 +29,8 @@ public class UploadXMLDTO extends BaseXMLDTO {
   private String name;
   @JsonProperty("version")
   private String version;
+  @JsonProperty("latest_version_id")
+  private Long latestVersionId;
   @JsonProperty("created-date")
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd@HH:mm:ss.SSSZ")
   private Timestamp createdDate;

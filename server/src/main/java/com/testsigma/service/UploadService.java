@@ -11,8 +11,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.testsigma.dto.BackupDTO;
-import com.testsigma.dto.export.AgentCloudXMLDTO;
-import com.testsigma.dto.export.AgentXMLDTO;
 import com.testsigma.dto.export.UploadCloudXMLDTO;
 import com.testsigma.dto.export.UploadXMLDTO;
 import com.testsigma.event.EventType;
@@ -66,6 +64,9 @@ public class UploadService extends XMLExportImportService<Upload> {
     return uploadRepository.findAll(specification, pageable);
   }
 
+  public Upload findById(Long id) {
+    return this.uploadRepository.findById(id).orElse(null);
+  }
 
   public Upload create(UploadRequest uploadRequest) throws TestsigmaException {
     Upload upload = new Upload();

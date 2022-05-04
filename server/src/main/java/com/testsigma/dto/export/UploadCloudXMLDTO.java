@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import com.testsigma.annotation.JsonListRootName;
 import lombok.Data;
 
+import javax.persistence.Column;
 import java.sql.Timestamp;
 
 @Data
@@ -27,6 +28,8 @@ public class UploadCloudXMLDTO extends BaseXMLDTO {
   private Long workspaceId;
   @JsonProperty("Name")
   private String name;
+  @JsonProperty("LatestVersionId")
+  private Long latestVersionId;
   @JsonProperty("CreatedDate")
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd@HH:mm:ss.SSSZ")
   private Timestamp createdDate;

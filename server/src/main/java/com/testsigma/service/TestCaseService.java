@@ -415,7 +415,7 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
     if (present.getPreRequisite() != null) {
       Optional<TestCase> recentPrerequisite = getRecentImportedEntity(importDTO, present.getPreRequisite());
       if (recentPrerequisite.isPresent())
-        present.setPreRequisite(recentPrerequisite.get().getPreRequisite());
+        present.setPreRequisite(recentPrerequisite.get().getId());
     }
     present.setWorkspaceVersionId(importDTO.getWorkspaceVersionId());
 

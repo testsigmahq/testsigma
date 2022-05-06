@@ -1130,7 +1130,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
 
   private editSerialize() {
     if (this.testStep.addonTemplate) {
-      this.replacer.nativeElement.innerHTML = this.testStep.parsedAddonStep;
+      this.replacer.nativeElement.innerHTML = this.testStep?.parsedAddonStep;
       this.setAddonTemplate(this.testStep.addonTemplate);
       if (this.testStep.addonElements) {
         const elementPlaceHolders = this.elementPlaceholder();
@@ -1155,16 +1155,20 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         })
       }
     } else {
-      this.replacer.nativeElement.innerHTML = this.testStep.template.htmlGrammar;
-      this.showTemplates = false;
-      this.currentTemplate = this.testStep.template;
-      if (this.testStep?.element)
-        this.assignElement(this.testStep?.element, this.elementPlaceholder()[0]);
-      if (this.testStep?.testDataVal)
-        this.assignDataValue(this.getDataTypeString(this.testStep?.testDataType, this.testStep?.testDataVal));
-      if (this.attributePlaceholder())
-        this.attributePlaceholder().innerHTML = this.testStep?.attribute;
-      this.attachActionTemplatePlaceholderEvents();
+      if (this.testStep?.template?.htmlGrammar) {
+        this.replacer.nativeElement.innerHTML = this.testStep?.template?.htmlGrammar;
+        this.showTemplates = false;
+        this.currentTemplate = this.testStep.template;
+        if (this.testStep?.element)
+          this.assignElement(this.testStep?.element, this.elementPlaceholder()[0]);
+        if (this.testStep?.testDataVal)
+          this.assignDataValue(this.getDataTypeString(this.testStep?.testDataType, this.testStep?.testDataVal));
+        if (this.attributePlaceholder())
+          this.attributePlaceholder().innerHTML = this.testStep?.attribute;
+        this.attachActionTemplatePlaceholderEvents();
+      }
+      else
+        this.replacer.nativeElement.innerHTML = this.testStep?.action;
     }
   }
 

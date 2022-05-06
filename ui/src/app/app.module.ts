@@ -254,6 +254,7 @@ import {TestSuitePrerequisiteChangeComponent} from "./shared/components/webcompo
 import {TestCasePrerequisiteChangeComponent} from "./components/webcomponents/test-case-prerequisite-change.component";
 import {InlineSortComponent} from "./components/webcomponents/inline-sort.component";
 import {ImportFormComponent} from "./components/webcomponents/import-form.component";
+import {ImportGuideLinesWarningComponent} from "./components/webcomponents/import-guide-lines-warning.component";
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -487,7 +488,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     InlineSortComponent,
     TestSuitePrerequisiteChangeComponent,
     TestCasePrerequisiteChangeComponent,
-    ImportFormComponent
+    ImportFormComponent,
+    ImportGuideLinesWarningComponent
   ],
   imports: [
     BrowserModule,

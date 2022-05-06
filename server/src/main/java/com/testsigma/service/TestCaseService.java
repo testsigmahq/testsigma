@@ -383,9 +383,9 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
 
   public void importXML(BackupDTO importDTO) throws IOException, ResourceNotFoundException {
     if (!importDTO.getIsTestCaseEnabled()) return;
-    log.debug("import process for requirement initiated");
+    log.debug("import process for testcase initiated");
     importFiles("testcases", importDTO);
-    log.debug("import process for requirement completed");
+    log.debug("import process for testcase completed");
   }
 
   @Override

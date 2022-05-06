@@ -1,0 +1,34 @@
+<div class="theme-overlay-container">
+  <div class="theme-overlay-header">
+    <div
+      class="theme-overlay-title">
+      <i class="fa-warning text-warning fz-18"></i>
+      <span [translate]="'import.warning.title'" class="pl-8 fz-16 rb-medium"></span>
+    </div>
+    <button
+      [mat-dialog-close]="undefined"
+      [matTooltip]="'hint.message.common.close' | translate"
+      class="theme-overlay-close"
+      type="button">
+    </button>
+  </div>
+
+  <div class="theme-overlay-content confirmation-model">
+    <div
+      [innerHTML]="modalData.description"
+      class="text-t-secondary pb-15 lh-2"></div>
+    <div class="list-content overflow-x-hidden  theme-only-items-scroll">
+    </div>
+  </div>
+
+  <div class="theme-overlay-footer">
+    <button
+      [mat-dialog-close]="false"
+      [translate]="'btn.common.cancel'"
+      class="theme-btn-primary"></button>
+    <button
+      [mat-dialog-close]="true"
+      [translate]="'btn.common.yes_proceed'"
+      class="border-0 p-8 pl-12 pr-12 btn btn-delete text-white theme-btn-clear-default"></button>
+  </div>
+</div>

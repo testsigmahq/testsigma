@@ -15,6 +15,7 @@ import {WorkspaceVersion} from "../../models/workspace-version.model";
 import {WorkspaceService} from "../../services/workspace.service";
 import {WorkspaceVersionService} from "../../shared/services/workspace-version.service";
 import {ToastrService} from "ngx-toastr";
+import {ImportGuideLinesWarningComponent} from "./import-guide-lines-warning.component";
 
 @Component({
   selector: 'import-form-component',
@@ -132,25 +133,39 @@ export class ImportFormComponent extends BaseComponent implements OnInit {
     if(!this.validateForm() || this.isSaving){
       return;
     }
-    this.importModel.deserialize(this.importForm.getRawValue());
-    this.importModel.skipEntityExists = this.skipEntityExists;
-    this.isSaving = true;
-    this.importService.importXml(this.formData()).subscribe(
-      () => {
-        this.translate.get('import.initiated.success', {FieldName: 'Imports'})
-          .subscribe(res => {
-            this.showNotification(NotificationType.Success, res);
-          });
-        this.isSaving = false;
-        this.dialogRef.close();
+    let description = this.translate.instant('import.warning.message')
+    const dialogRef = this.matModal.open(ImportGuideLinesWarningComponent, {
+      width: '568px',
+      height: 'auto',
+      data: {
+        description: description
       },
-      (exception) => {
-        this.isSaving = false;
-        this.translate.get('import.initiated.failure', {FieldName: 'Imports'})
-          .subscribe(res => {
-            this.showAPIError(exception, res);
-          })
-      });
+      panelClass: ['mat-dialog', 'rds-none']
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result){
+        this.importModel.deserialize(this.importForm.getRawValue());
+        this.importModel.skipEntityExists = this.skipEntityExists;
+        this.isSaving = true;
+        this.importService.importXml(this.formData()).subscribe(
+          () => {
+            this.translate.get('import.initiated.success', {FieldName: 'Imports'})
+              .subscribe(res => {
+                this.showNotification(NotificationType.Success, res);
+              });
+            this.isSaving = false;
+            this.dialogRef.close();
+          },
+          (exception) => {
+            this.isSaving = false;
+            this.translate.get('import.initiated.failure', {FieldName: 'Imports'})
+              .subscribe(res => {
+                this.showAPIError(exception, res);
+              })
+          });
+      }
+      }
+    );
   }
 
 

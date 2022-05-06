@@ -361,9 +361,9 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
 
   fetchElementDetails(elementName){
     this.elementDetails = {
-      'element name': this.testStepResult.elementDetails['element'].elementName,
-      'locator type': this.testStepResult.elementDetails['element'].locatorStrategyName,
-      'locator': this.testStepResult.elementDetails['element'].locatorValue
+      'element name': this.testStepResult.elementDetails['element']?.elementName,
+      'locator type': this.testStepResult.elementDetails['element']?.locatorStrategyName,
+      'locator': this.testStepResult.elementDetails['element']?.locatorValue
     }
   }
 

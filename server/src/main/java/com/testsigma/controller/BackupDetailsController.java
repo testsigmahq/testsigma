@@ -52,6 +52,17 @@ public class BackupDetailsController {
     response.sendRedirect(s3Url.get().toString());
   }
 
+  @GetMapping(path = "/{id}/download_testcases")
+  @ResponseStatus(HttpStatus.PERMANENT_REDIRECT)
+  public void downloadTestCasesList(@PathVariable("id") Long id, HttpServletResponse response) throws ResourceNotFoundException, IOException {
+    BackupDetail detail = this.service.find(id);
+    Optional<URL> s3Url = this.service.getTestCasesPreSignedURL(detail);
+    if (!s3Url.isPresent()) {
+      throw new ResourceNotFoundException("XLS file is missing in storage");
+    }
+    response.sendRedirect(s3Url.get().toString());
+  }
+
   @PostMapping(path ="/export")
   public void backup(@RequestBody BackupRequest request) throws IOException, TestsigmaException {
     service.export(request);

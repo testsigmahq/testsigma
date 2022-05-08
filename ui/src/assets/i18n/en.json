@@ -1523,6 +1523,7 @@
   "import.select.least.one": "Select atleast one Entity to Import",
   "import.warning.message": "<ul> <li>Custom Functions are not supported in Testsigma Open Source, any test steps which utilise custom function will be imported but will be in disabled state </li> <br>  <li> Addons related Test steps will be imported but disabled, will support in future </li> <br>  <li> Please ensure you replicate the same Environments from Cloud to OS for all tests to run</li> <br> <li>Note: We recommend you to <b> Verify the Workspace Type and Workspace Version </b> while importing, If any mismatch is there data wont' be imported.</li></ul> ",
   "import.warning.title": "Warning : Cloud to OS Import Guidelines",
+  "import.affected_list": "Affected List",
   "backup.model.testcase": "Test Cases",
   "backup.model.teststep": "Test Steps",
   "backup.model.elements": "Elements",

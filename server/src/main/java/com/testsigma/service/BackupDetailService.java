@@ -10,16 +10,13 @@ package com.testsigma.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.testsigma.config.StorageServiceFactory;
-import com.testsigma.model.BackupActionType;
-import com.testsigma.model.StorageAccessLevel;
+import com.testsigma.model.*;
 import com.testsigma.constants.MessageConstants;
 import com.testsigma.dto.BackupDTO;
 import com.testsigma.dto.export.BaseXMLDTO;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaException;
 import com.testsigma.mapper.BackupDetailMapper;
-import com.testsigma.model.BackupDetail;
-import com.testsigma.model.BackupStatus;
 import com.testsigma.repository.BackupDetailRepository;
 import com.testsigma.web.request.BackupRequest;
 import lombok.RequiredArgsConstructor;
@@ -79,6 +76,11 @@ public class BackupDetailService extends XMLExportImportService<BackupDetail> {
   public Optional<URL> downLoadURL(BackupDetail backupDetail) {
     return storageServiceFactory.getStorageService().generatePreSignedURLIfExists(
       "/backup/" + backupDetail.getName(), StorageAccessLevel.READ, 300);
+  }
+
+  public Optional<URL> getTestCasesPreSignedURL(BackupDetail backupDetail) {
+    return storageServiceFactory.getStorageService().generatePreSignedURLIfExists(backupDetail.getAffectedCasesListPath(),
+            StorageAccessLevel.READ, 300);
   }
 
   public BackupDetail create(BackupDetail backupDetail) {
@@ -228,6 +230,7 @@ public class BackupDetailService extends XMLExportImportService<BackupDetail> {
         testSuiteService.importXML(importDTO);
         testPlanService.importXML(importDTO);
         testDeviceService.importXML(importDTO);
+        importOp.setAffectedCasesListPath(importDTO.getAffectedCasesListPath());
         updateSuccess(importOp);
         log.debug("import process completed");
       } catch (Exception e) {

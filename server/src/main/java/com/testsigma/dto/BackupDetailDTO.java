@@ -21,4 +21,5 @@ public class BackupDetailDTO {
   private Timestamp createdDate;
   private Timestamp updatedDate;
   private WorkspaceVersionDTO workspaceVersion;
+  private String affectedCasesListPath;
 }

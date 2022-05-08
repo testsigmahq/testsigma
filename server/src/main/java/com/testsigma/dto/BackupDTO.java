@@ -51,4 +51,5 @@ public class BackupDTO {
   private WorkspaceType workspaceType;
   private String serverUrl;
   private Boolean isCloudImport = false;
+  private String affectedCasesListPath;
 }

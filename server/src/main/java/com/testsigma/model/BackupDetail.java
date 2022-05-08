@@ -91,6 +91,9 @@ public class BackupDetail implements Serializable {
   @Column(name = "skip_entity_exists")
   private Boolean skipEntityExists;
 
+  @Column(name = "affected_cases_list_path")
+  private String affectedCasesListPath;
+
   @Column(name = "created_date")
   @CreationTimestamp
   private Timestamp createdDate;

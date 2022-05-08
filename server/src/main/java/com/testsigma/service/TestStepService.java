@@ -29,6 +29,8 @@ import io.grpc.MethodDescriptor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Lazy;
@@ -57,6 +59,7 @@ public class TestStepService extends XMLExportImportService<TestStep> {
     private final TestDataProfileService testDataService;
     private final NaturalTextActionsService naturalTextActionsService;
     private final DefaultDataGeneratorService defaultDataGeneratorService;
+    private final ImportAffectedTestCaseXLSExportService affectedTestCaseXLSExportService;
 
 
     public List<TestStep> findAllByTestCaseId(Long testCaseId) {
@@ -284,25 +287,32 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         if (importDTO.getIsCloudImport()) {
             List<TestStep> steps = mapper.mapTestStepsCloudList(xmlMapper.readValue(xmlData, new TypeReference<List<TestStepCloudXMLDTO>>() {
             }));
+            HashMap<TestStep, String> stepsMap= new HashMap<>();
             for (TestStep step : steps) {
+                String message =null;
                 try {
                     if (step.getAddonActionId() != null && step.getAddonActionId() > 0) {
+                        message = "Not supported Addon Step!";
                         addonNaturalTextActionService.findById(step.getAddonActionId());
                     }
                     if (step.getNaturalTextActionId() != null && step.getNaturalTextActionId() > 0) {
+                        message = "Deprecated Action!";
                         naturalTextActionsService.findById(Long.valueOf(step.getNaturalTextActionId()));
                     }
-                    if (Objects.equals(step.getTestDataType(), TestDataType.function.getDispName())) {
+                    if (Objects.equals(step.getTestDataType(), TestDataType.function.getDispName()) && step.getType() != TestStepType.CUSTOM_FUNCTION ) {
+                        message = "Deprecated Custom Function / Custom Function not found!";
                         defaultDataGeneratorService.find(step.getTestDataFunctionId());
                     }
                 } catch (Exception e) {
                     log.error(e.getMessage());
                     step.setDisabled(true);
                     step.setAddonActionId(null);
+                    stepsMap.put(step, message);
                     log.info("disabling test steps having template id or addon action id or custom function id is not found!");
                 }
                 if (step.getType() == TestStepType.CUSTOM_FUNCTION) {
                     step.setDisabled(true);
+                    stepsMap.put(step,"Custom Functions not supported in OS");
                     log.info("disabling Custom function test step to avoid further issues, since CSFs are deprecated");
                 }
                 if (step.getType() == TestStepType.FOR_LOOP) {
@@ -311,7 +321,13 @@ public class TestStepService extends XMLExportImportService<TestStep> {
                         step.setForLoopTestDataId(testData.get().getId());
                 }
             }
-
+            XSSFWorkbook workbook = this.affectedTestCaseXLSExportService.initializeWorkBook();
+            try {
+                this.affectedTestCaseXLSExportService.addToExcelSheet(stepsMap, workbook, importDTO, 1);
+            }
+            catch (Exception e){
+                log.error(e.getMessage());
+            }
             return steps;
         } else {
             return mapper.mapTestStepsList(xmlMapper.readValue(xmlData, new TypeReference<List<TestStepXMLDTO>>() {

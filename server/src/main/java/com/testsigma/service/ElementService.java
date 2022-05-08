@@ -268,7 +268,8 @@ public class ElementService extends XMLExportImportService<Element> {
       present.setId(null);
     }
     Optional<ElementScreenName> uiIdentifierScreenName = screenNameService.getRecentImportedEntity(importDTO, present.getScreenNameId());
-    present.setScreenNameId(uiIdentifierScreenName.get().getId());
+    if(uiIdentifierScreenName.isPresent())
+      present.setScreenNameId(uiIdentifierScreenName.get().getId());
     present.setWorkspaceVersionId(importDTO.getWorkspaceVersionId());
     return present;
   }

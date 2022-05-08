@@ -84,8 +84,9 @@ public interface TestCaseRepository extends PagingAndSortingRepository<TestCase,
     "JOIN testCase.testData as testData WHERE testData.id = :testDataId")
   List<Long> findTestCaseIdsByTestDataId(@Param("testDataId") Long testDataId);
 
-    List<TestCase> findAllByName(String name);
+  List<TestCase> findAllByName(String name);
 
+  Optional<TestCase> findTestCaseByWorkspaceVersionIdAndName(Long versionId, String name);
 
   Optional<TestCase> findAllByWorkspaceVersionIdAndImportedId(Long versionId, Long importedId);
 }

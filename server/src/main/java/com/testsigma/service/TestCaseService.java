@@ -401,7 +401,7 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
   }
   @Override
   public Optional<TestCase> findImportedEntity(TestCase testCase, BackupDTO importDTO) {
-   return testCaseRepository.findAllByWorkspaceVersionIdAndImportedId(testCase.getWorkspaceVersionId(), testCase.getId());}
+   return testCaseRepository.findAllByWorkspaceVersionIdAndImportedId(importDTO.getWorkspaceVersionId(), testCase.getId());}
 
   @Override
   public TestCase processBeforeSave(Optional<TestCase> previous, TestCase present, TestCase toImport, BackupDTO importDTO) {
@@ -468,9 +468,9 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
 
 
   public Optional<TestCase> findImportedEntityHavingSameName(Optional<TestCase> previous, TestCase current, BackupDTO importDTO) {
-    List<TestCase> oldEntity = testCaseRepository.findAllByName(current.getName());
-    if (oldEntity.size() > 0) {
-      return Optional.of(oldEntity.get(0));
+    Optional<TestCase> oldEntity = testCaseRepository.findTestCaseByWorkspaceVersionIdAndName(importDTO.getWorkspaceVersionId(), current.getName());
+    if (oldEntity.isPresent()) {
+      return oldEntity;
     } else {
       return Optional.empty();
     }

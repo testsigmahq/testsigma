@@ -112,7 +112,7 @@ public class BackupDetailService extends XMLExportImportService<BackupDetail> {
           log.error(e.getMessage(), e);
         }
     } else {
-      backupDetail = this.repository.save(backupDetail);
+      this.repository.save(backupDetail);
     }
 
   }
@@ -212,7 +212,7 @@ public class BackupDetailService extends XMLExportImportService<BackupDetail> {
         log.debug("import process started for ::" + importOp.getId());
         importDTO.setImportFileUrl(storageServiceFactory.getStorageService().generatePreSignedURLIfExists(
                 "/backup/" + importDTO.getName(), StorageAccessLevel.READ, 300).get().toString());
-        initImportFolder(importDTO,unzipDir);
+        initImportFolder(importDTO);
        // workspaceService.setXmlImportVersionPrerequisites(importDTO);
         versionService.setXmlImportVersionPrerequisites(importDTO);
         testCasePriorityService.importXML(importDTO);

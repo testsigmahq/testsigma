@@ -57,9 +57,9 @@ public abstract class XMLExportImportService<T> {
 
     private String fileName = "backup.zip";
 
-    public static void initImportFolder(BackupDTO importDTO, String unzipDir) throws IOException, UnZipException {
+    public static void initImportFolder(BackupDTO importDTO) throws IOException, UnZipException {
         File destFolder = Files.createTempDirectory("import_" + importDTO.getId()).toFile();
-        File unZippedFolder = unZipFile(importDTO.getImportFileUrl(), destFolder, unzipDir);
+        File unZippedFolder = new ZipUtil().unZipFile(importDTO.getImportFileUrl(), destFolder);
         importDTO.setDestFiles(unZippedFolder);
     }
 
@@ -97,10 +97,10 @@ public abstract class XMLExportImportService<T> {
     public void initExportFolder(BackupDTO backupDTO) throws IOException {
         String path = System.getProperty("java.io.tmpdir");
 
-        String sourcePath = path + File.separator + "xmls" + File.separator
-                + backupDTO.getName();
+        String sourcePath = path + File.separator + "xmls" + File.separator + backupDTO.getId() + File.separator
+                + backupDTO.getName().substring(0, backupDTO.getName().length() - 4);
         String destPath = path + File.separator + "zip" + File.separator
-                + backupDTO.getName();
+                + backupDTO.getId();
 
         File folder = new File(sourcePath);
         if (!folder.isDirectory() && !folder.exists()) {
@@ -176,7 +176,7 @@ public abstract class XMLExportImportService<T> {
         try {
             String s3Key = "/backup/" + backupDetail.getName();
             log.debug("backup zip process initiated");
-            outputFile = new ZipUtil().zipFile(backupDetail.getSrcFiles(), fileName, backupDetail.getDestFiles());
+            outputFile = new ZipUtil().zipFile(backupDetail.getSrcFiles(), backupDetail.getName(), backupDetail.getDestFiles());
             log.debug("backup zip process completed");
             InputStream fileInputStream = new ByteArrayInputStream(FileUtils.readFileToByteArray(outputFile));
             storageServiceFactory.getStorageService().addFile(s3Key, fileInputStream);
@@ -218,10 +218,7 @@ public abstract class XMLExportImportService<T> {
     public void uploadImportFileToStorage(File uploadedFile, BackupDetail backupDetail) throws TestsigmaException {
 
         try {
-            String originalFileName = ObjectUtils.defaultIfNull(uploadedFile.getName(), "tmp")
-                    .replaceAll("\\s+", "_");
-            StringBuilder storageFilePath =
-                    new StringBuilder().append("/backup/").append(backupDetail.getName());
+            StringBuilder storageFilePath = new StringBuilder().append("/backup/").append(backupDetail.getName());
             log.info(String.format("Uploading import file:%s to storage path %s", uploadedFile.getAbsolutePath(), storageFilePath));
             InputStream fileInputStream = new ByteArrayInputStream(FileUtils.readFileToByteArray(uploadedFile));
             storageServiceFactory.getStorageService().addFile(storageFilePath.toString(), fileInputStream);

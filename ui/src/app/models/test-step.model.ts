@@ -444,7 +444,7 @@ export class TestStep extends Base implements PageObject {
   }
 
   get isAddonAction() {
-    return (this.addonActionId || !this.naturalTextActionId) && this.isAction;
+    return (this.addonActionId || (this.naturalTextActionId==null)) && this.isAction;
   }
 
   getParentLoopDataId(testStep, testCase) {

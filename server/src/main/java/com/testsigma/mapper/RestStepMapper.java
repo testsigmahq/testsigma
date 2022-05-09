@@ -33,7 +33,7 @@ public interface RestStepMapper {
     TestStep mapXMLToStep(TestStepCloudXMLDTO stepXMLDTO);
 
     @Mapping(target = "ifConditionExpectedResults", expression = "java(getIfConditionExpectedResults(map.getIfConditionExpectedResults()))")
-    @Mapping(target = "testDataFunctionId", expression = "java(getTestDataFunctionId(map.getCustomStep()))")
+    @Mapping(target = "testDataFunctionId", expression = "java(getTestDataFunctionId(map.getTestDataFunction()))")
     TestStep mapDataMapToStep(TestStepCloudDataMap map);
 
     TestStep mapForLoopToStep(TestStepCloudForLoop loop);
@@ -82,7 +82,7 @@ public interface RestStepMapper {
         return null;
     }
 
-    default Long getTestDataFunctionId(TestStepCustomStep generator){
+    default Long getTestDataFunctionId(DefaultDataGenerator generator){
         if (generator !=null){
             return generator.getId();
         }

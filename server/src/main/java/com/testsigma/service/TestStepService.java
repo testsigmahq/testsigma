@@ -275,10 +275,23 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         return event;
     }
 
+    private void generateXLSheet(BackupDTO importDTO){
+        HashMap<TestStep, String> stepsMap= this.affectedTestCaseXLSExportService.getStepsMap();
+        if (stepsMap !=null && !stepsMap.isEmpty()) {
+            XSSFWorkbook workbook = this.affectedTestCaseXLSExportService.initializeWorkBook();
+            try {
+                this.affectedTestCaseXLSExportService.addToExcelSheet(stepsMap, workbook, importDTO, 1);
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
+        }
+    }
+
     public void importXML(BackupDTO importDTO) throws IOException, ResourceNotFoundException {
         if (!importDTO.getIsTestStepEnabled()) return;
         log.debug("import process for Test step initiated");
         importFiles("test_steps", importDTO);
+        generateXLSheet(importDTO);
         log.debug("import process for Test step completed");
     }
 
@@ -287,7 +300,7 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         if (importDTO.getIsCloudImport()) {
             List<TestStep> steps = mapper.mapTestStepsCloudList(xmlMapper.readValue(xmlData, new TypeReference<List<TestStepCloudXMLDTO>>() {
             }));
-            HashMap<TestStep, String> stepsMap= new HashMap<>();
+            HashMap<TestStep, String> stepsMap= this.affectedTestCaseXLSExportService.getStepsMap();
             for (TestStep step : steps) {
                 String message =null;
                 try {
@@ -320,13 +333,6 @@ public class TestStepService extends XMLExportImportService<TestStep> {
                     if (testData.isPresent())
                         step.setForLoopTestDataId(testData.get().getId());
                 }
-            }
-            XSSFWorkbook workbook = this.affectedTestCaseXLSExportService.initializeWorkBook();
-            try {
-                this.affectedTestCaseXLSExportService.addToExcelSheet(stepsMap, workbook, importDTO, 1);
-            }
-            catch (Exception e){
-                log.error(e.getMessage());
             }
             return steps;
         } else {
@@ -408,7 +414,7 @@ public class TestStepService extends XMLExportImportService<TestStep> {
 
     }
 
-    private void setTemplateId(TestStep present, BackupDTO importDTO) {
+    private void setTemplateId(TestStep present, BackupDTO importDTO) throws ResourceNotFoundException {
         if (!importDTO.getIsSameApplicationType() && present.getNaturalTextActionId() != null && present.getNaturalTextActionId() > 0) {
             NaturalTextActions nlpTemplate = naturalTextActionsService.findById(present.getNaturalTextActionId().longValue());
             try {

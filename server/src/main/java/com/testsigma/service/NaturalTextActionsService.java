@@ -10,6 +10,7 @@
 package com.testsigma.service;
 
 
+import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.model.NaturalTextActions;
 import com.testsigma.repository.NaturalTextActionsRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +33,8 @@ public class NaturalTextActionsService {
     return naturalTextActionsRepository.findAll(spec, pageable);
   }
 
-  public NaturalTextActions findById(Long naturalTextActionId) {
-    return this.naturalTextActionsRepository.findById(naturalTextActionId).orElse(null);
+  public NaturalTextActions findById(Long naturalTextActionId) throws ResourceNotFoundException {
+    return this.naturalTextActionsRepository.findById(naturalTextActionId).orElseThrow(() -> new ResourceNotFoundException("NaturalTextAction missing::" + naturalTextActionId));
   }
 
   public List<NaturalTextActions> findByDisplayName(String displayName) {

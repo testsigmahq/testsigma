@@ -7,7 +7,9 @@ import com.testsigma.dto.BackupDTO;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaException;
 import com.testsigma.model.*;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -33,6 +35,9 @@ public class ImportAffectedTestCaseXLSExportService {
   private final WorkspaceVersionService versionService;
   private final TestCaseService testCaseService;
   private final StorageServiceFactory storageServiceFactory;
+  @Setter
+  @Getter
+  private HashMap<TestStep, String> stepsMap= new HashMap<>();
 
   public XSSFWorkbook initializeWorkBook(){
     XSSFWorkbook workbook = new XSSFWorkbook();
@@ -51,12 +56,12 @@ public class ImportAffectedTestCaseXLSExportService {
   public void addToExcelSheet(HashMap<TestStep, String> testSteps, XSSFWorkbook workbook, BackupDTO importDTO, int rowNum) throws ResourceNotFoundException {
     for (Map.Entry<TestStep, String> entry : testSteps.entrySet()) {
       TestStep step = entry.getKey();
-      Optional<TestCase> testCase = testCaseService.getRecentImportedEntity(importDTO, step.getTestCaseId());
-      WorkspaceVersion version = versionService.find(testCase.get().getWorkspaceVersionId());
+      TestCase testCase = testCaseService.find(step.getTestCaseId());
+      WorkspaceVersion version = versionService.find(testCase.getWorkspaceVersionId());
       Row row = workbook.getSheetAt(0).createRow(rowNum);
       row.createCell(0).setCellValue(rowNum);
-      row.createCell(1).setCellValue(testCase.get().getId().toString());
-      row.createCell(2).setCellValue(testCase.get().getName());
+      row.createCell(1).setCellValue(testCase.getId().toString());
+      row.createCell(2).setCellValue(testCase.getName());
       row.createCell(3).setCellValue(version.getWorkspace().getName() + "-" + version.getVersionName());
       row.createCell(4).setCellValue(String.valueOf(step.getPosition().intValue()+1));
       row.createCell(5).setCellValue(step.getAction());
@@ -72,7 +77,7 @@ public class ImportAffectedTestCaseXLSExportService {
 
   public void uploadImportFileToStorage(Workbook workbook, BackupDTO importDTO) throws TestsigmaException {
     String fileName = System.currentTimeMillis() + ".xls";
-    String filePath = "export_xlsx/" + importDTO.getId() + File.separator + fileName;
+    String filePath = "/export_xlsx/" + importDTO.getId() + File.separator + fileName;
     log.info(String.format("Uploading affected Testcase import file to storage path %s", filePath));
     ByteArrayOutputStream bos;
     try {

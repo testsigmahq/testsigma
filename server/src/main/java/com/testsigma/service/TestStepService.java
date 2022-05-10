@@ -290,6 +290,7 @@ public class TestStepService extends XMLExportImportService<TestStep> {
     public void importXML(BackupDTO importDTO) throws IOException, ResourceNotFoundException {
         if (!importDTO.getIsTestStepEnabled()) return;
         log.debug("import process for Test step initiated");
+        this.affectedTestCaseXLSExportService.setStepsMap(new HashMap<>());
         importFiles("test_steps", importDTO);
         generateXLSheet(importDTO);
         log.debug("import process for Test step completed");

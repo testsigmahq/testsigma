@@ -143,16 +143,6 @@
                                 (change)="checkDependencies($event, 'isTestStepEnabled')">
                     <span [translate]="'backup.model.teststep'" class="rb-medium"></span></mat-checkbox>
                 </div>
-                <div class="py-5">
-                  <mat-checkbox [formControlName]="['isSuitesEnabled']" class="mat-checkbox"
-                                (change)="checkDependencies($event, 'isSuitesEnabled')">
-                    <span [translate]="'backup.model.test_suites'" class="rb-medium"></span></mat-checkbox>
-                </div>
-                <div class="py-5">
-                  <mat-checkbox [formControlName]="['isTestPlanEnabled']" class="mat-checkbox"
-                                (change)="checkDependencies($event, 'isTestPlanEnabled')">
-                    <span [translate]="'backup.model.test_plans'" class="rb-medium"></span></mat-checkbox>
-                </div>
               </div>
               <div class="ts-col-50">
                 <div class="py-5">
@@ -166,10 +156,20 @@
                     <span [translate]="'backup.model.test_case_priorities'" class="rb-medium"></span></mat-checkbox>
                 </div>
                 <div class="py-5">
+                  <mat-checkbox [formControlName]="['isSuitesEnabled']" class="mat-checkbox"
+                                (change)="checkDependencies($event, 'isSuitesEnabled')">
+                    <span [translate]="'backup.model.test_suites'" class="rb-medium"></span></mat-checkbox>
+                </div>
+                <div class="py-5">
+                  <mat-checkbox [formControlName]="['isTestPlanEnabled']" class="mat-checkbox"
+                                (change)="checkDependencies($event, 'isTestPlanEnabled')">
+                    <span [translate]="'backup.model.test_plans'" class="rb-medium"></span></mat-checkbox>
+                </div>
+                <!--<div class="py-5">
                   <mat-checkbox [formControlName]="['isLabelEnabled']" class="mat-checkbox"
                                 (change)="checkDependencies($event, 'isLabelEnabled')">
                     <span [translate]="'backup.model.label'" class="rb-medium"></span></mat-checkbox>
-                </div>
+                </div>-->
               </div>
             </div>
           </div>

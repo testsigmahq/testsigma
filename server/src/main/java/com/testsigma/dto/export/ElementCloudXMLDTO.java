@@ -59,7 +59,7 @@ public class ElementCloudXMLDTO extends BaseXMLDTO {
   @JsonProperty("Attributes")
   private String attributes;
   @JsonProperty("IsDynamic")
-  private Boolean isDynamic;
+  private Boolean isDynamic = Boolean.FALSE;
   @JsonProperty("ScreenNameId")
   private Long screenNameId;
   @JsonProperty("ReviewedBy")

@@ -416,8 +416,8 @@ public class TestStepService extends XMLExportImportService<TestStep> {
 
     private void setTemplateId(TestStep present, BackupDTO importDTO) throws ResourceNotFoundException {
         if (!importDTO.getIsSameApplicationType() && present.getNaturalTextActionId() != null && present.getNaturalTextActionId() > 0) {
-            NaturalTextActions nlpTemplate = naturalTextActionsService.findById(present.getNaturalTextActionId().longValue());
             try {
+                NaturalTextActions nlpTemplate = naturalTextActionsService.findById(present.getNaturalTextActionId().longValue());
                 if (importDTO.getWorkspaceType().equals(WorkspaceType.WebApplication)) {
                     present.setNaturalTextActionId(nlpTemplate.getImportToWeb().intValue());
                     if (nlpTemplate.getImportToWeb().intValue() == 0) {
@@ -440,7 +440,6 @@ public class TestStepService extends XMLExportImportService<TestStep> {
                     }
                 }
             } catch (Exception e) {
-                log.error(e.getMessage(), e);
                 log.debug("mapping failed for templateId   " + present.getNaturalTextActionId().longValue());
                 present.setNaturalTextActionId(0);
                 present.setDisabled(true);

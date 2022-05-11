@@ -45,7 +45,7 @@
                *ngIf="uploadForm?.touched  && uploadForm.controls.name.hasError('whitespace')"
                [textContent]="'form.validation.cannot_have_white_spaces' | translate: {FieldName:'Name'}"></div>
         </div>
-        <div class="form-group pb-18 upload-version" *ngIf="(upload.id && uploadedFileObject?.name)" @fade>
+        <div class="form-group pb-18 upload-version" *ngIf="uploadedFileObject?.name" @fade>
           <input class="form-control" formControlName="version">
           <label class="control-label required" [translate]="'uploads.form.version.name'"></label>
         </div>

@@ -16,7 +16,8 @@ CREATE TABLE `upload_versions`
   `upload_status`  VARCHAR(100) DEFAULT NULL,
   `last_uploaded_time`   DATETIME      DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `index_uploads_on_workspace_id_and_name` (`workspace_id`, `name`)
+  UNIQUE KEY `index_uploads_on_workspace_id_and_name` (`workspace_id`, `name`),
+  UNIQUE KEY `index_uploads_on_upload_id_and_name` (`upload_id`, `name`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
   COLLATE utf8_unicode_ci;

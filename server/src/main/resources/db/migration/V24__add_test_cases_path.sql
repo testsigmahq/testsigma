@@ -1,0 +1,1 @@
+ALTER TABLE `backup_details` ADD COLUMN `affected_cases_list_path` VARCHAR (1000) DEFAULT NULL;

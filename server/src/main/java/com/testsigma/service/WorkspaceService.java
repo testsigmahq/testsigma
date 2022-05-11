@@ -7,6 +7,8 @@
 
 package com.testsigma.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.testsigma.dto.BackupDTO;
 import com.testsigma.dto.export.ApplicationXMLDTO;
 import com.testsigma.exception.ResourceNotFoundException;
@@ -26,21 +28,76 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Log4j2
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class WorkspaceService extends XMLExportService<Workspace> {
+public class WorkspaceService extends XMLExportImportService<Workspace> {
   private final WorkspaceRepository workspaceRepository;
   private final WorkspaceVersionService workspaceVersionService;
   private final WorkspaceMapper mapper;
 
   public Workspace find(Long id) throws ResourceNotFoundException {
     return this.workspaceRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Workspace missing with id" + id));
+  }
+
+  @Override
+  List<Workspace> readEntityListFromXmlData(String xmlData, XmlMapper xmlMapper, BackupDTO importDTO) throws JsonProcessingException, ResourceNotFoundException {
+    return null;
+  }
+
+  @Override
+  Optional<Workspace> findImportedEntity(Workspace workspace, BackupDTO importDTO) {
+    return Optional.empty();
+  }
+
+  @Override
+  Optional<Workspace> findImportedEntityHavingSameName(Optional<Workspace> previous, Workspace workspace, BackupDTO importDTO) throws ResourceNotFoundException {
+    return Optional.empty();
+  }
+
+  @Override
+  boolean hasImportedId(Optional<Workspace> previous) {
+    return false;
+  }
+
+  @Override
+  boolean isEntityAlreadyImported(Optional<Workspace> previous, Workspace workspace) {
+    return false;
+  }
+
+  @Override
+  Workspace processBeforeSave(Optional<Workspace> previous, Workspace present, Workspace importEntity, BackupDTO importDTO) throws ResourceNotFoundException {
+    return null;
+  }
+
+  @Override
+  Workspace copyTo(Workspace workspace) {
+    return null;
+  }
+
+  @Override
+  Workspace save(Workspace workspace) {
+    return null;
+  }
+
+  @Override
+  Optional<Workspace> getRecentImportedEntity(BackupDTO importDTO, Long... ids) {
+    return Optional.empty();
+  }
+
+  @Override
+  boolean hasToSkip(Workspace workspace, BackupDTO importDTO) {
+    return false;
+  }
+
+  @Override
+  void updateImportedId(Workspace workspace, Workspace previous, BackupDTO importDTO) {
+
   }
 
   public Page<Workspace> findAll(Specification<Workspace> spec, Pageable pageable) {

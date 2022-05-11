@@ -12,7 +12,7 @@ public class TestStepDataMap {
 
 
   @JsonProperty("condition_if")
-  private Object ifConditionExpectedResults;
+  private ResultConstant[] ifConditionExpectedResults;
   @JsonProperty("condition-type")
   private TestStepConditionType conditionType;
   @JsonProperty("test-data")

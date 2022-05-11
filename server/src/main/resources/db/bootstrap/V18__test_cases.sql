@@ -23,6 +23,7 @@ CREATE TABLE `test_cases`
   `draft_at`               DATETIME            DEFAULT NULL,
   `obsolete_at`            DATETIME            DEFAULT NULL,
   `ready_at`               DATETIME            DEFAULT NULL,
+  `imported_id`            BIGINT(20) DEFAULT NULL,
   `created_date`           DATETIME            DEFAULT CURRENT_TIMESTAMP,
   `updated_date`           DATETIME            DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),

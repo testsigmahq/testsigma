@@ -9,17 +9,23 @@
 
 package com.testsigma.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.testsigma.dto.BackupDTO;
+import com.testsigma.dto.export.TestDataCloudXMLDTO;
 import com.testsigma.dto.export.TestDataXMLDTO;
 import com.testsigma.event.EventType;
 import com.testsigma.event.TestDataEvent;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.mapper.TestDataProfileMapper;
+import com.testsigma.model.Element;
 import com.testsigma.model.TestData;
 import com.testsigma.repository.TestDataProfileRepository;
 import com.testsigma.specification.SearchCriteria;
 import com.testsigma.specification.SearchOperation;
 import com.testsigma.specification.TestDataProfileSpecificationsBuilder;
+import com.testsigma.web.request.TestDataSetRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,19 +35,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Log4j2
-public class TestDataProfileService extends XMLExportService<TestData> {
+public class TestDataProfileService extends XMLExportImportService<TestData> {
   private final TestDataProfileRepository testDataProfileRepository;
   private final ApplicationEventPublisher applicationEventPublisher;
   private final TestDataProfileMapper mapper;
@@ -135,4 +140,86 @@ public class TestDataProfileService extends XMLExportService<TestData> {
     testDataProfileSpecificationsBuilder.params = params;
     return testDataProfileSpecificationsBuilder.build();
   }
+
+  public void importXML(BackupDTO importDTO) throws IOException, ResourceNotFoundException {
+    if (!importDTO.getIsTestDataEnabled()) return;
+    log.debug("import process for Test Data initiated");
+    importFiles("test_data", importDTO);
+    log.debug("import process for Test Data completed");
+  }
+
+  @Override
+  public List<TestData> readEntityListFromXmlData(String xmlData, XmlMapper xmlMapper, BackupDTO importDTO) throws JsonProcessingException {
+    if (importDTO.getIsCloudImport()) {
+      return mapper.mapCloudTestDataList(xmlMapper.readValue(xmlData, new TypeReference<List<TestDataCloudXMLDTO>>() {
+      }));
+    }
+    else{
+      return mapper.mapTestDataList(xmlMapper.readValue(xmlData, new TypeReference<List<TestDataXMLDTO>>() {
+      }));
+    }
+  }
+
+  @Override
+  public Optional<TestData> findImportedEntity(TestData testData, BackupDTO importDTO) {
+    return testDataProfileRepository.findAllByVersionIdAndImportedId(importDTO.getWorkspaceVersionId(), testData.getId());
+  }
+
+  @Override
+  public TestData processBeforeSave(Optional<TestData> previous, TestData present, TestData toImport, BackupDTO importDTO) {
+    present.setImportedId(present.getId());
+    if (previous.isPresent() && importDTO.isHasToReset()) {
+      present.setId(previous.get().getId());
+    } else {
+      present.setId(null);
+    }
+    present.setVersionId(importDTO.getWorkspaceVersionId());
+    return present;
+  }
+
+
+  @Override
+  public TestData copyTo(TestData testData) {
+    return mapper.copy(testData);
+  }
+
+  @Override
+  public TestData save(TestData testData) {
+    return testDataProfileRepository.save(testData);
+  }
+
+  @Override
+  public Optional<TestData> getRecentImportedEntity(BackupDTO importDTO, Long... ids) {
+    Long importedId = ids[0];
+    return testDataProfileRepository.findAllByVersionIdAndImportedId(importDTO.getWorkspaceVersionId(), importedId);
+  }
+
+  public Optional<TestData> findImportedEntityHavingSameName(Optional<TestData> previous, TestData current, BackupDTO importDTO) {
+    Optional<TestData> oldEntity = testDataProfileRepository.findByTestDataNameAndVersionId(current.getTestDataName(),importDTO.getWorkspaceVersionId());
+    return oldEntity;
+  }
+
+  public boolean hasImportedId(Optional<TestData> previous) {
+    return previous.isPresent() && previous.get().getImportedId() != null;
+  }
+
+  public boolean isEntityAlreadyImported(Optional<TestData> previous, TestData current) {
+    return previous.isPresent() && previous.get().getImportedId() != null && previous.get().getImportedId().equals(current.getId());
+  }
+
+  @Override
+  public boolean hasToSkip(TestData testData, BackupDTO importDTO) {
+    return false;
+  }
+
+  @Override
+  void updateImportedId(TestData testData, TestData previous, BackupDTO importDTO) {
+    previous.setImportedId(testData.getId());
+    save(previous);
+  }
+
+  public boolean isDataSetNameEmpty(TestDataSetRequest dataSetRequest) {
+    return (dataSetRequest.getName() == null || dataSetRequest.getName().isEmpty());
+  }
+
 }

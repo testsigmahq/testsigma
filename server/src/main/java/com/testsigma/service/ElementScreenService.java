@@ -9,7 +9,11 @@
 
 package com.testsigma.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.testsigma.dto.BackupDTO;
+import com.testsigma.dto.export.ElementScreenNameCloudXMLDTO;
 import com.testsigma.dto.export.ElementScreenNameXMLDTO;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.mapper.ElementScreenNameMapper;
@@ -21,6 +25,7 @@ import com.testsigma.web.request.ElementScreenNameRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +40,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Log4j2
-public class ElementScreenService extends XMLExportService<ElementScreenName> {
+public class ElementScreenService extends XMLExportImportService<ElementScreenName> {
   private final ElementScreenNameRepository elementScreenNameRepository;
   private final ElementScreenNameMapper elementScreenNameMapper;
 
@@ -78,5 +83,89 @@ public class ElementScreenService extends XMLExportService<ElementScreenName> {
   @Override
   protected List<ElementScreenNameXMLDTO> mapToXMLDTOList(List<ElementScreenName> list) {
     return elementScreenNameMapper.mapElementScreenNameList(list);
+  }
+
+  public void importXML(BackupDTO importDTO) throws IOException, ResourceNotFoundException {
+    if (!importDTO.getIsElementScreenNameEnabled()) return;
+    log.debug("import process for ui-identifier screen name initiated");
+    importFiles("ui_identifier_screen_names", importDTO);
+    log.debug("import process for ui-identifier  screen name completed");
+  }
+
+  @Override
+  public List<ElementScreenName> readEntityListFromXmlData(String xmlData, XmlMapper xmlMapper, BackupDTO importDTO) throws JsonProcessingException {
+    if (importDTO.getIsCloudImport()) {
+      return elementScreenNameMapper.mapCloudElementScreenNamesList(xmlMapper.readValue(xmlData, new TypeReference<List<ElementScreenNameCloudXMLDTO>>() {
+      }));
+    }
+    else{
+      return elementScreenNameMapper.mapElementScreenNamesList(xmlMapper.readValue(xmlData, new TypeReference<List<ElementScreenNameXMLDTO>>() {
+      }));
+    }
+  }
+
+  @Override
+  public Optional<ElementScreenName> findImportedEntity(ElementScreenName uiIdentifier, BackupDTO importDTO) {
+    Optional<ElementScreenName> previous = elementScreenNameRepository.findAllByWorkspaceVersionIdAndImportedId(importDTO.getWorkspaceVersionId(), uiIdentifier.getId());
+    return previous;
+  }
+
+  @Override
+  public ElementScreenName processBeforeSave(Optional<ElementScreenName> previous, ElementScreenName present, ElementScreenName toImport, BackupDTO importDTO) {
+    present.setImportedId(present.getId());
+    if (previous.isPresent() && importDTO.isHasToReset()) {
+      present.setId(previous.get().getId());
+    } else {
+      present.setId(null);
+    }
+
+    present.setWorkspaceVersionId(importDTO.getWorkspaceVersionId());
+    return present;
+  }
+
+
+  @Override
+  public ElementScreenName copyTo(ElementScreenName uiIdentifier) {
+    return elementScreenNameMapper.copy(uiIdentifier);
+  }
+
+  @Override
+  public ElementScreenName save(ElementScreenName uiIdentifier) {
+    try {
+      return elementScreenNameRepository.save(uiIdentifier);
+    }catch (DataIntegrityViolationException exception){
+      log.error(exception,exception);
+    }
+    return uiIdentifier;
+  }
+
+  @Override
+  public Optional<ElementScreenName> getRecentImportedEntity(BackupDTO importDTO, Long... ids) {
+    Long importedFrom = ids[0];
+    return elementScreenNameRepository.findAllByWorkspaceVersionIdAndImportedId(importDTO.getWorkspaceVersionId(), importedFrom);
+  }
+
+  public Optional<ElementScreenName> findImportedEntityHavingSameName(Optional<ElementScreenName> previous, ElementScreenName current, BackupDTO importDTO) {
+    Optional<ElementScreenName> oldEntity = elementScreenNameRepository.findByNameAndWorkspaceVersionId(current.getName(), importDTO.getWorkspaceVersionId());
+    return oldEntity;
+  }
+
+  public boolean hasImportedId(Optional<ElementScreenName> previous) {
+    return previous.isPresent() && previous.get().getImportedId() != null;
+  }
+
+  public boolean isEntityAlreadyImported(Optional<ElementScreenName> previous, ElementScreenName current) {
+    return previous.isPresent() && previous.get().getImportedId() != null && previous.get().getImportedId().equals(current.getId());
+  }
+
+  @Override
+  public boolean hasToSkip(ElementScreenName uiIdentifierScreenName, BackupDTO importDTO) {
+    return false;
+  }
+
+  @Override
+  void updateImportedId(ElementScreenName uiIdentifierScreenName, ElementScreenName previous, BackupDTO importDTO) {
+    previous.setImportedId(uiIdentifierScreenName.getId());
+    save(previous);
   }
 }

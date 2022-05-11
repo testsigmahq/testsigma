@@ -9,8 +9,11 @@
 
 package com.testsigma.mapper;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.testsigma.dto.TestDataProfileDTO;
 import com.testsigma.dto.TestDataSetDTO;
+import com.testsigma.dto.export.TestDataCloudXMLDTO;
+import com.testsigma.dto.export.TestDataSetCloudXMLDTO;
 import com.testsigma.dto.export.TestDataSetXMLDTO;
 import com.testsigma.dto.export.TestDataXMLDTO;
 import com.testsigma.model.TestData;
@@ -18,10 +21,7 @@ import com.testsigma.model.TestDataSet;
 import com.testsigma.web.request.TestDataProfileRequest;
 import com.testsigma.web.request.TestDataSetRequest;
 import org.json.JSONObject;
-import org.mapstruct.Mapper;
-import org.mapstruct.NullValueCheckStrategy;
-import org.mapstruct.NullValuePropertyMappingStrategy;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,6 +41,16 @@ public interface TestDataProfileMapper {
   List<TestDataProfileDTO> mapToDTO(List<TestData> testData);
 
   TestData map(TestDataProfileRequest request);
+
+  @Mapping(target = "data", expression = "java(testDataSetXMLDTO.getData())")
+  TestDataSet map(TestDataSetXMLDTO testDataSetXMLDTO) throws JsonProcessingException;
+
+  @Mapping(target = "data", expression = "java(testDataSetXMLDTO.getData())")
+  TestDataSet map2(TestDataSetCloudXMLDTO testDataSetXMLDTO) throws JsonProcessingException;
+
+  List<TestDataSet> map(List<TestDataSetXMLDTO> testDataSetXMLDTO);
+
+ List<TestDataSet> map2(List<TestDataSetCloudXMLDTO> testDataSetXMLDTO);
 
   default Map<String, TestDataSet> map(TestData testData) {
     Map<String, TestDataSet> testDataSetMap = new HashMap<>();
@@ -95,4 +105,27 @@ public interface TestDataProfileMapper {
 
   List<TestDataSet> mapDataSet(List<TestDataSetRequest> data);
 
+  @Mapping(target = "data", expression = "java(map(testDataXMLDTO.getTestDataSetList()))")
+  TestData mapTestData(TestDataXMLDTO testDataXMLDTO) throws JsonProcessingException;
+
+  @Mapping(target = "data", expression = "java(map2(testDataCloudXMLDTO.getTestDataSetList()))")
+  TestData mapTestData2(TestDataCloudXMLDTO testDataCloudXMLDTO) throws JsonProcessingException;
+
+    default List<TestData> mapTestDataList(List<TestDataXMLDTO> xmlDTOs) throws JsonProcessingException {
+      List<TestData> list = new ArrayList<>();
+      for (TestDataXMLDTO testDataXMLDTO : xmlDTOs) {
+        list.add(mapTestData(testDataXMLDTO));
+      }
+      return list;
+    }
+
+    default List<TestData> mapCloudTestDataList(List<TestDataCloudXMLDTO> xmlDTOs) throws JsonProcessingException {
+      List<TestData> list = new ArrayList<>();
+      for (TestDataCloudXMLDTO testDataXMLDTO : xmlDTOs) {
+        list.add(mapTestData2(testDataXMLDTO));
+      }
+      return list;
+    }
+
+  TestData copy(TestData testData);
 }

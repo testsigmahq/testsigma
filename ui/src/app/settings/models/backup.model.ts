@@ -30,6 +30,9 @@ export class Backup extends Base implements PageObject {
   @serializable(custom(v=>SKIP, v=>v))
   public workspaceVersion:WorkspaceVersion;
 
+  @serializable(custom(v=>SKIP, v=>v))
+  public affectedCasesListPath:String;
+
   deserialize(input: any): this {
     return Object.assign(this, deserialize(Backup, input));
   }

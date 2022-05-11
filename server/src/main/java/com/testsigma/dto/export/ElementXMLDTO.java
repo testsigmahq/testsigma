@@ -17,6 +17,7 @@ import com.testsigma.model.ElementCreateType;
 import com.testsigma.model.LocatorType;
 import lombok.Data;
 
+import javax.persistence.Column;
 import java.sql.Timestamp;
 
 @Data
@@ -71,4 +72,6 @@ public class ElementXMLDTO extends BaseXMLDTO {
   private Long readyBy;
   @JsonProperty("comments")
   private String comments;
+  @JsonProperty("is_duplicated")
+  private Boolean isDuplicated = false;
 }

@@ -253,6 +253,8 @@ import {DuplicateLocatorWarningComponent} from "./components/webcomponents/dupli
 import {TestSuitePrerequisiteChangeComponent} from "./shared/components/webcomponents/test-suite-prerequisite-change.component";
 import {TestCasePrerequisiteChangeComponent} from "./components/webcomponents/test-case-prerequisite-change.component";
 import {InlineSortComponent} from "./components/webcomponents/inline-sort.component";
+import {ImportFormComponent} from "./components/webcomponents/import-form.component";
+import {ImportGuideLinesWarningComponent} from "./components/webcomponents/import-guide-lines-warning.component";
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -485,7 +487,9 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     DuplicateLocatorWarningComponent,
     InlineSortComponent,
     TestSuitePrerequisiteChangeComponent,
-    TestCasePrerequisiteChangeComponent
+    TestCasePrerequisiteChangeComponent,
+    ImportFormComponent,
+    ImportGuideLinesWarningComponent
   ],
   imports: [
     BrowserModule,

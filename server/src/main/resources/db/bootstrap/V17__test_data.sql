@@ -7,6 +7,7 @@ CREATE TABLE `test_data`
   `test_data_name` VARCHAR(250) NOT NULL,
   `copied_from`    BIGINT(20) default null,
   `passwords`      JSON,
+  `imported_id`    BIGINT(20) DEFAULT NULL,
   `created_date`   DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_date`   DATETIME DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),

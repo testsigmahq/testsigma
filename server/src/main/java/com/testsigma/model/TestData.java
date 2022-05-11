@@ -54,6 +54,10 @@ public class TestData {
   @Column(name = "test_data")
   private String data;
 
+  @Column(name = "imported_id")
+  @Getter
+  @Setter
+  private Long importedId;
 
   @Column(name = "copied_from")
   @Getter

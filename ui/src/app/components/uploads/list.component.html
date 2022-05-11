@@ -101,7 +101,7 @@
               [matTooltip]="'pagination.delete' | translate"
               href="javascript:void(0)"
               class="fa-trash-thin action-icon"></a>
-            <a
+            <a *ngIf="upload.latestVersion?.id"
               data-placement="bottom"
               [matTooltip]="'hint.message.common.download' | translate"
               [href]="'/upload_versions/'+upload.latestVersion?.id+'/download'"

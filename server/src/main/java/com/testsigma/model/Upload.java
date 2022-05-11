@@ -63,6 +63,8 @@ public class Upload {
     @ToString.Exclude
     private UploadVersion latestVersion;
 
+    @Column(name = "imported_id")
+    private Long importedId;
 
     @ManyToOne
     @Fetch(value = FetchMode.SELECT)

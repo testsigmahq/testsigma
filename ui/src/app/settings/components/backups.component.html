@@ -1,10 +1,10 @@
 <div class="page-header">
   <div
     class="page-title"
-    [translate]="'settings.backup.title'">
+    [translate]="'page_title.settings.backups'">
   </div>
 
-  <div class="short-hand-actions" *ngIf="backups?.totalElements">
+  <div class="short-hand-actions">
     <button
       *ngIf="hasIncomplete"
       (click)="fetchBackups()"
@@ -17,6 +17,11 @@
       class="theme-btn-primary border-rds-2 ml-14">
       <i class="fa-export-thin mr-8"></i>
       <span [translate]="'settings.backup.xml'"></span>
+    </button>
+    <button (click)="openImportForm()"
+            class="btn ml-15 theme-btn-clear-default position-relative">
+      <i class="fa-download-thin mr-8"></i>
+      <span [translate]="'settings.import.xml'"></span>
     </button>
     <div class=" ml-15 pl-15 theme-border-l">
       <app-pagination
@@ -38,7 +43,9 @@
       <span
         class="ts-col-15" [translate]="'message.common.text.version'"></span>
       <span
-        class="ts-col-15" [translate]="'message.common.text.title'"></span>
+        class="ts-col-35" [translate]="'message.common.text.title'"></span>
+      <span
+        class="ts-col-15 ts-col-15 mx-30" [translate]="'import.affected_list'"></span>
     </div>
   </div>
   <div class="list-container ts-col-100 without-title-height">
@@ -66,6 +73,13 @@
             <i [matTooltip]="'hint.message.common.delete' | translate" class="fa-trash-thin ml-10"
                (click)="delete(backup)"></i>
           </div>
+      <div class="ts-col-10" *ngIf="backup?.isCompleted && backup?.affectedCasesListPath">
+        <a
+          [matTooltip]="'hint.message.common.download' | translate"
+          [href]="'/settings/backups/'+backup.id+'/download_testcases'"
+          target="_blank"
+          class="fa-download-thin text-dark"></a>
+      </div>
           <div class="ts-col-10 h-30p" *ngIf="backup.isInProgress || backup.isFailed">
             <mat-progress-spinner
               class="search-spinner" mode="indeterminate" diameter="15" *ngIf="backup.isInProgress">

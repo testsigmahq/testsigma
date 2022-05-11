@@ -68,6 +68,7 @@ export class UrlConstantsService {
   public osServerDetailsURL = this.apiBase + '/os_server_details';
 
   public backupUrl = this.apiBase+ "/settings/backups" ;
+  public backupExportUrl = this.apiBase+ "/settings/backups/export" ;
   public backupXmlUrl = this.apiBase+ "/settings/backups/xml" ;
 
   public onboardingURL = this.apiBase + '/onboarding';

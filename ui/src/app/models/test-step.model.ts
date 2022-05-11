@@ -189,56 +189,63 @@ export class TestStep extends Base implements PageObject {
   }
 
   get parsedStep(): String {
-    let parsedStep = this.template.naturalText;
-    parsedStep = this.replaceTestData(parsedStep, this?.testDataType);
-    if (this?.element) {
-      parsedStep = this.replaceElement(parsedStep);
+    let parsedStep = this.template?.naturalText;
+    if (parsedStep) {
+      parsedStep = this.replaceTestData(parsedStep, this?.testDataType);
+      if (this?.element) {
+        parsedStep = this.replaceElement(parsedStep);
+      }
+      if (this?.attribute) {
+        parsedStep = this.replaceAttribute(parsedStep);
+      }
     }
-    if (this?.attribute) {
-      parsedStep = this.replaceAttribute(parsedStep);
-    }
+    else parsedStep = this.action;
     return parsedStep;
   }
 
   get parsedAddonStep(): String {
-    let parsedStep = this.addonTemplate.naturalText;
-    if (this.addonTestData && this.addonElements)
-      this.addonTemplate.parameters?.forEach(parameter => {
-        let referenceName = new RegExp(parameter.reference);
-        if (parameter.isTestData) {
-          let value = this.addonTestData[parameter.reference]?.value;
-          switch (this.addonTestData[parameter.reference]?.type) {
-            case TestDataType.random:
-              value = '~|' + value + '|';
-              break;
-            case TestDataType.runtime:
-              value = '$|' + value + '|';
-              break;
-            case TestDataType.environment:
-              value = '*|' + value + '|';
-              break;
-            case TestDataType.parameter:
-              value = '@|' + value + '|';
-              break;
-            case TestDataType.function:
-              value = '!|' + value + '|';
-              break;
+    let parsedStep = this.addonTemplate?.naturalText;
+    if(parsedStep) {
+      if (this.addonTestData && this.addonElements)
+        this.addonTemplate.parameters?.forEach(parameter => {
+          let referenceName = new RegExp(parameter.reference);
+          if (parameter.isTestData) {
+            let value = this.addonTestData[parameter.reference]?.value;
+            switch (this.addonTestData[parameter.reference]?.type) {
+              case TestDataType.random:
+                value = '~|' + value + '|';
+                break;
+              case TestDataType.runtime:
+                value = '$|' + value + '|';
+                break;
+              case TestDataType.environment:
+                value = '*|' + value + '|';
+                break;
+              case TestDataType.parameter:
+                value = '@|' + value + '|';
+                break;
+              case TestDataType.function:
+                value = '!|' + value + '|';
+                break;
+            }
+            parsedStep = parsedStep.replace(referenceName, '<TSTESTDAT ref="' + parameter.reference + '">' + value + '</TSTESTDAT>')
+          } else if (parameter.isElement) {
+            parsedStep = parsedStep.replace(referenceName, '<TSELEMENT ref="' + parameter.reference + '">' + this.addonElements[parameter.reference]?.name + '</TSELEMENT>')
           }
-          parsedStep = parsedStep.replace(referenceName, '<TSTESTDAT ref="' + parameter.reference + '">' + value + '</TSTESTDAT>')
+        })
+
+
+      this.addonTemplate.parameters?.forEach((parameter: AddonNaturalTextActionParameter) => {
+        if (parameter.isTestData) {
+          parsedStep = parsedStep.replace('<TSTESTDAT ref="' + parameter.reference + '">', '<span class="test_data" data-reference="' + parameter.reference + '">')
         } else if (parameter.isElement) {
-          parsedStep = parsedStep.replace(referenceName, '<TSELEMENT ref="' + parameter.reference + '">' + this.addonElements[parameter.reference]?.name + '</TSELEMENT>')
+          parsedStep = parsedStep.replace('<TSELEMENT ref="' + parameter.reference + '">', '<span class="element" data-reference="' + parameter.reference + '">')
         }
       })
-
-    this.addonTemplate.parameters?.forEach((parameter: AddonNaturalTextActionParameter) => {
-      if (parameter.isTestData) {
-        parsedStep = parsedStep.replace('<TSTESTDAT ref="' + parameter.reference + '">', '<span class="test_data" data-reference="' + parameter.reference + '">')
-      } else if (parameter.isElement) {
-        parsedStep = parsedStep.replace('<TSELEMENT ref="' + parameter.reference + '">', '<span class="element" data-reference="' + parameter.reference + '">')
-      }
-    })
-    parsedStep = parsedStep.replace(new RegExp('</TSTESTDAT>', 'g'), '</span>')
-    parsedStep = parsedStep.replace(new RegExp('</TSELEMENT>', 'g'), '</span>')
+      parsedStep = parsedStep.replace(new RegExp('</TSTESTDAT>', 'g'), '</span>')
+      parsedStep = parsedStep.replace(new RegExp('</TSELEMENT>', 'g'), '</span>')
+    }
+    else parsedStep = this.action;
     return parsedStep;
   }
 
@@ -437,7 +444,7 @@ export class TestStep extends Base implements PageObject {
   }
 
   get isAddonAction() {
-    return this.addonActionId;
+    return (this.naturalTextActionId==null && this.isAction!=null && this.conditionType!=TestStepConditionType.CONDITION_ELSE && this.type == TestStepType.ACTION_TEXT) ;
   }
 
   getParentLoopDataId(testStep, testCase) {

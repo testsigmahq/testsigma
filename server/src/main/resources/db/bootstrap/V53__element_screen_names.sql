@@ -5,6 +5,7 @@ CREATE TABLE `element_screen_names`
   `name`         VARCHAR(250) NOT NULL,
   `version_id`   BIGINT(20)   NOT NULL,
   `copied_from`  BIGINT(20) DEFAULT NULL,
+  `imported_id`  BIGINT(20) DEFAULT NULL,
   `created_date` DATETIME   DEFAULT CURRENT_TIMESTAMP,
   `updated_date` DATETIME   DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),

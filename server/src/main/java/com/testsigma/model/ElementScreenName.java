@@ -37,6 +37,9 @@ public class ElementScreenName implements Serializable {
   @Column(name = "name")
   private String name;
 
+  @Column(name = "imported_id")
+  private Long importedId;
+
   @Column(name = "created_date")
   @CreationTimestamp
   private Timestamp createdDate;

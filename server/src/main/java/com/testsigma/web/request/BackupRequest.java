@@ -27,4 +27,5 @@ public class BackupRequest {
   private Boolean isLabelEnabled;
   private Long filterId;
   private Long workspaceVersionId;
+  private Boolean skipEntityExists;
 }

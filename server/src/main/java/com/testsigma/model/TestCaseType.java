@@ -33,6 +33,8 @@ public class TestCaseType {
   @Column(name = "workspace_id")
   private Long workspaceId;
 
+  @Column(name = "imported_id")
+  private Long importedId;
 
   @Column(name = "created_date")
   @CreationTimestamp

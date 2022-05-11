@@ -138,6 +138,10 @@ public class TestStep {
   @Column(name = "ignore_step_result")
   private Boolean ignoreStepResult;
 
+  @Column(name = "imported_id")
+  private Long importedId;
+
+
   @ManyToOne
   @Fetch(value = FetchMode.SELECT)
   @JoinColumn(name = "test_case_id", referencedColumnName = "id", insertable = false, updatable = false)
@@ -222,5 +226,15 @@ public class TestStep {
     forLoop.setTestDataId(forLoopTestDataId);
     testStepDataMap.setForLoop(forLoop);
     return testStepDataMap;
+  }
+
+  public void setTestDataType(String testDataType) {
+    if (testDataType !=null){
+      if (testDataType.equals("global"))
+        this.testDataType = TestDataType.environment.getDispName();
+      else if (testDataType.equals("phone_number") || testDataType.equals("mail_box"))
+        this.testDataType = TestDataType.raw.getDispName();
+      else this.testDataType = testDataType;
+    }
   }
 }

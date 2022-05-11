@@ -90,6 +90,9 @@ public class TestCase {
   @Column(name = "updated_date")
   @UpdateTimestamp
   private Timestamp updatedDate;
+  @Column(name = "imported_id")
+  private Long importedId;
+
   @ManyToOne
   @Fetch(value = FetchMode.SELECT)
   @JoinColumn(name = "test_data_id", referencedColumnName = "id", insertable = false, updatable = false)
@@ -149,6 +152,9 @@ public class TestCase {
 
   @Transient
   private List<Attachment> files;
+
+  @Transient
+  private List<String> tagNames;
 
   public Boolean getIsDataDriven() {
     return isDataDriven != null && isDataDriven;

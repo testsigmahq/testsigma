@@ -35,6 +35,7 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
@@ -494,5 +495,51 @@ public class HttpClient {
       .setConnectTimeout(2 * 60 * 1000)
       .build();
     return HttpClients.custom().setDefaultRequestConfig(config).build();
+  }
+
+  public HttpResponse downloadRedirectFile(String url, String filePath, Map<String, String> headers) throws IOException {
+    log.info("Making a download file request to " + url);
+    CloseableHttpClient client = getClientRedirect();
+    return downloadFile(client, url, filePath, headers);
+  }
+
+  public synchronized CloseableHttpClient getClientRedirect() {
+    RequestConfig config = RequestConfig.custom()
+            .setCookieSpec(CookieSpecs.STANDARD)
+            .setSocketTimeout(10 * 60 * 1000)
+            .setConnectionRequestTimeout(60 * 1000)
+            .setConnectTimeout(2 * 60 * 1000)
+            .build();
+    return HttpClients.custom().setDefaultRequestConfig(config).setRedirectStrategy(new LaxRedirectStrategy()).build();
+  }
+
+  public HttpResponse downloadFile(CloseableHttpClient client, String url, String filePath, Map<String, String> headers) throws IOException {
+    log.info("Making a download file request to " + url);
+    try {
+      HttpGet getRequest = new HttpGet(url);
+      for (String key : headers.keySet()) {
+        getRequest.addHeader(key, headers.get(key));
+      }
+
+      getRequest.setHeader("Accept", "*/*");
+
+      HttpResponse res = client.execute(getRequest);
+
+      Integer status = res.getStatusLine().getStatusCode();
+      log.info("Download file request response code - " + status);
+      if (status.equals(HttpStatus.OK.value())) {
+        BufferedInputStream bis = new BufferedInputStream(res.getEntity().getContent());
+        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(new File(filePath)));
+        int inByte;
+        while ((inByte = bis.read()) != -1) bos.write(inByte);
+        bis.close();
+        bos.close();
+      }
+      return res;
+    } finally {
+      if (client != null) {
+        closeConnection(client);
+      }
+    }
   }
 }

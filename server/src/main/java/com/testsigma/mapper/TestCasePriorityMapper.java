@@ -8,6 +8,7 @@
 package com.testsigma.mapper;
 
 import com.testsigma.dto.TestCasePriorityDTO;
+import com.testsigma.dto.export.TestCasePriorityCloudXMLDTO;
 import com.testsigma.dto.export.TestCasePriorityXMLDTO;
 import com.testsigma.model.TestCasePriority;
 import com.testsigma.web.request.TestCasePriorityRequest;
@@ -28,4 +29,9 @@ public interface TestCasePriorityMapper {
   TestCasePriority map(TestCasePriorityRequest testCasePriorityRequest);
 
   void merge(TestCasePriorityRequest testCasePriorityRequest, @MappingTarget TestCasePriority testCasePriority);
+
+  List<TestCasePriority> mapTestcasePriorityList(List<TestCasePriorityXMLDTO> readValue);
+  List<TestCasePriority> mapCloudTestcasePriorityList(List<TestCasePriorityCloudXMLDTO> readValue);
+
+  TestCasePriority copy(TestCasePriority testCasePriority);
 }

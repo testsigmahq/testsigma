@@ -7,12 +7,17 @@
 
 package com.testsigma.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.testsigma.dto.BackupDTO;
+import com.testsigma.dto.export.UploadCloudXMLDTO;
 import com.testsigma.dto.export.UploadXMLDTO;
 import com.testsigma.event.EventType;
 import com.testsigma.event.UploadEvent;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaException;
+import com.testsigma.mapper.UploadMapper;
 import com.testsigma.model.*;
 import com.testsigma.repository.UploadRepository;
 import com.testsigma.specification.SearchCriteria;
@@ -34,16 +39,18 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Log4j2
 @AllArgsConstructor
-public class UploadService extends XMLExportService<Upload> {
+public class UploadService extends XMLExportImportService<Upload> {
   private final UploadRepository uploadRepository;
   private final ApplicationEventPublisher applicationEventPublisher;
   private final WorkspaceService workspaceService;
   private final WorkspaceVersionService workspaceVersionService;
   private final UploadVersionService uploadVersionService;
+  private final UploadMapper mapper;
 
   public Upload find(Long id) throws ResourceNotFoundException {
     Upload upload = this.uploadRepository.findById(id)
@@ -57,6 +64,9 @@ public class UploadService extends XMLExportService<Upload> {
     return uploadRepository.findAll(specification, pageable);
   }
 
+  public Upload findById(Long id) {
+    return this.uploadRepository.findById(id).orElse(null);
+  }
 
   public Upload create(UploadRequest uploadRequest) throws TestsigmaException {
     Upload upload = new Upload();
@@ -132,6 +142,98 @@ public class UploadService extends XMLExportService<Upload> {
   @Override
   protected List<UploadXMLDTO> mapToXMLDTOList(List<Upload> list) {
     return null;
+  }
+
+  public void importXML(BackupDTO importDTO) throws IOException, ResourceNotFoundException {
+    if (!importDTO.getIsUploadsEnabled()) return;
+    log.debug("import process for uploads initiated");
+    importFiles("uploads", importDTO);
+    log.debug("import process for uploads completed");
+  }
+
+  @Override
+  public List<Upload> readEntityListFromXmlData(String xmlData, XmlMapper xmlMapper, BackupDTO importDTO) throws JsonProcessingException, ResourceNotFoundException {
+
+    if (importDTO.getIsCloudImport()) {
+      if (!hasToSkip(null, importDTO)) {
+        return mapper.mapUploadsCloudXMLList(xmlMapper.readValue(xmlData, new TypeReference<List<UploadCloudXMLDTO>>() {
+        }));
+      } else {
+        return new ArrayList<>();
+      }
+    } else {
+      if (!hasToSkip(null, importDTO)) {
+        return mapper.mapUploadsXMLList(xmlMapper.readValue(xmlData, new TypeReference<List<UploadXMLDTO>>() {
+        }));
+      } else {
+        return new ArrayList<>();
+      }
+    }
+
+  }
+
+  @Override
+  public boolean hasToSkip(Upload upload, BackupDTO importDTO) {
+    return !importDTO.getIsSameApplicationType();
+  }
+
+  @Override
+  void updateImportedId(Upload upload, Upload previous, BackupDTO importDTO) {
+    previous.setImportedId(upload.getId());
+    save(previous);
+  }
+
+  @Override
+  public Optional<Upload> findImportedEntity(Upload upload, BackupDTO importDTO) {
+    return uploadRepository.findAllByWorkspaceIdAndImportedId(importDTO.getWorkspaceId(), upload.getId());
+  }
+
+  @Override
+  public Upload processBeforeSave(Optional<Upload> previous, Upload present, Upload toImport, BackupDTO importDTO) throws ResourceNotFoundException {
+    present.setImportedId(present.getId());
+    if (previous.isPresent() && importDTO.isHasToReset()) {
+      present.setId(previous.get().getId());
+    } else {
+      present.setId(null);
+    }
+    present.setWorkspaceId(importDTO.getWorkspaceId());
+    return present;
+  }
+  public List<Upload> findAllByApplicationId(Long applicationVersionId){
+    return this.uploadRepository.findAllByWorkspaceId(applicationVersionId);
+  }
+
+  @Override
+  public Upload copyTo(Upload upload) {
+    return mapper.copy(upload);
+  }
+
+
+  @Override
+  public Optional<Upload> getRecentImportedEntity(BackupDTO importDTO, Long... ids) {
+    Long importedId = ids[0];
+    return uploadRepository.findAllByWorkspaceIdAndImportedId(importDTO.getWorkspaceId(), importedId);
+  }
+
+
+  @Override
+  public Optional<Upload> findImportedEntityHavingSameName(Optional<Upload> previous, Upload current, BackupDTO importDTO) throws ResourceNotFoundException {
+    return uploadRepository.findByNameAndWorkspaceId(current.getName(), importDTO.getWorkspaceVersionId());
+  }
+
+  @Override
+  public boolean hasImportedId(Optional<Upload> previous) {
+    return previous.isPresent() && previous.get().getImportedId() != null;
+  }
+
+  @Override
+  public boolean isEntityAlreadyImported(Optional<Upload> previous, Upload current) {
+    return previous.isPresent() && previous.get().getImportedId() != null && previous.get().getImportedId().equals(current.getId());
+  }
+
+  public Upload findByImportedIdAndWorkspaceId(Long importedId,
+                                                 Long applicationId) {
+    return uploadRepository.findByImportedIdAndWorkspaceId(importedId,applicationId);
   }
 
 }

@@ -49,6 +49,7 @@
     <google-guava-version>31.0.1-jre</google-guava-version>
     <one-login-saml-version>2.4.0</one-login-saml-version>
     <spring-data-jpa-version>2.5.2</spring-data-jpa-version>
+    <poi.version>3.15</poi.version>
  <!--   <hibernate-validator-version>7.0.2.Final</hibernate-validator-version>-->
     <hibernate-validator-version>6.0.17.Final</hibernate-validator-version>
     <hibernate.version>5.5.6.Final</hibernate.version>
@@ -184,7 +185,24 @@
       <version>${httpmime.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi</artifactId>
+      <version>${poi.version}</version>
+    </dependency>
 
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml</artifactId>
+      <version>${poi.version}</version>
+      <exclusions>
+        <!-- Exclude Commons Logging in favor of SLF4j -->
+        <exclusion>
+          <groupId>xml-apis</groupId>
+          <artifactId>xml-apis</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
 
     <dependency>
       <groupId>com.amazonaws</groupId>

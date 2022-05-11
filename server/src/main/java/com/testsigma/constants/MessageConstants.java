@@ -22,6 +22,8 @@ public class MessageConstants {
     "test machine. Please publish your addon before running in cloud machines.";
   public static final String BACKUP_IS_IN_PROGRESS = "Backup is in progress";
   public static final String BACKUP_IS_SUCCESS = "Backup is completed";
+  public static final String IMPORT_IS_IN_PROGRESS = "Import is in progress";
+  public static final String IMPORT_IS_SUCCESS = "Import is completed";
   public static String TEST_PLAN_COMPLETED = "Test plan execution completed";
   public static String TEST_PLAN_FAILURE = "Test plan execution failed";
 

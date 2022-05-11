@@ -11,6 +11,9 @@ package com.testsigma.mapper;
 
 import com.testsigma.dto.TestCaseDTO;
 import com.testsigma.dto.TestCaseEntityDTO;
+import com.testsigma.dto.export.ElementCloudXMLDTO;
+import com.testsigma.dto.export.ElementXMLDTO;
+import com.testsigma.dto.export.TestCaseCloudXMLDTO;
 import com.testsigma.dto.export.TestCaseXMLDTO;
 import com.testsigma.model.TestCase;
 import com.testsigma.web.request.TestCaseRequest;
@@ -84,5 +87,8 @@ public interface TestCaseMapper {
   @IterableMapping(qualifiedByName = "mapWithoutData")
   List<TestCaseDTO> mapDTOs(List<TestCase> testCases);
 
+  List<TestCase> mapTestCasesXMLList(List<TestCaseXMLDTO> readValue);
+
+  List<TestCase> mapTestCasesCloudXMLList(List<TestCaseCloudXMLDTO> readValue);
 }
 

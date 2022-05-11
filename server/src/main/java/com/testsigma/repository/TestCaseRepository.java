@@ -24,6 +24,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Transactional
@@ -82,4 +83,10 @@ public interface TestCaseRepository extends PagingAndSortingRepository<TestCase,
   @Query(value = "SELECT testCase.id FROM TestCase as testCase " +
     "JOIN testCase.testData as testData WHERE testData.id = :testDataId")
   List<Long> findTestCaseIdsByTestDataId(@Param("testDataId") Long testDataId);
+
+  List<TestCase> findAllByName(String name);
+
+  Optional<TestCase> findTestCaseByWorkspaceVersionIdAndName(Long versionId, String name);
+
+  Optional<TestCase> findAllByWorkspaceVersionIdAndImportedId(Long versionId, Long importedId);
 }

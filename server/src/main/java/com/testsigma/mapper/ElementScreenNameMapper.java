@@ -8,6 +8,7 @@
 package com.testsigma.mapper;
 
 import com.testsigma.dto.ElementScreenNameDTO;
+import com.testsigma.dto.export.ElementScreenNameCloudXMLDTO;
 import com.testsigma.dto.export.ElementScreenNameXMLDTO;
 import com.testsigma.model.ElementScreenName;
 import com.testsigma.web.request.ElementScreenNameRequest;
@@ -29,4 +30,9 @@ public interface ElementScreenNameMapper {
 
   @Named("mapData")
   ElementScreenNameDTO map(ElementScreenName screenName);
+
+    List<ElementScreenName> mapElementScreenNamesList(List<ElementScreenNameXMLDTO> readValue);
+    List<ElementScreenName> mapCloudElementScreenNamesList(List<ElementScreenNameCloudXMLDTO> readValue);
+
+  ElementScreenName copy(ElementScreenName uiIdentifier);
 }

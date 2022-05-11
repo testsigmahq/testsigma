@@ -12,6 +12,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 public enum TestStepConditionType {
+  NOT_USED("Not Used"),
   CONDITION_IF("If"),
   CONDITION_IFNOT("If not"),
   CONDITION_ELSE_IF("Else If"),

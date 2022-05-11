@@ -102,6 +102,9 @@ public class RestStep {
   @UpdateTimestamp
   private Timestamp updatedDate;
 
+  @Column(name = "imported_id")
+  private Long importedId;
+
   @OneToOne
   @Fetch(value = FetchMode.SELECT)
   @JoinColumn(name = "step_id", referencedColumnName = "id", insertable = false, updatable = false)

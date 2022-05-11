@@ -9,7 +9,13 @@
 
 package com.testsigma.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.testsigma.dto.*;
+import com.testsigma.dto.export.ElementCloudXMLDTO;
+import com.testsigma.dto.export.ElementXMLDTO;
+import com.testsigma.dto.export.TestCaseCloudXMLDTO;
 import com.testsigma.dto.export.TestCaseXMLDTO;
 import com.testsigma.event.EventType;
 import com.testsigma.event.TestCaseEvent;
@@ -39,11 +45,12 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__({@Autowired, @Lazy}))
 @Log4j2
-public class TestCaseService extends XMLExportService<TestCase> {
+public class TestCaseService extends XMLExportImportService<TestCase> {
   private final TestCaseMapper testCaseMapper;
   private final com.testsigma.service.TestPlanService testPlanService;
   private final TestDeviceService testDeviceService;
@@ -60,6 +67,9 @@ public class TestCaseService extends XMLExportService<TestCase> {
   private final StepGroupFilterService stepGroupFilterService;
   private final WorkspaceVersionService workspaceVersionService;
   private final TestSuiteService testSuiteService;
+  private final TestCasePriorityService testCasePriorityService;
+  private final TestCaseTypeService testCaseTypeService;
+  private final TestDataProfileService testDataService;
 
   public Page<TestCase> findAll(Specification<TestCase> specification, Pageable pageable) {
     return testCaseRepository.findAll(specification, pageable);
@@ -369,5 +379,123 @@ public class TestCaseService extends XMLExportService<TestCase> {
   @Override
   protected List<TestCaseXMLDTO> mapToXMLDTOList(List<TestCase> list) {
     return mapper.mapTestcases(list);
+  }
+
+  public void importXML(BackupDTO importDTO) throws IOException, ResourceNotFoundException {
+    if (!importDTO.getIsTestCaseEnabled()) return;
+    log.debug("import process for testcase initiated");
+    importFiles("testcases", importDTO);
+    log.debug("import process for testcase completed");
+  }
+
+  @Override
+  public List<TestCase> readEntityListFromXmlData(String xmlData, XmlMapper xmlMapper, BackupDTO importDTO) throws JsonProcessingException {
+    if (importDTO.getIsCloudImport()) {
+      return mapper.mapTestCasesCloudXMLList(xmlMapper.readValue(xmlData, new TypeReference<List<TestCaseCloudXMLDTO>>() {
+      }));
+    }
+    else{
+      return mapper.mapTestCasesXMLList(xmlMapper.readValue(xmlData, new TypeReference<List<TestCaseXMLDTO>>() {
+      }));
+    }
+  }
+  @Override
+  public Optional<TestCase> findImportedEntity(TestCase testCase, BackupDTO importDTO) {
+   return testCaseRepository.findAllByWorkspaceVersionIdAndImportedId(importDTO.getWorkspaceVersionId(), testCase.getId());}
+
+  @Override
+  public TestCase processBeforeSave(Optional<TestCase> previous, TestCase present, TestCase toImport, BackupDTO importDTO) {
+    present.setImportedId(present.getId());
+
+    if (previous.isPresent() && importDTO.isHasToReset()) {
+      present.setId(previous.get().getId());
+    } else {
+      present.setId(null);
+    }
+    if (present.getPreRequisite() != null) {
+      Optional<TestCase> recentPrerequisite = getRecentImportedEntity(importDTO, present.getPreRequisite());
+      if (recentPrerequisite.isPresent())
+        present.setPreRequisite(recentPrerequisite.get().getId());
+    }
+    present.setWorkspaceVersionId(importDTO.getWorkspaceVersionId());
+
+    if (present.getPriority() != null) {
+      Optional<TestCasePriority> priority = testCasePriorityService.getRecentImportedEntity(importDTO, present.getPriority());
+      if (priority.isPresent())
+        present.setPriority(priority.get().getId());
+    }
+
+    if (present.getType() != null) {
+      Optional<TestCaseType> testCaseType = testCaseTypeService.getRecentImportedEntity(importDTO, present.getType());
+      if (testCaseType.isPresent())
+        present.setType(testCaseType.get().getId());
+    }
+
+    if (present.getTestDataId() != null) {
+      Optional<TestData> testData = testDataService.getRecentImportedEntity(importDTO, present.getTestDataId());
+      if (testData.isPresent())
+        present.setTestDataId(testData.get().getId());
+    }
+
+    present.setLastRunId(null);
+    return present;
+  }
+
+
+  @Override
+  public TestCase copyTo(TestCase testCase) {
+    Long id = testCase.getId();
+    testCase = mapper.copy(testCase);
+    testCase.setId(id);
+    return testCase;
+  }
+
+
+  public TestCase save(TestCase testCase) {
+    List<String> tagNames = testCase.getTagNames();
+    testCase = testCaseRepository.save(testCase);
+    tagService.updateTags(tagNames, TagType.TEST_CASE, testCase.getId());
+    return testCase;
+  }
+
+  @Override
+  public Optional<TestCase> getRecentImportedEntity(BackupDTO importDTO, Long... ids) {
+    Long importedId = ids[0];
+    Optional<TestCase> previous = testCaseRepository.findAllByWorkspaceVersionIdAndImportedId(importDTO.getWorkspaceVersionId(), importedId);
+    return previous;
+
+  }
+
+
+  public Optional<TestCase> findImportedEntityHavingSameName(Optional<TestCase> previous, TestCase current, BackupDTO importDTO) {
+    Optional<TestCase> oldEntity = testCaseRepository.findTestCaseByWorkspaceVersionIdAndName(importDTO.getWorkspaceVersionId(), current.getName());
+    if (oldEntity.isPresent()) {
+      return oldEntity;
+    } else {
+      return Optional.empty();
+    }
+  }
+
+  public boolean hasImportedId(Optional<TestCase> previous) {
+    return previous.isPresent() && previous.get().getImportedId() != null;
+  }
+
+  public boolean isEntityAlreadyImported(Optional<TestCase> previous, TestCase current) {
+    return previous.isPresent() && previous.get().getImportedId() != null && previous.get().getImportedId().equals(current.getId());
+  }
+
+  @Override
+  public boolean hasToSkip(TestCase testCase, BackupDTO importDTO) {
+    return false;
+  }
+
+  @Override
+  void updateImportedId(TestCase testCase, TestCase previous, BackupDTO importDTO) {
+    previous.setImportedId(testCase.getId());
+    save(previous);
+  }
+
+  public void handlePreRequisiteChange(TestCase testCase) {
+    this.testSuiteService.handlePreRequisiteChange(testCase);
   }
 }

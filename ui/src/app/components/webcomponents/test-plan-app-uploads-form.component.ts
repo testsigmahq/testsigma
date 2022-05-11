@@ -10,15 +10,15 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
       <div class="d-flex form-group flex-wrap" *ngIf="appSrcTypeControl">
           <mat-radio-group
                   aria-labelledby="example-radio-group-label"
-                  class="ts-col-100 d-flex pb-40" [formControl]="appSrcTypeControl">
+                  class="ts-col-100 d-flex pb-25" [formControl]="appSrcTypeControl">
               <mat-radio-button class="pr-20" [value]="pathTypes[0]">
-                  <span [translate]="'test_plan.application.path_type.'+pathTypes[0]"></span>
+                  <span class="rb-regular-i-d" [translate]="'test_plan.application.path_type.'+pathTypes[0]"></span>
               </mat-radio-button>
               <mat-radio-button class="pr-20" [value]="pathTypes[1]" *ngIf="testPlanLabType && isHybrid">
-                  <span [translate]="'test_plan.application.path_type.'+pathTypes[1]"></span>
+                  <span class="rb-regular-i-d" [translate]="'test_plan.application.path_type.'+pathTypes[1]"></span>
               </mat-radio-button>
               <mat-radio-button [value]="pathTypes[2]">
-                  <span [translate]="'test_plan.application.path_type.'+pathTypes[2]"></span>
+                  <span class="rb-regular-i-d" [translate]="'test_plan.application.path_type.'+pathTypes[2]"></span>
               </mat-radio-button>
           </mat-radio-group>
           <div class="ts-col-60 pr-60" *ngIf="isAppUploadType">

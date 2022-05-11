@@ -15,7 +15,7 @@ import { DevicesService } from 'app/agents/services/devices.service';
   selector: 'app-test-plan-execution-environment-info',
   template: `
       <div class="text-t-secondary d-flex flex-column execution-list-item">
-          <div *ngIf="!isHybrid" class="d-flex justify-content-around">
+          <div *ngIf="!isHybrid" class="d-flex justify-content-between">
               <div class="d-flex">
                   <i (click)="remove()"
                      [matTooltip]="'hint.message.common.delete' | translate"

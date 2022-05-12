@@ -127,7 +127,12 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
           }
         }
     });
-  });
+  },error => {
+      this.translate.get("message.common.upload.failure", {FieldName: "File"})
+        .subscribe(key => this.showAPIError(error, key, 'Upload'))
+      this.dialogRef.close();
+    }
+    );
   }
 
   public uploadedFile(event): void {

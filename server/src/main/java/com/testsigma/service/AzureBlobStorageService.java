@@ -18,6 +18,7 @@ import java.net.URL;
 import java.security.InvalidKeyException;
 import java.util.Calendar;
 import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.Optional;
 
 @Log4j2
@@ -187,5 +188,9 @@ public class AzureBlobStorageService extends StorageService {
       return filePathToAdd.substring(1);
     }
     return filePathToAdd;
+  }
+
+  public boolean validateCredentials() {
+    return container.listBlobs().iterator().hasNext();
   }
 }

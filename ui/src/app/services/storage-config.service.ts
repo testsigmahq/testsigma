@@ -20,7 +20,7 @@ export class StorageConfigService {
   public update(storage: StorageConfig): Observable<StorageConfig> {
     return this.http.put<StorageConfig>(this.URLConstants.storageConfigURL, storage.serialize()).pipe(
       map((data) => new StorageConfig().deserialize(data)),
-      catchError(() => throwError('Problem while saving Storage Configuration'))
+      catchError((err) => throwError(err))
     );
   }
 

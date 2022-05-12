@@ -59,7 +59,7 @@ export class CreateComponent extends BaseComponent implements OnInit {
         this.saving = false;
       }, error => {
         this.translate.get('message.common.created.failure', {FieldName: 'Azure Storage Config'}).subscribe((res) => {
-          this.showAPIError(error, res);
+          this.showAPIError(error, res, 'Azure Storage Config Details');
           this.saving = false;
         })
       });

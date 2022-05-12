@@ -118,4 +118,8 @@ public class AwsS3StorageService extends StorageService {
   protected String getRootDirectory() {
     return storageConfig.getAwsBucketName();
   }
+
+  public boolean validateCredentials() {
+    return this.amazonS3.doesBucketExistV2(storageConfig.getAwsBucketName());
+  }
 }

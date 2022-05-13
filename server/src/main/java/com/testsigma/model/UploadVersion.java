@@ -10,6 +10,7 @@ package com.testsigma.model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.*;
 
@@ -53,6 +54,18 @@ public class UploadVersion extends BaseModel {
   @Column(name = "last_uploaded_time")
   private Timestamp lastUploadedTime;
 
+  @Column(name = "package_name")
+  private String packageName;
+
+  @Column(name = "activity")
+  private String activity;
+
+  @Column(name = "version_name")
+  private String versionName;
+
+  @Column(name = "bundle_id")
+  private String bundleId;
+
   @Column(name = "upload_status")
   @Enumerated(EnumType.STRING)
   private UploadStatus uploadStatus;
@@ -89,6 +102,13 @@ public class UploadVersion extends BaseModel {
       return this.getFileName();
     }
     return Paths.get(this.getPath()).toFile().getName();
+  }
+
+  public String getS3Path(){
+    String originalFileName = ObjectUtils.defaultIfNull(getFileName(), "tmp")
+            .replaceAll("\\s+", "_");
+    return "/uploads/" + getId() +
+             "/" + originalFileName;
   }
 }
 

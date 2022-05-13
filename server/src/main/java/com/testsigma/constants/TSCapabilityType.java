@@ -13,6 +13,9 @@ public interface TSCapabilityType {
   String PLATFORM_NAME = "platformName";
   String BUNDLE_ID = "bundleId";
   String DEVICE_NAME = "deviceName";
+  String APP_ACTIVITY = "appActivity";
+  String APP_PACKAGE = "appPackage";
+  String APP_VERSION = "appVersion";
   String APP = "app";
   String WDA_URL = "webDriverAgentUrl";
   String WDA_URL_VALUE = "http://localhost:8100";

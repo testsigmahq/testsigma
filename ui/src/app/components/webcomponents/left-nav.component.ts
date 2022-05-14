@@ -21,6 +21,10 @@ import {SessionService} from "../../shared/services/session.service";
 import {Router} from "@angular/router";
 import {AuthenticationConfigService} from "../../services/authentication-config.service";
 import {AuthenticationType} from "../../shared/enums/authentication-type.enum";
+import {DryRunFormComponent} from "./dry-run-form.component";
+import {TestsigmaLoveComponent} from "./testsigma-love.component";
+import moment from "moment";
+import {UserPreference} from "../../models/user-preference.model";
 
 @Component({
   selector: 'app-left-nav',
@@ -34,6 +38,7 @@ export class LeftNavComponent extends BaseComponent implements OnInit {
   public isTestManager = false;
   public displayGlobalAdd: boolean;
   public moreAction: boolean;
+  public userPreference: UserPreference;
   public isNoAuth : boolean;
   @ViewChild('moreActionRef') moreActionOverlay: CdkConnectedOverlay;
   @ViewChild('primaryHelpContainer') overlayDir: CdkConnectedOverlay;
@@ -53,6 +58,7 @@ export class LeftNavComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.checkIfGithubStarIsShown();
     this.onBoardingSharedService.getPreferencesEmitter().subscribe((completedEvent: OnBoarding) => {
       if(completedEvent == OnBoarding.TEST_DEVELOPMENT) {
         setTimeout(()=> {
@@ -62,6 +68,38 @@ export class LeftNavComponent extends BaseComponent implements OnInit {
     })
     this.fetchAuthConfig()
   }
+
+  ngOnChanges() {
+    this.checkIfGithubStarIsShown();
+  }
+
+  checkIfGithubStarIsShown() {
+    this.userPreferenceService.show().subscribe(res => {
+      this.userPreference = res;
+      if ((moment(this.userPreference.createdDate) < moment().subtract(15, 'minute')) &&
+        !this.userPreference?.showedGitHubStar) {
+
+        let dialogRef= this.matDialog.open(TestsigmaLoveComponent, {
+          position: {top: '10vh', right: '28vw'},
+          panelClass: ['mat-dialog', 'rds-none'],
+        });
+
+        dialogRef.afterClosed().subscribe(()=>{
+          this.userPreference.showedGitHubStar = true;
+          this.userPreferenceService.save(this.userPreference).subscribe();
+        });
+
+      }else{
+        let autoRefresh = setInterval(() => {
+          if(this.userPreference.showedGitHubStar)
+            clearInterval(autoRefresh);
+          else
+            this.checkIfGithubStarIsShown()
+        },60000);
+      }
+    })
+  }
+
   fetchAuthConfig()
   {
     this.authConfigService.find().subscribe(

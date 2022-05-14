@@ -20,4 +20,5 @@ public class UserPreferenceDTO {
   private Long workspaceId;
   private Timestamp createdDate;
   private Timestamp updatedDate;
+  private boolean showedGitHubStar;
 }

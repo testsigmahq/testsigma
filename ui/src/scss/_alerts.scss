@@ -80,6 +80,38 @@
   }
 
   &.error {
+    &:not(.paused-notification) {
+      .icon {
+        @extend .fa-result-1;
+      }
+
+      .sn-progress-loader {
+        > span {
+          background: $theme-failed-color !important;
+        }
+      }
+    }
+    &.paused-notification {
+      cursor: text;
+
+      .icon, a {
+        @extend .pointer;
+      }
+
+      .icon {
+        @extend .p-0, .w-fit-content, .fa-circled-close, .text-icon;
+        height: fit-content;
+        line-height: 12px;
+        left: 94% !important;
+        font-size: 15px !important;
+        top: 4px;
+      }
+
+      .sn-content {
+        padding-left: 0px !important;
+      }
+    }
+
     .icon, &:before {
       @extend .fa-result-1;
     }
@@ -103,4 +135,14 @@
 
 .project-notification {
   background: #6C63FF;
+}
+
+.toast-message > a{
+  color: #1FB47E !important;
+}
+
+.toast-container > .error > .toast-title{
+  color: $theme-failed-color !important;
+  padding-bottom: 8px;
+  text-decoration: underline;
 }

@@ -145,12 +145,12 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
             this.handleActionSuccess()
           }
         },
-        (err) => this.handleActionFailure(err, "mobile_recorder.notification.navigate_back.failure")
+        (err) => this.handleActionFailure(err, "mobile_recorder.notification.navigate_back.failure", "Navigate back", "/#8--failed-to-navigate-back")
       );
     } else {
       this.devicesService.navigateBack(this.data.device).subscribe(
         () => { if (this.data.recording) this.handleActionSuccess()},
-        (err) => this.handleActionFailure(err, "mobile_recorder.notification.navigate_back.failure")
+        (err) => this.handleActionFailure(err, "mobile_recorder.notification.navigate_back.failure", "Navigate back", "/#8--failed-to-navigate-back")
       );
     }
   }
@@ -159,7 +159,7 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
     this.beforeAction();
     this.devicesService.goToHome(this.sessionId).subscribe(
       () => this.handleActionSuccess(),
-      (err) => this.handleActionFailure(err, "mobile_recorder.notification.go_to_home.failure")
+      (err) => this.handleActionFailure(err, "mobile_recorder.notification.go_to_home.failure", "Navigate to Home", "#11--failed-to-navigate-to-home")
     );
   }
 
@@ -184,7 +184,7 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
         this.handleActionSuccess();
       },
       error: (err) =>
-        this.handleActionFailure(err, "mobile_recorder.notification.change_orientation_failed")
+        this.handleActionFailure(err, "mobile_recorder.notification.change_orientation_failed", "Change Orientation", "#10--failed-to-change-orientation")
     });
   }
 
@@ -461,12 +461,12 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
     if (this.data.recording) {
       this.devicesService.sessionSwipe(this.sessionId, tapPoints).subscribe({
         next: () => this.handleActionSuccess(),
-        error: (err) => this.handleActionFailure(err, "mobile_recorder.notification.swipe.failure")
+        error: (err) => this.handleActionFailure(err, "mobile_recorder.notification.swipe.failure", "Swipe", "/#7--failed-to-swipe")
       });
     } else {
       this.devicesService.deviceSwipe(this.data.device, tapPoints).subscribe({
         next: () => this.handleActionSuccess(),
-        error: (err) => this.handleActionFailure(err, "mobile_recorder.notification.swipe.failure")
+        error: (err) => this.handleActionFailure(err, "mobile_recorder.notification.swipe.failure", "Swipe", "/#7--failed-to-swipe")
       });
     }
   };
@@ -489,14 +489,14 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
             this.handleActionSuccess();
           }
         },
-        error: (err) => this.handleActionFailure(err, "mobile_recorder.notification.tap.failure")
+        error: (err) => this.handleActionFailure(err, "mobile_recorder.notification.tap.failure", "Tap","/#6--failed-to-tap-on-the-element")
       });
     } else {
       this.devicesService.deviceTap(this.data.device, tapPoint).subscribe({
         next: () => {
           if (this.data.recording) this.handleActionSuccess();
         },
-        error: (err) => this.handleActionFailure(err, "mobile_recorder.notification.tap.failure")
+        error: (err) => this.handleActionFailure(err, "mobile_recorder.notification.tap.failure", "Tap","/#6--failed-to-tap-on-the-element")
       });
     }
   }
@@ -619,7 +619,7 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
           }
           this.handleActionSuccess()
         },
-        error: (err) => this.handleActionFailure(err, "mobile_recorder.notification.send_keys.failure")
+        error: (err) => this.handleActionFailure(err, "mobile_recorder.notification.send_keys.failure", "Enter", "/#9--failed-to-enter-data-into-the-element")
       });
   }
 
@@ -631,7 +631,7 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
           if(this.data.isStepRecord) this.saveClearStep.emit(mobileElement);
           this.handleActionSuccess()
         },
-        error: (err) => this.handleActionFailure(err, "mobile_recorder.notification.clear.failure")
+        error: (err) => this.handleActionFailure(err, "mobile_recorder.notification.clear.failure","Clear", "/#5--failed-to-clear-the-elements-text")
       });
   }
 
@@ -712,8 +712,8 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
       recorderDialog.beforeAction();
   }
 
-  private handleActionFailure(error, messageKey: string) {
-    this.recorderDialog.handleActionFailure(error, messageKey);
+  private handleActionFailure(error, messageKey: string, actionType?: string, guideLink?:string) {
+    this.recorderDialog.handleActionFailure(error, messageKey, actionType, guideLink);
   }
 
   private handleActionSuccess() {

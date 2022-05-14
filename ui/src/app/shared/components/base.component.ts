@@ -55,7 +55,7 @@ export class BaseComponent implements OnInit {
   }
 
 
-  showNotification(type: NotificationType, message) {
+  showNotification(type: NotificationType, message, clickToClose?) {
     const temp = {
       type: type,
       title: status,
@@ -63,7 +63,8 @@ export class BaseComponent implements OnInit {
       timeOut: 7000,
       positionClass: 'toast-bottom-left',
       progressBar: true,
-      progressAnimation: <ProgressAnimationType>'increasing'
+      progressAnimation: <ProgressAnimationType>'increasing',
+      enableHtml: true
     };
     if (this.toastrService) {
       this.toastrService.show(temp.content, temp.title, temp, temp.type);

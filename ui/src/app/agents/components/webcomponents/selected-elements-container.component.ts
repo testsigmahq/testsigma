@@ -56,7 +56,7 @@ export class SelectedElementsContainerComponent{
           this.clearSelection();
         },
         error: (err) => {
-          this.handleActionFailure(err, "mobile_recorder.notification.tap.failure")
+          this.handleActionFailure(err, "mobile_recorder.notification.tap.failure", "Tap","/#6--failed-to-tap-on-the-element")
           this.inspectedElement = null;
         }
       });
@@ -70,7 +70,7 @@ export class SelectedElementsContainerComponent{
           if(this.isStepRecorder)
             this.saveEnterStep.emit(sendKeysRequest);
           this.handleActionSuccess()},
-        error: (err) => this.handleActionFailure(err, "mobile_recorder.notification.send_keys.failure")
+        error: (err) => this.handleActionFailure(err, "mobile_recorder.notification.send_keys.failure", "Enter", "/#9--failed-to-enter-data-into-the-element")
       });
   }
 
@@ -83,7 +83,7 @@ export class SelectedElementsContainerComponent{
             this.saveClearStep.emit(mobileElement);
           this.handleActionSuccess();
         },
-        error: (err) => this.handleActionFailure(err, "mobile_recorder.notification.clear.failure")
+        error: (err) => this.handleActionFailure(err, "mobile_recorder.notification.clear.failure","Clear", "/#5--failed-to-clear-the-elements-text")
       });
 
   }
@@ -135,9 +135,9 @@ export class SelectedElementsContainerComponent{
     recorderDialog.handleActionSuccess();
   }
 
-  private handleActionFailure(error, messageKey: string) {
+  private handleActionFailure(error, messageKey: string, actionType?: string, guideLink?:string) {
     let recorderDialog: MobileRecordingComponent = this.dialog.openDialogs.find(dialog => dialog.componentInstance instanceof MobileRecordingComponent).componentInstance;
-    recorderDialog.handleActionFailure(error, messageKey);
+    recorderDialog.handleActionFailure(error, messageKey, actionType, guideLink);
   }
 
   private clearSelection() {

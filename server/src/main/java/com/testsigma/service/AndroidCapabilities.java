@@ -28,6 +28,9 @@ public class AndroidCapabilities extends MobileCapabilities {
     throws TestsigmaException {
     if (AppPathType.UPLOADS == appPathType) {
       capabilities.add(new WebDriverCapability(TSCapabilityType.APP, getPreSignedUrl(testDevice)));
+      Upload upload = uploadService.findById(Long.valueOf(testDevice.getAppUploadId()));
+      UploadVersion uploadVersion = testDevice.getAppUploadVersionId() == null ? upload.getLatestVersion() : uploadVersionService.find(testDevice.getAppUploadVersionId());
+      setAppActivityAndPackage(uploadVersion, capabilities);
     } else if (AppPathType.USE_PATH == appPathType) {
       if (testDevice.getAppUrl() != null) {
         capabilities.add(new WebDriverCapability(TSCapabilityType.APP, testDevice.getAppUrl()));
@@ -53,5 +56,14 @@ public class AndroidCapabilities extends MobileCapabilities {
     if (testDevice.getAppPathType() != null)
       setHybridAppCapability(testDevice, testDevice.getAppPathType(),
         capabilities);
+  }
+
+  public void setAppActivityAndPackage(UploadVersion uploadVersion, List<WebDriverCapability> capabilities) {
+    capabilities.add(new WebDriverCapability(TSCapabilityType.APP_ACTIVITY,
+            uploadVersion.getActivity()));
+    capabilities.add(new WebDriverCapability(TSCapabilityType.APP_PACKAGE,
+            uploadVersion.getPackageName()));
+    capabilities.add(new WebDriverCapability(TSCapabilityType.APP_VERSION,
+            uploadVersion.getVersionName()));
   }
 }

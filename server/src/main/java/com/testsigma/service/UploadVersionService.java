@@ -65,6 +65,7 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
   private final UploadVersionRepository uploadVersionRepository;
   private final UploadService uploadService;
   private final HttpClient client;
+  private final AppParserService appParserService;
 
   @Getter
   @Setter
@@ -104,12 +105,14 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
   public void uploadFile(File uploadedFile, UploadVersion uploadVersion) throws TestsigmaException {
 
     try {
-      String originalFileName = ObjectUtils.defaultIfNull(uploadVersion.getFileName(), "tmp")
-              .replaceAll("\\s+", "_");
-      StringBuilder storageFilePath =
-              new StringBuilder().append("/uploads/").append(uploadVersion.getId()).append("/").append(originalFileName);
-      uploadToStorage(storageFilePath.toString(), uploadedFile, uploadVersion);
-      uploadVersion.setPath(storageFilePath.toString());
+      String storageFilePath = uploadVersion.getS3Path();
+      uploadToStorage(storageFilePath, uploadedFile, uploadVersion);
+      UploadVersionAppInfo uploadedVersion = appParserService.parseFile(uploadedFile);
+      uploadVersion.setPath(storageFilePath);
+      uploadVersion.setActivity(uploadedVersion.getAppActivity());
+      uploadVersion.setPackageName(uploadedVersion.getPackageName());
+      uploadVersion.setVersionName(uploadedVersion.getAppVersion());
+      uploadVersion.setBundleId(uploadedVersion.getBundleId());
       this.uploadVersionRepository.save(uploadVersion);
       resignTheUpload(uploadVersion);
       publishEvent(uploadVersion, EventType.UPDATE);

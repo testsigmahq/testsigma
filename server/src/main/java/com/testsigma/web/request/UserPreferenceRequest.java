@@ -20,4 +20,5 @@ public class UserPreferenceRequest {
   private Long testCaseFilterId;
   private Long versionId;
   private Long workspaceId;
+  private boolean showedGitHubStar;
 }

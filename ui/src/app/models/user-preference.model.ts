@@ -12,6 +12,7 @@ import {Deserializable} from "../shared/models/deserializable";
 import {alias, custom, deserialize, serializable, SKIP} from 'serializr';
 import {Workspace} from "./workspace.model";
 import {WorkspaceVersion} from "./workspace-version.model";
+import * as moment from "moment";
 
 export class UserPreference extends Base implements Deserializable {
   @serializable
@@ -40,6 +41,14 @@ export class UserPreference extends Base implements Deserializable {
 
   public selectedWorkspace: Workspace;
   public selectedVersion: WorkspaceVersion;
+  @serializable(alias('createdDate', custom(() => SKIP, (v) => {
+    if (v)
+      return moment(v)
+  })))
+  public createdDate:Date;
+
+  @serializable
+  public showedGitHubStar : boolean  = false;
 
   @serializable(alias('workspaceId', custom(v => v, v => SKIP)))
   get selectedworkspaceId(): String {

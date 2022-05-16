@@ -158,8 +158,12 @@ export class MobileRecordingComponent extends BaseComponent implements OnInit {
             this.createSession(mobileInspection.id);
           },
         error: (error: any) => {
-          this.showNotification(NotificationType.Error, error && error.error && error.error.code ? error.error.code :
-            this.translate.instant("mobile_recorder.notification.start.failure"));
+          let msg = error && error.error && error.error.code ? error.error.code :
+            this.translate.instant("mobile_recorder.notification.start.failure");
+          if(msg == "There are already running sessions for the user"){
+            msg = this.translate.instant("mobile_recorder.notification.start.open_sessions_failure_troubleshoot");
+          }
+          this.showNotification(NotificationType.Error, msg);
           this.loadingActions = false;
           this.loading = false;
         }
@@ -201,7 +205,7 @@ export class MobileRecordingComponent extends BaseComponent implements OnInit {
           this.mobileSessionId = null;
         }
         console.log("Error while creating the session - ", error);
-        this.showNotification(NotificationType.Error, this.translate.instant("mobile_recorder.notification.start.failure"));
+        this.showNotification(NotificationType.Error, this.translate.instant("mobile_recorder.message.refresh"), false);
         this.loadingActions = false;
         this.loading = false;
       }
@@ -495,16 +499,16 @@ export class MobileRecordingComponent extends BaseComponent implements OnInit {
     this.loadingActions = true;
   }
 
-  public handleActionFailure(error, messageKey: string) {
+  public handleActionFailure(error, messageKey: string, actionType?: string, guideLink?: string) {
     let message;
     if (error['status'] == 500 && error['error']['error'].includes("A session is either terminated or not started")) {
       message = "mobile_recorder.notification.session_expired";
     } else if (error["error"]["error"]?.startsWith("Screen rotation cannot be changed")) {
       message = "mobile_recorder.notification.change_orientation_failed";
     } else {
-      message = messageKey;
+      message = "mobile_recorder.notification.action.failure_troubleshoot";
     }
-    this.showAPIError(error, this.translate.instant(message))
+    this.showAPIError(error, this.translate.instant(message), undefined, actionType, guideLink);
     this.loadingActions = false
   }
 
@@ -555,4 +559,42 @@ export class MobileRecordingComponent extends BaseComponent implements OnInit {
   public getSaveElementsComponent = () => this.mobileRecorderComponentInstance?.saveElementsComponent;
 
   public getMirroringContainerComponent =  () =>  this.mobileRecorderComponentInstance?.mirroringContainerComponent;
+
+  showAPIError(exception, internalErrorMSG, entityName?:string, actionType?: string, guideLink?: string) {
+    if(exception['status'] == 422 || exception['status'] == 451){
+      let errorMessage = exception['error']['error'];
+      if(errorMessage == "Entity with same name already exists, Please use different name" && Boolean(entityName)){
+        errorMessage = errorMessage.replace("Entity", entityName)
+      }
+      this.showNotification(NotificationType.Error, errorMessage);
+    }
+    else if (exception['status'] == 500){
+      let troubleShootMessage = this.translate.instant("mobile_recorder.notification.action.failure_troubleshoot", {actionType:actionType, guideLink:""});//TODO: Change "" to guideLink when we add the add the articles - shabarish.v@testsigma.com
+      this.showNotification(NotificationType.Error, (exception?.error?.code ? this.translate.instant(exception?.error?.code) : troubleShootMessage) || troubleShootMessage, false);
+    } else if(exception?.error?.objectErrors?.length > 0)
+      this.showNotification(NotificationType.Error, this.translate.instant('message.duplicate_entity'));
+    else
+      this.showNotification(NotificationType.Error, internalErrorMSG);
+  }
+
+  showNotification(type: NotificationType, message, clickToClose?:boolean) {
+    if(type == NotificationType.Success){
+      super.showNotification(type, message);
+      return;
+    }
+    const temp = {
+      type: type,
+      title: "Error",
+      content: message,
+      timeOut: 0,
+      positionClass: 'toast-bottom-left',
+      showProgressBar: true,
+      pauseOnHover: true,
+      animate: 'fromLeft',
+      showCloseButton: true,
+      enableHtml: true,
+      disableTimeOut:clickToClose
+    };
+    this.toastrService.show( temp.content,temp.title, temp, temp.type);
+  }
 }

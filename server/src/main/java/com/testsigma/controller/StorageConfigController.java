@@ -1,6 +1,8 @@
 package com.testsigma.controller;
 
+import com.testsigma.config.StorageServiceFactory;
 import com.testsigma.dto.StorageConfigDTO;
+import com.testsigma.exception.InvalidStorageCredentialsException;
 import com.testsigma.exception.TestsigmaException;
 import com.testsigma.mapper.StorageConfigMapper;
 import com.testsigma.model.StorageConfig;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class StorageConfigController {
   private final StorageConfigService storageConfigService;
   private final StorageConfigMapper storageConfigMapper;
+  private final StorageServiceFactory storageServiceFactory;
 
   @RequestMapping(method = RequestMethod.GET)
   public StorageConfigDTO get() {
@@ -30,14 +33,15 @@ public class StorageConfigController {
   }
 
   @RequestMapping(method = RequestMethod.PUT)
-  public ResponseEntity<StorageConfigDTO> update(@RequestBody StorageConfigRequest storageConfigRequest) throws TestsigmaException {
+  public StorageConfigDTO update(@RequestBody StorageConfigRequest storageConfigRequest) throws TestsigmaException {
     StorageConfig storageConfig = storageConfigMapper.map(storageConfigRequest);
     try {
-      storageConfigService.validateCredentials(storageConfig);
+      storageServiceFactory.validateCredentials(storageConfig);
     } catch (Exception e) {
-      return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+      throw new InvalidStorageCredentialsException(e.getMessage());
     }
-    return new ResponseEntity<>(storageConfigMapper.map(storageConfigService.update(storageConfig)), HttpStatus.OK);
+    StorageConfig storageConfigDto = storageConfigService.update(storageConfig);
+    return storageConfigMapper.map(storageConfigDto);
   }
 
 }

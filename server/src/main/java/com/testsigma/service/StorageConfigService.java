@@ -25,21 +25,4 @@ public class StorageConfigService {
   public StorageConfig update(StorageConfig storageConfig) {
     return storageConfigRepository.save(storageConfig);
   }
-
-    public boolean validateCredentials(StorageConfig storageConfigReq) {
-      switch (storageConfigReq.getStorageType()) {
-        case AWS_S3:
-          if (storageConfigReq.getAwsAccessKey()==null && storageConfigReq.getAwsSecretKey()==null) return true;
-          AwsS3StorageService awsS3StorageService = new AwsS3StorageService(storageConfigReq, applicationConfig, httpClient);
-          return awsS3StorageService.validateCredentials();
-        case AZURE_BLOB:
-          if(storageConfigReq.getAzureConnectionString() == null) return true;
-          AzureBlobStorageService azureBlobStorageService = new AzureBlobStorageService(storageConfigReq, applicationConfig, httpClient);
-          return azureBlobStorageService.validateCredentials();
-        case ON_PREMISE:
-        case TESTSIGMA:
-          return true;
-      }
-      return false;
-    }
 }

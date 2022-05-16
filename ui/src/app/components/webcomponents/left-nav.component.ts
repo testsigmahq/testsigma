@@ -74,7 +74,9 @@ export class LeftNavComponent extends BaseComponent implements OnInit {
   }
 
   checkIfGithubStarIsShown() {
-    this.userPreferenceService.show().subscribe(res => {
+    let showedGitHubStar = false;
+    let autoRefresh = undefined;
+      this.userPreferenceService.show().subscribe(res => {
       this.userPreference = res;
       if ((moment(this.userPreference.createdDate) < moment().subtract(15, 'minute')) &&
         !this.userPreference?.showedGitHubStar) {
@@ -85,13 +87,15 @@ export class LeftNavComponent extends BaseComponent implements OnInit {
         });
 
         dialogRef.afterOpened().subscribe(()=>{
+          showedGitHubStar = true;
+          clearInterval(autoRefresh);
           this.userPreference.showedGitHubStar = true;
           this.userPreferenceService.save(this.userPreference).subscribe();
         });
 
       }else{
-        let autoRefresh = setInterval(() => {
-          if(this.userPreference.showedGitHubStar)
+        autoRefresh = setInterval(() => {
+          if(this.userPreference?.showedGitHubStar || showedGitHubStar)
             clearInterval(autoRefresh);
           else
             this.checkIfGithubStarIsShown()

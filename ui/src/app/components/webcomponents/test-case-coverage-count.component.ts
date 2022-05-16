@@ -88,7 +88,7 @@ export class TestCaseCoverageCountComponent implements OnInit {
   }
 
   navigateToTestCase(result?) {
-    this.router.navigate(['/td', this.version.id, 'cases', 'filter', this.userPreference?.testCaseFilterId], { queryParams: {result:result}});
+    this.router.navigate(['/td', this.version.id, 'cases', 'filter', this.userPreference?.testCaseFilterId], { queryParams: {result:result,tempFilter:true}});
   }
 
 }

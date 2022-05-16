@@ -84,7 +84,7 @@ export class LeftNavComponent extends BaseComponent implements OnInit {
           panelClass: ['mat-dialog', 'rds-none'],
         });
 
-        dialogRef.afterClosed().subscribe(()=>{
+        dialogRef.afterOpened().subscribe(()=>{
           this.userPreference.showedGitHubStar = true;
           this.userPreferenceService.save(this.userPreference).subscribe();
         });

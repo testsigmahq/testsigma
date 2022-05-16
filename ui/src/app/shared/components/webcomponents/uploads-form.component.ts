@@ -58,7 +58,7 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
   private initiateForm(): void {
     this.uploadForm = new FormGroup({
       name: new FormControl(this.upload.name, [Validators.required, Validators.minLength(4), this.noWhitespaceValidator]),
-      version: new FormControl(undefined, [this.requiredIfValidator(() => this.uploadedFileObject && this.upload.id)])    });
+      version: new FormControl(undefined, [Validators.required])    });
   }
 
   private get formData(): FormData {
@@ -68,7 +68,7 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
     formData.append("fileContent", this.uploadedFileObject || new File([""], ""));
     formData.append("name", rawData.name);
     formData.append("workspaceId", this.data.version.workspace.id.toString());
-    formData.append("version", rawData.version || rawData.name);
+    formData.append("version", rawData.version);
     formData.append("uploadType", version.workspace.isAndroidNative ? UploadType.APK : version.workspace.isIosNative ? UploadType.IPA : UploadType.Attachment);
     return formData;
   }
@@ -83,7 +83,7 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
       err => {
         this.uploading = false;
         this.translate.get(updateDetailsOnly ? "message.common.update.failure" : "message.common.upload.failure", {FieldName: "File"})
-          .subscribe(key => this.showAPIError(NotificationType.Error, key,'Upload'))
+          .subscribe(key => this.showAPIError(err, key,'Upload'))
       }
     );
   }
@@ -135,6 +135,7 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
     if (!this.upload.id) {
       this.upload.name = this.uploadedFileObject.name;
       this.uploadForm.controls.name.setValue(this.uploadedFileObject.name);
+      this.uploadForm.controls.version.setValue(this.uploadedFileObject.name);
       this.upload.latestVersion = this.upload.latestVersion || new UploadVersion();
       this.upload.latestVersion.fileSize = this.uploadedFileObject.size;
     }
@@ -148,8 +149,10 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
 
   public removeUpload() {
     this.uploadedFileObject = null;
-    if (!this.upload.id)
+    if (!this.upload.id) {
       this.uploadForm.controls.name.setValue('');
+      this.uploadForm.controls.version.setValue('');
+    }
   }
 
   public onCancel(){

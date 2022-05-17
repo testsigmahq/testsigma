@@ -25,6 +25,7 @@ import {DryRunFormComponent} from "./dry-run-form.component";
 import {TestsigmaLoveComponent} from "./testsigma-love.component";
 import moment from "moment";
 import {UserPreference} from "../../models/user-preference.model";
+import {TestsigmaGitHubStarLoveComponent} from "../../shared/components/webcomponents/testsigma-github-star-love.component";
 
 @Component({
   selector: 'app-left-nav',
@@ -74,20 +75,21 @@ export class LeftNavComponent extends BaseComponent implements OnInit {
   }
 
   checkIfGithubStarIsShown() {
-    let showedGitHubStar = false;
     let autoRefresh = undefined;
       this.userPreferenceService.show().subscribe(res => {
       this.userPreference = res;
       if ((moment(this.userPreference.createdDate) < moment().subtract(15, 'minute')) &&
         !this.userPreference?.showedGitHubStar) {
 
-        let dialogRef= this.matDialog.open(TestsigmaLoveComponent, {
-          position: {top: '10vh', right: '28vw'},
+        let dialogRef= this.matDialog.open(TestsigmaGitHubStarLoveComponent, {
+          position: {top: '10vh', right: '35vw'},
           panelClass: ['mat-dialog', 'rds-none'],
+          data:{
+            showTwitter: false
+          }
         });
 
         dialogRef.afterOpened().subscribe(()=>{
-          showedGitHubStar = true;
           clearInterval(autoRefresh);
           this.userPreference.showedGitHubStar = true;
           this.userPreferenceService.save(this.userPreference).subscribe();
@@ -95,7 +97,7 @@ export class LeftNavComponent extends BaseComponent implements OnInit {
 
       }else{
         autoRefresh = setInterval(() => {
-          if(this.userPreference?.showedGitHubStar || showedGitHubStar)
+          if(this.userPreference?.showedGitHubStar)
             clearInterval(autoRefresh);
           else
             this.checkIfGithubStarIsShown()

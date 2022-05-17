@@ -94,6 +94,7 @@ import {ToastrModule} from "ngx-toastr";
 import {SortDirective} from "./directives/sort.directive";
 import {UploadVersion} from "./models/upload-version.model";
 import {UploadVersionService} from "./services/upload-version.service";
+import {TestsigmaGitHubStarLoveComponent} from "./components/webcomponents/testsigma-github-star-love.component";
 
 @NgModule({
     declarations: [
@@ -101,6 +102,7 @@ import {UploadVersionService} from "./services/upload-version.service";
         LoadingCircleComponent,
         DurationFormatComponent,
         ConfirmationModalComponent,
+        TestsigmaGitHubStarLoveComponent,
         PromptModalComponent,
         ResultPieChartColumnComponent,
         TestMachineInfoColumnComponent,

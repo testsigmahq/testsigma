@@ -85,7 +85,7 @@ export class DetailsComponent extends BaseComponent implements OnInit {
         error: (error) => {
           this.saving = false;
           this.translate.get("message.common.deleted.failure", {FieldName: 'Aws Config Details'}).subscribe((res: string) => {
-            this.showAPIError(error, res);
+            this.showAPIError(error, res, 'Aws Storage Config Details');
           });
         }
       }

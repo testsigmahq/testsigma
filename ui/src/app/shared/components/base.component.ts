@@ -103,6 +103,11 @@ export class BaseComponent implements OnInit {
   }
 
   showAPIError(exception, internalErrorMSG, entityName?: string, parentEntity?:string) {
+    if (exception['status'] == 401 && entityName){
+      this.showNotification(NotificationType.Error, "Invalid "+entityName);
+      return;
+    }
+
     if (exception['status'] == 422 || exception['status'] == 451) {
       let errorMessage = exception['error']['error'];
       if (errorMessage == "Entity with same name already exists, Please use different name" && Boolean(entityName)) {

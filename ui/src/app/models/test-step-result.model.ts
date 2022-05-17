@@ -55,6 +55,8 @@ export class TestStepResult extends ResultBase implements PageObject {
   @serializable
   public waitTime: Number;
   @serializable
+  public visualEnabled: Boolean;
+  @serializable
   public priority: TestStepPriority;
 
   @serializable

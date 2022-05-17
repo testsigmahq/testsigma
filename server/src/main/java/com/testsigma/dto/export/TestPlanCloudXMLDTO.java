@@ -77,8 +77,6 @@ public class TestPlanCloudXMLDTO extends BaseXMLDTO {
   private String notificationStatusList;
   @JsonProperty("EmailSubject")
   private String emailSubject;
-  @JsonProperty("VisualTestingEnabled")
-  private boolean visualTestingEnabled;
   @JsonProperty("RetrySessionCreationTimeout")
   private Integer retrySessionCreationTimeout;
   @JsonProperty("RetrySessionCreation")

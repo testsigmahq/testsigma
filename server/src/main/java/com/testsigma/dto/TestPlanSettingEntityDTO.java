@@ -24,7 +24,6 @@ public class TestPlanSettingEntityDTO {
   private PreRequisiteAction onTestcasePreRequisiteFail;
   private RecoverAction onStepPreRequisiteFail;
   private Boolean hasSuggestionFeature = false;
-  private boolean visualTestingEnabled = false;
   private Boolean retrySessionCreation = false;
   private Integer retrySessionCreationTimeout;
 }

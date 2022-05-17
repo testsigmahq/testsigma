@@ -90,7 +90,7 @@ export class TestStepService {
     );
   }
 
-  public bulkUpdateProperties(steps: TestStep[], priority?: TestStepPriority, waitTime?: number, disable?: Boolean, ignoreStepResult?: Boolean): Observable<void> {
+  public bulkUpdateProperties(steps: TestStep[], priority?: TestStepPriority, waitTime?: number,disable?:Boolean, ignoreStepResult?:Boolean,visualEnabled?:Boolean): Observable<void> {
     let params = steps.map(step => step.id).reduce((p, id) => p.append('ids[]', id.toString()), new HttpParams());
     if (priority)
       params = params.append("priority", priority);
@@ -100,6 +100,8 @@ export class TestStepService {
       params = params.append("disabled", disable.toString());
     if (ignoreStepResult != undefined)
       params = params.append("ignoreStepResult", ignoreStepResult.toString());
+    if (visualEnabled != undefined)
+      params = params.append("visualEnabled", visualEnabled.toString());
     return this.http.put<void>(this.URLConstants.testStepsUlr + "/bulk_update_properties", {}, {
       headers: this.httpHeaders.contentTypeApplication,
       params: params

@@ -52,6 +52,7 @@ public class TestCaseStepEntity implements Cloneable {
   private List<TestCaseStepEntity> testCaseSteps = new ArrayList<TestCaseStepEntity>();
   private Map<String, String> additionalScreenshotPaths = new HashMap<>();
   public List<AddonPluginTestDataFunctionEntity> addonPluginTDFEntityList;
+  private Boolean visualEnabled = false;
   //Used only on automator side
   private Screenshot screenshot;
   private int noOfRetriesOnStepFailure = 1;

@@ -175,7 +175,6 @@ public abstract class TestsuiteRunner {
         testCaseResult.setDataDriven(testCaseEntity.getIsDataDriven());
         testCaseResult.setStartTime(new Timestamp(System.currentTimeMillis()));
         testCasesResult.add(testCaseResult);
-        testCaseResult.setVisualTestingEnabled(testPlanRunSettingEntity.isVisualTestingEnabled());
 
         testcaseResultMap.put(testCaseEntity.getId(), testCaseResult);
 
@@ -287,7 +286,6 @@ public abstract class TestsuiteRunner {
       dataDrivenTestCaseResult.setTestDataSetName(dataDrivenTestCase.getTestDataSetName());
       dataDrivenTestCaseResult.setTestDataId(testCaseEntity.getTestDataId());
       dataDrivenTestCaseResult.setStartTime(new Timestamp(System.currentTimeMillis()));
-      dataDrivenTestCaseResult.setVisualTestingEnabled(testCaseResult.isVisualTestingEnabled());
 
       testCaseResult.getTestCaseResults().add(dataDrivenTestCaseResult);
 

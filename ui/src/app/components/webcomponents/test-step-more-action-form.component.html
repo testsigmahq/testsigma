@@ -73,7 +73,7 @@
           <i [matTooltip]="'test_step.details.ignore_step_result_hint' | translate"
              class="fa-question-circle-solid ml-8"></i></mat-checkbox>
       </div>
-      <div>
+      <div class="form-group">
         <mat-checkbox
           [matTooltip]="canAllowDisableStep ? ('test_step.results.cant_enable_hint'|translate):''"
           [matTooltipPosition]="'right'"
@@ -81,6 +81,15 @@
           [disabled]="canAllowDisableStep"
           [formControlName]="['disabled']">
           <span [translate]="'test_step.results.disable_label'"></span></mat-checkbox>
+      </div>
+
+      <div>
+        <mat-checkbox
+          [matTooltipPosition]="'right'"
+          [class.disabled]="canAllowDisableStep"
+          [disabled]="canAllowDisableStep"
+          [formControlName]="['visualEnabled']">
+          <span [translate]="'test_step.results.visual_enabled_label'"></span></mat-checkbox>
       </div>
     </div>
   </div>

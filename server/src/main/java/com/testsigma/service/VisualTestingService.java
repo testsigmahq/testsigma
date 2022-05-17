@@ -65,8 +65,8 @@ public class VisualTestingService {
   }
 
   public void initScreenshotComparison(TestCaseResult testCaseResult) throws Exception {
-    log.debug("Starting Screenshot comparision for testCaseResult" + testCaseResult);
-    List<TestStepResult> stepResultList = testStepResultService.findAllByTestCaseResultIdAndScreenshotNameIsNotNull(testCaseResult.getId());
+    log.debug("Starting Screenshot comparison for testCaseResult" + testCaseResult);
+    List<TestStepResult> stepResultList = testStepResultService.findAllByTestCaseResultIdAndScreenshotNameIsNotNullAndVisualEnabledIsTrue(testCaseResult.getId());
     if (stepResultList.isEmpty()) {
       log.debug("Empty steps for testCaseResult" + testCaseResult);
       return;
@@ -89,7 +89,6 @@ public class VisualTestingService {
     resultScreenshotComparison.setSimilarityScore(getDoubleValue(result.get(JSON_KEY_PER_SIMILAR)));
     resultScreenshotComparison.setDiffCoordinates(result.get(JSON_KEY_DIFF_COORDS).toString());
     resultScreenshotComparison = stepResultScreenshotComparisonService.update(resultScreenshotComparison);
-    List<StepResultScreenshotComparison> pendingList = stepResultScreenshotComparisonService.findAllByTestCaseResultIdAndSimilarityScoreIsNull(resultScreenshotComparison.getTestCaseResultId());
     stepResultScreenshotComparisonService.propagateVisualResult(resultScreenshotComparison);
     return resultScreenshotComparison;
   }

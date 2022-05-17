@@ -28,6 +28,7 @@ CREATE TABLE `test_steps`
   `parent_id`               BIGINT(20)       DEFAULT NULL,
   `copied_from`             BIGINT(20)       DEFAULT NULL,
   `disabled`                TINYINT(1)       DEFAULT '0',
+  `visual_enabled`          tinyint(1) DEFAULT '0',
   `ignore_step_result`                TINYINT(1)       DEFAULT '0',
   `addon_plugin_tdf_data` LONGTEXT DEFAULT NULL,
   `addon_natural_text_action_data` JSON             DEFAULT NULL,

@@ -1016,6 +1016,7 @@
   "hint.message.ad_hoc.saved_config.list": "Manage Favorite Ad-hoc Run Configs",
   "ad_hoc.btn.create_run": "Run Now",
   "test_plan.enable_visual_testing": "Enable Visual Testing",
+  "test_step.results.visual_enabled_label": "Enable Visual Testing for this step",
   "test_plan.retry_device_allocation": "Retry Device Allocation",
   "test_plan.environment.lab.title": "Select Test Lab",
   "test_plan.environment.machine.title": "Select Test Machines",

@@ -121,4 +121,6 @@ public interface TestStepResultRepository extends JpaRepository<TestStepResult, 
                                      @Param("inResult") ResultConstant inResult);
 
   List<TestStepResult> findAllByTestCaseResultId(Long id);
+
+  List<TestStepResult> findAllByTestCaseResultIdAndScreenshotNameIsNotNullAndVisualEnabledIsTrue(Long testCaseResultId);
 }

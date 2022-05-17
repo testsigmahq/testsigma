@@ -190,7 +190,8 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       this.oldStepData.testDataVal = this.testStep.testDataVal;
       this.testStep.conditionIf = Object.assign([], JSON.parse(JSON.stringify(this.testStep.conditionIf)));
     }
-    this.actionForm.addControl('action', new FormControl(this.testStep.action, []))
+    this.actionForm.addControl('action', new FormControl(this.testStep.action, []));
+    this.testStep.type = TestStepType.ACTION_TEXT;
     this.isFetching = true;
     this.attachContentEditableDivKeyEvent();
     this.stepArticleUrl = this.stepCreateArticles[this.version.workspace.workspaceType];
@@ -473,6 +474,8 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     whileStep.waitTime = 30;
     whileStep.priority = TestStepPriority.MINOR;
     whileStep.type = TestStepType.WHILE_LOOP;
+    delete whileStep.conditionType;
+    whileStep.visualEnabled = null;
     whileStep.ignoreStepResult = whileStep.ignoreStepResult === undefined ? true : whileStep.ignoreStepResult;
     this.testStepService.create(whileStep).subscribe(res => {
       this.testStep.parentId = res.id

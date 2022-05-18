@@ -320,8 +320,14 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
             console.log(event);
             if (["ArrowDown", "ArrowUp"].includes(event.key))
               return;
-            if ("Backspace" == event.key)
-              delete this.currentTemplate
+            if ("Backspace" == event.key &&  this.replacer.nativeElement.innerHTML.length === 0)
+              delete this.currentTemplate;
+            if ("Enter" == event.key) {
+              if (this.showTemplates && this.filteredTemplate?.length > 0)
+                this.selectTemplate();
+              else if (this.currentTemplate?.id)
+                this.save();
+            }
             let htmlGrammar = this.replacer.nativeElement.innerHTML;
             htmlGrammar = htmlGrammar.replace(/<br>/g, "");
             if (htmlGrammar) {
@@ -816,6 +822,10 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         });
         item.addEventListener('keydown', (event) => {
           console.log('test data keydown event triggered');
+          if (event.key == "Enter" && !this.showDataTypes) {
+            this.save();
+            return this.stopEvent(event);
+          }
           this.getAddonTemplateAllowedValues(item.dataset?.reference);
           let value = item?.textContent;
           let testDataType = ['@|', '!|', '~|', '$|', '*|'].some(type => item?.textContent.includes(type))
@@ -847,6 +857,10 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
 
         item.addEventListener('keyup', (event) => {
           console.log('test data keyup event triggered');
+          if (event.key == "Enter" && !this.showDataTypes) {
+            this.save();
+            return this.stopEvent(event);
+          }
           this.getAddonTemplateAllowedValues(item.dataset?.reference);
           this.urlPatternError = false;
           let testDataType = ['@|', '!|', '~|', '$|', '*|'].some(type => item?.textContent.includes(type))
@@ -901,6 +915,12 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
   }
 
+  public stopEvent(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation()
+    return false;
+  }
   selectDataType(value, isSkipSelect?: boolean) {
     let dataType = TestDataType.raw;
     if (value?.trim()?.match(/@\|(.?)\||@\|(.+?)\|/g)) {

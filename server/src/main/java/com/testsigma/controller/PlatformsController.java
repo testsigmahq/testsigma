@@ -46,7 +46,7 @@ public class PlatformsController {
   }
 
   @RequestMapping(path = "/{platform}/{osVersion}/browsers", method = RequestMethod.GET)
-  public List<Browsers> browserVersions(@PathVariable Platform platform,
+  public List<Browsers> browsers(@PathVariable Platform platform,
                                         @PathVariable String osVersion,
                                         @RequestParam TestPlanLabType testPlanLabType) throws TestsigmaException {
     return platformService.getPlatformSupportedBrowsers(platform, osVersion, testPlanLabType);

@@ -25,6 +25,7 @@ import java.util.Optional;
 public class IntegrationsService {
 
   IntegrationsRepository integrationsRepository;
+  PrivateGridService privateGridService;
   IntegrationsMapper mapper;
 
   /*
@@ -73,6 +74,8 @@ public class IntegrationsService {
     if (!config.isPresent()) {
       throw new IntegrationNotFoundException("EXTERNAL APPLICATION CONFIG NOT FOUND");
     }
+    if (config.get().getWorkspace() == Integration.PrivateGrid)
+          this.privateGridService.cleanTable();
     integrationsRepository.delete(config.get());
   }
 

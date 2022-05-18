@@ -50,6 +50,13 @@ public class TestDevice {
   @Column(name = "browser")
   private String browser;
 
+  @Column(name = "platform")
+  @Enumerated(EnumType.STRING)
+  private Platform platform;
+
+  @Column(name = "browser_version")
+  private String browserVersion;
+
   @Column(name = "platform_os_version_id")
   private Long platformOsVersionId;
 

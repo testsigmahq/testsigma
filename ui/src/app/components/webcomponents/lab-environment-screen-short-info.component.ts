@@ -19,7 +19,8 @@ import {Platform} from "../../enums/platform.enum";
       <div class="align-items-center d-flex justify-content-start flex-wrap mb-10">
         <span class="mr-5" style="height: 20px;width: 20px;"
               [class.testsigma-lab-logo]="testPlanResult?.testPlan?.isTestsigmaLab"
-              [class.testsigma-local-devices-logo]="isHybrid">
+              [class.testsigma-local-devices-logo]="isHybrid"
+                [class.grid]="isPrivateGrid">
         </span>
         <span
           class="rb-medium"
@@ -142,6 +143,10 @@ export class LabEnvironmentScreenShortInfoComponent implements OnInit {
 
   get isHybrid() {
     return this.testPlanResult?.testPlan?.isHybrid;
+  }
+
+  get isPrivateGrid() {
+    return this.testPlanResult?.testPlan?.isPrivateLab;
   }
 
   get isMobileWeb() {

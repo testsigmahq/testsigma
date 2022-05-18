@@ -83,6 +83,11 @@ export class TestPlan extends Base implements PageObject {
     return this.testPlanLabType === TestPlanLabType.Hybrid;
   }
 
+  get isPrivateLab() {
+    return this.testPlanLabType === TestPlanLabType.PrivateGrid;
+  }
+
+
   deserialize(input: any): this {
     return Object.assign(this, deserialize(TestPlan, input));
   }

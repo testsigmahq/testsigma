@@ -21,6 +21,7 @@ public enum Integration {
   Linear(13, IntegrationAuthType.AccessKey),
   TestsigmaLab(14, IntegrationAuthType.AccessKey),
   ClickUp(15,  IntegrationAuthType.AccessKey),
+  PrivateGrid(16, IntegrationAuthType.None),
 
 
   Others(10000, IntegrationAuthType.AccessKey);

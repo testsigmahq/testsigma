@@ -328,6 +328,23 @@
       </div>
     </div>
 
+    <div class="white-border-container" *ngIf="testLab || all">
+      <div class="item-content">
+        <div class="d-flex align-items-center">
+          <div class="ts-col-20 grid sm-h"></div>
+          <div class="item-title-text" [translate]="'plugins.private_lab'"></div>
+        </div>
+        <div class="item-text" [translate]="'plugins.private_lab.description'"></div>
+        <div class="item-action">
+          <mat-slide-toggle
+            class="mat-slide-toggle ml-auto slide-with-text"
+            [checked]="!!privateGridApplication"
+            (change)="toggleApplication($event, Integration.PrivateGrid, privateGridApplication)">
+          </mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+
     <div class="white-border-container" *ngIf="ciCd || all">
       <div class="item-content">
         <div class="d-flex align-items-center">

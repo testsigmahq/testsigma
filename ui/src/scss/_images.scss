@@ -344,6 +344,26 @@
   }
 }
 
+.grid {
+  background-image: url("~assets/images/selenium.svg");
+  background-size: contain;
+  background-repeat:   no-repeat;
+  &.bug-list-grid{
+    background-size: 70px;
+    background-position: center center;
+  }
+  width: 30px;
+  height: 30px;
+  &.sm-h {
+    @extend .h-40p;
+    width:80px;
+  }
+  &.md-wh {
+    width: 100px;
+    height: 100px;
+  }
+}
+
 .backLog{
   background-image: url("~assets/images/backlog-300x220.png");
   background-size: contain;

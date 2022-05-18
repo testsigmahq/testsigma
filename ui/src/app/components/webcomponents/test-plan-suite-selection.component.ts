@@ -77,6 +77,10 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
     return this.testPlanLabType == TestPlanLabType.Hybrid;
   }
 
+  get isPrivateGrid() {
+    return this.testPlanLabType == TestPlanLabType.PrivateGrid;
+  }
+
   get environmentsFormControls(): FormGroup[] {
     return (<FormGroup[]>(<FormArray>this.testPlanForm.controls['testDevices']).controls);
   }
@@ -337,7 +341,7 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
       environment.agentId = null;
       environment.deviceId = null;
     }
-    if((!this.isWeb && !this.isMobileWeb) || (this.isWeb && !this.isHybrid)){
+    if((!this.isWeb && !this.isMobileWeb) || (this.isWeb && !this.isHybrid && !this.isPrivateGrid)){
       environment.browser = null;
     }
     return environment;

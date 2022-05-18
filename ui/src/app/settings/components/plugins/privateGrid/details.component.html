@@ -1,0 +1,37 @@
+<div class="w-100 h-100">
+  <div class="theme-overlay-container" *ngIf="plug">
+    <div class="theme-overlay-header">
+      <span [translate]="pluginName ?pluginName:'plugins.private_lab'" ></span>
+      <button class="theme-overlay-close"
+              type="button"
+              [matTooltip]="'hint.message.common.close' | translate"
+              mat-dialog-close>
+      </button>
+    </div>
+
+    <div class="theme-overlay-content">
+      <form class="ts-form pt-30" >
+        <div class="form-group ts-form">
+          <div class="ts-col-80 text-t-secondary" [translate]="'settings.plugins.connector_url'"></div>
+          <div class="text-truncate rb-medium mt-8" [textContent]="plug?.url" *ngIf="plug"></div>
+        </div>
+      </form>
+    </div>
+
+    <div class="theme-overlay-footer">
+      <button
+        type="button"
+        mat-dialog-close
+        class="theme-btn-clear-default" [translate]="'btn.common.cancel'" >
+      </button>
+      <div class="ml-10 d-inline">
+        <button type="submit"
+                [disabled]="saving"
+                class="btn btn-delete" (click)="delete()">
+          <span class="fa-trash-thin mr-5"></span>
+          <span [translate]="'btn.common.delete'"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

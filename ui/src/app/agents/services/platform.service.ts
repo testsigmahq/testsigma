@@ -71,7 +71,7 @@ export class PlatformService {
   }
 
   public findAllBrowsers(platform: Platform, osVersion: PlatformOsVersion, workspaceType: WorkspaceType, testPlanLabType: TestPlanLabType): Observable<PlatformBrowser[]> {
-    return this.http.get<PlatformBrowser[]>("/platforms/"+platform.id+"/"+osVersion.version+"/browsers?workspaceType="+workspaceType+"&testPlanLabType="+testPlanLabType, {
+    return this.http.get<PlatformBrowser[]>("/platforms/"+platform.id+"/"+osVersion?.version+"/browsers?workspaceType="+workspaceType+"&testPlanLabType="+testPlanLabType, {
       headers: this.httpHeaders.contentTypeApplication
     }).pipe(map((data) => {
         let browsers: PlatformBrowser[] = [];
@@ -85,7 +85,7 @@ export class PlatformService {
   }
 
   public findAllScreenResolutions(platform: Platform, osVersion: PlatformOsVersion, workspaceType: WorkspaceType, testPlanLabType: TestPlanLabType): Observable<PlatformScreenResolution[]> {
-    return this.http.get<PlatformScreenResolution[]>("/platforms/"+platform.id+"/"+osVersion.version+"/screen_resolutions?workspaceType="+workspaceType+"&testPlanLabType="+testPlanLabType, {
+    return this.http.get<PlatformScreenResolution[]>("/platforms/"+platform.id+"/"+osVersion?.version+"/screen_resolutions?workspaceType="+workspaceType+"&testPlanLabType="+testPlanLabType, {
       headers: this.httpHeaders.contentTypeApplication
     }).pipe(map((data) => {
         let resolutions: PlatformScreenResolution[] = [];
@@ -111,7 +111,7 @@ export class PlatformService {
   }
 
   public findAllBrowserVersions(platform: Platform, osVersion: PlatformOsVersion, browser: PlatformBrowser, workspaceType: WorkspaceType, testPlanLabType: TestPlanLabType): Observable<PlatformBrowserVersion[]> {
-    return this.http.get<PlatformBrowserVersion[]>("/platforms/"+platform.id+"/"+osVersion.version+"/browser/"+browser.name+"/versions?workspaceType="+workspaceType+"&testPlanLabType="+testPlanLabType, {
+    return this.http.get<PlatformBrowserVersion[]>("/platforms/"+platform.id+"/"+osVersion?.version+"/browser/"+browser?.name+"/versions?workspaceType="+workspaceType+"&testPlanLabType="+testPlanLabType, {
       headers: this.httpHeaders.contentTypeApplication
     }).pipe(map((data) => {
         let browserVersions: PlatformBrowserVersion[] = [];

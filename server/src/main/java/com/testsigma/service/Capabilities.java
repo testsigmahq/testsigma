@@ -49,6 +49,7 @@ public abstract class Capabilities {
     throws TestsigmaException {
     switch (testPlanLabType) {
       case TestsigmaLab:
+      case PrivateGrid:
         setTestsigmaLabCapabilities(testDevice, integrations, capabilities);
         break;
       case Hybrid:

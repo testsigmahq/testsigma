@@ -192,6 +192,9 @@ public class TestsigmaDriver {
       case Hybrid:
         setHybridCapabilities();
         break;
+      case PrivateGrid:
+        setPrivateGridCapabilities();
+        break;
       default:
         log.error("Unsupported execution lab type - " + executionLabType);
     }
@@ -210,6 +213,10 @@ public class TestsigmaDriver {
   }
 
   protected void setTestsigmaLabRemoteServerUrl() throws AutomatorException {
+    setRemoteServerURL(webDriverSettings.getWebDriverServerUrl());
+  }
+
+  protected void setPrivateGridCapabilities(){
     setRemoteServerURL(webDriverSettings.getWebDriverServerUrl());
   }
 

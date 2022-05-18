@@ -13,5 +13,6 @@ export enum Integration {
   Trello = 'Trello',
   Linear = 'Linear',
   TestsigmaLab = "TestsigmaLab",
-  ClickUp = 'ClickUp'
+  ClickUp = 'ClickUp',
+  PrivateGrid = 'PrivateGrid'
 }

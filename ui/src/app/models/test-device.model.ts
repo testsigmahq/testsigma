@@ -23,6 +23,12 @@ export class TestDevice extends Base implements PageObject {
   public browser : String;
 
   @serializable
+  public platform : Platform;
+
+  @serializable
+  public browserVersion : String;
+
+  @serializable
   public platformOsVersionId: Number;  // OsVersion
   @serializable
   public platformBrowserVersionId: Number; // BrowserVersion
@@ -105,9 +111,7 @@ export class TestDevice extends Base implements PageObject {
   }))
   public suiteIds: number[];
 
-  public platform : Platform;
   public osVersion : String;
-  public browserVersion : String;
   public deviceName : String;
   public resolution : String;
 

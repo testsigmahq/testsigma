@@ -153,7 +153,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
           platformOsVersionId :new FormControl(this.testPlan.testDevices[0].platformOsVersionId,  [this.requiredIfValidator(() => !this.isRest && !this.isHybrid)]),
           platformScreenResolutionId : new FormControl(this.testPlan.testDevices[0].platformScreenResolutionId, [this.requiredIfValidator(() => this.version?.workspace.isWeb && !this.isHybrid)]),
           platformBrowserVersionId :new FormControl(this.testPlan.testDevices[0].platformBrowserVersionId, [this.requiredIfValidator(() => !this.version?.workspace.isMobile && !this.isRest && !this.isHybrid)]),
-          platformDeviceId : new FormControl(this.testPlan.testDevices[0].platformDeviceId,  [this.requiredIfValidator(() => !this.version?.workspace.isWeb && !this.isRest && !this.isHybrid)])
+          platformDeviceId : new FormControl(this.testPlan.testDevices[0].platformDeviceId,  [this.requiredIfValidator(() => !this.version?.workspace.isWeb && !this.isRest && !this.isHybrid)]),
         })
       ])
     })
@@ -326,6 +326,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
   }
 
   private normalizeFormValue() {
+    console.log(this.dryExecutionForm.getRawValue());
     const environment = new DryTestDevice().deserialize(this.dryExecutionForm.getRawValue()['testDevices'][0]);
     this.testPlan = new DryTestPlan().deserialize(this.dryExecutionForm.getRawValue());
     this.testPlan.workspaceVersionId = this.version.id;
@@ -349,7 +350,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
       environment.platformOsVersionId= null;
       environment.platformScreenResolutionId = null;
     }
-    if (!this.testPlan.isHybrid) {
+    if (!this.testPlan.isHybrid && !this.testPlan.isPrivateLab) {
       environment.agentId = null;
       environment.deviceId = null;
       environment.browser = null;
@@ -397,7 +398,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
   }
 
   disableRunButton() {
-    return this.saving || this.savingConfig || this.dryExecutionForm?.invalid || this.emptyElements.length>0
+    return this.saving || this.savingConfig  || this.emptyElements.length>0
       || (!this.isHybrid &&  this.invalidUrls.length>0) || (this.isHybrid && this.zeroActiveAgents) ;
   }
 

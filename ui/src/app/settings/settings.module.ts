@@ -44,6 +44,8 @@ import {MatCardModule} from "@angular/material/card";
 import { TelemetryComponent } from './components/telemetry/telemetry.component';
 import {BackupsComponent} from './components/backups.component';
 import {LogoutPromptComponent} from './components/authentication-config/logout-prompt.component';
+import {CreateComponent} from "./components/plugins/privateGrid/create.component";
+import {DetailsComponent} from "./components/plugins/privateGrid/details.component";
 
 @NgModule({
   declarations: [
@@ -85,6 +87,8 @@ import {LogoutPromptComponent} from './components/authentication-config/logout-p
     TelemetryComponent,
     BackupsComponent,
     LogoutPromptComponent,
+    CreateComponent,
+    DetailsComponent
   ],
   exports: [
     SigninComponent

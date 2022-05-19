@@ -48,6 +48,7 @@ public class IntegrationsController {
   private final LinearService linearService;
   private final IntegrationsMapper mapper;
   private final ClickUpService clickUpService;
+  private final PrivateGridService privateGridService;
 
   @RequestMapping(method = RequestMethod.POST)
   public IntegrationsDTO create(
@@ -70,6 +71,7 @@ public class IntegrationsController {
 
   @RequestMapping(path = "/{configId}", method = RequestMethod.GET)
   public IntegrationsDTO get(@PathVariable("configId") Long configId)
+
     throws IntegrationNotFoundException {
     Integrations config = integrationsService.find(configId);
     return mapper.map(config);
@@ -418,8 +420,9 @@ public class IntegrationsController {
     return bugZillaService.testIntegration(config);
   }
 
-  @PostMapping(path = "/test_trello_integration")
-  public JsonNode testTrelloAuth(@RequestBody IntegrationsRequest config) throws TestsigmaException {
-    return trelloService.testIntegration(config);
+  @PostMapping(path = "/test_privategrid_integration")
+  public JsonNode testPrivateGridAuth(@RequestBody IntegrationsRequest config) throws TestsigmaException {
+    return privateGridService.testIntegration(config);
   }
+
 }

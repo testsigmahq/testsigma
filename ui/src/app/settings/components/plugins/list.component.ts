@@ -19,6 +19,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications';
 import {TranslateService} from '@ngx-translate/core';
 import {ToastrService} from "ngx-toastr";
+import {CreateComponent} from "./privateGrid/create.component";
+import {DetailsComponent} from "./privateGrid/details.component";
 
 @Component({
   selector: 'app-plugins',
@@ -105,6 +107,10 @@ export class ListComponent extends BaseComponent implements OnInit {
     return this.plugins.find(plug => plug.isTestsigmaLab);
   }
 
+  get privateGridApplication() {
+    return this.plugins.find(plug => plug.isPrivateLab);
+  }
+
   ngOnInit(): void {
     this.fetchPlugins();
     this.pushToParent(this.route, this.route.params);
@@ -187,6 +193,8 @@ export class ListComponent extends BaseComponent implements OnInit {
       case Integration.Youtrack:
       case Integration.Azure:
         return AzureDetailsComponent;
+      case Integration.PrivateGrid:
+        return DetailsComponent;
     }
   }
 
@@ -208,6 +216,8 @@ export class ListComponent extends BaseComponent implements OnInit {
       case Integration.Azure:
       case Integration.Youtrack:
         return AzureCreateComponent;
+      case Integration.PrivateGrid:
+        return CreateComponent;
     }
   }
 

@@ -10,10 +10,12 @@
 package com.testsigma.web.request;
 
 import com.testsigma.model.AppPathType;
+import com.testsigma.model.Platform;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import javax.persistence.Column;
 import java.util.List;
 
 @Data
@@ -30,6 +32,8 @@ public class TestDeviceRequest {
   Long platformDeviceId;
   TestDeviceSettings settings;
   String browser;
+  Platform platform;
+  String browserVersion;
   String udid;
   Long appUploadId;
   Long appUploadVersionId;

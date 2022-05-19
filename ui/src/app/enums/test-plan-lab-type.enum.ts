@@ -7,5 +7,6 @@
 
 export enum TestPlanLabType {
   TestsigmaLab = "TestsigmaLab",
-  Hybrid = "Hybrid"
+  Hybrid = "Hybrid",
+  PrivateGrid = "PrivateGrid"
 }

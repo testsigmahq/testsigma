@@ -60,6 +60,15 @@ import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
               <span [translate]="'execution.lab_type.Hybrid'"></span>
             </div>
           </mat-radio-button>
+          <mat-radio-button
+            (change)="setTargetMachineAsMandatory(false)"
+            *ngIf="((testPlan?.id && testPlan.isPrivateLab) || !testPlan?.id) && applications && isPrivateLabInstalled && isWeb"
+            [value]="'PrivateGrid'">
+            <div class="lab-item">
+              <span class="grid lab-icon"></span>
+              <span [translate]="'execution.lab_type.PrivateGrid'"></span>
+            </div>
+          </mat-radio-button>
         </mat-radio-group>
       </div>
       <div class="d-flex mt-15" *ngIf="isWeb && isHybrid" [formGroup]="selectTestLabForm">
@@ -149,6 +158,10 @@ export class SelectTestLabComponent implements OnInit {
 
   get isTestsigmaLab() {
     return this.selectTestLabForm.controls['testPlanLabType'].value === TestPlanLabType.TestsigmaLab;
+  }
+
+  get isPrivateLabInstalled() {
+    return this.applications?.find(app => app.isPrivateLab);
   }
 
   setTargetMachineAsMandatory(mandatory) {

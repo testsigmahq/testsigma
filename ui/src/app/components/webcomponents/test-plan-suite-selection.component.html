@@ -137,7 +137,7 @@
     <div class="text-right">
       <button
         *ngIf="!advancedSettings && !isEditEnvironmentActive"
-        [disabled]="isActiveEnvironmentInValid || agentIsOffline"
+        [disabled]="agentIsOffline"
         [translate]="'btn.common.add'"
         class="theme-btn-primary pl-30 pr-30" (click)="saveEnvironment()"></button>
     </div>
@@ -229,7 +229,6 @@
           class="theme-btn-clear-default ml-auto" (click)="addNewExecutionEnvironment()"></button>
         <button
           *ngIf="isEditEnvironmentActive"
-          [disabled]="isActiveEnvironmentInValid"
           [translate]="'btn.common.update'"
           class="theme-btn-clear-default secondary-highlight" (click)="saveEnvironment()"></button>
       </div>
@@ -245,8 +244,7 @@
       <span [translate]="'pagination.previous'"></span>
     </a>
     <button
-      [disabled]="isInValid"
-      (click)="isInValid ? '' : next()"
+      (click)="next()"
       class="theme-btn-primary mt-15">
       <span [translate]="'pagination.next'"></span>
       <i class="fa-right-arrow-thin ml-4 fz-11"></i>

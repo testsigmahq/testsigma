@@ -7,6 +7,8 @@ CREATE TABLE `test_devices`
   `agent_id`                      BIGINT(50)            DEFAULT NULL,
   `device_id`                     BIGINT(20)            DEFAULT NULL,
   `browser`                       VARCHAR(100)          DEFAULT NULL,
+  `platform`                      VARCHAR(100)          DEFAULT NULL,
+  `browser_version`               VARCHAR(100)          DEFAULT NULL,
   `platform_device_id`            BIGINT(20)            DEFAULT NULL,
   `udid`                          VARCHAR(255)          DEFAULT NULL,
   `app_upload_id`                 BIGINT(20)            DEFAULT NULL,

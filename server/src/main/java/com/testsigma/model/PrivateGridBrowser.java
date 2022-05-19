@@ -5,13 +5,15 @@
  *  ****************************************************************************
  */
 
-package com.testsigma.automator.entity;
+package com.testsigma.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 
-@AllArgsConstructor
-@Getter
-public enum ExecutionLabType {
-  TestsigmaLab, Hybrid, PrivateGrid
+@Data
+public class PrivateGridBrowser {
+  private OSBrowserType browserName;
+  private Integer maxInstances;
+  private Platform platform;
+  private String platformName;
+  private String version;
 }

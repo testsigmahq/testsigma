@@ -7,7 +7,7 @@
  *
  */
 
-package com.testsigma.automator.actions.mobile.ios.verify;
+package com.testsigma.automator.actions.mobile.mobileweb.verify;
 
 import com.testsigma.automator.actions.ElementAction;
 import lombok.extern.log4j.Log4j2;

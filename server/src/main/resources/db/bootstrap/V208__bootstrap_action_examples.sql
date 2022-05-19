@@ -497,8 +497,7 @@ INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `des
 INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `description`, `example`, `workspace`, `data`, `created_date`, `updated_date`) VALUES (849,20140,'Enter data ${test-data} on focused element','In this example, We will enter data on focused element','https://app.testsigma.com/','{\"test-data\": \"\\\\\\\\\\\\\\\\${.*?}\"}','2022-01-10 20:16:55','2022-01-10 20:16:55');
 INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `description`, `example`, `workspace`, `data`, `created_date`, `updated_date`) VALUES (850,20142,'Break loop','Breaks Loop','https://app.testsigma.com/','{}','2022-01-10 20:16:55','2022-01-10 20:16:55');
 INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `description`, `example`, `workspace`, `data`, `created_date`, `updated_date`) VALUES (851,20143,'Continue loop','Continues loop','https://app.testsigma.com/','{}','2022-01-10 20:16:55','2022-01-10 20:16:55');
+INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `description`, `example`, `workspace`, `data`, `created_date`, `updated_date`) VALUES (852,30176,'Verify that the element button is clickable','In this example, We will verify that the element is clickable','https://app.testsigma.com/','{}','2022-05-17 21:51:41','2022-05-17 21:51:41');
+INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `description`, `example`, `workspace`, `data`, `created_date`, `updated_date`) VALUES (853,30188,'Verify that the element element has non-empty value','In this example, We will verify that the element has non empty value','https://app.testsigma.com/','{}','2022-05-17 21:57:02','2022-05-17 21:57:02');
 /*!40000 ALTER TABLE `natural_text_action_examples` ENABLE KEYS */;
 UNLOCK TABLES;
-
-
-

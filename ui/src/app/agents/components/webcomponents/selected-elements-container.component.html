@@ -1,4 +1,4 @@
-<div *ngIf="inspectedElement" class="attributes-section">
+<div *ngIf="inspectedElement" class="attributes-section mt-n2">
   <div class="btn-group-row">
     <div>
       <button (click)="tap(inspectedElement.mobileElement)">
@@ -216,5 +216,5 @@
 </div>
 <div *ngIf="!inspectedElement"
      [translate]="'agents.mobile.inspection.element_not_selected'"
-     class="fz-16 pt-20 text-center text-warning">
+     class="align-items-center d-flex fz-16 h-100 justify-content-center m-auto text-center text-warning ts-col-80">
 </div>

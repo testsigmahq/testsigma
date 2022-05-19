@@ -38,6 +38,7 @@
 .fa-android-solid:before,
 .fa-api:before,
 .fa-apk-file:before,
+.fa-app-source:before,
 .fa-app-store-ios:before,
 .fa-apple:before,
 .fa-application-new:before,
@@ -132,6 +133,7 @@
 .fa-dashboard:before,
 .fa-data-grid:before,
 .fa-database-solid:before,
+.fa-default-generators:before,
 .fa-delete-icon:before,
 .fa-deselect:before,
 .fa-desktop:before,
@@ -258,6 +260,7 @@
 .fa-lock-solid:before,
 .fa-logos_ios:before,
 .fa-long-arrow-alt-right-solid:before,
+.fa-long-tap:before,
 .fa-love:before,
 .fa-members:before,
 .fa-menu-bar:before,
@@ -266,6 +269,7 @@
 .fa-minus-square-regular:before,
 .fa-minus-square-solid:before,
 .fa-mirroring:before,
+.fa-mirroring-selection:before,
 .fa-mobile-alt-solid:before,
 .fa-mobile-line:before,
 .fa-more:before,
@@ -284,6 +288,7 @@
 .fa-page-element:before,
 .fa-page-loading:before,
 .fa-paper-flight:before,
+.fa-pause:before,
 .fa-pdf-file:before,
 .fa-pencil-on-paper:before,
 .fa-pencil-thick:before,
@@ -322,6 +327,7 @@
 .fa-record:before,
 .fa-record-circle:before,
 .fa-record-new:before,
+.fa-record-play:before,
 .fa-refresh:before,
 .fa-refresh-new:before,
 .fa-refresh-thick:before,
@@ -386,10 +392,12 @@
 .fa-suitcase-2:before,
 .fa-suitecase-filled:before,
 .fa-support:before,
+.fa-swipe:before,
 .fa-swipe-horizontal:before,
 .fa-table:before,
 .fa-tags-solid:before,
 .fa-tap:before,
+.fa-tap-on:before,
 .fa-test-case-alt:before,
 .fa-test-case-priorities:before,
 .fa-test-case-types:before,
@@ -479,6 +487,7 @@
 .fa-android-solid:before { content: "\f105"; }
 .fa-api:before { content: "\f106"; }
 .fa-apk-file:before { content: "\f24a"; }
+.fa-app-source:before { content: "\f2b6"; }
 .fa-app-store-ios:before { content: "\f2c0"; }
 .fa-apple:before { content: "\f107"; }
 .fa-application-new:before { content: "\f27d"; }
@@ -573,6 +582,7 @@
 .fa-dashboard:before { content: "\f13d"; }
 .fa-data-grid:before { content: "\f244"; }
 .fa-database-solid:before { content: "\f13e"; }
+.fa-default-generators:before { content: "\f2b7"; }
 .fa-delete-icon:before { content: "\f13f"; }
 .fa-deselect:before { content: "\f140"; }
 .fa-desktop:before { content: "\f141"; }
@@ -699,6 +709,7 @@
 .fa-lock-solid:before { content: "\f17f"; }
 .fa-logos_ios:before { content: "\f2c6"; }
 .fa-long-arrow-alt-right-solid:before { content: "\f180"; }
+.fa-long-tap:before { content: "\f2bc"; }
 .fa-love:before { content: "\f181"; }
 .fa-members:before { content: "\f243"; }
 .fa-menu-bar:before { content: "\f2a8"; }
@@ -707,6 +718,7 @@
 .fa-minus-square-regular:before { content: "\f183"; }
 .fa-minus-square-solid:before { content: "\f184"; }
 .fa-mirroring:before { content: "\f1ef"; }
+.fa-mirroring-selection:before { content: "\f2b8"; }
 .fa-mobile-alt-solid:before { content: "\f185"; }
 .fa-mobile-line:before { content: "\f2c7"; }
 .fa-more:before { content: "\f186"; }
@@ -725,6 +737,7 @@
 .fa-page-element:before { content: "\f2a4"; }
 .fa-page-loading:before { content: "\f2a5"; }
 .fa-paper-flight:before { content: "\f18e"; }
+.fa-pause:before { content: "\e900"; }
 .fa-pdf-file:before { content: "\f224"; }
 .fa-pencil-on-paper:before { content: "\f18f"; }
 .fa-pencil-thick:before { content: "\f270"; }
@@ -763,6 +776,7 @@
 .fa-record:before { content: "\f19e"; }
 .fa-record-circle:before { content: "\f19f"; }
 .fa-record-new:before { content: "\f1a0"; }
+.fa-record-play:before { content: "\f2ba"; }
 .fa-refresh:before { content: "\f1a1"; }
 .fa-refresh-new:before { content: "\f1f7"; }
 .fa-refresh-thick:before { content: "\f1a2"; }
@@ -822,15 +836,18 @@
 .fa-step-group:before { content: "\f1c1"; }
 .fa-stop:before { content: "\f284"; }
 .fa-stop-circle-solid:before { content: "\f1c2"; }
+.fa-suggestion-list:before { content: "\f2bb"; }
 .fa-storage-outline:before { content: "\f2c2"; }
 .fa-suitcase:before { content: "\f1ed"; }
 .fa-suitcase-2:before { content: "\f1c3"; }
 .fa-suitecase-filled:before { content: "\f1c5"; }
 .fa-support:before { content: "\f23c"; }
+.fa-swipe:before { content: "\f2bd"; }
 .fa-swipe-horizontal:before { content: "\f1f9"; }
 .fa-table:before { content: "\f1c6"; }
 .fa-tags-solid:before { content: "\f1c7"; }
 .fa-tap:before { content: "\f1fa"; }
+.fa-tap-on:before { content: "\f2be"; }
 .fa-test-case-alt:before { content: "\f268"; }
 .fa-test-case-priorities:before { content: "\f254"; }
 .fa-test-case-types:before { content: "\f255"; }
@@ -907,6 +924,7 @@ $font-font_custom-android-outlined: "\f2c4";
 $font-font_custom-android-solid: "\f105";
 $font-font_custom-api: "\f106";
 $font-font_custom-apk-file: "\f24a";
+$font-font_custom-app-source: "\f2b6";
 $font-font_custom-app-store-ios: "\f2c0";
 $font-font_custom-apple: "\f107";
 $font-font_custom-application-new: "\f27d";
@@ -1001,6 +1019,7 @@ $font-font_custom-cursor-click-flash: "\f1f3";
 $font-font_custom-dashboard: "\f13d";
 $font-font_custom-data-grid: "\f244";
 $font-font_custom-database-solid: "\f13e";
+$font-font_custom-default-generators: "\f2b7";
 $font-font_custom-delete-icon: "\f13f";
 $font-font_custom-deselect: "\f140";
 $font-font_custom-desktop: "\f141";
@@ -1127,6 +1146,7 @@ $font-font_custom-lock-open-solid: "\f17e";
 $font-font_custom-lock-solid: "\f17f";
 $font-font_custom-logos_ios: "\f2c6";
 $font-font_custom-long-arrow-alt-right-solid: "\f180";
+$font-font_custom-long-tap: "\f2bc";
 $font-font_custom-love: "\f181";
 $font-font_custom-members: "\f243";
 $font-font_custom-menu-bar: "\f2a8";
@@ -1135,6 +1155,7 @@ $font-font_custom-minus: "\f182";
 $font-font_custom-minus-square-regular: "\f183";
 $font-font_custom-minus-square-solid: "\f184";
 $font-font_custom-mirroring: "\f1ef";
+$font-font_custom-mirroring-selection: "\f2b8";
 $font-font_custom-mobile-alt-solid: "\f185";
 $font-font_custom-mobile-line: "\f2c7";
 $font-font_custom-more: "\f186";
@@ -1153,6 +1174,7 @@ $font-font_custom-overlap: "\f21b";
 $font-font_custom-page-element: "\f2a4";
 $font-font_custom-page-loading: "\f2a5";
 $font-font_custom-paper-flight: "\f18e";
+$font-font_custom-pause: "\e900";
 $font-font_custom-pdf-file: "\f224";
 $font-font_custom-pencil-on-paper: "\f18f";
 $font-font_custom-pencil-thick: "\f270";
@@ -1191,6 +1213,7 @@ $font-font_custom-re-run: "\f271";
 $font-font_custom-record: "\f19e";
 $font-font_custom-record-circle: "\f19f";
 $font-font_custom-record-new: "\f1a0";
+$font-font_custom-record-play: "\f2ba";
 $font-font_custom-refresh: "\f1a1";
 $font-font_custom-refresh-new: "\f1f7";
 $font-font_custom-refresh-thick: "\f1a2";
@@ -1250,15 +1273,18 @@ $font-font_custom-star: "\f275";
 $font-font_custom-step-group: "\f1c1";
 $font-font_custom-stop: "\f284";
 $font-font_custom-stop-circle-solid: "\f1c2";
+$font-font_custom-suggestion-list: "\f2bb";
 $font-font_custom-storage-outline: "\f2c2";
 $font-font_custom-suitcase: "\f1ed";
 $font-font_custom-suitcase-2: "\f1c3";
 $font-font_custom-suitecase-filled: "\f1c5";
 $font-font_custom-support: "\f23c";
+$font-font_custom-swipe: "\f2bd";
 $font-font_custom-swipe-horizontal: "\f1f9";
 $font-font_custom-table: "\f1c6";
 $font-font_custom-tags-solid: "\f1c7";
 $font-font_custom-tap: "\f1fa";
+$font-font_custom-tap-on: "\f2be";
 $font-font_custom-test-case-alt: "\f268";
 $font-font_custom-test-case-priorities: "\f254";
 $font-font_custom-test-case-types: "\f255";

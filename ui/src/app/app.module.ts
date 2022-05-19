@@ -255,6 +255,13 @@ import {TestCasePrerequisiteChangeComponent} from "./components/webcomponents/te
 import {InlineSortComponent} from "./components/webcomponents/inline-sort.component";
 import {ImportFormComponent} from "./components/webcomponents/import-form.component";
 import {ImportGuideLinesWarningComponent} from "./components/webcomponents/import-guide-lines-warning.component";
+import {SelectedElementsContainerComponent} from "./agents/components/webcomponents/selected-elements-container.component";
+import {ElementsContainerComponent} from "./agents/components/webcomponents/elements-container.component";
+import {MirroringContainerComponent} from "./agents/components/webcomponents/mirroring-container.component";
+import {SaveWorkWarningComponent} from "./agents/components/webcomponents/save-work-warning.component";
+import {AppSourceContainerComponent} from "./agents/components/webcomponents/app-source-container.component";
+import {MobileStepRecorderComponent} from "./agents/components/webcomponents/mobile-step-recorder.component";
+import {MobileInspectionComponent} from "./agents/components/webcomponents/mobile-inspection.component";
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -481,6 +488,13 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     SubmitElementReviewComponent,
     ChromeRecordButtonComponent,
     FirstChromeInstallComponent,
+    MobileStepRecorderComponent,
+    MirroringContainerComponent,
+    MobileInspectionComponent,
+    ElementsContainerComponent,
+    SelectedElementsContainerComponent,
+    AppSourceContainerComponent,
+    SaveWorkWarningComponent,
     FreshChatWidgetComponent,
     ClickUpIssueFormComponent,
     ClickUpIssueDetailsComponent,
@@ -542,6 +556,13 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
   providers: [Title],
   bootstrap: [AppComponent],
   exports: [
+    AutoRefreshComponent,
+    ActionTestDataFunctionSuggestionComponent,
+    StepSummaryComponent,
+    ElementFormComponent,
+    ActionTestDataEnvironmentSuggestionComponent,
+    ActionTestDataParameterSuggestionComponent,
+    TestStepMoreActionFormComponent,
     AutoRefreshComponent
   ],
   schemas: [

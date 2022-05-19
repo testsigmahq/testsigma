@@ -73,6 +73,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   @Input('selectedTemplate') currentTemplate: NaturalTextActions;
   @Input('testCaseResultId') testCaseResultId: number;
   @Input('isDryRun') isDryRun: boolean;
+  @Output('onSuggestion') public onSuggestion = new EventEmitter<any>();
   @Optional() @Input('conditionTypeChange') conditionTypeChange: TestStepConditionType;
 
   @ViewChild('searchInput') searchInput: ElementRef;
@@ -196,6 +197,12 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     this.stepArticleUrl = this.stepCreateArticles[this.version.workspace.workspaceType];
     this.resetValidation();
     this.subscribeMobileRecorderEvents();
+    this.mobileRecorderEventService.returnData.subscribe(res => {
+      if(res.type == 'element') {
+        let name = typeof res.data == "string" ? res.data : res.data.name;
+        this.assignElement(name, this.mobileRecorderEventService.currentlyTargetElement);
+      }
+    })
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -1232,20 +1239,27 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   // }
 
   private openElementsPopup(targetElement?) {
-    if (this.popupsAlreadyOpen(ActionElementSuggestionComponent)) return;
+    let sendDetails = {
+      version: this.version,
+      testCase: this.testCase,
+      testCaseResultId: this.testCaseResultId,
+      isDryRun: this.isDryRun,
+      isStepRecordView: this.stepRecorderView
+    };
+    if (this.stepRecorderView) {
+      if(targetElement)
+        this.mobileRecorderEventService.currentlyTargetElement = targetElement;
+      this.mobileRecorderEventService.suggestionContent.next(Object.assign(sendDetails, {
+        content: 'suggestionElement'
+      }));
+      return
+    }
     this.elementSuggestion = this.matModal.open(ActionElementSuggestionComponent, {
       height: "100vh",
       width: '40%',
       position: {top: '0', right: '0'},
       panelClass: ['mat-dialog', 'rds-none'],
-      data: {
-        version: this.version,
-        testCase: this.testCase,
-        testCaseResultId: this.testCaseResultId,
-        isDryRun: this.isDryRun,
-        isStepRecordView: this.stepRecorderView
-      },
-      ...this.alterStyleIfStepRecorder(),
+      data: sendDetails
     });
     let afterClose = (element) => {
       if (element) {
@@ -1253,10 +1267,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         this.assignElement(name, targetElement);
       }
     }
-    if (this.stepRecorderView) {
-      this.resetPositionAndSize(this.elementSuggestion, ActionElementSuggestionComponent, afterClose);
-    } else
-      this.elementSuggestion.afterClosed().subscribe(element => afterClose(element));
+    this.elementSuggestion.afterClosed().subscribe(element => afterClose(element));
   }
 
   private assignElement(elementName, targetElement?) {
@@ -1314,13 +1325,11 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   }
 
   private openSuggestionTestDataFunction() {
-    if (this.popupsAlreadyOpen(ActionTestDataFunctionSuggestionComponent)) return;
     this.testDataFunctionSuggestion = this.matModal.open(ActionTestDataFunctionSuggestionComponent, {
       height: "100vh",
       width: '30%',
       position: {top: '0', right: '0'},
       panelClass: ['mat-dialog', 'rds-none'],
-      ...this.alterStyleIfStepRecorder(),
       data: {version: this.version?.id}
     });
     let afterClose = (data) => {
@@ -1337,10 +1346,8 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         this.showTestDataPopup()
       }
     }
-    if (this.stepRecorderView) {
-      this.resetPositionAndSize(this.testDataFunctionSuggestion, ActionTestDataFunctionSuggestionComponent, afterClose);
-    } else
-      this.testDataFunctionSuggestion.afterClosed().subscribe(data => afterClose(data));
+
+    this.testDataFunctionSuggestion.afterClosed().subscribe(data => afterClose(data));
   }
 
 
@@ -1408,13 +1415,11 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   }
 
   private openSuggestionDataProfile() {
-    if (this.popupsAlreadyOpen(ActionTestDataParameterSuggestionComponent)) return;
     this.dataProfileSuggestion = this.matModal.open(ActionTestDataParameterSuggestionComponent, {
       height: "100vh",
       width: '35%',
       position: {top: '0', right: '0'},
       panelClass: ['mat-dialog', 'rds-none'],
-      ...this.alterStyleIfStepRecorder(),
       data: {
         dataProfileId: this.testStep.getParentLoopDataId(this.testStep, this.testCase),
         versionId: this.version?.id,
@@ -1430,14 +1435,11 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         this.showTestDataPopup()
       }
     }
-    if (this.stepRecorderView) {
-      this.resetPositionAndSize(this.dataProfileSuggestion, ActionTestDataParameterSuggestionComponent, afterClose);
-    } else
-      this.dataProfileSuggestion.afterClosed().subscribe(data => afterClose(data));
+
+    this.dataProfileSuggestion.afterClosed().subscribe(data => afterClose(data));
   }
 
   private openSuggestionEnvironment() {
-    if (this.popupsAlreadyOpen(ActionTestDataEnvironmentSuggestionComponent)) return;
     this.environmentSuggestion = this.matModal.open(ActionTestDataEnvironmentSuggestionComponent, {
       height: "100vh",
       width: '30%',
@@ -1455,10 +1457,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         this.showTestDataPopup()
       }
     }
-    if (this.stepRecorderView) {
-      this.resetPositionAndSize(this.environmentSuggestion, ActionTestDataEnvironmentSuggestionComponent, afterClose);
-    } else
-      this.environmentSuggestion.afterClosed().subscribe(data => afterClose(data));
+    this.environmentSuggestion.afterClosed().subscribe(data => afterClose(data));
   }
 
   private showTestDataPopup() {
@@ -1711,55 +1710,6 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     let msgKey = Boolean(isUpdate) ? 'message.common.update.failure' : 'message.common.created.failure';
     this.showAPIError(err, this.translate.instant(msgKey, {FieldName: 'Test Step'}));
     this.saving = false;
-  }
-
-  alterStyleIfStepRecorder() {
-    if (!this.stepRecorderView) return {};
-    let mobileStepRecorderComponent: MobileStepRecorderComponent = this.matModal.openDialogs.find(dialog => dialog.componentInstance instanceof MobileStepRecorderComponent).componentInstance;
-    let clients = {
-      height: mobileStepRecorderComponent.customDialogContainerH50.nativeElement.clientHeight + 'px',
-      width: mobileStepRecorderComponent.customDialogContainerH50.nativeElement.clientWidth + 'px',
-      position: {
-        top: mobileStepRecorderComponent.customDialogContainerH50.nativeElement.getBoundingClientRect().top + 'px',
-        left: mobileStepRecorderComponent.customDialogContainerH50.nativeElement.getBoundingClientRect().left + 'px'
-      },
-      hasBackdrop: false,
-      panelClass: ['modal-shadow-none', 'px-10']
-    }
-    return clients;
-  }
-
-  private resetPositionAndSize(matDialog: MatDialogRef<any>, dialogComponent: any, afterClose: (res?) => void) {
-    setTimeout(() => {
-      if (matDialog._containerInstance._config.height == '0px') {
-        let alterStyleIfStepRecorder = this.alterStyleIfStepRecorder();
-        matDialog.close();
-        matDialog = this.matModal.open(dialogComponent, {
-          ...matDialog._containerInstance._config,
-          ...alterStyleIfStepRecorder
-        });
-        matDialog.afterClosed().subscribe(res => afterClose(res));
-      } else {
-        matDialog.afterClosed().subscribe(res => afterClose(res));
-      }
-    }, 200)
-  }
-
-  private popupsAlreadyOpen(currentPopup) {
-    if (!Boolean(this.stepRecorderView)) return false;
-    this?.matModal?.openDialogs?.forEach(dialog => {
-      if ((dialog.componentInstance instanceof ActionElementSuggestionComponent ||
-          dialog.componentInstance instanceof ActionTestDataFunctionSuggestionComponent ||
-          dialog.componentInstance instanceof ActionTestDataParameterSuggestionComponent ||
-          dialog.componentInstance instanceof ActionTestDataEnvironmentSuggestionComponent ||
-          dialog.componentInstance instanceof TestStepMoreActionFormComponent ||
-          (dialog.componentInstance instanceof ActionElementSuggestionComponent &&
-            !(currentPopup instanceof ElementFormComponent)))
-        && !(dialog.componentInstance instanceof currentPopup)) {
-        dialog.close();
-      }
-    })
-    return Boolean(this?.matModal?.openDialogs?.find(dialog => dialog.componentInstance instanceof currentPopup));
   }
 
   ngOnDestroy() {

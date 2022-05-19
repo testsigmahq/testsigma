@@ -9,15 +9,9 @@ import {TestPlansComponent as AgentsTestPlansComponent} from './components/test-
 import {DryRunsComponent as AgentsDryRunsComponent} from './components/dry-runs.component';
 import {DevicesComponent as AgentsDevicesComponent} from './components/devices.component';
 import {RedirectGuard} from "./guards/redirect.guard";
-import {InspectionLauncherComponent} from "./components/inspection-launcher.component";
 import {AuthenticationGuard} from "../shared/guards/authentication.guard";
 
 const routes: Routes = [
-  {
-    path: 'record/:versionId',
-    component: InspectionLauncherComponent,
-    canActivate: [AuthenticationGuard]
-  },
   {
     path: '',
     component: AgentsComponent,

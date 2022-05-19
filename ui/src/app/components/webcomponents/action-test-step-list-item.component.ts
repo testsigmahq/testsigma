@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, Optional, Renderer2} from '@angular/core';
 import {TestStep} from "../../models/test-step.model";
 import {StepSummaryComponent} from "./step-summary.component";
 import {TestStepService} from "../../services/test-step.service";
@@ -22,6 +22,7 @@ import {ActionTestDataParameterSuggestionComponent} from "./action-test-data-par
 import {ActionTestDataEnvironmentSuggestionComponent} from "./action-test-data-environment-suggestion.component";
 import {TestStepMoreActionFormComponent} from "./test-step-more-action-form.component";
 import {ElementFormComponent} from "./element-form.component";
+import {MobileRecorderEventService} from "../../services/mobile-recorder-event.service";
 
 
 @Component({
@@ -289,6 +290,7 @@ export class ActionTestStepListItemComponent extends TestStepListItemComponent i
   @Input() stepRecorderView?: boolean;
   @Input()public stepForm: FormGroup = new FormGroup({});
 
+
   get conditionChildStep() {
     return this.testStep.isForLoop && this.testStep.parentId || !this.testStep.isForLoop &&
       this.testStep.isConditionalType && !this.testStep.isConditionalWhileLoop && this.findParentIf(this.testStep)?.parentStep;
@@ -302,7 +304,9 @@ export class ActionTestStepListItemComponent extends TestStepListItemComponent i
     public testStepService: TestStepService,
     public naturalTestActionsService : NaturalTextActionsService,
     public matModal: MatDialog,
-    public testDataService: TestDataService
+    public testDataService: TestDataService,
+    @Optional() public renderer?: Renderer2,
+    @Optional() public mobileRecorderEventService?: MobileRecorderEventService
   ) {
     super(authGuard, notificationsService, translate, toastrService, testStepService, naturalTestActionsService, matModal);
   }
@@ -311,27 +315,30 @@ export class ActionTestStepListItemComponent extends TestStepListItemComponent i
   }
 
   showDetails(testStep: TestStep) {
-    if(this.popupsAlreadyOpen(StepSummaryComponent)) return;
+    let sendDetail = {
+    testStep: testStep,
+    version: this.version,
+    testCase: this.testCase,
+    steps: this.testSteps?.content,
+    isStepRecordView: this.stepRecorderView
+  }
+    if (this.stepRecorderView) {
+      this.mobileRecorderEventService.suggestionContent.next( Object.assign(sendDetail, {
+        content: 'showDetails',
+      }));
+      return
+    }
+
     testStep.isSelected = true;
     const dialogRef = this.matModal.open(StepSummaryComponent, {
       backdropClass: 'cdk-overlay-transparent-backdrop',
       height: "100%",
       width: '29%',
       position: {top: '0px', right: '0px'},
-      data: {
-        testStep: testStep,
-        version: this.version,
-        testCase: this.testCase,
-        steps: this.testSteps?.content,
-        isStepRecordView: this.stepRecorderView
-      },
+      data: sendDetail,
       panelClass: ['mat-dialog', 'rds-none'],
-      ...this.alterStyleIfStepRecorder()
     });
-    if(this.stepRecorderView)
-      this.resetPositionAndSize(dialogRef, StepSummaryComponent);
-    else
-      dialogRef.afterClosed().subscribe(() => testStep.isSelected = false);
+    dialogRef.afterClosed().subscribe(() => testStep.isSelected = false);
   }
 
   postStepFetchProcessing(steps: Page<TestStep>) {
@@ -376,55 +383,6 @@ export class ActionTestStepListItemComponent extends TestStepListItemComponent i
         this.testStep?.childStep?.leftIndent :
         this.testStep?.childStep?.leftIndent + this.testStep.leftIndent :
       this.testStep.leftIndent) * 20
-  }
-
-  private alterStyleIfStepRecorder() {
-    if(!this.stepRecorderView) return {};
-    let mobileStepRecorderComponent:MobileStepRecorderComponent = this.matModal.openDialogs.find(dialog => dialog.componentInstance instanceof MobileStepRecorderComponent).componentInstance;
-    let dialogContainer = mobileStepRecorderComponent.fullScreenMode ?
-      mobileStepRecorderComponent.customDialogContainerH50.nativeElement: mobileStepRecorderComponent.customDialogContainerH100.nativeElement;
-    let clients = {
-      height: dialogContainer.clientHeight +'px',
-      width: dialogContainer.clientWidth +'px',
-      maxWidth: dialogContainer.clientWidth +'px',
-      position: {
-        top: dialogContainer.getBoundingClientRect().top + 'px',
-        left: dialogContainer.getBoundingClientRect().left + 'px'
-      },
-      hasBackdrop: false,
-      panelClass: ['mat-dialog', 'rds-none', 'modal-shadow-none', mobileStepRecorderComponent.fullScreenMode?'px-10':'']
-    }
-    return clients;
-  }
-
-  private popupsAlreadyOpen(currentPopup) {
-    if(!Boolean(this.stepRecorderView)) return false;
-    this?.matModal?.openDialogs?.forEach( dialog => {
-      if((dialog.componentInstance instanceof ActionElementSuggestionComponent ||
-          dialog.componentInstance instanceof ActionTestDataFunctionSuggestionComponent ||
-          dialog.componentInstance instanceof ActionTestDataParameterSuggestionComponent ||
-          dialog.componentInstance instanceof ActionTestDataEnvironmentSuggestionComponent ||
-          dialog.componentInstance instanceof TestStepMoreActionFormComponent ||
-          (dialog.componentInstance instanceof ActionElementSuggestionComponent &&
-            !(currentPopup instanceof ElementFormComponent)))
-        && !(dialog.componentInstance instanceof currentPopup)){
-        dialog.close();
-      }
-    })
-    return Boolean(this?.matModal?.openDialogs?.find( dialog => dialog.componentInstance instanceof currentPopup));
-  }
-
-  private resetPositionAndSize(matDialog: MatDialogRef<any>, dialogComponent: any) {
-    setTimeout(() => {
-      if (matDialog._containerInstance._config.height == '0px') {
-        let alterStyleIfStepRecorder = this.alterStyleIfStepRecorder();
-        matDialog.close();
-        matDialog = this.matModal.open(dialogComponent, {
-          ...matDialog._containerInstance._config,
-          ...alterStyleIfStepRecorder
-        });
-      }
-    }, 200)
   }
 
   get stepIndent() {

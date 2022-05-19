@@ -67,6 +67,10 @@
       "codepoint": 62026,
       "source": "./icons/apk-file.svg"
     },
+    "app-source": {
+      "codepoint": 62134,
+      "source": "./icons/app-source.svg"
+    },
     "app-store-ios": {
       "codepoint": 62144,
       "source": "./icons/app-store-ios.svg"
@@ -442,6 +446,10 @@
     "database-solid": {
       "codepoint": 61758,
       "source": "./icons/database-solid.svg"
+    },
+    "default-generators": {
+      "codepoint": 62135,
+      "source": "./icons/default-generators.svg"
     },
     "delete-icon": {
       "codepoint": 61759,
@@ -947,6 +955,10 @@
       "codepoint": 61824,
       "source": "./icons/long-arrow-alt-right-solid.svg"
     },
+    "long-tap": {
+      "codepoint": 62140,
+      "source": "./icons/long-tap.svg"
+    },
     "love": {
       "codepoint": 61825,
       "source": "./icons/love.svg"
@@ -978,6 +990,10 @@
     "mirroring": {
       "codepoint": 61935,
       "source": "./icons/mirroring.svg"
+    },
+    "mirroring-selection": {
+      "codepoint": 62136,
+      "source": "./icons/mirroring-selection.svg"
     },
     "mobile-alt-solid": {
       "codepoint": 61829,
@@ -1050,6 +1066,10 @@
     "paper-flight": {
       "codepoint": 61838,
       "source": "./icons/paper-flight.svg"
+    },
+    "pause": {
+      "codepoint": 62137,
+      "source": "./icons/pause.svg"
     },
     "pdf-file": {
       "codepoint": 61988,
@@ -1202,6 +1222,10 @@
     "record-new": {
       "codepoint": 61856,
       "source": "./icons/record-new.svg"
+    },
+    "record-play": {
+      "codepoint": 62138,
+      "source": "./icons/record-play.svg"
     },
     "refresh": {
       "codepoint": 61857,
@@ -1439,6 +1463,10 @@
       "codepoint": 61890,
       "source": "./icons/stop-circle-solid.svg"
     },
+    "suggestion-list": {
+      "codepoint": 62139,
+      "source": "./icons/suggestion-list.svg"
+    },
     "storage-outline": {
       "codepoint": 62146,
       "source": "./icons/storage-outline.svg"
@@ -1459,6 +1487,10 @@
       "codepoint": 62012,
       "source": "./icons/support.svg"
     },
+    "swipe": {
+      "codepoint": 62141,
+      "source": "./icons/swipe.svg"
+    },
     "swipe-horizontal": {
       "codepoint": 61945,
       "source": "./icons/swipe-horizontal.svg"
@@ -1474,6 +1506,10 @@
     "tap": {
       "codepoint": 61946,
       "source": "./icons/tap.svg"
+    },
+    "tap-on": {
+      "codepoint": 62142,
+      "source": "./icons/tap-on.svg"
     },
     "test-case-alt": {
       "codepoint": 62056,

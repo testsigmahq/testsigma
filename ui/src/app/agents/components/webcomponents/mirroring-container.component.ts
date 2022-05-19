@@ -22,6 +22,7 @@ import {Element} from "../../../models/element.model";
 import {ElementLocatorType} from "../../../enums/element-locator-type.enum";
 import {SendKeysRequest} from 'app/agents/models/send-keys-request.model';
 import {Image} from "fabric/fabric-impl";
+import {MobileRecorderEventService} from "../../../services/mobile-recorder-event.service";
 
 @Component({
   selector: 'app-mirroring-container',
@@ -43,6 +44,7 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
   @Input() public sessionId: String;
   @Input() public mirroring: boolean;
   @Input() public selectedElement: Element;
+  @Input() public isPauseRecord: boolean;
   @Output() saveTapOnDeviceStep: EventEmitter<Position> = new EventEmitter<Position>();
   @Output() saveChangeOrientationStep: EventEmitter<Boolean> = new EventEmitter<Boolean>();
   @Output() saveNavigateBackStep: EventEmitter<void> = new EventEmitter<void>();
@@ -52,7 +54,6 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
   @Output() updateRecordedElement: EventEmitter<void> = new EventEmitter<void>();
   private devicesService:  DevicesService; //CloudDevicesService
   public inspectedElement: MobileElementRect = null;
-  public isLandscapeMode: Boolean;
   public fabricCanvas: fabric.Canvas;
   public actionType: String;
   public screenScaledInitially: boolean;
@@ -97,7 +98,8 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
     private router: Router,
     private dialog: MatDialog,
     private JsonPipe: JsonPipe,
-    private localDeviceService: DevicesService) {
+    private localDeviceService: DevicesService,
+    public mobileRecorderEventService: MobileRecorderEventService) {
     super(authGuard, notificationsService, translate, toastrService);
   }
 
@@ -117,8 +119,8 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
   public switchToMirroringMode() {
     this.mirroring = true;
     this.removeInspectionElements();
-    this.devicesService.deleteSession(this.sessionId).subscribe();
-    this.sessionId = null;
+    // this.devicesService.deleteSession(this.sessionId).subscribe();
+    // this.sessionId = null;
   }
 
   public switchToActionMode(actionType: String) {
@@ -179,8 +181,8 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
         let height = this.screenHeight;
         this.screenHeight = width;
         this.screenWidth = height;
-        this.isLandscapeMode = !this.isLandscapeMode;
-        if(this.data.isStepRecord) this.saveChangeOrientationStep.emit(this.isLandscapeMode);
+        this.mobileRecorderEventService.isLandscapeMode = !this.mobileRecorderEventService?.isLandscapeMode;
+        if(this.data.isStepRecord) this.saveChangeOrientationStep.emit(this.mobileRecorderEventService?.isLandscapeMode);
         this.handleActionSuccess();
       },
       error: (err) =>
@@ -190,10 +192,10 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
 
   public _onImageLoad(img: HTMLImageElement) {
     let oImg = new fabric.Image(img);
-    const mode = this.isLandscapeMode ? 'landscape' : 'portrait';
+    const mode = this.mobileRecorderEventService?.isLandscapeMode ? 'landscape' : 'portrait';
     this.canvasWidth = this.deviceDimensions[mode].width;
     this.canvasHeight = this.deviceDimensions[mode].height;
-    if (this.isLandscapeMode == (oImg.width < oImg.height)) {
+    if (this.mobileRecorderEventService?.isLandscapeMode == (oImg.width < oImg.height)) {
       this.orientationConflict = true;
       this.canvasHeight = this.canvasHeight * (oImg.height / oImg.width)
     }
@@ -207,7 +209,7 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
     oImg._set('scaleX', scaleXFactor * fullscreenScalingFactor);
     oImg._set('scaleY', scaleXFactor * fullscreenScalingFactor);
     oImg.set('selectable', false);
-    if (this.isLandscapeMode && oImg.width < oImg.height) {
+    if (this.mobileRecorderEventService?.isLandscapeMode && oImg.width < oImg.height) {
       // Pratheepv : Reason for not fully relaying on landscape value is some times image from browserstack is coming in portrait mode
       oImg.rotate(90);
       oImg.center();
@@ -517,14 +519,14 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
     let positionHeight = this.screenHeight;
     let xPosition = position.x * (positionWidth / this.canvasWidth);
     let yPosition = position.y * (positionHeight / this.canvasHeight);
-    if (this.isLandscapeMode && !this.orientationConflict) {
+    if (this.mobileRecorderEventService?.isLandscapeMode && !this.orientationConflict) {
       xPosition = position.x * (positionHeight / this.canvasHeight);
       yPosition = position.y * (positionWidth / this.canvasWidth);
     }
     let mobilePosition: Position = new Position();
     mobilePosition.x = xPosition;
     mobilePosition.y = yPosition;
-    if (this.isLandscapeMode && this.orientationConflict) {
+    if (this.mobileRecorderEventService?.isLandscapeMode && this.orientationConflict) {
       mobilePosition.x = yPosition;
       mobilePosition.y = xPosition;
     }
@@ -537,7 +539,7 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
   }
 
   private getFullScreenScalingFactor( oImg, scaleXFactor): number {
-    if (!(this.isLandscapeMode && oImg.width < oImg.height)) {
+    if (!(this.mobileRecorderEventService?.isLandscapeMode && oImg.width < oImg.height)) {
       this.canvasHeight = oImg.height * scaleXFactor;
     }
     let initialScalingFactor = (this.mirroringContainer.nativeElement.clientWidth - 73) / this.deviceDimensions.portrait.width;
@@ -560,19 +562,19 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
   }
 
   private canvasWidthExceedsLayout = (initialScalingFactor) =>
-    (this.canvasWidth * initialScalingFactor) > (this.mirroringContainer.nativeElement.clientWidth - (73 - (this.isLandscapeMode ? 42 : 0)));
+    (this.canvasWidth * initialScalingFactor) > (this.mirroringContainer.nativeElement.clientWidth - (73 - (this.mobileRecorderEventService?.isLandscapeMode ? 42 : 0)));
 
   public canvasHeightExceedsLayout = (initialScalingFactor) =>
-    (this.canvasHeight * initialScalingFactor) > (this.mirroringContainer.nativeElement.clientHeight - (30 + (this.isLandscapeMode ? 72 : 0)));
+    (this.canvasHeight * initialScalingFactor) > (this.mirroringContainer.nativeElement.clientHeight - (30 + (this.mobileRecorderEventService?.isLandscapeMode ? 72 : 0)));
 
   private canvasFitsLayout = (initialScalingFactor) =>
     !this.canvasWidthExceedsLayout(initialScalingFactor) && !this.canvasHeightExceedsLayout(initialScalingFactor);
 
   private fitWidthToLayout = () =>
-    (this.mirroringContainer.nativeElement.clientWidth - (73 - (this.isLandscapeMode ? 42 : 0))) / this.canvasWidth;
+    (this.mirroringContainer.nativeElement.clientWidth - (73 - (this.mobileRecorderEventService?.isLandscapeMode ? 42 : 0))) / this.canvasWidth;
 
   public fitHeightToLayout = () =>
-    (this.mirroringContainer?.nativeElement.clientHeight - (30 + (this.isLandscapeMode ? 72 : 0))) / this.canvasHeight;
+    (this.mirroringContainer?.nativeElement.clientHeight - (30 + (this.mobileRecorderEventService?.isLandscapeMode ? 72 : 0))) / this.canvasHeight;
 
   public createCanvas(screenDimensions?: ScreenDimensions) {
     if(Boolean(screenDimensions)){
@@ -657,11 +659,13 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
       this.inspectedElement = mobileElementRect;
       this.fabricCanvas.renderAll();
     }
-    if(!Boolean(this.data.isStepRecord))
-      this.recorderDialog.initElement();
-    else
-      this.updateRecordedElement.emit()
-    this.optimiseXpath();
+    if (!this.isPauseRecord) {
+      if (!Boolean(this.data.isStepRecord))
+        this.recorderDialog.initElement();
+      else
+        this.updateRecordedElement.emit()
+      this.optimiseXpath();
+    }
   }
 
   private optimiseXpath(){

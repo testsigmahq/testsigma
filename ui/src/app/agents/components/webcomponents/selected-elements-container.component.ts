@@ -91,7 +91,8 @@ export class SelectedElementsContainerComponent{
   public sendKeyDialog(mobileElement: MobileElement) {
     this.setTimer(1800);
     SendKeyModalComponent.prototype.keys = '';
-    const dialogRef = this.dialog.open(SendKeyModalComponent, {width: '500px'});
+    const dialogRef = this.dialog.open(SendKeyModalComponent, {width: '500px',
+      panelClass: ['mat-dialog', 'rds-none']});
     const sendKeysRequest = new SendKeysRequest();
     dialogRef.afterClosed().subscribe(result => {
       this.setTimer(1800);

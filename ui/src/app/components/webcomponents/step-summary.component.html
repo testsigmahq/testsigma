@@ -12,7 +12,7 @@
         class="close"
         type="button"
         [matTooltip]="'hint.message.common.close' | translate"
-        mat-dialog-close>
+        (click)="closeSuggestion()">
       </button>
     </div>
 

@@ -16,7 +16,6 @@
         id="action"
         [attr.data-placeholder]="animatedPlaceholder? animatedPlaceholder :  'Start typing the action (' + (version?.workspace?.isMobile ? 'tab, enter, launch, swipe' : 'go to, click, enter, select etc.') +')…'"
         (focus)="showACTIONDropdown();showActions = true"
-        (keydown.enter)="selectTemplate()"
         (keydown.arrowUp)="scrollUpTemplateFocus()"
         (keydown.arrowDown)="scrollDownTemplateFocus()"
         contenteditable="true"

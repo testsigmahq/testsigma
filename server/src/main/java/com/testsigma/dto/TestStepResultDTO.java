@@ -47,6 +47,7 @@ public class TestStepResultDTO {
   private Integer waitTime;
   private Map<String, AddonTestStepTestData> addonTestData;
   private Map<String, AddonElementData> addonElements;
+  private Boolean visualEnabled = false;
   private Timestamp createdDate;
   private Timestamp updatedDate;
   private String addonActionLogs;

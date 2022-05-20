@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, Input, OnInit, Optional} from '@angular/core';
 import {TestStep} from "../../models/test-step.model";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {TestStepPriority} from "../../enums/test-step-priority.enum";
@@ -7,6 +7,7 @@ import {TestStepConditionType} from "../../enums/test-step-condition-type.enum";
 import {MatCheckboxChange} from '@angular/material/checkbox';
 import {ResultConstant} from "../../enums/result-constant.enum";
 import {MatSelectChange} from '@angular/material/select';
+import {MobileRecorderEventService} from "../../services/mobile-recorder-event.service";
 
 @Component({
   selector: 'app-test-step-more-action-form',
@@ -14,6 +15,7 @@ import {MatSelectChange} from '@angular/material/select';
   styles: []
 })
 export class TestStepMoreActionFormComponent implements OnInit {
+  @Optional() @Input('moreDetails') moreDetails;
   public prerequisiteList: TestStep[];
   public form: FormGroup;
   public formSubmitted: Boolean;
@@ -32,13 +34,20 @@ export class TestStepMoreActionFormComponent implements OnInit {
       parentDisabled: Boolean,
       isTestStepResultsView: Boolean
     },
-    private matDialog: MatDialogRef<TestStepMoreActionFormComponent>) {
+    private matDialog: MatDialogRef<TestStepMoreActionFormComponent>,
+    private mobileRecorderEventService: MobileRecorderEventService) {
     this.form = this.options.form;
     this.formSubmitted = this.options.formSubmitted;
     this.testStep = this.options.testStep;
   }
 
   ngOnInit(): void {
+    if (this.moreDetails) {
+      this.options = this.moreDetails;
+      this.form = this.options.form;
+      this.formSubmitted = this.options.formSubmitted;
+      this.testStep = this.options.testStep;
+    }
     delete this.form.controls['ignoreStepResult'];
     this.addFormControls();
     this.addPriorityControl();
@@ -73,6 +82,7 @@ export class TestStepMoreActionFormComponent implements OnInit {
     this.form.addControl('priority', new FormControl(this.options.testStep.priority, []));
     this.form.addControl('preRequisiteStepId', new FormControl(this.options.testStep.preRequisiteStepId, []));
     this.form.addControl('conditionType', new FormControl(this.options.testStep.conditionType, []));
+    this.form.addControl('visualEnabled', new FormControl(this.options.testStep.visualEnabled, []));
     this.form.addControl('disabled', new FormControl((Boolean(this.options?.testStep?.parentStep?.disabled)||this.canAllowDisableStep? true :this.options.testStep.disabled), []));
     this.form.addControl("conditionIf", new FormControl(this.options.testStep.conditionIf,[]));
     this.form.addControl('ignoreStepResult', new FormControl(this.options.testStep.ignoreStepResult, []));
@@ -133,7 +143,7 @@ export class TestStepMoreActionFormComponent implements OnInit {
     if(this.form.get('waitTime').value >121 || this.form.get('waitTime').value < 1) {
       this.formSubmitted = true;
     } else {
-      this.matDialog.close()
+      this.moreDetails ? this.mobileRecorderEventService.setEmptyAction() : this.matDialog.close();
     }
   }
 
@@ -151,5 +161,9 @@ export class TestStepMoreActionFormComponent implements OnInit {
   get canAllowDisableStep() {
     return this.testStep?.isConditionalWhileLoop ? this.options?.testStep?.parentStep?.parentStep ?
       this.options?.testStep?.parentStep?.parentStep?.disabled : false : this.options?.parentDisabled;
+  }
+
+  get canShowVisualTest() {
+    return this.testStep.isAction || this.testStep.isConditionalElseIf || this.testStep.isConditionalIf || this.testStep.isConditionalWhileLoop;
   }
 }

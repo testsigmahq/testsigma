@@ -37,7 +37,7 @@
     [class.d-visible]="switch.classList.contains('filtered')">
     <button
       *ngIf="hasInspectorFeature()"
-      [routerLink]="['/agents', 'record', this.versionId]"
+      [routerLink]="['/td', 'record', this.versionId]"
       [queryParams]="{isRecord: true}"
       class="theme-btn-clear-default ml-14"
       [translate]="'elements.btn.record'"></button>

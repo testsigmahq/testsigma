@@ -45,7 +45,6 @@ public class TestPlanDTO {
   Timestamp createdDate;
   Timestamp updatedDate;
   Boolean matchBrowserVersion = false;
-  boolean visualTestingEnabled;
   Boolean retrySessionCreation;
   Integer retrySessionCreationTimeout;
   private Long lastRunId;

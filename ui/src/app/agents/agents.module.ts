@@ -18,13 +18,6 @@ import {SessionExpiredModalComponent} from './components/webcomponents/session-e
 import {SendKeyModalComponent} from './components/webcomponents/send-key-modal.component';
 import { SearchElementsModalComponent } from './components/webcomponents/search-elements-modal.component';
 import { AgentsFilterComponent } from './components/webcomponents/agents-filter.component';
-import { ElementsContainerComponent } from './components/webcomponents/elements-container.component';
-import { SelectedElementsContainerComponent } from './components/webcomponents/selected-elements-container.component';
-import { AppSourceContainerComponent } from './components/webcomponents/app-source-container.component';
-import { MirroringContainerComponent } from './components/webcomponents/mirroring-container.component';
-import { MobileInspectionComponent } from './components/webcomponents/mobile-inspection.component';
-import { MobileStepRecorderComponent } from './components/webcomponents/mobile-step-recorder.component';
-import {SaveWorkWarningComponent} from "./components/webcomponents/save-work-warning.component";
 
 @NgModule({
   declarations: [
@@ -42,14 +35,7 @@ import {SaveWorkWarningComponent} from "./components/webcomponents/save-work-war
     SessionExpiredModalComponent,
     SendKeyModalComponent,
     SearchElementsModalComponent,
-    AgentsFilterComponent,
-    ElementsContainerComponent,
-    SelectedElementsContainerComponent,
-    AppSourceContainerComponent,
-    MirroringContainerComponent,
-    MobileInspectionComponent,
-    SaveWorkWarningComponent,
-    MobileStepRecorderComponent
+    AgentsFilterComponent
   ],
   providers: [
     RedirectGuard

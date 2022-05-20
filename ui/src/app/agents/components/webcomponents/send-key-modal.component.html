@@ -1,28 +1,40 @@
-<h2 mat-dialog-title>
-  <span class="modal-title" [translate]="'mobile_recorder.button.send_keys'"></span>
-  <button type="button" class="close" mat-dialog-close data-placement="bottom"
-          [matTooltip]="'pagination.delete' | translate">
-  </button>
-</h2>
-<mat-dialog-content class="mat-typography p-40 w-100 mx-auto">
-  <div class="ts-form">
-    <div class="form-group">
-      <label
-        class="control-label"
-        [translate]="'mobile_recorder.button.send_keys'"></label>
-      <input type="text" class="form-control" [(ngModel)]="keys">
+<div class="theme-overlay-container">
+  <div class="theme-overlay-header">
+    <div
+      class="theme-overlay-title"
+      [translate]="'mobile_recorder.button.send_keys'">
+    </div>
+    <button
+      class="theme-overlay-close"
+      type="button"
+      [matTooltip]="'hint.message.common.close' | translate"
+      mat-dialog-close>
+    </button>
+  </div>
+  <div class="theme-overlay-content py-15">
+
+    <div class="ts-form">
+      <div class="form-group">
+        <label
+          class="control-label"
+          [translate]="'mobile_recorder.button.send_keys'"></label>
+        <input type="text" class="form-control" [(ngModel)]="keys">
+      </div>
     </div>
   </div>
-</mat-dialog-content>
-<mat-dialog-actions align="end" class="p-40">
-  <button class="theme-btn-clear-default"
-          mat-dialog-close
-          [translate]="'btn.common.cancel'"></button>
-  <button class="btn btn-primary"
-          [translate]="'mobile_recorder.button.send_keys'"
-          [disabled]="!keys"
-          [mat-dialog-close]="keys"
-          [matTooltip]="((!keys)?('mobile_recorder.message.sendkeys.required'|translate ):'')"
-          cdkFocusInitial></button>
-</mat-dialog-actions>
+  <div class="theme-overlay-footer">
+    <button
+      class="theme-btn-clear-default"
+      mat-dialog-close
+      [translate]="'btn.common.cancel'">
+    </button>
+    <button
+      class="theme-btn-primary"
+      [translate]="'mobile_recorder.button.send_keys'"
+      [disabled]="!keys"
+      [mat-dialog-close]="keys"
+      [matTooltip]="((!keys)?('mobile_recorder.message.sendkeys.required'|translate ):'')">
+    </button>
+  </div>
+</div>
 

@@ -177,3 +177,7 @@ $abbrev in (border: border) {
 .border-dashed-style {
   border-style: dashed;
 }
+
+.highlight-br-color {
+  border-color: $border-light-separator!important;
+}

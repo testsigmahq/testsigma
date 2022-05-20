@@ -22,6 +22,7 @@ CREATE TABLE `test_step_results`
   `test_step_details`     JSON,
   `element_details` JSON,
   `test_data_details`     JSON            DEFAULT NULL,
+  `visual_enabled`              tinyint(1) DEFAULT '0',
   `wait_time`             BIGINT(20)      DEFAULT NULL,
   `addon_test_data`     JSON            DEFAULT NULL,
   `addon_elements`      JSON            DEFAULT NULL,

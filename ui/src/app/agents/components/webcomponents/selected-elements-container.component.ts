@@ -25,7 +25,7 @@ export class SelectedElementsContainerComponent{
   @Input()optimisingXpath: boolean;
 
   constructor(
-    private dialog: MatDialog,
+    private dialog: MatDialog
   ) {
     // @ts-ignore
     const width = (this.inspectedElement?.mobileElement.x2) - (this.inspectedElement?.mobileElement.x1);
@@ -46,6 +46,8 @@ export class SelectedElementsContainerComponent{
 
   public tap(mobileElement: MobileElement) {
     this.beforeAction();
+    if (mobileElement?.text.length <4 && mobileElement?.text.length>0)
+      mobileElement.text = mobileElement.text +'-'+ this.getCurrentTimeStamp();
     this.devicesService.tapElement(this.sessionId, mobileElement)
       .subscribe({
         next: () => {
@@ -64,6 +66,8 @@ export class SelectedElementsContainerComponent{
 
   private sendkeys(sendKeysRequest: SendKeysRequest) {
     this.beforeAction(true);
+    if (sendKeysRequest?.mobileElement?.text.length < 4 && sendKeysRequest?.mobileElement?.text.length>0)
+      sendKeysRequest.mobileElement.text = sendKeysRequest?.mobileElement?.text +'-'+ this.getCurrentTimeStamp();
     this.devicesService.sendKeys(this.sessionId, sendKeysRequest)
       .subscribe({
         next: () => {
@@ -91,7 +95,8 @@ export class SelectedElementsContainerComponent{
   public sendKeyDialog(mobileElement: MobileElement) {
     this.setTimer(1800);
     SendKeyModalComponent.prototype.keys = '';
-    const dialogRef = this.dialog.open(SendKeyModalComponent, {width: '500px'});
+    const dialogRef = this.dialog.open(SendKeyModalComponent, {width: '500px',
+      panelClass: ['mat-dialog', 'rds-none']});
     const sendKeysRequest = new SendKeysRequest();
     dialogRef.afterClosed().subscribe(result => {
       this.setTimer(1800);
@@ -157,5 +162,10 @@ export class SelectedElementsContainerComponent{
       recorderDialog.viewType = "NATIVE_APP";
     } else
       recorderDialog.beforeAction();
+  }
+
+  private getCurrentTimeStamp() {
+    var oDate = new Date();
+    return ""+oDate.getDate()+oDate.getMonth()+oDate.getFullYear()+oDate.getHours()+oDate.getMinutes()+oDate.getSeconds();
   }
 }

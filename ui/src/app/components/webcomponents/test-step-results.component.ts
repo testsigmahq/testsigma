@@ -132,7 +132,7 @@ export class TestStepResultsComponent extends TestCaseStepsListComponent impleme
     this.fetchNLActions(this.testStepResults);
     this.navigateToFirstFailedStep(null);
     this.fetchResultStepGroups();
-    if (this.execution.visualTestingEnabled && this.testStepResults.content.length > 0)
+    if (this.testStepResults.content.find(stepResult => stepResult.visualEnabled))
       this.fetchVisualResults(this.testStepResults);
     this.scrollActiveToView();
     this.isStepsFetchComplete = true;
@@ -141,8 +141,7 @@ export class TestStepResultsComponent extends TestCaseStepsListComponent impleme
   setGroupTemplateDetails(stepResults, groupResult, steps) {
 
     this.fetchNLActions(stepResults, steps, groupResult);
-    if (this.execution.visualTestingEnabled && stepResults.content.length > 0)
-      this.fetchVisualResults(stepResults);
+    this.fetchVisualResults(stepResults);
   }
 
   fetchTestSteps(id, isTestGroup?, groupResult?) {
@@ -395,8 +394,11 @@ export class TestStepResultsComponent extends TestCaseStepsListComponent impleme
     pageable.pageSize = testStepResults.content.length;
     this.stepResultScreenshotComparisionService.findAll(query, undefined, pageable).subscribe(res => {
       res.content.forEach(screenshotCom => {
-        let stepResult = testStepResults.content.find(stepResult => stepResult.id == screenshotCom.testStepResultId);
-        stepResult && (stepResult.stepResultScreenshotComparison = screenshotCom);
+        testStepResults.content.filter(stepResult => {
+          if(stepResult.id == screenshotCom.testStepResultId) {
+            stepResult.stepResultScreenshotComparison = screenshotCom
+          }
+        });
       });
     });
   }

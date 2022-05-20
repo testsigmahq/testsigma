@@ -1,34 +1,34 @@
 <div *ngIf="(inspectedElement || elements?.length>0)"
      class="save-elements-section">
-  <fieldset class="theme-border p-0 w-100 overflow-y-auto">
-    <legend class="ml-12 position-absolute top-n5 bg-white">
-      <div *ngIf="element">
-        <div [translate]="'agents.mobile.inspection.element_form'"
-             class="text-secondary rb-medium pt-12"></div>
-      </div>
-      <div *ngIf="!element" class="mat-form-field-flex text-t-secondary lh-4">
-                  <span [translate]="'agents.mobile.inspection.elements'"
-                        class="rb-medium text-nowrap">
-                  </span>
-        <span class="mat-form-field-flex pl-14">
-                    <span class="result-status-1 rounded-circle btn mr-5 p-4 my-2 pluse"></span>
-                    <span [translate]="'agents.mobile.inspection.recording'" class="text-danger"></span>
-                  </span>
-      </div>
-    </legend>
+<!--  <fieldset class="theme-border p-0 w-100 overflow-y-auto">-->
+<!--    <legend class="ml-12 position-absolute top-n5 bg-white">-->
+<!--      <div *ngIf="element">-->
+<!--        <div [translate]="'agents.mobile.inspection.element_form'"-->
+<!--             class="text-secondary rb-medium pt-12"></div>-->
+<!--      </div>-->
+<!--      <div *ngIf="!element" class="mat-form-field-flex text-t-secondary lh-4">-->
+<!--                  <span [translate]="'agents.mobile.inspection.elements'"-->
+<!--                        class="rb-medium text-nowrap">-->
+<!--                  </span>-->
+<!--        <span class="mat-form-field-flex pl-14">-->
+<!--                    <span class="result-status-1 rounded-circle btn mr-5 p-4 my-2 pluse"></span>-->
+<!--                    <span [translate]="'agents.mobile.inspection.recording'" class="text-danger"></span>-->
+<!--                  </span>-->
+<!--      </div>-->
+<!--    </legend>-->
     <ng-container *ngTemplateOutlet="ElementForm"></ng-container>
     <ng-container *ngTemplateOutlet="Elements"></ng-container>
-  </fieldset>
+<!--  </fieldset>-->
 </div>
 <div *ngIf="!inspectedElement"
      [translate]="'agents.mobile.inspection.element_not_selected'"
-     class="fz-16 pt-20 text-center text-warning">
+     class="align-items-center d-flex fz-16 h-100 justify-content-center m-auto text-center text-warning ts-col-80">
 </div>
 <ng-template #ElementForm>
   <div *ngIf="inspectedElement && versionId && element"
        class="ts-col-100 h-100">
     <div class="selected-element-details h-100">
-      <div *ngIf="elementForm" [formGroup]="elementForm" class="ts-form pt-30 pb-20 px-15">
+      <div *ngIf="elementForm" [formGroup]="elementForm" class="ts-form pt-30 pb-20 px-25 h-100-50 overflow-y-auto">
         <div class="form-group">
           <label [translate]="'agents.mobile.inspection.element_name'"
                  class="control-label required"></label>
@@ -108,17 +108,17 @@
           </div>
         </div>
       </div>
-      <div class="fixed-pos-with-br">
+      <div class="d-flex py-10 px-25">
         <button
           (click)="(uiId)?getElement()
                     :(isEdit?(element.locatorValue=null):backToListView())"
           [translate]="'btn.common.cancel'"
-          class="btn btn-clear ts-col-50 border-0 pointer"></button>
+          class="theme-btn-clear-default ml-auto"></button>
         <button
           (click)="(uiId)?updateElement():((isEdit)?createElement():addToList())"
           [disabled]="isEdit && elementForm?.pristine && (element?.locatorValue==fetchedElement?.locatorValue)"
           [translate]="(uiId)?'agents.mobile.inspection.update_and_close':(isEdit)?'agents.mobile.inspection.save_and_close':'agents.mobile.inspection.save_element'"
-          class="theme-btn-primary ts-col-50 border-rds-1 m-0 border-0 pointer"></button>
+          class="theme-btn-primary"></button>
       </div>
     </div>
   </div>
@@ -127,7 +127,7 @@
   <div *ngIf="elements?.length>0 && !element && versionId && !isEdit"
        class="ts-col-100 h-100">
     <div class="selected-element-details">
-      <div class="field-list pt-5">
+      <div class="h-100-40 pt-5 ts-col-100 overflow-y-auto">
         <li *ngFor="let element of elements;index as i"
             class="align-items-baseline d-flex justify-content-start list-view pl-5 pt-8 list-style-none">
           <div class="d-inline-block pr-5 pt-8">
@@ -162,7 +162,7 @@
           </div>
         </li>
       </div>
-      <div class="fixed-pos-with-br">
+      <div class="d-flex" style="margin-top: 11.3px">
         <button
           (click)="saveElements()"
           [disabled]="formSubmitted"

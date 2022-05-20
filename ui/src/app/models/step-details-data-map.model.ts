@@ -94,6 +94,8 @@ export class StepDetailsDataMap extends Base implements Deserializable {
       input['test-data-function'] = input['testDataFunction']
     if(input['addonTDF'])
       input['addon_test_data_function'] = input['addonTDF']
+    if(input['visual_enabled'])
+      input['visual_enabled'] = input['visualEnabled']
     return Object.assign(this, deserialize(StepDetailsDataMap, input));
   }
 

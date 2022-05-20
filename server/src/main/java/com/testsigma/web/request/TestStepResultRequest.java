@@ -57,5 +57,6 @@ public class TestStepResultRequest {
   private List<SuggestionEngineResultRequest> suggestionResults = new ArrayList<SuggestionEngineResultRequest>();
   private Map<String, ElementProperties> ElementDetails;
   private Map<String, TestDataPropertiesEntityRequest> testDataDetails;
+  private Boolean visualEnabled = false;
 
 }

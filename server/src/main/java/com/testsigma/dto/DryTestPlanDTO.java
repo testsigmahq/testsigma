@@ -37,5 +37,4 @@ public class DryTestPlanDTO {
   TestPlanType testPlanType;
   WorkspaceVersionDTO workspaceVersion;
   List<TestDeviceDTO> testDevices;
-  boolean visualTestingEnabled;
 }

@@ -39,6 +39,7 @@ export class TestPlanTimeOutSettingsComponent extends BaseComponent implements O
   }
 
   ngOnInit(): void {
+    this.setScreenshot();
     this.storageConfigService.find().subscribe(res => {
       this.disableVisualTesting =  res.storageType == StorageType.ON_PREMISE
     })
@@ -52,17 +53,12 @@ export class TestPlanTimeOutSettingsComponent extends BaseComponent implements O
     return this?.version?.workspace?.isMobileNative
   }
 
-  get visualTestingEnabledControl(): FormControl {
-    return <FormControl>this.testPlanFormGroup.controls['visualTestingEnabled'];
-  }
-
   get retrySessionCreationControl(): FormControl {
     return <FormControl>this.testPlanFormGroup.controls['retrySessionCreation'];
   }
 
   setScreenshot() {
-    this.testPlanFormGroup.patchValue({'screenshot':
-        this.testPlanFormGroup.controls['visualTestingEnabled'].value ? Screenshot.ALL_TYPES : this.testPlanFormGroup.controls['screenshot'].value})
+    this.testPlanFormGroup.patchValue({'screenshot': Screenshot.ALL_TYPES})
   }
 
   setSessionCreationTimeout() {

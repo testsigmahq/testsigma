@@ -17,7 +17,6 @@ public class DryTestPlanRequest {
   private Long environmentId;
   private Screenshot screenshot;
   private TestPlanLabType testPlanLabType;
-  private boolean visualTestingEnabled;
   private TestPlanType testPlanType = TestPlanType.CROSS_BROWSER;
   private Boolean matchBrowserVersion = false;
   private List<TestDeviceRequest> testDevices;

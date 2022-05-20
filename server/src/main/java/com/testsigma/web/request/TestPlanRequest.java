@@ -41,7 +41,6 @@ public class TestPlanRequest {
   Timestamp createdDate;
   Timestamp updatedDate;
   Boolean matchBrowserVersion = false;
-  boolean visualTestingEnabled;
   List<TestDeviceRequest> testDevices;
   ReRunType reRunType;
   Boolean retrySessionCreation = false;

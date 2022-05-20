@@ -12,6 +12,7 @@ import {ElementsContainerComponent} from "./elements-container.component";
 import {ElementService} from "../../../shared/services/element.service";
 import {MirroringContainerComponent} from "./mirroring-container.component";
 import {SaveWorkWarningComponent} from "./save-work-warning.component";
+import {MobileRecorderEventService} from "../../../services/mobile-recorder-event.service";
 
 @Component({
   selector: 'app-mobile-inspection',
@@ -32,7 +33,8 @@ export class MobileInspectionComponent extends MobileRecordingComponent implemen
     public localDeviceService: DevicesService,
     public elementService: ElementService,
     public dialogRef: MatDialogRef<MobileRecordingComponent>,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public mobileRecorderEventService: MobileRecorderEventService
   ) {
     super(
       authGuard, notificationsService, translate, toastrService,
@@ -41,7 +43,8 @@ export class MobileInspectionComponent extends MobileRecordingComponent implemen
       localDeviceService,
       elementService,
       dialogRef,
-      dialog)
+      dialog,
+      mobileRecorderEventService)
   }
 
   //public cloudDeviceService: CloudDevicesService,

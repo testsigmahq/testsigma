@@ -44,7 +44,6 @@ export class TestPlanSettingsFormComponent extends BaseComponent implements OnIn
     this.formGroup.addControl('pageTimeOut', new FormControl(this.testPlan.pageTimeOut || 30, [Validators.required]));
     this.formGroup.addControl('elementTimeOut', new FormControl(this.testPlan.elementTimeOut || 30, [Validators.required]));
     this.formGroup.addControl('environmentId', new FormControl(this.testPlan.environmentId, []));
-    this.formGroup.addControl('visualTestingEnabled', new FormControl(this.testPlan.visualTestingEnabled, []));
     this.formGroup.addControl('retrySessionCreation', new FormControl(this.testPlan.retrySessionCreation, []));
     this.formGroup.addControl('retrySessionCreationTimeout', new FormControl(this.testPlan.retrySessionCreationTimeout || null, []));
     this.formGroup.addControl('screenshot', new FormControl(this.testPlan.screenshot || Screenshot.FAILED_STEPS, [Validators.required]));

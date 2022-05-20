@@ -57,8 +57,6 @@ export class TestPlan extends Base implements PageObject {
       return new TestPlanResult().deserialize(v);
   }))
   public lastRun: TestPlanResult;
-  @serializable
-  public visualTestingEnabled: Boolean;
   @serializable(optional())
   public retrySessionCreation: Boolean;
   @serializable(optional())

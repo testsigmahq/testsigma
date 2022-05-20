@@ -29,6 +29,7 @@ import {ScreenOrientation} from "../../../enums/screen-orientation.enum";
 import {MirroringContainerComponent} from "./mirroring-container.component";
 import {ElementsContainerComponent} from "./elements-container.component";
 import {FormGroup} from "@angular/forms";
+import {MobileRecorderEventService} from "../../../services/mobile-recorder-event.service";
 
 @Component({
   selector: 'app-mobile-recording',
@@ -62,6 +63,7 @@ export class MobileRecordingComponent extends BaseComponent implements OnInit {
   public selectedIndex: number = 2;
   public selectedElement1: Element;
   public mobileRecorderComponentInstance: any;
+  public pauseRecord: boolean = false;
 
   constructor(
     public authGuard: AuthenticationGuard,
@@ -74,7 +76,8 @@ export class MobileRecordingComponent extends BaseComponent implements OnInit {
     //public cloudDeviceService: CloudDevicesService,
     public elementService: ElementService,
     public dialogRef: MatDialogRef<MobileRecordingComponent>,
-    public dialog: MatDialog) {
+    public dialog: MatDialog,
+    public mobileRecorderEventService: MobileRecorderEventService) {
     super(authGuard, notificationsService, translate, toastrService);
     this.devicesService = this.data.testsigmaAgentEnabled ? localDeviceService : localDeviceService;//cloudDeviceService;
     this.fullScreenMode = this.data.showFullScreen;
@@ -596,5 +599,9 @@ export class MobileRecordingComponent extends BaseComponent implements OnInit {
       disableTimeOut:clickToClose
     };
     this.toastrService.show( temp.content,temp.title, temp, temp.type);
+  }
+
+  get isFullModeScreen() {
+    return this.mobileRecorderEventService.isLandscapeMode || this.fullScreenMode;
   }
 }

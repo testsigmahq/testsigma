@@ -285,6 +285,13 @@
               [translate]="testStepResult?.stepDetails?.ignoreStepResult ? 'common.yes': 'common.no'">
             </div>
           </div>
+          <div class="details-items ts-col-100">
+            <label class="details-title" [translate]="'test_step.results.visual_enabled_label'"></label>
+            <div
+              class="details-info"
+              [translate]="testStepResult?.visualEnabled? 'common.yes': 'common.no'">
+            </div>
+          </div>
         </div>
       </div>
       <div *ngIf="!testStepResult?.isRestStep && testStepResult?.stepDetails?.dataMap?.elementString && !testStepResult?.addonElements">

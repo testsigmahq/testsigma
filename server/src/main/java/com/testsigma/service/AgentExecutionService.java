@@ -1329,6 +1329,7 @@ public class AgentExecutionService {
       stepEntity.setStepGroupId(testStepDTO.getStepGroupId());
       stepEntity.setParentId(testStepDTO.getParentId());
       stepEntity.setConditionType(testStepDTO.getConditionType());
+      stepEntity.setVisualEnabled(testStepDTO.getVisualEnabled());
 
       if (testStepDTO.getTestStepDTOS() != null) {
         for (TestStepDTO subTestStepDTO : testStepDTO.getTestStepDTOS()) {

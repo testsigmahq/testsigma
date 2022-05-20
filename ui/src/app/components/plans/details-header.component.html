@@ -65,7 +65,8 @@
             <div class="details-info">
               <div class="d-flex">
                 <span class="mr-5 h-18p"
-                  [class.testsigma-lab-logo]="testPlan?.isTestsigmaLab || testPlan?.isHybrid">
+                  [class.testsigma-lab-logo]="testPlan?.isTestsigmaLab || testPlan?.isHybrid"
+                  [class.grid]="testPlan?.isPrivateLab">
                 </span>
                 <span [translate]="'execution.lab_type.'+ testPlan?.testPlanLabType"></span>
               </div>

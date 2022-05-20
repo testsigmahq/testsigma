@@ -196,9 +196,9 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
       agentId: new FormControl(environment?.agentId, [this.requiredIfValidator(() => this.isHybrid)]),
       deviceId: new FormControl(environment?.deviceId, [this.requiredIfValidator(() => this.isHybrid && this.version?.workspace.isMobile)]),
       settings:new FormGroup({}),
-      platformOsVersionId :new FormControl(environment?.platformOsVersionId,  [this.requiredIfValidator(() => !this.isRest && !this.isHybrid)]),
-      platformScreenResolutionId : new FormControl(environment?.platformScreenResolutionId, [this.requiredIfValidator(() => this.isWeb && !this.isHybrid)]),
-      platformBrowserVersionId :new FormControl(environment?.platformBrowserVersionId, [this.requiredIfValidator(() => !this.version?.workspace.isMobile && !this.isRest && !this.isHybrid)]),
+      platformOsVersionId :new FormControl(environment?.platformOsVersionId,  [this.requiredIfValidator(() => !this.isRest && !this.isHybrid && !this.isPrivateGrid)]),
+      platformScreenResolutionId : new FormControl(environment?.platformScreenResolutionId, [this.requiredIfValidator(() => this.isWeb && !this.isHybrid && !this.isPrivateGrid)]),
+      platformBrowserVersionId :new FormControl(environment?.platformBrowserVersionId, [this.requiredIfValidator(() => !this.version?.workspace.isMobile && !this.isRest && !this.isHybrid && !this.isPrivateGrid)]),
       platformDeviceId : new FormControl(environment?.platformDeviceId,  [this.requiredIfValidator(() => !this.isWeb && !this.isRest && !this.isHybrid)]),
       appUploadId : new FormControl(environment?.appUploadId, [this.requiredIfValidator(() => this.isAppUploadIdRequired)]),
       appUploadVersionId: new FormControl(environment?.appUploadVersionId, []),
@@ -209,7 +209,7 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
       suiteIds: this.formBuilder.array([this.formBuilder.control(suiteIds, Validators.required)]),
       title: new FormControl(environment?.title, []),
       createSessionAtCaseLevel: new FormControl(environment?.createSessionAtCaseLevel, []),
-      browser: new FormControl(environment?.browser, [this.requiredIfValidator(() => !this.version?.workspace.isMobile && !this.isRest && this.isHybrid)]),
+      browser: new FormControl(environment?.browser, [this.requiredIfValidator(() => !this.version?.workspace.isMobile && !this.isRest && (this.isHybrid || this.isPrivateGrid) )]),
       platform: new FormControl(environment?.platform, []),
       osVersion: new FormControl(environment?.osVersion, []),
       browserVersion: new FormControl(environment?.browserVersion, []),
@@ -268,14 +268,15 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
     let executionEnvironment = new TestDevice().deserialize(this.activeEnvironmentFormGroup.getRawValue());
     executionEnvironment.testSuites = this.activeExecutionEnvironment?.testSuites || this.executionEnvironments[this.executionEnvironments?.length-1]?.testSuites || [];
     this.setSuiteIdsInFormGroup(this.activeEnvironmentFormGroup);
-    console.log(this.activeEnvironmentFormGroup);
-    executionEnvironment.title = this.activeEnvironmentFormGroup.value?.platform + "(" + this.activeEnvironmentFormGroup.value?.osVersion + ")";
+    executionEnvironment.title = this.activeEnvironmentFormGroup.value?.platform+" ";
+    if (this.activeEnvironmentFormGroup.value?.osVersion)
+      executionEnvironment.title += "(" + this.activeEnvironmentFormGroup.value?.osVersion + ") ";
     if(this.activeEnvironmentFormGroup.value?.browser)
-      executionEnvironment.title += this.activeEnvironmentFormGroup.value?.browser+"";
+      executionEnvironment.title += this.activeEnvironmentFormGroup.value?.browser+" ";
     if(this.activeEnvironmentFormGroup.value?.browserVersion)
-      executionEnvironment.title += " (" + this.activeEnvironmentFormGroup.value?.browserVersion + ")";
+      executionEnvironment.title += "(" + this.activeEnvironmentFormGroup.value?.browserVersion + ") ";
     if(this.activeEnvironmentFormGroup.value?.deviceName)
-      executionEnvironment.title += " ("+this.activeEnvironmentFormGroup.value?.deviceName+")";
+      executionEnvironment.title += "("+this.activeEnvironmentFormGroup.value?.deviceName+")";
 
     executionEnvironment = this.normalizeFormValue(executionEnvironment);
     if(this.isRest){

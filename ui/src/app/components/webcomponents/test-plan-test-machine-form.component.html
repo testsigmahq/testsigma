@@ -48,7 +48,7 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <label class="control-label required" [translate]="'test_plan.environment.os_version'"></label>
+      <label class="control-label" [translate]="'test_plan.environment.os_version'" [class.required]="!isPrivateGrid"></label>
     </div>
 
     <div
@@ -126,7 +126,7 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <label class="control-label required" [translate]="'test_plan.environment.selected_version'"></label>
+      <label class="control-label" [translate]="'test_plan.environment.selected_version'" [class.required]="!isPrivateGrid" ></label>
     </div>
     <div
       class="ts-col-20 pr-14">
@@ -142,7 +142,7 @@
             [value]="resolution.id" [textContent]="resolution.displayResolution"></mat-option>
         </mat-select>
       </mat-form-field>
-      <label class="control-label required" [translate]="'test_plan.environment.resolution'"></label>
+      <label class="control-label" [class.required]="!isPrivateGrid" [translate]="'test_plan.environment.resolution'"></label>
     </div>
 
   </div>

@@ -106,6 +106,10 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
     return this.dryExecutionForm?.controls['testPlanLabType']?.value === TestPlanLabType.Hybrid;
   }
 
+  get isPrivateGrid() {
+    return this.dryExecutionForm?.controls['testPlanLabType']?.value === TestPlanLabType.PrivateGrid;
+  }
+
   ngOnInit(): void {
     this.testCaseService.show(this.options.testCaseId).subscribe(res => {
       this.testCase = res;
@@ -150,10 +154,10 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
         this.formBuilder.group({
           agentId : new FormControl(this.testPlan.testDevices[0].agentId, [this.requiredIfValidator(() => this.isHybrid)]),
           deviceId: new FormControl(this.testPlan.testDevices[0]?.deviceId, [this.requiredIfValidator(() => this.isHybrid && this.version?.workspace.isMobile)]),
-          platformOsVersionId :new FormControl(this.testPlan.testDevices[0].platformOsVersionId,  [this.requiredIfValidator(() => !this.isRest && !this.isHybrid)]),
-          platformScreenResolutionId : new FormControl(this.testPlan.testDevices[0].platformScreenResolutionId, [this.requiredIfValidator(() => this.version?.workspace.isWeb && !this.isHybrid)]),
-          platformBrowserVersionId :new FormControl(this.testPlan.testDevices[0].platformBrowserVersionId, [this.requiredIfValidator(() => !this.version?.workspace.isMobile && !this.isRest && !this.isHybrid)]),
-          platformDeviceId : new FormControl(this.testPlan.testDevices[0].platformDeviceId,  [this.requiredIfValidator(() => !this.version?.workspace.isWeb && !this.isRest && !this.isHybrid)]),
+          platformOsVersionId :new FormControl(this.testPlan.testDevices[0].platformOsVersionId,  [this.requiredIfValidator(() => !this.isRest && !this.isHybrid && !this.isPrivateGrid)]),
+          platformScreenResolutionId : new FormControl(this.testPlan.testDevices[0].platformScreenResolutionId, [this.requiredIfValidator(() => this.version?.workspace.isWeb && !this.isHybrid && !this.isPrivateGrid)]),
+          platformBrowserVersionId :new FormControl(this.testPlan.testDevices[0].platformBrowserVersionId, [this.requiredIfValidator(() => !this.version?.workspace.isMobile && !this.isRest && !this.isHybrid && !this.isPrivateGrid)]),
+          platformDeviceId : new FormControl(this.testPlan.testDevices[0].platformDeviceId,  [this.requiredIfValidator(() => !this.version?.workspace.isWeb && !this.isRest && !this.isHybrid && !this.isPrivateGrid)]),
         })
       ])
     })
@@ -398,7 +402,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
   }
 
   disableRunButton() {
-    return this.saving || this.savingConfig  || this.emptyElements.length>0
+    return this.saving || this.savingConfig  || this.emptyElements.length>0 || !this.dryExecutionForm?.valid
       || (!this.isHybrid &&  this.invalidUrls.length>0) || (this.isHybrid && this.zeroActiveAgents) ;
   }
 

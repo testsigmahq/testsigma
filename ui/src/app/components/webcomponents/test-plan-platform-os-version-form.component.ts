@@ -174,7 +174,6 @@ export class TestPlanPlatformOsVersionFormComponent implements OnInit {
         else{
           this.browserVersion = null;
           this.environmentFormGroup?.controls['platformBrowserVersionId'].setValue(null);
-          this.environmentFormGroup?.controls['browserVersion']?.setValue("Not Available");
           this.environmentFormGroup?.controls['browserVersion']?.disable();
         }
       }

@@ -24,6 +24,7 @@ import {TestDevice} from "../../models/test-device.model";
             style="height: 20px;min-width: 20px"
             *ngIf="testPlan.testPlanLabType"
             [class.testsigma-lab-logo]="testPlan.isTestsigmaLab || testPlan.isHybrid"
+            [class.grid]="testPlan.isPrivateLab"
             [matTooltip]="('testPlan.lab_type.'+testPlan.testPlanLabType) | translate"></span>
       <span *ngIf="isHybridMobileWeb">
         <span *ngFor="let env of executionEnvironments"

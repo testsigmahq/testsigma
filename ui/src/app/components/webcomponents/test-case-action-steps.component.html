@@ -4,7 +4,8 @@
     itemSize="63" class="virtual-scroll-viewport list-container cdk-content"
     *ngIf="!isDragEnabled">
     <div
-      class="pr-45">
+      [class.pr-45]="!stepRecorderView"
+      class="pt-10">
       <app-action-test-step-list-item
         class="w-100 scroll-item flex-wrap"
         *cdkVirtualFor='let testStep of testSteps?.content; let stepNumber = index; trackBy: trackByIdx'

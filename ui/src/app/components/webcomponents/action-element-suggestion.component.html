@@ -1,5 +1,7 @@
 <div class="theme-overlay-container">
-  <div class="theme-overlay-header with-br-bottom">
+  <div
+    [class.with-br-bottom]="!elementSuggestion"
+    class="theme-overlay-header">
     <div
       class="theme-overlay-title"
       [translate]="'elements.title'">
@@ -8,7 +10,7 @@
       class="theme-overlay-close"
       type="button"
       [matTooltip]="'hint.message.common.close' | translate"
-      mat-dialog-close>
+      (click)="closeSuggestion()">
     </button>
   </div>
 
@@ -60,13 +62,22 @@
     novalidate="novalidate">
     <div
       class="full-view-content pb-0" *ngIf="!elements?.isEmpty || isQueryBased || elements?.isFetching">
-      <div>
-        <div class="search-input ml-4">
+      <div
+        [class.d-flex]="elementSuggestion"
+        [class.mt-n10]="elementSuggestion"
+        [class.pb-10]="elementSuggestion"
+      >
+        <div
+          [class.rounded-search]="elementSuggestion"
+          [style]="{'padding-bottom': elementSuggestion ? '10px!important': 'unset'}"
+          class="search-input ml-4">
           <i
             [matTooltip]="'hint.message.common.search' | translate"
             class="fa-search fz-13 mr-5"></i>
           <div
-            class="form-control border-0 ts-col-55 data-placeholder-content d-inline-block p-0"
+            [class.ts-col-55]="!elementSuggestion"
+            [class.ts-col-85]="elementSuggestion"
+            class="form-control data-placeholder-content d-inline-block border-0 p-0"
             #searchInput
             (focus)="this.currentFocusedIndex=0"
             (keydown.enter)="selectElement()"
@@ -75,6 +86,7 @@
             contenteditable="true"
             [attr.data-placeholder]="'action.element.suggestion.placeholder' | translate"></div>
           <div
+            *ngIf="!elementSuggestion"
           class="form-control border-0 ts-col-40 data-placeholder-content d-inline-block p-0"
           #searchScreenInput
           (focus)="this.currentFocusedIndex=0"
@@ -89,6 +101,11 @@
           class="theme-btn-primary ml-14 my-auto"
           [translate]="'btn.common.create.element' | translate"></button>
         <div class="ml-auto d-flex align-items-center">
+          <button
+            *ngIf="elementSuggestion"
+            class="theme-btn-clear-default" (click)="openElementForm()">
+            <span [textContent]="'+ ' +('btn.common.new' | translate)"></span>
+          </button>
         <span
           #stepResultFilterBtn
           class="filter-icon-with-reset text-t-secondary d-none">
@@ -103,7 +120,10 @@
         </div>
       </div>
       <div
-        class="list-header px-5 py-10">
+        [class.list-header]="!elementSuggestion"
+        [class.rb-semi-bold]="elementSuggestion"
+        [class.d-flex]="elementSuggestion"
+        class="px-5 py-10">
         <div
           class="ts-col-50 pr-10 d-flex">
           <span
@@ -115,10 +135,13 @@
           [translate]="'elements.screen_name'"></div>
       </div>
       <cdk-virtual-scroll-viewport
-        itemSize="30"
+        itemSize="{{elementSuggestion ? '36' : '30'}}"
         class="list-container virtual-scroll-viewport theme-details-scroll h-100-120">
       <a
-          class="list-view green-highlight py-7 px-5 border-0 pointer align-items-center grey-on-hover"
+        [class.border-0]="!elementSuggestion"
+        [class.py-10]="elementSuggestion"
+        [class.py-7]="!elementSuggestion"
+        class="list-view green-highlight px-5 pointer align-items-center grey-on-hover"
         *cdkVirtualFor='let element of elements; let index = index'
           [class.h-active]="currentFocusedIndex == index"
           (mouseover)="currentFocusedIndex = index">

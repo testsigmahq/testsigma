@@ -164,7 +164,8 @@ $theme-sub-colors: () !default;
 $tag-color: #7a3380;
 $attribute-color: #9a5931;
 $value-color: #213184;
-$theme-sub-colors: map-merge(('emerald-green': $emerald-green, 'theme': $theme-text-color, 't-secondary': $theme-secondary-text-color, 't-highlight': $theme-highlight-tex-color, 't-warning': $theme-warning-text-color, 'pale-orange':$theme-warning-color, 'hint': $theme-hint-text-color, 'red-warning': $theme-red-warning-text-color, 'strongBlue': $strong-blue, 'desaturatedBlue': $desaturated-blue, 'light-grayish-red': $light-grayish-red, 'purplish-blue': $purplish-blue, 'body': $body-color, 'muted': $text-muted, 'brand': $success-text, 'link': $link-text, 'hight-text': $hight-text, 'list-header': $list-header-text-color, 'sub-title': $sub-title-text,
+$border-light-separator: #B0C1D8;
+  $theme-sub-colors: map-merge(('emerald-green': $emerald-green, 'theme': $theme-text-color, 't-secondary': $theme-secondary-text-color, 't-highlight': $theme-highlight-tex-color, 't-warning': $theme-warning-text-color, 'pale-orange':$theme-warning-color, 'hint': $theme-hint-text-color, 'red-warning': $theme-red-warning-text-color, 'strongBlue': $strong-blue, 'desaturatedBlue': $desaturated-blue, 'light-grayish-red': $light-grayish-red, 'purplish-blue': $purplish-blue, 'body': $body-color, 'muted': $text-muted, 'brand': $success-text, 'link': $link-text, 'hight-text': $hight-text, 'list-header': $list-header-text-color, 'sub-title': $sub-title-text,
   'tag': $tag-color, 'attribute': $attribute-color,
   'value': $value-color), $theme-sub-colors);
 $border-colors: () !default;
@@ -178,3 +179,4 @@ $bright-gray: #ebecf0;
 
 $light-text-color: #5e6c84;
 $icon-btn-color: #42526e;
+$active-brand-color: #26A775;

@@ -1,27 +1,119 @@
 <div class="d-flex flex-row position-relative h-100">
-  <button (click)="loading?'':quit()"
-          [disabled]="deleteClicked"
-          [matTooltip]="(loading?'agents.mobile.inspection.quit_session_later':'agents.mobile.inspection.quit_session')| translate"
-          class="btn btn-delete mobile-ins-close-recording d-flex mr-10">
-    <span class="fz-14 pr-7" [translate]="'agents.mobile.inspection.quit_session'"></span> &times;
-  </button>
-  <div *ngIf="!fullScreenMode" class="ts-col-40 pr-14 mt-45 pt-14 pb-15">
-    <div class="position-absolute top-n20 rb-medium px-25 fz-14 d-flex w-100 mt-n4">
-      <span [translate]="'mobile_recorder.test_steps.title'" class="text-secondary text-nowrap"></span>
-      <span class="ml-auto pl-14">
-        <span class="btn mr-5 my-2 p-7 pluse pulse result-status-1 rounded-circle"
-              (click)="pauseRecord=!pauseRecord"
-              [matTooltip]="(pauseRecord?'mobile_recorder.hint.resume_recording':'mobile_recorder.hint.pause_recording')|translate">
-          <i class="fa-play fz-5 mt-n3 position-absolute" *ngIf="pauseRecord" style="margin-left: -2.1px"></i>
-          <i class="fa-stop fz-5 mt-n3 position-absolute" *ngIf="!pauseRecord" style="margin-left: -3.1px"></i>
+
+  <div class="ts-col-40">
+    <div class="d-flex w-100 px-20 py-15 theme-border-b">
+      <span [translate]="'mobile_recorder.test_steps.title'" class="fz-15 rb-medium-i-d text-nowrap"></span>
+      <div class="ml-auto">
+        <span
+          class="ml-auto pl-14 pointer"
+          [matTooltip]="(pauseRecord?'mobile_recorder.hint.resume_recording':'mobile_recorder.hint.pause_recording')|translate"
+          (click)="pauseRecord=!pauseRecord">
+          <span
+            [class.fa-pause]="!pauseRecord"
+            [class.fa-play-circle]="pauseRecord"
+            [class.result-status-text-1]="!pauseRecord"
+            [class.result-status-text-0]="pauseRecord"
+            class="mr-5 pulse">
+          </span>
+          <span [translate]="!pauseRecord ? 'agents.mobile.inspection.recording' : 'agents.mobile.inspection.pause'"
+                class="text-danger"></span>
         </span>
-        <span [translate]="'agents.mobile.inspection.recording'" class="text-danger"></span>
-      </span>
+      </div>
     </div>
-    <div class="w-100 position-absolute z-in-2 pl-25 pr-20"><mat-divider></mat-divider></div>
+<!--    <div class="position-relative h-100-50">-->
+<!--      <div-->
+<!--        [class.h-100]="!suggestionName && !fullScreenMode"-->
+<!--        [class.h-50]="suggestionName || fullScreenMode">-->
+<!--        <ng-container *ngTemplateOutlet="stepRecorderTemplate"></ng-container>-->
+<!--      </div>-->
+<!--      <div *ngIf="suggestionName || fullScreenMode" class="h-50 theme-border-t">-->
+<!--        <div *ngIf="suggestionName" class="h-100 pb-20">-->
+<!--          <app-step-summary-->
+<!--            *ngIf="isSummary"-->
+<!--            [stepDetails]="suggestionContentData"></app-step-summary>-->
+<!--          <app-element-form-->
+<!--            *ngIf="isEditElement"-->
+<!--            [formDetails]="suggestionContentData"-->
+<!--          ></app-element-form>-->
+<!--          <app-action-element-suggestion-->
+<!--            *ngIf="isElementsSuggestion"-->
+<!--            [elementSuggestion]="suggestionContentData"-->
+<!--          ></app-action-element-suggestion>-->
+<!--          <app-action-test-data-function-suggestion-->
+<!--            *ngIf="isCustomFunction"-->
+<!--            [testDataCustomFunction]="suggestionContentData"-->
+<!--          ></app-action-test-data-function-suggestion>-->
+<!--          <app-action-test-data-environment-suggestion-->
+<!--            *ngIf="isEnvironment"-->
+<!--            [testDataEnvironment]="suggestionContentData"-->
+<!--          ></app-action-test-data-environment-suggestion>-->
+<!--          <app-action-test-data-parameter-suggestion-->
+<!--            *ngIf="isDataProfile"-->
+<!--            [testDataProfileDetails]="suggestionContentData"-->
+<!--          ></app-action-test-data-parameter-suggestion>-->
+<!--            <app-test-step-more-action-form-->
+<!--              *ngIf="isMoreAction"-->
+<!--              [moreDetails]="suggestionContentData"-->
+<!--            ></app-test-step-more-action-form>-->
+<!--        </div>-->
+<!--        <div *ngIf="!mirroring && fullScreenMode"-->
+<!--             class="inspection-details-section w-100">-->
+<!--          <div class="flex-column w-100">-->
+<!--            <div class="ml-n12 theme-border-b h-50" #customDialogContainerH50-->
+<!--                 [class.d-none]="!halfHeightDialogsOpen && !fullScreenMode || (fullScreenMode && !halfHeightDialogsOpen && !fullHeightDialogsOpen)"></div>-->
+<!--            <mat-tab-group [class.disabled]="loading"-->
+<!--                           [(selectedIndex)]="selectedIndex"-->
+<!--                           [class.h-50]="halfHeightDialogsOpen || fullScreenMode && customDialogContainerH50['clientHeight'] > 2"-->
+<!--                           [class.d-none-important]="fullHeightDialogsOpen && customDialogContainerH100['clientHeight'] > 2"-->
+<!--                           class="inspector-mat-tab w-100 border-0 pt-10 pr-15"-->
+<!--                           mat-stretch-tabs>-->
+<!--              <mat-tab>-->
+<!--                <ng-template mat-tab-label>-->
+<!--                  <span [translate]="'agents.mobile.inspection.app_source'"></span>-->
+<!--                </ng-template>-->
+<!--                <app-source *ngIf="mirroringContainerComponent"-->
+<!--                            (highlightCanvas)="mirroringContainerComponent.highlightOnSelection($event)"-->
+<!--                            (highlightCanvasOnHover)="mirroringContainerComponent.mouseInFromAppSource($event)"-->
+<!--                            (mouseOutFromAppSource)="mirroringContainerComponent.mouseOutFromAppSource()"-->
+<!--                            [dataSource]="dataSource"-->
+<!--                            [inspectedElement]="mirroringContainerComponent.inspectedElement"-->
+<!--                            [isNativeAppEnabled]="mirroringContainerComponent.isNativeAppEnabled"-->
+<!--                            [loading]="loading">-->
+<!--                </app-source>-->
+<!--              </mat-tab>-->
+<!--              <mat-tab>-->
+<!--                <ng-template mat-tab-label>-->
+<!--                  <span [translate]="'agents.mobile.inspection.selected_element'"></span>-->
+<!--                </ng-template>-->
+<!--                <app-selected-elements *ngIf="mirroringContainerComponent"-->
+<!--                                       [currentPageSource]="currentPageSource"-->
+<!--                                       [inspectedElement]="mirroringContainerComponent.inspectedElement"-->
+<!--                                       [isNativeAppEnabled]="mirroringContainerComponent.isNativeAppEnabled"-->
+<!--                                       [sessionId]="sessionId"-->
+<!--                                       [devicesService]="devicesService"-->
+<!--                                       [isStepRecorder]="true"-->
+<!--                                       [optimisingXpath]="mirroringContainerComponent.optimisingXpath"-->
+<!--                                       (saveEnterStep)="saveEnterStep($event)"-->
+<!--                                       (saveClearStep)="saveClearStep($event)"-->
+<!--                                       (saveTapStep)="saveTapStep($event)">-->
+<!--                </app-selected-elements>-->
+<!--              </mat-tab>-->
+<!--            </mat-tab-group>-->
+<!--            <div class="mr-14 h-100" #customDialogContainerH100-->
+<!--                 [class.d-none]="!fullHeightDialogsOpen || customDialogContainerH50['clientHeight'] > 2 || fullScreenMode"-->
+<!--            ></div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+    <div class="w-100 position-absolute z-in-2 pl-25 pr-20">
+      <mat-divider></mat-divider>
+    </div>
     <ng-container *ngTemplateOutlet="stepRecorderTemplate"></ng-container>
   </div>
-  <div *ngIf="!mirroring" [class.ts-col-40]="fullScreenMode"
+
+
+  <div *ngIf="!mirroring" [class.d-none-important]="fullScreenMode"
        class="inspection-details-section ts-col-30 theme-border-l">
     <div class="flex-column w-100">
       <div class="ml-n12 theme-border-b h-50" #customDialogContainerH50
@@ -30,15 +122,8 @@
                      [(selectedIndex)]="selectedIndex"
                      [class.h-50]="halfHeightDialogsOpen || fullScreenMode && customDialogContainerH50['clientHeight'] > 2"
                      [class.d-none-important]="fullHeightDialogsOpen && customDialogContainerH100['clientHeight'] > 2"
-                     class="inspector-mat-tab w-100 border-0 mt-14 pr-15"
+                     class="inspector-mat-tab w-100 border-0 pt-10 pr-15"
                      mat-stretch-tabs>
-        <mat-tab *ngIf="fullScreenMode">
-          <ng-template mat-tab-label>
-            <span [translate]="'mobile_recorder.test_steps.title'"></span>
-          </ng-template>
-          <div class="w-100 position-absolute z-in-2"><mat-divider></mat-divider></div>
-          <ng-container *ngTemplateOutlet="stepRecorderTemplate"></ng-container>
-        </mat-tab>
         <mat-tab>
           <ng-template mat-tab-label>
             <span [translate]="'agents.mobile.inspection.app_source'"></span>
@@ -77,10 +162,14 @@
     </div>
   </div>
   <div [class.ts-col-60]="fullScreenMode"
-       class="mirroring-section ts-col-30 theme-border-l">
-    <div class="ts-col-100 d-flex theme-border-b">
-      <div [translate]="'agents.mobile.inspection.record_title'"
-           class="p-15 fz-16 rb-medium lh-3"></div>
+       class="mirroring-section ts-col-30 theme-border-l" style="background: #CEDAE6">
+    <div class="d-flex pt-10 pr-10">
+      <button (click)="loading?'':quit()"
+              [disabled]="deleteClicked"
+              [matTooltip]="(loading?'agents.mobile.inspection.quit_session_later':'agents.mobile.inspection.quit_session')| translate"
+              class="ml-auto theme-btn-clear-default bg-white">
+        <span class="fz-14 pr-12" [translate]="'agents.mobile.inspection.quit_session'"></span> &times;
+      </button>
     </div>
     <app-mirroring-container #mirroringContainerComponent
                              [(dataSource)]="dataSource"
@@ -101,6 +190,7 @@
                              (saveEnterStep)="saveEnterStep($event)"
                              (saveClearStep)="saveClearStep($event)"
                              (updateRecordedElement)="updateRecordedElement()"
+                             class="d-flex h-100-40 ts-col-100"
     ></app-mirroring-container>
   </div>
 </div>
@@ -109,7 +199,7 @@
 <ng-template #stepRecorderTemplate>
   <div
     [class.showed]="canShowBulkActions && !canDrag"
-    class="bulk-action-container mt-14 mr-2" [style.zIndex]="canShowBulkActions? 3 : -1">
+    class="bulk-action-container" [style.zIndex]="canShowBulkActions? 3 : -1">
     <button
       (click)="openBulkUpdate()"
       class="theme-btn-clear-default">
@@ -159,5 +249,3 @@
                            [class.h-100-50]="canDrag"
   ></app-test-case-action-steps>
 </ng-template>
-<!--
-[ngStyle]="{'height': isRibbonShowed ? 'calc(100% - 38px)': '100%'}"-->

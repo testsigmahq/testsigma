@@ -1,10 +1,12 @@
-import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Inject, Input, OnInit, Optional, ViewChild} from '@angular/core';
 import {Page} from "../../shared/models/page";
 import {Environment} from "../../models/environment.model";
 import {EnvironmentService} from "../../services/environment.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {fromEvent} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, tap} from 'rxjs/operators';
+import {MobileRecorderEventService} from "../../services/mobile-recorder-event.service";
+import {TestDataType} from "../../enums/test-data-type.enum";
 
 @Component({
   selector: 'app-action-test-data-environment-suggestion',
@@ -12,6 +14,7 @@ import {debounceTime, distinctUntilChanged, filter, tap} from 'rxjs/operators';
   styles: []
 })
 export class ActionTestDataEnvironmentSuggestionComponent implements OnInit {
+  @Optional() @Input('testDataEnvironment') testDataEnvironment;
   public environments: any[];
   public filteredSuggestion: any[];
   public currentFocusedIndex: number = 0;
@@ -27,11 +30,15 @@ export class ActionTestDataEnvironmentSuggestionComponent implements OnInit {
   constructor(
     private dialogRef: MatDialogRef<ActionTestDataEnvironmentSuggestionComponent, any>,
     private environmentService: EnvironmentService,
-    @Inject(MAT_DIALOG_DATA) public option: { versionId: number, stepRecorderView: boolean }
+    @Inject(MAT_DIALOG_DATA) public option: { versionId: number, stepRecorderView: boolean },
+    private mobileRecorderEventService: MobileRecorderEventService
   ) {
   }
 
   ngOnInit(): void {
+    if (this.testDataEnvironment) {
+      this.option = this.testDataEnvironment;
+    }
     this.versionId = this.option.versionId;
     this.fetchEnvironment();
     this.attachDebounceEvent();
@@ -109,7 +116,7 @@ export class ActionTestDataEnvironmentSuggestionComponent implements OnInit {
 
   selectedSuggestion(suggestion?: any) {
     suggestion = suggestion || this.filteredSuggestion[this.currentFocusedIndex];
-    this.dialogRef.close(suggestion);
+    this.testDataEnvironment ? this.mobileRecorderEventService.returnData.next({type: TestDataType.environment, data: suggestion}) : this.dialogRef.close(suggestion);
   }
 
   scrollUpEnvParamFocus() {
@@ -124,5 +131,9 @@ export class ActionTestDataEnvironmentSuggestionComponent implements OnInit {
       ++this.currentFocusedIndex;
     let target = <HTMLElement>document.querySelector(".h-active");
     target.parentElement.scrollTop = target.offsetTop - target.parentElement.offsetTop;
+  }
+
+  closeSuggestion(data?)  {
+    this.testDataEnvironment ? this.mobileRecorderEventService.setEmptyAction() : this.dialogRef.close(data);
   }
 }

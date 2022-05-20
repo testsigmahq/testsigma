@@ -80,4 +80,6 @@ public class TestStepXMLDTO extends BaseXMLDTO {
   private Timestamp updatedDate;
   @JsonProperty("disabled")
   private Boolean disabled;
+  @JsonProperty("VisualEnabled")
+  private Boolean visualEnabled = false;
 }

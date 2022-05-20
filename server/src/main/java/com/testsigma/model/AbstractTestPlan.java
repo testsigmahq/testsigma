@@ -74,9 +74,7 @@ public class AbstractTestPlan implements Serializable {
   @Column(name = "on_step_pre_requisite_failed")
   @Enumerated(EnumType.STRING)
   private RecoverAction onStepPreRequisiteFail = RecoverAction.Run_Next_Testcase;
-
-  @Column(name = "is_visual_testing_enabled")
-  private boolean visualTestingEnabled;
+  
   @Column(name = "retry_session_timeout", length = 11)
   private Integer retrySessionCreationTimeout;
   @Column(name = "retry_session_creation")

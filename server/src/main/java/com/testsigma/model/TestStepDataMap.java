@@ -39,4 +39,6 @@ public class TestStepDataMap {
   private String whileCondition;
   @JsonProperty("addon_test_data_function")
   private AddonTestStepTestData addonTDF;
+  @JsonProperty("visual_enabled")
+  private Boolean visualEnabled;
 }

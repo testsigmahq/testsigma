@@ -146,7 +146,7 @@ public class TestCaseResultService {
       testCaseResultMapper.merge(testCaseResultRequest, testCaseResult);
       testCaseResult.setStatus(StatusConstant.STATUS_COMPLETED);
       update(testCaseResult);
-      if (testCaseResultRequest.isVisualTestingEnabled() && !storageConfigService.getStorageConfig().getStorageType().equals(StorageType.ON_PREMISE))
+      if (!storageConfigService.getStorageConfig().getStorageType().equals(StorageType.ON_PREMISE))
         initiateScreenshotAnalysis(testCaseResult);
       if (!testCaseResult.getIsDataDriven())
         updateResultCounts(testCaseResult);

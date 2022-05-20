@@ -21,11 +21,13 @@ export class StepBulkUpdateFormComponent extends BaseComponent implements OnInit
   public priority: TestStepPriority = null;
   public ignoreStepResult: boolean = null;
   public waitTime: number = null;
+  public visualEnabled: Boolean = null;
   public formSubmitted: Boolean= false;
   public saving: boolean = false;
   bulkUpdateForm: FormGroup = new FormGroup({
     priority: new FormControl(null),
     disabled: new FormControl(null),
+    visualEnabled: new FormControl(null),
     ignoreStepResult: new FormControl(null)
   });
 
@@ -54,7 +56,7 @@ export class StepBulkUpdateFormComponent extends BaseComponent implements OnInit
     Object.assign(this, {...this, ...this.bulkUpdateForm.getRawValue()} );
     if(this.priority!=null)
        this.priority = this.priority? TestStepPriority.MAJOR : TestStepPriority.MINOR;
-    this.testStepService.bulkUpdateProperties(this.options.steps, this.priority, this.waitTime, this.disabled, this.ignoreStepResult).subscribe(() => {
+    this.testStepService.bulkUpdateProperties(this.options.steps, this.priority, this.waitTime, this.disabled, this.ignoreStepResult,this.visualEnabled).subscribe(() => {
       this.translate.get('test_step.bulk.update.success').subscribe((res: string) => {
         this.showNotification(NotificationType.Success, res);
         this.dialogRef.close(true);

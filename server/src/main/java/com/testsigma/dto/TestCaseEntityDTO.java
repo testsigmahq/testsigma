@@ -37,6 +37,7 @@ public class TestCaseEntityDTO implements Cloneable {
   private Integer errorCode;
   private String message;
   private Long phoneNumberId;
+  private Boolean visualEnabled = false;
 
   public TestCaseEntityDTO clone() throws CloneNotSupportedException {
     TestCaseEntityDTO entity = (TestCaseEntityDTO) super.clone();

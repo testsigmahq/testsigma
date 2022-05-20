@@ -19,7 +19,6 @@ CREATE TABLE `test_plans`
   `retry_session_creation`                     BIT(1)                                DEFAULT b'0',
   `test_lab_type`                              VARCHAR(255)                          DEFAULT NULL,
   `test_plan_type`                             VARCHAR(255)                          DEFAULT 'DISTRIBUTED',
-  `is_visual_testing_enabled`                  BIT(1)                                DEFAULT b'0',
   `last_run_id`                                BIGINT(20)                            DEFAULT NULL,
   `match_browser_version`                      TINYINT(1)                            DEFAULT '0',
   `copied_from`                                BIGINT(20)                            default null,

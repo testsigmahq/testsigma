@@ -35,7 +35,6 @@ public class TestCaseResultRequest {
   private Integer errorCode;
   private Integer currentIndex;
   private String sessionId;
-  private boolean visualTestingEnabled = false;
 
 
   public TestCaseResultRequest() {

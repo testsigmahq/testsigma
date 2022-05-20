@@ -121,6 +121,9 @@ public class TestStepResult {
   @Column(name = "test_data_details")
   private String testDataDetails;
 
+  @Column(name = "visual_enabled")
+  private Boolean visualEnabled = false;
+
   @OneToMany(mappedBy = "stepResult", fetch = FetchType.LAZY)
   @EqualsAndHashCode.Exclude
   @ToString.Exclude

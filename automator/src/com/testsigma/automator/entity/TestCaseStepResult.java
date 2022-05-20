@@ -57,4 +57,5 @@ public class TestCaseStepResult {
   private TestPlanRunSettingEntity testPlanRunSettingEntity;
   private Boolean isBreakLoop = false;
   private Boolean isContinueLoop = false;
+  private Boolean visualEnabled = false;
 }

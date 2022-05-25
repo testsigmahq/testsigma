@@ -92,6 +92,7 @@ public class StepProcessor {
     exeTestStepEntity.setType(testStepDTO.getType());
     exeTestStepEntity.setNaturalTextActionId(testStepDTO.getNaturalTextActionId());
     exeTestStepEntity.setTestCaseId(testStepDTO.getTestCaseId());
+    exeTestStepEntity.setTestDataName(testStepDTO.getTestDataProfileName());
     exeTestStepEntity.setAction(testStepDTO.getAction());
     exeTestStepEntity.setTestPlanId(testPlanId);
     exeTestStepEntity.setPriority(testStepDTO.getPriority());

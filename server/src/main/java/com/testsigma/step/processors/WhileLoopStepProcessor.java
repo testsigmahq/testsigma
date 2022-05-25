@@ -57,6 +57,7 @@ public class WhileLoopStepProcessor extends StepProcessor {
         exeEntity.setType(loopentity.getType());
         exeEntity.setStepGroupId(loopentity.getStepGroupId());
         exeEntity.setPosition(loopentity.getPosition());
+        exeEntity.setTestDataProfileName(loopentity.getTestDataProfileName());
       }
       for (TestStepDTO centity : loopentity.getTestStepDTOS()) {
         List<TestCaseStepEntityDTO> stepGroupSpecialSteps = new ArrayList<>();
@@ -130,6 +131,7 @@ public class WhileLoopStepProcessor extends StepProcessor {
       iteEntity.setPosition(entity.getId().intValue());
       iteEntity.setWaitTime(entity.getWaitTime() == null ? 0 : entity.getWaitTime());
       iteEntity.setIndex(1);
+      iteEntity.setTestDataProfileName(entity.getTestDataProfileName());
       iteEntity.setType(entity.getType());
       iteEntity.setNaturalTextActionId(entity.getNaturalTextActionId());
       populateStepDetails(testStepDTO, iteEntity);

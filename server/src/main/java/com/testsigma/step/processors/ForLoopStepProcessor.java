@@ -81,6 +81,7 @@ public class ForLoopStepProcessor extends StepProcessor {
             exeEntity.setType(loopentity.getType());
             exeEntity.setStepGroupId(loopentity.getStepGroupId());
             exeEntity.setPosition(loopentity.getPosition());
+            exeEntity.setTestDataProfileName(testData.getTestDataName());
             exeEntity.setIndex(i + 1);
 
             for (TestStepDTO centity : loopentity.getTestStepDTOS()) {
@@ -121,6 +122,7 @@ public class ForLoopStepProcessor extends StepProcessor {
               cstepEntity.setType(centity.getType());
               cstepEntity.setStepGroupId(centity.getStepGroupId());
               exeEntity.getTestCaseSteps().add(cstepEntity);
+              exeEntity.setTestDataProfileName(testData.getTestDataName());
             }
             iteEntity.getTestCaseSteps().add(exeEntity);
           }

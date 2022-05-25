@@ -23,6 +23,7 @@ public class TestCaseEntityDTO implements Cloneable {
   private Boolean expectedToFail;
   private Boolean isDataDriven;
   private String testDataSetName;
+  private String testDataProfileName;
   private Calendar startTime;
   private Calendar endTime;
   private Long preRequisite;

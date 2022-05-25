@@ -1031,6 +1031,7 @@ public class AgentExecutionService {
     Long testDataId = testCaseEntityDTO.getTestDataId();
     if (testDataId != null) {
       TestData testData = testDataProfileService.find(testCaseEntityDTO.getTestDataId());
+      testCaseEntityDTO.setTestDataProfileName(testData.getTestDataName());
       databank = testData.getData();
       profileName = testData.getTestDataName();
     }

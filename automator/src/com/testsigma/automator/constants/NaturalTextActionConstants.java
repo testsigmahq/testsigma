@@ -27,4 +27,8 @@ public class NaturalTextActionConstants {
   public final static String DISABLED = "disabled";
   public final static String CHECKED = "checked";
   public final static String UN_CHECKED = "unchecked";
+  public final static String TEST_DATA_NAME = "Test Data Profile Name";
+  public final static String SET_INDEX = "Test Data Set Index";
+  public final static String SET_NAME = "Test Data Set Name";
+  public final static String RUNTIME_TEST_DATA_ID= "TestDataId";
 }

@@ -80,6 +80,7 @@ export class LeftNavComponent extends BaseComponent implements OnInit {
       this.userPreference = res;
       if ((moment(this.userPreference.createdDate) < moment().subtract(15, 'minute')) &&
         !this.userPreference?.showedGitHubStar) {
+        clearInterval(autoRefresh);
 
         let dialogRef= this.matDialog.open(TestsigmaGitHubStarLoveComponent, {
           position: {top: '10vh', right: '35vw'},

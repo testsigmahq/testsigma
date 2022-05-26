@@ -29,7 +29,7 @@ export class TestPlansComponent extends BaseComponent implements OnInit {
     public toastrService: ToastrService,
     private testPlanService: TestPlanService,
     private route: ActivatedRoute,
-    private executionEnvironmentService: TestDeviceService
+    private testDeviceService: TestDeviceService
   ) {
     super(authGuard, notificationsService, translate, toastrService);
   }
@@ -57,7 +57,7 @@ export class TestPlansComponent extends BaseComponent implements OnInit {
     let pageable = new Pageable();
     pageable.pageSize = 200;
     let query = "testPlanId@" + this.testPlans.content.map((exe) => exe.id).join("#");
-    this.executionEnvironmentService.findAll(query, undefined, pageable).subscribe((environments) => {
+    this.testDeviceService.findAll(query, undefined, pageable).subscribe((environments) => {
       this.testPlans.content.forEach((exe) => {
         let filteredEnvs = environments.content.filter((exeEnv) => exeEnv.testPlanId === exe.id);
         if (filteredEnvs)

@@ -17,11 +17,11 @@
             <div
               class="theme-breadcrumb ts-col-50">
               <div
-                *ngIf="testCaseResult?.environmentResult?.executionEnvironment?.title"
+                *ngIf="testCaseResult?.environmentResult?.testDevice?.title"
                 class="theme-breadcrumb-item"
                 (click)="showTestMachineResult(testCaseResult?.environmentResult);$event.stopImmediatePropagation();$event.stopPropagation();$event.preventDefault()"
-                [matTooltip]="testCaseResult?.environmentResult?.executionEnvironment?.title"
-                [textContent]="testCaseResult?.environmentResult?.executionEnvironment?.title "></div>
+                [matTooltip]="testCaseResult?.environmentResult?.testDevice?.title"
+                [textContent]="testCaseResult?.environmentResult?.testDevice?.title "></div>
               <div
                 (click)="showTestSuiteResult(testCaseResult.suiteResultId);$event.stopImmediatePropagation();$event.stopPropagation();$event.preventDefault()"
                 class="theme-breadcrumb-item"
@@ -33,7 +33,7 @@
               <app-test-machine-info-column
                 [environmentResult]="testCaseResult?.environmentResult"
                 [testPlanResult]="testCaseResult?.environmentResult?.testPlanResult"
-                [executionEnvironment]="testCaseResult?.environmentResult?.executionEnvironment"></app-test-machine-info-column>
+                [testDevice]="testCaseResult?.environmentResult?.testDevice"></app-test-machine-info-column>
             </div>
           </div>
         </div>

@@ -126,7 +126,7 @@ export class AdhocRunConfiguration extends Base implements PageObject {
   public browserVersion : String;
   public deviceName : String;
   public resolution : String;
-  public executionEnvironment : TestDevice;
+  public testDevice : TestDevice;
 
 
   deserialize(input: any): this {

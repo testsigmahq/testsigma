@@ -247,29 +247,29 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
   }
 
   setDryFormValues(configuration: AdhocRunConfiguration) {
-    let executionEnvironment = new DryTestDevice();
-    executionEnvironment.platform = configuration.platform;
-    executionEnvironment.capabilities = configuration.desiredCapabilities;
+    let testDevice = new DryTestDevice();
+    testDevice.platform = configuration.platform;
+    testDevice.capabilities = configuration.desiredCapabilities;
     this.testPlan.deserialize(configuration.serialize());
     this.testPlan.id = undefined;
     this.testPlan.environmentId = isNaN(parseInt(configuration.environmentId)) ? null : parseInt(configuration.environmentId);
     this.testPlan.screenshot = configuration.captureScreenshots;
     this.testPlan.testPlanLabType = configuration.type;
-    executionEnvironment.platformDeviceId = configuration.platformDeviceId;
-    executionEnvironment.platformOsVersionId = configuration.platformOsVersionId;
-    executionEnvironment.platformBrowserVersionId = configuration.platformBrowserVersionId;
-    executionEnvironment.platformScreenResolutionId = configuration.platformScreenResolutionId;
-    executionEnvironment.browser = configuration.browser;
-    executionEnvironment.appUploadId = configuration.appUploadId;
-    executionEnvironment.appPackage = configuration.appPackage;
-    executionEnvironment.appActivity = configuration.appActivity;
-    executionEnvironment.appUrl = configuration.appUrl;
-    executionEnvironment.appBundleId = configuration.appBundleId;
-    executionEnvironment.appPathType = configuration.appPathType;
-    executionEnvironment.agentId = configuration.agentId;
-    executionEnvironment.deviceId = configuration.deviceId;
-    executionEnvironment.settings = new TestDeviceSettings();
-    this.testPlan.testDevices = [executionEnvironment];
+    testDevice.platformDeviceId = configuration.platformDeviceId;
+    testDevice.platformOsVersionId = configuration.platformOsVersionId;
+    testDevice.platformBrowserVersionId = configuration.platformBrowserVersionId;
+    testDevice.platformScreenResolutionId = configuration.platformScreenResolutionId;
+    testDevice.browser = configuration.browser;
+    testDevice.appUploadId = configuration.appUploadId;
+    testDevice.appPackage = configuration.appPackage;
+    testDevice.appActivity = configuration.appActivity;
+    testDevice.appUrl = configuration.appUrl;
+    testDevice.appBundleId = configuration.appBundleId;
+    testDevice.appPathType = configuration.appPathType;
+    testDevice.agentId = configuration.agentId;
+    testDevice.deviceId = configuration.deviceId;
+    testDevice.settings = new TestDeviceSettings();
+    this.testPlan.testDevices = [testDevice];
     this.environment = configuration.environment;
     console.log("Execution Environment", this.testPlan, this.environment);
     this.dryExecutionForm = undefined;

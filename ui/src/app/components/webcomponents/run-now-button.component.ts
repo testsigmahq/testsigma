@@ -55,7 +55,7 @@ export class RunNowButtonComponent extends BaseComponent implements OnInit {
     public translate: TranslateService,
     public toastrService: ToastrService,
     public agentService: AgentService,
-    private executionEnvironmentService: TestDeviceService,
+    private testDeviceService: TestDeviceService,
     private testPlanResultService: TestPlanResultService,) {
     super(authGuard, notificationsService, translate, toastrService);
   }
@@ -86,7 +86,7 @@ export class RunNowButtonComponent extends BaseComponent implements OnInit {
 
   start() {
     if (this.testPlan.isHybrid) {
-      this.executionEnvironmentService.findAll("disable:false,testPlanId:" + this.testPlan.id, undefined).subscribe(res => {
+      this.testDeviceService.findAll("disable:false,testPlanId:" + this.testPlan.id, undefined).subscribe(res => {
         let testDevice: TestDevice = res.content[0];
         this.agentService.find(testDevice.agentId).subscribe(res => {
           if (!res.isOnline() || res.isOutOfSync()) {

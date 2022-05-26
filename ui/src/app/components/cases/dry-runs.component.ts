@@ -60,7 +60,7 @@ export class DryRunsComponent extends BaseComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private matDialog: MatDialog,
-    private executionEnvironmentService: TestDeviceService,
+    private testDeviceService: TestDeviceService,
     private testCaseService: TestCaseService,
     private testStepService: TestStepService) {
     super(authGuard, notificationsService, translate, toastrService)

@@ -5,14 +5,14 @@
            [placeholder]="'common.place_holder.search' | translate"/>
     <button class="theme-btn-clear-default"
             [translate]="isMobile ? 'test_plan.environment.device.title' : 'test_plan.environment.machine.title' | translate"
-            (click)="openSelectTestMachineForm(executionEnvironments?.cachedItems[0])"></button>
+            (click)="openSelectTestMachineForm(testDevices?.cachedItems[0])"></button>
   </div>
-  <div class="list-container theme-w-o-h-scroll lg-h" *ngIf="!executionEnvironments.isEmpty">
+  <div class="list-container theme-w-o-h-scroll lg-h" *ngIf="!testDevices.isEmpty">
     <cdk-virtual-scroll-viewport class="virtual-scroll-viewport outer-sm-pm"
                                  itemSize="90">
       <div
         class="list-view green-highlight lg-pm pl-10 pointer align-items-center"
-        *cdkVirtualFor="let environment of executionEnvironments">
+        *cdkVirtualFor="let environment of testDevices">
         <mat-slide-toggle
           [disabled]="!isEnvironmentAvailable && !environment.disable"
           [matTooltip]="!isEnvironmentAvailable && !environment.disable ? ('environment.disable_info'| translate) : ''"
@@ -30,7 +30,7 @@
           <app-test-machine-info-column
             *ngIf="testPlan"
             [testPlan]="testPlan"
-            [executionEnvironment]="environment"></app-test-machine-info-column>
+            [testDevice]="environment"></app-test-machine-info-column>
         </div>
         <div class="ts-col-20 action-icons text-right position-absolute right-10 top-10 mr-60 mt-10">
           <a class="action-icon"
@@ -38,7 +38,7 @@
              [matTooltip]="'pagination.edit' | translate">
             <i class="fa-pencil-on-paper"></i>
           </a>
-          <a class="action-icon" *ngIf="executionEnvironments.totalElements > 1"
+          <a class="action-icon" *ngIf="testDevices.totalElements > 1"
              (click)="deleteEnvironment(environment)"
              data-placement="bottom"
              [matTooltip]="'pagination.delete' | translate">
@@ -56,10 +56,10 @@
         </div>
       </div>
       <app-placeholder-loader
-        *ngIf="executionEnvironments.isFetching"></app-placeholder-loader>
+        *ngIf="testDevices.isFetching"></app-placeholder-loader>
     </cdk-virtual-scroll-viewport>
   </div>
-  <div *ngIf="executionEnvironments.isEmpty" class="h-100">
+  <div *ngIf="testDevices.isEmpty" class="h-100">
     <div
       class="empty-full-container">
       <div class="empty-run-md"></div>

@@ -14,17 +14,17 @@
 
     <div class="theme-overlay-content">
       <form
-        class="ts-form align-items-center"
+        class="align-items-center d-flex-wrap"
         [class.pt-4]="inline"
         [formGroup]="uploadForm" *ngIf="uploadForm">
-        <div class="align-items-baseline d-flex form-group pt-5 pb-0 upload-file">
+        <div class="align-items-baseline d-flex form-group pb-0 pb-18 pt-5 upload-file">
           <label class="mt-20 mb-30 theme-btn-clear-default overflow-x-hidden" *ngIf="!uploadedFileObject" @fade>
             <i class="fa-pin pr-5"></i> Choose File
             <input class="d-none" type="file" required
                    [accept]="fileTypes"
                    (change)="uploadedFile($event)">
           </label>
-          <div class="overflow-x-hidden mt-10 mb-30 p-16 pt-0 border-rds-2 f-medium d-inline-flex align-items-center
+          <div class="overflow-x-hidden mr-10 p-16 pt-0 border-rds-2 f-medium d-inline-flex align-items-center
                   bg-grey-x-light mw-100 w-100"
                *ngIf="uploadedFileObject" @fade>
                 <span [textContent]="upload?.name + ' ( size : ' + upload?.sizeInWords + ' ) '"
@@ -35,7 +35,7 @@
                [translate]="'form.validation.common.max_file_size'| translate: {FieldName: getRawValue().type ,max:500 }">
           </div>
         </div>
-        <div class="form-group pb-18 upload-file-name"
+        <div class="form-group pb-15 mr-5"
              *ngIf="getRawValue().name || (!upload.id && uploadedFileObject?.name)" @fade>
           <input class="form-control" formControlName="name">
           <label class="control-label required" [translate]="'uploads.form.label.name'"></label>
@@ -45,7 +45,7 @@
                *ngIf="uploadForm?.touched  && uploadForm.controls.name.hasError('whitespace')"
                [textContent]="'form.validation.cannot_have_white_spaces' | translate: {FieldName:'Name'}"></div>
         </div>
-        <div class="form-group pb-18 upload-version" *ngIf="uploadedFileObject?.name" @fade>
+        <div class="form-group pb-15" *ngIf="uploadedFileObject?.name" @fade>
           <input class="form-control" formControlName="version">
           <label class="control-label required" [translate]="'uploads.form.version.name'"></label>
         </div>

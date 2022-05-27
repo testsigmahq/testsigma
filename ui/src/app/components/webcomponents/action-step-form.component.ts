@@ -1328,6 +1328,12 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   }
 
   private openSuggestionTestDataFunction() {
+    let suggestionData = {
+      versionId: this.version?.id,
+    };
+    if(this.sendSuggestionDetails(suggestionData, this.mobileRecorderEventService.suggestionCustomFunction)) {
+      return;
+    }
     this.testDataFunctionSuggestion = this.matModal.open(ActionTestDataFunctionSuggestionComponent, {
       height: "100vh",
       width: '30%',
@@ -1417,7 +1423,27 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
   }
 
+  sendSuggestionDetails(sendDetails, contentName) {
+    if (this.stepRecorderView) {
+      this.mobileRecorderEventService.suggestionContent.next(Object.assign(sendDetails, {
+        content: contentName
+      }));
+      return true;
+    } else {
+      return false
+    }
+  }
+
   private openSuggestionDataProfile() {
+    let suggestionData = {
+      dataProfileId: this.testStep.getParentLoopDataId(this.testStep, this.testCase),
+      versionId: this.version?.id,
+      testCaseId: this.testCase?.id,
+      stepRecorderView: Boolean(this.stepRecorderView),
+    };
+    if(this.sendSuggestionDetails(suggestionData, this.mobileRecorderEventService.suggestionDataProfile)) {
+      return;
+    }
     this.dataProfileSuggestion = this.matModal.open(ActionTestDataParameterSuggestionComponent, {
       height: "100vh",
       width: '35%',
@@ -1443,6 +1469,13 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   }
 
   private openSuggestionEnvironment() {
+    let suggestionData = {
+      versionId: this.version?.id,
+      stepRecorderView: Boolean(this.stepRecorderView),
+    };
+    if(this.sendSuggestionDetails(suggestionData, this.mobileRecorderEventService.suggestionEnvironment)) {
+      return;
+    }
     this.environmentSuggestion = this.matModal.open(ActionTestDataEnvironmentSuggestionComponent, {
       height: "100vh",
       width: '30%',
@@ -1689,7 +1722,6 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
     step.parentStep = this.testStep.parentStep;
     step.siblingStep = this.testStep.siblingStep;
-    step.action = this.testStep.action;
     step.stepDisplayNumber = this.testStep.stepDisplayNumber;
     if (Boolean(this.stepRecorderView)) {
       this.matModal.openDialogs?.find(dialog => dialog.componentInstance instanceof TestStepMoreActionFormComponent)?.close();

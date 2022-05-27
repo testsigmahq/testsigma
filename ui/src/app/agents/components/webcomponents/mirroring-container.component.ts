@@ -66,6 +66,7 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
   private screenHeight: number;
   public screenOriginalHeight: number;
   public screenOriginalWidth: number;
+  public inspectionMode: boolean = true;
   private deviceDimensions = {
     'portrait': {width: 252, height: 448},
     'landscape': {width: 448, height: 252},
@@ -118,12 +119,14 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
 
   public switchToMirroringMode() {
     this.mirroring = true;
+    this.inspectionMode = false;
     this.removeInspectionElements();
     // this.devicesService.deleteSession(this.sessionId).subscribe();
     // this.sessionId = null;
   }
 
   public switchToActionMode(actionType: String) {
+    this.inspectionMode = false;
     this.actionType = actionType;
     this.removeInspectionElements();
     this.clearSelection();
@@ -427,12 +430,13 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
   };
 
   public switchToInspectMode() {
-    this.mirroring = false;
-    if (this.actionType) {
+    if (this.actionType || this.mirroring) {
       this.actionType = null;
+      this.mirroring = false;
       this.renderCurrentScreenshot();
       this.renderCurrentScreenshot();
     }
+    this.inspectionMode = true;
     if (!this.data.recording)
       this.recorderDialog.startSession();
   }
@@ -721,7 +725,7 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
   }
 
   private handleActionSuccess() {
-    this.recorderDialog.handleActionSuccess();
+    this.recorderDialog.handleActionSuccess(this.mirroring);
   }
 
   private get recorderDialog():MobileRecordingComponent{

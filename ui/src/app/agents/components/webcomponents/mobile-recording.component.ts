@@ -427,7 +427,7 @@ export class MobileRecordingComponent extends BaseComponent implements OnInit {
     }
   }
 
-  renderCurrentScreenshot() {
+  renderCurrentScreenshot(isMirroring?: boolean) {
     if (this.data.recording) {
       this.loadingActions = true;
       this.devicesService.getScreenshot(this.data.agent, this.sessionId).subscribe({
@@ -435,6 +435,9 @@ export class MobileRecordingComponent extends BaseComponent implements OnInit {
           let img = new Image();
           img.onload = () => this.getMirroringContainerComponent()._onImageLoad(img);
           img.src = imageBase64URL + '';
+          if(isMirroring){
+            this.loadingActions = false;
+          }
         },
         error: (error) => {
           console.log('Error in get screenshot - ', error);
@@ -515,13 +518,13 @@ export class MobileRecordingComponent extends BaseComponent implements OnInit {
     this.loadingActions = false
   }
 
-  handleActionSuccess() {
+  handleActionSuccess(isMirroring?: boolean) {
     this.devicesService.getOrientation(this.sessionId).subscribe((res: ScreenOrientation) => {
       this.getMirroringContainerComponent().isLandscapeMode = res == ScreenOrientation.LANDSCAPE;
       let asyncRenderScreenshot = async () => {
         await this.synchronousDelay(500);
-        this.renderCurrentScreenshot();
-        this.renderCurrentScreenshot();
+        this.renderCurrentScreenshot(isMirroring);
+        this.renderCurrentScreenshot(isMirroring);
       }
       asyncRenderScreenshot();
     })

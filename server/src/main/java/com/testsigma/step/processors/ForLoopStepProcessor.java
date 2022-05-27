@@ -83,6 +83,9 @@ public class ForLoopStepProcessor extends StepProcessor {
             exeEntity.setPosition(loopentity.getPosition());
             exeEntity.setTestDataProfileName(testData.getTestDataName());
             exeEntity.setIndex(i + 1);
+            entity.setTestDataId(testDataId);
+            entity.setTestDataIndex(i);
+            entity.setSetName(dataSet.getName());
 
             for (TestStepDTO centity : loopentity.getTestStepDTOS()) {
               List<TestCaseStepEntityDTO> stepGroupSpecialSteps = new ArrayList<>();

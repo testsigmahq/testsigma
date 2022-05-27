@@ -59,7 +59,7 @@
     novalidate="novalidate">
     <div
       *ngIf="dataProfileSuggestion?.length || isQueryBased"
-      [class.pt-30]="!testDataProfileDetails"
+      [class.pt-25]="!testDataProfileDetails"
       class="overflow-x-hidden h-100">
       <div
         [class.pb-30]="!testDataProfileDetails"
@@ -95,7 +95,7 @@
           [translate]="'elements.column_name'"></span>
         </div>
       </div>
-    </div>
+
     <cdk-virtual-scroll-viewport
       itemSize="{{testDataProfileDetails ? '65': '59'}}"
       class="list-container virtual-scroll-viewport theme-details-scroll x-sm-h">
@@ -121,5 +121,6 @@
             [translate]="'message.common.search.not_found'"></div>
         </div>
     </cdk-virtual-scroll-viewport>
+    </div>
 </form>
 </div>

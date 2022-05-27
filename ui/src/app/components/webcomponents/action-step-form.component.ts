@@ -334,7 +334,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
               if (this.showTemplates && this.filteredTemplate?.length > 0)
                 this.selectTemplate();
               else if (this.currentTemplate?.id)
-                this.save();
+                this.validateTestData();
             }
             let htmlGrammar = this.replacer.nativeElement.innerHTML;
             htmlGrammar = htmlGrammar.replace(/<br>/g, "");
@@ -513,6 +513,17 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         this.testStepService.create(this.testStep).subscribe(step => this.afterSave(step), e => this.handleSaveFailure(e));
       }
     }
+  }
+
+  validateTestData() {
+   if ((this.currentAddonTemplate || this.currentTemplate)&& this.navigateTemplate.includes(this.currentTemplate?.id))
+    {
+      this.navigateUrlValidation();
+      setTimeout(()=> {
+        this.save();
+      },1000);
+    }
+   else this.save();
   }
 
   update(naturalTextActionId, addonActionId) {
@@ -833,7 +844,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         item.addEventListener('keydown', (event) => {
           console.log('test data keydown event triggered');
           if (event.key == "Enter" && !this.showDataTypes) {
-            this.save();
+            this.validateTestData();
             return this.stopEvent(event);
           }
           this.getAddonTemplateAllowedValues(item.dataset?.reference);
@@ -868,7 +879,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         item.addEventListener('keyup', (event) => {
           console.log('test data keyup event triggered');
           if (event.key == "Enter" && !this.showDataTypes) {
-            this.save();
+            this.validateTestData();
             return this.stopEvent(event);
           }
           this.getAddonTemplateAllowedValues(item.dataset?.reference);

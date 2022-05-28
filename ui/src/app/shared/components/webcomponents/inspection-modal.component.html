@@ -11,7 +11,7 @@
     </button>
   </div>
 
-<div class="theme-overlay-content theme-border-y only-content">
+<div class="theme-overlay-content theme-border-y only-content" #scrollContainer>
 <!--  <mat-dialog-content class="ts-col-100 p-20 m-auto"-->
 <!--                      [class.px-40]="!showInlineLaunch" >-->
 
@@ -180,10 +180,10 @@
             </div>
 
             <div *ngIf="version && !showUploadDropDown && !uploading" class="d-flex-wrap ts-col-100">
-              <app-uploads-form (onUpload)="uploadSuccess($event)"
+              <app-uploads-form (onUpload)="uploadSuccess($event); uploadSelectionForm?.controls['upload_version_id'].setValue(null)"
+                                (onUploadedFile)="scrollToBottom()"
                                 [upload]="upload"
                                 [version]="version"
-                                [inline]="true"
                                 class="ts-col-100"></app-uploads-form>
             </div>
 

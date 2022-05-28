@@ -14,38 +14,38 @@
 
     <div class="theme-overlay-content">
       <form
-        class="align-items-center d-flex-wrap"
+        class="ts-form align-items-center"
         [class.pt-4]="inline"
         [formGroup]="uploadForm" *ngIf="uploadForm">
-        <div class="align-items-baseline d-flex form-group pb-0 pb-18 pt-5 upload-file">
+        <div class="align-items-baseline d-flex form-group pt-5 pb-0 upload-file">
           <label class="mt-20 mb-30 theme-btn-clear-default overflow-x-hidden" *ngIf="!uploadedFileObject" @fade>
             <i class="fa-pin pr-5"></i> Choose File
             <input class="d-none" type="file" required
                    [accept]="fileTypes"
                    (change)="uploadedFile($event)">
           </label>
-          <div class="overflow-x-hidden mr-10 p-16 pt-0 border-rds-2 f-medium d-inline-flex align-items-center
+          <div class="overflow-x-hidden mt-10 mb-30 p-16 pt-0 border-rds-2 f-medium d-inline-flex align-items-center
                   bg-grey-x-light mw-100 w-100"
                *ngIf="uploadedFileObject" @fade>
-                <span [textContent]="upload?.name + ' ( size : ' + upload?.sizeInWords + ' ) '"
-                      class="pr-10 text-truncate"></span>
+        <span [textContent]="upload?.name + ' ( size : ' + upload?.sizeInWords + ' ) '"
+              class="pr-10 text-truncate"></span>
             <i class="fa-trash-thin pointer ml-auto" (click)="removeUpload()"></i>
           </div>
           <div class="error mt-30" *ngIf="maxSizeError"
-               [translate]="'form.validation.common.max_file_size'| translate: {FieldName: getRawValue().type ,max:500 }">
-          </div>
+               [translate]="'form.validation.common.max_file_size'| translate: {FieldName: getRawValue().type ,max:500 }"></div>
         </div>
-        <div class="form-group pb-15 mr-5"
-             *ngIf="getRawValue().name || (!upload.id && uploadedFileObject?.name)" @fade>
+        <div
+          [class.ts-col-50]="inline"
+          [class.pb-0]="inline"
+          [class.pb-18]="!inline"
+          class="form-group upload-file-name" *ngIf="getRawValue().name || (!upload.id && uploadedFileObject?.name)" @fade>
           <input class="form-control" formControlName="name">
           <label class="control-label required" [translate]="'uploads.form.label.name'"></label>
           <div class="error" *ngIf="uploadForm.controls.name.invalid"
                [textContent]="'form.validation.common.min_length'| translate: {FieldName: 'Name' ,min: '4' }"></div>
-          <div class="error"
-               *ngIf="uploadForm?.touched  && uploadForm.controls.name.hasError('whitespace')"
-               [textContent]="'form.validation.cannot_have_white_spaces' | translate: {FieldName:'Name'}"></div>
         </div>
-        <div class="form-group pb-15" *ngIf="uploadedFileObject?.name" @fade>
+
+        <div class="form-group pb-18 upload-version" *ngIf="uploadedFileObject?.name" @fade>
           <input class="form-control" formControlName="version">
           <label class="control-label required" [translate]="'uploads.form.version.name'"></label>
         </div>

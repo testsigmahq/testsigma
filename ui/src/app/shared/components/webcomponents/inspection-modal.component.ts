@@ -1,4 +1,4 @@
-import {Component, Inject, Input, OnInit} from '@angular/core';
+import {Component, ElementRef, Inject, Input, OnInit, ViewChild} from '@angular/core';
 import {Agent} from "../../../agents/models/agent.model";
 import {Page} from "../../models/page";
 import {AgentService} from "../../../agents/services/agent.service";
@@ -37,6 +37,7 @@ export class InspectionModalComponent extends BaseComponent implements OnInit {
   @Input('elementInspection') elementInspection: boolean;
   @Input('versionId') versionId: number;
   @Input('uiId') uiId: number;
+  @ViewChild('scrollContainer') private scrollContainer: ElementRef;
   public physicalDeviceForm: FormGroup;
   public manuallyInstalledAppForm: FormGroup;
   public uploadSelectionForm: FormGroup;
@@ -391,6 +392,16 @@ export class InspectionModalComponent extends BaseComponent implements OnInit {
 
   }
 
+  scrollToBottom(): void {
+    setTimeout(()=>{
+        this.scrollContainer.nativeElement.scroll({
+          top: this.scrollContainer.nativeElement.scrollHeight + 75,
+          left: 0,
+          behavior: 'smooth'
+        });
+      }
+      , 1000)
+  }
 
   isTestStep(){
     return this.isStepGroup;

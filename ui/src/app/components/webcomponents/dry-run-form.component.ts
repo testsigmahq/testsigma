@@ -352,6 +352,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
       environment.platformDeviceId = null;
       environment.platformOsVersionId= null;
       environment.platformScreenResolutionId = null;
+      environment.platform=null;
     }
     if (!this.testPlan.isHybrid && !this.testPlan.isPrivateLab) {
       environment.agentId = null;

@@ -5,7 +5,7 @@
  *  ****************************************************************************
  */
 
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
 import {BaseComponent} from "../../shared/components/base.component";
 import {TranslateService} from '@ngx-translate/core';
@@ -33,7 +33,7 @@ import {TestsigmaGitHubStarLoveComponent} from "../../shared/components/webcompo
   styles: [],
   animations: [expand, collapse]
 })
-export class LeftNavComponent extends BaseComponent implements OnInit {
+export class LeftNavComponent extends BaseComponent implements OnInit,OnDestroy {
   openDropdown: any;
   public isUsageDetailsVisible: boolean;
   public isTestManager = false;
@@ -41,6 +41,7 @@ export class LeftNavComponent extends BaseComponent implements OnInit {
   public moreAction: boolean;
   public userPreference: UserPreference;
   public isNoAuth : boolean;
+  public autoRefresh:any;
   @ViewChild('moreActionRef') moreActionOverlay: CdkConnectedOverlay;
   @ViewChild('primaryHelpContainer') overlayDir: CdkConnectedOverlay;
 
@@ -59,6 +60,7 @@ export class LeftNavComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.setIntervalToCheckGithubStar();
     this.checkIfGithubStarIsShown();
     this.onBoardingSharedService.getPreferencesEmitter().subscribe((completedEvent: OnBoarding) => {
       if(completedEvent == OnBoarding.TEST_DEVELOPMENT) {
@@ -70,41 +72,31 @@ export class LeftNavComponent extends BaseComponent implements OnInit {
     this.fetchAuthConfig()
   }
 
-  ngOnChanges() {
-    this.checkIfGithubStarIsShown();
-  }
-
   checkIfGithubStarIsShown() {
-    let autoRefresh = undefined;
-      this.userPreferenceService.show().subscribe(res => {
+    this.userPreferenceService.show().subscribe(res => {
       this.userPreference = res;
       if ((moment(this.userPreference.createdDate) < moment().subtract(15, 'minute')) &&
         !this.userPreference?.showedGitHubStar) {
-        clearInterval(autoRefresh);
-
-        let dialogRef= this.matDialog.open(TestsigmaGitHubStarLoveComponent, {
+        this.clearIntervalIfGitHubStarIsShown();
+        let dialogRef = this.matDialog.open(TestsigmaGitHubStarLoveComponent, {
           position: {top: '10vh', right: '35vw'},
           panelClass: ['mat-dialog', 'rds-none'],
-          data:{
+          data: {
             showTwitter: false
           }
         });
 
-        dialogRef.afterOpened().subscribe(()=>{
-          clearInterval(autoRefresh);
+        dialogRef.afterOpened().subscribe(() => {
+          this.clearIntervalIfGitHubStarIsShown();
           this.userPreference.showedGitHubStar = true;
           this.userPreferenceService.save(this.userPreference).subscribe();
         });
-
-      }else{
-        autoRefresh = setInterval(() => {
-          if(this.userPreference?.showedGitHubStar)
-            clearInterval(autoRefresh);
-          else
-            this.checkIfGithubStarIsShown()
-        },60000);
       }
     })
+  }
+
+  clearIntervalIfGitHubStarIsShown(){
+      clearInterval(this.autoRefresh);
   }
 
   fetchAuthConfig()
@@ -163,4 +155,20 @@ export class LeftNavComponent extends BaseComponent implements OnInit {
   logout() {
     this.sessionService.logout().subscribe(()=> this.router.navigate(['login']));
   }
+
+  private setIntervalToCheckGithubStar() {
+    this.autoRefresh = setInterval(() => {
+      console.log("autorefresh")
+      if (this.userPreference?.showedGitHubStar) {
+        console.log("remove")
+        this.clearIntervalIfGitHubStarIsShown();
+      } else
+        this.checkIfGithubStarIsShown()
+    }, 60000);
+  }
+
+  ngOnDestroy(): void {
+    this.clearIntervalIfGitHubStarIsShown();
+  }
+
 }

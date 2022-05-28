@@ -66,7 +66,6 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
   private screenHeight: number;
   public screenOriginalHeight: number;
   public screenOriginalWidth: number;
-  public inspectionMode: boolean = true;
   private deviceDimensions = {
     'portrait': {width: 252, height: 448},
     'landscape': {width: 448, height: 252},
@@ -119,14 +118,12 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
 
   public switchToMirroringMode() {
     this.mirroring = true;
-    this.inspectionMode = false;
     this.removeInspectionElements();
     // this.devicesService.deleteSession(this.sessionId).subscribe();
     // this.sessionId = null;
   }
 
   public switchToActionMode(actionType: String) {
-    this.inspectionMode = false;
     this.actionType = actionType;
     this.removeInspectionElements();
     this.clearSelection();
@@ -430,13 +427,12 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
   };
 
   public switchToInspectMode() {
-    if (this.actionType || this.mirroring) {
+    this.mirroring = false;
+    if (this.actionType) {
       this.actionType = null;
-      this.mirroring = false;
       this.renderCurrentScreenshot();
       this.renderCurrentScreenshot();
     }
-    this.inspectionMode = true;
     if (!this.data.recording)
       this.recorderDialog.startSession();
   }
@@ -491,8 +487,12 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
       this.devicesService.sessionTap(this.sessionId, tapPoint).subscribe({
         next: () => {
           if (this.data.recording) {
-            if(this.data.isStepRecord) this.saveTapOnDeviceStep.emit(tapPoint);
+            if(this.data.isStepRecord && !this.mirroring) this.saveTapOnDeviceStep.emit(tapPoint);
             this.handleActionSuccess();
+            if(this.mirroring) {
+              this.removeInspectionElements();
+              this.clearSelection();
+            }
           }
         },
         error: (err) => this.handleActionFailure(err, "mobile_recorder.notification.tap.failure", "Tap","/#6--failed-to-tap-on-the-element")

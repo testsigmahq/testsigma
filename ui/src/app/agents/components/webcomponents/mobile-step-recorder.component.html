@@ -9,7 +9,7 @@
           [matTooltip]="(pauseRecord?'mobile_recorder.hint.resume_recording':'mobile_recorder.hint.pause_recording')|translate"
           (click)="pauseRecord=!pauseRecord">
           <span
-            [class.fa-pause]="!pauseRecord"
+            [class.fa-pause-record]="!pauseRecord"
             [class.fa-play-circle]="pauseRecord"
             [class.result-status-text-1]="!pauseRecord"
             [class.result-status-text-0]="pauseRecord"

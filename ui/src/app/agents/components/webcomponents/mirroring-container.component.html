@@ -49,14 +49,14 @@
         <button [disabled]="mirroring || !data.recording || loading"
                 [class.active]="actionType=='swipe'"
                 (click)="switchToActionMode('swipe')">
-          <i class="fa-swipe fz-20"
+          <i class="fa-swipe-action fz-20"
              [matTooltip]="'agents.mobile.inspection.swipe_action' |
                translate"></i>
         </button>
         <button [disabled]="mirroring || !data.recording || loading"
                 [class.active]="actionType=='tap'"
                 (click)="switchToActionMode('tap')">
-          <i class="fa-tap-on fz-20" [matTooltip]="'agents.mobile.inspection.click_action' | translate"></i>
+          <i class="fa-tap-on-action fz-20" [matTooltip]="'agents.mobile.inspection.click_action' | translate"></i>
         </button>
       </div>
 

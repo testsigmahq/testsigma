@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @Service
 @Log4j2
-public class MobileCapabilities extends Capabilities {
+public abstract class MobileCapabilities extends Capabilities {
   protected String fileName;
   @Autowired
   protected UploadService uploadService;

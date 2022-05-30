@@ -41,6 +41,7 @@ public class TestStepDTO implements Cloneable, Serializable {
   private Integer forLoopStartIndex;
   private Integer forLoopEndIndex;
   private Long forLoopTestDataId;
+  private Boolean visualEnabled = false;
   private Long testDataFunctionId;
   @JsonProperty()
   private AddonTestStepTestData addonTDF;

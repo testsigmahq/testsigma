@@ -57,8 +57,6 @@ export class TestPlan extends Base implements PageObject {
       return new TestPlanResult().deserialize(v);
   }))
   public lastRun: TestPlanResult;
-  @serializable
-  public visualTestingEnabled: Boolean;
   @serializable(optional())
   public retrySessionCreation: Boolean;
   @serializable(optional())
@@ -82,6 +80,11 @@ export class TestPlan extends Base implements PageObject {
   get isHybrid() {
     return this.testPlanLabType === TestPlanLabType.Hybrid;
   }
+
+  get isPrivateLab() {
+    return this.testPlanLabType === TestPlanLabType.PrivateGrid;
+  }
+
 
   deserialize(input: any): this {
     return Object.assign(this, deserialize(TestPlan, input));

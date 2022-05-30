@@ -36,23 +36,23 @@
     <div
       class="ts-col-20 pr-25 theme-border-r">
       <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill" [formGroup]="environmentFormGroup">
-        <mat-select
+        <mat-select placeholder="Data Not Available"
           disableOptionCentering panelClass="single"
           formControlName="platformOsVersionId"
           (selectionChange)="setOsVersion($event.value);"
           name="osVersion">
           <mat-option
             *ngFor="let osVersion of platformOsVersions"
-            [value]="osVersion.id">
-            <span [textContent]="osVersion.displayName"></span>
+            [value]="osVersion?.id">
+            <span [textContent]="osVersion?.displayName"></span>
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <label class="control-label required" [translate]="'test_plan.environment.os_version'"></label>
+      <label class="control-label" [translate]="'test_plan.environment.os_version'" [class.required]="!isPrivateGrid"></label>
     </div>
 
     <div
-      class="ts-col-20 pr-14 ml-25">
+      class="ts-col-20 pr-14 ml-25" *ngIf="!isPrivateGrid">
       <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill" [formGroup]="environmentFormGroup">
         <span
           matPrefix
@@ -80,12 +80,43 @@
       </mat-form-field>
       <label class="control-label required" [translate]="'test_plan.environment.selected_browser'"></label>
     </div>
+
+    <div *ngIf="isPrivateGrid"
+      class="ts-col-20 pr-14 ml-25">
+      <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill" [formGroup]="environmentFormGroup">
+        <span
+          matPrefix
+          [class.fa-edge]="platformBrowser?.isEdge"
+          [class.fa-firefox]="platformBrowser?.isFirefox"
+          [class.fa-safari-brands]="platformBrowser?.isSafari"
+          [class.fa-chrome]="platformBrowser?.isChrome"
+          class="mr-10 text-t-secondary"></span>
+        <mat-select
+          disableOptionCentering panelClass="single"
+          formControlName="browser"
+          (selectionChange)="setPrivateGridPlatformBrowser($event.value)"
+          name="browser">
+          <mat-option
+            *ngFor="let browser of browsers"
+            [value]="browser.name">
+            <i [class.fa-edge]="browser.isEdge"
+               [class.fa-firefox]="browser.isFirefox"
+               [class.fa-safari-brands]="browser.isSafari"
+               [class.fa-chrome]="browser.isChrome"
+               class="mr-10 text-t-secondary"></i>
+            <span [textContent]="browser.name" ></span>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <label class="control-label required" [translate]="'test_plan.environment.selected_browser'"></label>
+    </div>
     <div
       class="ts-col-20 pr-14">
       <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill" [formGroup]="environmentFormGroup">
         <mat-select
           disableOptionCentering panelClass="single"
           formControlName="platformBrowserVersionId"
+          placeholder="Data Not Available"
           (selectionChange)="setPlatformBrowserVersion($event.value)"
           name="browserVersion">
           <mat-option
@@ -95,7 +126,7 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <label class="control-label required" [translate]="'test_plan.environment.selected_version'"></label>
+      <label class="control-label" [translate]="'test_plan.environment.selected_version'" [class.required]="!isPrivateGrid" ></label>
     </div>
     <div
       class="ts-col-20 pr-14">
@@ -103,6 +134,7 @@
         <mat-select
           disableOptionCentering panelClass="single"
           formControlName="platformScreenResolutionId"
+          placeholder="Data Not Available"
           (selectionChange)="setResolution($event)"
           name="resoultion">
           <mat-option
@@ -110,7 +142,7 @@
             [value]="resolution.id" [textContent]="resolution.displayResolution"></mat-option>
         </mat-select>
       </mat-form-field>
-      <label class="control-label required" [translate]="'test_plan.environment.resolution'"></label>
+      <label class="control-label" [class.required]="!isPrivateGrid" [translate]="'test_plan.environment.resolution'"></label>
     </div>
 
   </div>

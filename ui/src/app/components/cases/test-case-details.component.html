@@ -30,7 +30,7 @@
           <div *ngIf="version?.workspace?.isMobileNative && !testCase?.deleted">
             <button
               *ngIf="hasInspectorFeature()"
-              [routerLink]="['/agents', 'record', testCase.workspaceVersionId]"
+              [routerLink]="['/td', 'record', testCase.workspaceVersionId]"
               [queryParams]="{isRecord: true, isStepRecord: true, testCaseId: testCaseId}"
               class="theme-btn-clear-default  ml-14"
               [translate]="'elements.btn.record'"></button>

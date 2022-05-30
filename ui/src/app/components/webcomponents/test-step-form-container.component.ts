@@ -31,6 +31,8 @@ import {ActionTestDataParameterSuggestionComponent} from "./action-test-data-par
 import {ActionTestDataEnvironmentSuggestionComponent} from "./action-test-data-environment-suggestion.component";
 import {ElementFormComponent} from "./element-form.component";
 import {MobileStepRecorderComponent} from "../../agents/components/webcomponents/mobile-step-recorder.component";
+import {MobileRecorderEventService} from "../../services/mobile-recorder-event.service";
+import {OnBoardingSharedService} from "../../services/on-boarding-shared.service";
 
 @Component({
   selector: 'app-test-step-form-container',
@@ -74,7 +76,9 @@ export class TestStepFormContainerComponent extends BaseComponent implements OnI
     private pageScrollService: PageScrollService,
     @Inject(DOCUMENT) private document: any,
     private _ngZone: NgZone,
-    private testStepService: TestStepService
+    private testStepService: TestStepService,
+    private onBoardingSharedService: OnBoardingSharedService,
+    private mobileRecorderEventService: MobileRecorderEventService
   ) {
     super(authGuard, notificationsService, translate, toastrService);
   }
@@ -288,7 +292,21 @@ export class TestStepFormContainerComponent extends BaseComponent implements OnI
   }
 
   showMoreOption(testStep: TestStep) {
-    if(this.popupsAlreadyOpen(TestStepMoreActionFormComponent)) return;
+    let sendDetails = {
+      testStep: testStep,
+      form: this.stepForm,
+      formSubmitted: true,
+      steps: this.testSteps.content,
+      parentDisabled: testStep.parentStep?.disabled,
+      isStepRecordView: this.stepRecorderView,
+      isTestStepResultsView: !!this.testCaseResultId
+    };
+    if (this.stepRecorderView) {
+      this.mobileRecorderEventService.suggestionContent.next(Object.assign(sendDetails, {
+        content: this.mobileRecorderEventService.stepMoreAction
+      }));
+      return
+    }
     testStep.stepDisplayNumber = this.indexPosition(false);
     if(testStep.preRequisiteStepId) {
       this.testSteps.content.find(testStep => testStep.id == this.testStep.preRequisiteStepId)
@@ -299,20 +317,10 @@ export class TestStepFormContainerComponent extends BaseComponent implements OnI
       height: "100%",
       width: '29%',
       position: {top: '0px', right: '0px'},
-      data: {
-        testStep: testStep,
-        form: this.stepForm,
-        formSubmitted: true,
-        steps: this.testSteps.content,
-        parentDisabled: testStep.parentStep?.disabled,
-        isStepRecordView: this.stepRecorderView,
-        isTestStepResultsView: !!this.testCaseResultId
-      },
-      panelClass: ['mat-dialog', 'rds-none'],
-      ...this.alterStyleIfStepRecorder()
+      data: sendDetails,
+      panelClass: ['mat-dialog', 'rds-none']
     })
     moreOption.disableClose = true;
-    if(this.stepRecorderView) this.resetPositionAndSize(moreOption, TestStepMoreActionFormComponent);
     moreOption.backdropClick().subscribe((event) => {
       let maxWait = this.stepForm?.controls['waitTime']?.value;
       if(maxWait > 120 || maxWait < 1) {
@@ -321,7 +329,6 @@ export class TestStepFormContainerComponent extends BaseComponent implements OnI
         moreOption.close();
       }
     });
-    if(this.popupsAlreadyOpen(TestStepMoreActionFormComponent)) return;
     testStep.stepDisplayNumber = this.indexPosition(false);
     if(testStep.preRequisiteStepId) {
       this.testSteps.content.find(testStep => testStep.id == this.testStep.preRequisiteStepId)
@@ -431,62 +438,4 @@ export class TestStepFormContainerComponent extends BaseComponent implements OnI
     });
   }
 
-  private popupsAlreadyOpen(currentPopup) {
-    if(!Boolean(this.stepRecorderView)) return false;
-    this?.matDialog?.openDialogs?.forEach( dialog => {
-      if((dialog.componentInstance instanceof ActionElementSuggestionComponent ||
-          dialog.componentInstance instanceof ActionTestDataFunctionSuggestionComponent ||
-          dialog.componentInstance instanceof ActionTestDataParameterSuggestionComponent ||
-          dialog.componentInstance instanceof ActionTestDataEnvironmentSuggestionComponent||
-          dialog.componentInstance instanceof TestStepMoreActionFormComponent ||
-          (dialog.componentInstance instanceof ActionElementSuggestionComponent &&
-            !(currentPopup instanceof ElementFormComponent)))
-        && !(dialog.componentInstance instanceof currentPopup)){
-        dialog.close();
-      }
-    })
-    return Boolean(this?.matDialog?.openDialogs?.find( dialog => dialog.componentInstance instanceof currentPopup));
-  }
-
-  alterStyleIfStepRecorder() {
-    if(!this.stepRecorderView) return {};
-    let mobileStepRecorderComponent:MobileStepRecorderComponent = this.matDialog.openDialogs.find(dialog => dialog.componentInstance instanceof MobileStepRecorderComponent).componentInstance;
-    let dialogContainer = mobileStepRecorderComponent.fullScreenMode ?
-      mobileStepRecorderComponent.customDialogContainerH50.nativeElement: mobileStepRecorderComponent.customDialogContainerH100.nativeElement;
-    let clients = {
-      height: dialogContainer.clientHeight +'px',
-      width: dialogContainer.clientWidth +'px',
-      position: {
-        top: dialogContainer.getBoundingClientRect().top + 'px',
-        left: dialogContainer.getBoundingClientRect().left + 'px'
-      },
-      hasBackdrop: false,
-      panelClass: ['mat-dialog', 'rds-none', 'modal-shadow-none', mobileStepRecorderComponent.fullScreenMode?'px-10':'']
-    }
-    return clients;
-  }
-
-  private resetPositionAndSize(matDialog: MatDialogRef<any>, dialogComponent: any) {
-    setTimeout(() => {
-      if (matDialog._containerInstance._config.height == '0px') {
-        let alterStyleIfStepRecorder = this.alterStyleIfStepRecorder();
-        matDialog.close();
-        matDialog = this.matDialog.open(dialogComponent, {
-          ...matDialog._containerInstance._config,
-          ...alterStyleIfStepRecorder
-        });
-        matDialog.afterClosed().subscribe(res => {
-          this.stepFormChange.emit(this.stepForm);
-          this.testStep.conditionType = this.stepForm.get("conditionType").value;
-          //this.testStep.dataMap = this.stepForm.get("dataMap").value;
-        })
-      } else {
-        matDialog.afterClosed().subscribe(res => {
-          this.stepFormChange.emit(this.stepForm);
-          this.testStep.conditionType = this.stepForm.get("conditionType").value;
-          //this.testStep.dataMap = this.stepForm.get("dataMap").value;
-        })
-      }
-    }, 200)
-  }
 }

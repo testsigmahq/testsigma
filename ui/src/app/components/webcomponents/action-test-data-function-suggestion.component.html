@@ -1,5 +1,7 @@
 <div class="theme-overlay-container">
-  <div class="theme-overlay-header with-br-bottom">
+  <div
+    [class.with-br-bottom]="!testDataCustomFunction"
+    class="theme-overlay-header">
     <div
       class="theme-overlay-title"
       [translate]="'test_data_generators.list.title'">
@@ -8,7 +10,7 @@
       class="theme-overlay-close"
       type="button"
       [matTooltip]="'hint.message.common.close' | translate"
-      mat-dialog-close>
+      (click)="closeSuggestion()">
     </button>
   </div>
   <div class="identifier-record text-center"
@@ -24,7 +26,7 @@
     <div class="pt-30">
       <div [translate]="'test_data_generators_suggestion.not_found.start_title'" class="fz-14 pb-20"></div>
       <button class="btn theme-btn-primary" [routerLink]="['/td', versionId, 'custom-functions', 'new']"
-              [mat-dialog-close]="true">
+              (click)="closeSuggestion(true)">
         <span [translate]="'btn.common.create'"></span>
       </button>
     </div>
@@ -35,10 +37,15 @@
     (keydown.enter)="false"
     novalidate="novalidate">
     <div
-      class="overflow-x-hidden h-100 pt-30">
+      [class.mt-n4]="testDataCustomFunction"
+      [class.pt-15]="testDataCustomFunction"
+      [class.pt-30]="!testDataCustomFunction"
+      class="h-100">
       <div
         class="d-flex text-t-secondary pb-30">
-        <div class="w-85 d-flex align-items-center">
+        <div
+          [class.rounded-search]="testDataCustomFunction"
+          class="w-85 d-flex align-items-center">
           <i
             [matTooltip]="'hint.message.common.search' | translate"
             class="fa-search fz-13 mr-5"></i>
@@ -53,7 +60,9 @@
             [attr.data-placeholder]="'action.custom_function.suggestion.method_placeholder' | translate"></div>
         </div>
       </div>
-      <div class="theme-w-o-h-scroll lg-h">
+      <div
+        [class.sm-h]="!testDataCustomFunction"
+        class="theme-w-o-h-scroll">
         <div class="tab-navigation-inline h-100 mt-0-i">
           <ul class="tab-nav" role="tablist">
             <li class="nav-items" role="presentation" [class.active]="activeTab == 'custom_functions'">
@@ -71,14 +80,19 @@
             </li>
           </ul>
           <div class="theme-w-o-h-scroll lg-h">
-            <div *ngIf="activeTab == 'addon_functions'" class="h-90 mt-n30">
+            <div *ngIf="activeTab == 'addon_functions'" class="h-100">
               <div
-                class="overflow-x-hidden h-100 pt-30">
+                [class.pt-15]="testDataCustomFunction"
+                [class.pt-30]="!testDataCustomFunction"
+                class="overflow-x-hidden">
                 <cdk-virtual-scroll-viewport
-                  itemSize="29"
+                  itemSize="{{testDataCustomFunction ? '35': '29'}}"
                   class="list-container virtual-scroll-viewport">
                   <a
-                    class="list-view py-7 px-5 border-0 pointer align-items-center"
+                    [class.border-0]="!testDataCustomFunction"
+                    [class.py-10]="testDataCustomFunction"
+                    [class.py-7]="!testDataCustomFunction"
+                    class="list-view px-5 pointer align-items-center"
                     *cdkVirtualFor='let element of addonCustomFunctionSuggestion; let index = index'
                     [class.h-active]="currentFocusedIndex == index"
                     (mouseover)="currentFocusedIndex = index">
@@ -93,7 +107,7 @@
                       <div class="ts-col-10">
                         <a (click)="openAddonDetails(element?.id)"
                            [matTooltip]="'addon.show_details' | translate">
-                          <i class="fa-addon fz-16"></i>
+                          <i class="fa-default-generators fz-16"></i>
                         </a>
                       </div>
                       <div class="ts-col-10">
@@ -118,12 +132,17 @@
             </div>
             <div *ngIf="activeTab == 'custom_functions'" class="h-100">
               <div
-                class="overflow-x-hidden h-100 pt-30">
+                [class.pt-15]="testDataCustomFunction"
+                [class.pt-30]="!testDataCustomFunction"
+                class="overflow-x-hidden h-100">
                 <cdk-virtual-scroll-viewport
-                  itemSize="29"
+                  itemSize="{{testDataCustomFunction ? '35': '29'}}"
                   class="list-container virtual-scroll-viewport">
                   <a
-                    class="list-view py-7 px-5 border-0 pointer align-items-center"
+                    [class.border-0]="!testDataCustomFunction"
+                    [class.py-10]="testDataCustomFunction"
+                    [class.py-7]="!testDataCustomFunction"
+                    class="list-view px-5 pointer align-items-center"
                     *cdkVirtualFor='let element of testDataFunctionSuggestion; let index = index'
                     [class.h-active]="currentFocusedIndex == index"
                     (mouseover)="currentFocusedIndex = index"

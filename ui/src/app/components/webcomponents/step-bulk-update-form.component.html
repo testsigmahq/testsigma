@@ -66,6 +66,14 @@
             (change)="changeTriStateCheckBox(disabledCheckBox,bulkUpdateForm.get('disabled'))">
             <span [translate]="'test_step.results.disable_label'"></span></mat-checkbox>
         </div>
+      <div>
+        <mat-checkbox
+          #visualEnabledCheckBox
+          name="visualEnabled"
+          [indeterminate]="bulkUpdateForm.get('visualEnabled')?.value==null"
+          (change)="changeTriStateCheckBox(visualEnabledCheckBox,bulkUpdateForm.get('visualEnabled'))">
+          <span [translate]="'test_step.results.visual_enabled_label'"></span></mat-checkbox>
+      </div>
     </form>
   </div>
   <div class="theme-overlay-footer">

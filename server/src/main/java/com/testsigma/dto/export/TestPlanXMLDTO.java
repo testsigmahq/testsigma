@@ -56,8 +56,6 @@ public class TestPlanXMLDTO extends BaseXMLDTO {
   private PreRequisiteAction onTestcasePreRequisiteFail;
   @JsonProperty("on-step-pre-requisite-fail")
   private RecoverAction onStepPreRequisiteFail;
-  @JsonProperty("visual-testing-enabled")
-  private boolean visualTestingEnabled;
   @JsonProperty("retry-session-creation-timeout")
   private Integer retrySessionCreationTimeout;
   @JsonProperty("retry-session-creation")

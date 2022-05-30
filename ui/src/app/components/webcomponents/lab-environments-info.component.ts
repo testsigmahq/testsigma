@@ -24,9 +24,10 @@ import {TestDevice} from "../../models/test-device.model";
             style="height: 20px;min-width: 20px"
             *ngIf="testPlan.testPlanLabType"
             [class.testsigma-lab-logo]="testPlan.isTestsigmaLab || testPlan.isHybrid"
+            [class.grid]="testPlan.isPrivateLab"
             [matTooltip]="('testPlan.lab_type.'+testPlan.testPlanLabType) | translate"></span>
       <span *ngIf="isHybridMobileWeb">
-        <span *ngFor="let env of executionEnvironments"
+        <span *ngFor="let env of testDevices"
               [matTooltip]="
             ('platform.name.'+env?.platform | translate) + '( '+ env?.osVersion+' ) '+
             (env?.browser? ('browser.name.'+env?.browser | translate) : env?.deviceName) +
@@ -44,7 +45,7 @@ import {TestDevice} from "../../models/test-device.model";
           </span>
       </span>
       <span *ngIf="!isHybridMobileNative && !isHybridMobileWeb">
-      <span *ngFor="let env of executionEnvironments"
+      <span *ngFor="let env of testDevices"
             [matTooltip]="
             ('platform.name.'+env?.platform | translate) + '( '+ env?.osVersion+' ) '+
             (env?.browser? ('browser.name.'+env?.browser | translate) : env?.deviceName) +
@@ -60,7 +61,7 @@ import {TestDevice} from "../../models/test-device.model";
       </span>
       <span *ngIf="isHybridMobileNative && !isHybridMobileWeb">
       <span
-        *ngFor="let env of executionEnvironments"
+        *ngFor="let env of testDevices"
         [matTooltip]="env?.title"
         class="mr-5 fz-18 text-t-secondary"
         [class.fa-apple]="isIosNative"
@@ -72,7 +73,7 @@ import {TestDevice} from "../../models/test-device.model";
 })
 export class LabEnvironmentsInfoComponent implements OnInit {
   @Input('testPlan') testPlan: TestPlan;
-  @Input('executionEnvironments') executionEnvironments : TestDevice[];
+  @Input('testDevices') testDevices : TestDevice[];
 
   constructor( private platformService: PlatformService,
                private devicesService: DevicesService,
@@ -83,7 +84,7 @@ export class LabEnvironmentsInfoComponent implements OnInit {
   }
 
   ngOnChanges(changes : SimpleChanges) : void{
-    this.executionEnvironments.forEach((env)=>{
+    this.testDevices.forEach((env)=>{
       if(this.testPlan.testPlanLabType == TestPlanLabType.Hybrid){
         this.agentService.findAll("id:"+env?.agentId).subscribe(res=> {
           let agent;

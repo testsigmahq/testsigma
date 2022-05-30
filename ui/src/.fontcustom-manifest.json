@@ -1,14 +1,14 @@
 {
   "checksum": {
-    "previous": "0db0138cbab473ececf701ba5d9aef8260b0c7090592c48e1eea1fea4b81f7d0",
-    "current": "0db0138cbab473ececf701ba5d9aef8260b0c7090592c48e1eea1fea4b81f7d0"
+    "previous": "cc56d6d170c505986bb6ae74475e4aecb1b70a3dde648a9c52b3ebe1e1e1b1a3",
+    "current": "cc56d6d170c505986bb6ae74475e4aecb1b70a3dde648a9c52b3ebe1e1e1b1a3"
   },
   "fonts": [
-    "./assets/font_icons/font_custom_0db0138cbab473ececf701ba5d9aef82.ttf",
-    "./assets/font_icons/font_custom_0db0138cbab473ececf701ba5d9aef82.svg",
-    "./assets/font_icons/font_custom_0db0138cbab473ececf701ba5d9aef82.woff",
-    "./assets/font_icons/font_custom_0db0138cbab473ececf701ba5d9aef82.eot",
-    "./assets/font_icons/font_custom_0db0138cbab473ececf701ba5d9aef82.woff2"
+    "./assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.ttf",
+    "./assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.svg",
+    "./assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.woff",
+    "./assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.eot",
+    "./assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.woff2"
   ],
   "glyphs": {
     "4-quabs": {
@@ -66,6 +66,10 @@
     "apk-file": {
       "codepoint": 62026,
       "source": "./icons/apk-file.svg"
+    },
+    "app-source": {
+      "codepoint": 62134,
+      "source": "./icons/app-source.svg"
     },
     "app-store-ios": {
       "codepoint": 62144,
@@ -442,6 +446,10 @@
     "database-solid": {
       "codepoint": 61758,
       "source": "./icons/database-solid.svg"
+    },
+    "default-generators": {
+      "codepoint": 62135,
+      "source": "./icons/default-generators.svg"
     },
     "delete-icon": {
       "codepoint": 61759,
@@ -947,6 +955,10 @@
       "codepoint": 61824,
       "source": "./icons/long-arrow-alt-right-solid.svg"
     },
+    "long-tap": {
+      "codepoint": 62140,
+      "source": "./icons/long-tap.svg"
+    },
     "love": {
       "codepoint": 61825,
       "source": "./icons/love.svg"
@@ -978,6 +990,10 @@
     "mirroring": {
       "codepoint": 61935,
       "source": "./icons/mirroring.svg"
+    },
+    "mirroring-selection": {
+      "codepoint": 62136,
+      "source": "./icons/mirroring-selection.svg"
     },
     "mobile-alt-solid": {
       "codepoint": 61829,
@@ -1050,6 +1066,10 @@
     "paper-flight": {
       "codepoint": 61838,
       "source": "./icons/paper-flight.svg"
+    },
+    "pause-record": {
+      "codepoint": 62157,
+      "source": "./icons/pause-record.svg"
     },
     "pdf-file": {
       "codepoint": 61988,
@@ -1202,6 +1222,10 @@
     "record-new": {
       "codepoint": 61856,
       "source": "./icons/record-new.svg"
+    },
+    "record-play": {
+      "codepoint": 62138,
+      "source": "./icons/record-play.svg"
     },
     "refresh": {
       "codepoint": 61857,
@@ -1443,6 +1467,10 @@
       "codepoint": 62146,
       "source": "./icons/storage-outline.svg"
     },
+    "suggestion-list": {
+      "codepoint": 62139,
+      "source": "./icons/suggestion-list.svg"
+    },
     "suitcase": {
       "codepoint": 61933,
       "source": "./icons/suitcase.svg"
@@ -1459,6 +1487,10 @@
       "codepoint": 62012,
       "source": "./icons/support.svg"
     },
+    "swipe-action": {
+      "codepoint": 62158,
+      "source": "./icons/swipe-action.svg"
+    },
     "swipe-horizontal": {
       "codepoint": 61945,
       "source": "./icons/swipe-horizontal.svg"
@@ -1474,6 +1506,10 @@
     "tap": {
       "codepoint": 61946,
       "source": "./icons/tap.svg"
+    },
+    "tap-on-action": {
+      "codepoint": 62159,
+      "source": "./icons/tap-on-action.svg"
     },
     "test-case-alt": {
       "codepoint": 62056,

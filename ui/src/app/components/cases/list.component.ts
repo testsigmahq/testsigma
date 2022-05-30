@@ -173,7 +173,7 @@ export class TestCasesListComponent extends BaseComponent implements OnInit {
       else if (this.resultFilter == 'failed')
         this.query += ",deleted:false,isStepGroup:false,result@FAILURE#ABORTED,workspaceVersionId:" + this.versionId;
       else if (this.resultFilter == 'notExecuted')
-        this.query += ",deleted:false,isStepGroup:false,result@QUEUED#STOPPED#NOT_EXECUTED,workspaceVersionId:" + this.versionId;
+        this.query += ",deleted:false,isStepGroup:false,result@QUEUED#STOPPED#NOT_EXECUTED#null,workspaceVersionId:" + this.versionId;
     }
     if (this.query) {
       this.currentFilter.normalizeQuery(this.versionId);
@@ -348,7 +348,7 @@ export class TestCasesListComponent extends BaseComponent implements OnInit {
         this.filterId = result.id;
         this.query = undefined;
         this.currentFilter = result;
-        this.router.navigate(['/td', this.version.id, this.urlString, 'filter', result.id]);
+        this.router.navigate(['/td', this.version.id, this.urlString, 'filter', result.id],{ queryParams: {tempFilter:true}});
         this.fetchFilters();
       }
     });
@@ -432,6 +432,9 @@ export class TestCasesListComponent extends BaseComponent implements OnInit {
   }
 
   setTestCaseFilterId(userPreference) {
-    this.userPreferenceService.save(userPreference).subscribe(res => this.userPreference = res)
+    let tempFilter = this.route.snapshot.queryParamMap['params']['tempFilter'];
+    if (!tempFilter) {
+      this.userPreferenceService.save(userPreference).subscribe(res => this.userPreference = res)
+    }
   }
 }

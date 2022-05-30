@@ -9,7 +9,7 @@ import {MAT_DIALOG_DATA} from '@angular/material/dialog';
                   class="confirm-message"
                   [textContent]="modalData.description ? modalData.description: ('message.common.confirmation.default' | translate)"></div>
                 <div
-                  class="confirm-note"
+                  class="confirm-note pr-15"
                   [translate]="'message.common.confirmation.note'"></div>
                 <div
                   *ngIf="modalData?.message"

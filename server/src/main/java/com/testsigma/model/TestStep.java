@@ -141,6 +141,8 @@ public class TestStep {
   @Column(name = "imported_id")
   private Long importedId;
 
+  @Column(name = "visual_enabled")
+  private Boolean visualEnabled = false;
 
   @ManyToOne
   @Fetch(value = FetchMode.SELECT)
@@ -215,6 +217,7 @@ public class TestStep {
     testStepDataMap.setFromElement(fromElement);
     testStepDataMap.setToElement(toElement);
     testStepDataMap.setAttribute(attribute);
+    testStepDataMap.setVisualEnabled(visualEnabled);
     ObjectMapperService mapper = new ObjectMapperService();
     testStepDataMap.setAddonTDF(mapper.parseJson(addonTestData, AddonTestStepTestData.class));
     DefaultDataGeneratorsDetails functionDetails = new DefaultDataGeneratorsDetails();

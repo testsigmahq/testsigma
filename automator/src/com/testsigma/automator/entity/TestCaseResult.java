@@ -33,7 +33,6 @@ public class TestCaseResult {
   private Timestamp createdDate;
   private Timestamp updatedDate;
   private Long testPlanResultId;
-  private boolean visualTestingEnabled = false;
   private Long phoneNumberId;
 
   public TestCaseResult() {

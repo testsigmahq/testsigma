@@ -44,4 +44,7 @@ public class UserPreference {
   @Column(name = "updated_date")
   private Timestamp updatedDate;
 
+  @Column(name = "showed_github_star")
+  private boolean showedGitHubStar;
+
 }

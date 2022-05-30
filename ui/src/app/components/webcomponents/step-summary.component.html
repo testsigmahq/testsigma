@@ -12,7 +12,7 @@
         class="close"
         type="button"
         [matTooltip]="'hint.message.common.close' | translate"
-        mat-dialog-close>
+        (click)="closeSuggestion()">
       </button>
     </div>
 
@@ -192,6 +192,13 @@
               <i
                 class="fz-11 pl-10 fa-tick-circle-filled result-status-text-7"></i>
             </span>
+          </div>
+        </div>
+        <div class="details-items ts-col-100">
+          <label class="details-title" [translate]="'test_step.results.visual_enabled_label'"></label>
+          <div
+            class="details-info"
+            [translate]="testStep?.visualEnabled? 'common.yes': 'common.no'">
           </div>
         </div>
       </div>

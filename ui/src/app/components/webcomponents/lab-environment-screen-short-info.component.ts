@@ -19,7 +19,8 @@ import {Platform} from "../../enums/platform.enum";
       <div class="align-items-center d-flex justify-content-start flex-wrap mb-10">
         <span class="mr-5" style="height: 20px;width: 20px;"
               [class.testsigma-lab-logo]="testPlanResult?.testPlan?.isTestsigmaLab"
-              [class.testsigma-local-devices-logo]="isHybrid">
+              [class.testsigma-local-devices-logo]="isHybrid"
+                [class.grid]="isPrivateGrid">
         </span>
         <span
           class="rb-medium"
@@ -34,39 +35,39 @@ import {Platform} from "../../enums/platform.enum";
                         [textContent]="agentDevice.name"></span>
           <span class="mr-5 sm" style="height: 14px"
                 *ngIf="!agentDevice"
-                [class.windows]="executionEnvironment?.isWindows"
-                [class.apple]="executionEnvironment?.isMac||executionEnvironment?.isIOS"
-                [class.android]="executionEnvironment?.isAndroid"
-                [class.linux]="executionEnvironment?.isLinux"></span>
+                [class.windows]="testDevice?.isWindows"
+                [class.apple]="testDevice?.isMac||testDevice?.isIOS"
+                [class.android]="testDevice?.isAndroid"
+                [class.linux]="testDevice?.isLinux"></span>
           <span
             class="pr-8"
-            [textContent]="isHybrid && agentDevice ? 'V. ' +agentDevice.osVersion : executionEnvironment?.formattedOsVersion"></span>
+            [textContent]="isHybrid && agentDevice ? 'V. ' +agentDevice.osVersion : testDevice?.formattedOsVersion"></span>
           <span
             class="mr-5 sm" style="height: 14px"
-            [class.fa-mobile-alt-solid]="!isMobileNative && executionEnvironment?.deviceName && (executionEnvironment?.isIOS || executionEnvironment?.isAndroid)"></span>
+            [class.fa-mobile-alt-solid]="!isMobileNative && testDevice?.deviceName && (testDevice?.isIOS || testDevice?.isAndroid)"></span>
           <span
             *ngIf="!isMobile"
             class="mr-5 sm" style="height: 14px"
-            [class.chrome]="executionEnvironment?.isChrome && executionEnvironment?.formattedBrowserVersion"
-            [class.safari]="executionEnvironment?.isSafari && executionEnvironment?.formattedBrowserVersion"
-            [class.firefox]="executionEnvironment?.isFirefox && executionEnvironment?.formattedBrowserVersion"
-            [class.edge]="executionEnvironment?.isEdge && executionEnvironment?.formattedBrowserVersion"></span>
+            [class.chrome]="testDevice?.isChrome && testDevice?.formattedBrowserVersion"
+            [class.safari]="testDevice?.isSafari && testDevice?.formattedBrowserVersion"
+            [class.firefox]="testDevice?.isFirefox && testDevice?.formattedBrowserVersion"
+            [class.edge]="testDevice?.isEdge && testDevice?.formattedBrowserVersion"></span>
           <span class="pr-8"
-                *ngIf="!isMobile && executionEnvironment?.formattedBrowserVersion"
-                [textContent]="executionEnvironment?.formattedBrowserVersion"></span>
+                *ngIf="!isMobile && testDevice?.formattedBrowserVersion"
+                [textContent]="testDevice?.formattedBrowserVersion"></span>
           <span
             style="height: 14px"
             class="text-truncate pr-8 pb-16"
-            *ngIf="!isHybrid && executionEnvironment?.deviceName && (executionEnvironment?.isIOS || executionEnvironment?.isAndroid)"
-            [textContent]="executionEnvironment?.deviceName"></span>
+            *ngIf="!isHybrid && testDevice?.deviceName && (testDevice?.isIOS || testDevice?.isAndroid)"
+            [textContent]="testDevice?.deviceName"></span>
           <span class="ml-5 sm" style="height: 14px"
-                *ngIf="!isMobileNative && (executionEnvironment?.isIOS || executionEnvironment?.isAndroid) && executionEnvironment?.browser"
-                [class.chrome]="executionEnvironment?.isChrome"
-                [class.safari]="executionEnvironment?.isSafari"></span>
+                *ngIf="!isMobileNative && (testDevice?.isIOS || testDevice?.isAndroid) && testDevice?.browser"
+                [class.chrome]="testDevice?.isChrome"
+                [class.safari]="testDevice?.isSafari"></span>
           <span *ngIf="canShowResolution">
             <i class="fa-watch-tv pr-5 text-t-secondary"></i>
             <span
-              [textContent]="executionEnvironment?.resolution"></span>
+              [textContent]="testDevice?.resolution"></span>
           </span>
         </div>
       </div>
@@ -75,7 +76,7 @@ import {Platform} from "../../enums/platform.enum";
   styles: []
 })
 export class LabEnvironmentScreenShortInfoComponent implements OnInit {
-  @Input('executionEnvironment') executionEnvironment: TestDevice;
+  @Input('testDevice') testDevice: TestDevice;
   @Input('testPlanResult') testPlanResult: TestPlanResult;
   @Input("environmentResult") environmentResult: TestDeviceResult;
 
@@ -93,55 +94,59 @@ export class LabEnvironmentScreenShortInfoComponent implements OnInit {
   }
   ngOnChanges() {
     if(this.testPlanResult?.testPlan?.isHybrid) {
-      this.agentService.findAll("id:"+this.executionEnvironment?.agentId).subscribe(res=> {
+      this.agentService.findAll("id:"+this.testDevice?.agentId).subscribe(res=> {
         if(res.content.length) {
           this.agent = res.content[0]
-          this.executionEnvironment.platform = Agent.getPlatformFromOsType(this.agent.osType);
-          this.executionEnvironment.osVersion = this.agent.osVersion;
-          this.browser = this.agent.browsers.find(browser => browser.name.toUpperCase() == this.executionEnvironment.browser);
-          this.executionEnvironment.browserVersion = this.browser?.majorVersion;
+          this.testDevice.platform = Agent.getPlatformFromOsType(this.agent.osType);
+          this.testDevice.osVersion = this.agent.osVersion;
+          this.browser = this.agent.browsers.find(browser => browser.name.toUpperCase() == this.testDevice.browser);
+          this.testDevice.browserVersion = this.browser?.majorVersion;
         }
-        if(this.executionEnvironment.deviceId && this.agent) {
+        if(this.testDevice.deviceId && this.agent) {
           this.devicesService.findAll(this.agent.id).subscribe(res => {
-            this.agentDevice = res.content.find(device => device.id == this.executionEnvironment.deviceId);
-            this.executionEnvironment.platform = AgentDevice.getPlatformFromMobileOStype(this.agentDevice.osName);
-            this.executionEnvironment.osVersion = this.agentDevice.osVersion;
-            this.executionEnvironment.browser = this.executionEnvironment.platform === Platform.Android ? 'CHROME' : "SAFARI";
-            this.executionEnvironment.deviceName = this.agentDevice.name;
+            this.agentDevice = res.content.find(device => device.id == this.testDevice.deviceId);
+            this.testDevice.platform = AgentDevice.getPlatformFromMobileOStype(this.agentDevice.osName);
+            this.testDevice.osVersion = this.agentDevice.osVersion;
+            this.testDevice.browser = this.testDevice.platform === Platform.Android ? 'CHROME' : "SAFARI";
+            this.testDevice.deviceName = this.agentDevice.name;
           })
         }
       });
     }
-    if(this.executionEnvironment.platformOsVersionId!= null){
-      this.platformService.findOsVersion(this.executionEnvironment.platformOsVersionId, this.testPlanResult.testPlan.testPlanLabType).subscribe((platformOsversion) => {
-        this.executionEnvironment.platform = platformOsversion.platform;
-        this.executionEnvironment.osVersion = platformOsversion.version;
+    if(this.testDevice.platformOsVersionId!= null){
+      this.platformService.findOsVersion(this.testDevice.platformOsVersionId, this.testPlanResult.testPlan.testPlanLabType).subscribe((platformOsversion) => {
+        this.testDevice.platform = platformOsversion.platform;
+        this.testDevice.osVersion = platformOsversion.version;
       });
     }
-    if(this.executionEnvironment.platformBrowserVersionId!=null){
-      this.platformService.findBrowserVersion(this.executionEnvironment.platformBrowserVersionId, this.testPlanResult.testPlan.testPlanLabType).subscribe((platformBrowsersversion) => {
-        this.executionEnvironment.browser = platformBrowsersversion.name;
-        this.executionEnvironment.browserVersion = platformBrowsersversion.version;
+    if(this.testDevice.platformBrowserVersionId!=null){
+      this.platformService.findBrowserVersion(this.testDevice.platformBrowserVersionId, this.testPlanResult.testPlan.testPlanLabType).subscribe((platformBrowsersversion) => {
+        this.testDevice.browser = platformBrowsersversion.name;
+        this.testDevice.browserVersion = platformBrowsersversion.version;
       });
     }
-    if(this.executionEnvironment.platformDeviceId!=null){
-        this.platformService.findDevice(this.executionEnvironment.platformDeviceId, this.testPlanResult.testPlan.testPlanLabType).subscribe((platformDevice) => {
-        this.executionEnvironment.deviceName = platformDevice.displayName;
+    if(this.testDevice.platformDeviceId!=null){
+        this.platformService.findDevice(this.testDevice.platformDeviceId, this.testPlanResult.testPlan.testPlanLabType).subscribe((platformDevice) => {
+        this.testDevice.deviceName = platformDevice.displayName;
       });
     }
-    if(this.executionEnvironment.platformScreenResolutionId!=null){
-      this.platformService.findScreenResolution(this.executionEnvironment.platformScreenResolutionId, this.testPlanResult.testPlan.testPlanLabType).subscribe((platformResolution) => {
-        this.executionEnvironment.resolution = platformResolution.resolution;
+    if(this.testDevice.platformScreenResolutionId!=null){
+      this.platformService.findScreenResolution(this.testDevice.platformScreenResolutionId, this.testPlanResult.testPlan.testPlanLabType).subscribe((platformResolution) => {
+        this.testDevice.resolution = platformResolution.resolution;
       });
     }
   }
 
   get canShowResolution() {
-    return !this.executionEnvironment?.resolution?.includes('?') && this.executionEnvironment?.resolution && !this.isHybrid;
+    return !this.testDevice?.resolution?.includes('?') && this.testDevice?.resolution && !this.isHybrid;
   }
 
   get isHybrid() {
     return this.testPlanResult?.testPlan?.isHybrid;
+  }
+
+  get isPrivateGrid() {
+    return this.testPlanResult?.testPlan?.isPrivateLab;
   }
 
   get isMobileWeb() {

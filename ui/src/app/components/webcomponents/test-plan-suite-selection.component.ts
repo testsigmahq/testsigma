@@ -33,7 +33,7 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
   @ViewChild('suitesValidationDiv') suitesValidationDiv: ElementRef;
   @ViewChild('machineValidationDiv') machineValidationDiv: ElementRef;
   public activeEnvironmentFormGroup: FormGroup;
-  public executionEnvironments: TestDevice[] = [];
+  public testDevices: TestDevice[] = [];
   public activeExecutionEnvironment: TestDevice;
   public isAdvanceAddToggle: boolean = false;
   public isEditEnvironmentActive: boolean = false;
@@ -59,7 +59,7 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
   }
 
   get isSuiteIdsInvalid(){
-    return this.executionEnvironments?.filter(environment => !environment?.suiteIds?.length)?.length;
+    return this.testDevices?.filter(environment => !environment?.suiteIds?.length)?.length;
   }
 
   constructor(
@@ -75,6 +75,10 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
 
   get isHybrid() {
     return this.testPlanLabType == TestPlanLabType.Hybrid;
+  }
+
+  get isPrivateGrid() {
+    return this.testPlanLabType == TestPlanLabType.PrivateGrid;
   }
 
   get environmentsFormControls(): FormGroup[] {
@@ -118,8 +122,8 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
   }
 
   get hasDifferentSuites() {
-    let suiteIds = this.executionEnvironments[0]?.testSuites?.map(suite => suite.id) || [];
-    return this.executionEnvironments.length > 1 && this.executionEnvironments.filter(env => {
+    let suiteIds = this.testDevices[0]?.testSuites?.map(suite => suite.id) || [];
+    return this.testDevices.length > 1 && this.testDevices.filter(env => {
       return env.platform && JSON.stringify(env.testSuites?.map(suite => suite.id)) != JSON.stringify(suiteIds);
     }).length > 0;
   }
@@ -150,22 +154,22 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
 
   ngOnChanges() {
     setTimeout(()=> {
-      if (this.formSubmitted && !this.executionEnvironments.length) {
+      if (this.formSubmitted && !this.testDevices.length) {
         this.machineValidationDiv?.nativeElement.scrollIntoView({behavior: "smooth"});
       } else if (this.formSubmitted && this.isSuiteIdsInvalid) {
         this.suitesValidationDiv?.nativeElement.scrollIntoView({behavior: "smooth"});
       }
     }, 200);
-    if(this.executionEnvironments.length > 0)
+    if(this.testDevices.length > 0)
       return
     if (this.testPlan?.testDevices) {
       this.testPlan.testDevices.forEach(environment => {
-        this.executionEnvironments.push(environment);
+        this.testDevices.push(environment);
         (<FormArray>this.testPlanForm.controls['testDevices']).push(this.createEnvironmentFormGroup(environment))
       });
     } else if (this.environmentsFormControls?.length > 0) {
       this.environmentsFormControls.forEach((environmentGroup: FormGroup) => {
-        this.executionEnvironments.push(new TestDevice().deserialize(environmentGroup.getRawValue()));
+        this.testDevices.push(new TestDevice().deserialize(environmentGroup.getRawValue()));
       })
     }
     this.addNewExecutionEnvironment();
@@ -192,9 +196,9 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
       agentId: new FormControl(environment?.agentId, [this.requiredIfValidator(() => this.isHybrid)]),
       deviceId: new FormControl(environment?.deviceId, [this.requiredIfValidator(() => this.isHybrid && this.version?.workspace.isMobile)]),
       settings:new FormGroup({}),
-      platformOsVersionId :new FormControl(environment?.platformOsVersionId,  [this.requiredIfValidator(() => !this.isRest && !this.isHybrid)]),
-      platformScreenResolutionId : new FormControl(environment?.platformScreenResolutionId, [this.requiredIfValidator(() => this.isWeb && !this.isHybrid)]),
-      platformBrowserVersionId :new FormControl(environment?.platformBrowserVersionId, [this.requiredIfValidator(() => !this.version?.workspace.isMobile && !this.isRest && !this.isHybrid)]),
+      platformOsVersionId :new FormControl(environment?.platformOsVersionId,  [this.requiredIfValidator(() => !this.isRest && !this.isHybrid && !this.isPrivateGrid)]),
+      platformScreenResolutionId : new FormControl(environment?.platformScreenResolutionId, [this.requiredIfValidator(() => this.isWeb && !this.isHybrid && !this.isPrivateGrid)]),
+      platformBrowserVersionId :new FormControl(environment?.platformBrowserVersionId, [this.requiredIfValidator(() => !this.version?.workspace.isMobile && !this.isRest && !this.isHybrid && !this.isPrivateGrid)]),
       platformDeviceId : new FormControl(environment?.platformDeviceId,  [this.requiredIfValidator(() => !this.isWeb && !this.isRest && !this.isHybrid)]),
       appUploadId : new FormControl(environment?.appUploadId, [this.requiredIfValidator(() => this.isAppUploadIdRequired)]),
       appUploadVersionId: new FormControl(environment?.appUploadVersionId, []),
@@ -205,7 +209,7 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
       suiteIds: this.formBuilder.array([this.formBuilder.control(suiteIds, Validators.required)]),
       title: new FormControl(environment?.title, []),
       createSessionAtCaseLevel: new FormControl(environment?.createSessionAtCaseLevel, []),
-      browser: new FormControl(environment?.browser, [this.requiredIfValidator(() => !this.version?.workspace.isMobile && !this.isRest && this.isHybrid)]),
+      browser: new FormControl(environment?.browser, [this.requiredIfValidator(() => !this.version?.workspace.isMobile && !this.isRest && (this.isHybrid || this.isPrivateGrid) )]),
       platform: new FormControl(environment?.platform, []),
       osVersion: new FormControl(environment?.osVersion, []),
       browserVersion: new FormControl(environment?.browserVersion, []),
@@ -230,16 +234,16 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
   }
 
   setFormStates(showEnv?:boolean,showSuite?:boolean){
-    if(this.executionEnvironments.length == 0){
+    if(this.testDevices.length == 0){
       this.showAddEnvironmentForm = true;
       this.showAddSuiteForm = true;
     } else if(this.isEditEnvironmentActive){
       this.showAddEnvironmentForm = true;
       this.showAddSuiteForm = true;
-    } else if((this.executionEnvironments.length > 0) && !this.isEditEnvironmentActive && !this.advancedSettings){
+    } else if((this.testDevices.length > 0) && !this.isEditEnvironmentActive && !this.advancedSettings){
       this.showAddEnvironmentForm = false;
       this.showAddSuiteForm = true;
-    } else if((this.executionEnvironments.length > 0) && !this.isEditEnvironmentActive && this.advancedSettings){
+    } else if((this.testDevices.length > 0) && !this.isEditEnvironmentActive && this.advancedSettings){
       this.showAddEnvironmentForm = false;
       this.showAddSuiteForm = false;
     }
@@ -254,62 +258,63 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
   addNewExecutionEnvironment() {
     this.isEditEnvironmentActive = false;
     this.activeEnvironmentFormGroup = this.createEnvironmentFormGroup();
-    let testSuites = this.executionEnvironments[this.executionEnvironments.length-1]?.testSuites || [];
+    let testSuites = this.testDevices[this.testDevices.length-1]?.testSuites || [];
     this.activeExecutionEnvironment = new TestDevice().deserialize(this.activeEnvironmentFormGroup.getRawValue());
     this.activeExecutionEnvironment.testSuites = this.advancedSettings ? [] : [...testSuites];
     this.setFormStates();
   }
 
   saveEnvironment() {
-    let executionEnvironment = new TestDevice().deserialize(this.activeEnvironmentFormGroup.getRawValue());
-    executionEnvironment.testSuites = this.activeExecutionEnvironment?.testSuites || this.executionEnvironments[this.executionEnvironments?.length-1]?.testSuites || [];
+    let testDevice = new TestDevice().deserialize(this.activeEnvironmentFormGroup.getRawValue());
+    testDevice.testSuites = this.activeExecutionEnvironment?.testSuites || this.testDevices[this.testDevices?.length-1]?.testSuites || [];
     this.setSuiteIdsInFormGroup(this.activeEnvironmentFormGroup);
-    console.log(this.activeEnvironmentFormGroup);
-    executionEnvironment.title = this.activeEnvironmentFormGroup.value?.platform + "(" + this.activeEnvironmentFormGroup.value?.osVersion + ")";
+    testDevice.title = this.activeEnvironmentFormGroup.value?.platform+" ";
+    if (this.activeEnvironmentFormGroup.value?.osVersion)
+      testDevice.title += "(" + this.activeEnvironmentFormGroup.value?.osVersion + ") ";
     if(this.activeEnvironmentFormGroup.value?.browser)
-      executionEnvironment.title += this.activeEnvironmentFormGroup.value?.browser+"";
+      testDevice.title += this.activeEnvironmentFormGroup.value?.browser+" ";
     if(this.activeEnvironmentFormGroup.value?.browserVersion)
-      executionEnvironment.title += " (" + this.activeEnvironmentFormGroup.value?.browserVersion + ")";
+      testDevice.title += "(" + this.activeEnvironmentFormGroup.value?.browserVersion + ") ";
     if(this.activeEnvironmentFormGroup.value?.deviceName)
-      executionEnvironment.title += " ("+this.activeEnvironmentFormGroup.value?.deviceName+")";
+      testDevice.title += "("+this.activeEnvironmentFormGroup.value?.deviceName+")";
 
-    executionEnvironment = this.normalizeFormValue(executionEnvironment);
+    testDevice = this.normalizeFormValue(testDevice);
     if(this.isRest){
-      executionEnvironment.title = "Environment of("+this.activeExecutionEnvironment?.testSuites.map((suite) => suite.name).join(",")+")"
+      testDevice.title = "Environment of("+this.activeExecutionEnvironment?.testSuites.map((suite) => suite.name).join(",")+")"
     }
 
     if(this.isHybrid && this.isMobile){
-      this.devicesService.findByAgentId(executionEnvironment.agentId).subscribe(res => {
-        let device = res.content.find(device => device.id == executionEnvironment.deviceId);
-        executionEnvironment.title = device.osName + "(" + device.osVersion +")"+" ("+device.name+")";
-        this.populateEnvironmentsList(executionEnvironment);
+      this.devicesService.findByAgentId(testDevice.agentId).subscribe(res => {
+        let device = res.content.find(device => device.id == testDevice.deviceId);
+        testDevice.title = device.osName + "(" + device.osVersion +")"+" ("+device.name+")";
+        this.populateEnvironmentsList(testDevice);
         this.addNewExecutionEnvironment();
       })
     } else {
-      this.populateEnvironmentsList(executionEnvironment);
+      this.populateEnvironmentsList(testDevice);
       this.addNewExecutionEnvironment();
     }
     this.setFormStates(false);
   }
 
-  private populateEnvironmentsList(executionEnvironment){
-    this.activeEnvironmentFormGroup.controls['title'].setValue(executionEnvironment.title);
-    this.activeEnvironmentFormGroup.controls['platformOsVersionId'].setValue(executionEnvironment.platformOsVersionId);
-    this.activeEnvironmentFormGroup.controls['platformScreenResolutionId'].setValue(executionEnvironment.platformScreenResolutionId);
-    this.activeEnvironmentFormGroup.controls['platformBrowserVersionId'].setValue(executionEnvironment.platformBrowserVersionId);
-    this.activeEnvironmentFormGroup.controls['platformDeviceId'].setValue(executionEnvironment.platformDeviceId);
-    this.activeEnvironmentFormGroup.controls['appUploadId'].setValue(executionEnvironment.appUploadId);
-    this.activeEnvironmentFormGroup.controls['appPathType'].setValue(executionEnvironment.appPathType);
-    this.activeEnvironmentFormGroup.controls['appUrl'].setValue(executionEnvironment.appUrl);
-    this.activeEnvironmentFormGroup.controls['appPackage'].setValue(executionEnvironment.appPackage);
-    this.activeEnvironmentFormGroup.controls['appActivity'].setValue(executionEnvironment.appActivity);
-    this.activeEnvironmentFormGroup.controls['browser'].setValue(executionEnvironment.browser);
+  private populateEnvironmentsList(testDevice){
+    this.activeEnvironmentFormGroup.controls['title'].setValue(testDevice.title);
+    this.activeEnvironmentFormGroup.controls['platformOsVersionId'].setValue(testDevice.platformOsVersionId);
+    this.activeEnvironmentFormGroup.controls['platformScreenResolutionId'].setValue(testDevice.platformScreenResolutionId);
+    this.activeEnvironmentFormGroup.controls['platformBrowserVersionId'].setValue(testDevice.platformBrowserVersionId);
+    this.activeEnvironmentFormGroup.controls['platformDeviceId'].setValue(testDevice.platformDeviceId);
+    this.activeEnvironmentFormGroup.controls['appUploadId'].setValue(testDevice.appUploadId);
+    this.activeEnvironmentFormGroup.controls['appPathType'].setValue(testDevice.appPathType);
+    this.activeEnvironmentFormGroup.controls['appUrl'].setValue(testDevice.appUrl);
+    this.activeEnvironmentFormGroup.controls['appPackage'].setValue(testDevice.appPackage);
+    this.activeEnvironmentFormGroup.controls['appActivity'].setValue(testDevice.appActivity);
+    this.activeEnvironmentFormGroup.controls['browser'].setValue(testDevice.browser);
     let index = this.environmentsFormControls.indexOf(this.activeEnvironmentFormGroup);
     if(index > -1) {
-      this.executionEnvironments.splice(index, 1, executionEnvironment);
+      this.testDevices.splice(index, 1, testDevice);
     } else {
       (<FormArray>this.testPlanForm.controls['testDevices']).push(this.activeEnvironmentFormGroup);
-      this.executionEnvironments.push(executionEnvironment);
+      this.testDevices.push(testDevice);
     }
     console.log("testPlanFrom", this.testPlanForm);
   }
@@ -337,7 +342,7 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
       environment.agentId = null;
       environment.deviceId = null;
     }
-    if((!this.isWeb && !this.isMobileWeb) || (this.isWeb && !this.isHybrid)){
+    if((!this.isWeb && !this.isMobileWeb) || (this.isWeb && !this.isHybrid && !this.isPrivateGrid)){
       environment.browser = null;
     }
     return environment;
@@ -345,7 +350,7 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
 
   removeEnvironment(index) {
     this.environmentsFormControls.splice(index, 1);
-    this.executionEnvironments.splice(index, 1);
+    this.testDevices.splice(index, 1);
     this.addNewExecutionEnvironment();
     this.setFormStates();
   }
@@ -354,7 +359,7 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
     this.matDialog.open(TestPlanAddSuiteFormComponent, {
       width: '65vw',
       height: '85vh',
-      data: {executionEnvironment: this.activeExecutionEnvironment, version: this.version, execution: this.testPlan},
+      data: {testDevice: this.activeExecutionEnvironment, version: this.version, execution: this.testPlan},
       panelClass: ['mat-dialog', 'full-width', 'rds-none']
     }).afterClosed().subscribe(res => {
       if(res && !this.advancedSettings)
@@ -365,7 +370,7 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
   }
 
   updateSuites() {
-    this.executionEnvironments.forEach((environment, index) => {
+    this.testDevices.forEach((environment, index) => {
       environment.testSuites = [...this.activeExecutionEnvironment.testSuites];
       this.setSuiteIdsInFormGroup(this.environmentsFormControls[index]);
     })
@@ -405,7 +410,7 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
           environmentForm.controls['browser'].setValue(platformBrowsersversion.name.toUpperCase());
           setTimeout(() => {
             this.activeEnvironmentFormGroup = environmentForm;
-            this.activeExecutionEnvironment = this.executionEnvironments[index];
+            this.activeExecutionEnvironment = this.testDevices[index];
           }, 10);
         });
       }
@@ -414,14 +419,14 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
             environmentForm.controls['platform'].setValue(platformOsversion.platform);
             setTimeout(() => {
               this.activeEnvironmentFormGroup = environmentForm;
-              this.activeExecutionEnvironment = this.executionEnvironments[index];
+              this.activeExecutionEnvironment = this.testDevices[index];
             }, 10);
           });
       }
       else{
         setTimeout(()=> {
           this.activeEnvironmentFormGroup = environmentForm;
-          this.activeExecutionEnvironment = this.executionEnvironments[index];
+          this.activeExecutionEnvironment = this.testDevices[index];
         }, 10);
       }
     }
@@ -453,7 +458,7 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
   }
 
   showAddEnvButton():boolean {
-    return !this.showAddEnvironmentForm && this.executionEnvironments.length > 0 && !this.isEditEnvironmentActive;
+    return !this.showAddEnvironmentForm && this.testDevices.length > 0 && !this.isEditEnvironmentActive;
   }
 
   setAgentStatus(isAgentOnline:boolean){

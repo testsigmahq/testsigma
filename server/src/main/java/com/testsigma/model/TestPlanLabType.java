@@ -11,7 +11,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum TestPlanLabType {
-  TestsigmaLab, Hybrid;
+  TestsigmaLab, Hybrid, PrivateGrid;
 
   public boolean isHybrid() {
     return this.equals(Hybrid);

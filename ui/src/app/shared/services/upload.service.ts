@@ -58,7 +58,7 @@ export class UploadService {
     return this.http.post<Upload>(this.URLConstants.uploadsUrl + "/"+id, formData, {
     }).pipe(
       map(data => new Upload().deserialize(data)),
-      catchError(() => throwError('Problem while uploading file'))
+      catchError((exception) => throwError(exception))
     )
   }
 

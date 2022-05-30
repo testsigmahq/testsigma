@@ -68,7 +68,7 @@ import {TestDevice} from "../../models/test-device.model";
           <div
             class="ts-col-35 d-flex">
             <app-test-machine-info-column
-              [executionEnvironment]="configuration?.executionEnvironment"></app-test-machine-info-column>
+              [testDevice]="configuration?.testDevice"></app-test-machine-info-column>
             <i
               [matTooltip]="'hint.message.common.delete' | translate"
               class="ml-auto pointer fa-trash-thin action-icons"
@@ -129,7 +129,7 @@ export class DryRunSavedConfigListComponent extends BaseComponent implements OnI
     this.configurations.forEach(config => {
       let json = config.serialize();
       json['capabilities'] = json['desiredCapabilities']
-      config.executionEnvironment = new TestDevice().deserialize(json);
+      config.testDevice = new TestDevice().deserialize(json);
     })
   }
 

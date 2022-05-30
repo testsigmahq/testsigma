@@ -83,7 +83,7 @@ export class DetailsComponent extends BaseComponent implements OnInit {
         error: (error) => {
           this.saving = false;
           this.translate.get("message.common.deleted.failure", {FieldName: 'Azure Config Details'}).subscribe((res: string) => {
-            this.showAPIError(error, res);
+            this.showAPIError(error, res,'Azure Storage Config Details' );
           });
         }
       }

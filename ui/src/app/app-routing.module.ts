@@ -56,6 +56,7 @@ import {OnboardingFormComponent} from "./components/onboarding-form.component";
 import {OnboardingGuard} from "./guards/onboarding.guard";
 import {Onboarding} from "./models/onboarding.model";
 import {SupportComponent} from "./components/support.component";
+import {InspectionLauncherComponent} from "./agents/components/inspection-launcher.component";
 
 const routes: Routes = [
   {
@@ -221,6 +222,11 @@ const routes: Routes = [
               },
               {path: 'plans', component: TestPlansListInTestSuiteComponent}
             ]
+          },
+          {
+            path: 'record/:versionId',
+            component: InspectionLauncherComponent,
+            canActivate: [AuthenticationGuard]
           },
           {
             path: ':versionId/suites/new',

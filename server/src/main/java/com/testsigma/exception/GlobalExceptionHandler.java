@@ -305,4 +305,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+  @ExceptionHandler({InvalidStorageCredentialsException.class})
+  public ResponseEntity<Object> handleTestsigmaException(final InvalidStorageCredentialsException ex,
+                                                         final WebRequest request) {
+    logger.error(ex.getMessage(), ex);
+    final APIErrorDTO apiError = new APIErrorDTO();
+    apiError.setCode(ex.getErrorCode());
+    apiError.setError(ex.getLocalizedMessage());
+    return new ResponseEntity<>(apiError, new HttpHeaders(), HttpStatus.UNAUTHORIZED);
+  }
 }

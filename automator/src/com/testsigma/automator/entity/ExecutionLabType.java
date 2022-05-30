@@ -13,5 +13,5 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum ExecutionLabType {
-  TestsigmaLab, Hybrid
+  TestsigmaLab, Hybrid, PrivateGrid
 }

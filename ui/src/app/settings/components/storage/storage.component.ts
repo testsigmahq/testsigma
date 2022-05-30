@@ -111,12 +111,12 @@ export class StorageComponent extends BaseComponent implements OnInit {
       .subscribe((res) => {
         if (res){
           this.changeStorageStatus(storageType,true);
-          this.getStorageConfig();
         }
         else {
           this.changeStorageStatus(storageType, false);
           event.source.checked = false;
         }
+        this.getStorageConfig();
       });
   }
 
@@ -206,7 +206,7 @@ export class StorageComponent extends BaseComponent implements OnInit {
         this.checkDetails();
       }, error => {
         this.translate.get('message.common.created.failure', {FieldName: 'Storage Config'}).subscribe((res) => {
-          this.showAPIError(error, res);
+          this.showAPIError(error, res, this.storageConfig.storageType);
         })
       });
   }

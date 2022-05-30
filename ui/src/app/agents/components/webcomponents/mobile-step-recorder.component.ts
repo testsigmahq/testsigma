@@ -79,13 +79,14 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
   private bulkStepUpdateDialogRef: MatDialogRef<StepBulkUpdateFormComponent>;
   public draggedSteps: TestStep[];
   public currentStepType: string = TestStepType.ACTION_TEXT;
-  public pauseRecord: boolean = false;
   private viewAfterLastAction: string = 'NATIVE_APP';
   public actionStep: TestStep;
   public addActionStepAfterSwitch: boolean = false;
   public isElseIfStep: boolean = false;
   private isNeedToUpdateId: number;
   public editedStep: TestStep;
+  public suggestionName: string;
+  public suggestionContentData;
   public isReorder: boolean = false;
 
   constructor(
@@ -106,7 +107,7 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
     public addonActionService: AddonActionService,
     public applicationVersionService: WorkspaceVersionService,
     private route: ActivatedRoute,
-    private mobileRecorderEventService: MobileRecorderEventService
+    public mobileRecorderEventService: MobileRecorderEventService,
   ) {
     super(
       authGuard, notificationsService, translate, toastrService,
@@ -116,7 +117,8 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
       //cloudDeviceService,
       elementService,
       dialogRef,
-      dialog)
+      dialog,
+      mobileRecorderEventService)
   }
 
   get halfHeightDialogsOpen(): boolean {
@@ -140,10 +142,14 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
   }
 
   get canShowBulkActions() {
-    return this.selectedStepsList && this.selectedStepsList.length>1;
+    return this.selectedStepsList && this.selectedStepsList?.length>1;
   }
 
   ngOnInit(): void {
+    this.mobileRecorderEventService.suggestionContent.subscribe(res => {
+      this.suggestionContentData = res;
+      this.suggestionName = res.content;
+    })
     super.ngOnInit();
     this.route.params.subscribe((params: Params) => {
       this.fetchTestCase(this.route.snapshot.queryParamMap['params'].testCaseId);
@@ -525,4 +531,33 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
   public findConditionalIfParent(parentStep: TestStep) {
     return parentStep.isConditionalIf ? parentStep : this.findConditionalParent(parentStep.parentStep);
   }
+
+  get isSummary() {
+    return this.suggestionName === this.mobileRecorderEventService.stepSummary;
+  }
+
+  get isEditElement() {
+    return this.suggestionName === this.mobileRecorderEventService.editElementPopup;
+  }
+
+  get isCustomFunction() {
+    return this.suggestionName === this.mobileRecorderEventService.suggestionCustomFunction;
+  }
+
+  get isDataProfile() {
+    return this.suggestionName === this.mobileRecorderEventService.suggestionDataProfile;
+  }
+
+  get isEnvironment() {
+    return this.suggestionName === this.mobileRecorderEventService.suggestionEnvironment;
+  }
+
+  get isMoreAction() {
+    return this.suggestionName === this.mobileRecorderEventService.stepMoreAction;
+  }
+
+  get isElementsSuggestion() {
+    return this.suggestionName === this.mobileRecorderEventService.suggestionElement;
+  }
+
 }

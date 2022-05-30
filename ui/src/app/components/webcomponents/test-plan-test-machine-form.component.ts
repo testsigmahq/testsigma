@@ -48,14 +48,20 @@ export class TestPlanTestMachineFormComponent extends TestPlanPlatformOsVersionF
         this.screenResolution = this.screenResolutions.find(res => res.id == this.environmentFormGroup?.controls['platformScreenResolutionId'].value);
       }
       if (setValue || !this.screenResolution) {
-        this.screenResolution = this.screenResolutions[0];
-        this.environmentFormGroup?.controls['platformScreenResolutionId'].setValue(this.screenResolution.id);
+        if (this.screenResolutions.length > 0) {
+          this.screenResolution = this.screenResolutions[0];
+          this.environmentFormGroup?.controls['platformScreenResolutionId'].setValue(this.screenResolution.id);
+        } else {
+          this.screenResolution = null;
+          this.environmentFormGroup?.controls['platformScreenResolutionId'].setValue(null);
+        }
       }
       this.setResolution(this.screenResolution);
     })
   }
 
   setResolution(screenResolution){
+    if (screenResolution)
     this.environmentFormGroup?.controls['resolution'].setValue(screenResolution.resolution);
   }
 

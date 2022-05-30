@@ -40,7 +40,7 @@ export class TestPlanAddSuiteFormComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public options: {
-      executionEnvironment: TestDevice,
+      testDevice: TestDevice,
       version: WorkspaceVersion,
       execution: TestPlan
     },
@@ -63,7 +63,7 @@ export class TestPlanAddSuiteFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.selectedSuites = [...this.options.executionEnvironment?.testSuites] || [];
+    this.selectedSuites = [...this.options.testDevice?.testSuites] || [];
     this.selectedSuites.forEach(testSuite => this.setParentSuite(testSuite));
     this.filterCheckAllSelectedSuites = [...this.selectedSuites];
     this.fetchTags();
@@ -174,7 +174,7 @@ export class TestPlanAddSuiteFormComponent implements OnInit {
   save() {
     this.submitted = true;
     if (this.selectedSuites.length == 0) return;
-    this.options.executionEnvironment.testSuites = this.selectedSuites;
+    this.options.testDevice.testSuites = this.selectedSuites;
     this.dialogRef.close(true);
   }
 

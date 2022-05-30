@@ -47,6 +47,10 @@ public class TestStepResultService {
     return this.testStepResultRepository.findAllByTestCaseResultIdAndScreenshotNameIsNotNull(testCaseResultId);
   }
 
+  public List<TestStepResult> findAllByTestCaseResultIdAndScreenshotNameIsNotNullAndVisualEnabledIsTrue(Long testCaseResultId) {
+    return this.testStepResultRepository.findAllByTestCaseResultIdAndScreenshotNameIsNotNullAndVisualEnabledIsTrue(testCaseResultId);
+  }
+
   public TestStepResult create(TestStepResult testStepResult) {
     return testStepResultRepository.save(testStepResult);
   }

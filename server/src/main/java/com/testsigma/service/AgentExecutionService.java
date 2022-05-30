@@ -567,7 +567,7 @@ public class AgentExecutionService {
       settings.setPlatform(platformOsVersion.getPlatform());
       settings.setOsVersion(platformOsVersion.getPlatformVersion());
     }
-    if (exeLabType == TestPlanLabType.Hybrid) {
+    if (exeLabType == TestPlanLabType.Hybrid || exeLabType == TestPlanLabType.PrivateGrid) {
       settings.setBrowser(testDevice.getBrowser());
     }
     settings.setAppActivity(testDevice.getAppActivity());
@@ -1223,11 +1223,14 @@ public class AgentExecutionService {
         platform = agentDevice.getOsName().getPlatform();
       }
       platformOsVersion = platformsService.getPlatformOsVersion(platform, osVersion, this.getAppType(), testPlanLabType);
-    } else {
+    }
+    else {
       platformOsVersion = platformsService.getPlatformOsVersion(testDevice.getPlatformOsVersionId(), testPlanLabType);
     }
-
-    settings.setPlatform(platformOsVersion.getPlatform());
+  if (testPlanLabType != TestPlanLabType.PrivateGrid)
+         settings.setPlatform(platformOsVersion.getPlatform());
+  else
+    settings.setPlatform(testDevice.getPlatform());
     if (TestPlanLabType.Hybrid == testPlanLabType) {
       settings.setOsVersion(platformOsVersion.getVersion());
     }
@@ -1251,7 +1254,9 @@ public class AgentExecutionService {
     if (testPlanLabType.isHybrid()) {
       matchHybridBrowserVersion(agent, platformBrowserVersion, testDevice, platformBrowserVersion.getName(),environmentEntityDTO);
     }
-    settings.setBrowser(platformBrowserVersion.getName().name());
+    if (testPlanLabType != TestPlanLabType.PrivateGrid)
+     settings.setBrowser(platformBrowserVersion.getName().name());
+    else settings.setBrowser(Browsers.getBrowser(testDevice.getBrowser()).name());
 
     if (testPlanLabType == TestPlanLabType.Hybrid) {
       settings.setBrowserVersion(platformBrowserVersion.getVersion());
@@ -1260,7 +1265,9 @@ public class AgentExecutionService {
           platformBrowserVersion.getVersion(), platformBrowserVersion.getName(),
           platformBrowserVersion.getDriverVersion()));
     } else {
-      settings.setBrowserVersion(platformBrowserVersion.getVersion());
+      if (testPlanLabType != TestPlanLabType.PrivateGrid)
+        settings.setBrowserVersion(platformBrowserVersion.getVersion());
+      else settings.setBrowserVersion(testDevice.getBrowserVersion());
     }
   }
 
@@ -1322,6 +1329,7 @@ public class AgentExecutionService {
       stepEntity.setStepGroupId(testStepDTO.getStepGroupId());
       stepEntity.setParentId(testStepDTO.getParentId());
       stepEntity.setConditionType(testStepDTO.getConditionType());
+      stepEntity.setVisualEnabled(testStepDTO.getVisualEnabled());
 
       if (testStepDTO.getTestStepDTOS() != null) {
         for (TestStepDTO subTestStepDTO : testStepDTO.getTestStepDTOS()) {

@@ -191,6 +191,19 @@
       <version>${poi.version}</version>
     </dependency>
 
+
+    <dependency>
+      <groupId>net.dongliu</groupId>
+      <artifactId>apk-parser</artifactId>
+      <version>2.6.10</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.googlecode.plist</groupId>
+      <artifactId>dd-plist</artifactId>
+      <version>1.23</version>
+    </dependency>
+
     <dependency>
       <groupId>org.apache.poi</groupId>
       <artifactId>poi-ooxml</artifactId>
@@ -377,6 +390,11 @@
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
       <version>2.17.1</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.media</groupId>
+      <artifactId>jmf</artifactId>
+      <version>2.1.1e</version>
     </dependency>
 
     <dependency>

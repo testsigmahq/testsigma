@@ -15,32 +15,32 @@ import { DevicesService } from 'app/agents/services/devices.service';
   selector: 'app-test-plan-execution-environment-info',
   template: `
       <div class="text-t-secondary d-flex flex-column execution-list-item">
-          <div *ngIf="!isHybrid" class="d-flex justify-content-around">
+          <div *ngIf="!isHybrid" class="d-flex justify-content-between">
               <div class="d-flex">
                   <i (click)="remove()"
                      [matTooltip]="'hint.message.common.delete' | translate"
                      class="pointer fa-close-alt mr-8 mt-8 position-absolute right-0 top-0" style="font-size:8px"></i>
-                  <i [class.fa-apple]="executionEnvironment?.isIOS || executionEnvironment?.isMac"
-                     [class.fa-windows-brands]="executionEnvironment?.isWindows"
-                     [class.fa-linux-2]="executionEnvironment?.isLinux"
-                     [class.fa-android-solid]="executionEnvironment?.isAndroid"></i>
-                  <span class="ml-4" [textContent]="executionEnvironment?.formattedOsVersion"></span>
+                  <i [class.fa-apple]="testDevice?.isIOS || testDevice?.isMac"
+                     [class.fa-windows-brands]="testDevice?.isWindows"
+                     [class.fa-linux-2]="testDevice?.isLinux"
+                     [class.fa-android-solid]="testDevice?.isAndroid"></i>
+                  <span class="ml-4" [textContent]="testDevice?.formattedOsVersion"></span>
               </div>
               <div class="d-flex mw-80 text-nowrap" *ngIf="version?.workspace?.isMobile">
                   <i class="ml-4"
-                     [class.fa-mobile-alt-solid]="executionEnvironment?.deviceName"></i>
+                     [class.fa-mobile-alt-solid]="testDevice?.deviceName"></i>
                   <span class="d-inline-block mw-90 text-truncate"
-                        [textContent]="executionEnvironment?.deviceName"></span>
+                        [textContent]="testDevice?.deviceName"></span>
               </div>
               <div class="d-flex text-nowrap" *ngIf="(version?.workspace?.isMobileWeb || version?.workspace?.isWeb)">
                   <i class="ml-4"
-                     [class.fa-chrome]="executionEnvironment?.isChrome"
-                     [class.fa-firefox]="executionEnvironment?.isFirefox"
-                     [class.fa-safari-brands]="executionEnvironment?.isSafari"
-                     [class.fa-edge]="executionEnvironment?.isEdge"></i>
+                     [class.fa-chrome]="testDevice?.isChrome"
+                     [class.fa-firefox]="testDevice?.isFirefox"
+                     [class.fa-safari-brands]="testDevice?.isSafari"
+                     [class.fa-edge]="testDevice?.isEdge"></i>
                   <span class="ml-4" *ngIf="!version?.workspace?.isMobileWeb"
-                        [textContent]="executionEnvironment?.formattedBrowserVersion"></span>
-                  <span class="ml-15" [textContent]="executionEnvironment?.resolution"></span>
+                        [textContent]="testDevice?.formattedBrowserVersion"></span>
+                  <span class="ml-15" [textContent]="testDevice?.resolution"></span>
               </div>
           </div>
           <div *ngIf="isHybrid" class="d-flex justify-content-around">
@@ -49,38 +49,38 @@ import { DevicesService } from 'app/agents/services/devices.service';
                      [matTooltip]="'hint.message.common.delete' | translate"
                      class="pointer fa-close-alt mr-8 mt-8 position-absolute right-0 top-0" style="font-size:8px"></i>
                   <i
-                          [class.fa-apple]="executionEnvironment.agent?.isMac || executionEnvironment?.isMac || executionEnvironment?.isIOS"
-                          [class.fa-android-solid]="executionEnvironment?.isAndroid"
-                          [class.fa-windows-brands]="executionEnvironment.agent?.isWindows || executionEnvironment?.isWindows"
-                          [class.fa-linux-2]="executionEnvironment.agent?.isLinux || executionEnvironment?.isLinux"></i>
-                  <span class="ml-4" [textContent]="executionEnvironment.agent?.title"></span>
+                          [class.fa-apple]="testDevice.agent?.isMac || testDevice?.isMac || testDevice?.isIOS"
+                          [class.fa-android-solid]="testDevice?.isAndroid"
+                          [class.fa-windows-brands]="testDevice.agent?.isWindows || testDevice?.isWindows"
+                          [class.fa-linux-2]="testDevice.agent?.isLinux || testDevice?.isLinux"></i>
+                  <span class="ml-4" [textContent]="testDevice.agent?.title"></span>
               </div>
               <div class="d-flex mw-80" *ngIf="version?.workspace?.isMobile">
                   <i class="ml-4"
-                     [class.fa-mobile-alt-solid]="executionEnvironment.deviceId"></i>
+                     [class.fa-mobile-alt-solid]="testDevice.deviceId"></i>
                   <span class="d-inline-block mw-90 text-truncate"
-                        [textContent]="executionEnvironment?.deviceName"></span>
+                        [textContent]="testDevice?.deviceName"></span>
               </div>
               <div class="d-flex" *ngIf="(version?.workspace?.isMobileWeb || version?.workspace?.isWeb)">
                   <i class="ml-4"
-                     [class.fa-chrome]="executionEnvironment?.isChrome"
-                     [class.fa-firefox]="executionEnvironment?.isFirefox"
-                     [class.fa-safari-brands]="executionEnvironment?.isSafari"
-                     [class.fa-edge]="executionEnvironment?.isEdge"></i>
+                     [class.fa-chrome]="testDevice?.isChrome"
+                     [class.fa-firefox]="testDevice?.isFirefox"
+                     [class.fa-safari-brands]="testDevice?.isSafari"
+                     [class.fa-edge]="testDevice?.isEdge"></i>
                   <span class="ml-4" *ngIf="!version?.workspace?.isMobileWeb"
-                        [textContent]="executionEnvironment?.formattedBrowserVersion"></span>
+                        [textContent]="testDevice?.formattedBrowserVersion"></span>
               </div>
           </div>
           <div class="d-flex text-dark pt-10 pl-10" *ngIf="advancedSettingsEnabled">
         <span
-                [textContent]="'test_plan.environments.no_of_suites' | translate : {count: (executionEnvironment.testSuites?.length || 0)}"></span>
+                [textContent]="'test_plan.environments.no_of_suites' | translate : {count: (testDevice.testSuites?.length || 0)}"></span>
           </div>
       </div>
   `,
   styles: []
 })
 export class TestPlanExecutionEnvironmentInfoComponent implements OnInit {
-  @Input('executionEnvironment') executionEnvironment: TestDevice;
+  @Input('testDevice') testDevice: TestDevice;
   @Input('testPlan') testPlan: TestPlan;
   @Input('version') version: WorkspaceVersion;
   @Input('testPlanLabType') testPlanLabType: TestPlanLabType;
@@ -106,56 +106,56 @@ export class TestPlanExecutionEnvironmentInfoComponent implements OnInit {
 
   ngOnChanges() {
     if(this.isHybrid){
-      this.agentService.findAll("id:"+this.executionEnvironment?.agentId).subscribe(res=> {
+      this.agentService.findAll("id:"+this.testDevice?.agentId).subscribe(res=> {
         let agent;
         if(res.content.length){
           agent = res.content[0];
-          if(this.executionEnvironment.browser!=null){
-            this.executionEnvironment.platform = Agent.getPlatformFromOsType(agent.osType);
-            this.executionEnvironment.osVersion = agent.osVersion;
-            let browser = agent.browsers.find(browser => browser.name.toUpperCase() == this.executionEnvironment.browser)
-            this.executionEnvironment.browserVersion = browser.majorVersion;
+          if(this.testDevice.browser!=null){
+            this.testDevice.platform = Agent.getPlatformFromOsType(agent.osType);
+            this.testDevice.osVersion = agent.osVersion;
+            let browser = agent.browsers.find(browser => browser.name.toUpperCase() == this.testDevice.browser)
+            this.testDevice.browserVersion = browser.majorVersion;
           }
         }
-        if(this.executionEnvironment.deviceId && agent)
+        if(this.testDevice.deviceId && agent)
           this.devicesService.findAll(agent.id).subscribe(res => {
-            let agentDevice = res.content.find(device => device.id == this.executionEnvironment.deviceId);
+            let agentDevice = res.content.find(device => device.id == this.testDevice.deviceId);
             console.log(agentDevice);
-            this.executionEnvironment.platform = AgentDevice.getPlatformFromMobileOStype(agentDevice.osName);
-            this.executionEnvironment.osVersion = agentDevice.osVersion;
-            this.executionEnvironment.browser = this.executionEnvironment.platform === Platform.Android ? 'CHROME' : "SAFARI";
-            this.executionEnvironment.deviceName = agentDevice.name;
+            this.testDevice.platform = AgentDevice.getPlatformFromMobileOStype(agentDevice.osName);
+            this.testDevice.osVersion = agentDevice.osVersion;
+            this.testDevice.browser = this.testDevice.platform === Platform.Android ? 'CHROME' : "SAFARI";
+            this.testDevice.deviceName = agentDevice.name;
           })
       });
     }
     else{
-      if (this.executionEnvironment.platformOsVersionId != null) {
-        this.platformService.findOsVersion(this.executionEnvironment.platformOsVersionId, this.testPlanLabType).subscribe((platformOsversion) => {
-          this.executionEnvironment.platform = platformOsversion.platform;
-          this.executionEnvironment.osVersion = platformOsversion.version;
+      if (this.testDevice.platformOsVersionId != null) {
+        this.platformService.findOsVersion(this.testDevice.platformOsVersionId, this.testPlanLabType).subscribe((platformOsversion) => {
+          this.testDevice.platform = platformOsversion.platform;
+          this.testDevice.osVersion = platformOsversion.version;
         });
       }
-      if (this.executionEnvironment.platformBrowserVersionId != null) {
-        this.platformService.findBrowserVersion(this.executionEnvironment.platformBrowserVersionId, this.testPlanLabType).subscribe((platformBrowsersversion) => {
-          this.executionEnvironment.browser = platformBrowsersversion.name.toUpperCase();
-          this.executionEnvironment.browserVersion = platformBrowsersversion.version;
+      if (this.testDevice.platformBrowserVersionId != null) {
+        this.platformService.findBrowserVersion(this.testDevice.platformBrowserVersionId, this.testPlanLabType).subscribe((platformBrowsersversion) => {
+          this.testDevice.browser = platformBrowsersversion.name.toUpperCase();
+          this.testDevice.browserVersion = platformBrowsersversion.version;
         });
       }
-      if (this.executionEnvironment.platformDeviceId != null) {
-        this.platformService.findDevice(this.executionEnvironment.platformDeviceId, this.testPlanLabType).subscribe((platformDevice) => {
-          this.executionEnvironment.deviceName = platformDevice.displayName;
+      if (this.testDevice.platformDeviceId != null) {
+        this.platformService.findDevice(this.testDevice.platformDeviceId, this.testPlanLabType).subscribe((platformDevice) => {
+          this.testDevice.deviceName = platformDevice.displayName;
         });
       }
-      if (this.executionEnvironment.platformScreenResolutionId != null) {
-        this.platformService.findScreenResolution(this.executionEnvironment.platformScreenResolutionId, this.testPlanLabType).subscribe((platformResolution) => {
-          this.executionEnvironment.resolution = platformResolution.resolution;
+      if (this.testDevice.platformScreenResolutionId != null) {
+        this.platformService.findScreenResolution(this.testDevice.platformScreenResolutionId, this.testPlanLabType).subscribe((platformResolution) => {
+          this.testDevice.resolution = platformResolution.resolution;
         });
       }
     }
-    if (this.isHybrid && this.executionEnvironment.agentId)
-      this.agentService.findAll("id:" + this.executionEnvironment.agentId).subscribe(res => {
+    if (this.isHybrid && this.testDevice.agentId)
+      this.agentService.findAll("id:" + this.testDevice.agentId).subscribe(res => {
         if (res.content.length)
-          this.executionEnvironment.agent = res.content[0];
+          this.testDevice.agent = res.content[0];
       })
   }
 

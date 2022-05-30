@@ -50,6 +50,7 @@ public class PlatformsService {
   private static final String PLATFORM_DEVICE_BY_ID_URL = "/{platformDeviceId}/device";
 
   private final HybridPlatformService hybridPlatformService;
+  private final PrivateGridService privateGridService;
   private final IntegrationsService integrationsService;
   private final HttpClient httpClient;
   private final TestsigmaOSConfigService testsigmaOSConfigService;
@@ -57,14 +58,19 @@ public class PlatformsService {
   public List<Platform> getSupportedPlatforms(WorkspaceType workspaceType,
                                               TestPlanLabType testPlanLabType) throws TestsigmaException {
 
-    com.testsigma.util.HttpResponse<List<Platform>> response = httpClient.get(getSupportedPlatformsUrl(
-            workspaceType, testPlanLabType),
-      getHeaders(testPlanLabType), new TypeReference<>() {
-      });
-    if (response.getStatusCode() < 300) {
-      return response.getResponseEntity();
-    } else {
-      return new ArrayList<>();
+    if (testPlanLabType != TestPlanLabType.PrivateGrid) {
+      com.testsigma.util.HttpResponse<List<Platform>> response = httpClient.get(getSupportedPlatformsUrl(
+                      workspaceType, testPlanLabType),
+              getHeaders(testPlanLabType), new TypeReference<>() {
+              });
+      if (response.getStatusCode() < 300) {
+        return response.getResponseEntity();
+      } else {
+        return new ArrayList<>();
+      }
+    }
+    else {
+     return this.privateGridService.getAllPlatforms();
     }
   }
 
@@ -113,14 +119,18 @@ public class PlatformsService {
   public List<Browsers> getPlatformSupportedBrowsers(Platform platform, String osVersion,
                                                      TestPlanLabType testPlanLabType)
     throws TestsigmaException {
-
-    com.testsigma.util.HttpResponse<List<Browsers>> response = httpClient.get(getBrowsersNamesUrl(platform,
-      osVersion, testPlanLabType), getHeaders(testPlanLabType), new TypeReference<>() {
-    });
-    if (response.getStatusCode() < 300) {
-      return response.getResponseEntity();
-    } else {
-      return new ArrayList<>();
+    if (testPlanLabType!=TestPlanLabType.PrivateGrid) {
+      com.testsigma.util.HttpResponse<List<Browsers>> response = httpClient.get(getBrowsersNamesUrl(platform,
+              osVersion, testPlanLabType), getHeaders(testPlanLabType), new TypeReference<>() {
+      });
+      if (response.getStatusCode() < 300) {
+        return response.getResponseEntity();
+      } else {
+        return new ArrayList<>();
+      }
+    }
+    else {
+      return this.privateGridService.getPlatformSupportedBrowsers(platform);
     }
   }
 
@@ -128,14 +138,18 @@ public class PlatformsService {
                                                           Browsers browserName,
                                                           TestPlanLabType testPlanLabType) throws TestsigmaException {
 
-
-    com.testsigma.util.HttpResponse<List<PlatformBrowserVersion>> response = httpClient.get(getBrowsersUrl(
-      platform, osVersion, browserName.toString(), testPlanLabType), getHeaders(testPlanLabType), new TypeReference<>() {
-    });
-    if (response.getStatusCode() < 300) {
-      return response.getResponseEntity();
-    } else {
-      return new ArrayList<>();
+    if (testPlanLabType != TestPlanLabType.PrivateGrid) {
+      com.testsigma.util.HttpResponse<List<PlatformBrowserVersion>> response = httpClient.get(getBrowsersUrl(
+              platform, osVersion, browserName.toString(), testPlanLabType), getHeaders(testPlanLabType), new TypeReference<>() {
+      });
+      if (response.getStatusCode() < 300) {
+        return response.getResponseEntity();
+      } else {
+        return new ArrayList<>();
+      }
+    }
+    else {
+    return this.privateGridService.getPlatformBrowserVersions( platform, browserName);
     }
   }
 

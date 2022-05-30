@@ -7,6 +7,7 @@ CREATE TABLE `user_preferences`
   `test_case_filter_id` BIGINT(20) DEFAULT NULL,
   `created_date`        DATETIME   DEFAULT CURRENT_TIMESTAMP,
   `updated_date`        DATETIME   DEFAULT CURRENT_TIMESTAMP,
+  `showed_github_star`  BIT(1)     DEFAULT b'0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_user_preferences_on_email` (`email`)
 ) ENGINE = InnoDB

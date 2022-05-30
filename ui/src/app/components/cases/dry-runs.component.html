@@ -60,7 +60,7 @@
         <app-test-machine-info-column
           [environmentResult]="dryTestCaseResult?.testDeviceResult"
           [testPlanResult]="dryTestCaseResult?.testDeviceResult?.testPlanResult"
-          [executionEnvironment]="dryTestCaseResult?.testDeviceResult?.testDevice"></app-test-machine-info-column>
+          [testDevice]="dryTestCaseResult?.testDeviceResult?.testDevice"></app-test-machine-info-column>
       </div>
       <div class="ts-col-10 text-t-secondary d-flex align-items-center"
            [textContent]="dryTestCaseResult?.testDeviceResult?.startTime | date:'hh:mm a MMM d'">

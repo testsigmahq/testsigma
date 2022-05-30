@@ -100,6 +100,7 @@ public abstract class TestcaseStepRunner {
     testCaseStepResult.setWaitTime(testCaseStepEntity.getWaitTime());
     testCaseStepResult.setTestPlanRunSettingEntity(testPlanRunSettingEntity);
     testCaseStepResult.setPriority(testCaseStepEntity.getPriority());
+    testCaseStepResult.setVisualEnabled(testCaseStepEntity.getVisualEnabled());
 
     Map<String, String> envDetails = new HashMap<String, String>();
     envDetails.put("testcaseId", testCaseResult.getTestCaseId() + "");

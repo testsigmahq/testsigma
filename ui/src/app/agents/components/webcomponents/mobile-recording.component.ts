@@ -29,6 +29,7 @@ import {ScreenOrientation} from "../../../enums/screen-orientation.enum";
 import {MirroringContainerComponent} from "./mirroring-container.component";
 import {ElementsContainerComponent} from "./elements-container.component";
 import {FormGroup} from "@angular/forms";
+import {MobileRecorderEventService} from "../../../services/mobile-recorder-event.service";
 
 @Component({
   selector: 'app-mobile-recording',
@@ -62,6 +63,7 @@ export class MobileRecordingComponent extends BaseComponent implements OnInit {
   public selectedIndex: number = 2;
   public selectedElement1: Element;
   public mobileRecorderComponentInstance: any;
+  public pauseRecord: boolean = false;
 
   constructor(
     public authGuard: AuthenticationGuard,
@@ -74,7 +76,8 @@ export class MobileRecordingComponent extends BaseComponent implements OnInit {
     //public cloudDeviceService: CloudDevicesService,
     public elementService: ElementService,
     public dialogRef: MatDialogRef<MobileRecordingComponent>,
-    public dialog: MatDialog) {
+    public dialog: MatDialog,
+    public mobileRecorderEventService: MobileRecorderEventService) {
     super(authGuard, notificationsService, translate, toastrService);
     this.devicesService = this.data.testsigmaAgentEnabled ? localDeviceService : localDeviceService;//cloudDeviceService;
     this.fullScreenMode = this.data.showFullScreen;
@@ -158,8 +161,12 @@ export class MobileRecordingComponent extends BaseComponent implements OnInit {
             this.createSession(mobileInspection.id);
           },
         error: (error: any) => {
-          this.showNotification(NotificationType.Error, error && error.error && error.error.code ? error.error.code :
-            this.translate.instant("mobile_recorder.notification.start.failure"));
+          let msg = error && error.error && error.error.code ? error.error.code :
+            this.translate.instant("mobile_recorder.notification.start.failure");
+          if(msg == "There are already running sessions for the user"){
+            msg = this.translate.instant("mobile_recorder.notification.start.open_sessions_failure_troubleshoot");
+          }
+          this.showNotification(NotificationType.Error, msg);
           this.loadingActions = false;
           this.loading = false;
         }
@@ -201,7 +208,7 @@ export class MobileRecordingComponent extends BaseComponent implements OnInit {
           this.mobileSessionId = null;
         }
         console.log("Error while creating the session - ", error);
-        this.showNotification(NotificationType.Error, this.translate.instant("mobile_recorder.notification.start.failure"));
+        this.showNotification(NotificationType.Error, this.translate.instant("mobile_recorder.message.refresh"), false);
         this.loadingActions = false;
         this.loading = false;
       }
@@ -420,7 +427,7 @@ export class MobileRecordingComponent extends BaseComponent implements OnInit {
     }
   }
 
-  renderCurrentScreenshot() {
+  renderCurrentScreenshot(isMirroring?: boolean) {
     if (this.data.recording) {
       this.loadingActions = true;
       this.devicesService.getScreenshot(this.data.agent, this.sessionId).subscribe({
@@ -428,6 +435,9 @@ export class MobileRecordingComponent extends BaseComponent implements OnInit {
           let img = new Image();
           img.onload = () => this.getMirroringContainerComponent()._onImageLoad(img);
           img.src = imageBase64URL + '';
+          if(isMirroring){
+            this.loadingActions = false;
+          }
         },
         error: (error) => {
           console.log('Error in get screenshot - ', error);
@@ -495,26 +505,26 @@ export class MobileRecordingComponent extends BaseComponent implements OnInit {
     this.loadingActions = true;
   }
 
-  public handleActionFailure(error, messageKey: string) {
+  public handleActionFailure(error, messageKey: string, actionType?: string, guideLink?: string) {
     let message;
     if (error['status'] == 500 && error['error']['error'].includes("A session is either terminated or not started")) {
       message = "mobile_recorder.notification.session_expired";
     } else if (error["error"]["error"]?.startsWith("Screen rotation cannot be changed")) {
       message = "mobile_recorder.notification.change_orientation_failed";
     } else {
-      message = messageKey;
+      message = "mobile_recorder.notification.action.failure_troubleshoot";
     }
-    this.showAPIError(error, this.translate.instant(message))
+    this.showAPIError(error, this.translate.instant(message), undefined, actionType, guideLink);
     this.loadingActions = false
   }
 
-  handleActionSuccess() {
+  handleActionSuccess(isMirroring?: boolean) {
     this.devicesService.getOrientation(this.sessionId).subscribe((res: ScreenOrientation) => {
       this.getMirroringContainerComponent().isLandscapeMode = res == ScreenOrientation.LANDSCAPE;
       let asyncRenderScreenshot = async () => {
         await this.synchronousDelay(500);
-        this.renderCurrentScreenshot();
-        this.renderCurrentScreenshot();
+        this.renderCurrentScreenshot(isMirroring);
+        this.renderCurrentScreenshot(isMirroring);
       }
       asyncRenderScreenshot();
     })
@@ -555,4 +565,46 @@ export class MobileRecordingComponent extends BaseComponent implements OnInit {
   public getSaveElementsComponent = () => this.mobileRecorderComponentInstance?.saveElementsComponent;
 
   public getMirroringContainerComponent =  () =>  this.mobileRecorderComponentInstance?.mirroringContainerComponent;
+
+  showAPIError(exception, internalErrorMSG, entityName?:string, actionType?: string, guideLink?: string) {
+    if(exception['status'] == 422 || exception['status'] == 451){
+      let errorMessage = exception['error']['error'];
+      if(errorMessage == "Entity with same name already exists, Please use different name" && Boolean(entityName)){
+        errorMessage = errorMessage.replace("Entity", entityName)
+      }
+      this.showNotification(NotificationType.Error, errorMessage);
+    }
+    else if (exception['status'] == 500){
+      let troubleShootMessage = this.translate.instant("mobile_recorder.notification.action.failure_troubleshoot", {actionType:actionType, guideLink:""});//TODO: Change "" to guideLink when we add the add the articles - shabarish.v@testsigma.com
+      this.showNotification(NotificationType.Error, (exception?.error?.code ? this.translate.instant(exception?.error?.code) : troubleShootMessage) || troubleShootMessage, false);
+    } else if(exception?.error?.objectErrors?.length > 0)
+      this.showNotification(NotificationType.Error, this.translate.instant('message.duplicate_entity'));
+    else
+      this.showNotification(NotificationType.Error, internalErrorMSG);
+  }
+
+  showNotification(type: NotificationType, message, clickToClose?:boolean) {
+    if(type == NotificationType.Success){
+      super.showNotification(type, message);
+      return;
+    }
+    const temp = {
+      type: type,
+      title: "Error",
+      content: message,
+      timeOut: 0,
+      positionClass: 'toast-bottom-left',
+      showProgressBar: true,
+      pauseOnHover: true,
+      animate: 'fromLeft',
+      showCloseButton: true,
+      enableHtml: true,
+      disableTimeOut:clickToClose
+    };
+    this.toastrService.show( temp.content,temp.title, temp, temp.type);
+  }
+
+  get isFullModeScreen() {
+    return this.mobileRecorderEventService.isLandscapeMode || this.fullScreenMode;
+  }
 }

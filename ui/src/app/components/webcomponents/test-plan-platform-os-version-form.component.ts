@@ -35,6 +35,10 @@ export class TestPlanPlatformOsVersionFormComponent implements OnInit {
     return this.testPlanLabType == TestPlanLabType.Hybrid;
   }
 
+  get isPrivateGrid() {
+    return this.testPlanLabType == TestPlanLabType.PrivateGrid;
+  }
+
   @Input('formGroup') environmentFormGroup: FormGroup;
   @Input('version') version: WorkspaceVersion;
   @Input('testPlanLabType') testPlanLabType: TestPlanLabType;
@@ -82,8 +86,9 @@ export class TestPlanPlatformOsVersionFormComponent implements OnInit {
       .findAll(this.version.workspace.workspaceType, this.testPlanLabType)
       .subscribe(res => {
         this.platforms = res;
-        if (this.environmentFormGroup?.controls['platform']?.value)
+        if (this.environmentFormGroup?.controls['platform']?.value) {
           this.platform = this.platforms.find(platform => platform.id == this.environmentFormGroup?.controls['platform'].value);
+        }
         if (this.platform==null) {
           this.platform = this.platforms[0];
           this.environmentFormGroup?.controls['platform']?.setValue(this.platform?.id);
@@ -103,10 +108,18 @@ export class TestPlanPlatformOsVersionFormComponent implements OnInit {
       if (this.environmentFormGroup?.controls['platformOsVersionId']?.value)
         this.platformOsVersion = this.platformOsVersions.find(osVersion => osVersion.id ==  this.environmentFormGroup?.controls['platformOsVersionId']?.value)
       if (!this.platformOsVersion || setValue) {
-        this.platformOsVersion = this.platformOsVersions[0];
-        this.environmentFormGroup?.controls['platformOsVersionId'].setValue(this.platformOsVersion.id);
+        if (this.platformOsVersions.length>0) {
+          this.platformOsVersion = this.platformOsVersions[0];
+          this.environmentFormGroup?.controls['platformOsVersionId'].setValue(this.platformOsVersion.id);
+          this.environmentFormGroup.controls['osVersion']?.setValue(this.platformOsVersion.version);
+        }
+        else{
+          this.platformOsVersion = null;
+          this.environmentFormGroup?.controls['platformOsVersionId'].setValue(null);
+          this.environmentFormGroup.controls['osVersion']?.setValue("Not Available");
+          this.environmentFormGroup.controls['osVersion']?.disable();
+        }
       }
-      this.environmentFormGroup.controls['osVersion']?.setValue(this.platformOsVersion.version);
       this.postOsVersionFetch(setValue)
     });
   }
@@ -125,11 +138,21 @@ export class TestPlanPlatformOsVersionFormComponent implements OnInit {
   fetchBrowsers(setValue?: Boolean) {
     this.platformService.findAllBrowsers(this.platform, this.platformOsVersion, this.version.workspace.workspaceType, this.testPlanLabType).subscribe(res => {
       this.browsers = res;
-      if (this.environmentFormGroup?.controls['browser']?.value)
-        this.platformBrowser = this.browsers.find(browser => browser.id == this.environmentFormGroup?.controls['browser']?.value);
-      if (!this.platformBrowser || setValue) {
-        this.platformBrowser = this.browsers[0];
-        this.environmentFormGroup?.controls['browser']?.setValue(this.platformBrowser?.id);
+      if (!this.isPrivateGrid) {
+        if (this.environmentFormGroup?.controls['browser']?.value)
+          this.platformBrowser = this.browsers.find(browser => browser.id == this.environmentFormGroup?.controls['browser']?.value);
+        if (!this.platformBrowser || setValue) {
+          this.platformBrowser = this.browsers[0];
+          this.environmentFormGroup?.controls['browser']?.setValue(this.platformBrowser?.id);
+        }
+      }
+      if (this.isPrivateGrid){
+        if (this.environmentFormGroup?.controls['browser']?.value)
+          this.platformBrowser = this.browsers.find(browser => browser.name == this.environmentFormGroup?.controls['browser']?.value);
+        if (!this.platformBrowser || setValue) {
+          this.platformBrowser = this.browsers[0];
+          this.environmentFormGroup?.controls['browser']?.setValue(this.platformBrowser?.name);
+        }
       }
       if (this.platformBrowser)
         this.fetchBrowserVersions(setValue);
@@ -143,10 +166,17 @@ export class TestPlanPlatformOsVersionFormComponent implements OnInit {
         this.browserVersion = this.browserVersions.find(browserVersion => browserVersion.id === this.environmentFormGroup?.controls['platformBrowserVersionId']?.value)
       }
       if (setValue || !this.browserVersion) {
-        this.browserVersion = this.browserVersions[0];
-        this.environmentFormGroup?.controls['platformBrowserVersionId'].setValue(this.browserVersion.id);
+        if (this.browserVersions.length>0) {
+          this.browserVersion = this.browserVersions[0];
+          this.environmentFormGroup?.controls['platformBrowserVersionId'].setValue(this.browserVersion.id);
+          this.environmentFormGroup?.controls['browserVersion']?.setValue(this.browserVersion?.version);
+        }
+        else{
+          this.browserVersion = null;
+          this.environmentFormGroup?.controls['platformBrowserVersionId'].setValue(null);
+          this.environmentFormGroup?.controls['browserVersion']?.disable();
+        }
       }
-      this.environmentFormGroup?.controls['browserVersion']?.setValue(this.browserVersion?.version);
     });
     this.isBrowserLoaded=true;
   }
@@ -154,7 +184,7 @@ export class TestPlanPlatformOsVersionFormComponent implements OnInit {
   setPlatformBrowserVersion(browserVersionId) {
     if (browserVersionId != null) {
       this.browserVersion = this.browserVersions.find(browserVersion => browserVersion.id === browserVersionId)
-      this.environmentFormGroup.controls['browserVersion']?.setValue(this.browserVersion.version);
+      this.environmentFormGroup.controls['browserVersion']?.setValue(this.browserVersion?.version);
     }
   }
 
@@ -215,6 +245,11 @@ export class TestPlanPlatformOsVersionFormComponent implements OnInit {
 
   setPlatformBrowser(browserId) {
     this.platformBrowser = this.browsers.find(browser => browser.id == browserId);
+    this.fetchBrowserVersions(true);
+  }
+
+  setPrivateGridPlatformBrowser(browserName) {
+    this.platformBrowser = this.browsers.find(browser => browser.name == browserName);
     this.fetchBrowserVersions(true);
   }
 

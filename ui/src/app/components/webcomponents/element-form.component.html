@@ -1,5 +1,7 @@
 <div class="theme-overlay-container">
-  <div class="theme-overlay-header theme-border-b">
+  <div
+    [class.theme-border-b]="!formDetails"
+    class="theme-overlay-header">
     <div
       class="theme-overlay-title"
       [translate]="elementId ? 'elements.form.edit_title' : 'elements.form.create_title'">
@@ -28,7 +30,7 @@
               [value]="elementCreateType.MANUAL"
               [ngModelOptions]="{standalone: true}"
               [(ngModel)]="element.createdType"
-              (ngModelChange)="workspaceVersion?.workspace.isWeb? stopCapture():''"/>
+              (ngModelChange)="workspaceVersion?.workspace.isWeb? stopCapture(false):''"/>
             <label
               for="manual"
               class="pl-5 pointer"
@@ -264,9 +266,8 @@
   </div>
   <div class="theme-overlay-footer">
     <button
-      (click) = "stopCapture()"
+      (click) = "stopCapture(true)"
       class="theme-btn-clear-default"
-      [matDialogClose]="reviewSubmittedElement"
       [translate]="'btn.common.cancel'"></button>
     <button
       [disabled]="!elementForm?.valid || this.isInProgress"

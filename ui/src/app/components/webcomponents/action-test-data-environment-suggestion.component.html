@@ -1,23 +1,38 @@
 <div class="theme-overlay-container">
-<div class="theme-overlay-header with-br-bottom">
   <div
-       class="theme-overlay-title"
-       [translate]="'action.no_environment.suggestion.title'">
+    [class.with-br-bottom]="!testDataEnvironment"
+    class="theme-overlay-header">
+    <div
+      class="theme-overlay-title"
+      [translate]="'action.no_environment.suggestion.title' | translate">
+    </div>
+    <button
+      class="theme-overlay-close"
+      type="button"
+      [matTooltip]="'hint.message.common.close' | translate"
+      (click)="closeSuggestion()">
+    </button>
   </div>
-  <button
-    class="theme-overlay-close"
-    type="button"
-    [matTooltip]="'hint.message.common.close' | translate"
-    mat-dialog-close>
-  </button>
-</div>
   <div class="identifier-record text-center h-100-64 overflow-y-auto" *ngIf="!environments?.length && !isQueryBased">
-    <div class="identifier-bg px-60">
-      <div [translate]="'environment_suggestion.not_found.title'" class="fz-20 rb-medium py-20"></div>
+    <div class="px-30">
+      <div class="d-flex align-items-center py-15">
+        <a class="btn theme-btn-primary"
+           (click)="closeSuggestion(!option?.stepRecorderView)"
+           [routerLink]="['/td', versionId, 'environments', 'new']"
+           target="_blank">
+          <span [translate]="'page_title.create_environment' | translate"></span>
+        </a>
+
+        <a class="btn btn-clear-default border-rds-4 ml-auto"
+           href="https://testsigma.com/docs/test-data/types/environment/" target="_blank">
+          <i class="text-purplish-blue fa-article pr-6 fz-15"></i>
+          <span class="text-dark" [translate]="'message.common.know_more'"></span>
+        </a>
+      </div>
       <div>
         <div
           *ngIf="!showVideo"
-          class="d-flex align-items-center justify-content-center w-100 theme-border border-rds-12 bg-white pointer" style="height: 200px; color: red">
+          class="d-flex align-items-center justify-content-center w-100 theme-border border-rds-12 bg-white pointer" style="height: 300px; color: red">
           <i
             (click)="showVideo= !showVideo"
             class="fa-youtube fz-38"></i>
@@ -28,104 +43,82 @@
           [class.player]="showVideo"
           height="300" class="w-100 border-rds-6">
           <div class="first-test-case poster"></div>
-          <video *ngIf="showVideo" [src]="getSource" controls autoplay class="border-rds-12 d-flex w-100" ></video>
+          <video *ngIf="showVideo" [src]="getSource" controls autoplay class="border-rds-12 d-flex w-100 identifier-bg" ></video>
         </div>
       </div>
-      <a class="btn btn-lg btn-clear-default border-rds-4 my-30" href="https://testsigma.com/docs/test-data/types/environment/" target="_blank">
-        <i class="text-purplish-blue fa-article pr-6 fz-15"></i>
-        <span class="text-dark" [translate]="'environment_suggestion.not_found.know_more'"></span>
-      </a>
-    </div>
-    <div class="pt-30">
-      <div [translate]="'environment_suggestion.not_found.start_title'" class="fz-14 pb-20"></div>
-      <a *ngIf="!option?.stepRecorderView" class="btn theme-btn-primary"
-         [routerLink]="['/td', versionId, 'environments', 'new']"
-         target="_blank"
-         [mat-dialog-close]="true">
-        <span [translate]="'+ '+ ('page_title.create_environment' | translate)"></span>
-      </a>
-      <a *ngIf="option?.stepRecorderView" class="btn theme-btn-primary"
-         [routerLink]="['/td', versionId, 'environments', 'new']"
-         target="_blank">
-        <span [translate]="'+ '+ ('page_title.create_environment' | translate)"></span>
-      </a>
+
     </div>
   </div>
-<form
-  *ngIf="environments?.length || isQueryBased"
-  class="ts-form theme-overlay-content without-footer" id="testcaseStatusForm"
-  (keydown.enter)="false"
-  novalidate="novalidate">
-  <div
-    class="overflow-x-hidden h-100 pt-30">
+  <form
+    *ngIf="environments?.length || isQueryBased"
+    class="ts-form theme-overlay-content without-footer" id="testcaseStatusForm"
+    (keydown.enter)="false"
+    novalidate="novalidate">
     <div
-      class="d-flex text-t-secondary pb-30">
-      <div class="w-85 d-flex align-items-center">
-        <i
-          [matTooltip]="'hint.message.common.search' | translate"
-          class="fa-search fz-13 mr-5"></i>
-        <div
-          class="form-control border-0 w-85 data-placeholder-content d-inline-block p-0"
-          #searchInput
-          (focus)="this.currentFocusedIndex=0"
-          (keydown.enter)="selectedSuggestion()"
-          (keydown.arrowup)="scrollUpEnvParamFocus()"
-          (keydown.arrowDown)="scrollDownEnvParamFocus()"
-          contenteditable="true"
-          [attr.data-placeholder]="'message.common.place_holder.search_name' | translate"></div>
-      </div>
-    </div>
-    <div
-      *ngIf="environments?.length"
-      class="list-header px-5 py-10">
+      [class.pt-30]="!testDataEnvironment"
+      class="overflow-x-hidden h-100">
       <div
-        class="ts-col-60 pr-10 d-flex">
+        [class.pb-30]="!testDataEnvironment"
+        [class.pb-15]="testDataEnvironment"
+        class="d-flex text-t-secondary">
+        <div
+          [class.rounded-search]="testDataEnvironment"
+          class="w-85 d-flex align-items-center">
+          <i
+            [matTooltip]="'hint.message.common.search' | translate"
+            class="fa-search fz-13 mr-5"></i>
+          <div
+            class="form-control border-0 w-85 data-placeholder-content d-inline-block p-0"
+            #searchInput
+            (focus)="this.currentFocusedIndex=0"
+            (keydown.enter)="selectedSuggestion()"
+            (keydown.arrowup)="scrollUpEnvParamFocus()"
+            (keydown.arrowDown)="scrollDownEnvParamFocus()"
+            contenteditable="true"
+            [attr.data-placeholder]="'message.common.place_holder.search_name' | translate"></div>
+        </div>
+      </div>
+      <div
+        *ngIf="environments?.length"
+        [class.list-header]="!testDataEnvironment"
+        [class.rb-medium-i-d]="testDataEnvironment"
+        [class.px-10]="testDataEnvironment"
+        class="px-5 py-10">
+        <div
+          class="ts-col-60 pr-10 d-flex">
         <span
           class="pl-7"
           [translate]="'environments.form.table_header.parameter_name'"></span>
+        </div>
       </div>
-    </div>
     <cdk-virtual-scroll-viewport
-      itemSize="59"
+      itemSize="{{testDataEnvironment ? '65': '59'}}"
       class="list-container virtual-scroll-viewport theme-details-scroll x-sm-h">
       <a
+        [class.border-0]="!testDataEnvironment"
+        [class.py-10]="testDataEnvironment"
+        [class.py-7]="!testDataEnvironment"
         class="list-view green-highlight py-7 px-5 border-0 pointer align-items-center grey-on-hover"
-        *ngFor='let element of filteredSuggestion; let index = index'
+        *ngFor='let environment of filteredSuggestion; let index = index'
         [class.h-active]="currentFocusedIndex == index"
         (mouseover)="currentFocusedIndex = index"
-        (click)="selectedSuggestion(element.parameter)">
+        (click)="selectedSuggestion(environment.parameter)">
         <div
           class="d-flex text-truncate pr-10 pl-10">
           <span
             class="pl-7"
-            [textContent]="element.parameter"></span>
-          <span class="pl-7 rb-medium text-t-secondary  " [textContent]="'('+element.name+')'"></span>
+            [textContent]="environment.parameter"></span>
+          <span class="pl-7 rb-medium text-t-secondary  " [textContent]="'('+environment.name+')'"></span>
         </div>
       </a>
-      <div
-        *ngIf="!filteredSuggestion?.length"
-        class="p-50 d-flex align-items-center justify-content-center h-100 flex-column">
         <div
-          class="text-t-secondary pt-30 pb-18"
-          [translate]="'message.common.search.not_found'"></div>
-      </div>
+          *ngIf="!filteredSuggestion?.length"
+          class="p-50 d-flex align-items-center justify-content-center h-100 flex-column">
+          <div
+            class="text-t-secondary pt-30 pb-18"
+            [translate]="'message.common.search.not_found'"></div>
+        </div>
     </cdk-virtual-scroll-viewport>
-  </div>
-
-  <div *ngIf="!isFetching && !environments?.length" class="w-100 h-100">
-    <div
-         class="empty-full-container">
-      <div class="empty-run xx-sm-wh"></div>
-      <div
-        class="text-t-secondary fz-15 py-10"
-        [translate]="'environments.list.not_created'"></div>
-      <a
-        [routerLink]="['td',versionId,'environments','new']" target="_blank"
-        class="theme-btn-primary">
-        +
-        <span [translate]="'page_title.create_environment'"></span>
-      </a>
     </div>
-  </div>
 </form>
 </div>

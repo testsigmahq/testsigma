@@ -1,0 +1,40 @@
+<div class="w-100 h-100">
+  <div class="theme-overlay-container">
+    <div class="theme-overlay-header">
+      <span [translate]="plug.name?plug.name:'plugins.private_lab'" ></span>
+      <span  ></span>
+      <button class="theme-overlay-close"
+              type="button"
+              [matTooltip]="'hint.message.common.close' | translate"
+              mat-dialog-close>
+      </button>
+    </div>
+
+    <div class="theme-overlay-content">
+      <form class="ts-form pt-30" [formGroup]="updateForm">
+        <div class="form-group ts-form" >
+          <label  class="control-label required">
+            <span [translate]="'settings.plugins.connector_url'"></span>
+          </label>
+          <input type="text"
+                 formControlName="url"
+                 class="form-control "  required
+                 [placeholder]="'username:password@https://privategrid.com'">
+          <span *ngIf="!updateForm.get('url').valid && updateForm.get('url').touched" class="help-block"
+                [translate]="'plugins.message.url'">
+          </span>
+        </div>
+      </form>
+    </div>
+
+    <div class="theme-overlay-footer">
+      <button
+        type="button"
+        mat-dialog-close
+        class="theme-btn-clear-default" [translate]="'btn.common.cancel'">
+      </button>
+      <button type="submit" [disabled]="!updateForm.valid || saving"
+              class="theme-btn-primary" (click)="onSubmit()" [translate]="saving ?  'message.common.saving' : 'btn.common.create'"></button>
+    </div>
+  </div>
+</div>

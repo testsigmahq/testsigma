@@ -1,4 +1,4 @@
-import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Inject, Input, OnInit, Optional, ViewChild} from '@angular/core';
 import {ElementService} from "../../shared/services/element.service";
 import {WorkspaceVersion} from "../../models/workspace-version.model";
 import {MAT_DIALOG_DATA, MatDialogRef, MatDialog} from '@angular/material/dialog';
@@ -15,6 +15,7 @@ import {ActionTestDataEnvironmentSuggestionComponent} from "./action-test-data-e
 import {TestStepMoreActionFormComponent} from "./test-step-more-action-form.component";
 import {MobileStepRecorderComponent} from "../../agents/components/webcomponents/mobile-step-recorder.component";
 import {WorkspaceType} from "../../enums/workspace-type.enum";
+import {MobileRecorderEventService} from "../../services/mobile-recorder-event.service";
 
 @Component({
   selector: 'app-action-element-suggestion',
@@ -23,6 +24,7 @@ import {WorkspaceType} from "../../enums/workspace-type.enum";
   ]
 })
 export class ActionElementSuggestionComponent implements OnInit {
+  @Optional() @Input('elementSuggestion') elementSuggestion;
   public workspaceVersion: WorkspaceVersion;
   public elements: InfiniteScrollableDataSource;
   public filteredElements: Element[];
@@ -39,12 +41,17 @@ export class ActionElementSuggestionComponent implements OnInit {
     private dialogRef: MatDialogRef<ActionElementSuggestionComponent>,
     private elementService: ElementService,
     private matModal: MatDialog,
+    private mobileRecorderEventService: MobileRecorderEventService,
     @Inject(MAT_DIALOG_DATA) public option: { version: WorkspaceVersion, testCase: TestCase, testCaseResultId?:number, isDryRun: boolean, isStepRecordView: boolean},
   ) {
     this.workspaceVersion = this.option?.version;
   }
 
   ngOnInit(): void {
+    if(this.elementSuggestion) {
+      this.option = this.elementSuggestion;
+      this.workspaceVersion = this.option?.version;
+    }
     this.fetchElement();
     this.attachDebounceEvent();
     this.attachScreenDebounceEvent();
@@ -175,8 +182,9 @@ export class ActionElementSuggestionComponent implements OnInit {
   }
 
   selectElement(){
-    if(this.elements.cachedItems[this.currentFocusedIndex])
-      this.dialogRef.close(this.elements.cachedItems[this.currentFocusedIndex]['name']);
+    let selectedName = this.elements?.cachedItems?.[this.currentFocusedIndex]
+    if(selectedName)
+      this.elementSuggestion ? this.mobileRecorderEventService.returnData.next({type: 'element', data: selectedName['name']}) : this.dialogRef.close(selectedName['name']);
     else
       this.openElementForm(this.elementName);
   }
@@ -186,28 +194,35 @@ export class ActionElementSuggestionComponent implements OnInit {
   }
 
   selectScreenElement(){
-    if(this.elements.cachedItems[this.currentFocusedIndex])
-      this.dialogRef.close(this.elements.cachedItems[this.currentFocusedIndex]['name']);
+    let selectedName = this.elements?.cachedItems?.[this.currentFocusedIndex]
+    if(selectedName)
+      this.elementSuggestion ? this.mobileRecorderEventService.returnData.next({type: 'element', data: selectedName['name']}) : this.dialogRef.close(selectedName['name']);
     else
       this.openElementForm(this.elementName);
   }
 
   openElementForm(name?: string, elementId?: string) {
-    if (this.popupsAlreadyOpen(ElementFormComponent)) return;
+    let sendDetails = {
+      versionId: this.option.version.id,
+      elementId: elementId,
+      name:name,
+      isNew: true,
+      testCaseId: this.option?.testCase?.id,
+      isDryRun: this.option?.isDryRun,
+      testCaseResultId: this.option.testCaseResultId,
+      isStepRecordView: this.option.isStepRecordView
+    }
+    if (this.option.isStepRecordView) {
+      this.mobileRecorderEventService.suggestionContent.next(Object.assign(sendDetails, {
+        content: this.mobileRecorderEventService.editElementPopup
+      }));
+      return
+    }
     this.elementForm = this.matModal.open(ElementFormComponent, {
       height: "100vh",
       width: '60%',
       position: {top: '0px', right: '0px'},
-      data: {
-        versionId: this.option.version.id,
-        elementId: elementId,
-        name:name,
-        isNew: true,
-        testCaseId: this.option?.testCase?.id,
-        isDryRun: this.option?.isDryRun,
-        testCaseResultId: this.option.testCaseResultId,
-        isStepRecordView: this.option.isStepRecordView
-      },
+      data: sendDetails,
       panelClass: ['mat-dialog', 'rds-none'],
       ...this.alterStyleIfStepRecorder()
     });
@@ -216,10 +231,7 @@ export class ActionElementSuggestionComponent implements OnInit {
         this.dialogRef.close(name);
       }
     }
-    if(Boolean(this.option.isStepRecordView)){
-      this.resetPositionAndSize(this.elementForm, ElementFormComponent, afterClose);
-    } else
-      this.elementForm.afterClosed().subscribe(element=> afterClose(element));
+    this.elementForm.afterClosed().subscribe(element=> afterClose(element));
   }
 
   scrollUpElementFocus() {
@@ -238,37 +250,6 @@ export class ActionElementSuggestionComponent implements OnInit {
     let target = <HTMLElement>document.querySelector(".h-active");
     if(target)
     target.parentElement.scrollTop = target?.offsetTop - target?.parentElement?.offsetTop;
-  }
-
-  private resetPositionAndSize(matDialog: MatDialogRef<any>, dialogComponent: any, afterClose: (res?) => void) {
-    setTimeout(() => {
-      if (matDialog._containerInstance._config.height == '0px') {
-        let alterStyleIfStepRecorder = this.alterStyleIfStepRecorder();
-        matDialog.close();
-        matDialog = this.matModal.open(dialogComponent, {
-          ...matDialog._containerInstance._config,
-          ...alterStyleIfStepRecorder
-        });
-        matDialog.afterClosed().subscribe(res=> afterClose(res));
-      } else {
-        matDialog.afterClosed().subscribe(res=> afterClose(res));
-      }
-    }, 200)
-  }
-
-  private popupsAlreadyOpen(currentPopup) {
-    if(!Boolean(this.option.isStepRecordView)) return false;
-    this?.matModal?.openDialogs?.forEach( dialog => {
-      if((dialog.componentInstance instanceof ActionElementSuggestionComponent ||
-          dialog.componentInstance instanceof ActionTestDataFunctionSuggestionComponent ||
-          dialog.componentInstance instanceof ActionTestDataParameterSuggestionComponent ||
-          dialog.componentInstance instanceof ActionTestDataEnvironmentSuggestionComponent ||
-          dialog.componentInstance instanceof TestStepMoreActionFormComponent) &&
-        !(dialog.componentInstance instanceof currentPopup || dialog.componentInstance instanceof ActionElementSuggestionComponent)){
-        dialog.close();
-      }
-    })
-    return Boolean(this?.matModal?.openDialogs?.find( dialog => dialog.componentInstance instanceof currentPopup));
   }
 
   alterStyleIfStepRecorder() {
@@ -320,5 +301,9 @@ export class ActionElementSuggestionComponent implements OnInit {
           this.dialogRef.close(res);
         }
       });
+  }
+
+  closeSuggestion() {
+    this.elementSuggestion ? this.mobileRecorderEventService.setEmptyAction() : this.dialogRef.close();
   }
 }

@@ -25,7 +25,7 @@ export class SelectedElementsContainerComponent{
   @Input()optimisingXpath: boolean;
 
   constructor(
-    private dialog: MatDialog,
+    private dialog: MatDialog
   ) {
     // @ts-ignore
     const width = (this.inspectedElement?.mobileElement.x2) - (this.inspectedElement?.mobileElement.x1);
@@ -46,6 +46,8 @@ export class SelectedElementsContainerComponent{
 
   public tap(mobileElement: MobileElement) {
     this.beforeAction();
+    if (mobileElement?.text.length <4 && mobileElement?.text.length>0)
+      mobileElement.text = mobileElement.text +'-'+ this.getCurrentTimeStamp();
     this.devicesService.tapElement(this.sessionId, mobileElement)
       .subscribe({
         next: () => {
@@ -56,7 +58,7 @@ export class SelectedElementsContainerComponent{
           this.clearSelection();
         },
         error: (err) => {
-          this.handleActionFailure(err, "mobile_recorder.notification.tap.failure")
+          this.handleActionFailure(err, "mobile_recorder.notification.tap.failure", "Tap","/#6--failed-to-tap-on-the-element")
           this.inspectedElement = null;
         }
       });
@@ -64,13 +66,15 @@ export class SelectedElementsContainerComponent{
 
   private sendkeys(sendKeysRequest: SendKeysRequest) {
     this.beforeAction(true);
+    if (sendKeysRequest?.mobileElement?.text.length < 4 && sendKeysRequest?.mobileElement?.text.length>0)
+      sendKeysRequest.mobileElement.text = sendKeysRequest?.mobileElement?.text +'-'+ this.getCurrentTimeStamp();
     this.devicesService.sendKeys(this.sessionId, sendKeysRequest)
       .subscribe({
         next: () => {
           if(this.isStepRecorder)
             this.saveEnterStep.emit(sendKeysRequest);
           this.handleActionSuccess()},
-        error: (err) => this.handleActionFailure(err, "mobile_recorder.notification.send_keys.failure")
+        error: (err) => this.handleActionFailure(err, "mobile_recorder.notification.send_keys.failure", "Enter", "/#9--failed-to-enter-data-into-the-element")
       });
   }
 
@@ -83,7 +87,7 @@ export class SelectedElementsContainerComponent{
             this.saveClearStep.emit(mobileElement);
           this.handleActionSuccess();
         },
-        error: (err) => this.handleActionFailure(err, "mobile_recorder.notification.clear.failure")
+        error: (err) => this.handleActionFailure(err, "mobile_recorder.notification.clear.failure","Clear", "/#5--failed-to-clear-the-elements-text")
       });
 
   }
@@ -91,7 +95,8 @@ export class SelectedElementsContainerComponent{
   public sendKeyDialog(mobileElement: MobileElement) {
     this.setTimer(1800);
     SendKeyModalComponent.prototype.keys = '';
-    const dialogRef = this.dialog.open(SendKeyModalComponent, {width: '500px'});
+    const dialogRef = this.dialog.open(SendKeyModalComponent, {width: '500px',
+      panelClass: ['mat-dialog', 'rds-none']});
     const sendKeysRequest = new SendKeysRequest();
     dialogRef.afterClosed().subscribe(result => {
       this.setTimer(1800);
@@ -135,9 +140,9 @@ export class SelectedElementsContainerComponent{
     recorderDialog.handleActionSuccess();
   }
 
-  private handleActionFailure(error, messageKey: string) {
+  private handleActionFailure(error, messageKey: string, actionType?: string, guideLink?:string) {
     let recorderDialog: MobileRecordingComponent = this.dialog.openDialogs.find(dialog => dialog.componentInstance instanceof MobileRecordingComponent).componentInstance;
-    recorderDialog.handleActionFailure(error, messageKey);
+    recorderDialog.handleActionFailure(error, messageKey, actionType, guideLink);
   }
 
   private clearSelection() {
@@ -157,5 +162,10 @@ export class SelectedElementsContainerComponent{
       recorderDialog.viewType = "NATIVE_APP";
     } else
       recorderDialog.beforeAction();
+  }
+
+  private getCurrentTimeStamp() {
+    var oDate = new Date();
+    return ""+oDate.getDate()+oDate.getMonth()+oDate.getFullYear()+oDate.getHours()+oDate.getMinutes()+oDate.getSeconds();
   }
 }

@@ -77,7 +77,7 @@ export class SearchElementsModalComponent extends BaseComponent implements OnIni
           msg = this.translate.instant('search_elements.invalid_caused_search_failure')
         else
           msg = this.translate.instant('search_elements.session_expiry_caused_search_failure')
-        this.showAPIError(NotificationType.Error, msg);
+        this.showAPIError(NotificationType.Error, msg, "Search", "#12--failed-to-search");
       }
     )
   }

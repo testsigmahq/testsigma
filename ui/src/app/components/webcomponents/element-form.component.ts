@@ -1,4 +1,4 @@
-import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Inject, Input, OnInit, Optional, ViewChild} from '@angular/core';
 import {Element} from "../../models/element.model";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
@@ -25,6 +25,7 @@ import {ElementScreenName} from "../../models/element-screen-name.model";
 import {ChromeRecorderService} from "../../services/chrome-recoder.service";
 import {WorkspaceType} from "../../enums/workspace-type.enum";
 import {DuplicateLocatorWarningComponent} from "./duplicate-locator-warning.component";
+import {MobileRecorderEventService} from "../../services/mobile-recorder-event.service";
 
 @Component({
   selector: 'app-element-form',
@@ -33,6 +34,7 @@ import {DuplicateLocatorWarningComponent} from "./duplicate-locator-warning.comp
 
 export class ElementFormComponent extends BaseComponent implements OnInit {
   @ViewChild('submitReviewButton') public submitReviewButton: ElementRef;
+  @Optional() @Input('formDetails') formDetails;
   public control = new FormControl();
   public workspaceVersion: WorkspaceVersion;
   public element: Element;
@@ -76,7 +78,8 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
     },
     private userPreferenceService: UserPreferenceService,
     public chromeRecorderService: ChromeRecorderService,
-    private matDialog: MatDialog) {
+    private matDialog: MatDialog,
+    private  mobileRecorderEventService: MobileRecorderEventService) {
     super(authGuard, notificationsService, translate, toastrService);
     this.versionId = this.options.versionId;
     this.elementId = this.options.elementId;
@@ -105,6 +108,13 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(this.formDetails) {
+      this.options = this.formDetails;
+      this.versionId = this.options.versionId;
+      this.elementId = this.options.elementId;
+      this.testCaseId = this.options?.testCaseId;
+      this.testCaseResultId= this.options?.testCaseResultId;
+    }
     this.canNotShowLaunch = !this.router.url.includes('/step')
     this.userPreferenceService.show().subscribe(res => {
       this.userPreference = res
@@ -220,7 +230,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
         this.translate.get('message.common.created.success', {FieldName: 'Element'}).subscribe((res) => {
           this.showNotification(NotificationType.Success, res);
           this.stopCapture();
-          this.dialogRef.close(element);
+          this.formDetails ? this.mobileRecorderEventService.returnData.next({type: 'element', data: element}) : this.dialogRef.close(element);
         })
       },
       error => {
@@ -307,10 +317,11 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
   //     this.elementForm.controls['locatorType'].setValue(this.locatorTypes[0])
   // }
 
-  stopCapture() {
+  stopCapture(isClose?:Boolean) {
     this.chromeRecorderService.elementCallBackContext = undefined;
     this.chromeRecorderService.elementCallBack = undefined;
     this.chromeRecorderService.stopSpying();
+    this.formDetails ? this.mobileRecorderEventService.setEmptyAction() : ( isClose? this.dialogRef.close(this.reviewSubmittedElement): null );
   }
 
   private chromeExtensionElementCallback(chromeRecorderElement: Element) {
@@ -482,7 +493,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
         this.translate.get('message.common.update.success', {FieldName: 'Element'}).subscribe((res: string) => {
           this.showNotification(NotificationType.Success, res);
           this.stopCapture()
-          this.dialogRef.close(element);
+          this.formDetails ? this.mobileRecorderEventService.returnData.next({type: 'element', data: element}) : this.dialogRef.close(element);
         });
       },
       error => {

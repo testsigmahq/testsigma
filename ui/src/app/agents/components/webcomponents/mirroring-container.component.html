@@ -1,5 +1,5 @@
-<div #mirroringContainer class="p-15 bg-light overflow-x-auto" style="height: calc(100% - 61px)">
-  <div class="d-flex h-100 inspector" [class.flex-column]="isLandscapeMode">
+<div #mirroringContainer class="p-15  overflow-x-auto h-100 m-auto ts-col-100" style="background: #CEDAE6">
+  <div class="d-flex h-100 inspector" [class.flex-column]="mobileRecorderEventService.isLandscapeMode">
     <div class="mirroring-container m-auto"
          [style.height.px]="(screenScaledInitially? canvasHeight:mirroringContainer.offsetHeight-30)+2"
          [style.width.px]="(screenScaledInitially? canvasWidth:mirroringContainer.offsetWidth-73)+2">
@@ -24,17 +24,20 @@
       </div>
     </div>
     <div class="inspector-tools align-items-center"
-         [class.m-auto]="isLandscapeMode"
-         [class.flex-column]="!isLandscapeMode"
-         [class.pl-10]="!isLandscapeMode"
-         [class.flex-row]="isLandscapeMode"
-         [class.pt-20]="isLandscapeMode">
-      <div [class.btn-group-column]="!isLandscapeMode"
-           [class.btn-group-row]="isLandscapeMode"
-           [class.mr-15]="isLandscapeMode"
-           [class.mb-10]="!isLandscapeMode">
-        <button [class.active]="mirroring && !loading"
-                [disabled]="data.recording || loading"
+         [class.mx-auto]="mobileRecorderEventService.isLandscapeMode"
+         [class.my-auto]="!mobileRecorderEventService.isLandscapeMode"
+         [class.ml-auto]="!mobileRecorderEventService.isLandscapeMode"
+         [class.mb-auto]="mobileRecorderEventService.isLandscapeMode"
+         [class.flex-column]="!mobileRecorderEventService.isLandscapeMode"
+         [class.pl-10]="!mobileRecorderEventService.isLandscapeMode"
+         [class.flex-row]="mobileRecorderEventService.isLandscapeMode"
+         [class.pt-20]="mobileRecorderEventService.isLandscapeMode">
+      <div [class.btn-group-column]="!mobileRecorderEventService.isLandscapeMode"
+           [class.btn-group-row]="mobileRecorderEventService.isLandscapeMode"
+           [class.mr-15]="mobileRecorderEventService.isLandscapeMode"
+           [class.mb-10]="!mobileRecorderEventService.isLandscapeMode">
+        <button [class.active]="mirroring"
+                [disabled]="loading"
                 (click)="switchToMirroringMode()">
           <i class="fa-mirroring" [matTooltip]="'agents.mobile.inspection.switch_to_mirroring' | translate"></i>
         </button>
@@ -46,20 +49,20 @@
         <button [disabled]="mirroring || !data.recording || loading"
                 [class.active]="actionType=='swipe'"
                 (click)="switchToActionMode('swipe')">
-          <i class="fa-swipe-horizontal fz-20"
+          <i class="fa-swipe-action fz-20"
              [matTooltip]="'agents.mobile.inspection.swipe_action' |
                translate"></i>
         </button>
         <button [disabled]="mirroring || !data.recording || loading"
                 [class.active]="actionType=='tap'"
                 (click)="switchToActionMode('tap')">
-          <i class="fa-tap fz-20" [matTooltip]="'agents.mobile.inspection.click_action' | translate"></i>
+          <i class="fa-tap-on-action fz-20" [matTooltip]="'agents.mobile.inspection.click_action' | translate"></i>
         </button>
       </div>
 
-      <div [class.btn-group-column]="!isLandscapeMode"
-           [class.btn-group-row]="isLandscapeMode"
-           [class.mr-15]="isLandscapeMode">
+      <div [class.btn-group-column]="!mobileRecorderEventService.isLandscapeMode"
+           [class.btn-group-row]="mobileRecorderEventService.isLandscapeMode"
+           [class.mr-15]="mobileRecorderEventService.isLandscapeMode">
         <button [disabled]="mirroring || loading"
                 (click)="navigateBack()">
           <i class="fa-back-arrow"
@@ -80,19 +83,19 @@
 
       <button [disabled]="mirroring || loading"
               (click)="changeOrientation()"
-              [class.mr-15]="isLandscapeMode">
+              [class.mr-15]="mobileRecorderEventService.isLandscapeMode">
         <i class="fa-screen-rotation fz-16"
-           [matTooltip]="(!isLandscapeMode? 'agents.mobile.inspection.change_to_landscape':'agents.mobile.inspection.change_to_portrait') |
+           [matTooltip]="(!mobileRecorderEventService.isLandscapeMode? 'agents.mobile.inspection.change_to_landscape':'agents.mobile.inspection.change_to_portrait') |
                translate"></i>
       </button>
       <button (click)="openSearchDialog()" [disabled]="mirroring || loading"
-              [class.mr-15]="isLandscapeMode">
+              [class.mr-15]="mobileRecorderEventService.isLandscapeMode">
         <i class="fa-search fz-16" [matTooltip]="'agents.mobile.inspection.search_elements'|translate"></i>
       </button>
 
-      <div [class.btn-group-column]="!isLandscapeMode"
-           [class.mt-10]="!isLandscapeMode"
-           [class.btn-group-row]="isLandscapeMode" *ngIf="hasWebContexts">
+      <div [class.btn-group-column]="!mobileRecorderEventService.isLandscapeMode"
+           [class.mt-10]="!mobileRecorderEventService.isLandscapeMode"
+           [class.btn-group-row]="mobileRecorderEventService.isLandscapeMode" *ngIf="hasWebContexts">
         <button [class.active]="isNativeAppEnabled && !loading"
                 [disabled]="loading"
                 (click)="switchViewMode('NATIVE_APP')">

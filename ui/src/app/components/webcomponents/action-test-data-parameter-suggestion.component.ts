@@ -1,9 +1,11 @@
-import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Inject, Input, OnInit, Optional, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {fromEvent} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, tap} from 'rxjs/operators';
 import {TestDataService} from "../../services/test-data.service";
 import {TestDataSet} from "../../models/test-data-set.model";
+import {MobileRecorderEventService} from "../../services/mobile-recorder-event.service";
+import {TestDataType} from "../../enums/test-data-type.enum";
 
 @Component({
   selector: 'app-action-test-data-parameter-suggestion',
@@ -11,6 +13,7 @@ import {TestDataSet} from "../../models/test-data-set.model";
   styles: []
 })
 export class ActionTestDataParameterSuggestionComponent implements OnInit {
+  @Optional() @Input('testDataProfileDetails') testDataProfileDetails;
   public dataProfileSuggestion: any[];
   public filteredSuggestion: any[];
   public searchText: string;
@@ -26,12 +29,18 @@ export class ActionTestDataParameterSuggestionComponent implements OnInit {
     private dialogRef: MatDialogRef<ActionTestDataParameterSuggestionComponent, any>,
     private testDataService: TestDataService,
     @Inject(MAT_DIALOG_DATA) public option: { dataProfileId?: number, versionId: number, testCaseId: number, stepRecorderView: boolean },
+    private mobileRecorderEventService: MobileRecorderEventService
   ) {
     this.versionId = this.option.versionId;
     this.testCaseId = this.option.testCaseId;
   }
 
   ngOnInit(): void {
+    if (this.testDataProfileDetails) {
+      this.option = this.testDataProfileDetails;
+      this.versionId = this.option.versionId;
+      this.testCaseId = this.option.testCaseId;
+    }
     this.fetchDataParameter();
     this.attachDebounceEvent();
   }
@@ -101,7 +110,7 @@ export class ActionTestDataParameterSuggestionComponent implements OnInit {
 
   selectedSuggestion(suggestion?: any) {
     suggestion = suggestion || this.filteredSuggestion[this.currentFocusedIndex];
-    this.dialogRef.close(suggestion);
+    this.testDataProfileDetails ? this.mobileRecorderEventService.returnData.next({type: TestDataType.parameter, data: suggestion}) : this.dialogRef.close(suggestion);
   }
 
   scrollUpParameterFocus() {
@@ -116,5 +125,9 @@ export class ActionTestDataParameterSuggestionComponent implements OnInit {
       ++this.currentFocusedIndex;
     let target = <HTMLElement>document.querySelector(".h-active");
     target.parentElement.scrollTop = target.offsetTop - target.parentElement.offsetTop;
+  }
+
+  closeSuggestion(data?) {
+    this.testDataProfileDetails ? this.mobileRecorderEventService.setEmptyAction() : this.dialogRef.close(data);
   }
 }

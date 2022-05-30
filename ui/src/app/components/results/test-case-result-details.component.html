@@ -73,7 +73,7 @@
               (click)=" startExecution(getTestCaseResult()?.testDeviceResult?.testPlanResult?.dryTestPlan)"
               class="theme-btn-primary py-6">
               <i class="fa-filled-circled-play pr-4"></i>
-              <span [translate]="'dry.testcase.btn.re_run'"></span>
+              <span [translate]="startSync ? 'btn.common.please_wait' :'dry.testcase.btn.re_run'"></span>
             </button>
           </div>
           <button
@@ -162,7 +162,7 @@
             *ngIf="testCaseResult && getTestCaseResult()"
             class="text-nowrap"
             [environmentResult]="getTestCaseResult()?.testDeviceResult"
-            [executionEnvironment]="getTestCaseResult()?.testDeviceResult?.testDevice"
+            [testDevice]="getTestCaseResult()?.testDeviceResult?.testDevice"
             [testPlanResult]="getTestCaseResult()?.testDeviceResult?.testPlanResult"></app-lab-environment-screen-short-info>
           <div class="details-items mt-30 mw-20 text-nowrap" [ngSwitch]="!testCaseResult?.isExecuting && !testCaseResult?.totalCount && isTestCaseFetchingCompleted">
             <div *ngSwitchCase="true"

@@ -55,7 +55,7 @@ export class BaseComponent implements OnInit {
   }
 
 
-  showNotification(type: NotificationType, message) {
+  showNotification(type: NotificationType, message, clickToClose?) {
     const temp = {
       type: type,
       title: status,
@@ -63,7 +63,8 @@ export class BaseComponent implements OnInit {
       timeOut: 7000,
       positionClass: 'toast-bottom-left',
       progressBar: true,
-      progressAnimation: <ProgressAnimationType>'increasing'
+      progressAnimation: <ProgressAnimationType>'increasing',
+      enableHtml: true
     };
     if (this.toastrService) {
       this.toastrService.show(temp.content, temp.title, temp, temp.type);
@@ -102,6 +103,11 @@ export class BaseComponent implements OnInit {
   }
 
   showAPIError(exception, internalErrorMSG, entityName?: string, parentEntity?:string) {
+    if (exception['status'] == 401 && entityName){
+      this.showNotification(NotificationType.Error, "Invalid "+entityName);
+      return;
+    }
+
     if (exception['status'] == 422 || exception['status'] == 451) {
       let errorMessage = exception['error']['error'];
       if (errorMessage == "Entity with same name already exists, Please use different name" && Boolean(entityName)) {

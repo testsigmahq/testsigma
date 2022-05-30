@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild, Inject} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild, Inject, Input, Optional} from '@angular/core';
 import {fromEvent} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, tap} from 'rxjs/operators';
 import {DefaultDataGeneratorService} from '../../services/default-data-generator.service';
@@ -6,6 +6,8 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog
 import {InfiniteScrollableDataSource} from '../../data-sources/infinite-scrollable-data-source';
 import {AddonTestDataFunctionService} from "../../services/addon-default-data-generator.service";
 import {AddonDetailsComponent} from "../../shared/components/webcomponents/addon-details.component";
+import {MobileRecorderEventService} from "../../services/mobile-recorder-event.service";
+import {TestDataType} from "../../enums/test-data-type.enum";
 
 @Component({
   selector: 'app-action-test-data-function-suggestion',
@@ -13,6 +15,7 @@ import {AddonDetailsComponent} from "../../shared/components/webcomponents/addon
   styles: []
 })
 export class ActionTestDataFunctionSuggestionComponent implements OnInit {
+  @Optional() @Input('testDataCustomFunction') testDataCustomFunction;
   public activeTab = 'custom_functions'
   public testDataFunctionSuggestion: InfiniteScrollableDataSource;
   public addonCustomFunctionSuggestion: InfiniteScrollableDataSource;
@@ -28,12 +31,17 @@ export class ActionTestDataFunctionSuggestionComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public option: { versionId: number },
     private defaultDataGeneratorService: DefaultDataGeneratorService,
     private addonTestDataFunctionService: AddonTestDataFunctionService,
+    private mobileRecorderEventService: MobileRecorderEventService,
     private matModal: MatDialog
   ) {
     this.versionId = this.option.versionId;
   }
 
   ngOnInit(): void {
+    if (this.testDataCustomFunction) {
+      this.option = this.testDataCustomFunction;
+      this.versionId = this.option.versionId;
+    }
     this.fetchTestDataFunction();
     this.fetchAddonTestDataFunctions();
     this.attachDebounceEvent();
@@ -117,7 +125,7 @@ export class ActionTestDataFunctionSuggestionComponent implements OnInit {
 
   selectedSuggestion(suggestion?) {
     suggestion = suggestion || this.testDataFunctionSuggestion.cachedItems[this.currentFocusedIndex] || this.addonCustomFunctionSuggestion.cachedItems[this.currentFocusedIndex];
-    this.dialogRef.close(suggestion);
+      this.testDataCustomFunction ? this.mobileRecorderEventService.returnData.next({type: TestDataType.function, data: suggestion}) : this.dialogRef.close(suggestion);
   }
 
   scrollUpFunctionFocus() {
@@ -146,5 +154,9 @@ export class ActionTestDataFunctionSuggestionComponent implements OnInit {
 
   searchCriteriaNotFound(){
     return (this.activeTab=='custom_functions' && this.testDataFunctionSuggestion?.isEmpty) || (this.activeTab=='addon_functions' && this.addonCustomFunctionSuggestion?.isEmpty);
+  }
+
+  closeSuggestion(data?) {
+    this.testDataCustomFunction ? this.mobileRecorderEventService.setEmptyAction() : this.dialogRef.close(data);
   }
 }

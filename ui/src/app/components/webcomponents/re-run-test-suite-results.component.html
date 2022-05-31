@@ -16,18 +16,18 @@
             <div
               class="theme-breadcrumb ts-col-50">
               <div
-                *ngIf="suiteResult?.environmentResult?.executionEnvironment?.title"
+                *ngIf="suiteResult?.environmentResult?.testDevice?.title"
                 class="theme-breadcrumb-item"
                 (click)="showTestMachineResult(suiteResult?.environmentResult);$event.stopImmediatePropagation();$event.stopPropagation();$event.preventDefault()"
-                [matTooltip]="suiteResult?.environmentResult?.executionEnvironment?.title"
-                [textContent]="suiteResult?.environmentResult?.executionEnvironment?.title "></div>
+                [matTooltip]="suiteResult?.environmentResult?.testDevice?.title"
+                [textContent]="suiteResult?.environmentResult?.testDevice?.title "></div>
             </div>
             <div
               class="text-nowrap px-10 text-center ts-col-50">
               <app-test-machine-info-column
                 [environmentResult]="suiteResult?.environmentResult"
                 [testPlanResult]="suiteResult?.environmentResult?.testPlanResult"
-                [executionEnvironment]="suiteResult?.environmentResult?.executionEnvironment"></app-test-machine-info-column>
+                [testDevice]="suiteResult?.environmentResult?.testDevice"></app-test-machine-info-column>
             </div>
           </div>
         </div>

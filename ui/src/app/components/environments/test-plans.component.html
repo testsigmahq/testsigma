@@ -36,7 +36,7 @@
           <app-lab-environments-info
             *ngIf="testPlan.testDevices"
             [testPlan]="testPlan"
-            [executionEnvironments]="testPlan.testDevices"></app-lab-environments-info>
+            [testDevices]="testPlan.testDevices"></app-lab-environments-info>
           <div
             [textContent]="('execution.type.'+testPlan.testPlanType) | translate"
             class="pt-4 text-t-secondary"></div>

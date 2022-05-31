@@ -1,14 +1,14 @@
 {
   "checksum": {
-    "previous": "0db0138cbab473ececf701ba5d9aef8260b0c7090592c48e1eea1fea4b81f7d0",
-    "current": "0db0138cbab473ececf701ba5d9aef8260b0c7090592c48e1eea1fea4b81f7d0"
+    "previous": "cc56d6d170c505986bb6ae74475e4aecb1b70a3dde648a9c52b3ebe1e1e1b1a3",
+    "current": "cc56d6d170c505986bb6ae74475e4aecb1b70a3dde648a9c52b3ebe1e1e1b1a3"
   },
   "fonts": [
-    "./assets/font_icons/font_custom_0db0138cbab473ececf701ba5d9aef82.ttf",
-    "./assets/font_icons/font_custom_0db0138cbab473ececf701ba5d9aef82.svg",
-    "./assets/font_icons/font_custom_0db0138cbab473ececf701ba5d9aef82.woff",
-    "./assets/font_icons/font_custom_0db0138cbab473ececf701ba5d9aef82.eot",
-    "./assets/font_icons/font_custom_0db0138cbab473ececf701ba5d9aef82.woff2"
+    "./assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.ttf",
+    "./assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.svg",
+    "./assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.woff",
+    "./assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.eot",
+    "./assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.woff2"
   ],
   "glyphs": {
     "4-quabs": {
@@ -1067,9 +1067,9 @@
       "codepoint": 61838,
       "source": "./icons/paper-flight.svg"
     },
-    "pause": {
-      "codepoint": 62137,
-      "source": "./icons/pause.svg"
+    "pause-record": {
+      "codepoint": 62157,
+      "source": "./icons/pause-record.svg"
     },
     "pdf-file": {
       "codepoint": 61988,
@@ -1463,13 +1463,13 @@
       "codepoint": 61890,
       "source": "./icons/stop-circle-solid.svg"
     },
-    "suggestion-list": {
-      "codepoint": 62139,
-      "source": "./icons/suggestion-list.svg"
-    },
     "storage-outline": {
       "codepoint": 62146,
       "source": "./icons/storage-outline.svg"
+    },
+    "suggestion-list": {
+      "codepoint": 62139,
+      "source": "./icons/suggestion-list.svg"
     },
     "suitcase": {
       "codepoint": 61933,
@@ -1487,9 +1487,9 @@
       "codepoint": 62012,
       "source": "./icons/support.svg"
     },
-    "swipe": {
-      "codepoint": 62141,
-      "source": "./icons/swipe.svg"
+    "swipe-action": {
+      "codepoint": 62158,
+      "source": "./icons/swipe-action.svg"
     },
     "swipe-horizontal": {
       "codepoint": 61945,
@@ -1507,9 +1507,9 @@
       "codepoint": 61946,
       "source": "./icons/tap.svg"
     },
-    "tap-on": {
-      "codepoint": 62142,
-      "source": "./icons/tap-on.svg"
+    "tap-on-action": {
+      "codepoint": 62159,
+      "source": "./icons/tap-on-action.svg"
     },
     "test-case-alt": {
       "codepoint": 62056,

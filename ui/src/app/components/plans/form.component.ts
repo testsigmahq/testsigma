@@ -32,7 +32,7 @@ export class FormComponent implements OnInit {
   constructor(
     private versionService: WorkspaceVersionService,
     private testPlanService: TestPlanService,
-    private executionEnvironmentService: TestDeviceService,
+    private testDeviceService: TestDeviceService,
     private testSuiteService: TestSuiteService,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute) {
@@ -59,7 +59,7 @@ export class FormComponent implements OnInit {
   }
 
   fetchEnvironments() {
-    this.executionEnvironmentService.findAll("testPlanId:"+this.testPlanId).subscribe(res => {
+    this.testDeviceService.findAll("testPlanId:"+this.testPlanId).subscribe(res => {
       this.testPlan.testDevices = res.content;
       this.fetchSuites();
     })

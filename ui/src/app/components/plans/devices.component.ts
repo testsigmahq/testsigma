@@ -26,7 +26,7 @@ import {ToastrService} from "ngx-toastr";
   }
 })
 export class DevicesComponent extends BaseComponent implements OnInit {
-  public executionEnvironments: InfiniteScrollableDataSource;
+  public testDevices: InfiniteScrollableDataSource;
   public version: WorkspaceVersion;
   public testPlan: TestPlan;
   public activeEnvironment: TestDevice;
@@ -39,7 +39,7 @@ export class DevicesComponent extends BaseComponent implements OnInit {
     private route: ActivatedRoute,
     private testPlanService: TestPlanService,
     private versionService: WorkspaceVersionService,
-    private executionEnvironmentService: TestDeviceService,
+    private testDeviceService: TestDeviceService,
     private matDialog: MatDialog,
     public authGuard: AuthenticationGuard,
     public notificationsService: NotificationsService,
@@ -73,7 +73,7 @@ export class DevicesComponent extends BaseComponent implements OnInit {
     let query = "testPlanId:" + this.testPlanId;
     if (term)
       query += ",title:*" + term + "*";
-    this.executionEnvironments = new InfiniteScrollableDataSource(this.executionEnvironmentService, query, undefined, 50);
+    this.testDevices = new InfiniteScrollableDataSource(this.testDeviceService, query, undefined, 50);
     this.environmentEnableCount()
     this.fetchExecution();
   }
@@ -107,16 +107,16 @@ export class DevicesComponent extends BaseComponent implements OnInit {
     this.matDialog.open(TestPlanTestMachineSelectFormComponent, {
       width: this.testPlan.workspaceVersion.workspace.isWeb ? '875px' : 'auto',
       height: '100vh',
-      data: {testPlan: this.testPlan, executionEnvironment: environment, isEdit: isEdit},
+      data: {testPlan: this.testPlan, testDevice: environment, isEdit: isEdit},
       position: {top: '0px', right: '0px'},
       panelClass: ['mat-dialog', 'rds-none']
     }).afterClosed().subscribe((res: TestDevice) => {
       if (res) {
         if (  isEdit) {
-          let editedEnvironmentIndex = this.executionEnvironments['cachedItems'].indexOf(environment);
-          this.executionEnvironments['cachedItems'][editedEnvironmentIndex] = res;
+          let editedEnvironmentIndex = this.testDevices['cachedItems'].indexOf(environment);
+          this.testDevices['cachedItems'][editedEnvironmentIndex] = res;
         } else {
-          this.executionEnvironments['cachedItems'].push(res);
+          this.testDevices['cachedItems'].push(res);
         }
         this.updateEnvironments()
       }
@@ -124,13 +124,13 @@ export class DevicesComponent extends BaseComponent implements OnInit {
   }
 
   deleteEnvironment(environment) {
-    this.executionEnvironments['cachedItems'].splice(this.executionEnvironments['cachedItems'].indexOf(environment), 1);
-    this.testPlan.testDevices = <TestDevice[]>this.executionEnvironments['cachedItems'];
+    this.testDevices['cachedItems'].splice(this.testDevices['cachedItems'].indexOf(environment), 1);
+    this.testPlan.testDevices = <TestDevice[]>this.testDevices['cachedItems'];
     this.updateEnvironments(true);
   }
 
   updateEnvironments(isDelete?) {
-    this.testPlan.testDevices = <TestDevice[]>this.executionEnvironments['cachedItems'];
+    this.testPlan.testDevices = <TestDevice[]>this.testDevices['cachedItems'];
     let fieldName = this.testPlan.workspaceVersion.workspace.isWeb ?'Test Machine':'Test Device';
     let typeOfOperation;
     if (isDelete){
@@ -149,13 +149,13 @@ export class DevicesComponent extends BaseComponent implements OnInit {
 
   toggleMachineEnable(environment: TestDevice) {
     environment.disable = !environment.disable;
-    let editedEnvironmentIndex = this.executionEnvironments['cachedItems'].indexOf(environment);
-    this.executionEnvironments['cachedItems'][editedEnvironmentIndex] = environment;
+    let editedEnvironmentIndex = this.testDevices['cachedItems'].indexOf(environment);
+    this.testDevices['cachedItems'][editedEnvironmentIndex] = environment;
     this.updateEnvironments();
   }
 
   environmentEnableCount() {
-    this.executionEnvironmentService.findAll("disable:false,testPlanId:" + this.testPlanId).subscribe(res => {
+    this.testDeviceService.findAll("disable:false,testPlanId:" + this.testPlanId).subscribe(res => {
       this.isEnvironmentAvailable = res.totalElements >= 2;
     })
   }

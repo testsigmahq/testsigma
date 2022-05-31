@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
 public class PrivateGridService {
     private final HttpClient httpClient;
     private final ApplicationConfig config;
-    private final PrivateGridNodeMapper mapper;
+    private final PrivateGridNodeMapper nodeMapper;
     private final PrivateGridNodeRepository repository;
 
     @Getter
@@ -53,20 +53,27 @@ public class PrivateGridService {
     private void fetchBrowsersFromNode(String proxy, String gridURL) throws TestsigmaException {
         HttpResponse<JsonNode> response = httpClient.get(gridURL + "/grid/api/proxy?id=" + proxy, getHeaders(), new TypeReference<JsonNode>() {
         });
-        JsonNode browsers = response.getResponseEntity().get("request").get("configuration").get("capabilities");
-        for (JsonNode browser : browsers) {
-            ((ObjectNode) browser).put("browserName", StringUtils.capitalize(browser.get("browserName").asText().toLowerCase()));
-            ((ObjectNode) browser).put("platform", StringUtils.capitalize(browser.get("platform").asText().toLowerCase()));
+        try {
+            JsonNode browsers = response.getResponseEntity().get("request").get("configuration").get("capabilities");
+            for (JsonNode browser : browsers) {
+                ((ObjectNode) browser).put("browserName", StringUtils.capitalize(browser.get("browserName").asText().toLowerCase().replaceAll("\\s", "")));
+                ((ObjectNode) browser).put("platform", StringUtils.capitalize(browser.get("platform").asText().toLowerCase().replaceAll("\\s", "")));
+                if (browser.get("platform").asText().contains("Win"))
+                    ((ObjectNode) browser).put("platform", "Windows");
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            PrivateGridBrowserRequest[] browsersList = mapper.convertValue(browsers, PrivateGridBrowserRequest[].class);
+            PrivateGridNodeRequest request = new PrivateGridNodeRequest();
+            request.setNodeName(proxy);
+            request.setGridURL(gridURL);
+            request.setBrowserList(List.of(browsersList));
+            PrivateGridNode node = nodeMapper.map(request);
+            this.create(node);
+        } catch (Exception e) {
+            throw new TestsigmaException("Unable extract and save the node configurations from your private grid");
         }
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        PrivateGridBrowserRequest[] browsersList = mapper.convertValue(browsers, PrivateGridBrowserRequest[].class);
-        PrivateGridNodeRequest request = new PrivateGridNodeRequest();
-        request.setNodeName(proxy);
-        request.setGridURL(gridURL);
-        request.setBrowserList(List.of(browsersList));
-        this.create(request);
     }
 
     public List<String> ParseProxyIds(String gridUrl) throws TestsigmaException {
@@ -94,7 +101,10 @@ public class PrivateGridService {
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new TestsigmaException(" : URLs extraction failed - " + e.getMessage());
+            if (e instanceof TestsigmaException)
+                throw new TestsigmaException(e.getMessage());
+            else
+                throw new TestsigmaException(" : URLs extraction failed - " + e.getMessage());
         }
         return parsedURLs;
     }
@@ -108,7 +118,8 @@ public class PrivateGridService {
         ObjectNode status = jnf.objectNode();
         status.put("status_code", response.getStatusCode());
         status.put("status_message", response.getStatusMessage());
-        if (response.getStatusCode() == HttpStatus.SC_OK) this.ParseProxyIds(testAuth.getUrl());
+        if (response.getStatusCode() == HttpStatus.SC_OK)
+            this.ParseProxyIds(testAuth.getUrl());
         return status;
     }
 
@@ -117,8 +128,7 @@ public class PrivateGridService {
         return Lists.newArrayList(contentType);
     }
 
-    public PrivateGridNode create(PrivateGridNodeRequest request) {
-        PrivateGridNode node = mapper.map(request);
+    public PrivateGridNode create(PrivateGridNode node) {
         return this.repository.save(node);
     }
 
@@ -153,20 +163,20 @@ public class PrivateGridService {
         return browsersList;
     }
 
-  public List<PlatformBrowserVersion> getPlatformBrowserVersions(Platform platform, Browsers browserName) {
-      List<PrivateGridNode> nodes = this.repository.findAll();
-      List<PrivateGridBrowser> browsers = nodes.stream().flatMap(node -> node.getBrowserList().stream())
-              .filter(privateGridBrowser -> privateGridBrowser.getPlatform() == platform && Objects.equals(privateGridBrowser.getBrowserName().getHybridName(), browserName.getKey()))
-              .distinct().collect(Collectors.toList());
-      List<String> versions = browsers.stream().map(PrivateGridBrowser::getVersion).collect(Collectors.toList());
-      List<PlatformBrowserVersion> platformBrowserVersions = new ArrayList<>();
-      for (String version : versions){
-          PlatformBrowserVersion platformBrowserVersion = new PlatformBrowserVersion();
-          platformBrowserVersion.setPlatform(platform);
-          platformBrowserVersion.setVersion(version);
-          platformBrowserVersion.setDisplayVersion(version);
-          platformBrowserVersion.setName(browserName);
-      }
-    return platformBrowserVersions;
-  }
+    public List<PlatformBrowserVersion> getPlatformBrowserVersions(Platform platform, Browsers browserName) {
+        List<PrivateGridNode> nodes = this.repository.findAll();
+        List<PrivateGridBrowser> browsers = nodes.stream().flatMap(node -> node.getBrowserList().stream())
+                .filter(privateGridBrowser -> privateGridBrowser.getPlatform() == platform && Objects.equals(privateGridBrowser.getBrowserName().getHybridName(), browserName.getKey()))
+                .distinct().collect(Collectors.toList());
+        List<String> versions = browsers.stream().map(PrivateGridBrowser::getVersion).collect(Collectors.toList());
+        List<PlatformBrowserVersion> platformBrowserVersions = new ArrayList<>();
+        for (String version : versions) {
+            PlatformBrowserVersion platformBrowserVersion = new PlatformBrowserVersion();
+            platformBrowserVersion.setPlatform(platform);
+            platformBrowserVersion.setVersion(version);
+            platformBrowserVersion.setDisplayVersion(version);
+            platformBrowserVersion.setName(browserName);
+        }
+        return platformBrowserVersions;
+    }
 }

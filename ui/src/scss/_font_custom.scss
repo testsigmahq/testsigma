@@ -4,12 +4,12 @@
 
 @font-face {
   font-family: "font_custom";
-  src: url("~/assets/font_icons/font_custom_0db0138cbab473ececf701ba5d9aef82.eot");
-  src: url("~/assets/font_icons/font_custom_0db0138cbab473ececf701ba5d9aef82.eot?#iefix") format("embedded-opentype"),
-       url("~/assets/font_icons/font_custom_0db0138cbab473ececf701ba5d9aef82.woff2") format("woff2"),
-       url("~/assets/font_icons/font_custom_0db0138cbab473ececf701ba5d9aef82.woff") format("woff"),
-       url("~/assets/font_icons/font_custom_0db0138cbab473ececf701ba5d9aef82.ttf") format("truetype"),
-       url("~/assets/font_icons/font_custom_0db0138cbab473ececf701ba5d9aef82.svg#font_custom") format("svg");
+  src: url("~/assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.eot");
+  src: url("~/assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.eot?#iefix") format("embedded-opentype"),
+       url("~/assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.woff2") format("woff2"),
+       url("~/assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.woff") format("woff"),
+       url("~/assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.ttf") format("truetype"),
+       url("~/assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.svg#font_custom") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -17,7 +17,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: "font_custom";
-    src: url("~/assets/font_icons/font_custom_0db0138cbab473ececf701ba5d9aef82.svg#font_custom") format("svg");
+    src: url("~/assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.svg#font_custom") format("svg");
   }
 }
 
@@ -288,7 +288,7 @@
 .fa-page-element:before,
 .fa-page-loading:before,
 .fa-paper-flight:before,
-.fa-pause:before,
+.fa-pause-record:before,
 .fa-pdf-file:before,
 .fa-pencil-on-paper:before,
 .fa-pencil-thick:before,
@@ -388,16 +388,17 @@
 .fa-stop:before,
 .fa-stop-circle-solid:before,
 .fa-storage-outline:before,
+.fa-suggestion-list:before,
 .fa-suitcase:before,
 .fa-suitcase-2:before,
 .fa-suitecase-filled:before,
 .fa-support:before,
-.fa-swipe:before,
+.fa-swipe-action:before,
 .fa-swipe-horizontal:before,
 .fa-table:before,
 .fa-tags-solid:before,
 .fa-tap:before,
-.fa-tap-on:before,
+.fa-tap-on-action:before,
 .fa-test-case-alt:before,
 .fa-test-case-priorities:before,
 .fa-test-case-types:before,
@@ -737,7 +738,7 @@
 .fa-page-element:before { content: "\f2a4"; }
 .fa-page-loading:before { content: "\f2a5"; }
 .fa-paper-flight:before { content: "\f18e"; }
-.fa-pause:before { content: "\e900"; }
+.fa-pause-record:before { content: "\f2cd"; }
 .fa-pdf-file:before { content: "\f224"; }
 .fa-pencil-on-paper:before { content: "\f18f"; }
 .fa-pencil-thick:before { content: "\f270"; }
@@ -836,18 +837,18 @@
 .fa-step-group:before { content: "\f1c1"; }
 .fa-stop:before { content: "\f284"; }
 .fa-stop-circle-solid:before { content: "\f1c2"; }
-.fa-suggestion-list:before { content: "\f2bb"; }
 .fa-storage-outline:before { content: "\f2c2"; }
+.fa-suggestion-list:before { content: "\f2bb"; }
 .fa-suitcase:before { content: "\f1ed"; }
 .fa-suitcase-2:before { content: "\f1c3"; }
 .fa-suitecase-filled:before { content: "\f1c5"; }
 .fa-support:before { content: "\f23c"; }
-.fa-swipe:before { content: "\f2bd"; }
+.fa-swipe-action:before { content: "\f2ce"; }
 .fa-swipe-horizontal:before { content: "\f1f9"; }
 .fa-table:before { content: "\f1c6"; }
 .fa-tags-solid:before { content: "\f1c7"; }
 .fa-tap:before { content: "\f1fa"; }
-.fa-tap-on:before { content: "\f2be"; }
+.fa-tap-on-action:before { content: "\f2cf"; }
 .fa-test-case-alt:before { content: "\f268"; }
 .fa-test-case-priorities:before { content: "\f254"; }
 .fa-test-case-types:before { content: "\f255"; }
@@ -1174,7 +1175,7 @@ $font-font_custom-overlap: "\f21b";
 $font-font_custom-page-element: "\f2a4";
 $font-font_custom-page-loading: "\f2a5";
 $font-font_custom-paper-flight: "\f18e";
-$font-font_custom-pause: "\e900";
+$font-font_custom-pause-record: "\f2cd";
 $font-font_custom-pdf-file: "\f224";
 $font-font_custom-pencil-on-paper: "\f18f";
 $font-font_custom-pencil-thick: "\f270";
@@ -1273,18 +1274,18 @@ $font-font_custom-star: "\f275";
 $font-font_custom-step-group: "\f1c1";
 $font-font_custom-stop: "\f284";
 $font-font_custom-stop-circle-solid: "\f1c2";
-$font-font_custom-suggestion-list: "\f2bb";
 $font-font_custom-storage-outline: "\f2c2";
+$font-font_custom-suggestion-list: "\f2bb";
 $font-font_custom-suitcase: "\f1ed";
 $font-font_custom-suitcase-2: "\f1c3";
 $font-font_custom-suitecase-filled: "\f1c5";
 $font-font_custom-support: "\f23c";
-$font-font_custom-swipe: "\f2bd";
+$font-font_custom-swipe-action: "\f2ce";
 $font-font_custom-swipe-horizontal: "\f1f9";
 $font-font_custom-table: "\f1c6";
 $font-font_custom-tags-solid: "\f1c7";
 $font-font_custom-tap: "\f1fa";
-$font-font_custom-tap-on: "\f2be";
+$font-font_custom-tap-on-action: "\f2cf";
 $font-font_custom-test-case-alt: "\f268";
 $font-font_custom-test-case-priorities: "\f254";
 $font-font_custom-test-case-types: "\f255";

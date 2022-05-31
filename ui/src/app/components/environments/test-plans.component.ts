@@ -21,7 +21,7 @@ export class TestPlansComponent implements OnInit {
 
   constructor(
     private testPlanService: TestPlanService,
-    private executionEnvironmentService: TestDeviceService,
+    private testDeviceService: TestDeviceService,
     private route: ActivatedRoute) { }
 
   ngOnInit(): void {
@@ -45,7 +45,7 @@ export class TestPlansComponent implements OnInit {
     let pageable = new Pageable();
     pageable.pageSize = 200;
     let query = "testPlaId@" + this.testPlans.content.map((exe) => exe.id).join("#");
-    this.executionEnvironmentService.findAll(query, undefined, pageable).subscribe((environments) => {
+    this.testDeviceService.findAll(query, undefined, pageable).subscribe((environments) => {
       this.testPlans.content.forEach((exe) => {
         let filteredEnvs = environments.content.filter((exeEnv) => exeEnv.testPlanId === exe.id);
         if (filteredEnvs)

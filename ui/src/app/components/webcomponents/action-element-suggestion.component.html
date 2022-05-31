@@ -97,6 +97,7 @@
           [attr.data-placeholder]="'action.element.screen.name.suggestion.placeholder' | translate"></div>
         </div>
         <button
+          *ngIf="!elementSuggestion"
           (click)="openAddEditElement()"
           class="theme-btn-primary ml-14 my-auto"
           [translate]="'btn.common.create.element' | translate"></button>

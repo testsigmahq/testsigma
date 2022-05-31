@@ -111,25 +111,25 @@
       (onTestCaseResultShow)="showTestCaseResult($event)"
       (onTestSuiteResultShow)="showTestSuiteResult($event)"
       (onTestMachineResultShow)="showTestMachineResult($event)"
-      [executionResult]="options.testPlanResult"
+      [testPlanResult]="options.testPlanResult"
       [environmentResult]="activeEnvironmentResult"
       [testSuiteResult]="activeTestSuiteResult">
     </app-re-run-test-case-results>
     <app-re-run-test-suite-results
-      [executionResult]="options.testPlanResult"
+      [testPlanResult]="options.testPlanResult"
       [environmentResult]="activeEnvironmentResult"
       (onTestMachineResultShow)="showTestMachineResult($event)"
       (onTestSuiteResultShow)="showTestSuiteResult($event)"
       *ngIf="view == 'TSR'"></app-re-run-test-suite-results>
     <app-re-run-test-machine-results
-      [executionResult]="options.testPlanResult"
+      [testPlanResult]="options.testPlanResult"
       (onTestMachineResultShow)="showTestMachineResult($event)"
       *ngIf="view == 'TMR'"></app-re-run-test-machine-results>
   </div>
   <app-re-run-data-driven-results
     *ngIf="activeTestCaseResult && activeTestCaseResult.isDataDriven"
     [testCaseResult]="activeTestCaseResult"
-    [executionResult]="options.testPlanResult"
+    [testPlanResult]="options.testPlanResult"
     (onTestCaseResultShow)="showTestCaseResult($event)">
   </app-re-run-data-driven-results>
   <app-re-run-test-step-result

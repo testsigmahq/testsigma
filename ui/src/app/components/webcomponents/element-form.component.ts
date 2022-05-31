@@ -317,11 +317,11 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
   //     this.elementForm.controls['locatorType'].setValue(this.locatorTypes[0])
   // }
 
-  stopCapture() {
+  stopCapture(isClose?:Boolean) {
     this.chromeRecorderService.elementCallBackContext = undefined;
     this.chromeRecorderService.elementCallBack = undefined;
     this.chromeRecorderService.stopSpying();
-    this.formDetails ? this.mobileRecorderEventService.setEmptyAction() : this.dialogRef.close(this.reviewSubmittedElement);
+    this.formDetails ? this.mobileRecorderEventService.setEmptyAction() : ( isClose? this.dialogRef.close(this.reviewSubmittedElement): null );
   }
 
   private chromeExtensionElementCallback(chromeRecorderElement: Element) {

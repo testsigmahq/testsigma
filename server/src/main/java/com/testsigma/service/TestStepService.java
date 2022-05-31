@@ -163,8 +163,9 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         return testStep;
     }
 
-    public void bulkUpdateProperties(Long[] ids, TestStepPriority testStepPriority, Integer waitTime, Boolean disabled, Boolean ignoreStepResult) {
-        this.repository.bulkUpdateProperties(ids, testStepPriority != null ? testStepPriority.toString() : null, waitTime);
+    public void bulkUpdateProperties(Long[] ids, TestStepPriority testStepPriority, Integer waitTime, Boolean disabled,
+                                     Boolean ignoreStepResult,Boolean visualEnabled) {
+        this.repository.bulkUpdateProperties(ids, testStepPriority != null ? testStepPriority.toString() : null, waitTime,visualEnabled);
         if (disabled != null || ignoreStepResult != null)
             this.bulkUpdateDisableAndIgnoreResultProperties(ids, disabled, ignoreStepResult);
     }

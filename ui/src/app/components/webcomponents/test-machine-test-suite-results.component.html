@@ -24,20 +24,20 @@
           <div
             class="theme-breadcrumb ts-col-40">
             <span
-              *ngIf="testSuiteResult.environmentResult?.testDeviceSettings?.platform ||
-              testSuiteResult.environmentResult?.testDeviceSettings?.osVersion"
+              *ngIf="testSuiteResult.testDeviceResult?.testDeviceSettings?.platform ||
+              testSuiteResult.testDeviceResult?.testDeviceSettings?.osVersion"
               class="theme-breadcrumb-item mw-100"
-              [matTooltip]="('platform.name.'+testSuiteResult.environmentResult.testDeviceSettings.platform | translate)  +
-           ' ' + testSuiteResult.environmentResult.testDeviceSettings.osVersion "
-              [textContent]="('platform.name.'+testSuiteResult.environmentResult.testDeviceSettings.platform | translate)  +
-           ' ' + testSuiteResult.environmentResult.testDeviceSettings.osVersion "></span>
+              [matTooltip]="('platform.name.'+testSuiteResult.testDeviceResult.testDeviceSettings.platform | translate)  +
+           ' ' + testSuiteResult.testDeviceResult.testDeviceSettings.osVersion "
+              [textContent]="('platform.name.'+testSuiteResult.testDeviceResult.testDeviceSettings.platform | translate)  +
+           ' ' + testSuiteResult.testDeviceResult.testDeviceSettings.osVersion "></span>
           </div>
           <div
             class="text-nowrap px-10 text-center ts-col-30">
             <app-test-machine-info-column
-              [environmentResult]="testSuiteResult?.environmentResult"
-              [executionResult]="testSuiteResult?.environmentResult?.executionResult"
-              [executionEnvironment]="testSuiteResult?.environmentResult?.executionEnvironment"></app-test-machine-info-column>
+              [environmentResult]="testSuiteResult?.testDeviceResult"
+              [testPlanResult]="testSuiteResult?.testDeviceResult?.testPlanResult"
+              [testDevice]="testSuiteResult?.testDeviceResult?.testDevice"></app-test-machine-info-column>
           </div>
           <div
             class="d-flex justify-content-end text-nowrap ts-col-30">

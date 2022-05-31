@@ -34,8 +34,8 @@ export class SuitesComponent extends BaseComponent implements OnInit {
   @ViewChild('searchInput', {static: true}) searchInput: ElementRef;
   public isFetching: boolean = false;
   private testPlan: TestPlan;
-  private executionEnvironment = new TestDevice();
-  private executionEnvironments: TestDevice[];
+  private testDevice = new TestDevice();
+  private testDevices: TestDevice[];
   public suitesList: InfiniteScrollableDataSource;
 
   constructor(
@@ -45,7 +45,7 @@ export class SuitesComponent extends BaseComponent implements OnInit {
     public toastrService: ToastrService,
     private route: ActivatedRoute,
     private testSuiteService: TestSuiteService,
-    private executionEnvironmentService: TestDeviceService,
+    private testDeviceService: TestDeviceService,
     private testPlanService: TestPlanService,
     private matDialog: MatDialog) {
     super(authGuard, notificationsService, translate, toastrService);
@@ -88,12 +88,12 @@ export class SuitesComponent extends BaseComponent implements OnInit {
     let page = new Pageable();
     page.pageSize = 1000;
     this.testSuiteService.findAll("testPlanId:" + this.testPlanId, undefined, page).subscribe(res => {
-      this.executionEnvironment.testSuites = res.content;
+      this.testDevice.testSuites = res.content;
       this.matDialog.open(TestPlanAddSuiteFormComponent, {
         width: '65vw',
         height: '85vh',
         data: {
-          executionEnvironment: this.executionEnvironment,
+          testDevice: this.testDevice,
           version: this.testPlan.workspaceVersion,
           execution: this.testPlan
         },
@@ -109,7 +109,7 @@ export class SuitesComponent extends BaseComponent implements OnInit {
   drop(event: CdkDragDrop<TestSuite[]>) {
     if (event.previousIndex != event.currentIndex) {
       moveItemInArray(this.testSuites.content, event.previousIndex, event.currentIndex);
-      this.executionEnvironment.testSuites = this.testSuites.content;
+      this.testDevice.testSuites = this.testSuites.content;
       this.updateSuites();
     }
   }
@@ -123,14 +123,14 @@ export class SuitesComponent extends BaseComponent implements OnInit {
 
   private fetchEnvironments() {
     let query = "testPlanId:" + this.testPlan.id;
-    this.executionEnvironmentService.findAll(query).subscribe(res => {
-      this.executionEnvironments = res.content;
-      this.testPlan.testDevices = this.executionEnvironments
+    this.testDeviceService.findAll(query).subscribe(res => {
+      this.testDevices = res.content;
+      this.testPlan.testDevices = this.testDevices
     });
   }
 
   private updateSuites() {
-    let suiteIds =this.executionEnvironment.testSuites.map(suite => suite.id);
+    let suiteIds =this.testDevice.testSuites.map(suite => suite.id);
     for(let i in this.testPlan.testDevices)
       this.testPlan.testDevices[i].suiteIds =suiteIds;
     this.testPlanService.update(this.testPlan).subscribe(

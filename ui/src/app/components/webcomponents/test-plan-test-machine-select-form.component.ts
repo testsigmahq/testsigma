@@ -34,7 +34,7 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
   public createSessionAtCaseLevel: Boolean;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { testPlan: TestPlan, executionEnvironment: TestDevice, isEdit: boolean },
+    @Inject(MAT_DIALOG_DATA) public data: { testPlan: TestPlan, testDevice: TestDevice, isEdit: boolean },
     private matDialog: MatDialog,
     public dialogRef: MatDialogRef<TestPlanTestMachineSelectFormComponent>,
     private testSuiteService: TestSuiteService,
@@ -45,7 +45,7 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
     public toastrService: ToastrService,
     public devicesService: DevicesService) {
     super(authGuard, notificationsService, translate, toastrService);
-    this.createSessionAtCaseLevel = this.data.executionEnvironment.createSessionAtCaseLevel;
+    this.createSessionAtCaseLevel = this.data.testDevice.createSessionAtCaseLevel;
   }
 
   get advancedSettings(): boolean {
@@ -91,11 +91,11 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
     this.activeExecutionEnvironment.testSuites = [];
     this.workspace = this.data.testPlan?.workspaceVersion?.workspace;
     this.testPlan = this.data.testPlan;
-    if (this.data?.executionEnvironment && this.data.isEdit) {
+    if (this.data?.testDevice && this.data.isEdit) {
       this.isEdit = true;
-      this.fetchActiveSuites("testDeviceId:" + this.data?.executionEnvironment?.id);
+      this.fetchActiveSuites("testDeviceId:" + this.data?.testDevice?.id);
     } else {
-      this.data['executionEnvironment'] = undefined;
+      this.data['testDevice'] = undefined;
       this.fetchActiveSuites("testPlanId:" + this.data?.testPlan?.id);
     }
   }
@@ -104,8 +104,8 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
     this.testSuiteService.findAll(query).subscribe(res => {
       this.activeExecutionEnvironment.testSuites = res.content;
       this.originalExecutionEnvironment = this.activeExecutionEnvironment;
-      this.data.executionEnvironment = this.data.executionEnvironment? this.data.executionEnvironment : new TestDevice();
-      this.activeEnvironmentFormGroup = this.initFormGroup(this.data.executionEnvironment);
+      this.data.testDevice = this.data.testDevice? this.data.testDevice : new TestDevice();
+      this.activeEnvironmentFormGroup = this.initFormGroup(this.data.testDevice);
     });
   }
 
@@ -114,7 +114,7 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
       width: '65vw',
       height: '85vh',
       data: {
-        executionEnvironment: this.activeExecutionEnvironment, version: this.version,
+        testDevice: this.activeExecutionEnvironment, version: this.version,
         execution: this.testPlan
       },
       panelClass: ['mat-dialog', 'full-width', 'rds-none']
@@ -142,44 +142,44 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
   saveEnvironment() {
     this.submitted = true;
     if (!this.activeEnvironmentFormGroup.getRawValue().suiteIds.length && this.advancedSettings) return;
-    let executionEnvironment = new TestDevice().deserialize(this.activeEnvironmentFormGroup.getRawValue());
-    executionEnvironment.platform = this.activeEnvironmentFormGroup.getRawValue().platform;
-    executionEnvironment.osVersion = this.activeEnvironmentFormGroup.getRawValue().osVersion;
-    executionEnvironment.browserVersion = this.activeEnvironmentFormGroup.getRawValue().browserVersion;
-    executionEnvironment.deviceName = this.activeEnvironmentFormGroup.getRawValue().deviceName;
-    executionEnvironment.testPlanId = this.testPlan.id;
-    executionEnvironment.id = this.data.executionEnvironment.id;
-    executionEnvironment.disable = false
+    let testDevice = new TestDevice().deserialize(this.activeEnvironmentFormGroup.getRawValue());
+    testDevice.platform = this.activeEnvironmentFormGroup.getRawValue().platform;
+    testDevice.osVersion = this.activeEnvironmentFormGroup.getRawValue().osVersion;
+    testDevice.browserVersion = this.activeEnvironmentFormGroup.getRawValue().browserVersion;
+    testDevice.deviceName = this.activeEnvironmentFormGroup.getRawValue().deviceName;
+    testDevice.testPlanId = this.testPlan.id;
+    testDevice.id = this.data.testDevice.id;
+    testDevice.disable = false
     if (!this.testPlan.isCustomPlan)
-      executionEnvironment.suiteIds = this.activeEnvironmentFormGroup.getRawValue().suiteIds
-    executionEnvironment.createSessionAtCaseLevel = this.createSessionAtCaseLevel;
+      testDevice.suiteIds = this.activeEnvironmentFormGroup.getRawValue().suiteIds
+    testDevice.createSessionAtCaseLevel = this.createSessionAtCaseLevel;
     if(this.testPlan.isCustomPlan){
-      executionEnvironment.suiteIds = this.activeEnvironmentFormGroup.getRawValue().suiteIds;
-      executionEnvironment.createSessionAtCaseLevel = this.activeEnvironmentFormGroup.getRawValue().createSessionAtCaseLevel;
+      testDevice.suiteIds = this.activeEnvironmentFormGroup.getRawValue().suiteIds;
+      testDevice.createSessionAtCaseLevel = this.activeEnvironmentFormGroup.getRawValue().createSessionAtCaseLevel;
     }
     if(this.testPlan.isHybrid)
-      executionEnvironment.agentId = this.activeEnvironmentFormGroup.getRawValue().agentId;
-    executionEnvironment.title = executionEnvironment.platform + "(" + executionEnvironment.osVersion + ")";
-    if(executionEnvironment.browser)
-      executionEnvironment.title +=executionEnvironment.browser+"";
-    if(executionEnvironment.browserVersion)
-      executionEnvironment.title += " (" + executionEnvironment.browserVersion + ")";
-    if(executionEnvironment.deviceName)
-      executionEnvironment.title += " ("+executionEnvironment.deviceName+")";
+      testDevice.agentId = this.activeEnvironmentFormGroup.getRawValue().agentId;
+    testDevice.title = testDevice.platform + "(" + testDevice.osVersion + ")";
+    if(testDevice.browser)
+      testDevice.title +=testDevice.browser+"";
+    if(testDevice.browserVersion)
+      testDevice.title += " (" + testDevice.browserVersion + ")";
+    if(testDevice.deviceName)
+      testDevice.title += " ("+testDevice.deviceName+")";
 
-    executionEnvironment = this.normalizeFormValue(executionEnvironment);
+    testDevice = this.normalizeFormValue(testDevice);
     if(this.isRest){
-      executionEnvironment.title = "Environment of("+this.activeExecutionEnvironment?.testSuites.map((suite) => suite.name).join(",")+")"
+      testDevice.title = "Environment of("+this.activeExecutionEnvironment?.testSuites.map((suite) => suite.name).join(",")+")"
     }
 
     if(this.isHybrid && this.isMobile){
-      this.devicesService.findByAgentId(executionEnvironment.agentId).subscribe(res => {
-        let device = res.content.find(device => device.id == executionEnvironment.deviceId);
-        executionEnvironment.title = device.osName + "(" + device.osVersion +")"+" ("+device.name+")"
-        this.dialogRef.close(executionEnvironment);
+      this.devicesService.findByAgentId(testDevice.agentId).subscribe(res => {
+        let device = res.content.find(device => device.id == testDevice.deviceId);
+        testDevice.title = device.osName + "(" + device.osVersion +")"+" ("+device.name+")"
+        this.dialogRef.close(testDevice);
       })
     } else {
-      this.dialogRef.close(executionEnvironment);
+      this.dialogRef.close(testDevice);
     }
   }
 

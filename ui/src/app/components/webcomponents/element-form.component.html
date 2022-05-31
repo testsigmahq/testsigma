@@ -30,7 +30,7 @@
               [value]="elementCreateType.MANUAL"
               [ngModelOptions]="{standalone: true}"
               [(ngModel)]="element.createdType"
-              (ngModelChange)="workspaceVersion?.workspace.isWeb? stopCapture():''"/>
+              (ngModelChange)="workspaceVersion?.workspace.isWeb? stopCapture(false):''"/>
             <label
               for="manual"
               class="pl-5 pointer"
@@ -266,7 +266,7 @@
   </div>
   <div class="theme-overlay-footer">
     <button
-      (click) = "stopCapture()"
+      (click) = "stopCapture(true)"
       class="theme-btn-clear-default"
       [translate]="'btn.common.cancel'"></button>
     <button

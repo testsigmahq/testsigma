@@ -487,8 +487,12 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
       this.devicesService.sessionTap(this.sessionId, tapPoint).subscribe({
         next: () => {
           if (this.data.recording) {
-            if(this.data.isStepRecord) this.saveTapOnDeviceStep.emit(tapPoint);
+            if(this.data.isStepRecord && !this.mirroring) this.saveTapOnDeviceStep.emit(tapPoint);
             this.handleActionSuccess();
+            if(this.mirroring) {
+              this.removeInspectionElements();
+              this.clearSelection();
+            }
           }
         },
         error: (err) => this.handleActionFailure(err, "mobile_recorder.notification.tap.failure", "Tap","/#6--failed-to-tap-on-the-element")
@@ -721,7 +725,7 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
   }
 
   private handleActionSuccess() {
-    this.recorderDialog.handleActionSuccess();
+    this.recorderDialog.handleActionSuccess(this.mirroring);
   }
 
   private get recorderDialog():MobileRecordingComponent{

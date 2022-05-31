@@ -74,7 +74,7 @@
           <app-lab-environments-info
             *ngIf="testPlan.testDevices"
             [testPlan]="testPlan"
-            [executionEnvironments]="testPlan.testDevices"></app-lab-environments-info>
+            [testDevices]="testPlan.testDevices"></app-lab-environments-info>
           <span [ngSwitch]="testPlan.testPlanType==getCrossBrowser() && testPlan?.workspaceVersion?.workspace?.isMobile">
             <div
               class="pt-4 text-t-secondary"  *ngSwitchCase="true"

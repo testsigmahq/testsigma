@@ -7,6 +7,7 @@ import com.testsigma.model.UploadVersionAppInfo;
 import lombok.extern.log4j.Log4j2;
 import net.dongliu.apk.parser.ApkFile;
 import net.dongliu.apk.parser.bean.ApkMeta;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -43,10 +44,20 @@ public class AppParserService {
       }
       return new UploadVersionAppInfo(null, null,
         rootDict.objectForKey(BUNDLE_VERSION).toString(), rootDict.objectForKey(BUNDLE_IDENTIFIER).toString());
+    }else if(checkIsItApkFile(file)){
+      return parseApkFile(file);
     }
+    return new UploadVersionAppInfo(null,null,null,null);
+  }
 
-    return parseApkFile(file);
-
+  private boolean checkIsItApkFile(File file) {
+    String filePath = file.getAbsolutePath();
+    int lastIndex = filePath.lastIndexOf(DOT);
+    boolean isApkFile = filePath.substring(lastIndex+1).equalsIgnoreCase(".apk") ||
+            filePath.substring(lastIndex+1).equalsIgnoreCase(".xapk") ||
+            filePath.substring(lastIndex+1).equalsIgnoreCase(".apks") ||
+            filePath.substring(lastIndex+1).equalsIgnoreCase(".apkm");
+    return isApkFile;
   }
 
   private UploadVersionAppInfo parseApkFile(File file) {

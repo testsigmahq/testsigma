@@ -24,7 +24,7 @@
       <span
         class="bg-white rb-medium py-10"
         [translate]="'test_step.for_loop.start'"></span>
-      <div class="pr-15 pt-5" style="width: 280px">
+      <div class="pr-15 pt-5" [style.width]="stepRecorderView? '80px':'280px'">
         <mat-form-field
           class="mat-select-custom inline-no-border sm w-100" appearance="fill">
           <mat-select
@@ -44,7 +44,7 @@
       <span
         class="bg-white rb-medium py-10"
         [translate]="'test_step.for_loop.end'"></span>
-      <div class="pl-15 pt-5" style="width: 280px">
+      <div class="pl-15 pt-5" [style.width]="stepRecorderView? '80px':'280px'">
         <mat-form-field
           class="mat-select-custom inline-no-border sm w-100" appearance="fill">
           <mat-select

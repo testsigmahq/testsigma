@@ -57,11 +57,13 @@ public interface TestStepRepository extends JpaRepository<TestStep, Long> {
   void incrementPosition(@Param("position") Integer position, @Param("testCaseId") Long testCaseId);
 
   @Query(value = "UPDATE TestStep SET priority=COALESCE(:priority, priority), waitTime=COALESCE(:waitTime, waitTime) " +
+          ",visualEnabled=COALESCE(:visualEnabled,visualEnabled) " +
     "WHERE id in :ids")
   @Modifying
   void bulkUpdateProperties(@Param("ids") Long[] ids,
                             @Param("priority") String priority,
-                            @Param("waitTime") Integer waitTime);
+                            @Param("waitTime") Integer waitTime,
+                            @Param("visualEnabled") Boolean visualEnabled);
 
   List<TestStep> findAllByTestCaseIdAndIdInOrderByPosition(Long testCaseId, List<Long> stepIds);
 

@@ -65,12 +65,12 @@
     </div>
 
     <div class="ts-col-100 d-flex flex-wrap pb-15 add-plan-btn"
-    *ngIf="!!executionEnvironments.length">
+    *ngIf="!!testDevices.length">
       <div
         class="p-15 border-rds-5 mr-5 mb-10 position-relative pointer d-block mw-100"
         [class.highlighter-bg-border]="environmentForm == activeEnvironmentFormGroup"
         [class.bg-highlight]="environmentForm != activeEnvironmentFormGroup"
-        [class.hide]="!executionEnvironments[index]?.settings?.platform && !isRest && index > 0"
+        [class.hide]="!testDevices[index]?.settings?.platform && !isRest && index > 0"
         *ngFor="let environmentForm of environmentsFormControls; let index = index"
         (click)="editEnvironment(environmentForm, index); isAdvanceAddToggle=true">
         <a
@@ -80,7 +80,7 @@
             [testPlanLabType]="testPlanLabType"
             [version]="version"
             [testPlan]="testPlan"
-            [executionEnvironment]="executionEnvironments[index]"
+            [testDevice]="testDevices[index]"
             (onRemove)="removeEnvironment(index)"></app-test-plan-execution-environment-info>
         </a>
       </div>
@@ -141,7 +141,7 @@
         [translate]="'btn.common.add'"
         class="theme-btn-primary pl-30 pr-30" (click)="saveEnvironment()"></button>
     </div>
-      <div class="form-group" *ngIf="formSubmitted && !executionEnvironments.length">
+      <div class="form-group" *ngIf="formSubmitted && !testDevices.length">
         <div class="error mt-n35" #machineValidationDiv
              [textContent]="'validation.required.message' | translate: {field: version.workspace.isWeb?'Test Machine':'Test Device'}"></div>
       </div>

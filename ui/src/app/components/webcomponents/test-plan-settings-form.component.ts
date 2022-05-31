@@ -103,6 +103,8 @@ export class TestPlanSettingsFormComponent extends BaseComponent implements OnIn
     let json = this.formGroup.getRawValue();
     this.testPlan = new TestPlan().deserialize(json);
     this.testPlan?.testDevices?.forEach((environment, index) => {
+      if (this.testPlan.isHybrid)
+          environment.platform = null;
       environment.testSuites = json.testDevices[index].suiteIds
       environment.matchBrowserVersion = this.testPlan.matchBrowserVersion;
       if(this.version.workspace.isMobileNative){

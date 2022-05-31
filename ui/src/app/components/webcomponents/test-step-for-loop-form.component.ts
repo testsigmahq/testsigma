@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Optional, Output} from '@angular/core';
 import {WorkspaceVersion} from "../../models/workspace-version.model";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
@@ -28,6 +28,7 @@ export class TestStepForLoopFormComponent extends BaseComponent implements OnIni
   @Output('onCancel') onCancel = new EventEmitter<void>();
   @Output('onSave') onSave = new EventEmitter<TestStep>();
   @Input('stepForm') stepForm: FormGroup;
+  @Optional() @Input("stepRecorderView") stepRecorderView:boolean;
   loopForm: FormGroup = new FormGroup({});
   public testDataList: Page<TestData>;
   public startArray: Array<any>;

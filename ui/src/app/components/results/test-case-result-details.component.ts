@@ -73,7 +73,7 @@ export class TestCaseResultDetailsComponent extends BaseComponent implements OnI
               public dryTestPlanService: DryTestPlanService,
               public matModal: MatDialog,
               public testPlanResultService: TestPlanResultService,
-              public executionEnvironmentService: TestDeviceService) {
+              public testDeviceService: TestDeviceService) {
     super(authGuard, notificationsService, translate, toastrService);
   }
 

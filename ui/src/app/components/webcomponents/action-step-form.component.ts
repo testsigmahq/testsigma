@@ -199,9 +199,16 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     this.resetValidation();
     this.subscribeMobileRecorderEvents();
     this.mobileRecorderEventService.returnData.subscribe(res => {
+      this.mobileRecorderEventService.setEmptyAction();
       if(res.type == 'element') {
         let name = typeof res.data == "string" ? res.data : res.data.name;
         this.assignElement(name, this.mobileRecorderEventService.currentlyTargetElement);
+      }else if(res.type == TestDataType.environment) {
+        this.environmentAfterClose(res.data)
+      } else if(res.type == TestDataType.parameter) {
+        this.dataProfileAfterClose(res.data);
+      } else if(res.type == TestDataType.function) {
+        this.customFunctionAfterClose(res.data)
       }
     })
   }
@@ -334,7 +341,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
               if (this.showTemplates && this.filteredTemplate?.length > 0)
                 this.selectTemplate();
               else if (this.currentTemplate?.id)
-                this.save();
+                this.validateTestData();
             }
             let htmlGrammar = this.replacer.nativeElement.innerHTML;
             htmlGrammar = htmlGrammar.replace(/<br>/g, "");
@@ -513,6 +520,17 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         this.testStepService.create(this.testStep).subscribe(step => this.afterSave(step), e => this.handleSaveFailure(e));
       }
     }
+  }
+
+  validateTestData() {
+   if ((this.currentAddonTemplate || this.currentTemplate)&& this.navigateTemplate.includes(this.currentTemplate?.id))
+    {
+      this.navigateUrlValidation();
+      setTimeout(()=> {
+        this.save();
+      },1000);
+    }
+   else this.save();
   }
 
   update(naturalTextActionId, addonActionId) {
@@ -833,7 +851,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         item.addEventListener('keydown', (event) => {
           console.log('test data keydown event triggered');
           if (event.key == "Enter" && !this.showDataTypes) {
-            this.save();
+            this.validateTestData();
             return this.stopEvent(event);
           }
           this.getAddonTemplateAllowedValues(item.dataset?.reference);
@@ -868,7 +886,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         item.addEventListener('keyup', (event) => {
           console.log('test data keyup event triggered');
           if (event.key == "Enter" && !this.showDataTypes) {
-            this.save();
+            this.validateTestData();
             return this.stopEvent(event);
           }
           this.getAddonTemplateAllowedValues(item.dataset?.reference);
@@ -1328,6 +1346,12 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   }
 
   private openSuggestionTestDataFunction() {
+    let suggestionData = {
+      versionId: this.version?.id,
+    };
+    if(this.sendSuggestionDetails(suggestionData, this.mobileRecorderEventService.suggestionCustomFunction)) {
+      return;
+    }
     this.testDataFunctionSuggestion = this.matModal.open(ActionTestDataFunctionSuggestionComponent, {
       height: "100vh",
       width: '30%',
@@ -1335,22 +1359,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       panelClass: ['mat-dialog', 'rds-none'],
       data: {version: this.version?.id}
     });
-    let afterClose = (data) => {
-      if (data) {
-        if (data instanceof AddonTestDataFunction) {
-          this.assignTDFData(data);
-        } else {
-          this.currentTestDataFunction = data;
-          this.assignCFData(data.arguments);
-          this.assignDataValue(this.getDataTypeString(TestDataType.function, data.classDisplayName + " :: " + data.displayName))
-        }
-      } else if (!data) {
-        delete this.currentTestDataType
-        this.showTestDataPopup()
-      }
-    }
-
-    this.testDataFunctionSuggestion.afterClosed().subscribe(data => afterClose(data));
+    this.testDataFunctionSuggestion.afterClosed().subscribe(data => this.customFunctionAfterClose(data));
   }
 
 
@@ -1417,7 +1426,27 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
   }
 
+  sendSuggestionDetails(sendDetails, contentName) {
+    if (this.stepRecorderView) {
+      this.mobileRecorderEventService.suggestionContent.next(Object.assign(sendDetails, {
+        content: contentName
+      }));
+      return true;
+    } else {
+      return false
+    }
+  }
+
   private openSuggestionDataProfile() {
+    let suggestionData = {
+      dataProfileId: this.testStep.getParentLoopDataId(this.testStep, this.testCase),
+      versionId: this.version?.id,
+      testCaseId: this.testCase?.id,
+      stepRecorderView: Boolean(this.stepRecorderView),
+    };
+    if(this.sendSuggestionDetails(suggestionData, this.mobileRecorderEventService.suggestionDataProfile)) {
+      return;
+    }
     this.dataProfileSuggestion = this.matModal.open(ActionTestDataParameterSuggestionComponent, {
       height: "100vh",
       width: '35%',
@@ -1430,19 +1459,17 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         stepRecorderView: Boolean(this.stepRecorderView),
       }
     });
-    let afterClose = (data) => {
-      if (data)
-        this.assignDataValue(this.getDataTypeString(TestDataType.parameter, data));
-      else {
-        this.currentTestDataType = TestDataType.raw;
-        this.showTestDataPopup()
-      }
-    }
-
-    this.dataProfileSuggestion.afterClosed().subscribe(data => afterClose(data));
+    this.dataProfileSuggestion.afterClosed().subscribe(data => this.dataProfileAfterClose(data));
   }
 
   private openSuggestionEnvironment() {
+    let suggestionData = {
+      versionId: this.version?.id,
+      stepRecorderView: Boolean(this.stepRecorderView),
+    };
+    if(this.sendSuggestionDetails(suggestionData, this.mobileRecorderEventService.suggestionEnvironment)) {
+      return;
+    }
     this.environmentSuggestion = this.matModal.open(ActionTestDataEnvironmentSuggestionComponent, {
       height: "100vh",
       width: '30%',
@@ -1453,14 +1480,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         stepRecorderView: Boolean(this.stepRecorderView),
       }
     });
-    let afterClose = (data) => {
-      data = data || ' ';
-      this.assignDataValue(this.getDataTypeString(TestDataType.environment, data));
-      if (data == ' ') {
-        this.showTestDataPopup()
-      }
-    }
-    this.environmentSuggestion.afterClosed().subscribe(data => afterClose(data));
+    this.environmentSuggestion.afterClosed().subscribe(data => this.environmentAfterClose(data));
   }
 
   private showTestDataPopup() {
@@ -1689,7 +1709,6 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
     step.parentStep = this.testStep.parentStep;
     step.siblingStep = this.testStep.siblingStep;
-    step.action = this.testStep.action;
     step.stepDisplayNumber = this.testStep.stepDisplayNumber;
     if (Boolean(this.stepRecorderView)) {
       this.matModal.openDialogs?.find(dialog => dialog.componentInstance instanceof TestStepMoreActionFormComponent)?.close();
@@ -1720,4 +1739,36 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   }
 
 
+  private environmentAfterClose(data) {
+    data = data || ' ';
+    this.assignDataValue(this.getDataTypeString(TestDataType.environment, data));
+    if (data == ' ') {
+      this.showTestDataPopup()
+    }
+  }
+
+  private dataProfileAfterClose(data) {
+    if (data)
+      this.assignDataValue(this.getDataTypeString(TestDataType.parameter, data));
+    else {
+      this.currentTestDataType = TestDataType.raw;
+      this.showTestDataPopup()
+    }
+  }
+
+  private customFunctionAfterClose(data) {
+    if (data) {
+      if (data instanceof AddonTestDataFunction) {
+        this.assignTDFData(data);
+      } else {
+        this.currentTestDataFunction = data;
+        this.assignCFData(data.arguments);
+        this.showDataTypes = false;
+        this.assignDataValue(this.getDataTypeString(TestDataType.function, data.classDisplayName + " :: " + data.displayName))
+      }
+    } else if (!data) {
+      delete this.currentTestDataType
+      this.showTestDataPopup()
+    }
+  }
 }

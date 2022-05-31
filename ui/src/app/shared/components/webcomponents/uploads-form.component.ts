@@ -25,6 +25,7 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
   @Input('upload') upload: Upload;
   @Optional() @Input('inline') inline?: Boolean;
   @Output('onUpload') uploadCallBack = new EventEmitter<any>();
+  @Output('onUploadedFile') onUploadedFile = new EventEmitter<any>();
   public uploadTypes = [UploadType.Attachment];
   public uploadForm: FormGroup;
   public uploading: boolean;
@@ -148,6 +149,7 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
       this.upload.latestVersion = this.upload.latestVersion || new UploadVersion();
         this.upload.latestVersion.fileSize = this.uploadedFileObject.size;
     }
+    this.onUploadedFile.emit();
   }
 
   public getRawValue = () => this.uploadForm.getRawValue();

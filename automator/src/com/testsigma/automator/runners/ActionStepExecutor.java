@@ -3,10 +3,7 @@ package com.testsigma.automator.runners;
 import com.testsigma.automator.constants.ActionResult;
 import com.testsigma.automator.constants.AutomatorMessages;
 import com.testsigma.automator.drivers.DriverManager;
-import com.testsigma.automator.entity.ResultConstant;
-import com.testsigma.automator.entity.TestCaseResult;
-import com.testsigma.automator.entity.TestCaseStepEntity;
-import com.testsigma.automator.entity.TestCaseStepResult;
+import com.testsigma.automator.entity.*;
 import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.actions.DriverAction;
 import com.testsigma.automator.actions.constants.ErrorCodes;
@@ -50,6 +47,9 @@ public class ActionStepExecutor {
     snippet.setRuntimeDataProvider(prepareRunTimeDataProvider());
     snippet.setEnvSettings(envSettings);
     snippet.setAdditionalData(testCaseStepEntity.getAdditionalData());
+
+    snippet.setTestDataProfileEntity(new TestDataProfileEntity(testCaseStepEntity.getTestDataIndex(),
+            testCaseStepEntity.getSetName(), testCaseStepEntity.getTestDataProfileName()));
     ActionResult snippetResult = snippet.run();
     //We retry test step execution on failure based on the exception type.
     snippetResult = reTrySnippetIfEligible(snippetResult, snippet, testCaseStepEntity, testCaseStepResult);

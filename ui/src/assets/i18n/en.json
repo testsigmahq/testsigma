@@ -27,6 +27,7 @@
   "testcases.details.export_as_xml": "Test Case XML Export",
   "testgroups.details.export_as_xml": "Step Group XML Export",
   "test_step.results.element": "Element",
+  "nlp.data_profile.suggestion.title": "Test Data Profile",
   "btn.common.new": "New",
   "btn.common.create.element": "+Create Element",
   "btn.common.create_new": "Create New",

@@ -12,6 +12,7 @@ package com.testsigma.automator.actions;
 import com.testsigma.automator.constants.ActionResult;
 import com.testsigma.automator.entity.AttributePropertiesEntity;
 import com.testsigma.automator.entity.ElementPropertiesEntity;
+import com.testsigma.automator.entity.TestDataProfileEntity;
 import com.testsigma.automator.entity.TestDataPropertiesEntity;
 import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.actions.constants.ErrorCodes;
@@ -44,6 +45,7 @@ public abstract class Action {
   protected Map<String, String> testDataParams = new HashMap<>();
   protected Map<String, Object> additionalData = new HashMap<>();
   protected Map<String, String> envSettings = new HashMap<>();
+  private TestDataProfileEntity testDataProfileEntity;
   @Getter
   protected String errorMessage;
   @Getter

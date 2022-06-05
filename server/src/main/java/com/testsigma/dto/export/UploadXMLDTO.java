@@ -8,6 +8,7 @@
 package com.testsigma.dto.export;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.testsigma.annotation.JsonListRootName;
@@ -20,6 +21,7 @@ import java.sql.Timestamp;
 @Data
 @JsonListRootName(name = "uploads")
 @JsonRootName(value = "upload")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UploadXMLDTO extends BaseXMLDTO {
   @JsonProperty("id")
   private Long id;

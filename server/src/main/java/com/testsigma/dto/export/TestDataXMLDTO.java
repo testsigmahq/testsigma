@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonListRootName(name = "test-data-list")
 @JsonRootName(value = "test-data")
 public class TestDataXMLDTO extends BaseXMLDTO {

@@ -20,35 +20,57 @@ export class VisualComparisonListComponent implements OnInit {
   @Input('filteredTestStepResult') filteredTestStepResult: Page<any>;
   @Input('currentComparison') currentComparison: Number;
   @Output('selectedScreenComparison') selectedScreenComparison = new EventEmitter<any>();
+  public visualDiffEnabledStepResult:any[];
   public previousResult: TestStepResult;
   public nextResult: TestStepResult;
+  public previousResultRoute: string;
+  public nextResultRoute: string;
   public showItems: boolean = false;
 
   constructor() {
   }
 
   ngOnInit() {
-    this.setPaginationData()
+    this.getVisualEnabledStepResult();
+    this.setPaginationData();
   }
 
+  getVisualEnabledStepResult(){
+    if( this.filteredTestStepResult?.content?.length ){
+      this.visualDiffEnabledStepResult = this.filteredTestStepResult.content.filter(( testStepResult )=>{
+        return testStepResult.visualEnabled && testStepResult.stepResultScreenshotComparison?.id;
+      })
+    }else {
+      this.visualDiffEnabledStepResult = [];
+    }
+  }
   setPaginationData() {
-    if (this.filteredTestStepResult && this.filteredTestStepResult.content && this.filteredTestStepResult.content.length > 1) {
-      let condition = (compareItem) => compareItem.stepResultScreenshotComparison && compareItem.stepResultScreenshotComparison.id == this.currentComparison;
-      let currentIndex = this.filteredTestStepResult.content.findIndex(condition);
-      if (this.filteredTestStepResult.content[currentIndex - 1]) {
-        this.previousResult = this.filteredTestStepResult.content[currentIndex - 1];
-      } else {
+    if( this.visualDiffEnabledStepResult.length ){
+      if( this.visualDiffEnabledStepResult.length === 1 ){
         this.previousResult = undefined;
-      }
-      if (this.filteredTestStepResult.content[currentIndex + 1]) {
-        this.nextResult = this.filteredTestStepResult.content[currentIndex + 1];
-      } else {
         this.nextResult = undefined;
       }
-    } else {
-      this.previousResult = undefined;
-      this.nextResult = undefined;
+      else{
+        let condition = (compareItem) => compareItem.stepResultScreenshotComparison && compareItem.stepResultScreenshotComparison.id == this.currentComparison;
+        let selectedDiffIndex = this.visualDiffEnabledStepResult.findIndex(condition);
+        if( selectedDiffIndex !== 0 ){
+          this.previousResult = this.visualDiffEnabledStepResult[selectedDiffIndex-1];
+          this.previousResultRoute = this.getRouteFromResult(this.previousResult);
+        }else{
+          this.previousResult = undefined;
+        };
+        if( selectedDiffIndex < this.visualDiffEnabledStepResult.length-1 ){
+          this.nextResult = this.visualDiffEnabledStepResult[selectedDiffIndex + 1];
+          this.nextResultRoute = this.getRouteFromResult(this.nextResult);
+        }else{
+          this.nextResult = undefined;
+        }
+      }
     }
+  }
+
+  getRouteFromResult(result: TestStepResult): string {
+    return result.constructor.name === "TestStepResult" ? `/td/test_case_results/${result.testCaseResultId}/step_results/${result.id}` : `/td/dry_test_case_results/${result.testCaseResultId}/step_results/${result.id}`;
   }
 
   selectList(id) {

@@ -58,7 +58,7 @@ public class PrivateGridService {
             for (JsonNode browser : browsers) {
                 ((ObjectNode) browser).put("browserName", StringUtils.capitalize(browser.get("browserName").asText().toLowerCase().replaceAll("\\s", "")));
                 ((ObjectNode) browser).put("platform", StringUtils.capitalize(browser.get("platform").asText().toLowerCase().replaceAll("\\s", "")));
-                if (browser.get("platform").asText().contains("Win"))
+                if (browser.get("platform").asText().contains("Win") || browser.get("platform").asText().contains("WIN"))
                     ((ObjectNode) browser).put("platform", "Windows");
             }
             ObjectMapper mapper = new ObjectMapper();
@@ -72,6 +72,7 @@ public class PrivateGridService {
             PrivateGridNode node = nodeMapper.map(request);
             this.create(node);
         } catch (Exception e) {
+            log.error(e.getMessage());
             throw new TestsigmaException("Unable extract and save the node configurations from your private grid");
         }
     }

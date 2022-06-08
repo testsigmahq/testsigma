@@ -53,10 +53,10 @@ public class AppParserService {
   private boolean checkIsItApkFile(File file) {
     String filePath = file.getAbsolutePath();
     int lastIndex = filePath.lastIndexOf(DOT);
-    boolean isApkFile = filePath.substring(lastIndex+1).equalsIgnoreCase(".apk") ||
-            filePath.substring(lastIndex+1).equalsIgnoreCase(".xapk") ||
-            filePath.substring(lastIndex+1).equalsIgnoreCase(".apks") ||
-            filePath.substring(lastIndex+1).equalsIgnoreCase(".apkm");
+    boolean isApkFile = filePath.substring(lastIndex+1).equalsIgnoreCase("apk") ||
+            filePath.substring(lastIndex+1).equalsIgnoreCase("xapk") ||
+            filePath.substring(lastIndex+1).equalsIgnoreCase("apks") ||
+            filePath.substring(lastIndex+1).equalsIgnoreCase("apkm");
     return isApkFile;
   }
 

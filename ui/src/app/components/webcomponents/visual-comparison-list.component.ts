@@ -70,7 +70,9 @@ export class VisualComparisonListComponent implements OnInit {
   }
 
   getRouteFromResult(result: TestStepResult): string {
-    return result.constructor.name === "TestStepResult" ? `/td/test_case_results/${result.testCaseResultId}/step_results/${result.id}` : `/td/dry_test_case_results/${result.testCaseResultId}/step_results/${result.id}`;
+    if (result)
+    return result.constructor.name === "TestStepResult" ? `/td/test_case_results/${result?.testCaseResultId}/step_results/${result?.id}` : `/td/dry_test_case_results/${result?.testCaseResultId}/step_results/${result?.id}`;
+  else return null;
   }
 
   selectList(id) {

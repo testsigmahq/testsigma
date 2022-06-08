@@ -309,12 +309,14 @@ export class TestStepResultsComponent extends TestCaseStepsListComponent impleme
       this.setFailedStepOnRefresh(stepResults);
       testStepResult.stepGroupResults = stepResults;
       this.fetchTestSteps(testStepResult.stepGroupId, stepResults, testStepResult);
+      this.fetchVisualResults(stepResults);
       this.navigateToFirstFailedStep(testStepResult);
       this.scrollActiveToView();
     });
     //this.activeStepGroup = testStepResult;
 
   }
+
 
   setFailedStepOnRefresh(stepResults) {
     if(this.route.children[0]) {

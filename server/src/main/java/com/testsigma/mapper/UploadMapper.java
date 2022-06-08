@@ -87,10 +87,12 @@ public interface UploadMapper {
                     list.add(xmldto);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    uploadFolder.delete();
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
+
         }
         return list;
     }

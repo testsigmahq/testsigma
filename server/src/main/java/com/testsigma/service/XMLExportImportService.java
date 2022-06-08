@@ -178,7 +178,7 @@ public abstract class XMLExportImportService<T> {
         try {
             String s3Key = "/backup/" + backupDetail.getName();
             log.debug("backup zip process initiated");
-            outputFile = new ZipUtil().zipFile(backupDetail.getSrcFiles(), backupDetail.getName(), backupDetail.getDestFiles());
+            outputFile = new ZipUtil().zipFolder(backupDetail.getSrcFiles(), backupDetail.getName(), backupDetail.getDestFiles());
             log.debug("backup zip process completed");
             InputStream fileInputStream = new ByteArrayInputStream(FileUtils.readFileToByteArray(outputFile));
             storageServiceFactory.getStorageService().addFile(s3Key, fileInputStream);
@@ -341,7 +341,7 @@ public abstract class XMLExportImportService<T> {
     public abstract Specification<T> getExportXmlSpecification(BackupDTO backupDTO) throws ResourceNotFoundException;
 
     protected List<? extends BaseXMLDTO> mapToXMLDTOList(List<T> list, BackupDTO backupDTO) {
-        if (list.size() > 0 && list.get(0) instanceof Upload) {
+        if (list.size() > 0 && list.get(0) instanceof UploadVersion) {
             return mapToXMLDTOList(list, backupDTO);
         }
         return mapToXMLDTOList(list);

@@ -141,7 +141,12 @@ public class UploadService extends XMLExportImportService<Upload> {
 
   @Override
   protected List<UploadXMLDTO> mapToXMLDTOList(List<Upload> list) {
-    return null;
+    return  mapper.mapUploads(list);
+  }
+
+  @Override
+  protected List<UploadXMLDTO> mapToXMLDTOList(List<Upload> list, BackupDTO backupDTO) {
+    return mapper.mapUploads(list);
   }
 
   public void importXML(BackupDTO importDTO) throws IOException, ResourceNotFoundException {

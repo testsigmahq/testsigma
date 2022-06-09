@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
@@ -26,6 +27,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.apache.http.message.BasicHeader;
+import org.json.JSONArray;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -55,25 +57,35 @@ public class PrivateGridService {
         });
         try {
             JsonNode browsers = response.getResponseEntity().get("request").get("configuration").get("capabilities");
+            JSONArray validPlatforms = new JSONArray();
             for (JsonNode browser : browsers) {
                 ((ObjectNode) browser).put("browserName", StringUtils.capitalize(browser.get("browserName").asText().toLowerCase().replaceAll("\\s", "")));
                 ((ObjectNode) browser).put("platform", StringUtils.capitalize(browser.get("platform").asText().toLowerCase().replaceAll("\\s", "")));
+                if (OSBrowserType.getBrowserEnumValueIfExists(browser.get("browserName").asText())==null){
+                    continue;
+                }
                 if (browser.get("platform").asText().contains("Win") || browser.get("platform").asText().contains("WIN"))
                     ((ObjectNode) browser).put("platform", "Windows");
+                validPlatforms.put(browser);
             }
             ObjectMapper mapper = new ObjectMapper();
             mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            PrivateGridBrowserRequest[] browsersList = mapper.convertValue(browsers, PrivateGridBrowserRequest[].class);
+            PrivateGridBrowserRequest[] browsersList = mapper.convertValue(validPlatforms, PrivateGridBrowserRequest[].class);
             PrivateGridNodeRequest request = new PrivateGridNodeRequest();
             request.setNodeName(proxy);
             request.setGridURL(gridURL);
             request.setBrowserList(List.of(browsersList));
             PrivateGridNode node = nodeMapper.map(request);
+            if (node.getBrowserList().size()<1)
+                throw new TestsigmaException("Node configuration is not correct! may be unsupported browsers and platforms are added");
             this.create(node);
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
+            if (e instanceof TestsigmaException)
+                throw new TestsigmaException(e.getMessage());
+            else
             throw new TestsigmaException("Unable extract and save the node configurations from your private grid");
         }
     }

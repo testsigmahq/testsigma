@@ -27,7 +27,7 @@ import {TestPlanLabType} from '../../../enums/test-plan-lab-type.enum';
       <input
         type="text" readonly [class.pl-20]="hasProjectIcon || hasApplicationIcon"
              [value]="noneValue ? 'None' : value?.name"
-             class="autocomplete-placeholder">
+             class="autocomplete-placeholder text-truncate">
       <i class="fa-down-arrow-filled" [class.fz-12]="inline"></i>
       </div>
       <input

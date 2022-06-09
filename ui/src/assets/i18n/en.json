@@ -499,6 +499,8 @@
   "step_result.error_message": "Error Message",
   "step_result.fix_element": "Fix Element",
   "step_result.metadata": "Metadata",
+  "test.step.details.prerequisite_warning.description":"Are you sure you want to disable this Step?",
+  "test.step.details.prerequisite_warning.confirmation_note":"This step is a prerequisite for another step in this testcase, disabling it will remove it from being a prerequisite step.",
   "step_result.rest.status.code": "Response Status Code : ",
   "step_result.rest.header.data": "Header Run Time Data : ",
   "step_result.rest.body.data": "Body Run Time Data : ",

@@ -2,12 +2,14 @@ import {Component, Inject, Input, OnInit, Optional} from '@angular/core';
 import {TestStep} from "../../models/test-step.model";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {TestStepPriority} from "../../enums/test-step-priority.enum";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogRef, MatDialog} from "@angular/material/dialog";
 import {TestStepConditionType} from "../../enums/test-step-condition-type.enum";
 import {MatCheckboxChange} from '@angular/material/checkbox';
 import {ResultConstant} from "../../enums/result-constant.enum";
 import {MatSelectChange} from '@angular/material/select';
 import {MobileRecorderEventService} from "../../services/mobile-recorder-event.service";
+import {ConfirmationModalComponent} from "../../shared/components/webcomponents/confirmation-modal.component";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-test-step-more-action-form',
@@ -16,6 +18,10 @@ import {MobileRecorderEventService} from "../../services/mobile-recorder-event.s
 })
 export class TestStepMoreActionFormComponent implements OnInit {
   @Optional() @Input('moreDetails') moreDetails;
+  @Optional() @Input('isFullScreenMode') isFullScreenMode;
+  private previousDisabledValue: boolean;
+  private stepUsedAsPreRequisite: boolean = false;
+  public disableConfirmed: boolean = false;
   public prerequisiteList: TestStep[];
   public form: FormGroup;
   public formSubmitted: Boolean;
@@ -35,10 +41,13 @@ export class TestStepMoreActionFormComponent implements OnInit {
       isTestStepResultsView: Boolean
     },
     private matDialog: MatDialogRef<TestStepMoreActionFormComponent>,
-    private mobileRecorderEventService: MobileRecorderEventService) {
+    private mobileRecorderEventService: MobileRecorderEventService,
+    private matModal: MatDialog,
+    private translate: TranslateService,) {
     this.form = this.options.form;
     this.formSubmitted = this.options.formSubmitted;
     this.testStep = this.options.testStep;
+    this.previousDisabledValue = this.testStep?.disabled;
   }
 
   ngOnInit(): void {
@@ -47,6 +56,7 @@ export class TestStepMoreActionFormComponent implements OnInit {
       this.form = this.options.form;
       this.formSubmitted = this.options.formSubmitted;
       this.testStep = this.options.testStep;
+      this.previousDisabledValue = this.testStep?.disabled;
     }
     delete this.form.controls['ignoreStepResult'];
     this.addFormControls();
@@ -61,7 +71,8 @@ export class TestStepMoreActionFormComponent implements OnInit {
       this.testStep.ignoreStepResult = true;
     }
 
-    this.prerequisiteList = this.options.steps.filter(step => step.position < this.testStep.position);
+    this.prerequisiteList = this.options.steps.filter(step => step.position <  this.testStep.position && !step.disabled);
+    this.stepUsedAsPreRequisite = Boolean(this.options.steps.find(step => step.preRequisiteStepId == this.testStep.id))
   }
 
   addPriorityControl() {
@@ -69,7 +80,7 @@ export class TestStepMoreActionFormComponent implements OnInit {
     this.priorityControl = new FormControl( priorityValue==TestStepPriority.MAJOR);
     this.priorityControl.valueChanges.subscribe(res => {
       if(res){
-        this.form.controls.priority.setValue(TestStepPriority.MAJOR)
+        this.form.controls.priority.setValue(TestStepPriority.MAJOR);
         this.form.controls.ignoreStepResult.setValue(undefined);
       } else{
         this.form.controls.priority.setValue(TestStepPriority.MINOR)
@@ -78,6 +89,9 @@ export class TestStepMoreActionFormComponent implements OnInit {
   }
 
   addFormControls() {
+    if(Boolean(this.form.controls['disabled'])){
+      this.form.removeControl('disabled');
+    }
     this.form.addControl('waitTime', new FormControl(this.options.testStep.waitTime, [Validators.max(126)]));
     this.form.addControl('priority', new FormControl(this.options.testStep.priority, []));
     this.form.addControl('preRequisiteStepId', new FormControl(this.options.testStep.preRequisiteStepId, []));
@@ -86,6 +100,7 @@ export class TestStepMoreActionFormComponent implements OnInit {
     this.form.addControl('disabled', new FormControl((Boolean(this.options?.testStep?.parentStep?.disabled)||this.canAllowDisableStep? true :this.options.testStep.disabled), []));
     this.form.addControl("conditionIf", new FormControl(this.options.testStep.conditionIf,[]));
     this.form.addControl('ignoreStepResult', new FormControl(this.options.testStep.ignoreStepResult, []));
+
     this.dataMapGroup = new FormGroup({
       conditionIf: new FormControl(this.options.testStep.conditionIf, [])
     });
@@ -104,11 +119,11 @@ export class TestStepMoreActionFormComponent implements OnInit {
       if(!this.testStep?.id)
         conditionIf = [ResultConstant.SUCCESS]
       this.form.controls['conditionIf'].setValue(conditionIf);
-      this.form.get('priority').setValue(TestStepPriority.MINOR);
+      this.form?.get('priority')?.setValue(TestStepPriority.MINOR);
     } else {
       this.form.controls['conditionType'].setValue(undefined);
       this.form.controls['conditionIf'].setValue([]);
-      this.form.get('priority').setValue(this.testStep.priority);
+      this.form?.get('priority')?.setValue(this.testStep.priority);
     }
     if (this.form.controls['ignoreStepResult'].value) {
       this.testStep.ignoreStepResult = this.form.controls['ignoreStepResult'].value;
@@ -140,7 +155,7 @@ export class TestStepMoreActionFormComponent implements OnInit {
   }
 
   maxTimeValidate() {
-    if(this.form.get('waitTime').value >121 || this.form.get('waitTime').value < 1) {
+    if(this.form?.get('waitTime')?.value >121 || this.form?.get('waitTime')?.value < 1) {
       this.formSubmitted = true;
     } else {
       this.moreDetails ? this.mobileRecorderEventService.setEmptyAction() : this.matDialog.close();
@@ -165,5 +180,36 @@ export class TestStepMoreActionFormComponent implements OnInit {
 
   get canShowVisualTest() {
     return this.testStep.isAction || this.testStep.isConditionalElseIf || this.testStep.isConditionalIf || this.testStep.isConditionalWhileLoop;
+  }
+
+
+  preventClosingMoreOptions() {
+    if(!this.disableConfirmed && this.form.controls.disabled.value && this.previousDisabledValue == false && this.stepUsedAsPreRequisite){
+      this.usedAsPreRequisiteWarning();
+      return true;
+    } else {
+      return false;
+    }
+  }
+  private usedAsPreRequisiteWarning() {
+    let description = this.translate.instant("test.step.details.prerequisite_warning.description");
+    let confirmation = this.translate.instant("test.step.details.prerequisite_warning.confirmation_note");
+    const dialogRef = this.matModal.open(ConfirmationModalComponent, {
+      width: '450px',
+      data: {
+        description: description,
+        confirmation: confirmation,
+        yes: "btn.common.disable"
+      },
+      panelClass: ['matDialog', 'delete-confirm']
+    });
+    dialogRef.afterClosed().subscribe(res => {
+      if (res === false) {
+        this.disableConfirmed = false;
+      } else if (res === true) {
+        this.disableConfirmed = true;
+        this.matDialog.close(true);
+      }
+    })
   }
 }

@@ -71,14 +71,14 @@ public class VisualTestingService {
       log.debug("Empty steps for testCaseResult" + testCaseResult);
       return;
     }
+    log.debug("No of steps fetched for screenshot Comparison where screenshot name is not null: " + stepResultList.size());
     for (TestStepResult stepResult : stepResultList) {
       initScreenshotComparison(stepResult, testCaseResult);
     }
     List<StepResultScreenshotComparison> failedList = stepResultScreenshotComparisonService.findAllByTestCaseResultIdAndDiffCoordinatesNot(testCaseResult.getId(), "[]");
-    if (failedList.isEmpty()) {
-      testCaseResultService.updateVisualResult(testCaseResult, true);
-      testCaseResultService.propagateVisualResult(testCaseResult);
-    }
+    log.debug("Count of visually different steps: " + failedList.size());
+    testCaseResultService.updateVisualResult(testCaseResult, failedList.isEmpty());
+    testCaseResultService.propagateVisualResult(testCaseResult);
   }
 
   public StepResultScreenshotComparison updateVisualResponse(Map<String, Object> result) throws ResourceNotFoundException {
@@ -108,14 +108,18 @@ public class VisualTestingService {
     String entityType = testCaseResult.getTestPlanResult().getTestPlan().getEntityType();
     log.info("Starting Screenshot comparision for testStepResult" + testStepResult + " | with envSettings::" + envSettings.toString());
     Optional<TestStepScreenshot> baseScreenshot = getBaseScreenshot(testCaseResult, testStepResult, envSettings, entityType);
-    if ((!baseScreenshot.isPresent() || baseScreenshot.get().getBaseImageName() == null) && testStepResult.getResult().equals(ResultConstant.SUCCESS)) {
-      log.info("Base Screenshot identified just now so saving to for future runs... :");
+    if ((baseScreenshot.isEmpty() || baseScreenshot.get().getBaseImageName() == null) && testStepResult.getResult().equals(ResultConstant.SUCCESS)) {
+      log.info(String.format("Base screenshot not found for step id: %s. Saving Base Screenshot for future runs from testStepResult with id: %s...",
+              testStepResult.getStepId(), testStepResult.getId()));
       saveAsBaseScreenshot(testCaseResult, testStepResult, envSettings,entityType);
       return;
     }
     if (baseScreenshot.isPresent()) {
       StepResultScreenshotComparison stepResultScreenshotComparison = addResultScreenshotComparison(testStepResult, baseScreenshot.get());
       postImageAnalysisRequest(testStepResult, stepResultScreenshotComparison, baseScreenshot.get());
+    }
+    else {
+      log.debug("BaseScreenshot missing::" + baseScreenshot);
     }
   }
 
@@ -147,6 +151,11 @@ public class VisualTestingService {
         }
         Thread.sleep(10000);
       } catch (Exception e) {
+        try {
+          Thread.sleep(10000);
+        } catch (InterruptedException ex) {
+          ex.printStackTrace();
+        }
         log.error("Unable to download base image.", e);
       }
 
@@ -160,7 +169,7 @@ public class VisualTestingService {
     if (testStepResult.getParentResultId() != null) {
       TestStepResult parentStepResult = testStepResultService.find(testStepResult.getParentResultId());
       TestStep testStep = testStepService.find(parentStepResult.getStepId());
-      return (testStep.getForLoopTestDataId() == null) ? testStep.getForLoopTestDataId() : 0;
+      return (testStep.getForLoopTestDataId() != null) ? testStep.getForLoopTestDataId() : 0;
     }
     if (testCaseResult.getParentId() != null && testCaseResult.getTestDataId() != null) {
       testDataId = testCaseResult.getTestDataId();
@@ -217,6 +226,7 @@ public class VisualTestingService {
     entity.setTestDataId(testDataId);
     entity.setBaseImageSize(baseImageSize);
     entity.setEntityType(entityType);
+    log.debug("Save as base screenshot:" + entity);
     testStepScreenshotService.create(entity);
   }
 
@@ -254,15 +264,18 @@ public class VisualTestingService {
   }
 
   private String getBaseScreenshotURL(TestStepScreenshot testStepScreenshot) {
+    Long componentTestCaseResultId = testStepScreenshot.getTestStepResult().getGroupResultId();
+    Long testCaseResultId =  componentTestCaseResultId != null ? componentTestCaseResultId : testStepScreenshot.getTestCaseResultId();
     String baseLineImageName = testStepScreenshot.getBaseImageName();
     String screenShotPath =
-      "/executions/" + testStepScreenshot.getTestCaseResultId() + "/" + baseLineImageName;
+      "/executions/" + testCaseResultId.toString() + "/" + baseLineImageName;
     return storageServiceFactory.getStorageService().generatePreSignedURL(screenShotPath, StorageAccessLevel.READ).toString();
   }
 
   private String getCurrentRunScreenshotPath(TestStepResult testStepResult) {
+    Long testCaseResultId = testStepResult.getGroupResultId() != null ? testStepResult.getGroupResultId() : testStepResult.getTestCaseResultId();
     String currentScreenShotPath =
-      "/executions/" + testStepResult.getTestCaseResultId() + "/" + testStepResult.getScreenshotName();
+      "/executions/" + testCaseResultId.toString() + "/" + testStepResult.getScreenshotName();
     return storageServiceFactory.getStorageService().generatePreSignedURL(currentScreenShotPath, StorageAccessLevel.READ).toString();
   }
 

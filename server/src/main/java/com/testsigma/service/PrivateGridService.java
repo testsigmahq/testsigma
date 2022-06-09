@@ -73,6 +73,7 @@ public class PrivateGridService {
             this.create(node);
         } catch (Exception e) {
             log.error(e.getMessage());
+            e.printStackTrace();
             throw new TestsigmaException("Unable extract and save the node configurations from your private grid");
         }
     }

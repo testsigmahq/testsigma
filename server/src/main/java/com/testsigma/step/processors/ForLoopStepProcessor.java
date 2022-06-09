@@ -82,6 +82,7 @@ public class ForLoopStepProcessor extends StepProcessor {
             exeEntity.setStepGroupId(loopentity.getStepGroupId());
             exeEntity.setPosition(loopentity.getPosition());
             exeEntity.setTestDataProfileName(testData.getTestDataName());
+            exeEntity.setVisualEnabled(loopentity.getVisualEnabled());
             exeEntity.setIndex(i + 1);
             entity.setTestDataId(testDataId);
             entity.setTestDataIndex(i);
@@ -144,6 +145,7 @@ public class ForLoopStepProcessor extends StepProcessor {
           iteEntity.setNaturalTextActionId(entity.getNaturalTextActionId());
           populateStepDetails(testStepDTO, iteEntity);
           iteEntity.setAction(entity.getAction());
+          iteEntity.setVisualEnabled(entity.getVisualEnabled());
           entityList.add(iteEntity);
         }
       }

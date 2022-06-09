@@ -54,7 +54,7 @@ export class AddonActionService {
   }
 
   unInstallPlugin(plugin: JSON) {
-    return this.http.delete<void>(this.URLConstants.addonUrl+plugin['externalUniqueId'], {
+    return this.http.delete<void>(this.URLConstants.addonUrl+'/'+plugin['externalUniqueId'], {
       headers: this.httpHeaders.contentTypeApplication
     }).pipe(
       map(data => console.log(data)),

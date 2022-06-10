@@ -11,6 +11,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.testsigma.annotation.JsonListRootName;
 import lombok.Data;
 import org.json.JSONObject;
@@ -31,24 +33,24 @@ public class TestDataSetXMLDTO extends BaseXMLDTO {
   private String description;
   @JsonProperty("expected-to-fail")
   private Boolean expectedToFail = false;
-  @JsonProperty("data")
-  private List<Entry> data;
+  @JacksonXmlElementWrapper(localName = "DataMap")
+  @JacksonXmlProperty(localName = "DataEntry")
+  private List<Entry> dataMap = new ArrayList();
 
-  private Map<String, Object> map = new HashMap<>();
-
-  public void setData(JSONObject data) {
-    this.data = new ArrayList();
-    data.keySet().forEach((k) -> {
-      this.data.add(new Entry(k, data.optString(k)));
-    });
-  }
+  private Map<String, Object> data = new HashMap<>();
 
   @JsonIgnore
   public JSONObject getData() {
-    this.data.forEach((entry) -> {
-      map.put(entry.getKey(), entry.getValue());
+    this.dataMap.forEach((entry) -> {
+      data.put(entry.getKey(), entry.getValue());
     });
     return new JSONObject(data);
+  }
+
+  public void setData(JSONObject data) {
+    data.keySet().forEach((k) -> {
+      this.dataMap.add(new Entry(k, data.optString(k, "")));
+    });
   }
 }
 

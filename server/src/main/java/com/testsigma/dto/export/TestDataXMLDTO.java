@@ -13,6 +13,9 @@ import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.ser.FilterProvider;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.testsigma.annotation.JsonListRootName;
 import com.testsigma.converter.StringSetConverter;
 import com.testsigma.model.TestDataSet;
@@ -83,41 +86,57 @@ public class TestDataXMLDTO extends BaseXMLDTO {
         return null;
       }
       List<TestDataSetXMLDTO> testDataSets = new ArrayList<>();
-      for (JsonNode node : new ObjectMapper().readTree(this.data)) {
-
-        Map<String, Object> jsonOrderedMap = new LinkedHashMap<>();
-        jsonOrderedMap = new ObjectMapperService().parseJson(node.get("data").toString(),
-          LinkedHashMap.class);
-        JSONObject dataObj = new JSONObject();
-        Field map = dataObj.getClass().getDeclaredField("map");
-        map.setAccessible(true);//because the field is private final...
-        map.set(dataObj, jsonOrderedMap);
-        map.setAccessible(false);
-        TestDataSetXMLDTO testDataSet = new TestDataSetXMLDTO();
-        testDataSet.setName(node.get("name").asText());
-        testDataSet.setDescription(node.get("description").asText());
-        testDataSet.setExpectedToFail(node.get("expectedToFail").asBoolean());
-        testDataSet.setData(dataObj);
-        testDataSets.add(testDataSet);
+      JsonNode dataNode = new ObjectMapper().readTree(this.data);
+      for (JsonNode dataMapNode : dataNode) {
+        JsonNode dataMapNodeEntity = dataMapNode.has("data") ? dataMapNode.get("data") : dataMapNode.get("dataMap");
+        for (JsonNode node : dataMapNodeEntity) {
+          Map<String, Object> jsonOrderedMap = new LinkedHashMap<>();
+          jsonOrderedMap = new ObjectMapperService().parseJson(node.toString(), LinkedHashMap.class);
+          JSONObject dataObj = new JSONObject();
+          Field map = dataObj.getClass().getDeclaredField("map");
+          map.setAccessible(true);//because the field is private final...
+          map.set(dataObj, jsonOrderedMap);
+          map.setAccessible(false);
+          TestDataSetXMLDTO testDataSet = new TestDataSetXMLDTO();
+          JsonNode name = node.get("name");
+          name = name == null ? node.get("Name") : name;
+          testDataSet.setName(name.asText());
+          JsonNode description = node.get("description");
+          description = description == null ? node.get("Description") : description;
+          testDataSet.setDescription(description.asText());
+          JsonNode expectedToFail = node.get("expectedToFail");
+          expectedToFail = node.has("ExpectedToFail") ? node.get("ExpectedToFail")
+                  : node.has("expected-to-fail") ? node.get("expected-to-fail") : expectedToFail;
+          testDataSet.setExpectedToFail(expectedToFail.asBoolean());
+          testDataSet.setData(dataObj);
+          testDataSets.add(testDataSet);
+        }
       }
       this.testDataSets = testDataSets;
       return testDataSets;
     } catch (Exception ex) {
+      ex.printStackTrace();
       return null;
     }
   }
 
   public void setTestDataSets(List<TestDataSetXMLDTO> dataSets) {
     try {
+      dataSets.forEach(data -> {
+        List<Entry> dataMap = data.getDataMap();
+        JSONObject object = new JSONObject();
+        for (Entry entry : dataMap) {
+          object.put(entry.getKey(), entry.getValue() == null ? "" : entry.getValue());
+        }
+        data.setData(object);
+      });
+      this.testDataSets = dataSets;
       this.data = new ObjectMapper()
-        .setSerializationInclusion(JsonInclude.Include.NON_NULL)
-        .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
-        .writeValueAsString(dataSets);
-      ;
-    } catch (Exception e) {
+              .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
+              .writeValueAsString(dataSets);
+    }catch (Exception e) {
       e.printStackTrace();
     }
 
-  }
-
+}
 }

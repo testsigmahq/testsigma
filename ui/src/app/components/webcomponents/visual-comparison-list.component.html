@@ -11,7 +11,7 @@
     *ngIf="!!!previousResult"
     class="fa-left-arrow-thin px-7 py-6  theme-border-r text-decoration-none not-allowed text-muted"></a>
   <a
-    [center-mat-menu]="menuTrigger"
+    [matMenuTriggerFor]="menuTrigger"
     [matTooltip]="'visual_test.hint.test_steps_list' | translate"
     class="fa-list px-7 py-6  theme-border-r"></a>
   <a
@@ -24,11 +24,11 @@
     *ngIf="!!!nextResult"
     class="fa-right-arrow-thin px-7 py-6  text-muted not-allowed text-decoration-none"></a>
 </button>
-<div #menuTrigger="matMenuTrigger" [matMenuTriggerFor]="menu">
+<div>
   <mat-menu
     backdropClass="theme-mat-menu-center"
     panelClass="my-panel-class"
-    #menu="matMenu" class="list-container theme-mat-menu">
+    #menuTrigger="matMenu" class="list-container theme-mat-menu">
     <a
       [class.active]="testStepResult?.stepResultScreenshotComparison?.id == currentComparison"
       class="list-view sm-pm align-items-center"

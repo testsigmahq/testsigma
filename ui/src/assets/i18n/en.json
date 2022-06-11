@@ -18,7 +18,7 @@
   "btn.create.test_case": "Create Test Case",
   "btn.create.test_group": "Create Step Group",
   "btn.create.test_suite": "Create Test Suite",
-  "btn.common.associated": "Associated",
+  "btn.common.associate": "Associate",
   "testcase.details.step_create_group.step_group_error": "Test Steps contains Step Group. Please remove/Deselect it and try again.",
   "testcase.details.step_create_group.conditional_error": "Please add entire If condition/ For Loop/ While Loop and try again.",
   "backup.initiated.success": "Export initiated successfully",

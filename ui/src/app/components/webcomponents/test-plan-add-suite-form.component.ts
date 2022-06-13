@@ -44,7 +44,7 @@ export class TestPlanAddSuiteFormComponent implements OnInit {
       version: WorkspaceVersion,
       execution: TestPlan
     },
-    private dialogRef: MatDialogRef<TestPlanAddSuiteFormComponent>,
+    public dialogRef: MatDialogRef<TestPlanAddSuiteFormComponent>,
     private testSuiteTagService: TestSuiteTagService,
     private testSuiteService: TestSuiteService) {
   }
@@ -86,6 +86,8 @@ export class TestPlanAddSuiteFormComponent implements OnInit {
     }
     if (this.filterTagIds.length > 0)
       query += ",tagId@" + this.filterTagIds.join("#");
+    if(this.selectedSuites?.length > 0)
+      query += ",id;"+this.selectedSuites.map(suite => suite.id).join("#");
     this.availableSuites = new InfiniteScrollableDataSource(this.testSuiteService, query, "name", 500);
   }
 
@@ -109,6 +111,7 @@ export class TestPlanAddSuiteFormComponent implements OnInit {
     this.selectedSuites = this.selectedSuites.filter(suite => this.checkedSelectedSuites.indexOf(suite) == -1);
     this.checkedSelectedSuites = [];
     this.filterCheckAllSelectedSuites = [...this.selectedSuites];
+    this.fetchSuites();
     this.checkEmptyAvailable()
   }
 
@@ -150,7 +153,8 @@ export class TestPlanAddSuiteFormComponent implements OnInit {
     this.selectedSuites.splice(index, 1);
     this.selectedSuites = [...this.selectedSuites];
     this.filterCheckAllSelectedSuites = [...this.selectedSuites];
-    this.checkEmptyAvailable()
+    this.fetchSuites();
+    this.checkEmptyAvailable();
   }
 
   toggleCheck(suite: TestSuite, array: TestSuite[]) {
@@ -199,6 +203,8 @@ export class TestPlanAddSuiteFormComponent implements OnInit {
       this.filterCheckAllSelectedSuites = [...this.selectedSuites];
       this.isSearched = false;
     }
+    this.checkedSelectedSuites =[];
+    this.checkAllSelected = false;
   }
 
   testSuitesNotCreated() {

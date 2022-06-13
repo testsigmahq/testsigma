@@ -4,10 +4,20 @@ import {alias, custom, deserialize, list, object, optional, serializable, SKIP} 
 import {TestDataSet} from "./test-data-set.model";
 
 export class TestData extends Base implements PageObject {
-
+  @serializable
+  public id: number;
   @serializable(alias('testDataName'))
   public name: String;
-  @serializable(list(object(TestDataSet)))
+  @serializable(custom(
+    v=>{
+      if(v == null){ return null;}
+      else { return v }
+    },
+    v=> {
+      if(v == null){ return null;}
+      else { return v }
+    })
+  )
   public data: TestDataSet[];
   @serializable
   public versionId: number;

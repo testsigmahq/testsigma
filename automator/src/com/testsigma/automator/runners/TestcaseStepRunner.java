@@ -431,6 +431,7 @@ public abstract class TestcaseStepRunner {
       TestCaseStepResult parentResult = parentStatus.get(childStep.getParentId());
       childStepResult.setParentResultId(parentResult != null ? parentResult.getId() : null);
       childStepResult.setTestCaseStepType(childStep.getType());
+      childStepResult.setVisualEnabled(childStep.getVisualEnabled());
 
       childStepResult.setStepDetails(childStep.getStepDetails());
       RunnerUtil util = new RunnerUtil();

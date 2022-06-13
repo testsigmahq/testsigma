@@ -80,6 +80,7 @@ public class StepProcessor {
     exeTestStepEntity.setPriority(testStepDTO.getPriority());
     exeTestStepEntity.setPreRequisite(testStepDTO.getPreRequisiteStepId());
     exeTestStepEntity.setPosition(testStepDTO.getPosition());
+    exeTestStepEntity.setVisualEnabled(testStepDTO.getVisualEnabled());
     exeTestStepEntity.setIfConditionExpectedResults(testStepDTO.getIfConditionExpectedResults());
     exeTestStepEntity.setAdditionalData(testStepDTO.getDataMapJson());
     exeTestStepEntity.setAddonTestData(testStepDTO.getAddonTestData());

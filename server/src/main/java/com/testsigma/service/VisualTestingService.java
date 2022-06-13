@@ -264,8 +264,7 @@ public class VisualTestingService {
   }
 
   private String getBaseScreenshotURL(TestStepScreenshot testStepScreenshot) {
-    Long componentTestCaseResultId = testStepScreenshot.getTestStepResult().getGroupResultId();
-    Long testCaseResultId =  componentTestCaseResultId != null ? componentTestCaseResultId : testStepScreenshot.getTestCaseResultId();
+    Long testCaseResultId = testStepScreenshot.getTestCaseResultId();
     String baseLineImageName = testStepScreenshot.getBaseImageName();
     String screenShotPath =
       "/executions/" + testCaseResultId.toString() + "/" + baseLineImageName;
@@ -273,7 +272,7 @@ public class VisualTestingService {
   }
 
   private String getCurrentRunScreenshotPath(TestStepResult testStepResult) {
-    Long testCaseResultId = testStepResult.getGroupResultId() != null ? testStepResult.getGroupResultId() : testStepResult.getTestCaseResultId();
+    Long testCaseResultId = testStepResult.getTestCaseResultId();
     String currentScreenShotPath =
       "/executions/" + testCaseResultId.toString() + "/" + testStepResult.getScreenshotName();
     return storageServiceFactory.getStorageService().generatePreSignedURL(currentScreenShotPath, StorageAccessLevel.READ).toString();

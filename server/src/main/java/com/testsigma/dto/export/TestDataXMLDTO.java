@@ -68,7 +68,6 @@ public class TestDataXMLDTO extends BaseXMLDTO {
         .setSerializationInclusion(JsonInclude.Include.NON_NULL)
         .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
         .writeValueAsString(dataSets);
-      ;
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -87,15 +86,13 @@ public class TestDataXMLDTO extends BaseXMLDTO {
       }
       List<TestDataSetXMLDTO> testDataSets = new ArrayList<>();
       JsonNode dataNode = new ObjectMapper().readTree(this.data);
-      for (JsonNode dataMapNode : dataNode) {
-        JsonNode dataMapNodeEntity = dataMapNode.has("data") ? dataMapNode.get("data") : dataMapNode.get("dataMap");
-        for (JsonNode node : dataMapNodeEntity) {
+      for (JsonNode node : dataNode) {
           Map<String, Object> jsonOrderedMap = new LinkedHashMap<>();
           jsonOrderedMap = new ObjectMapperService().parseJson(node.toString(), LinkedHashMap.class);
           JSONObject dataObj = new JSONObject();
           Field map = dataObj.getClass().getDeclaredField("map");
           map.setAccessible(true);//because the field is private final...
-          map.set(dataObj, jsonOrderedMap);
+          map.set(dataObj, jsonOrderedMap.get("data"));
           map.setAccessible(false);
           TestDataSetXMLDTO testDataSet = new TestDataSetXMLDTO();
           JsonNode name = node.get("name");
@@ -110,7 +107,7 @@ public class TestDataXMLDTO extends BaseXMLDTO {
           testDataSet.setExpectedToFail(expectedToFail.asBoolean());
           testDataSet.setData(dataObj);
           testDataSets.add(testDataSet);
-        }
+
       }
       this.testDataSets = testDataSets;
       return testDataSets;
@@ -124,12 +121,15 @@ public class TestDataXMLDTO extends BaseXMLDTO {
     try {
       dataSets.forEach(data -> {
         List<Entry> dataMap = data.getDataMap();
-        JSONObject object = new JSONObject();
-        for (Entry entry : dataMap) {
-          object.put(entry.getKey(), entry.getValue() == null ? "" : entry.getValue());
+        if (dataMap!=null) {
+            JSONObject object = new JSONObject();
+            for (Entry entry : dataMap) {
+                object.put(entry.getKey(), entry.getValue() == null ? "" : entry.getValue());
+            }
+            data.setData(object);
         }
-        data.setData(object);
       });
+
       this.testDataSets = dataSets;
       this.data = new ObjectMapper()
               .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)

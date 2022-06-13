@@ -57,16 +57,14 @@ public class ScreenshotComparisonsController {
     log.info("Request /screenshot_comparisons/" + id);
     StepResultScreenshotComparison comparison = service.find(id);
     TestStepResult testStepResult = comparison.getTestStepResult();
-    Long screenShotPathId = ObjectUtils.defaultIfNull(testStepResult.getGroupResultId(),
-            testStepResult.getTestCaseResultId());
+    Long screenShotPathId = testStepResult.getTestCaseResultId();
     String currentScreenShotPath =
       "/executions/" + screenShotPathId + "/" + testStepResult.getScreenshotName();
     URL url = storageServiceFactory.getStorageService().generatePreSignedURL(currentScreenShotPath, StorageAccessLevel.READ);
     comparison.setScreenShotURL(url.toString());
 
     TestStepResult baseTestStepResult = comparison.getTestStepScreenshot().getTestStepResult();
-    Long baseScreenShotPathId = ObjectUtils.defaultIfNull(baseTestStepResult.getGroupResultId(),
-            baseTestStepResult.getTestCaseResultId());
+    Long baseScreenShotPathId = baseTestStepResult.getTestCaseResultId();
     String baseScreenShotPath =
       "/executions/" + baseScreenShotPathId + "/" + baseTestStepResult.getScreenshotName();
     url = storageServiceFactory.getStorageService().generatePreSignedURL(baseScreenShotPath, StorageAccessLevel.READ);

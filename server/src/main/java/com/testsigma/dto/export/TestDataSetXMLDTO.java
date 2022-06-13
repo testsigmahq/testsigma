@@ -14,13 +14,12 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.testsigma.annotation.JsonListRootName;
+import com.testsigma.service.ObjectMapperService;
 import lombok.Data;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -41,9 +40,6 @@ public class TestDataSetXMLDTO extends BaseXMLDTO {
 
   @JsonIgnore
   public JSONObject getData() {
-    this.dataMap.forEach((entry) -> {
-      data.put(entry.getKey(), entry.getValue());
-    });
     return new JSONObject(data);
   }
 
@@ -51,6 +47,7 @@ public class TestDataSetXMLDTO extends BaseXMLDTO {
     data.keySet().forEach((k) -> {
       this.dataMap.add(new Entry(k, data.optString(k, "")));
     });
-  }
+   this.data = new ObjectMapperService().parseJson(data.toString(), Map.class);
+}
 }
 

@@ -116,7 +116,7 @@ public abstract class XMLExportImportService<T> {
     }
 
     protected void createFile(List list, BackupDTO backupDTO, String fileName, int index) throws IOException {
-        if (list.size() == 0) return;
+        if (list ==null || list.size() == 0) return;
         log.debug("backup file " + backupDTO.getSrcFiles().getAbsolutePath() + File.separator + fileName + "_" + index + ".xml" + " initiated");
         XmlMapper xmlMapper = new XmlMapper();
         xmlMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
@@ -139,11 +139,13 @@ public abstract class XMLExportImportService<T> {
     public void writeXML(String fileName, BackupDTO backupDTO, Pageable pageable) throws IOException, ResourceNotFoundException {
         Specification<T> spec = getExportXmlSpecification(backupDTO);
         Page<T> page = findAll(spec, pageable);
-        createFile(mapToXMLDTOList(page.getContent(), backupDTO), backupDTO, fileName, pageable.getPageNumber());
-        if (!page.isLast()) {
-            log.info("Processing export next page");
-            Pageable nextPage = pageable.next();
-            writeXML(fileName, backupDTO, nextPage);
+        if (page.getContent().size()>0) {
+            createFile(mapToXMLDTOList(page.getContent(), backupDTO), backupDTO, fileName, pageable.getPageNumber());
+            if (!page.isLast()) {
+                log.info("Processing export next page");
+                Pageable nextPage = pageable.next();
+                writeXML(fileName, backupDTO, nextPage);
+            }
         }
     }
 
@@ -176,7 +178,7 @@ public abstract class XMLExportImportService<T> {
         try {
             String s3Key = "/backup/" + backupDetail.getName();
             log.debug("backup zip process initiated");
-            outputFile = new ZipUtil().zipFile(backupDetail.getSrcFiles(), backupDetail.getName(), backupDetail.getDestFiles());
+            outputFile = new ZipUtil().zipFolder(backupDetail.getSrcFiles(), backupDetail.getName(), backupDetail.getDestFiles());
             log.debug("backup zip process completed");
             InputStream fileInputStream = new ByteArrayInputStream(FileUtils.readFileToByteArray(outputFile));
             storageServiceFactory.getStorageService().addFile(s3Key, fileInputStream);
@@ -339,7 +341,7 @@ public abstract class XMLExportImportService<T> {
     public abstract Specification<T> getExportXmlSpecification(BackupDTO backupDTO) throws ResourceNotFoundException;
 
     protected List<? extends BaseXMLDTO> mapToXMLDTOList(List<T> list, BackupDTO backupDTO) {
-        if (list.size() > 0 && list.get(0) instanceof Upload) {
+        if (list.size() > 0 && list.get(0) instanceof UploadVersion) {
             return mapToXMLDTOList(list, backupDTO);
         }
         return mapToXMLDTOList(list);

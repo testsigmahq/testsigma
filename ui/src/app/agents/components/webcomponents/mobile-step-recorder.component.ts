@@ -421,7 +421,7 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
     currentStep.naturalTextActionId = currentStep.template.id;
     //currentStep.dataMap = new StepDetailsDataMap();
     currentStep.type = TestStepType.ACTION_TEXT;
-    let commonData = this.stepList.stepForm
+    let commonData = this.stepList?.stepForm
     if(commonData.get('waitTime')){
       currentStep.waitTime = commonData.get('waitTime').value;
       currentStep.priority = commonData.get('priority').value;
@@ -455,7 +455,7 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
   private addActionStep(templateId: number, elementName?: String, testData?: String, mobileElement?: MobileElement,
                         fromTestData?: String, toTestData?: String){
     this.naturalTextActionsService.findAll("id:" + templateId).subscribe(templates => {
-      let currentStep: TestStep = this.populateAttributesFromDetails(templates.content[0]);
+      let currentStep: TestStep = this.populateAttributesFromDetails(templates?.content[0]);
       if (Boolean(testData)) {
         currentStep.testDataVal = testData;
         currentStep.testDataType = TestDataType.raw;

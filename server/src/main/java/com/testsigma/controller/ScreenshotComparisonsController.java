@@ -20,6 +20,7 @@ import com.testsigma.service.TestStepScreenshotService;
 import com.testsigma.specification.ScreenshotComparisionSpecificationsBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -56,14 +57,16 @@ public class ScreenshotComparisonsController {
     log.info("Request /screenshot_comparisons/" + id);
     StepResultScreenshotComparison comparison = service.find(id);
     TestStepResult testStepResult = comparison.getTestStepResult();
+    Long screenShotPathId = testStepResult.getTestCaseResultId();
     String currentScreenShotPath =
-      "/executions/" + testStepResult.getTestCaseResultId() + "/" + testStepResult.getScreenshotName();
+      "/executions/" + screenShotPathId + "/" + testStepResult.getScreenshotName();
     URL url = storageServiceFactory.getStorageService().generatePreSignedURL(currentScreenShotPath, StorageAccessLevel.READ);
     comparison.setScreenShotURL(url.toString());
 
     TestStepResult baseTestStepResult = comparison.getTestStepScreenshot().getTestStepResult();
+    Long baseScreenShotPathId = baseTestStepResult.getTestCaseResultId();
     String baseScreenShotPath =
-      "/executions/" + baseTestStepResult.getTestCaseResultId() + "/" + baseTestStepResult.getScreenshotName();
+      "/executions/" + baseScreenShotPathId + "/" + baseTestStepResult.getScreenshotName();
     url = storageServiceFactory.getStorageService().generatePreSignedURL(baseScreenShotPath, StorageAccessLevel.READ);
     comparison.getTestStepScreenshot().setScreenShotURL(url.toString());
     return mapper.map(comparison);

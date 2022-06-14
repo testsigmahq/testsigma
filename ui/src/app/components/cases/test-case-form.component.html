@@ -225,7 +225,7 @@
                       <mat-option
                         *ngFor="let endIndex of endArray; let i=index"
                         [value]="endIndex.index"
-                        [textContent]="endIndex.setName+ ' (#'+ (2 +i) +')'">
+                        [textContent]="endIndex.setName+ ' (#'+ (i+1) +')'">
                       </mat-option>
                       <mat-option [value]="-1" [textContent]="'testcase.form.iteration_to.option_end' | translate">
                       </mat-option>

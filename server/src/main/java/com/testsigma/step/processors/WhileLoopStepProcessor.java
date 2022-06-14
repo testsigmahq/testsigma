@@ -57,6 +57,8 @@ public class WhileLoopStepProcessor extends StepProcessor {
         exeEntity.setType(loopentity.getType());
         exeEntity.setStepGroupId(loopentity.getStepGroupId());
         exeEntity.setPosition(loopentity.getPosition());
+        exeEntity.setVisualEnabled(loopentity.getVisualEnabled());
+        exeEntity.setTestDataProfileName(loopentity.getTestDataProfileName());
       }
       for (TestStepDTO centity : loopentity.getTestStepDTOS()) {
         List<TestCaseStepEntityDTO> stepGroupSpecialSteps = new ArrayList<>();
@@ -88,6 +90,7 @@ public class WhileLoopStepProcessor extends StepProcessor {
         cstepEntity.setPreRequisite(centity.getPreRequisiteStepId());
         cstepEntity.setType(centity.getType());
         cstepEntity.setStepGroupId(centity.getStepGroupId());
+        cstepEntity.setVisualEnabled(centity.getVisualEnabled());
 
         for (TestStepDTO stepDTOFromGroup : centity.getTestStepDTOS()) {
           if (stepDTOFromGroup.getType() == TestStepType.REST_STEP) {
@@ -130,8 +133,10 @@ public class WhileLoopStepProcessor extends StepProcessor {
       iteEntity.setPosition(entity.getId().intValue());
       iteEntity.setWaitTime(entity.getWaitTime() == null ? 0 : entity.getWaitTime());
       iteEntity.setIndex(1);
+      iteEntity.setTestDataProfileName(entity.getTestDataProfileName());
       iteEntity.setType(entity.getType());
       iteEntity.setNaturalTextActionId(entity.getNaturalTextActionId());
+      iteEntity.setVisualEnabled(entity.getVisualEnabled());
       populateStepDetails(testStepDTO, iteEntity);
       iteEntity.setAction(entity.getAction());
       entityList.add(iteEntity);

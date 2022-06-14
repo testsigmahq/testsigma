@@ -56,7 +56,7 @@ export class ActionTestDataParameterSuggestionComponent implements OnInit {
         }
       })
       this.dataProfileSuggestion = [...new Set(this.dataProfileSuggestion)];
-      this.filter()
+      this.filter();
     })
   }
 

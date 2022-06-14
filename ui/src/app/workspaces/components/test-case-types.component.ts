@@ -21,7 +21,7 @@ import {TestCaseService} from "../../services/test-case.service";
 })
 export class TestCaseTypesComponent extends BaseComponent implements OnInit {
   public testCaseTypes: InfiniteScrollableDataSource;
-  public rowNameControl = new FormControl('', [Validators.required]);
+  public rowNameControl = new FormControl('', [Validators.required, this.noWhitespaceValidator]);
   public editMode = false;
   public submitted = false;
   public newRow = false;
@@ -123,7 +123,11 @@ export class TestCaseTypesComponent extends BaseComponent implements OnInit {
 
   public updateTestCaseType(testCaseType: TestCaseType) {
     this.submitted = true;
-    if (this.rowNameControl.invalid) return;
+    if (this.rowNameControl.invalid) {
+      this.translate.get('form.validation.cannot_have_white_spaces', {FieldName: "Test Case Type"})
+        .subscribe(res => this.showNotification(NotificationType.Error, res));
+      return;
+    }
     this.editMode = false;
     this.submitted = false;
     testCaseType.name = this.rowNameControl.value;
@@ -142,7 +146,11 @@ export class TestCaseTypesComponent extends BaseComponent implements OnInit {
 
   createTestCaseType() {
     this.submitted = true;
-    if (this.rowNameControl.invalid) return;
+    if (this.rowNameControl.invalid) {
+      this.translate.get('form.validation.cannot_have_white_spaces', {FieldName: "Test Case Type"})
+        .subscribe(res => this.showNotification(NotificationType.Error, res));
+      return;
+    }
     this.submitted = false;
     this.newRow = false;
     let newTestCaseType = new TestCaseType();

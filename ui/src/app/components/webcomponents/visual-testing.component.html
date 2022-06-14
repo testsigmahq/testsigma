@@ -1,5 +1,5 @@
 <div class="d-flex ts-col-100 theme-border-b vi-container-p">
-  <div class="ts-col-60 text-truncate">
+  <div class="ts-col-40 text-truncate">
     <div class="theme-details-header">
       <a class="go-back-icon"
          [matTooltip]="'hint.message.common.back' | translate"
@@ -13,13 +13,29 @@
       class="text-t-secondary pl-30 pt-4">
     </div>
   </div>
-  <div class="d-flex align-items-baseline ml-auto">
+  <div class="d-flex ts-col-20 justify-content-center align-items-baseline">
+    <button
+      (click)="toggleIgnoreRegionUpdateListener()"
+      [matTooltip]="'visual_test.hint.update_ignored_region' | translate"
+      *ngIf="hasIgnoredRegions"
+      [class.theme-btn-primary]="canUpdateIgnoreRegion"
+      class="btn icon-btn theme-btn-secondary border-rds-2 ml-14">
+      <i class="fa-ignore-selection"></i>
+    </button>
+    <button
+      (click)="removeAllIgnoreRegions()"
+      [matTooltip]="'visual_test.hint.remove_ignored_region' | translate"
+      *ngIf="hasIgnoredRegions"
+      class="btn icon-btn theme-warning border-rds-2 ml-14">
+      <i class="fa-delete-icon"></i>
+    </button>
+  </div>
+  <div class="d-flex ts-col-40 justify-content-end align-items-baseline ml-auto">
     <app-visual-comparison-list
       [filteredTestStepResult]="filteredTestStepResult"
       [currentComparison]="screenshotComparisonId"
-      (selectedScreenComparison)="screenComparisonSelection($event)"
+      (selectedScreenComparison)="onScreenComparisonSelectionChange($event)"
     ></app-visual-comparison-list>
-
     <button
       (click)="highlightDifferences()"
       [matTooltip]="'visual_test.hint.highlight_diff' | translate"
@@ -35,7 +51,7 @@
       <i class="fa-draw-highlight"></i>
     </button>
     <button
-      (click)="addIgnoreCoOrdinates()"
+      (click)="toggleIgnoreRegionAdditionListener()"
       [matTooltip]="'visual_test.hint.ignore_region' | translate"
       [class.icon-btn]="!isIgnoreRegion"
       [class.theme-btn-primary]="isIgnoreRegion"
@@ -44,14 +60,14 @@
     </button>
     <button
       (click)="viewCombined()"
-      [matTooltip]="'visual_test.hint.combine' | translate"
+      [matTooltip]="'visual_test.hint.' + (isCombinedView?'split':'combine') | translate"
       [class.icon-btn]="!isCombinedView"
       [class.theme-btn-primary]="isCombinedView"
       class="btn border-rds-2 ml-14 mr-14 vi-btn">
       <i class="fa-overlap"></i>
     </button>
     <button
-      class="text-t-secondary close ml-14"
+      class="text-t-secondary fa-close-alt vi-btn icon-btn ml-14"
       type="button"
       [matTooltip]="'hint.message.common.close' | translate"
       mat-dialog-close>
@@ -86,25 +102,29 @@
     [class.overlay-enabled]="isCombinedView"
     class="compare-container overflow-y-auto">
     <div
-      class="compare-section" id="base_image_container">
+      class="compare-section h-100" id="base_image_container">
       <canvas id="base_image_canvas"></canvas>
     </div>
     <div
-      class="compare-border"></div>
+      class="compare-border h-100"></div>
     <div
-      class="compare-section">
+      class="compare-section h-100">
       <canvas id="current_image_canvas"></canvas>
     </div>
     <div class="ignore-confirmation-model" *ngIf="isShowConfirm">
       <div class="note" [translate]="'visual_test.message.already_ignore_hint'"></div>
-      <div class="p-5 text-t-highlight" [translate]="'visual_test.message.already_ignore_message'"></div>
+      <!--      Commenting since its showing even if there's no ignored region overlap-->
+      <!--      FIXME Check if new ignore region in creation overlaps existing ignored region and show this message -->
+      <!--      <div class="p-5 text-t-highlight" [translate]="'visual_test.message.already_ignore_message'"></div>-->
+
+      <div class="p-5 text-t-highlight"></div>
       <div class="text-right pt-20">
         <button
-          (click)="resetIgnoreRegion()"
+          (click)="cancelCurrentIgnoreRegion()"
           class="theme-btn-clear-default"
           [translate]="'btn.common.cancel'"></button>
         <button
-          (click)="saveIgnoreRegion()"
+          (click)="saveCurrentIgnoreRegion(null)"
           class="theme-btn-primary"
           [translate]="'btn.common.save'"></button>
       </div>

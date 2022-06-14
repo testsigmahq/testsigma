@@ -10,6 +10,7 @@
 package com.testsigma.dto.export;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.testsigma.annotation.JsonListRootName;
@@ -18,6 +19,7 @@ import lombok.Data;
 import java.sql.Timestamp;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonListRootName(name = "test-case-types")
 @JsonRootName(value = "test-case-type")
 public class TestCaseTypeXMLDTO extends BaseXMLDTO {

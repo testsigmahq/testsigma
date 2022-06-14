@@ -80,6 +80,7 @@ public class StepProcessor {
     exeTestStepEntity.setPriority(testStepDTO.getPriority());
     exeTestStepEntity.setPreRequisite(testStepDTO.getPreRequisiteStepId());
     exeTestStepEntity.setPosition(testStepDTO.getPosition());
+    exeTestStepEntity.setVisualEnabled(testStepDTO.getVisualEnabled());
     exeTestStepEntity.setIfConditionExpectedResults(testStepDTO.getIfConditionExpectedResults());
     exeTestStepEntity.setAdditionalData(testStepDTO.getDataMapJson());
     exeTestStepEntity.setAddonTestData(testStepDTO.getAddonTestData());
@@ -92,6 +93,7 @@ public class StepProcessor {
     exeTestStepEntity.setType(testStepDTO.getType());
     exeTestStepEntity.setNaturalTextActionId(testStepDTO.getNaturalTextActionId());
     exeTestStepEntity.setTestCaseId(testStepDTO.getTestCaseId());
+    exeTestStepEntity.setTestDataName(testStepDTO.getTestDataProfileName());
     exeTestStepEntity.setAction(testStepDTO.getAction());
     exeTestStepEntity.setTestPlanId(testPlanId);
     exeTestStepEntity.setPriority(testStepDTO.getPriority());
@@ -100,7 +102,10 @@ public class StepProcessor {
     exeTestStepEntity.setWaitTime(testStepDTO.getWaitTime() == null ? 0 : testStepDTO.getWaitTime());
     exeTestStepEntity.setIfConditionExpectedResults(testStepDTO.getIfConditionExpectedResults());
     exeTestStepEntity.setAdditionalData(testStepDTO.getDataMapJson());
-
+    exeTestStepEntity.setTestDataProfileStepId(testStepDTO.getTestDataProfileStepId());
+    exeTestStepEntity.setTestDataIndex(testCaseEntityDTO.getTestDataIndex());
+    exeTestStepEntity.setTestDataProfileName(testCaseEntityDTO.getTestDataProfileName());
+    exeTestStepEntity.setVisualEnabled(testStepDTO.getVisualEnabled());
     populateStepDetails(testStepDTO, exeTestStepEntity);
 
     if ((testStepDTO.getType() != null &&
@@ -117,6 +122,10 @@ public class StepProcessor {
       exeTestStepEntity.setAddonNaturalTextActionEntity(addonService.fetchPluginEntity(testStepDTO.getAddonActionId()));
     }
 
+    if (testDataSet != null)
+      exeTestStepEntity.setSetName(testDataSet.getName());
+    exeTestStepEntity.setTestDataId(testCaseEntityDTO.getTestDataId());
+    exeTestStepEntity.setIndex(testStepDTO.getIndex());
     setElementMap(exeTestStepEntity);
     setTestDataMap(exeTestStepEntity);
     setAttributesMap(exeTestStepEntity);

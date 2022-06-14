@@ -51,10 +51,11 @@
             *ngIf="isDataProfile"
             [testDataProfileDetails]="suggestionContentData"
           ></app-action-test-data-parameter-suggestion>
-            <app-test-step-more-action-form
-              *ngIf="isMoreAction"
-              [moreDetails]="suggestionContentData"
-            ></app-test-step-more-action-form>
+          <app-test-step-more-action-form
+            *ngIf="isMoreAction"
+            [isFullScreenMode]="fullScreenMode"
+            [moreDetails]="suggestionContentData"
+          ></app-test-step-more-action-form>
         </div>
         <div *ngIf="!mirroring && fullScreenMode"
              class="inspection-details-section w-100">

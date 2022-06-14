@@ -69,7 +69,6 @@ public class ZipUtil {
         zipOut.putNextEntry(new ZipEntry(fileName));
         zipOut.closeEntry();
       } else {
-        zipOut.putNextEntry(new ZipEntry(fileName + "/"));
         zipOut.closeEntry();
       }
       File[] children = fileToZip.listFiles();
@@ -119,6 +118,8 @@ public class ZipUtil {
     zis.closeEntry();
     zis.close();
     zipFile.delete();
+    if (targetFolder!=null && Objects.requireNonNull(targetFolder.listFiles()).length ==1 && Objects.requireNonNull(targetFolder.listFiles())[0].isDirectory())
+      return targetFolder.listFiles()[0];
     return targetFolder;
   }
 

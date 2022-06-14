@@ -1,7 +1,7 @@
 <div
   class="h-100 ts-form"
   [formGroup]="form">
-  <div class="theme-overlay-container">
+  <div class="theme-overlay-container" *ngIf="!isFullScreenMode">
     <div class="theme-overlay-header">
       <div
         class="theme-overlay-title">
@@ -17,7 +17,11 @@
       </button>
     </div>
 
-    <div class="theme-overlay-content without-footer pt-20">
+    <div
+      [class.full-content-view]="isFullScreenMode"
+      [class.pt-30]="isFullScreenMode"
+      [class.pt-20]="!isFullScreenMode"
+      class="theme-overlay-content without-footer">
       <div class="form-group" *ngIf="!testStep.isRestStep && !testStep.isForLoopStep">
         <div class="p-0 field m-0">
           <input
@@ -33,7 +37,7 @@
             for="waitTime" class="required"></label>
         </div>
         <div
-          *ngIf="form.get('waitTime').hasError('max')"
+          *ngIf="form?.get('waitTime')?.hasError('max')"
           class="error" [translate]="'test_step.max_wait_time.error'">
         </div>
       </div>
@@ -50,7 +54,7 @@
             <mat-option
               *ngFor="let prerequisite of prerequisiteList; let index = index"
               [value]="prerequisite.id"
-              [textContent]="prerequisite.stepDisplayNumber"></mat-option>
+              [textContent]="'Step ' + (prerequisite.position + 1) + ' - ' + (!!prerequisite.action? prerequisite.action : prerequisite?.stepGroup?.name)"></mat-option>
           </mat-select>
         </mat-form-field>
       </div>

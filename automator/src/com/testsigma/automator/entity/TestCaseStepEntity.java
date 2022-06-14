@@ -38,6 +38,9 @@ public class TestCaseStepEntity implements Cloneable {
   private String testDataType;
   private String testDataName;
   private String testDataValue;
+  private Long testDataId;
+  private Integer testDataIndex;
+  private String setName;
   private String testDataValuePreSignedURL;
   private String locatorStrategy;
   private String attribute;

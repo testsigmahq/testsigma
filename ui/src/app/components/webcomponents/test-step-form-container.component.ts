@@ -323,9 +323,10 @@ export class TestStepFormContainerComponent extends BaseComponent implements OnI
     moreOption.disableClose = true;
     moreOption.backdropClick().subscribe((event) => {
       let maxWait = this.stepForm?.controls['waitTime']?.value;
-      if(maxWait > 120 || maxWait < 1) {
+      if(maxWait > 120 || maxWait < 1 || moreOption.componentInstance.preventClosingMoreOptions()) {
         moreOption.disableClose = true;
       } else {
+        moreOption.componentInstance.disableConfirmed = false
         moreOption.close();
       }
     });

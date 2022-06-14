@@ -284,6 +284,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     this.resetValidation();
     this.currentTestDataFunctionParameters = null;
     this.currentAddonTDF = null;
+    this.mobileRecorderEventService.setEmptyAction();
   }
 
   attachContentEditableDivKeyEvent() {
@@ -1717,6 +1718,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     this.onSave.emit(step);
     this.saving = false;
     this.addActionStepAfterSwitch();
+
   }
 
   addActionStepAfterSwitch() {

@@ -7,10 +7,7 @@
 
 package com.testsigma.dto.export;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.annotation.*;
 import com.testsigma.annotation.JsonListRootName;
 import com.testsigma.model.TestStepConditionType;
 import com.testsigma.model.TestStepPriority;
@@ -23,6 +20,7 @@ import java.sql.Timestamp;
 @Data
 @JsonListRootName(name = "test-steps")
 @JsonRootName(value = "test-step")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TestStepXMLDTO extends BaseXMLDTO {
   @JsonProperty("name")
   private Long id;

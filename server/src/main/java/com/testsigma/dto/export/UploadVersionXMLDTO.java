@@ -44,4 +44,12 @@ public class UploadVersionXMLDTO extends BaseXMLDTO {
   private Timestamp updatedDate;
   @JsonProperty("DownloadURL")
   private String downloadURL;
+  @JsonProperty("PackageName")
+  private String packageName;
+  @JsonProperty("Activity")
+  private String activity;
+  @JsonProperty("VersionName")
+  private String versionName;
+  @JsonProperty("BundleId")
+  private String bundleId;
 }

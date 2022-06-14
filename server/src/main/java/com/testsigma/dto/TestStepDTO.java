@@ -43,6 +43,7 @@ public class TestStepDTO implements Cloneable, Serializable {
   private Long forLoopTestDataId;
   private Boolean visualEnabled = false;
   private Long testDataFunctionId;
+  private String testDataProfileName;
   @JsonProperty()
   private AddonTestStepTestData addonTDF;
   private Map<String, String> testDataFunctionArgs;
@@ -61,6 +62,12 @@ public class TestStepDTO implements Cloneable, Serializable {
   private Boolean disabled;
   private Boolean ignoreStepResult;
   private List<TestStepDTO> testStepDTOS = new ArrayList<>();
+  private Long testDataProfileStepId;
+  private Integer index;
+  private Long testDataId;
+  private Integer testDataIndex;
+  private String setName;
+
 
   public TestStepDTO clone() throws CloneNotSupportedException {
     TestStepDTO entity = (TestStepDTO) super.clone();

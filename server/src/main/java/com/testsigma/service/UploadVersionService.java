@@ -50,6 +50,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -224,7 +225,9 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
 
   public Specification<UploadVersion> getExportXmlSpecification(BackupDTO backupDTO) throws ResourceNotFoundException {
     WorkspaceVersion applicationVersion = workspaceVersionService.find(backupDTO.getWorkspaceVersionId());
-    SearchCriteria criteria = new SearchCriteria("workspaceId", SearchOperation.EQUALITY, applicationVersion.getWorkspaceId());
+    List<Long> uploads =
+            uploadService.findAllByApplicationId(applicationVersion.getWorkspaceId()).stream().map(upload -> upload.getId()).collect(Collectors.toList());
+    SearchCriteria criteria = new SearchCriteria("uploadId", SearchOperation.IN, uploads);
     List<SearchCriteria> params = new ArrayList<>();
     params.add(criteria);
     UploadVersionSpecificationsBuilder uploadSpecificationsBuilder = new UploadVersionSpecificationsBuilder();

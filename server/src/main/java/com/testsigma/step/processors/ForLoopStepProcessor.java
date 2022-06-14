@@ -81,7 +81,12 @@ public class ForLoopStepProcessor extends StepProcessor {
             exeEntity.setType(loopentity.getType());
             exeEntity.setStepGroupId(loopentity.getStepGroupId());
             exeEntity.setPosition(loopentity.getPosition());
+            exeEntity.setTestDataProfileName(testData.getTestDataName());
+            exeEntity.setVisualEnabled(loopentity.getVisualEnabled());
             exeEntity.setIndex(i + 1);
+            entity.setTestDataId(testDataId);
+            entity.setTestDataIndex(i);
+            entity.setSetName(dataSet.getName());
 
             for (TestStepDTO centity : loopentity.getTestStepDTOS()) {
               List<TestCaseStepEntityDTO> stepGroupSpecialSteps = new ArrayList<>();
@@ -121,6 +126,7 @@ public class ForLoopStepProcessor extends StepProcessor {
               cstepEntity.setType(centity.getType());
               cstepEntity.setStepGroupId(centity.getStepGroupId());
               exeEntity.getTestCaseSteps().add(cstepEntity);
+              exeEntity.setTestDataProfileName(testData.getTestDataName());
             }
             iteEntity.getTestCaseSteps().add(exeEntity);
           }
@@ -139,6 +145,7 @@ public class ForLoopStepProcessor extends StepProcessor {
           iteEntity.setNaturalTextActionId(entity.getNaturalTextActionId());
           populateStepDetails(testStepDTO, iteEntity);
           iteEntity.setAction(entity.getAction());
+          iteEntity.setVisualEnabled(entity.getVisualEnabled());
           entityList.add(iteEntity);
         }
       }

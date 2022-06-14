@@ -63,7 +63,8 @@ export class TestCaseFilterFormComponent extends BaseComponent implements OnInit
     this.filterForm = new FormGroup({
       name: new FormControl(this.filter.name, [
         Validators.required,
-        Validators.minLength(4)
+        Validators.minLength(4),
+        this.noWhitespaceValidator
       ]),
       isPublic: new FormControl(this.filter.isPublic, [
         Validators.required

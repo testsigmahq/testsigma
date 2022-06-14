@@ -420,13 +420,14 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
   toggleStartIndex(endIndex?) {
     let startIndex: number = this.testCase.testDataStartIndex>0 ? parseInt(String(this.testCase.testDataStartIndex)) : 1;
     let startArray = [...this.startArray]
-    this.endArray = startArray.splice(startIndex , startArray.length);
+    this.endArray = startArray;
     if(this.testCase.testDataStartIndex > this.testCase.testDataEndIndex || endIndex!=undefined) {
       this.testCase.testDataEndIndex = (endIndex > 0 && (endIndex <= this.startArray.length)) ? endIndex : -1;
       this.testCaseForm.patchValue({
         endIndex: this.testCase.testDataEndIndex
       })
     }
+
   }
 
   setTestDataStartIndex() {

@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.common.usermodel.Hyperlink;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.CreationHelper;
@@ -28,6 +29,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 
 @Service
@@ -57,6 +59,7 @@ public class ImportAffectedTestCaseXLSExportService {
     row.createCell(5).setCellValue("Action Text");
     row.createCell(6).setCellValue("Reason");
     row.createCell(7).setCellValue("Testcase URL");
+    row.createCell(8).setCellValue("NLP ID");
     return workbook;
   }
 
@@ -75,6 +78,7 @@ public class ImportAffectedTestCaseXLSExportService {
       row.createCell(6).setCellValue(entry.getValue());
       String testCaseURL = getServerURL()+"/ui/td/cases/"+testCase.getId().toString()+"/steps";
       row.createCell(7).setCellValue(testCaseURL);
+      row.createCell(8).setCellValue(ObjectUtils.defaultIfNull(step.getNaturalTextActionId(),"").toString());
       this.setTestCaseHyperLink(workbook, row, testCaseURL);
       ++rowNum;
     }

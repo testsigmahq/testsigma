@@ -41,6 +41,7 @@ export class ImportFormComponent extends BaseComponent implements OnInit {
     '"isTestStepEnabled" : [ "isRestStepEnabled", "isTestDataEnabled", "isTestCasePriorityEnabled", "isTestCaseTypeEnabled", "isElementEnabled", "isElementScreenNameEnabled"],' +
     '"isRequirementEnabled" : ["isTestCaseEnabled", "isTestStepEnabled", "isRestStepEnabled", "isTestDataEnabled", "isTestCasePriorityEnabled", "isTestCaseTypeEnabled", "isElementEnabled", "isElementScreenNameEnabled"],' +
     '"isTestPlanEnabled":["isTestDeviceEnabled", "isSuitesEnabled", "isAgentEnabled"],' +
+    '"isSuitesEnabled":["isRestStepEnabled", "isTestStepEnabled", "isTestDataEnabled", "isTestCasePriorityEnabled", "isTestCaseTypeEnabled", "isElementEnabled", "isElementScreenNameEnabled", "isTestCaseEnabled", "isTestCaseTypeEnabled"],'+
     '"isTestDeviceEnabled":["isSuitesEnabled", "isAgentEnabled"],' +
     '"isElementEnabled":["isElementScreenNameEnabled"]}';
 

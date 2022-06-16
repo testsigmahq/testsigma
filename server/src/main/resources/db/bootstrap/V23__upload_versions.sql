@@ -20,8 +20,8 @@ CREATE TABLE `upload_versions`
   `upload_status`  VARCHAR(100) DEFAULT NULL,
   `last_uploaded_time`   DATETIME      DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `index_uploads_on_workspace_id_and_name` (`workspace_id`, `name`),
-  UNIQUE KEY `index_uploads_on_upload_id_and_name` (`upload_id`, `name`)
+  UNIQUE KEY `uploads_upload_id_name` (`upload_id`,`name`),
+  CONSTRAINT `fk_upload_versions_upload_id` FOREIGN KEY (`upload_id`) REFERENCES `uploads` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
   COLLATE utf8_unicode_ci;

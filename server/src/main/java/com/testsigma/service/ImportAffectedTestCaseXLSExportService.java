@@ -59,7 +59,7 @@ public class ImportAffectedTestCaseXLSExportService {
     row.createCell(5).setCellValue("Action Text");
     row.createCell(6).setCellValue("Reason");
     row.createCell(7).setCellValue("Testcase URL");
-    row.createCell(8).setCellValue("NLP ID");
+   // row.createCell(8).setCellValue("NLP ID");
     return workbook;
   }
 
@@ -78,7 +78,7 @@ public class ImportAffectedTestCaseXLSExportService {
       row.createCell(6).setCellValue(entry.getValue());
       String testCaseURL = getServerURL()+"/ui/td/cases/"+testCase.getId().toString()+"/steps";
       row.createCell(7).setCellValue(testCaseURL);
-      row.createCell(8).setCellValue(ObjectUtils.defaultIfNull(step.getNaturalTextActionId(),"").toString());
+    //  row.createCell(8).setCellValue(ObjectUtils.defaultIfNull(step.getNaturalTextActionId(),"").toString());
       this.setTestCaseHyperLink(workbook, row, testCaseURL);
       ++rowNum;
     }

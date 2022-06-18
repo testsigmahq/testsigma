@@ -311,9 +311,9 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
     } else {
       present.setId(null);
     }
-    Upload importedUpload = uploadService.findByImportedIdAndWorkspaceId(present.getUploadId(),importDTO.getWorkspaceId());
-    present.setUploadId(importedUpload.getId());
-    present.setUpload(importedUpload);
+    Optional<Upload> importedUpload = uploadService.findByImportedIdAndWorkspaceId(present.getUploadId(),importDTO.getWorkspaceId());
+    present.setUploadId(importedUpload.get().getId());
+    present.setUpload(importedUpload.get());
     return present;
   }
 
@@ -339,7 +339,10 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
 
   @Override
   public Optional<UploadVersion> findImportedEntityHavingSameName(Optional<UploadVersion> previous, UploadVersion current, BackupDTO importDTO) throws ResourceNotFoundException {
-    return uploadVersionRepository.findByNameAndUploadId(current.getName(), current.getUploadId());
+   Optional<Upload> upload= uploadService.findByImportedIdAndWorkspaceId(current.getUploadId(), importDTO.getWorkspaceId());
+   if (upload.isPresent())
+    return uploadVersionRepository.findByNameAndUploadId(current.getName(), upload.get().getId());
+   else return Optional.empty();
   }
 
   @Override

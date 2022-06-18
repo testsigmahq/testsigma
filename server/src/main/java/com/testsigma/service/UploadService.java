@@ -223,7 +223,7 @@ public class UploadService extends XMLExportImportService<Upload> {
 
   @Override
   public Optional<Upload> findImportedEntityHavingSameName(Optional<Upload> previous, Upload current, BackupDTO importDTO) throws ResourceNotFoundException {
-    return uploadRepository.findByNameAndWorkspaceId(current.getName(), importDTO.getWorkspaceVersionId());
+    return uploadRepository.findByNameAndWorkspaceId(current.getName(), importDTO.getWorkspaceId());
   }
 
   @Override

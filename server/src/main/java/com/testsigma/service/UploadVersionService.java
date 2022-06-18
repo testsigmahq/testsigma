@@ -289,7 +289,7 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
       String originalFileName = ObjectUtils.defaultIfNull(present.getFileName(), "tmp")
               .replaceAll("\\s+", "_");
       String downloadPath = Files.createTempDirectory(present.getFileName()).toFile().getAbsolutePath() + "/" + originalFileName;
-      client.downloadRedirectFile(present.getDownloadURL(), downloadPath, new HashMap<>());
+      client.downloadRedirectFile(toImport.getDownloadURL(), downloadPath, new HashMap<>());
       uploadFile(new File(downloadPath), present);
       this.updateUploadWithLatestUploadVersion(present, present.getUploadId());
     } catch (IOException | TestsigmaException e) {
@@ -339,7 +339,7 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
 
   @Override
   public Optional<UploadVersion> findImportedEntityHavingSameName(Optional<UploadVersion> previous, UploadVersion current, BackupDTO importDTO) throws ResourceNotFoundException {
-    return uploadVersionRepository.findByNameAndUploadId(current.getName(), current.getImportedId());
+    return uploadVersionRepository.findByNameAndUploadId(current.getName(), current.getUploadId());
   }
 
   @Override

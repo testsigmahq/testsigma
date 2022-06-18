@@ -35,9 +35,9 @@ export class BackupFormComponent extends BaseComponent implements OnInit {
   public dependencies: string = '{"isTestCaseEnabled":["isTestStepEnabled", "isRestStepEnabled", "isTestDataEnabled", "isTestCasePriorityEnabled", "isTestCaseTypeEnabled", "isElementEnabled", "isElementScreenNameEnabled"],' +
     '"isTestStepEnabled" : [ "isRestStepEnabled", "isTestDataEnabled", "isTestCasePriorityEnabled", "isTestCaseTypeEnabled", "isElementEnabled", "isElementScreenNameEnabled"],' +
     '"isRequirementEnabled" : ["isTestCaseEnabled", "isTestStepEnabled", "isRestStepEnabled", "isTestDataEnabled", "isTestCasePriorityEnabled", "isTestCaseTypeEnabled", "isElementEnabled", "isElementScreenNameEnabled"],' +
-    '"isTestPlanEnabled":["isTestDeviceEnabled", "isSuitesEnabled", "isAgentEnabled"],' +
+    '"isTestPlanEnabled":["isTestCaseEnabled", "isTestDeviceEnabled", "isSuitesEnabled", "isUploadsEnabled", "isAgentEnabled", "isTestStepEnabled", "isRestStepEnabled", "isTestDataEnabled", "isTestCasePriorityEnabled", "isTestCaseTypeEnabled", "isElementEnabled", "isElementScreenNameEnabled"],' +
     '"isSuitesEnabled":["isRestStepEnabled", "isTestStepEnabled", "isTestDataEnabled", "isTestCasePriorityEnabled", "isTestCaseTypeEnabled", "isElementEnabled", "isElementScreenNameEnabled", "isTestCaseEnabled", "isTestCaseTypeEnabled"],'+
-    '"isTestDeviceEnabled":["isSuitesEnabled", "isAgentEnabled"],' +
+    '"isTestDeviceEnabled":["isSuitesEnabled", "isAgentEnabled", "isUploadsEnabled", "isTestCaseEnabled", "isTestStepEnabled", "isRestStepEnabled", "isTestDataEnabled", "isTestCasePriorityEnabled", "isTestCaseTypeEnabled", "isElementEnabled", "isElementScreenNameEnabled"],' +
     '"isElementEnabled":["isElementScreenNameEnabled"]}';
 
   constructor(

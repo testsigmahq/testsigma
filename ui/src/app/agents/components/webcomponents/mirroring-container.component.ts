@@ -490,7 +490,7 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
       this.devicesService.sessionTap(this.sessionId, tapPoint).subscribe({
         next: () => {
           if (this.data.recording) {
-            if(this.data.isStepRecord && !this.mirroring) this.saveTapOnDeviceStep.emit(tapPoint);
+            if(this.data.isStepRecord && !(this.mirroring || this.actionType == 'swipe')) this.saveTapOnDeviceStep.emit(tapPoint);
             this.handleActionSuccess();
             if(this.mirroring) {
               this.removeInspectionElements();

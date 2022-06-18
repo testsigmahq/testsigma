@@ -860,16 +860,18 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
           let testDataType = ['@|', '!|', '~|', '$|', '*|'].some(type => item?.textContent.includes(type))
           if (["Escape", "Tab"].includes(event.key))
             this.showDataTypes = false;
-          if (event.key == "ArrowUp" && this.currentDataTypeIndex != 0)
-            --this.currentDataTypeIndex;
-          if (event.key == "ArrowDown" && this.currentDataTypeIndex < this.dataTypes.length - 1)
-            ++this.currentDataTypeIndex;
-          if (event.key == "Enter") {
-            this.currentDataItemIndex = index;
-            this.selectTestDataType(TestDataType[this.dataTypes[this.currentDataTypeIndex]]);
-            setTimeout(() => {
-              item.innerHTML = this.removeHtmlTags(item?.textContent);
-            }, 100)
+          if(!this.currentTemplate?.allowedValues || this.currentTemplate?.allowedValues.length!<=0) {
+            if (event.key == "ArrowUp" && this.currentDataTypeIndex != 0)
+              --this.currentDataTypeIndex;
+            if (event.key == "ArrowDown" && this.currentDataTypeIndex < this.dataTypes.length - 1)
+              ++this.currentDataTypeIndex;
+            if (event.key == "Enter") {
+              this.currentDataItemIndex = index;
+              this.selectTestDataType(TestDataType[this.dataTypes[this.currentDataTypeIndex]]);
+              setTimeout(() => {
+                item.innerHTML = this.removeHtmlTags(item?.textContent);
+              }, 100)
+            }
           }
           if (value?.trim()?.length && testDataType &&
             (value?.trim()?.match(/\|/g) || []).length == 1 &&

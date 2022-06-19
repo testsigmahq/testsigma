@@ -119,7 +119,9 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
       },
       panelClass: ['mat-dialog', 'full-width', 'rds-none']
     }).afterClosed().subscribe(res => {
-      if (res)
+      if(res == 'close') {
+        this.dialogRef.close();
+      } else if (res)
         this.updateSuites();
       else
         this.activeExecutionEnvironment = this.originalExecutionEnvironment;

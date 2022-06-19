@@ -143,7 +143,7 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
       this.devicesService.sessionNavigateBack(this.sessionId).subscribe(
         () => {
           if (this.data.recording) {
-            if(this.data.isStepRecord) this.saveNavigateBackStep.emit()
+            if(this.data.isStepRecord && !(this.mirroring || this.actionType == 'swipe')) this.saveNavigateBackStep.emit()
             this.handleActionSuccess()
           }
         },
@@ -475,6 +475,9 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
 
   private tapOnDevice(tapPoint: Position) {
     if (this.data.recording) {
+      if(this.mirroring || this.actionType == 'swipe') {
+        this.beforeAction();
+      }
       if (tapPoint.x > this.screenOriginalWidth || tapPoint.y > this.screenOriginalHeight) {
         this.showNotification(NotificationType.Error, this.translate.instant("mobile_recorder.notification.tap.out_of_bound.failure", {
           screenWidth: this.screenOriginalWidth,
@@ -487,7 +490,7 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
       this.devicesService.sessionTap(this.sessionId, tapPoint).subscribe({
         next: () => {
           if (this.data.recording) {
-            if(this.data.isStepRecord && !this.mirroring) this.saveTapOnDeviceStep.emit(tapPoint);
+            if(this.data.isStepRecord && !(this.mirroring || this.actionType == 'swipe')) this.saveTapOnDeviceStep.emit(tapPoint);
             this.handleActionSuccess();
             if(this.mirroring) {
               this.removeInspectionElements();
@@ -600,7 +603,7 @@ export class MirroringContainerComponent extends BaseComponent implements OnInit
     this.devicesService.searchAndTapElement(this.sessionId, this.platform, locatorType, byValue, index, mobileElement.webViewName)
       .subscribe({
         next: () => {
-          if(this.data.isStepRecord) this.saveTapStep.emit(mobileElement);
+          if(this.data.isStepRecord && !(this.mirroring || this.actionType == 'swipe')) this.saveTapStep.emit(mobileElement);
           this.handleActionSuccess();
           this.removeInspectionElements();
           this.clearSelection();

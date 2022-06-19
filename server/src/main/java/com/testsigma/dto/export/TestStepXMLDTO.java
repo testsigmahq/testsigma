@@ -9,9 +9,8 @@ package com.testsigma.dto.export;
 
 import com.fasterxml.jackson.annotation.*;
 import com.testsigma.annotation.JsonListRootName;
-import com.testsigma.model.TestStepConditionType;
-import com.testsigma.model.TestStepPriority;
-import com.testsigma.model.TestStepType;
+import com.testsigma.model.*;
+import com.testsigma.service.ObjectMapperService;
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -42,8 +41,6 @@ public class TestStepXMLDTO extends BaseXMLDTO {
   private Long stepGroupId;
   @JsonProperty("custom-fields")
   private String customFields;
-  @JsonProperty("data-map")
-  private String dataMap;
   @JsonProperty("excepted-result")
   private String exceptedResult;
   @JsonProperty("natural-text-action-id")
@@ -80,4 +77,31 @@ public class TestStepXMLDTO extends BaseXMLDTO {
   private Boolean disabled;
   @JsonProperty("VisualEnabled")
   private Boolean visualEnabled = false;
+  @JsonProperty("condition_if")
+  private ResultConstant[] ifConditionExpectedResults;
+  @JsonProperty("test-data")
+  private String testData;
+  @JsonProperty("test-data-function")
+  private DefaultDataGenerator defaultDataGenerator;
+  @JsonProperty("custom-step")
+  private TestStepCustomStep customStep;
+  @JsonProperty("test-data-type")
+  private String testDataType;
+  @JsonProperty("element")
+  private String element;
+  @JsonProperty("from-element")
+  private String fromElement;
+  @JsonProperty("to-element")
+  private String toElement;
+  @JsonProperty("attribute")
+  private String attribute;
+  @JsonProperty("for_loop")
+  private TestStepForLoop forLoop;
+  @JsonProperty("while_loop")
+  private TestStepWhileLoop whileLoop;
+  @JsonProperty("whileCondition")
+  private String whileCondition;
+  @JsonProperty("addon_test_data_function")
+  private AddonTestStepTestData addonTDF;
+
 }

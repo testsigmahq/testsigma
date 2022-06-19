@@ -56,8 +56,13 @@ public class UploadService extends XMLExportImportService<Upload> {
     Upload upload = this.uploadRepository.findById(id)
       .orElseThrow(() -> new ResourceNotFoundException("Couldn't find upload version with " +
         "id: " + id));
+    try{
     upload.getLatestVersion().setPreSignedURL(uploadVersionService.getPreSignedURL(upload.getLatestVersion()));
-    return upload;
+    }
+    catch (Exception e){
+      log.error(e.getMessage());
+    }
+  return upload;
   }
 
   public Page<Upload> findAll(Specification<Upload> specification, Pageable pageable) {
@@ -223,7 +228,7 @@ public class UploadService extends XMLExportImportService<Upload> {
 
   @Override
   public Optional<Upload> findImportedEntityHavingSameName(Optional<Upload> previous, Upload current, BackupDTO importDTO) throws ResourceNotFoundException {
-    return uploadRepository.findByNameAndWorkspaceId(current.getName(), importDTO.getWorkspaceVersionId());
+    return uploadRepository.findByNameAndWorkspaceId(current.getName(), importDTO.getWorkspaceId());
   }
 
   @Override
@@ -236,8 +241,8 @@ public class UploadService extends XMLExportImportService<Upload> {
     return previous.isPresent() && previous.get().getImportedId() != null && previous.get().getImportedId().equals(current.getId());
   }
 
-  public Upload findByImportedIdAndWorkspaceId(Long importedId,
-                                                 Long applicationId) {
+  public Optional<Upload> findByImportedIdAndWorkspaceId(Long importedId,
+                                                         Long applicationId) {
     return uploadRepository.findByImportedIdAndWorkspaceId(importedId,applicationId);
   }
 

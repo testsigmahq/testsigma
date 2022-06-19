@@ -18,10 +18,10 @@
       <div
         class="empty-text"
         [textContent]="'message.common.empty_page' | translate : { categoryType:'Test Suites'}"></div>
-      <a
-        [routerLink]="['/td', options.version.id, 'suites', 'new']"
-        [translate]="'btn.common.create'" mat-dialog-close
-        class="theme-btn-primary"></a>
+      <a (click)="dialogRef.close('close');"
+         [routerLink]="['/td', options.version.id, 'suites', 'new']"
+         [translate]="'btn.common.create'" mat-dialog-close
+         class="theme-btn-primary"></a>
     </div>
   </div>
   <ng-template #elseBlock>

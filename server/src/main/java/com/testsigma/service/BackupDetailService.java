@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -38,7 +39,7 @@ import java.util.Optional;
 
 @Log4j2
 @Service
-@RequiredArgsConstructor(onConstructor = @__({@Autowired}))
+@RequiredArgsConstructor(onConstructor = @__({@Autowired, @Lazy}))
 public class BackupDetailService extends XMLExportImportService<BackupDetail> {
 
   private final BackupDetailRepository repository;
@@ -61,6 +62,7 @@ public class BackupDetailService extends XMLExportImportService<BackupDetail> {
   private final UploadVersionService uploadVersionService;
   private final BackupDetailMapper exportBackupEntityMapper;
   private final TestSuiteService testSuiteService;
+  private final SuiteTestCaseMappingService suiteTestCaseMappingService;
 
   @Value("${unzip.dir}")
   private String unzipDir;
@@ -183,6 +185,7 @@ public class BackupDetailService extends XMLExportImportService<BackupDetail> {
         teststepService.export(backupDTO);
         reststepService.export(backupDTO);
         testSuiteService.export(backupDTO);
+        suiteTestCaseMappingService.export(backupDTO);
         testPlanService.export(backupDTO);
         testDeviceService.export(backupDTO);
         backupDetail.setSrcFiles(backupDTO.getSrcFiles());
@@ -228,6 +231,7 @@ public class BackupDetailService extends XMLExportImportService<BackupDetail> {
         teststepService.importXML(importDTO);
         reststepService.importXML(importDTO);
         testSuiteService.importXML(importDTO);
+        suiteTestCaseMappingService.importXML(importDTO);
         testPlanService.importXML(importDTO);
         testDeviceService.importXML(importDTO);
         importOp.setAffectedCasesListPath(importDTO.getAffectedCasesListPath());

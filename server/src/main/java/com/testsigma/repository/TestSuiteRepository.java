@@ -49,4 +49,6 @@ public interface TestSuiteRepository extends PagingAndSortingRepository<TestSuit
 
     Optional<TestSuite> findAllByWorkspaceVersionIdAndImportedId(Long workspaceId, Long id);
     Optional<TestSuite> findByNameAndWorkspaceVersionId(String name,Long workspaceId );
+
+    List<TestSuite> findAllByWorkspaceVersionId(Long applicationVersionId);
 }

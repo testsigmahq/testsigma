@@ -34,27 +34,41 @@ export class AddonNaturalTextAction extends Base implements PageObject {
     if(this.parameters?.length) {
       this.parameters.forEach((parameter:AddonNaturalTextActionParameter) => {
         let referenceName = new RegExp(parameter.reference);
-        if(parameter.isElement ){
-          naturalText = naturalText.replace(referenceName, '<TSELEMENT ref="'+parameter.reference+'">'+parameter.name+'</TSELEMENT>')
-        } else if(parameter.isTestData){
-          naturalText = naturalText.replace(referenceName, '<TSTESTDAT ref="'+parameter.reference+'">'+parameter.name+'</TSTESTDAT>')
-        } else if(parameter.isTestData && !parameter.allowedValues?.length){
+        if(parameter.isEnvironmentData || parameter.isTestDataProfile || parameter.isTestDataSet){
+          naturalText = naturalText.replace(referenceName,'<TSENVDATA ref="'+parameter.reference+'">'+ parameter.reference + '</TSENVDATA>' )
+        }
+        if(parameter.isElement){
+          naturalText = naturalText.replace(referenceName, '<TSELEMENT ref="'+parameter.reference+'">'+ parameter.reference + '</TSELEMENT>')
+        }
+        else if(parameter.isTestData && !parameter.allowedValues?.length){
+          naturalText = naturalText.replace(referenceName, '<TSTESTDAT ref="'+parameter.reference+'">'+ parameter.reference + '</TSTESTDAT>')
+        }
+        else if(parameter.isTestData && parameter.allowedValues?.length){
           let selectedListVar = parameter.allowedValues.toString().replace(new RegExp(",", 'g'),'/');
-          naturalText = naturalText.replace(referenceName, '<TSTESTDAT ref="'+parameter.reference+'">'+selectedListVar+'</TSTESTDAT>');
+          selectedListVar = selectedListVar.replace('<','&lt').replace('>','&gt');
+          naturalText = naturalText.replace(referenceName, '<TSTESTDAT ref="'+parameter.reference+'">'+selectedListVar+'</TSTESTDAT>')
         }
       })
 
       this.parameters.forEach((parameter:AddonNaturalTextActionParameter) => {
+        if(parameter.isEnvironmentData || parameter.isTestDataProfile || parameter.isTestDataSet){
+          naturalText = naturalText.replace('<TSENVDATA ref="'+parameter.reference+'">', '<span class="test_data" data-reference="'+parameter.reference+'">')
+        }
         if(parameter.isTestData && !parameter.allowedValues?.length) {
           naturalText = naturalText.replace('<TSTESTDAT ref="'+parameter.reference+'">', '<span class="test_data" data-reference="'+parameter.reference+'">')
-        } else if(parameter.isElement) {
+        }
+        else if(parameter.isElement) {
           naturalText = naturalText.replace('<TSELEMENT ref="'+parameter.reference+'">', '<span class="element" data-reference="'+parameter.reference+'">')
+        }
+        else if(parameter.isTestData && parameter.allowedValues?.length) {
+          naturalText = naturalText.replace('<TSTESTDAT ref="'+parameter.reference+'">', '<span class="selected_list test_data" data-reference="'+parameter.reference+'">')
         }
       })
       // naturalText = naturalText.replace(new RegExp('TS_TE_ST', 'g'), 'test data');
       // naturalText = naturalText.replace(new RegExp('TS_ELE_MENT', 'g'), 'element')
       naturalText = naturalText.replace(new RegExp('</TSTESTDAT>', 'g'), '</span>')
       naturalText = naturalText.replace(new RegExp('</TSELEMENT>', 'g'), '</span>')
+      naturalText = naturalText.replace(new RegExp('</TSENVDATA>', 'g'), '</span>')
     }
     return naturalText;
   }

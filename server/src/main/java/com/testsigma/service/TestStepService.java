@@ -11,8 +11,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.testsigma.dto.BackupDTO;
-import com.testsigma.dto.export.TestCaseTypeCloudXMLDTO;
-import com.testsigma.dto.export.TestCaseTypeXMLDTO;
 import com.testsigma.dto.export.TestStepCloudXMLDTO;
 import com.testsigma.dto.export.TestStepXMLDTO;
 import com.testsigma.event.EventType;
@@ -25,11 +23,12 @@ import com.testsigma.repository.TestStepRepository;
 import com.testsigma.specification.SearchCriteria;
 import com.testsigma.specification.SearchOperation;
 import com.testsigma.specification.TestStepSpecificationsBuilder;
-import io.grpc.MethodDescriptor;
+import com.testsigma.util.DeprecatedActionMapper;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -60,6 +59,11 @@ public class TestStepService extends XMLExportImportService<TestStep> {
     private final NaturalTextActionsService naturalTextActionsService;
     private final DefaultDataGeneratorService defaultDataGeneratorService;
     private final ImportAffectedTestCaseXLSExportService affectedTestCaseXLSExportService;
+
+    private final List<ActionTestDataMap> actionTestDataMap = getMapsList();
+    private final List<Integer> depreciatedIds = DeprecatedActionMapper.getAllDeprecatedActionIds();
+
+
 
 
     public List<TestStep> findAllByTestCaseId(Long testCaseId) {
@@ -312,7 +316,19 @@ public class TestStepService extends XMLExportImportService<TestStep> {
                     }
                     if (step.getNaturalTextActionId() != null && step.getNaturalTextActionId() > 0) {
                         message = "Deprecated Action!";
+                        try {
                         naturalTextActionsService.findById(Long.valueOf(step.getNaturalTextActionId()));
+                        }
+                        catch (Exception e){
+                            if (this.depreciatedIds.contains(step.getNaturalTextActionId()))
+                                this.mapDeprecatedActionsWithUpdatesOnes(step);
+                            else {
+                                log.error(e.getMessage() + " and Not able to Map this Action Id with the Mapper");
+                                step.setDisabled(true);
+                                step.setAddonActionId(null);
+                                stepsMap.put(step, message);
+                            }
+                        }
                     }
                     if (Objects.equals(step.getTestDataType(), TestDataType.function.getDispName()) && step.getType() != TestStepType.CUSTOM_FUNCTION ) {
                         message = "Deprecated Custom Function / Custom Function not found!";
@@ -340,6 +356,16 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         } else {
             return mapper.mapTestStepsList(xmlMapper.readValue(xmlData, new TypeReference<List<TestStepXMLDTO>>() {
             }));
+        }
+    }
+
+
+    private void mapDeprecatedActionsWithUpdatesOnes(TestStep step) {
+        ActionTestDataMap filteredMap = this.actionTestDataMap.stream().filter(dataMap -> dataMap.getTestDataHash().containsKey(step.getNaturalTextActionId())).findFirst().orElse(null);
+        if (filteredMap != null) {
+            step.setTestData(filteredMap.getTestDataHash().get(step.getNaturalTextActionId()));
+            step.setNaturalTextActionId(filteredMap.getOptimizedActionId());
+            step.setTestDataType(TestDataType.raw.getDispName());
         }
     }
 
@@ -488,4 +514,57 @@ public class TestStepService extends XMLExportImportService<TestStep> {
     public List<TestStep> findAllByTestCaseIdIn(List<Long> testCaseIds) {
         return this.repository.findAllByTestCaseIdInOrderByPositionAsc(testCaseIds);
     }
+
+    private List<ActionTestDataMap> getMapsList(){
+        List<ActionTestDataMap> actionsMap = new ArrayList<>();
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.WebApplication, 1080, DeprecatedActionMapper.getWebWaitMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.MobileWeb, 10192, DeprecatedActionMapper.getMobileWebWaitMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.AndroidNative, 20153, DeprecatedActionMapper.getAndroidWaitMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.IOSNative, 30147, DeprecatedActionMapper.getIOSWaitMap()));
+
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.WebApplication, 1079, DeprecatedActionMapper.getWebVerifyMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.MobileWeb, 10191, DeprecatedActionMapper.getMobileWebVerifyMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.AndroidNative, 20152, DeprecatedActionMapper.getAndroidVerifyMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.IOSNative, 30146, DeprecatedActionMapper.getIOSVerifyMap()));
+
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.MobileWeb, 10196, DeprecatedActionMapper.getMobileWebTapOnAlertMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.AndroidNative, 20156, DeprecatedActionMapper.getAndroidTapOnAlertMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.IOSNative, 30151, DeprecatedActionMapper.getIOSTapOnAlertMap()));
+
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.MobileWeb, 10190, DeprecatedActionMapper.getMobileWebSwipeMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.AndroidNative, 20150, DeprecatedActionMapper.getAndroidSwipeFromMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.IOSNative, 30144, DeprecatedActionMapper.getIOSSwipeFromMap()));
+
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.AndroidNative, 20151, DeprecatedActionMapper.getAndroidSwipeToMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.IOSNative, 30145, DeprecatedActionMapper.getIOSSwipeToMap()));
+
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.AndroidNative, 20154, DeprecatedActionMapper.getAndroidEnableSwitchMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.IOSNative, 30148, DeprecatedActionMapper.getIOSEnableSwitchMap()));
+
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.MobileWeb, 10195, DeprecatedActionMapper.getMobileWebTapOnKeyMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.AndroidNative, 20155, DeprecatedActionMapper.getAndroidTapOnKeyMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.IOSNative, 30150, DeprecatedActionMapper.getIOSTapOnKeyMap()));
+
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.WebApplication, 1082, DeprecatedActionMapper.getMobileWebScrollInsideElementMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.MobileWeb, 10194, DeprecatedActionMapper.getMobileWebScrollInsideElementMap()));
+
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.WebApplication, 1081, DeprecatedActionMapper.getWebScrollToElementMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.MobileWeb, 10193, DeprecatedActionMapper.getMobileWebScrollToElementMap()));
+
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.WebApplication, 1083, DeprecatedActionMapper.getWebClickOnButtonMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.MobileWeb, 10197, DeprecatedActionMapper.getMobileWebTapOnButtonMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.IOSNative, 30149, DeprecatedActionMapper.getIOSWIFISwitchMap()));
+
+        return actionsMap;
+    }
+
+
+}
+
+@Data
+@AllArgsConstructor
+class ActionTestDataMap {
+    WorkspaceType workspaceType;
+    Integer optimizedActionId;
+    HashMap<Integer, String> testDataHash;
 }

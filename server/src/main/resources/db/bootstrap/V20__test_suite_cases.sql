@@ -5,6 +5,7 @@ CREATE TABLE `test_suite_cases`
   `suite_id`     BIGINT(20) NOT NULL,
   `test_case_id` BIGINT(20) NOT NULL,
   `position`     BIGINT(20) DEFAULT NULL,
+  `imported_id`    BIGINT(20) DEFAULT NULL,
   `created_date` DATETIME   DEFAULT CURRENT_TIMESTAMP,
   `updated_date` DATETIME   DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),

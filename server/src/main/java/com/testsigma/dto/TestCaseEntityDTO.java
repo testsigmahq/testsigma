@@ -11,9 +11,7 @@ import com.testsigma.model.ResultConstant;
 import com.testsigma.model.StatusConstant;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 @Data
 public class TestCaseEntityDTO implements Cloneable {
@@ -24,6 +22,7 @@ public class TestCaseEntityDTO implements Cloneable {
   private Boolean isDataDriven;
   private String testDataSetName;
   private String testDataProfileName;
+  private Integer testDataIndex;
   private Calendar startTime;
   private Calendar endTime;
   private Long preRequisite;
@@ -39,7 +38,7 @@ public class TestCaseEntityDTO implements Cloneable {
   private String message;
   private Long phoneNumberId;
   private Boolean visualEnabled = false;
-  private Integer testDataIndex;
+  private Map<Long, Integer> stepGroupParentForLoopStepIdIndexes;
 
   public TestCaseEntityDTO clone() throws CloneNotSupportedException {
     TestCaseEntityDTO entity = (TestCaseEntityDTO) super.clone();
@@ -51,4 +50,9 @@ public class TestCaseEntityDTO implements Cloneable {
     return entity;
 
   }
+
+  public Map<Long, Integer> getStepGroupParentForLoopStepIdIndexes(){
+    return stepGroupParentForLoopStepIdIndexes != null ? stepGroupParentForLoopStepIdIndexes : new HashMap<>();
+  }
+
 }

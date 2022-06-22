@@ -25,10 +25,8 @@ import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaException;
 import com.testsigma.mapper.*;
 import com.testsigma.model.*;
-import com.testsigma.step.processors.ForLoopStepProcessor;
-import com.testsigma.step.processors.RestStepProcessor;
-import com.testsigma.step.processors.StepProcessor;
-import com.testsigma.step.processors.WhileLoopStepProcessor;
+import com.testsigma.model.TestDataSet;
+import com.testsigma.step.processors.*;
 import com.testsigma.tasks.TestPlanRunTask;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -1091,13 +1089,22 @@ public class AgentExecutionService {
       workspace.getWorkspaceType(), testStepDTOS,
       elements, dataSet, testPlan.getId(),
       environmentParameters, testCaseEntityDTO, environmentProfileName,
-      profileName);
+      profileName,getStepGroupParentForLoopStepIdIndexes(testCaseEntityDTO));
     appendPreSignedURLs(executableList, testCaseEntityDTO, false, null, null);
 
     testCaseEntityDTO.setTestSteps(executableList);
 
     TestCaseResult testCaseResult = testCaseResultService.find(testCaseEntityDTO.getTestCaseResultId());
     testCaseResultService.markTestCaseResultAsInProgress(testCaseResult);
+  }
+
+  private Map<Long, Integer> getStepGroupParentForLoopStepIdIndexes(TestCaseEntityDTO testCaseEntityDTO){
+    Map<Long, Integer> dataIndex = testCaseEntityDTO.getStepGroupParentForLoopStepIdIndexes();
+    if(!testCaseEntityDTO.getIsStepGroup()){
+      dataIndex.put(ParameterTestDataProcessor.OVERRIDE_STEP_GROUP_STEP_WITH_TEST_CASE_PROFILE_ID,
+              testCaseEntityDTO.getTestDataIndex());
+    }
+    return dataIndex;
   }
 
   private boolean isStepInsideForLoop(TestCaseStepEntityDTO testCaseStepEntity) throws ResourceNotFoundException {
@@ -1114,16 +1121,21 @@ public class AgentExecutionService {
     Calendar cal = Calendar.getInstance();
     cal.add(Calendar.HOUR, 10);
     stepGroupStepID = (stepGroupStepID == null) ? 0 : stepGroupStepID;
+
     StorageService storageService = this.storageServiceFactory.getStorageService();
     for (TestCaseStepEntityDTO testCaseStepEntity : executableList) {
       Integer index;
+      Long parentId = testCaseStepEntity.getParentId();
+      if(parentId == null)
+        parentId = 0L;
       if (parentGroupEntity != null && !isStepInsideForLoop(testCaseStepEntity)) {
         index = (parentGroupEntity.getIndex() == null) ? 0 : parentGroupEntity.getIndex();
       } else {
         index = (testCaseStepEntity.getIndex() == null) ? 0 : testCaseStepEntity.getIndex();
       }
-      String screenShotPath = String.format("/executions/%s/%s_%s_%s_%s.%s", testCaseEntity.getTestCaseResultId(),
-        testCaseStepEntity.getId(), stepGroupStepID, testCaseStepEntity.getPosition(), index, "jpeg");
+      int rand = new Random().ints(1, 100).findFirst().getAsInt();
+      String screenShotPath = String.format("/executions/%s/%s_%s_%s_%s_%s_%s.%s", testCaseEntity.getTestCaseResultId(),
+        testCaseStepEntity.getId(), stepGroupStepID, parentId, testCaseStepEntity.getPosition(), index, rand ,"jpeg");
 
       URL presignedURL = storageService.generatePreSignedURL(screenShotPath, StorageAccessLevel.WRITE, 600);
       testCaseStepEntity.setScreenshotPath(presignedURL.toString());
@@ -1297,7 +1309,7 @@ public class AgentExecutionService {
                                                             com.testsigma.model.TestDataSet testDataSet,
                                                             Long testPlanId, Map<String, String> environmentParams,
                                                             TestCaseEntityDTO testCaseEntityDTO, String environmentParamSetName,
-                                                            String dataProfile) throws Exception {
+                                                            String dataProfile, Map<Long, Integer> dataSetIndex) throws Exception {
 
     List<Long> loopIds = new ArrayList<>();
     List<TestCaseStepEntityDTO> toReturn = new ArrayList<>();
@@ -1310,22 +1322,22 @@ public class AgentExecutionService {
       if (testStepDTO.getType() == TestStepType.FOR_LOOP) {
         loopIds.add(testStepDTO.getId());
         new ForLoopStepProcessor(webApplicationContext, toReturn, workspaceType, elementMap, testStepDTO,
-          testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile).processLoop(testStepDTOS, loopIds);
+          testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile, dataSetIndex).processLoop(testStepDTOS, loopIds);
         continue;
       } else if (testStepDTO.getType() == TestStepType.WHILE_LOOP) {
         loopIds.add(testStepDTO.getId());
         new WhileLoopStepProcessor(webApplicationContext, toReturn, workspaceType, elementMap, testStepDTO,
-          testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile).processWhileLoop(testStepDTOS, loopIds);
+          testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile, dataSetIndex).processWhileLoop(testStepDTOS, loopIds);
         continue;
       } else if (testStepDTO.getType() == TestStepType.REST_STEP) {
         new RestStepProcessor(webApplicationContext, toReturn, workspaceType, elementMap, testStepDTO,
-          testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile).process();
+          testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile, dataSetIndex).process();
         continue;
       }
 
       TestCaseStepEntityDTO stepEntity = new StepProcessor(webApplicationContext, toReturn, workspaceType,
         elementMap, testStepDTO, testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName,
-        dataProfile).processStep();
+        dataProfile, dataSetIndex).processStep();
 
       stepEntity.setStepGroupId(testStepDTO.getStepGroupId());
       stepEntity.setParentId(testStepDTO.getParentId());
@@ -1346,27 +1358,27 @@ public class AgentExecutionService {
           if (subTestStepDTO.getType() == TestStepType.FOR_LOOP) {
             loopIds.add(subTestStepDTO.getId());
             new ForLoopStepProcessor(webApplicationContext, stepGroupSpecialSteps, workspaceType, elementMap, subTestStepDTO,
-              testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile)
+              testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile, dataSetIndex)
               .processLoop(testStepDTO.getTestStepDTOS(), loopIds);
             stepEntity.getTestCaseSteps().addAll(stepGroupSpecialSteps);
             continue;
           } else if (subTestStepDTO.getType() == TestStepType.WHILE_LOOP) {
             loopIds.add(subTestStepDTO.getId());
             new WhileLoopStepProcessor(webApplicationContext, stepGroupSpecialSteps, workspaceType, elementMap,
-              subTestStepDTO, testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile)
-              .processWhileLoop(testStepDTO.getTestStepDTOS(), loopIds);
+              subTestStepDTO, testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName,
+                    dataProfile, dataSetIndex).processWhileLoop(testStepDTO.getTestStepDTOS(), loopIds);
             stepEntity.getTestCaseSteps().addAll(stepGroupSpecialSteps);
             continue;
           } else if (subTestStepDTO.getType() == TestStepType.REST_STEP) {
             new RestStepProcessor(webApplicationContext, stepGroupSpecialSteps, workspaceType, elementMap, subTestStepDTO,
-              testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile).process();
+              testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile, dataSetIndex).process();
             stepEntity.getTestCaseSteps().addAll(stepGroupSpecialSteps);
             continue;
           }
 
           TestCaseStepEntityDTO cstepEntity = new StepProcessor(webApplicationContext, toReturn, workspaceType,
             elementMap, subTestStepDTO, testPlanId, testDataSet, environmentParams, testCaseEntityDTO,
-            environmentParamSetName, dataProfile).processStep();
+            environmentParamSetName, dataProfile, dataSetIndex).processStep();
 
           cstepEntity.setParentId(subTestStepDTO.getParentId());
           cstepEntity.setConditionType(subTestStepDTO.getConditionType());

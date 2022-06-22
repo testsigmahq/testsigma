@@ -2,6 +2,7 @@ import {Base} from "../shared/models/base.model";
 import {PageObject} from "../shared/models/page-object";
 import {alias, custom, deserialize, list, object, optional, serializable, SKIP} from "serializr";
 import {TestDataSet} from "./test-data-set.model";
+import {InfiniteScrollableDataSource} from "../data-sources/infinite-scrollable-data-source";
 
 export class TestData extends Base implements PageObject {
   @serializable
@@ -13,7 +14,12 @@ export class TestData extends Base implements PageObject {
   @serializable
   public versionId: number;
   public isSelected: Boolean;
-
+  public parameters?:string[];
+  public testDataProfileStepId?:number;
+  public startIndex?:number;
+  public endIndex?:number;
+  public stepDisplayNumber?:string;
+  public testCases?:InfiniteScrollableDataSource;
   @serializable(optional(custom(v=> {let jsonObject = {};
   if(v)
     v.forEach((value, key) => {

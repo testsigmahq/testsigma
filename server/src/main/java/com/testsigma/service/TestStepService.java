@@ -216,6 +216,7 @@ public class TestStepService extends XMLExportImportService<TestStep> {
 
     private void updateChildLoops(Long parentId, String parameter, String newParameterName) {
         this.repository.updateChildStepsTestDataParameter(newParameterName, parameter, parentId);
+        this.repository.updateChildStepsTestDataParameterUsingTestDataProfileId(newParameterName, parameter, parentId);
         List<TestStep> conditionalSteps = this.repository.getChildConditionalStepsExceptLoop(parentId);
         for (TestStep step : conditionalSteps) {
             updateChildLoops(step.getId(), parameter, newParameterName);

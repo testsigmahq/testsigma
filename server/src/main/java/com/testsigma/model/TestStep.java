@@ -144,6 +144,9 @@ public class TestStep {
   @Column(name = "visual_enabled")
   private Boolean visualEnabled = false;
 
+  @Column(name = "test_data_profile_step_id")
+  private Long testDataProfileStepId;
+
   @ManyToOne
   @Fetch(value = FetchMode.SELECT)
   @JoinColumn(name = "test_case_id", referencedColumnName = "id", insertable = false, updatable = false)

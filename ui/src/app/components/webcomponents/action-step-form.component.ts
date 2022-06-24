@@ -1443,10 +1443,12 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   private openSuggestionDataProfile() {
     let suggestionData = {
       dataProfileId: this.testStep.getParentLoopDataId(this.testStep, this.testCase),
+      dataProfileIds : this.testStep.getAllParentLoopTDPIds(this.testStep,this.testCase,this.testSteps),
       versionId: this.version?.id,
       testCaseId: this.testCase?.id,
       stepRecorderView: Boolean(this.stepRecorderView),
     };
+    console.log(suggestionData);
     if(this.sendSuggestionDetails(suggestionData, this.mobileRecorderEventService.suggestionDataProfile)) {
       return;
     }
@@ -1455,12 +1457,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       width: '35%',
       position: {top: '0', right: '0'},
       panelClass: ['mat-dialog', 'rds-none'],
-      data: {
-        dataProfileId: this.testStep.getParentLoopDataId(this.testStep, this.testCase),
-        versionId: this.version?.id,
-        testCaseId: this.testCase?.id,
-        stepRecorderView: Boolean(this.stepRecorderView),
-      }
+      data: suggestionData
     });
     this.dataProfileSuggestion.afterClosed().subscribe(data => this.dataProfileAfterClose(data));
   }
@@ -1752,11 +1749,19 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   }
 
   private dataProfileAfterClose(data) {
-    if (data)
-      this.assignDataValue(this.getDataTypeString(TestDataType.parameter, data));
+    if (data) {
+      this.showDataTypes = false;
+      if( typeof(data)==="string" ){
+        this.assignDataValue(this.getDataTypeString(TestDataType.parameter, data));
+      }
+      else if( typeof(data)==="object" ){
+        this.testStep.testDataProfileStepId = data?.testDataProfileStepId;
+        this.assignDataValue(this.getDataTypeString(TestDataType.parameter, data?.suggestion));
+      }
+    }
     else {
       this.currentTestDataType = TestDataType.raw;
-      this.showTestDataPopup()
+      if(!this.testStep?.stepGroup) this.showTestDataPopup();
     }
   }
 

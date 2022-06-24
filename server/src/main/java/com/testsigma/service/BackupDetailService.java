@@ -220,8 +220,8 @@ public class BackupDetailService extends XMLExportImportService<BackupDetail> {
         versionService.setXmlImportVersionPrerequisites(importDTO);
         testCasePriorityService.importXML(importDTO);
         testCaseTypeService.importXML(importDTO);
-        elementScreenService.importXML(importDTO);
-        elementService.importXML(importDTO);
+        //elementScreenService.importXML(importDTO);
+        //elementService.importXML(importDTO);
         testDataProfileService.importXML(importDTO);
         attachmentService.importXML(importDTO);
         agentService.importXML(importDTO);

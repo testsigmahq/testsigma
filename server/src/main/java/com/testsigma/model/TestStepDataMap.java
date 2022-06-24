@@ -41,4 +41,6 @@ public class TestStepDataMap {
   private AddonTestStepTestData addonTDF;
   @JsonProperty("visual_enabled")
   private Boolean visualEnabled;
+  @JsonProperty("test-data-id")
+  private Long testDataId;
 }

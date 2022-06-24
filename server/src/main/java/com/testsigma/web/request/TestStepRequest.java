@@ -55,6 +55,7 @@ public class TestStepRequest {
   private Boolean disabled;
   private Boolean ignoreStepResult;
   private Boolean visualEnabled = false;
+  private Long testDataProfileStepId;
   @JsonProperty()
   private AddonTestStepTestData addonTDF;
 }

@@ -38,7 +38,6 @@ public interface TestStepMapper {
 
 
   TestStepDTO mapDTO(TestStep testStep);
-
   @Mapping(target = "status", source = "expectedResponseStatus")
   RestStepDTO map(RestStep restStep);
 
@@ -51,6 +50,7 @@ public interface TestStepMapper {
   List<TestStepDTO> mapDTOs(List<TestStep> testSteps);
 
   @Mapping(target = "preRequisiteStepId", expression = "java(testStepRequest.getPreRequisiteStepId())")
+  @Mapping(target = "testDataProfileStepId", expression = "java(testStepRequest.getTestDataProfileStepId())")
   @Mapping(target = "addonTestData", expression = "java(testStepRequest.getAddonTestData())")
   @Mapping(target = "addonElements", expression = "java(testStepRequest.getAddonElements())")
   TestStep map(TestStepRequest testStepRequest);

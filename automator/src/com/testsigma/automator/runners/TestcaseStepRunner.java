@@ -144,7 +144,10 @@ public abstract class TestcaseStepRunner {
         log.debug("Found execution environment / test case as stopped...skipping test case step execution");
         status = ResultConstant.STOPPED;
         testCaseStepResult.setMessage(AutomatorMessages.MSG_USER_ABORTED_EXECUTION);
-      } else if (testCaseStepResult.getSkipExe()) {
+      } else if(testCaseStepEntity.getFailureMessage() != null){
+        testCaseStepResult.setResult(ResultConstant.FAILURE);
+        testCaseStepResult.setMessage(testCaseStepEntity.getFailureMessage());
+      } if (testCaseStepResult.getSkipExe()) {
         log.debug("Found execution skip flag to be set...setting appropriate message");
         status = ResultConstant.NOT_EXECUTED;
         testCaseStepResult.setMessage(testCaseStepResult.getSkipMessage());

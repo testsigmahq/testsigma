@@ -2013,5 +2013,6 @@
   "addon.details.title": "Testsigma Addon",
   "addon.show_details": "Show Details",
   "chrome.install": "Install Testsigma Chrome Extension",
+  "action.test_data_profile.step_no": "Step no",
   "first_chrome_install.description": "Testsigma Chrome Extension will help you capture the “element” details automatically. Elements can be anything on a web page that you are trying to automate (or interact with) like buttons, text boxes, links, divs, texts, etc."
 }

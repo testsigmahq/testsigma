@@ -986,6 +986,7 @@
   "testcase.summary.type": "Test Case Type",
   "testcase.summary.data_profile": "Data Profile",
   "testcase.summary.title": "Test Case Details",
+  "testcase.details.step_group.edit_step.warning": "Any edits made to the step group will reflect in all test cases that use this step group",
   "test_step.for_loop.profile.none": "No Test Data Profiles available.",
   "test_step.for_loop.profile.none_mgs": "to create now.",
   "test_step.for_loop.profile_title": "Test Data Profile:",

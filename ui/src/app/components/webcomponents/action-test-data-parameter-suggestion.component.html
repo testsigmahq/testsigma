@@ -14,7 +14,7 @@
     </button>
   </div>
   <div class="identifier-record text-center h-100-64 overflow-y-auto"
-       *ngIf="!dataProfileSuggestion?.length && !isQueryBased && filteredMultiDataProfileSuggestions?.length">
+       *ngIf="!dataProfileSuggestion?.length && !isQueryBased && !filteredMultiDataProfileSuggestions?.length">
     <div class="pt-20 px-35 pb-20">
       <div [translate]="'test_data_profile_suggestion.not_found.start_title'"
            class="fz-14 pb-10 text-left line-height-large"></div>

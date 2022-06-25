@@ -234,6 +234,7 @@ export class ActionTestDataParameterSuggestionComponent  extends BaseComponent i
 
   closeSuggestion(data?) {
     this.testDataProfileDetails ? this.mobileRecorderEventService.setEmptyAction() : data ? this.showRefreshOption = true : this.dialogRef.close(data);
+    this.dialogRef.close(data);
   }
 
   refreshTestDataProfileId(){

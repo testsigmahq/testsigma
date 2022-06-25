@@ -130,7 +130,7 @@ import {MobileRecorderEventService} from "../../services/mobile-recorder-event.s
             [
               <span class="text-link">{{testStep?.testData?.name}}</span>
             ]
-            &nbsp;[&nbsp;{{testStep?.forLoopStartIndex}}
+            &nbsp;[&nbsp;{{testStep?.forLoopStartIndex == -1 ? ('test_step.for_loop.option_start' | translate) : testStep?.forLoopStartIndex}}
               ...{{testStep?.forLoopEndIndex == -1 ? ('test_step.for_loop.option_end' | translate) : testStep?.forLoopEndIndex}}&nbsp;]
           </span>
             <span

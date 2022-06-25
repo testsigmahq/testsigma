@@ -992,6 +992,7 @@
   "test_step.for_loop.start": "Loop Start",
   "test_step.for_loop.end": "Loop End",
   "test_step.for_loop.option_end": "End",
+  "test_step.for_loop.option_start": "Start",
   "test_step.re_usable.none": "Step Groups not created yet/not in Ready state.",
   "test_step.re_usable.none_msg": "to check the status if already created.",
   "test_step.re_usable_none.msg": "to create one. or",

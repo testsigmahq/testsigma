@@ -31,6 +31,7 @@
             disableOptionCentering panelClass="single"
             (selectionChange)="toggleStartIndex()"
             [formControlName]="['startIndex']">
+            <mat-option [value]="-1" [textContent]="'test_step.for_loop.option_start' | translate"></mat-option>
             <mat-option
               *ngFor="let startIndex of startArray"
               [value]="startIndex"

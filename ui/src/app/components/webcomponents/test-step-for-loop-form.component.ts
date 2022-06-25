@@ -72,7 +72,7 @@ export class TestStepForLoopFormComponent extends BaseComponent implements OnIni
       if (this.testDataList && this.testDataList.content && this.testDataList.content.length && setFirst) {
         this.currentTestDataList = this.testDataList?.content[0];
         let dataset = this.testDataList.content[0];
-        let startIndex:number=0;
+        let startIndex:number=-1;
         let endIndex:number=-1;
         if(this.testStep?.id) {
           dataset = this.testDataList.content.find(data => data.id == this.testStep.forLoopTestDataId)
@@ -127,11 +127,19 @@ export class TestStepForLoopFormComponent extends BaseComponent implements OnIni
   toggleStartIndex(endIndex?) {
     let startIndex = this.loopForm.get('startIndex').value || 1;
     let startArray = [...this.startArray]
-    this.endArray = startArray.splice(startIndex - 1, startArray.length);
+    if(startIndex == -1)
+      this.endArray = startArray;
+    else
+      this.endArray = startArray.splice(startIndex - 1, startArray.length);
     this.testStep.forLoopEndIndex = endIndex? endIndex : this.endArray[this.endArray.length - 1];
-    this.loopForm.patchValue({
-      endIndex: endIndex? endIndex : this.endArray[this.endArray.length - 1]
-    })
+    if(endIndex){
+      this.addFormControls();
+    }
+    else{
+      this.loopForm.patchValue({
+        endIndex: endIndex? endIndex : this.endArray[this.endArray.length - 1]
+      })
+    }
   }
 
   setStartValue(testData: TestData, startIndex?, endIndex?) {

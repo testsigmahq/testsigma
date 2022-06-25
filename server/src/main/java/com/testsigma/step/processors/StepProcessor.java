@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 @Log4j2
 public class StepProcessor {
   protected static Integer LOOP_END = -1;
+  protected static Integer LOOP_START = -1;
   protected Long testPlanId;
   protected List<TestCaseStepEntityDTO> testCaseStepEntityDTOS;
   protected WorkspaceType workspaceType;

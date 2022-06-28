@@ -26,7 +26,7 @@ public class MessageConstants {
   public static final String IMPORT_IS_SUCCESS = "Import is completed";
   public static String TEST_PLAN_COMPLETED = "Test plan execution completed";
   public static String TEST_PLAN_FAILURE = "Test plan execution failed";
-  public static String TEST_DATA_NOT_FOUND = "Test Step is not Executed Because TestData parameter is not found %s with in selected step id Test data profile.";
+  public static String TEST_DATA_NOT_FOUND = "Test Step is Failed Because TestData parameter is not found %s with in selected step id Test data profile.";
 
   public static String getMessage(String replaceableMsg, Object... replaceParameters) {
     replaceableMsg = replaceableMsg + " ";

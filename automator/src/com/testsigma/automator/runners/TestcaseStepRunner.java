@@ -146,6 +146,7 @@ public abstract class TestcaseStepRunner {
         testCaseStepResult.setMessage(AutomatorMessages.MSG_USER_ABORTED_EXECUTION);
       } else if(testCaseStepEntity.getFailureMessage() != null){
         testCaseStepResult.setResult(ResultConstant.FAILURE);
+        status = ResultConstant.FAILURE;
         testCaseStepResult.setMessage(testCaseStepEntity.getFailureMessage());
       } if (testCaseStepResult.getSkipExe()) {
         log.debug("Found execution skip flag to be set...setting appropriate message");
@@ -182,7 +183,7 @@ public abstract class TestcaseStepRunner {
         log.debug("Step type is Step Group. Executing Test Component with ID - " + testCaseStepEntity.getStepGroupId());
         status = executeStepGroup(testCaseStepEntity, testCaseStepResult, testCaseStepResultMap, testCaseResult, parentStatus,
           failedToProcess, screenCaptureUtil, status);
-      } else if (isRunning && !testCaseStepResult.getSkipExe() && !preReqFailed) {
+      } else if (isRunning && !testCaseStepResult.getSkipExe() && !preReqFailed && StringUtils.isEmpty(testCaseStepEntity.getFailureMessage())) {
         setTestDataValue(testCaseStepEntity, envDetails, testCaseResult, testCaseStepResult);
         testCaseStepResult.setElementDetails(testCaseStepEntity.getElementsMap());
         testCaseStepResult.setTestDataDetails(testCaseStepEntity.getTestDataMap());

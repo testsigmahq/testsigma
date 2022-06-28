@@ -289,18 +289,20 @@ public class StepProcessor {
   }
 
 
-  public TestDataSet getTestDataIdFromStep(Long stepId) throws ResourceNotFoundException {
-    try{
-    TestStep testStep = testStepService.find(stepId);
-    TestData testData = testDataProfileService.find(testStep.getForLoopTestDataId());
-    return testData.getData().get(dataSetIndex.get(testStep.getId()));
-    }
-    catch (Exception e){
-      if (Objects.equals(stepId, this.testCaseEntityDTO.getTestDataId())){
-        TestData testData = testDataProfileService.find(stepId);
-        return testData.getData().get(0);
-      }
-      else
+  public TestDataSet getTestDataIdFromStep(TestCaseStepEntityDTO step) throws ResourceNotFoundException {
+    try {
+      TestStep testStep = testStepService.find(step.getTestDataProfileStepId());
+      TestData testData = testDataProfileService.find(testStep.getForLoopTestDataId());
+      return testData.getData().get(dataSetIndex.get(testStep.getId()));
+    } catch (Exception e) {
+      TestStep parentStep = step.getParentId() != null ? testStepService.find(step.getParentId()) : null;
+      if (Objects.equals(step.getTestDataProfileStepId(), this.testCaseEntityDTO.getTestDataId())) {
+        TestData testData = testDataProfileService.find(step.getTestDataProfileStepId());
+        return testData.getData().get(this.testCaseEntityDTO.getTestDataStartIndex());
+      } else if (parentStep != null) {
+        TestData testData = testDataProfileService.find(parentStep.getForLoopTestDataId());
+        return testData.getData().get(dataSetIndex.get(parentStep.getId()));
+      } else
         return null;
     }
   }
@@ -310,9 +312,9 @@ public class StepProcessor {
     boolean isParentStepExists = false;
     try{
       if(exeTestStepEntity.getTestDataProfileStepId() != null){
-        testDataSet = getTestDataIdFromStep( exeTestStepEntity.getTestDataProfileStepId());
-        if (testDataSet!=null)
-            isParentStepExists = true;
+        testDataSet = getTestDataIdFromStep( exeTestStepEntity);
+        if (exeTestStepEntity.getParentId() != null && testDataSet != null && !(Objects.equals(exeTestStepEntity.getTestDataProfileStepId(), this.testCaseEntityDTO.getTestDataId())))
+          isParentStepExists = true;
       }
     }catch(Exception exception){
       log.error(exception,exception);

@@ -1061,10 +1061,10 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
           this.selectTestDataPlaceholder();
         break;
       case TestDataType.runtime:
-        this.assignDataValue("$| <span class='test_data_place'></span> |");
+        this.assignDataValue("$|<span class='test_data_place'></span>|");
         break;
       case TestDataType.random:
-        this.assignDataValue("~| <span class='test_data_place'></span> |");
+        this.assignDataValue("~|<span class='test_data_place'></span>|");
         break;
     }
   }

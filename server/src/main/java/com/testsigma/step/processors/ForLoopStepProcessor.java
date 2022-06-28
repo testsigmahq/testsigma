@@ -92,6 +92,7 @@ public class ForLoopStepProcessor extends StepProcessor {
             processedChildEntity.setTestDataProfileName(testData.getTestDataName());
             processedChildEntity.setVisualEnabled(loopChildEntity.getVisualEnabled());
             processedChildEntity.setIndex(i + 1);
+            processedChildEntity.setTestDataIndex(i);
             parentEntity.setTestDataId(testDataId);
             parentEntity.setTestDataIndex(i);
             parentEntity.setSetName(dataSet.getName());

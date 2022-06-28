@@ -3,7 +3,6 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {fromEvent} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, tap} from 'rxjs/operators';
 import {TestDataService} from "../../services/test-data.service";
-import {TestDataSet} from "../../models/test-data-set.model";
 import {MobileRecorderEventService} from "../../services/mobile-recorder-event.service";
 import {TestDataType} from "../../enums/test-data-type.enum";
 import {TestCaseService} from "../../services/test-case.service";
@@ -20,7 +19,8 @@ import {TestData} from "../../models/test-data.model";
   styles: []
 })
 export class ActionTestDataParameterSuggestionComponent  extends BaseComponent implements OnInit  {
-  @Optional() @Input('testDataProfileDetails') testDataProfileDetails;
+  testDataProfileDetails;
+  @Optional() @Input('mobileDataProfileDetails') mobileDataProfileDetails;
   public dataProfileSuggestion: any[];
   public filteredSuggestion: any[];
   public searchText: string;
@@ -61,7 +61,12 @@ export class ActionTestDataParameterSuggestionComponent  extends BaseComponent i
       this.versionId = this.option.versionId;
       this.testCaseId = this.option.testCaseId;
     }
-    console.log(this.option);
+    if (this.mobileDataProfileDetails) {
+      this.option = this.mobileDataProfileDetails;
+      this.testDataProfileDetails = this.mobileDataProfileDetails;
+    }
+    console.log(this.mobileDataProfileDetails);
+    console.log("Mobile Profile details");
     this.fetchDataParameter();
     this.attachDebounceEvent();
   }
@@ -194,15 +199,13 @@ export class ActionTestDataParameterSuggestionComponent  extends BaseComponent i
   selectedSuggestion(suggestion?: any, testDataProfileStepId?:number) {
     suggestion = suggestion || this.filteredSuggestion[this.currentFocusedIndex];
     testDataProfileStepId = testDataProfileStepId || this.selectedTestData?.testDataProfileStepId;
-    this.testDataProfileDetails ? this.mobileRecorderEventService.returnData.next({type: TestDataType.parameter, data:{ suggestion , testDataProfileStepId } }) : this.dialogRef.close({suggestion,testDataProfileStepId});
-    this.dialogRef.close({suggestion,testDataProfileStepId});
+    this.mobileDataProfileDetails ? this.mobileRecorderEventService.returnData.next({type: TestDataType.parameter, data:{ suggestion , testDataProfileStepId } }) : this.dialogRef.close({suggestion,testDataProfileStepId});
   }
 
   selectSuggestion(suggestion?: any,id?:number) {
     suggestion = suggestion || this.filteredMultiDataProfileSuggestions[this.currentFocusedIndex].key;
     id = id || this.selectedTestData?.testDataProfileStepId;
-    this.testDataProfileDetails ? this.mobileRecorderEventService.returnData.next({type: TestDataType.parameter, data: suggestion}) : this.dialogRef.close({suggestion,testDataProfileStepId:id});
-    this.dialogRef.close({suggestion,testDataProfileStepId:id});
+    this.mobileDataProfileDetails ? this.mobileRecorderEventService.returnData.next({type: TestDataType.parameter, data: suggestion}) : this.dialogRef.close({suggestion,testDataProfileStepId:id});
   }
 
   scrollUpParameterFocus() {
@@ -233,8 +236,7 @@ export class ActionTestDataParameterSuggestionComponent  extends BaseComponent i
   }
 
   closeSuggestion(data?) {
-    this.testDataProfileDetails ? this.mobileRecorderEventService.setEmptyAction() : data ? this.showRefreshOption = true : this.dialogRef.close(data);
-    this.dialogRef.close(data);
+    this.mobileDataProfileDetails ? this.mobileRecorderEventService.setEmptyAction() : data ? this.showRefreshOption = true : this.dialogRef.close(data);
   }
 
   refreshTestDataProfileId(){

@@ -296,8 +296,12 @@ public class StepProcessor {
     return testData.getData().get(dataSetIndex.get(testStep.getId()));
     }
     catch (Exception e){
-      TestData testData = testDataProfileService.find(stepId);
-      return testData.getData().get(0);
+      if (Objects.equals(stepId, this.testCaseEntityDTO.getTestDataId())){
+        TestData testData = testDataProfileService.find(stepId);
+        return testData.getData().get(0);
+      }
+      else
+        return null;
     }
   }
 
@@ -307,7 +311,8 @@ public class StepProcessor {
     try{
       if(exeTestStepEntity.getTestDataProfileStepId() != null){
         testDataSet = getTestDataIdFromStep( exeTestStepEntity.getTestDataProfileStepId());
-        isParentStepExists = true;
+        if (testDataSet!=null)
+            isParentStepExists = true;
       }
     }catch(Exception exception){
       log.error(exception,exception);

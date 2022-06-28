@@ -524,7 +524,7 @@ export class TestStep extends Base implements PageObject {
     }
   }
 
-  setStepDisplayNumber(testSteps: TestStep[]) {
+  setStepDisplayNumber(testSteps: TestStep[], stepPrefix?:number) {
     let nestedIndex=0;
     testSteps.forEach((step:TestStep, index) => {
       step.stepDisplayNumber = (index+1);
@@ -555,7 +555,10 @@ export class TestStep extends Base implements PageObject {
         if(step?.parentStep && this.getConditionalParentStep(step))
           ++nestedIndex;
       } else {
-        step.stepDisplayNumber = (index+1-nestedIndex);
+        const tempStepNum = ( index + 1 - nestedIndex );
+        step.stepDisplayNumber = stepPrefix ? ( stepPrefix + "." + tempStepNum ) : tempStepNum ;
+        //step.stepDisplayNumber = (index+1-nestedIndex);
+
         // if(!step.parentStep && (step.isConditionalWhileLoop || step.isConditionalIf || step.isForLoop))
         //   ++nestedIndex;
       }

@@ -173,7 +173,6 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
       .replaceAll("\\s+", "_"));
     uploadVersion = this.uploadVersionRepository.save(uploadVersion);
     uploadFile(uploadedFile, uploadVersion);
-    this.uploadVersionRepository.save(uploadVersion);
     return uploadVersion;
   }
 
@@ -290,8 +289,9 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
               .replaceAll("\\s+", "_");
       String downloadPath = Files.createTempDirectory(present.getFileName()).toFile().getAbsolutePath() + "/" + originalFileName;
       client.downloadRedirectFile(toImport.getDownloadURL(), downloadPath, new HashMap<>());
-      uploadFile(new File(downloadPath), present);
       this.updateUploadWithLatestUploadVersion(present, present.getUploadId());
+      uploadFile(new File(downloadPath), present);
+      this.uploadVersionRepository.save(present);
     } catch (IOException | TestsigmaException e) {
       log.error("Failed to upload file", e.getMessage(), e);
     }

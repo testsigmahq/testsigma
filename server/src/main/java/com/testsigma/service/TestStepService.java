@@ -331,8 +331,8 @@ public class TestStepService extends XMLExportImportService<TestStep> {
                             }
                         }
                     }
-                    if (Objects.equals(step.getTestDataType(), TestDataType.function.getDispName()) && step.getType() != TestStepType.CUSTOM_FUNCTION ) {
-                        message = "Deprecated Custom Function / Custom Function not found!";
+                    if (Objects.equals(step.getTestDataType(), TestDataType.function.getDispName()) && step.getType() != TestStepType.CUSTOM_FUNCTION) {
+                        message = "Deprecated Data Generator / Data Generator not found!";
                         defaultDataGeneratorService.find(step.getTestDataFunctionId());
                     }
                 } catch (Exception e) {
@@ -344,7 +344,7 @@ public class TestStepService extends XMLExportImportService<TestStep> {
                 }
                 if (step.getType() == TestStepType.CUSTOM_FUNCTION) {
                     step.setDisabled(true);
-                    stepsMap.put(step,"Custom Functions not supported in OS");
+                    stepsMap.put(step, "Custom Functions not supported in OS");
                     log.info("disabling Custom function test step to avoid further issues, since CSFs are deprecated");
                 }
                 if (step.getType() == TestStepType.FOR_LOOP) {
@@ -355,8 +355,15 @@ public class TestStepService extends XMLExportImportService<TestStep> {
             }
             return steps;
         } else {
-            return mapper.mapTestStepsList(xmlMapper.readValue(xmlData, new TypeReference<List<TestStepXMLDTO>>() {
+            List<TestStep> steps = mapper.mapTestStepsList(xmlMapper.readValue(xmlData, new TypeReference<List<TestStepXMLDTO>>() {
             }));
+            for (TestStep step : steps) {
+                if (step.getTestDataProfileStepId() != null) {
+                    Optional<TestData> testData = testDataService.getRecentImportedEntity(importDTO, step.getTestDataProfileStepId());
+                    testData.ifPresent(data -> step.setTestDataProfileStepId(data.getId()));
+                }
+            }
+            return steps;
         }
     }
 

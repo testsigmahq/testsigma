@@ -32,11 +32,19 @@ public class TestStepDataMapDeserializer extends JsonDeserializer<TestStepCloudD
           testStepDataMap.setTestData(testData.get("value").toString());
           testStepDataMap.setTestDataType(testData.get("type").toString());
           if (testData.containsKey("test-data-function")) {
-            testStepDataMap.setTestDataFunction(new ObjectMapper().convertValue(map.get("test-data-function"),
-                    DefaultDataGenerator.class));
+            testStepDataMap.setTestDataFunction(new ObjectMapper().convertValue(testData.get("test-data-function"),
+                    CloudTestDataFunction.class));
           }
           if (testData.containsKey("kibbutz_test_data_function")) {
-            testStepDataMap.setKibbutzTDF(new ObjectMapper().convertValue(map.get("kibbutz_test_data_function"),
+            testStepDataMap.setKibbutzTDF(new ObjectMapper().convertValue(testData.get("kibbutz_test_data_function"),
+                    AddonTestStepTestData.class));
+          }
+          if (testData.containsKey("testDataFunction")) {
+            testStepDataMap.setTestDataFunction(new ObjectMapper().convertValue(testData.get("testDataFunction"),
+                    CloudTestDataFunction.class));
+          }
+          if (testData.containsKey("kibbutzTDF")) {
+            testStepDataMap.setKibbutzTDF(new ObjectMapper().convertValue(testData.get("kibbutzTDF"),
                     AddonTestStepTestData.class));
           }
         }
@@ -45,10 +53,18 @@ public class TestStepDataMapDeserializer extends JsonDeserializer<TestStepCloudD
           testStepDataMap.setTestDataType(map.get("test-data-type").toString());
           if (map.containsKey("test-data-function")) {
             testStepDataMap.setTestDataFunction(new ObjectMapper().convertValue(map.get("test-data-function"),
-                    DefaultDataGenerator.class));
+                    CloudTestDataFunction.class));
           }
           if (map.containsKey("kibbutz_test_data_function")) {
             testStepDataMap.setKibbutzTDF(new ObjectMapper().convertValue(map.get("kibbutz_test_data_function"),
+                    AddonTestStepTestData.class));
+          }
+          if (map.containsKey("testDataFunction")) {
+            testStepDataMap.setTestDataFunction(new ObjectMapper().convertValue(map.get("testDataFunction"),
+                    CloudTestDataFunction.class));
+          }
+          if (map.containsKey("kibbutzTDF")) {
+            testStepDataMap.setKibbutzTDF(new ObjectMapper().convertValue(map.get("kibbutzTDF"),
                     AddonTestStepTestData.class));
           }
         }

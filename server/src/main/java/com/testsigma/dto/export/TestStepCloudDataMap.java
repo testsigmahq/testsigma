@@ -20,7 +20,7 @@ public class TestStepCloudDataMap {
   @JsonProperty("kibbutz_test_data_function")
   private AddonTestStepTestData kibbutzTDF;
   @JsonProperty("test-data-function")
-  private DefaultDataGenerator testDataFunction;
+  private CloudTestDataFunction testDataFunction;
   @JsonProperty("custom-step")
   private TestStepCustomStep customStep;
   @JsonProperty("test-data-type")

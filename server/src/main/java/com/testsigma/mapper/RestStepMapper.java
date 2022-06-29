@@ -2,12 +2,11 @@ package com.testsigma.mapper;
 
 import com.testsigma.dto.export.*;
 import com.testsigma.model.*;
-import org.aspectj.weaver.ast.Test;
 import org.mapstruct.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
@@ -34,6 +33,7 @@ public interface RestStepMapper {
 
     @Mapping(target = "ifConditionExpectedResults", expression = "java(getIfConditionExpectedResults(map.getIfConditionExpectedResults()))")
     @Mapping(target = "testDataFunctionId", expression = "java(getTestDataFunctionId(map.getTestDataFunction()))")
+    @Mapping(target = "testDataFunctionArgs", expression = "java(getTestDataFunctionArgs(map.getTestDataFunction()))")
     TestStep mapDataMapToStep(TestStepCloudDataMap map);
 
     TestStep mapForLoopToStep(TestStepCloudForLoop loop);
@@ -82,9 +82,16 @@ public interface RestStepMapper {
         return null;
     }
 
-    default Long getTestDataFunctionId(DefaultDataGenerator generator){
+    default Long getTestDataFunctionId(CloudTestDataFunction generator){
         if (generator !=null){
             return generator.getId();
+        }
+        return null;
+    }
+
+    default Map<String, String> getTestDataFunctionArgs(CloudTestDataFunction generator){
+        if (generator !=null){
+            return generator.getTestDataFunctionArgs();
         }
         return null;
     }

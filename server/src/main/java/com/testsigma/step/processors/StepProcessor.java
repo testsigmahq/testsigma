@@ -115,6 +115,7 @@ public class StepProcessor {
     exeTestStepEntity.setParentId(testStepDTO.getParentId());
     exeTestStepEntity.setIndex(testStepDTO.getIndex());
     exeTestStepEntity.setTestDataIndex(testCaseEntityDTO.getTestDataIndex());
+    exeTestStepEntity.setTestDataProfileName(testCaseEntityDTO.getTestDataProfileName());
     populateStepDetails(testStepDTO, exeTestStepEntity);
     //attachTestDataProfileStepId(testCaseStepEntityDTOS);
 

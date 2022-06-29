@@ -1033,6 +1033,28 @@ public class AgentExecutionService {
       databank = testData.getData();
       profileName = testData.getTestDataName();
     }
+    if (!testCaseEntityDTO.getIsDataDriven()) {
+      if (!databank.isEmpty()) {
+        log.info("Test case is not data driven. but has associated test data id");
+        int currentIndex = testCaseEntityDTO.getTestDataIndex();
+        dataSet = databank.get(currentIndex);
+        testCaseEntityDTO.setTestDataSetName(dataSet.getName());
+        testCaseEntityDTO.setTestDataIndex(currentIndex);
+      }
+    } else {
+      log.info("Test case is data driven...Matching data set with - " + testDataSetName);
+      for (int i = 0; i < databank.size(); i++) {
+        TestDataSet data = databank.get(i);
+        if (data.getName().equals(testDataSetName)) {
+          dataSet = data;
+          testCaseEntityDTO.setTestDataIndex(i);
+          break;
+        }
+      }
+
+      testCaseEntityDTO.setTestDataSetName(dataSet.getName());
+      testCaseEntityDTO.setExpectedToFail(dataSet.getExpectedToFail());
+    }
 
     List<Long> testCaseIds = new ArrayList<>();
     testCaseIds.add(testCaseEntityDTO.getId());
@@ -1102,7 +1124,7 @@ public class AgentExecutionService {
     Map<Long, Integer> dataIndex = testCaseEntityDTO.getStepGroupParentForLoopStepIdIndexes();
     if(!testCaseEntityDTO.getIsStepGroup()){
       dataIndex.put(ParameterTestDataProcessor.OVERRIDE_STEP_GROUP_STEP_WITH_TEST_CASE_PROFILE_ID,
-              testCaseEntityDTO.getTestDataIndex());
+              testCaseEntityDTO.getTestDataIndex() == null ? 0 : testCaseEntityDTO.getTestDataIndex());
     }
     return dataIndex;
   }

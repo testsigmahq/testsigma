@@ -92,9 +92,10 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         List<TestStep> testSteps = repository.findAllByTestCaseIdInAndAddonActionIdIsNotNull(testCaseIds);
         for (TestStep step : testSteps) {
             Map<String, AddonElementData> addonElementData = step.getAddonElements();
-
-            for (AddonElementData elementData : addonElementData.values()) {
-                elementsNames.add(elementData.getName());
+            if (step.getAddonElements() != null) {
+                for (AddonElementData elementData : addonElementData.values()) {
+                    elementsNames.add(elementData.getName());
+                }
             }
         }
         return elementsNames;
@@ -361,6 +362,10 @@ public class TestStepService extends XMLExportImportService<TestStep> {
                 if (step.getTestDataProfileStepId() != null) {
                     Optional<TestData> testData = testDataService.getRecentImportedEntity(importDTO, step.getTestDataProfileStepId());
                     testData.ifPresent(data -> step.setTestDataProfileStepId(data.getId()));
+                }
+                if (step.getType() == TestStepType.FOR_LOOP) {
+                    Optional<TestData> testData = testDataService.getRecentImportedEntity(importDTO, step.getForLoopTestDataId());
+                    testData.ifPresent(data -> step.setForLoopTestDataId(data.getId()));
                 }
             }
             return steps;

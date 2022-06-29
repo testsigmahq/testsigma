@@ -63,10 +63,10 @@ export class ActionTestDataParameterSuggestionComponent  extends BaseComponent i
     }
     if (this.mobileDataProfileDetails) {
       this.option = this.mobileDataProfileDetails;
+      this.versionId = this.option.versionId;
+      this.testCaseId = this.option.testCaseId;
       this.testDataProfileDetails = this.mobileDataProfileDetails;
     }
-    console.log(this.mobileDataProfileDetails);
-    console.log("Mobile Profile details");
     this.fetchDataParameter();
     this.attachDebounceEvent();
   }

@@ -1,0 +1,3 @@
+INSERT INTO `natural_text_actions` (`id`, `workspace_type`, `natural_text`, `data`, `display_name`, `snippet_class`, `action`, `import_to_web`, `import_to_mobile_web`, `import_to_android_native`, `import_to_ios_native`, `created_date`, `updated_date`, `allowed_values`, `condition_type`)
+VALUES
+	(30089, 'IOSNative', 'Tap on the back button', '{}', 'navigateBack', 'com.testsigma.automator.actions.mobile.ios.generic.NavigateBackAction', 'navigateBack', 0, 0, 20090, 30089, '2021-10-19 19:37:03', '2021-10-19 19:37:03', NULL, NULL);

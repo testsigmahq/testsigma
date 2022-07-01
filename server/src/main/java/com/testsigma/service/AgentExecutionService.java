@@ -278,11 +278,11 @@ public class AgentExecutionService {
                                                  TestDeviceResult testDeviceResult,
                                                  TestSuiteResult testSuiteResult,
                                                  TestCaseResult parentTestCaseResult) throws TestsigmaException {
-    log.info("Creating DatadrivenTestcaseResult for testcase:" + testCase.getName());
+    log.info("Creating Data driven TestcaseResult for testcase:" + testCase.getName());
     TestData testData = testCase.getTestData();
     List<TestDataSet> testDataSets = testData.getData();
-    int start = testCase.getTestDataStartIndex() != null ? testCase.getTestDataStartIndex() : 0;
-    int end = testCase.getTestDataEndIndex() != null ? testCase.getTestDataEndIndex() : testDataSets.size() - 1;
+    int start = testCase.getTestDataStartIndex() != null && testCase.getTestDataStartIndex() != -1 ? testCase.getTestDataStartIndex() : 0;
+    int end = testCase.getTestDataEndIndex() != null && testCase.getTestDataStartIndex() != -1  ? testCase.getTestDataEndIndex() : testDataSets.size() - 1;
     for (int i = start; i <= end && i < testDataSets.size(); i++) {
       testCase.setIsDataDriven(false);
       TestDataSet testDataSet = testDataSets.get(i);
@@ -1036,7 +1036,7 @@ public class AgentExecutionService {
     if (!testCaseEntityDTO.getIsDataDriven()) {
       if (!databank.isEmpty()) {
         log.info("Test case is not data driven. but has associated test data id");
-        int currentIndex = testCaseEntityDTO.getTestDataIndex();
+        int currentIndex = testCaseEntityDTO.getTestDataStartIndex();
         dataSet = databank.get(currentIndex);
         testCaseEntityDTO.setTestDataSetName(dataSet.getName());
         testCaseEntityDTO.setTestDataIndex(currentIndex);
@@ -1150,12 +1150,13 @@ public class AgentExecutionService {
       Long parentId = testCaseStepEntity.getParentId();
       if(parentId == null)
         parentId = 0L;
+      int rand =0;
       if (parentGroupEntity != null && !isStepInsideForLoop(testCaseStepEntity)) {
         index = (parentGroupEntity.getIndex() == null) ? 0 : parentGroupEntity.getIndex();
+        rand = new Random().ints(1, 100).findFirst().getAsInt();
       } else {
         index = (testCaseStepEntity.getIndex() == null) ? 0 : testCaseStepEntity.getIndex();
       }
-      int rand = new Random().ints(1, 100).findFirst().getAsInt();
       String screenShotPath = String.format("/executions/%s/%s_%s_%s_%s_%s_%s.%s", testCaseEntity.getTestCaseResultId(),
         testCaseStepEntity.getId(), stepGroupStepID, parentId, testCaseStepEntity.getPosition(), index, rand ,"jpeg");
 

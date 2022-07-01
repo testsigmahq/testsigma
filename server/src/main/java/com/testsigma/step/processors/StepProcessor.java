@@ -300,7 +300,7 @@ public class StepProcessor {
       TestStep parentStep = step.getParentId() != null ? testStepService.find(step.getParentId()) : null;
       if (Objects.equals(step.getTestDataProfileStepId(), this.testCaseEntityDTO.getTestDataId())) {
         TestData testData = testDataProfileService.find(step.getTestDataProfileStepId());
-        return testData.getData().get(this.testCaseEntityDTO.getTestDataStartIndex());
+        return testData.getData().get(this.testCaseEntityDTO.getTestDataIndex());
       } else if (parentStep != null) {
         TestData testData = testDataProfileService.find(parentStep.getForLoopTestDataId());
         return testData.getData().get(dataSetIndex.get(parentStep.getId()));

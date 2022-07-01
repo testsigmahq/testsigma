@@ -317,6 +317,10 @@ public class TestStepService extends XMLExportImportService<TestStep> {
                         addonNaturalTextActionService.findById(step.getAddonActionId());
                     }
                     if (step.getNaturalTextActionId() != null && step.getNaturalTextActionId() > 0) {
+                        if (step.getNaturalTextActionId()==574){   //// TODO: need to changes on Cloud side [Siva Nagaraju]
+                            step.setNaturalTextActionId(1038);
+                            continue;
+                        }
                         message = "Deprecated Action!";
                         try {
                         naturalTextActionsService.findById(Long.valueOf(step.getNaturalTextActionId()));

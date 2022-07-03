@@ -30,9 +30,9 @@ public class RestStepProcessor extends StepProcessor {
                            WorkspaceType workspaceType, Map<String, Element> elementMap,
                            TestStepDTO testStepDTO, Long testPlanId, TestDataSet testDataSet,
                            Map<String, String> environmentParams, TestCaseEntityDTO testCaseEntityDTO,
-                           String environmentParamSetName, String dataProfile) {
+                           String environmentParamSetName, String dataProfile, Map<Long, Integer> dataSetIndex) {
     super(webApplicationContext, testCaseStepEntityDTOS, workspaceType, elementMap, testStepDTO, testPlanId, testDataSet,
-      environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile);
+      environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile, dataSetIndex);
   }
 
   public void process() throws TestsigmaException {

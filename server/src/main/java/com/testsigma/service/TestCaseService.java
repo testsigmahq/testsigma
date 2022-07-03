@@ -315,6 +315,9 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
         TestStep prerequiste = parentStepIds.get(parentStep != null ? parent.getPreRequisiteStepId() : null);
         step.setPreRequisiteStepId(prerequiste != null ? prerequiste.getId() : null);
         step.setId(null);
+        TestStep testDataProfileStep = parentStepIds.get(parentStep != null ? step.getTestDataProfileStepId() : null);
+        if(testDataProfileStep != null)
+          step.setTestDataProfileStepId(testDataProfileStep.getId());
         step.setParentStep(parentStep);
         step = this.testStepService.create(step);
         parentStepIds.put(parent.getId(), step);

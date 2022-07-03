@@ -87,9 +87,12 @@ public class ElementScreenService extends XMLExportImportService<ElementScreenNa
 
   public void importXML(BackupDTO importDTO) throws IOException, ResourceNotFoundException {
     if (!importDTO.getIsElementScreenNameEnabled()) return;
-    log.debug("import process for ui-identifier screen name initiated");
-    importFiles("ui_identifier_screen_names", importDTO);
-    log.debug("import process for ui-identifier  screen name completed");
+    log.debug("import process for elements screen name initiated");
+    if (importDTO.getIsCloudImport())
+      importFiles("ui_identifier_screen_names", importDTO);
+    else
+      importFiles("element_screen_names", importDTO);
+    log.debug("import process for element screen name completed");
   }
 
   @Override

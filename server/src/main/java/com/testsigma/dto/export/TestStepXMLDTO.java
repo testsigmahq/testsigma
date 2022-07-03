@@ -10,10 +10,11 @@ package com.testsigma.dto.export;
 import com.fasterxml.jackson.annotation.*;
 import com.testsigma.annotation.JsonListRootName;
 import com.testsigma.model.*;
-import com.testsigma.service.ObjectMapperService;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Data
@@ -95,13 +96,22 @@ public class TestStepXMLDTO extends BaseXMLDTO {
   private String toElement;
   @JsonProperty("attribute")
   private String attribute;
-  @JsonProperty("for_loop")
-  private TestStepForLoop forLoop;
-  @JsonProperty("while_loop")
-  private TestStepWhileLoop whileLoop;
-  @JsonProperty("whileCondition")
-  private String whileCondition;
-  @JsonProperty("addon_test_data_function")
+  @JsonProperty("for-loop-start-index")
+  private Integer forLoopStartIndex;
+  @JsonProperty("for-loop-end-index")
+  private Integer forLoopEndIndex;
+  @JsonProperty("for-loop-test-data-id")
+  private Long forLoopTestDataId;
+  @JsonProperty("test-data-function-id")
+  private Long testDataFunctionId;
+  @JsonProperty("addon-test-data-function")
   private AddonTestStepTestData addonTDF;
-
+  @JsonProperty("test-data-profile-step-id")
+  private Long testDataProfileStepId;
+  @JsonProperty("addon-test-data")
+  private Map<String, AddonTestStepTestData> addonTestData;
+  @JsonProperty("addon-elements")
+  private Map<String, AddonElementData> addonElements = new HashMap<>();
+  @JsonProperty("test_data_function_args")
+  private Map<String, String> testDataFunctionArgs;
 }

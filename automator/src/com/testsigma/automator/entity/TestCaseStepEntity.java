@@ -59,6 +59,7 @@ public class TestCaseStepEntity implements Cloneable {
   //Used only on automator side
   private Screenshot screenshot;
   private int noOfRetriesOnStepFailure = 1;
+  private String failureMessage;
 
   public TestCaseStepEntity clone() throws CloneNotSupportedException {
     TestCaseStepEntity exeStepEntity = (TestCaseStepEntity) super.clone();

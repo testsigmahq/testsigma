@@ -16,19 +16,19 @@ public class StoreTestDataProxyNlpSnippet extends ElementAction {
     String status = getTestData();
     switch (status) {
       case NaturalTextActionConstants.TEST_DATA_NAME:
-        StoreCurrentTestDataProfileNameNlpSnippet presence = (StoreCurrentTestDataProfileNameNlpSnippet) this.initializeChildSnippet(StoreCurrentTestDataProfileNameNlpSnippet.class);
-        presence.execute();
-        this.setSuccessMessage(presence.getSuccessMessage());
+        StoreCurrentTestDataProfileNameNlpSnippet profile = (StoreCurrentTestDataProfileNameNlpSnippet) this.initializeChildSnippet(StoreCurrentTestDataProfileNameNlpSnippet.class);
+        profile.execute();
+        this.setSuccessMessage(profile.getSuccessMessage());
         break;
       case NaturalTextActionConstants.SET_INDEX:
-        StoreCurrentTestDatasetIndexNlpSnippet absence = (StoreCurrentTestDatasetIndexNlpSnippet) this.initializeChildSnippet(StoreCurrentTestDatasetIndexNlpSnippet.class);
-        absence.execute();
-        this.setSuccessMessage(absence.getSuccessMessage());
+        StoreCurrentTestDatasetIndexNlpSnippet index = (StoreCurrentTestDatasetIndexNlpSnippet) this.initializeChildSnippet(StoreCurrentTestDatasetIndexNlpSnippet.class);
+        index.execute();
+        this.setSuccessMessage(index.getSuccessMessage());
         break;
       case NaturalTextActionConstants.SET_NAME:
-        StoreCurrentTestDataSetNameNlpSnippet notDisplayed = (StoreCurrentTestDataSetNameNlpSnippet) this.initializeChildSnippet(StoreCurrentTestDataSetNameNlpSnippet.class);
-        notDisplayed.execute();
-        this.setSuccessMessage(notDisplayed.getSuccessMessage());
+        StoreCurrentTestDataSetNameNlpSnippet setName = (StoreCurrentTestDataSetNameNlpSnippet) this.initializeChildSnippet(StoreCurrentTestDataSetNameNlpSnippet.class);
+        setName.execute();
+        this.setSuccessMessage(setName.getSuccessMessage());
         break;
       default:
         setErrorMessage(FAILURE_MESSAGE);

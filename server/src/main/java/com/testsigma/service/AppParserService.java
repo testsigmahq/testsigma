@@ -42,8 +42,10 @@ public class AppParserService {
           e.printStackTrace();
         }
       }
-      return new UploadVersionAppInfo(null, null,
-        rootDict.objectForKey(BUNDLE_VERSION).toString(), rootDict.objectForKey(BUNDLE_IDENTIFIER).toString());
+      if (rootDict!=null) {
+        return new UploadVersionAppInfo(null, null,
+                rootDict.objectForKey(BUNDLE_VERSION).toString(), rootDict.objectForKey(BUNDLE_IDENTIFIER).toString());
+      }
     }else if(checkIsItApkFile(file)){
       return parseApkFile(file);
     }

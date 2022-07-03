@@ -152,7 +152,7 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
     })
     super.ngOnInit();
     this.route.params.subscribe((params: Params) => {
-      this.fetchTestCase(this.route.snapshot.queryParamMap['params'].testCaseId);
+      this.fetchTestCase(this.route?.snapshot?.queryParamMap?.['params']?.testCaseId ? this.route?.snapshot?.queryParamMap?.['params']?.testCaseId : this.data?.testCaseId);
     });
     super.mobileRecorderComponentInstance = this;
   }

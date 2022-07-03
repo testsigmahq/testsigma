@@ -1,0 +1,3 @@
+INSERT INTO `natural_text_actions` (`id`, `workspace_type`, `natural_text`, `data`, `display_name`, `snippet_class`, `action`, `import_to_web`, `import_to_mobile_web`, `import_to_android_native`, `import_to_ios_native`, `created_date`, `updated_date`, `allowed_values`, `condition_type`)
+VALUES
+	(1055, 'WebApplication', 'Verify that the #{element} button is clickable', '{\"test-data\":null,\"element\":\"\\\\\\\\#{.*?}\",\"attribute\":null,\"from-element\":null,\"to-element\":null}', 'verifyClickable', 'com.testsigma.automator.actions.web.ifconditional.ElementButtonClickableAction', 'verify', 1055, 0, 0, 0, '2021-10-19 19:37:03', '2021-10-19 19:37:03', NULL, NULL);

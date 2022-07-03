@@ -92,9 +92,10 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         List<TestStep> testSteps = repository.findAllByTestCaseIdInAndAddonActionIdIsNotNull(testCaseIds);
         for (TestStep step : testSteps) {
             Map<String, AddonElementData> addonElementData = step.getAddonElements();
-
-            for (AddonElementData elementData : addonElementData.values()) {
-                elementsNames.add(elementData.getName());
+            if (step.getAddonElements() != null) {
+                for (AddonElementData elementData : addonElementData.values()) {
+                    elementsNames.add(elementData.getName());
+                }
             }
         }
         return elementsNames;
@@ -216,6 +217,7 @@ public class TestStepService extends XMLExportImportService<TestStep> {
 
     private void updateChildLoops(Long parentId, String parameter, String newParameterName) {
         this.repository.updateChildStepsTestDataParameter(newParameterName, parameter, parentId);
+        this.repository.updateChildStepsTestDataParameterUsingTestDataProfileId(newParameterName, parameter, parentId);
         List<TestStep> conditionalSteps = this.repository.getChildConditionalStepsExceptLoop(parentId);
         for (TestStep step : conditionalSteps) {
             updateChildLoops(step.getId(), parameter, newParameterName);
@@ -315,6 +317,10 @@ public class TestStepService extends XMLExportImportService<TestStep> {
                         addonNaturalTextActionService.findById(step.getAddonActionId());
                     }
                     if (step.getNaturalTextActionId() != null && step.getNaturalTextActionId() > 0) {
+                        if (step.getNaturalTextActionId()==574){   //// TODO: need to changes on Cloud side [Siva Nagaraju]
+                            step.setNaturalTextActionId(1038);
+                            continue;
+                        }
                         message = "Deprecated Action!";
                         try {
                         naturalTextActionsService.findById(Long.valueOf(step.getNaturalTextActionId()));
@@ -330,8 +336,8 @@ public class TestStepService extends XMLExportImportService<TestStep> {
                             }
                         }
                     }
-                    if (Objects.equals(step.getTestDataType(), TestDataType.function.getDispName()) && step.getType() != TestStepType.CUSTOM_FUNCTION ) {
-                        message = "Deprecated Custom Function / Custom Function not found!";
+                    if (Objects.equals(step.getTestDataType(), TestDataType.function.getDispName()) && step.getType() != TestStepType.CUSTOM_FUNCTION) {
+                        message = "Deprecated Data Generator / Data Generator not found!";
                         defaultDataGeneratorService.find(step.getTestDataFunctionId());
                     }
                 } catch (Exception e) {
@@ -343,7 +349,7 @@ public class TestStepService extends XMLExportImportService<TestStep> {
                 }
                 if (step.getType() == TestStepType.CUSTOM_FUNCTION) {
                     step.setDisabled(true);
-                    stepsMap.put(step,"Custom Functions not supported in OS");
+                    stepsMap.put(step, "Custom Functions not supported in OS");
                     log.info("disabling Custom function test step to avoid further issues, since CSFs are deprecated");
                 }
                 if (step.getType() == TestStepType.FOR_LOOP) {
@@ -354,8 +360,19 @@ public class TestStepService extends XMLExportImportService<TestStep> {
             }
             return steps;
         } else {
-            return mapper.mapTestStepsList(xmlMapper.readValue(xmlData, new TypeReference<List<TestStepXMLDTO>>() {
+            List<TestStep> steps = mapper.mapTestStepsList(xmlMapper.readValue(xmlData, new TypeReference<List<TestStepXMLDTO>>() {
             }));
+            for (TestStep step : steps) {
+                if (step.getTestDataProfileStepId() != null) {
+                    Optional<TestData> testData = testDataService.getRecentImportedEntity(importDTO, step.getTestDataProfileStepId());
+                    testData.ifPresent(data -> step.setTestDataProfileStepId(data.getId()));
+                }
+                if (step.getType() == TestStepType.FOR_LOOP) {
+                    Optional<TestData> testData = testDataService.getRecentImportedEntity(importDTO, step.getForLoopTestDataId());
+                    testData.ifPresent(data -> step.setForLoopTestDataId(data.getId()));
+                }
+            }
+            return steps;
         }
     }
 

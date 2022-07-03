@@ -986,12 +986,14 @@
   "testcase.summary.type": "Test Case Type",
   "testcase.summary.data_profile": "Data Profile",
   "testcase.summary.title": "Test Case Details",
+  "testcase.details.step_group.edit_step.warning": "Any edits made to the step group will reflect in all test cases that use this step group",
   "test_step.for_loop.profile.none": "No Test Data Profiles available.",
   "test_step.for_loop.profile.none_mgs": "to create now.",
   "test_step.for_loop.profile_title": "Test Data Profile:",
   "test_step.for_loop.start": "Loop Start",
   "test_step.for_loop.end": "Loop End",
   "test_step.for_loop.option_end": "End",
+  "test_step.for_loop.option_start": "Start",
   "test_step.re_usable.none": "Step Groups not created yet/not in Ready state.",
   "test_step.re_usable.none_msg": "to check the status if already created.",
   "test_step.re_usable_none.msg": "to create one. or",
@@ -2013,5 +2015,6 @@
   "addon.details.title": "Testsigma Addon",
   "addon.show_details": "Show Details",
   "chrome.install": "Install Testsigma Chrome Extension",
+  "action.test_data_profile.step_no": "Step no",
   "first_chrome_install.description": "Testsigma Chrome Extension will help you capture the “element” details automatically. Elements can be anything on a web page that you are trying to automate (or interact with) like buttons, text boxes, links, divs, texts, etc."
 }

@@ -70,13 +70,11 @@ export class TestStepForLoopFormComponent extends BaseComponent implements OnIni
     this.testDataService.findAll("versionId:" + this.version.id + this.searchQuery).subscribe(res => {
       this.testDataList = res;
       if (this.testDataList && this.testDataList.content && this.testDataList.content.length && setFirst) {
-        this.currentTestDataList = this.testDataList?.content[0];
         let dataset = this.testDataList.content[0];
-        let startIndex:number=0;
+        let startIndex:number=-1;
         let endIndex:number=-1;
         if(this.testStep?.id) {
           dataset = this.testDataList.content.find(data => data.id == this.testStep.forLoopTestDataId)
-          this.currentTestDataList = dataset;
           if(!dataset){
             this.fetchTDPById(dataset, startIndex, endIndex)
           } else {
@@ -120,18 +118,25 @@ export class TestStepForLoopFormComponent extends BaseComponent implements OnIni
 
   toggleDataProfile(testData: TestData) {
     this.testStep.testData = testData;
-    this.currentTestDataList = testData;
-    this.setStartValue(testData);
+    this.setStartValue(testData, -1, -1);
   }
 
   toggleStartIndex(endIndex?) {
     let startIndex = this.loopForm.get('startIndex').value || 1;
     let startArray = [...this.startArray]
-    this.endArray = startArray.splice(startIndex - 1, startArray.length);
-    this.testStep.forLoopEndIndex = endIndex? endIndex : this.endArray[this.endArray.length - 1];
-    this.loopForm.patchValue({
-      endIndex: endIndex? endIndex : this.endArray[this.endArray.length - 1]
-    })
+    if(startIndex == -1)
+      this.endArray = startArray;
+    else
+      this.endArray = startArray.splice(startIndex - 1, startArray.length);
+    this.testStep.forLoopEndIndex = endIndex? endIndex : -1;
+    if(endIndex){
+      this.addFormControls();
+    }
+    else{
+      this.loopForm.patchValue({
+        endIndex: endIndex? endIndex : -1
+      })
+    }
   }
 
   setStartValue(testData: TestData, startIndex?, endIndex?) {
@@ -204,6 +209,10 @@ export class TestStepForLoopFormComponent extends BaseComponent implements OnIni
     this.testStep.testData = this.testDataList.content.find(data => data.id == this.oldData.testDataId);
     this.setStartValue(this.testStep.testData, this.oldData.startIndex, this.oldData.endIndex);
     this.onCancel.emit();
+  }
+
+  isNotNumber(index: any) {
+    return isNaN(parseInt(index));
   }
 
 }

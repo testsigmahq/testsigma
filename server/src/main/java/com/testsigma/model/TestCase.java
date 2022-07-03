@@ -156,6 +156,22 @@ public class TestCase {
   @Transient
   private List<String> tagNames;
 
+  @Transient
+  private Integer testDataStart;
+
+  public Integer getTestDataStart(){
+    return testDataStart != null && testDataStart > -1 ? testDataStart :
+            this.getTestDataStartIndex() != null &&  this.getTestDataStartIndex() > -1 ? this.getTestDataStartIndex(): 0;
+  }
+
+  @Transient
+  private Integer testDataEnd;
+
+  public Integer getTestDataEnd(Integer testDataSize){
+    return testDataEnd!= null && testDataEnd >-1 ? testDataEnd : this.getTestDataEndIndex() != null &&  this.getTestDataEndIndex() > -1 ? this.getTestDataEndIndex()
+            : testDataSize-1;
+  }
+
   public Boolean getIsDataDriven() {
     return isDataDriven != null && isDataDriven;
   }

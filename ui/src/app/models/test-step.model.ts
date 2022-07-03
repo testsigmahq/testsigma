@@ -90,6 +90,8 @@ export class TestStep extends Base implements PageObject {
   public exceptedResult: String;
   @serializable(optional(object(RestStepEntity)))
   public restStep: RestStepEntity;
+  @serializable
+  public testDataProfileStepId: Number;
 
   @serializable(custom(v => {
     if (!v)
@@ -463,6 +465,37 @@ export class TestStep extends Base implements PageObject {
     }
   }
 
+  getAllParentLoopTDPIds( testStep,testCase,testSteps,tdpDatas:any[]=[],isImmediateLoop:boolean=true ){
+    if( testStep.parentStep || ( testStep.parentId && testSteps ) ){
+      this.setStepDisplayNumber(testSteps.content);
+      const parentStep = testStep.parentStep || testSteps.content.find((_testStep)=> _testStep.id===testStep.parentId );
+      if( parentStep.isForLoop ){
+        tdpDatas.push({ tdpId : parentStep.forLoopTestDataId , stepDisplayNumber : `${parentStep.stepDisplayNumber}`, startIndex : parentStep?.forLoopStartIndex , endIndex : parentStep?.forLoopEndIndex , id:isImmediateLoop?null:parentStep.id , })
+        isImmediateLoop=false;
+      };
+      return this.getAllParentLoopTDPIds(parentStep,testCase,testSteps,tdpDatas,isImmediateLoop);
+    }else {
+      if(testCase?.testDataId){
+        tdpDatas.push({ tdpId : testCase?.testDataId , id: !isImmediateLoop ? -1 : null });
+      }
+      return tdpDatas;
+    };
+  }
+
+  getAllParentLoopDataIds(testStep,datas:any[]=[]){
+    if(testStep.parentStep){
+      if(testStep.parentStep.isForLoop){
+        if( !datas.some((data)=> data.testDataId === testStep.parentStep.forLoopTestDataId ) ){
+          datas.push({ testDataId : testStep.parentStep.forLoopTestDataId , stepDisplayNumber : `${testStep.parentStep.stepDisplayNumber}`, startIndex : testStep?.parentStep?.forLoopStartIndex , endIndex : testStep?.parentStep?.forLoopEndIndex , id:testStep.parentStep.id });
+        }
+      }
+      return this.getAllParentLoopDataIds(testStep.parentStep,datas);
+    }else{
+      return datas;
+    }
+  }
+
+
   getParentLoopId(testStep) {
     if (testStep.parentStep) {
       if (testStep.parentStep.isConditionalWhileLoop || testStep.parentStep.isForLoop) {
@@ -491,26 +524,25 @@ export class TestStep extends Base implements PageObject {
     }
   }
 
-  setStepDisplayNumber(testSteps: TestStep[]) {
-    console.log(testSteps);
-    let nestedIndex = 0;
-    testSteps.forEach((step: TestStep, index) => {
-      step.stepDisplayNumber = (index + 1);
-      if (step.parentId) {
+  setStepDisplayNumber(testSteps: TestStep[], stepPrefix?:number) {
+    let nestedIndex=0;
+    testSteps.forEach((step:TestStep, index) => {
+      step.stepDisplayNumber = (index+1);
+      if(step.parentId) {
         step.parentStep = testSteps.find(res => step.parentId == res.id);
       }
-      if ((step.isConditionalElseIf || step.isConditionalElse || step.isConditionalIf || step.isForLoop || step.isWhileLoop || step.isConditionalWhileLoop)) {
+      if((step.isConditionalElseIf || step.isConditionalElse || step.isConditionalIf || step.isForLoop || step.isWhileLoop || step.isConditionalWhileLoop)) {
         step.childIndex = 0;
       }
       let _parentStep = this.getConditionalParentStep(step);
-      if (step.parentStep && (!(step.isConditionalElseIf || step.isConditionalElse) || _parentStep)) {
-        if (_parentStep && (step.isConditionalElseIf || step.isConditionalElse)) {
-          _parentStep.childIndex = _parentStep.childIndex + 1;
+      if(step.parentStep && (!(step.isConditionalElseIf || step.isConditionalElse) || _parentStep)){
+        if(_parentStep && (step.isConditionalElseIf || step.isConditionalElse)) {
+          _parentStep.childIndex = _parentStep.childIndex +1;
         } else {
-          step.parentStep.childIndex = step.parentStep.childIndex + 1;
+          step.parentStep.childIndex = step.parentStep.childIndex +1;
         }
       }
-      if (step.parentStep && !(step.isConditionalElseIf || step.isConditionalElse)) {
+      if(step.parentStep && !(step.isConditionalElseIf || step.isConditionalElse)) {
 
         if(step.isConditionalWhileLoop) {
           step.stepDisplayNumber = step.parentStep?.stepDisplayNumber;
@@ -518,15 +550,18 @@ export class TestStep extends Base implements PageObject {
           step.stepDisplayNumber = step.parentStep?.stepDisplayNumber + "." + step.parentStep.childIndex;
         }
         ++nestedIndex;
-      } else if (step.isConditionalElseIf || step.isConditionalElse) {
+      } else if(step.isConditionalElseIf || step.isConditionalElse) {
         step.stepDisplayNumber = step.incrementParentStepDisplayNumberLastDigit();
-        if (step?.parentStep && this.getConditionalParentStep(step))
+        if(step?.parentStep && this.getConditionalParentStep(step))
           ++nestedIndex;
       } else {
-        step.stepDisplayNumber = (index + 1 - nestedIndex);
+        const tempStepNum = ( index + 1 - nestedIndex );
+        step.stepDisplayNumber = stepPrefix ? ( stepPrefix + "." + tempStepNum ) : tempStepNum ;
+        //step.stepDisplayNumber = (index+1-nestedIndex);
+
         // if(!step.parentStep && (step.isConditionalWhileLoop || step.isConditionalIf || step.isForLoop))
         //   ++nestedIndex;
-        }
+      }
     })
   }
 

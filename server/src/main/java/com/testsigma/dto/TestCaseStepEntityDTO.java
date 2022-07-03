@@ -66,6 +66,7 @@ public class TestCaseStepEntityDTO implements Cloneable {
   private Boolean visualEnabled = false;
   private List<TestCaseStepEntityDTO> testCaseSteps = new ArrayList<>();
   private Map<String, String> additionalScreenshotPaths = new HashMap<>();
+  private String failureMessage;
 
   public TestCaseStepEntityDTO clone() throws CloneNotSupportedException {
     TestCaseStepEntityDTO entity = (TestCaseStepEntityDTO) super.clone();

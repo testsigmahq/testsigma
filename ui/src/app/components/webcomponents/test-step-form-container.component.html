@@ -72,7 +72,7 @@
         </li>
         <li
           [class.active]="isForLoop"
-          *ngIf="!isWhileParentORCondition && !testStep?.isConditionalIf && !isParentForLoop"
+          *ngIf="!isWhileParentORCondition && !testStep?.isConditionalIf"
           (click)="changeStepType(testStepType.FOR_LOOP)"
           class="step-type">
           <i class="fa-power-loop step-icon"></i>

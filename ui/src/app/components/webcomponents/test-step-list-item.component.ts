@@ -108,6 +108,7 @@ export abstract class TestStepListItemComponent extends BaseComponent implements
     step.isStepsExpanded = true;
     //this.activeStepGroupAction.emit(step);
     this.testStepService.findAll("testCaseId:" + step.stepGroupId, 'position').subscribe(steps => {
+      steps.content[0].setStepDisplayNumber(steps.content, step.stepDisplayNumber);
       this.assignTemplateForSteps(steps, step)
       step.stepGroupSteps = steps;
       this.postStepFetchProcessing(steps);

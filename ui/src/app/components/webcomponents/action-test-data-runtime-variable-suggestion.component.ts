@@ -206,11 +206,11 @@ export class ActionTestDataRuntimeVariableSuggestionComponent implements OnInit 
       this.filteredSuggestion = [];
       if(this.testSteps?.length){
         this.testSteps.forEach(suggestion => {
-          /*Object.keys(suggestion.dataMap.testData).forEach(item => {
-            if(suggestion.dataMap.testData[item].value.includes(searchText)){
+          Object.keys(suggestion.testDataVal).forEach(item => {
+            if(suggestion.testDataVal.includes(searchText)){
               this.filteredSuggestion.push(suggestion);
             }
-          })*/
+          })
         })
         this.filteredSuggestion = [...new Set(this.filteredSuggestion)];
       }

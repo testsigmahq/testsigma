@@ -85,13 +85,12 @@
             class="ts-col-100 d-flex-wrap"
             *ngIf="item?.runTimeDataList?.length">
             <div
-              class="list-view lg-pm green-highlight ts-col-100"
-              *ngFor="let dataValue of item.runTimeDataList || []">
+              class="list-view lg-pm green-highlight ts-col-100">
               <div
                 class="ts-col-30 d-flex pointer"
-                (click)="selectSuggestion(item, dataValue?.value)"
+                (click)="selectSuggestion(item, item.attribute)"
                 [matTooltip]="'suggestion.runtime_vars.click_here.tooltip' | translate">
-                {{ dataValue?.value }}
+                {{item.attribute}}
               </div>
 
               <div class="text-dark ts-col-55 pl-5 loader-section mb-0">

@@ -262,6 +262,7 @@ import {SaveWorkWarningComponent} from "./agents/components/webcomponents/save-w
 import {AppSourceContainerComponent} from "./agents/components/webcomponents/app-source-container.component";
 import {MobileStepRecorderComponent} from "./agents/components/webcomponents/mobile-step-recorder.component";
 import {MobileInspectionComponent} from "./agents/components/webcomponents/mobile-inspection.component";
+import {ActionTestDataRuntimeVariableSuggestionComponent} from './components/webcomponents/action-test-data-runtime-variable-suggestion.component';
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -503,7 +504,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     TestSuitePrerequisiteChangeComponent,
     TestCasePrerequisiteChangeComponent,
     ImportFormComponent,
-    ImportGuideLinesWarningComponent
+    ImportGuideLinesWarningComponent,
+    ActionTestDataRuntimeVariableSuggestionComponent
   ],
   imports: [
     BrowserModule,

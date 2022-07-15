@@ -2016,5 +2016,12 @@
   "addon.show_details": "Show Details",
   "chrome.install": "Install Testsigma Chrome Extension",
   "action.test_data_profile.step_no": "Step no",
-  "first_chrome_install.description": "Testsigma Chrome Extension will help you capture the “element” details automatically. Elements can be anything on a web page that you are trying to automate (or interact with) like buttons, text boxes, links, divs, texts, etc."
+  "first_chrome_install.description": "Testsigma Chrome Extension will help you capture the “element” details automatically. Elements can be anything on a web page that you are trying to automate (or interact with) like buttons, text boxes, links, divs, texts, etc.",
+  "suggestion.runtime_vars.note": "We will use last stored value for the selected runtime variable.",
+  "suggestion.runtime_vars.var_name": "Runtime variable name",
+  "suggestion.runtime_vars.testcase": "Testcase",
+  "suggestion.runtime_vars.step": "Step",
+  "suggestion.runtime_vars.name": "Runtime Variables",
+  "suggestion.runtime_vars.empty": "You currently have no runtime variables.",
+  "suggestion.runtime_vars.click_here.tooltip": "Click here to select the runtime variable"
 }

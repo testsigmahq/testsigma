@@ -56,6 +56,11 @@
             [isFullScreenMode]="fullScreenMode"
             [moreDetails]="suggestionContentData"
           ></app-test-step-more-action-form>
+          <app-action-test-data-runtime-variable-suggestion
+            *ngIf="isRuntimeVariable"
+            [isFullScreenMode]="fullScreenMode"
+            [testDataRuntimeVariable]="suggestionContentData"
+          ></app-action-test-data-runtime-variable-suggestion>
         </div>
         <div *ngIf="!mirroring && fullScreenMode"
              class="inspection-details-section w-100">

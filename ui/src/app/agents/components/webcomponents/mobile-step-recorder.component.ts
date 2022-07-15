@@ -560,4 +560,8 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
     return this.suggestionName === this.mobileRecorderEventService.suggestionElement;
   }
 
+  get isRuntimeVariable() {
+    return this.suggestionName === this.mobileRecorderEventService.suggestionRuntimeVariable;
+  }
+
 }

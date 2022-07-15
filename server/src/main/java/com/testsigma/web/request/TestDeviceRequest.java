@@ -11,6 +11,7 @@ package com.testsigma.web.request;
 
 import com.testsigma.model.AppPathType;
 import com.testsigma.model.Platform;
+import com.testsigma.model.TestPlanLabType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -45,6 +46,9 @@ public class TestDeviceRequest {
   String capabilities;
   Long envRunId;
   Boolean disable;
+  Long prerequisiteTestDevicesId;
+  Long workspaceVersionId;
+  TestPlanLabType testPlanLabType;
   Boolean matchBrowserVersion = false;
   Boolean createSessionAtCaseLevel = false;
   List<Long> suiteIds;

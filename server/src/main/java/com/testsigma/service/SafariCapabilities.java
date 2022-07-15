@@ -4,6 +4,7 @@ package com.testsigma.service;
 import com.testsigma.constants.TSCapabilityType;
 import com.testsigma.exception.TestsigmaException;
 import com.testsigma.model.*;
+import com.testsigma.sdk.ApplicationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,9 +27,10 @@ public class SafariCapabilities extends Capabilities {
   @Override
   public void setHybridCapabilities(TestDevice testDevice,
                                     Integrations integrations,
-                                    List<WebDriverCapability> capabilities) throws TestsigmaException {
+                                    List<WebDriverCapability> capabilities,
+                                    TestPlanLabType testPlanLabType) throws TestsigmaException {
     capabilities.add(new WebDriverCapability(TSCapabilityType.BROWSER_NAME, TSCapabilityType.BROWSER_NAME_SAFARI));
-    PlatformOsVersion platformOsVersion = platformsService.getPlatformOsVersion(testDevice.getPlatformOsVersionId(), testDevice.getTestPlan().getTestPlanLabType());
+    PlatformOsVersion platformOsVersion = platformsService.getPlatformOsVersion(testDevice.getPlatformOsVersionId(), testDevice.getTestPlanLabType());
     capabilities.add(new WebDriverCapability(TSCapabilityType.OS_VERSION, Platform.Mac + "" + platformOsVersion.getVersion().substring(0, 5)));
   }
 

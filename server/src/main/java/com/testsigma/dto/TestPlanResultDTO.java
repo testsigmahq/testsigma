@@ -50,5 +50,9 @@ public class TestPlanResultDTO {
   private int totalQueuedCount;
   private Timestamp createdDate;
   private Timestamp updatedDate;
+  private TestPlanLabType testPlanLabType;
+  private Long applicationVersionId;
+  private Long targetMachineId;
+  private Long preRequisiteEnvironmentResultId;
 
 }

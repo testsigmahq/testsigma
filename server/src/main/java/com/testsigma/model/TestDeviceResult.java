@@ -120,6 +120,23 @@ public class TestDeviceResult implements Serializable {
   @Column(name = "app_upload_version_id")
   private Long appUploadVersionId;
 
+  @Column(name = "prerequisite_test_devices_id")
+  private Long prerequisiteTestDevicesId;
+
+  @Column(name = "workspace_version_id")
+  private Long workspaceVersionId;
+
+  @ManyToOne
+  @Fetch(value = FetchMode.SELECT)
+  @JoinColumn(name = "workspace_version_id", referencedColumnName = "id", insertable = false, updatable = false)
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  private WorkspaceVersion workspaceVersion;
+
+  @Column(name = "test_lab_type")
+  @Enumerated(EnumType.STRING)
+  private TestPlanLabType testPlanLabType;
+
   @ManyToOne
   @Fetch(value = FetchMode.SELECT)
   @JoinColumn(name = "test_plan_result_id", referencedColumnName = "id", insertable = false, updatable = false)

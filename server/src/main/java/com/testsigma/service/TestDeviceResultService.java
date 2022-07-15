@@ -56,11 +56,15 @@ public class TestDeviceResultService {
   }
 
   public TestDeviceResult findQueuedHybridEnvironment(Long id) {
-    return testDeviceResultRepository.findFirstByTestDeviceAgentIdAndTestPlanResultTestPlanTestPlanLabTypeAndResultOrderByIdAsc(id, TestPlanLabType.Hybrid, ResultConstant.QUEUED);
+    return testDeviceResultRepository.findFirstByTestDeviceAgentIdAndTestPlanLabTypeAndTestPlanResultResultOrderByIdAsc(id, TestPlanLabType.Hybrid, ResultConstant.QUEUED);
   }
 
   public Page<TestDeviceResult> findAll(Specification<TestDeviceResult> spec, Pageable pageable) {
     return this.testDeviceResultRepository.findAll(spec, pageable);
+  }
+
+  public TestDeviceResult findByTestPlanResultIdAndPrerequisiteTestDevicesId(Long testPlanResultId, Long prerequisiteTestDevicesId) {
+    return testDeviceResultRepository.findByTestPlanResultIdAndPrerequisiteTestDevicesId(testPlanResultId, prerequisiteTestDevicesId);
   }
 
   public List<TestDeviceResult> findAllByTestPlanResultIdAndResultIsNot(Long testPlanResultId, ResultConstant notInResult) {

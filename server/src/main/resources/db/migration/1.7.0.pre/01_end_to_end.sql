@@ -1,0 +1,12 @@
+ALTER TABLE `test_devices` add COLUMN prerequisite_test_devices_id bigint(20) DEFAULT NULL;
+ALTER TABLE `test_devices` add COLUMN `workspace_id` bigint(20) DEFAULT NULL;
+ALTER TABLE `test_device_results` add COLUMN prerequisite_test_device_result_id bigint(20) DEFAULT NULL;
+ALTER table test_devices add column `test_lab_type` varchar(255) DEFAULT NULL;
+ALTER table test_device_results add column `test_lab_type` varchar(255) DEFAULT NULL;
+ALTER TABLE `test_device_results` add COLUMN `workspace_id` bigint(20) DEFAULT NULL;
+ALTER table test_device_results add column `target_machine` bigint(20) DEFAULT NULL;
+update test_devices env set `workspace_id` = (select workspace_version_id from test_plans where env.test_plan_id=id);
+update test_device_results env_result set `workspace_id` = (select workspace_id from test_devices where env_result.test_device_id = id);
+update test_devices env set `test_lab_type` = (select `test_lab_type` from test_plans where env.test_plan_id=id);
+update test_device_results env_result set `test_lab_type` = (select test_lab_type from test_devices where env_result.test_device_id = id);
+update test_device_results env_result set `target_machine` = (select target_machine from test_devices where env_result.test_device_id = id);

@@ -5,6 +5,7 @@ import com.testsigma.model.StorageAccessLevel;
 import com.testsigma.constants.TSCapabilityType;
 import com.testsigma.exception.TestsigmaException;
 import com.testsigma.model.*;
+import com.testsigma.sdk.ApplicationType;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,8 @@ public class IosCapabilities extends MobileCapabilities {
   @Override
   public void setHybridCapabilities(TestDevice testDevice,
                                     Integrations integrations,
-                                    List<WebDriverCapability> capabilities)
+                                    List<WebDriverCapability> capabilities,
+                                    TestPlanLabType testPlanLabType)
     throws TestsigmaException {
     capabilities.add(new WebDriverCapability(TSCapabilityType.AUTOMATION_NAME, TSCapabilityType.XCUI_TEST));
     capabilities.add(new WebDriverCapability(TSCapabilityType.WDA_URL, TSCapabilityType.WDA_URL_VALUE));

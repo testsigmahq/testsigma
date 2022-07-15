@@ -91,7 +91,7 @@ public class WebDriverSettingsService {
     WorkspaceType workspaceType = testDeviceResult.getTestDevice().getTestPlan()
       .getWorkspaceVersion().getWorkspace().getWorkspaceType();
     TestPlanLabType testPlanLabType = testDeviceResult.getTestDevice()
-      .getTestPlan().getTestPlanLabType();
+      .getTestPlanLabType();
     return getDriverCapabilities(testDevice, workspaceType, testPlanLabType);
   }
 }

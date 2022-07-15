@@ -64,7 +64,7 @@ public abstract class DriverSettingsService {
     throws MalformedURLException, TestsigmaException {
     List<WebDriverCapability> capabilities = webDriverSettings.getWebDriverCapabilities();
     capabilities = capabilities == null ? new ArrayList<WebDriverCapability>() : capabilities;
-    String resolution = this.platformsService.getPlatformScreenResolution(testDevice.getPlatformScreenResolutionId(), testDevice.getTestPlan().getTestPlanLabType()).getResolution();
+    String resolution = this.platformsService.getPlatformScreenResolution(testDevice.getPlatformScreenResolutionId(), testDevice.getTestPlanLabType()).getResolution();
     if (!StringUtils.isBlank(resolution)) {
       capabilities.add(new WebDriverCapability(TSCapabilityType.KEY_RESOLUTION, resolution));
     } else {

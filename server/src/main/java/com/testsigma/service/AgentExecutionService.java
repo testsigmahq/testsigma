@@ -1153,8 +1153,8 @@ public class AgentExecutionService {
       int rand =0;
       if (parentGroupEntity != null && !isStepInsideForLoop(testCaseStepEntity)) {
         index = (parentGroupEntity.getIndex() == null) ? 0 : parentGroupEntity.getIndex();
-        rand = new Random().ints(1, 100).findFirst().getAsInt();
       } else {
+        rand = new Random().ints(1, 100).findFirst().getAsInt();
         index = (testCaseStepEntity.getIndex() == null) ? 0 : testCaseStepEntity.getIndex();
       }
       String screenShotPath = String.format("/executions/%s/%s_%s_%s_%s_%s_%s.%s", testCaseEntity.getTestCaseResultId(),

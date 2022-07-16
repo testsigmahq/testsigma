@@ -45,11 +45,11 @@ import {MobileRecorderEventService} from "../../services/mobile-recorder-event.s
 import {MobileStepRecorderComponent} from "../../agents/components/webcomponents/mobile-step-recorder.component";
 import {ResultConstant} from "../../enums/result-constant.enum";
 import {TestStepMoreActionFormComponent} from "./test-step-more-action-form.component";
-import {ElementFormComponent} from "./element-form.component";
 import {AddonTestDataFunctionService} from "../../services/addon-default-data-generator.service";
 import {AddonTestDataFunction} from "../../models/addon-test-data-function.model";
 import {AddonTestDataFunctionParameter} from "../../models/addon-test-data-function-parameter.model";
 import {StepActionType} from "../../enums/step-action-type.enum";
+import {ActionTestDataRuntimeVariableSuggestionComponent} from './action-test-data-runtime-variable-suggestion.component';
 
 @Component({
   selector: 'app-action-step-form',
@@ -138,6 +138,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   private eventEmitterAlreadySubscribed: Boolean = false;
   private oldStepData: TestStep;
   isAttachTestDataEvent: boolean = false;
+  private runtimeSuggestion: MatDialogRef<ActionTestDataRuntimeVariableSuggestionComponent>;
 
   get mobileStepRecorder(): MobileStepRecorderComponent {
     return this.matModal.openDialogs.find(dialog => dialog.componentInstance instanceof MobileStepRecorderComponent).componentInstance;
@@ -209,6 +210,8 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         this.dataProfileAfterClose(res.data);
       } else if(res.type == TestDataType.function) {
         this.customFunctionAfterClose(res.data)
+      } else if(res.type == TestDataType.runtime) {
+        this.runtimeVariableAfterClose(res.data);
       }
     })
   }
@@ -1060,9 +1063,11 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         if (!isSkipSelect)
           this.selectTestDataPlaceholder();
         break;
-      case TestDataType.runtime:
-        this.assignDataValue("$|<span class='test_data_place'></span>|");
+      case TestDataType.runtime: {
+        this.assignDataValue("$| <span class='test_data_place'></span> |");
+        this.openSuggestionRuntimeVariable();
         break;
+      }
       case TestDataType.random:
         this.assignDataValue("~|<span class='test_data_place'></span>|");
         break;
@@ -1123,9 +1128,14 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
 
   setTempPosition() {
     let element = this.replacer.nativeElement.querySelector('div.actiontext span span.test_data_place');
-    this.replacer.nativeElement.contentEditable = false;
-    element.contentEditable = true;
-    this.setMeddlePosition(element);
+    if(!element) {
+      return false;
+    }
+    if (element) {
+      this.replacer.nativeElement.contentEditable = false;
+      element.contentEditable = true;
+      this.setMeddlePosition(element);
+    }
   }
 
   setMeddlePosition(element) {
@@ -1307,13 +1317,13 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   }
 
 
-  private assignDataValue(dataName) {
+  private assignDataValue(dataName, isReplacer?:boolean) {
     this.showDataTypes = false;
     const testDataPlaceHolders = this.testDataPlaceholder();
     for (let i = 0; i < testDataPlaceHolders.length; i++) {
       const content = testDataPlaceHolders[i].innerHTML;
-      if (testDataPlaceHolders[i]?.contentEditable && ((testDataPlaceHolders[i].getAttribute("data-test-data-type") == null) ||
-        ((testDataPlaceHolders[i].getAttribute("data-test-data-type") != null && (content == '@| |' || content == '!| |' || content == '*| |'
+      if ((testDataPlaceHolders[i]?.contentEditable||Boolean(isReplacer)) && ((testDataPlaceHolders[i].getAttribute("data-test-data-type") == null) ||
+        ((testDataPlaceHolders[i].getAttribute("data-test-data-type") != null && (Boolean(isReplacer) ||content == '@| |' || content == '!| |' || content == '*| |'
           || content == "$| <span class='test_data_place'></span> |" || content == "~| <span class='test_data_place'></span> |" || content == "" || !this.removeHtmlTags(testDataPlaceHolders[i].textContent).trim().length))))) {
         testDataPlaceHolders[i].innerHTML = dataName;
         testDataPlaceHolders[i].setAttribute("data-test-data-type", this.currentTestDataType);
@@ -1778,6 +1788,38 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     } else if (!data) {
       delete this.currentTestDataType
       this.showTestDataPopup()
+    }
+  }
+
+  private openSuggestionRuntimeVariable() {
+    let suggestionData = {
+      projectId: this.version?.workspaceId,
+      version: this.version,
+      stepRecorderView: Boolean(this.stepRecorderView),
+      testCaseSteps: this.testSteps?.content || [],
+      testCase: this.testCase
+    };
+
+    if(this.sendSuggestionDetails(suggestionData, this.mobileRecorderEventService.suggestionRuntimeVariable)) {
+      return;
+    }
+
+    this.runtimeSuggestion = this.matModal.open(ActionTestDataRuntimeVariableSuggestionComponent, {
+      height: "100vh",
+      width: '50%',
+      position: {top: '0', right: '0'},
+      panelClass: ['mat-dialog', 'rds-none'],
+      data: suggestionData
+    });
+
+    this.runtimeSuggestion.afterClosed().subscribe(data => this.runtimeVariableAfterClose(data));
+  }
+
+  runtimeVariableAfterClose(data) {
+    if(data) {
+      this.assignDataValue(this.getDataTypeString(TestDataType.runtime, data), true);//, this.testDataPlaceholder(), false);
+    } else  {
+      this.showTestDataPopup();
     }
   }
 }

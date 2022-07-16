@@ -201,6 +201,7 @@ public class ElementsController {
     if (names.indexOf("element") > -1) {
       params.remove(new SearchCriteria("name", SearchOperation.IN, names));
       params.remove(new SearchCriteria("locatorValue", SearchOperation.IN, elements));
+      params.add(new SearchCriteria("name", SearchOperation.EQUALITY, "ui identifier"));
       params.add(new SearchCriteria("name", SearchOperation.EQUALITY, "element"));
       builder.setParams(params);
       spec = builder.build();
@@ -208,6 +209,19 @@ public class ElementsController {
       if (placeholderElement.size() == 0 || (placeholderElement.size() > 0 && placeholderElement.get(0).getName().isEmpty())) {
         ElementDTO placeholderDTO = new ElementDTO();
         placeholderDTO.setName("element");
+        dtos.add(placeholderDTO);
+      }
+    }
+    if (names.indexOf("ui identifier") > -1) {
+      params.remove(new SearchCriteria("name", SearchOperation.IN, names));
+      params.remove(new SearchCriteria("locatorValue", SearchOperation.IN, elements));
+      params.add(new SearchCriteria("name", SearchOperation.EQUALITY, "ui identifier"));
+      builder.setParams(params);
+      spec = builder.build();
+      List<Element> placeholderElement = elementService.findAll(spec, Pageable.unpaged()).getContent();
+      if (placeholderElement.size() == 0 || (placeholderElement.size() > 0 && placeholderElement.get(0).getName().isEmpty())) {
+        ElementDTO placeholderDTO = new ElementDTO();
+        placeholderDTO.setName("ui identifier");
         dtos.add(placeholderDTO);
       }
     }

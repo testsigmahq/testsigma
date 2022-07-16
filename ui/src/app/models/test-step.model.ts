@@ -592,4 +592,6 @@ export class TestStep extends Base implements PageObject {
     return this.priority == TestStepPriority.MAJOR;
   };
 
+  public runTimeDataList: any[];
+
 }

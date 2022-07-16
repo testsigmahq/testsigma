@@ -1,5 +1,6 @@
 <div class="list-container w-100 mt-n14" *ngIf="refreshedView">
   <cdk-virtual-scroll-viewport
+    #stepsVirtualScrollViewNonReorderDisabled
     minBufferPx="10000" maxBufferPx="30000"
     itemSize="63" class="virtual-scroll-viewport list-container cdk-content"
     *ngIf="!isDragEnabled">

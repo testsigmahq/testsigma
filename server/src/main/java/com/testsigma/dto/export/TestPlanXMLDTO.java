@@ -34,8 +34,6 @@ public class TestPlanXMLDTO extends BaseXMLDTO {
   private String name;
   @JsonProperty("description")
   private String description;
-  @JsonProperty("execution-lab-type")
-  private TestPlanLabType testPlanLabType;
   @JsonProperty("test-plan-type")
   private TestPlanType testPlanType;
   @JsonProperty("element-timeout")

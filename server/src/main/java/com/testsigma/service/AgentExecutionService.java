@@ -462,7 +462,6 @@ public class AgentExecutionService {
     testDeviceResult.setTestDeviceId(testDevice.getId());
     testDeviceResult.setAppUploadVersionId(getUploadVersionId(testDevice));
     testDeviceResult.setTestDeviceSettings(getExecutionTestDeviceSettings(testDevice));
-    testDeviceResult.setPrerequisiteTestDevicesId(testDevice.getPrerequisiteTestDevicesId());
     testDeviceResult.setTestPlanLabType(testDevice.getTestPlanLabType());
     testDeviceResult.setWorkspaceVersionId(testDevice.getWorkspaceVersionId());
     testDeviceResult = testDeviceResultService.create(testDeviceResult);
@@ -1432,14 +1431,14 @@ public class AgentExecutionService {
     for(TestDeviceResult environmentResult: environmentResults){
       Long executionEnvironmentPreRequisiteId = environmentResult.getTestDevice().getPrerequisiteTestDevicesId();
       if(executionEnvironmentPreRequisiteId != null){
-        TestDeviceResult preRequisiteEnvironmentResult = testDeviceResultService.findByTestPlanResultIdAndPrerequisiteTestDevicesId(executionResult.getId(),executionEnvironmentPreRequisiteId);
-        environmentResult.setPrerequisiteTestDevicesId(preRequisiteEnvironmentResult.getId());
+        TestDeviceResult preRequisiteEnvironmentResult = testDeviceResultService.findByTestPlanResultIdAndTestDeviceId(executionResult.getId(),executionEnvironmentPreRequisiteId);
+        environmentResult.setPrerequisiteTestDeviceResultId(preRequisiteEnvironmentResult.getId());
         testDeviceResultService.update(environmentResult);
       }
     }
   }
   protected  boolean isWaitingOnEnvironmentPrerequisite(TestDeviceResult environmentResult) throws ResourceNotFoundException {
-    Long preRequisiteEnvironmentResultId = environmentResult.getPrerequisiteTestDevicesId();
+    Long preRequisiteEnvironmentResultId = environmentResult.getPrerequisiteTestDeviceResultId();
     if(preRequisiteEnvironmentResultId != null){
       TestDeviceResult preRequisiteEnvironmentResult = testDeviceResultService.find(preRequisiteEnvironmentResultId);
       if(preRequisiteEnvironmentResult.getStatus() != StatusConstant.STATUS_COMPLETED){

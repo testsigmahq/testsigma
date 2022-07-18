@@ -63,8 +63,8 @@ public class TestDeviceResultService {
     return this.testDeviceResultRepository.findAll(spec, pageable);
   }
 
-  public TestDeviceResult findByTestPlanResultIdAndPrerequisiteTestDevicesId(Long testPlanResultId, Long prerequisiteTestDevicesId) {
-    return testDeviceResultRepository.findByTestPlanResultIdAndPrerequisiteTestDevicesId(testPlanResultId, prerequisiteTestDevicesId);
+  public TestDeviceResult findByTestPlanResultIdAndTestDeviceId(Long testPlanResultId, Long prerequisiteTestDevicesId) {
+    return testDeviceResultRepository.findByTestPlanResultIdAndTestDeviceId(testPlanResultId, prerequisiteTestDevicesId);
   }
 
   public List<TestDeviceResult> findAllByTestPlanResultIdAndResultIsNot(Long testPlanResultId, ResultConstant notInResult) {

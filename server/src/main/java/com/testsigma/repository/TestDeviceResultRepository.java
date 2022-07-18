@@ -66,7 +66,7 @@ public interface TestDeviceResultRepository extends JpaRepository<TestDeviceResu
 
   Page<TestDeviceResult> findAll(Specification<TestDeviceResult> spec, Pageable pageable);
 
-  TestDeviceResult findByTestPlanResultIdAndPrerequisiteTestDevicesId(Long testPlanResultId, Long prerequisiteTestDevicesId);
+  TestDeviceResult findByTestPlanResultIdAndTestDeviceId(Long testPlanResultId, Long prerequisiteTestDevicesId);
 
   TestDeviceResult findFirstByTestDeviceAgentIdAndTestPlanLabTypeAndTestPlanResultResultOrderByIdAsc(Long id, TestPlanLabType type, ResultConstant result);
 

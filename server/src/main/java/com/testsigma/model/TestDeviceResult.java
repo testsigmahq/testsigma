@@ -120,8 +120,8 @@ public class TestDeviceResult implements Serializable {
   @Column(name = "app_upload_version_id")
   private Long appUploadVersionId;
 
-  @Column(name = "prerequisite_test_devices_id")
-  private Long prerequisiteTestDevicesId;
+  @Column(name = "prerequisite_test_device_result_id")
+  private Long prerequisiteTestDeviceResultId;
 
   @Column(name = "workspace_version_id")
   private Long workspaceVersionId;

@@ -41,9 +41,6 @@ public class AbstractTestPlan implements Serializable {
   private String description;
   @Column(name = "entity_type", insertable = false, updatable = false)
   private String entityType;
-  //@Column(name = "test_lab_type")
-  //@Enumerated(EnumType.STRING)
-  //private TestPlanLabType testPlanLabType;
   @Column(name = "test_plan_type")
   @Enumerated(EnumType.STRING)
   private TestPlanType testPlanType;

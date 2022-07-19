@@ -86,6 +86,7 @@ import {AuthenticationGuard} from "../../../shared/guards/authentication.guard";
           <a class="btn btn-white mx-15 px-20" [translate]="'test_plan_form.install'"></a>
         </div>
         <a
+          rel="nofollow"
           href="https://testsigma.com/docs/agent/setup-on-windows-mac-linux/"
           class="text-underline" target="_blank" [translate]="'test_plan_form.agents_info'"></a>
       </div>

@@ -12,7 +12,7 @@ public class StoreValueAction extends ElementAction {
   @Override
   protected void execute() throws Exception {
     findElement();
-    String runTimeVarValue = getElement().getAttribute(ActionConstants.ATTRIBUTE_VALUE);
+    String runTimeVarValue = getElement().getText();
     Assert.isTrue(!(StringUtils.isEmpty(runTimeVarValue)), String.format(FAILURE_MESSAGE, getTestData()));
     runtimeDataProvider.storeRuntimeVariable(getTestData(), runTimeVarValue);
     resultMetadata.put(getTestData(), runTimeVarValue);

@@ -12,29 +12,4 @@
   <!-- settings-->
   <app-test-plan-recovery-actions
     [formGroup]="formGroup"></app-test-plan-recovery-actions>
-  <div class="theme-border-t ts-col-100 text-right bottom-0 position-sticky bg-white py-15">
-    <a class="theme-btn-clear-default mr-25"
-       (click)="previous()">
-      <i class="fa-left-arrow-thin mr-4 fz-11"></i>
-      <span [translate]="'pagination.previous'"></span>
-    </a>
-    <button
-      (click)="saving ? '' : create()"
-      *ngIf="!testPlan.id"
-      appAsyncBtn
-      [isLoading]="saving"
-      [message]="'message.common.saving'"
-      [textContent]="'btn.common.create' | translate"
-      class="theme-btn-primary">
-    </button>
-    <button
-      (click)="saving ? '' : save()"
-      appAsyncBtn
-      [isLoading]="saving"
-      [message]="'message.common.updating'"
-      *ngIf="testPlan.id"
-      [textContent]="'btn.common.update' | translate"
-      class="theme-btn-primary">
-    </button>
-  </div>
 </form>

@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnInit, SimpleChanges} from '@angular/core';
 import {WorkspaceVersion} from "../../models/workspace-version.model";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
@@ -57,7 +57,7 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
   }
 
   get version(): WorkspaceVersion {
-    return this.testPlan?.workspaceVersion;
+    return this.activeExecutionEnvironment?.version || this.data.testDevice?.version || this.testPlan?.workspaceVersion;
   }
 
   get isHybrid() {
@@ -242,6 +242,8 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
           appUrl: new FormControl(environment?.appUrl, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.USE_PATH), Validators.pattern(/^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/)]),
           appPackage: new FormControl(environment?.appPackage, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.APP_DETAILS)]),
           appActivity:  new FormControl(environment?.appActivity, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.APP_DETAILS)]),
+          workspaceVersionId: new FormControl(environment?.workspaceVersionId),
+          testPlanLabType: new FormControl(environment?.testPlanLabType)
     });
     if(this.activeExecutionEnvironment.testSuites?.length > 0) {
       environmentFormGroup.setControl('suiteIds', this.formBuilder.array([]));
@@ -268,6 +270,40 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
       }
       return null;
     })
+  }
+
+  setEnvironmentVersion(version: WorkspaceVersion) {
+    this.activeExecutionEnvironment.version = version;
+    //this.addControls(this.activeEnvironmentFormGroup, this.activeExecutionEnvironment);
+    this.activeExecutionEnvironment.testSuites = [];
+    this.activeEnvironmentFormGroup.setControl('suiteIds', this.formBuilder.array([]));
+    if(version.workspace.isMobileNative) {
+
+      // setTimeout(()=>{
+      this.activeExecutionEnvironment.browser=undefined;
+      this.activeExecutionEnvironment.browserVersion=undefined;
+      this.activeExecutionEnvironment.resolution=undefined;
+      this.activeExecutionEnvironment.testSuites = [];
+      this.activeExecutionEnvironment.appUploadId = undefined;
+
+      this.activeEnvironmentFormGroup.get('suiteIds').patchValue([]);
+      this.activeEnvironmentFormGroup.get('browser').patchValue('');
+      this.activeEnvironmentFormGroup.get('browserVersion').patchValue('');
+      this.activeEnvironmentFormGroup.get('resolution').patchValue('');
+      this.activeEnvironmentFormGroup.get('appUploadId').patchValue(undefined);
+      // }, 500);
+    }
+  }
+
+  setEnvironmentPreRequisite(executionEnvironment: TestDevice) {
+    const index = this.testPlan.testDevices.findIndex(env => env == executionEnvironment);
+    const prerequisiteEnvironmentIdIndex = index > -1 ? index : null;
+    this.activeEnvironmentFormGroup.controls['prerequisiteEnvironmentIdIndex'].setValue(prerequisiteEnvironmentIdIndex);
+    this.activeEnvironmentFormGroup.controls['prerequisiteEnvironmentId'].setValue(executionEnvironment?.id || null);
+  }
+
+  get testLabType() {
+    return this.activeEnvironmentFormGroup.controls['testPlanLabType'].value;
   }
 
 }

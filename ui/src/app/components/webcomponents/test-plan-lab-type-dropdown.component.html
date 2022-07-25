@@ -1,0 +1,100 @@
+<div class="d-flex justify-content-between theme-border-b mb-40" >
+  <div class="mr-10">
+    <div class="fz-14 rb-medium">
+      <span [translate]="'test_plan.lab_type'"></span>
+      <div
+        class="dropdown mouse-over d-inline-block">
+        <div class="btn-group pointer">
+          <i class="fa-question-circle-solid text-t-secondary pl-7"></i>
+        </div>
+        <div
+          class="dropdown-menu"
+          style="box-shadow: none;margin-top: -6px;padding-top: .5rem;background:
+         transparent;min-width:350px;left: -3px;">
+          <div
+            class="bg-white border-rds-4 ng-scope p-25 shadow-all2-b4 d-flex">
+            <i class="fa-help fz-18 text-t-secondary"></i>
+            <ul class="rb-regular-i-d ts-col-90 ml-auto my-0 p-0 theme-text" style="list-style: none">
+              <li [innerHTML]="'test_plan.form.help.testsigma_lab' | translate"></li>
+              <li class="pt-4" [innerHTML]="'test_plan.form.help.hybrid' | translate"></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <mat-form-field class="mat-select-custom w-100 mt-10 mb-10" appearance="fill">
+      <mat-select disableOptionCentering panelClass="single" [value]="testPlanLabType" (selectionChange)="$event.source.close()">
+        <mat-select-trigger>
+          <div class="d-flex align-items-center max-h-18">
+            <span [ngClass]="testLabsMap[testPlanLabType].iconClass + ' h-18p d-inline-block'"></span>
+            <span class="ml-10" [translate]="testLabsMap[testPlanLabType].name"></span>
+          </div>
+        </mat-select-trigger>
+        <mat-option *ngFor="let lab of testLabsList" [value]="lab.value">
+          <div
+            *ngIf="lab.value == ExecutionLabType.Hybrid"
+            class="d-flex align-items-center"
+          >
+            <i [ngClass]="lab.iconClass + ' h-18p d-inline-block'"></i>
+            <span class="ml-10" [translate]="lab.name"></span>
+          </div>
+          <div
+            *ngIf="lab.value != ExecutionLabType.Hybrid"
+            (click)="setValue(lab.value)"
+            class="d-flex align-items-center"
+          >
+            <i [ngClass]="lab.iconClass + ' h-18p d-inline-block'"></i>
+            <span class="ml-10" [translate]="lab.name"></span>
+          </div>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </div>
+  <div class="test-plan-prerequisite" *ngIf="executionEnvironments.length && isDistributed && activeExecutionEnvIndex != 0">
+    <div class="fz-14 rb-medium" [translate]="'common.prerequisite'"></div>
+    <div class="my-10 lab-item dropdown mouse-over d-inline-block">
+      <div class="selection-cutsom-skin btn-group pointer d-flex align-items-center bg-default-grey-light py-10 pr-10 pl-6 grey-on-hover border-rds-4">
+        <div class="min-w-250p h-18p">
+          <app-test-plan-execution-environment-info
+            *ngIf="preRequisiteExecutionEnvironment && !isNewUI"
+            [execution]="execution"
+            [version]="preRequisiteExecutionEnvironment.version"
+            [executionEnvironment]="preRequisiteExecutionEnvironment"></app-test-plan-execution-environment-info>
+          <span class="text-truncate-d-block w-100" *ngIf="isNewUI && preRequisiteExecutionEnvironment">{{ preRequisiteExecutionEnvironment?.title }}</span>
+          <span *ngIf="!preRequisiteExecutionEnvironment" [translate]="'message.common.none'" ></span>
+        </div>
+        <i class="fa-arrow-down-filled ml-5"></i>
+      </div>
+      <div
+        class="dropdown-menu w-100"
+        style="box-shadow: none;margin-top: -12px;padding-top: 1.5rem;background:transparent;min-width: 180px">
+        <div
+          class="bg-white border-rds-4 d-flex ng-scope py-10 shadow-all2-b4 px-15">
+          <ul class="rb-regular-i-d ts-col-100 ml-auto my-0 p-0 theme-text" style="list-style: none">
+            <!--<li class="d-flex align-items-center pl-10 py-10 grey-on-hover pointer" (click)="selectEnvironmentPreRequisite(executionEnvironment)">
+              <span [translate]="'message.common.none'" ></span>
+            </li>-->
+            <li class="d-flex align-items-center p-10 grey-on-hover pointer"
+                (click)="selectEnvironmentPreRequisite(executionEnvironment)"  *ngFor="let executionEnvironment of prerequisiteList">
+              <app-test-plan-execution-environment-info
+                *ngIf="!isNewUI"
+                [testPlan]="execution"
+                [version]="executionEnvironment.version"
+                [testDevice]="executionEnvironment"></app-test-plan-execution-environment-info>
+              <span class="text-truncate-d-block w-100" *ngIf="isNewUI">{{ executionEnvironment?.title }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="project-info test-plan-project-info" [class.visibility-hidden]="!isDistributed" *ngIf="!isNewUI">
+    <!--<div *ngIf="isDistributed" class="fz-14 rb-medium" [translate]="'test_plan.project'"></div>-->
+    <app-version-selection *ngIf="selectedVersion && isDistributed"
+                           class="position-relative" [customClass]="'selection-cutsom-skin'"
+                           (onVersionSelect)="setVersion($event)"
+                           [version]="selectedVersion"></app-version-selection>
+  </div>
+</div>

@@ -97,6 +97,10 @@ export class WorkspaceSwitcherComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.fetchWorkspaces();
+  }
+
+  fetchWorkspaces() {
     this.userPreferenceService.show().subscribe(res => {
       this.userPreference = res;
       this.fetchVersions();
@@ -181,5 +185,9 @@ export class WorkspaceSwitcherComponent implements OnInit {
     $event.stopPropagation();
     $event.stopImmediatePropagation();
     return false;
+  }
+
+  get selectedVersion(){
+    return this.projectSwitcherForm.get('version').value;
   }
 }

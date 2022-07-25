@@ -1,0 +1,74 @@
+<div class="theme-overlay-container">
+  <div class="theme-overlay-header">
+    <div class="theme-overlay-title flex-grow-1" translate="test_plan.add.machine"></div>
+    <button class="close" type="button" [matTooltip]="'hint.message.common.close' | translate" mat-dialog-close></button>
+  </div>
+  <div class="theme-overlay-content">
+    <div class="pt-10 ts-form">
+      <div class="form-group pb-20 ml-auto ts-col-100" [formGroup]="activeEnvironmentFormGroup">
+        <label class="required fz-14 rb-medium" [translate]="'message.common.label.name'"></label>
+        <input
+          class="form-control mt-10" required name="title" formControlName="title" autofocus
+          [value]="activeEnvironmentFormGroup?.value?.title"
+          (input)="updateTitle($event)"
+        />
+
+        <div class="error left"
+             *ngIf="activeEnvironmentFormGroup?.controls?.title?.errors?.minlength"
+             [textContent]="'form.validation.common.min_length' | translate: {FieldName:'Name' , min:'4'}"></div>
+        <div class="error left"
+             *ngIf="activeEnvironmentFormGroup?.controls?.title?.errors?.maxLength"
+             [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'120'}"></div>
+      </div>
+      <app-test-plan-lab-type-dropdown
+        *ngIf="activeExecutionEnvironment"
+        (onVersionSelect)="setEnvironmentVersion($event)"
+        (onPreRequisiteSelect)="setEnvironmentPreRequisite($event)"
+        [execution]="data.execution"
+        [executionType]="data.executionType"
+        [executionEnvironments]="data.executionEnvironments"
+        [version]="version"
+        [isNewUI]="true"
+        [activeExecutionEnvIndex]="activeExecutionEnvIndex"
+        [formGroup]="activeEnvironmentFormGroup"></app-test-plan-lab-type-dropdown>
+      <app-test-plan-test-machine-form
+        class="column"
+        *ngIf="(application?.isWeb || (isHybrid && !application?.isMobile)) && activeEnvironmentFormGroup"
+        [testPlanLabType]="testPlanLabType"
+        [formGroup]="activeEnvironmentFormGroup"
+        [isAvailableCheck]="false"
+        [version]="version"
+        [isEdit]="isEdit"></app-test-plan-test-machine-form>
+      <app-test-plan-device-form
+        class="column"
+        *ngIf="application?.isMobile && activeEnvironmentFormGroup"
+        [formGroup]="activeEnvironmentFormGroup"
+        [version]="version"
+        [isEdit]="isEdit"
+        [testPlanLabType]="testPlanLabType"></app-test-plan-device-form>
+      <app-test-plan-app-uploads-form
+        *ngIf="application?.isMobileNative && activeEnvironmentFormGroup"
+        [formGroup]="activeEnvironmentFormGroup"
+        [testPlanLabType]="testPlanLabType"
+        [version]="version"
+        [isEdit]="isEdit"></app-test-plan-app-uploads-form>
+      <app-desired-capabilities
+        *ngIf="activeEnvironmentFormGroup"
+        [capabilities]="activeExecutionEnvironment?.capabilities"
+        [formGroup]="activeEnvironmentFormGroup"></app-desired-capabilities>
+    </div>
+  </div>
+
+  <div class="theme-overlay-footer">
+    <button
+      [translate]="'btn.common.cancel'"
+      class="theme-btn-clear-default"
+      mat-dialog-close></button>
+    <button
+      [disabled]="!activeEnvironmentFormGroup.valid"
+      [translate]=" isEdit ? 'btn.common.update' : 'btn.common.create' "
+      (click)="activeEnvironmentFormGroup.valid && saveMachine()"
+      class="btn ml-14 theme-btn-primary"></button>
+  </div>
+
+</div>

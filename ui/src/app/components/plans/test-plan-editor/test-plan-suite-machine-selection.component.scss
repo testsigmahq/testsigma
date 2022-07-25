@@ -1,0 +1,66 @@
+div[module="plan-suite-machine-selection"] {
+  .suite-list {
+    border: 1px solid #E1E4E8;
+    min-height: 490px;
+    max-height: 490px;
+
+    .header {
+      min-height: 50px;
+      border-bottom: 1px solid #E1E4E8;
+      padding: 10px 16px;
+    }
+
+    .content {
+      height: 100%;
+      background-color: #FAFAFA;
+      overflow: overlay !important;
+
+      .empty-note {
+        width: 250px;
+        padding: 24px;
+        margin: 16px;
+        background: #FFFFFF;
+        border: 2px solid #BFC1C4;
+        border-radius: 24px 24px 24px 0px;
+      }
+
+      .empty-full-container {
+        padding: 50px 0px 0px 0px !important;
+      }
+    }
+
+    .footer {
+      min-height: 68px;
+      border-top: 1px solid #E1E4E8;
+      padding: 22px 16px;
+
+      &:hover {
+        background: #ededed !important;
+      }
+
+      .add-btn-icon {
+        color: #03A973;
+      }
+    }
+  }
+  .machine-list {
+    min-width: 360px;
+    max-width: 360px;
+    border: 1px solid #E1E4E8;
+    min-height: 490px;
+    max-height: 490px;
+
+    .header {
+      min-height: 50px;
+      border-bottom: 1px solid #E1E4E8;
+      padding: 10px 16px;
+    }
+
+    .content {
+      height: 100%;
+      background-color: #FAFAFA;
+      overflow: overlay !important;
+    }
+  }
+}
+

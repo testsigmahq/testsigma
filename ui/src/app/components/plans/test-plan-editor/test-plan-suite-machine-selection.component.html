@@ -1,0 +1,136 @@
+<div module="plan-suite-machine-selection" class="d-flex h-100">
+
+  <!-- LHS: Test machine/device list-->
+  <div class="machine-list border-rds-4 h-100 d-flex flex-column mr-25">
+    <div class="header align-items-center d-flex header position-relative">
+      <div class="flex-grow-1" [translate]="'test_plan.test.machine.device'"></div>
+      <div (click)="setFilterValue('All')" class="pointer text-link" *ngIf="filter != 'All'">
+        <span class="fa-circled-close mr-7"></span>
+        <span [translate]="'message.common.clear'"></span>
+      </div>
+      <div class="form-group position-absolute right-0 w-167p" *ngIf="formSubmitted && !executionEnvironments.length">
+        <div class="error mt-n35" [textContent]="'validation.required.message' | translate: {field: 'Test Machine'}"></div>
+      </div>
+    </div>
+    <div class="border-box content flex-grow-1 px-14 pt-0 pb-15">
+
+      <!-- Machine list -->
+      <app-test-plan-machines-list-item
+        [executionEnvironment]="environment"
+        [applicationVersionsMap]="applicationVersionsMap"
+        [isSelected]="filter == environment"
+        (onDelete)="removeExecutionEnvironment($event)"
+        (onEdit)="editExecutionEnvironment($event)"
+        (onMachineSettingsUpdate)="setTestMachineSettings($event)"
+        (click)="setFilterValue(environment)"
+        *ngFor="let environment of executionEnvironments"
+      ></app-test-plan-machines-list-item>
+
+      <!-- Machine empty -->
+      <div *ngIf="!executionEnvironments.length" class="p-20 text-center text-secondary" [textContent]="'test_plan.machine.empty'| translate"></div>
+    </div>
+  </div>
+
+  <!-- RHS: Testsuite list -->
+  <div class="suite-list border-rds-4 flex-grow-1 d-flex flex-column">
+
+    <!-- RHS: Header -->
+    <div class="align-items-center bg-white d-flex header w-100 position-relative">
+
+      <div style="width: 450px;top: 45px;" class="form-group position-absolute right-0" *ngIf="formSubmitted && isNextDisabled && executionEnvironments.length">
+        <div class="error mt-n35" [textContent]="'test_plan.test_suite.all_suite_machine_error' | translate"></div>
+      </div>
+
+      <div class="flex-grow-1 d-flex align-items-center position-relative">
+        <mat-checkbox
+          class="mat-checkbox"
+          [ngClass]="{'disabled opacity-7': !testSuiteList?.length || (hasMixedAppVersion && this.versionFilter == null)}"
+          [matTooltip]="((hasMixedAppVersion && this.versionFilter == null)? 'test_plan.suite.disabled.mixed_apps' : '') | translate"
+          (change)="selectAllTestSuites($event)"
+          [disabled]="!testSuiteList?.length || (hasMixedAppVersion && this.versionFilter == null)"
+          [checked]="testSuiteList?.length && (testSuiteList?.length == selectedTestSuites?.length) && !hasMixedAppVersion"></mat-checkbox>
+        <span [translate]="'test_plans.suites.title'" class="ml-15"></span>
+
+        <mat-form-field
+          class="mat-select-custom ts-col-35 inline-no-border text-capitalize sm ml-15"
+          appearance="fill"
+          *ngIf="executionEnvironments.length"
+        >
+          <mat-select #selectToggle disableOptionCentering panelClass="single" [(value)]="filter" [placeholder]="'test_plan.environments.all' | translate">
+            <mat-option
+              [value]="'All'"
+              (onSelectionChange)="setFilter($event)"
+              [textContent]="'test_plan.environments.all' | translate" selected></mat-option>
+            <mat-option
+              *ngFor="let item of executionEnvironments"
+              [value]="item"
+              (onSelectionChange)="setFilter($event)"
+              class="text-capitalize"> {{ item.title }} </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <app-toggle-search-button
+          [ngClass]="'position-absolute bg-white'"
+          [style]="'right: 0'"
+          [debounceTime]="0"
+          [hasClose]="true"
+          [InputStyle]="'width:' + (executionEnvironments.length? '320px' : '340px')"
+          *ngIf="testSuiteList.length"
+          (searchAction)="searchTestsuite($event)"></app-toggle-search-button>
+      </div>
+      <div class="align-items-center d-flex">
+        <app-test-plan-suite-filter
+          [versionFilter]="versionFilter"
+          [version]="versionFilter || selectedVersion"
+          (onVersionFilter)="setTestsuiteVersionFilterValue($event)"
+          *ngIf="testSuiteList.length && filter == 'All' && !isRest"></app-test-plan-suite-filter>
+        <app-create-machine-button
+          [isDisabled]="!selectedTestSuites.length"
+          [tooltip]="(!selectedTestSuites.length? (testSuiteList.length? 'test_plan.suite.add_machine.disabled.not_selected' : 'test_plan.suite.add_machine.disabled.no_suite') : '') | translate"
+          [executionEnvironments]="executionEnvironments"
+          [testSuiteList]="testSuiteList"
+          [selectedTestSuites]="selectedTestSuites"
+          [applicationVersionsMap]="applicationVersionsMap"
+          (onCreateMachine)="selectedTestSuites.length && handleCreateMachine()"
+          (onMapMachine)="mapTestSuitesToMachine($event, this.selectedTestSuites, false)"
+        ></app-create-machine-button>
+      </div>
+    </div>
+
+    <!-- RHS: List -->
+    <div class="content flex-grow-1 drag-list" cdkDropList (cdkDropListDropped)="testSuiteDrop($event)" [cdkDropListData]="filteredTestsuites">
+
+      <!-- Test suites list -->
+      <app-test-suite-list-item
+        *ngFor="let testSuite of filteredTestsuites"
+        [testsuite]="testSuite"
+        [executionEnvironments]="executionEnvironments"
+        [selectedExecutionEnvironment]="filter == 'All'? null : filter"
+        [isSelected]="selectedTestSuiteIds.includes(testSuite.id)"
+        [currentSelectedVersion]="versionFilter == null? currentSelectedVersion : undefined"
+        [disableDrag]="searchQuery.length > 0 || filter == 'All'"
+        [isFilteredApplied]="filter != 'All'"
+        [applicationVersion]="applicationVersionsMap[testSuite.workspaceVersionId] || fetchApplicationVersion(testSuite.workspaceVersionId)"
+        (onSelectChange)="handleTestSuiteItemCheckbox($event)"
+        (onDelete)="removeTestSuite($event)"
+        (onSuiteLevelExecutionMethodChange)="handleSuiteLevelExecutionMethodChange($event)"
+        (onAddMachine)="openSelectTestMachineForm(null, [$event])"
+        (onUnlinkTestsuite)="unlinkTestsuite($event)"
+      ></app-test-suite-list-item>
+
+      <!-- Test suites empty-->
+      <div *ngIf="!filteredTestsuites.length" class="d-flex empty-full-container" [ngClass]="{'justify-content-between': !searchQuery.length}">
+        <div class="empty-run-sm"></div>
+        <div [textContent]="'search.notfound' | translate" *ngIf="searchQuery.length" class="mt-20 text-secondary fz-16"></div>
+        <div class="w-100" *ngIf="!searchQuery.length">
+          <div class="empty-note" [innerHTML]="'test_plan.suite.empty.popup' | translate"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RHS: footer -->
+    <div class="footer bg-white pointer add-suites-btn align-items-center d-flex" (click)="addSuites()">
+      <span class="fa-plus-filled add-btn-icon"></span>
+      <span translate="test_plan.environment.select_suite.add" class="ml-12"></span>
+    </div>
+  </div>
+</div>

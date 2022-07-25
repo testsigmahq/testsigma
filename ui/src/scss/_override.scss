@@ -393,8 +393,10 @@ ngx-json-viewer.custom-json-view {
 .cdk-overlay-pane .mat-menu-panel {
   max-width: 600px !important;
   height: 50vh !important;
+  &.switcher-dropdown {
+    height: auto !important;
+  }
   max-height: 50vh;
-
   .mat-menu-content {
     @extend .h-100;
   }

@@ -700,7 +700,7 @@ public class AgentExecutionService {
       environmentEntityDTO.setAgentDeviceUuid(agentDevice.getUniqueId());
     }
     environmentEntityDTO.setStorageType(storageServiceFactory.getStorageService().getStorageType());
-    environmentEntityDTO.setWorkspaceType(this.getAppType());
+    environmentEntityDTO.setWorkspaceType(testDevice.getWorkspaceVersion().getWorkspace().getWorkspaceType());
     environmentEntityDTO.setTestPlanSettings(testPlanSettingEntityDTO);
     environmentEntityDTO.setMatchBrowserVersion(testDevice.getMatchBrowserVersion());
     environmentEntityDTO.setCreateSessionAtCaseLevel(testDevice.getCreateSessionAtCaseLevel());
@@ -1245,7 +1245,7 @@ public class AgentExecutionService {
 
     populatePlatformOsDetails(testDevice, settings, testPlanLabType, agent);
 
-    if (this.getAppType().isWeb()) {
+    if (testDevice.getWorkspaceVersion().getWorkspace().getWorkspaceType().isWeb()) {
       populatePlatformBrowserDetails(testDevice, settings, testPlanLabType, agent,environmentEntityDTO);
     }
   }
@@ -1258,15 +1258,15 @@ public class AgentExecutionService {
     if (testPlanLabType == TestPlanLabType.Hybrid) {
       Platform platform = null;
       String osVersion = null;
-      if ((this.getAppType().isWeb()) && agent != null) {
+      if ((testDevice.getWorkspaceVersion().getWorkspace().getWorkspaceType().isWeb()) && agent != null) {
         platform = agent.getOsType().getPlatform();
         osVersion = agent.getPlatformOsVersion(agent.getOsType().getPlatform());
-      } else if (this.getAppType().isMobile() && testDevice.getDeviceId() != null) {
+      } else if (testDevice.getWorkspaceVersion().getWorkspace().getWorkspaceType().isMobile() && testDevice.getDeviceId() != null) {
         AgentDevice agentDevice = this.agentDeviceService.find(testDevice.getDeviceId());
         osVersion = agentDevice.getPlatformOsVersion();
         platform = agentDevice.getOsName().getPlatform();
       }
-      platformOsVersion = platformsService.getPlatformOsVersion(platform, osVersion, this.getAppType(), testPlanLabType);
+      platformOsVersion = platformsService.getPlatformOsVersion(platform, osVersion, testDevice.getWorkspaceVersion().getWorkspace().getWorkspaceType(), testPlanLabType);
     }
     else {
       platformOsVersion = platformsService.getPlatformOsVersion(testDevice.getPlatformOsVersionId(), testPlanLabType);

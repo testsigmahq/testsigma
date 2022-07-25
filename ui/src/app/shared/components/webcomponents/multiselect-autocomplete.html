@@ -25,8 +25,9 @@
       *ngIf="items?.content?.length == 0 && !!searchTextboxControl.value"
       [disabled]="true" [textContent]="'select.search.notfound'|translate"></mat-option>
     <mat-option *ngFor="let option of filteredOptions" [value]="option.id">
+      <!--appTooltipOnEllipsis-->
       <div class="text-truncate text-nowrap lh-2point6" [textContent]="option.name"
-           appTooltipOnEllipsis></div>
+           ></div>
     </mat-option>
     <mat-option  *ngFor="let option of selectedPlaceholder" class="d-none" [value]="option?.id" [textContent]="option?.name"></mat-option>
   </mat-select>

@@ -34,6 +34,7 @@ public abstract class DriverSettingsService {
                                              WebApplicationContext webApplicationContext)
     throws IOException, TestsigmaException, SQLException {
     WebDriverSettingsDTO webDriverSettings = new WebDriverSettingsDTO();
+    workspaceType = testDevice.getWorkspaceVersion().getWorkspace().getWorkspaceType();
     webDriverSettings.setWebDriverCapabilities(getCapabilities(testDevice, workspaceType, testPlanLabType,
             integrations, webApplicationContext));
     setApplicationSpecificCapabilities(testDevice, workspaceType, integrations, webDriverSettings);

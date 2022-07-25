@@ -18,7 +18,7 @@
             [ngModelOptions]="{standalone: true}"
             [(ngModel)]="advancedSettings"
             [disabled]="hasDifferentSuites"
-            (change)="setFormStates()"/>
+            (change)="setTestPlanType();setFormStates()"/>
           <label *ngIf="version?.workspace?.isWeb || version?.workspace?.isMobileWeb"
                  for="cbt"
                  class="pl-5 pointer"
@@ -38,7 +38,7 @@
             [ngModelOptions]="{standalone: true}"
             [(ngModel)]="advancedSettings"
             [disabled]="hasDifferentSuites"
-            (change)="setFormStates()"/>
+            (change)="setTestPlanType();setFormStates();"/>
           <label
             for="distributive"
             class="pl-5 pointer"
@@ -111,17 +111,26 @@
       *ngIf="showAddEnvironmentForm"
       [class.bottom-combine]="advancedSettings"
       class="bordered-combine-container">
+    <app-test-plan-lab-type-dropdown
+      (onVersionSelect)="setEnvironmentVersion($event)"
+      (onPreRequisiteSelect)="setEnvironmentPreRequisite($event)"
+      [execution]="testPlan"
+      [executionType]="testPlanForm.controls['testPlanType'].value"
+      [executionEnvironments]="testDevices"
+      [version]="activeExecutionEnvironment.version"
+      [activeExecutionEnvIndex]="activeExecutionEnvironment.id"
+      [formGroup]="activeEnvironmentFormGroup"></app-test-plan-lab-type-dropdown>
     <app-test-plan-test-machine-form
-      *ngIf="testPlanForm?.controls['testPlanLabType'] && (version?.workspace?.isWeb || (isHybrid && !version?.workspace?.isMobile)) && activeEnvironmentFormGroup"
+      *ngIf="(selectedVersion?.workspace?.isWeb || (isHybrid && !selectedVersion?.workspace?.isMobile)) && activeEnvironmentFormGroup"
       [formGroup]="activeEnvironmentFormGroup"
-      [version]="version"
+      [version]="selectedVersion"
       [isAvailableCheck]="false"
       (setAgentOnline)="setAgentStatus($event)"
       [testPlanLabType]="testPlanLabType"></app-test-plan-test-machine-form>
     <app-test-plan-device-form
-      *ngIf="version?.workspace?.isMobile"
+      *ngIf="selectedVersion?.workspace?.isMobile"
       [formGroup]="activeEnvironmentFormGroup"
-      [version]="version"
+      [version]="selectedVersion"
       [testPlanLabType]="testPlanLabType"></app-test-plan-device-form>
     <app-test-plan-app-uploads-form
       *ngIf="version?.workspace?.isMobileNative"

@@ -110,24 +110,25 @@ export class LabEnvironmentsInfoComponent implements OnInit {
       }
       else{
         if (env.platformOsVersionId != null) {
-          this.platformService.findOsVersion(env.platformOsVersionId, this.testPlan.testPlanLabType).subscribe((platformOsversion) => {
+
+          this.platformService.findOsVersion(env.platformOsVersionId, env.testPlanLabType).subscribe((platformOsversion) => {
             env.platform =  platformOsversion.platform;
             env.osVersion = platformOsversion.version;
           });
         }
         if (env.platformBrowserVersionId != null) {
-          this.platformService.findBrowserVersion(env.platformBrowserVersionId, this.testPlan.testPlanLabType).subscribe((platformBrowsersversion) => {
+          this.platformService.findBrowserVersion(env.platformBrowserVersionId, env.testPlanLabType).subscribe((platformBrowsersversion) => {
             env.browser = platformBrowsersversion.name.toUpperCase();
             env.browserVersion = platformBrowsersversion.version;
           });
         }
         if (env.platformDeviceId != null) {
-          this.platformService.findDevice(env.platformDeviceId, this.testPlan.testPlanLabType).subscribe((platformDevice) => {
+          this.platformService.findDevice(env.platformDeviceId, env.testPlanLabType).subscribe((platformDevice) => {
             env.deviceName = platformDevice.displayName;
           });
         }
         if (env.platformScreenResolutionId != null) {
-          this.platformService.findScreenResolution(env.platformScreenResolutionId, this.testPlan.testPlanLabType).subscribe((platformResolution) => {
+          this.platformService.findScreenResolution(env.platformScreenResolutionId, env.testPlanLabType).subscribe((platformResolution) => {
             env.resolution = platformResolution.resolution;
           });
         }

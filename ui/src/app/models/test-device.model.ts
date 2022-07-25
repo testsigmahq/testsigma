@@ -7,6 +7,8 @@ import {TestSuite} from "./test-suite.model";
 import {ApplicationPathType} from "../enums/application-path-type.enum";
 import {Capability} from "../shared/models/capability.model";
 import {Platform} from "../enums/platform.enum";
+import {WorkspaceVersion} from "./workspace-version.model";
+import {TestPlanLabType} from "../enums/test-plan-lab-type.enum";
 
 export class TestDevice extends Base implements PageObject {
   @serializable
@@ -135,6 +137,14 @@ export class TestDevice extends Base implements PageObject {
     }
   }
 
+  get isHybrid() {
+    return this.testPlanLabType === TestPlanLabType.Hybrid;
+  }
+
+  get isTestsigmaLab(){
+    return this.testPlanLabType === TestPlanLabType.TestsigmaLab;
+  }
+
   get isWindows() {
     return this.platform == Platform.Windows;
   }
@@ -181,6 +191,28 @@ export class TestDevice extends Base implements PageObject {
 
   get isAppPathType() {
     return this.appPathType == ApplicationPathType.USE_PATH;
+  }
+
+  @serializable
+  public prerequisiteEnvironmentId: number;
+  @serializable
+  public prerequisiteEnvironmentIdIndex: number;
+  public version: WorkspaceVersion;
+  @serializable
+  public testPlanLabType: TestPlanLabType;
+  @serializable
+  public workspaceVersionId: number;
+
+  get browserNameI18nKey() {
+    if (this.isChrome) {
+      return 'browser.name.GOOGLECHROME';
+    } else if (this.isFirefox) {
+      return 'browser.name.FIREFOX';
+    } else if (this.isSafari) {
+      return 'browser.name.SAFARI';
+    } else if (this.isEdge) {
+      return 'browser.name.EDGE';
+    }
   }
 
 }

@@ -2016,5 +2016,18 @@
   "addon.show_details": "Show Details",
   "chrome.install": "Install Testsigma Chrome Extension",
   "action.test_data_profile.step_no": "Step no",
-  "first_chrome_install.description": "Testsigma Chrome Extension will help you capture the “element” details automatically. Elements can be anything on a web page that you are trying to automate (or interact with) like buttons, text boxes, links, divs, texts, etc."
+  "first_chrome_install.description": "Testsigma Chrome Extension will help you capture the “element” details automatically. Elements can be anything on a web page that you are trying to automate (or interact with) like buttons, text boxes, links, divs, texts, etc.",
+  "test_plan.test.machine.device": "Test Machines",
+  "test_plan.machine.empty": "Select Test Suites from the right and click 'Add Machine'",
+  "test_plan.add.machine": "Add Machine",
+  "test_plan.suite.empty.popup": "Click <strong>Add Test Suites</strong> to add Test Suites to this Test Plan",
+  "btn.common.switch_to_classic": "Switch to Classic UI",
+  "test_plan.suite.filters": "Filters",
+  "test_plan.suite.enable.e2e": "Enable End-to-End testing",
+  "test_plan.form.help.e2e": "More details - <a href='https://testsigma.com/tutorials/test-plans/cross-platform-end-to-end-testing/' target='_blank'>End-to-End Testing Guide</a>.",
+  "test_plan.environments.all": "All",
+  "test_plan.suite.disabled.mixed_apps": "This operation is not allowed for Test Plan of type End-to-End",
+  "test_plan.suite.disabled.prev_diff": "This operation is not allowed as previously selected Test Suite's application version is different",
+  "test_plan.suite.disabled.app_diff": "This operation is not allowed as selected Test Suites are from different application versions",
+  "test_plan.suite.disabled.select_machine": "Select Test Machine to perform this operation"
 }

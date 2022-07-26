@@ -24,6 +24,7 @@ export class VersionSelectionComponent extends WorkspaceSwitcherComponent implem
 
   ngOnInit(): void {
     this.workSpaceType = this.version.workspace.workspaceType
+    this.addControllers()
     this.fetchWorkspaces();
 
     this.projectSwitcherForm.valueChanges.subscribe(()=> {
@@ -60,8 +61,12 @@ export class VersionSelectionComponent extends WorkspaceSwitcherComponent implem
     }
   }
 
-  setSelectedWorkSpace($event) {
-
+  addControllers() {
+    this.projectSwitcherForm = new FormGroup({
+      project: new FormControl(this.version.workspace, []),
+      application: new FormControl(this.version.workspace, []),
+      version: new FormControl(this.version, [])
+    });
   }
 
   get liveVersions(){

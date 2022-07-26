@@ -34,6 +34,7 @@
         <mat-option *ngFor="let lab of testLabsList" [value]="lab.value">
           <div
             *ngIf="lab.value == ExecutionLabType.Hybrid"
+            (click)="setValue(lab.value)"
             class="d-flex align-items-center"
           >
             <i [ngClass]="lab.iconClass + ' h-18p d-inline-block'"></i>

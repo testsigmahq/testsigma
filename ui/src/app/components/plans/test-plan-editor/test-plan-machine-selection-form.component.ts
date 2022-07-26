@@ -101,6 +101,7 @@ export class TestPlanMachineSelectionFormComponent extends BaseComponent impleme
     let testSuites = this.data.testSuites.map(suite => suite.id);
 
     let environmentFormGroup = this.formBuilder.group({
+      agentId: new FormControl(environment?.agentId, [this.requiredIfValidator(() => environment?.isHybrid)]),
       id: new FormControl(environment?.id, []),
       title: new FormControl(environment?.title, [Validators.required, Validators.minLength(4), Validators.maxLength(120)]),
       testPlanLabType: new FormControl(environment?.testPlanLabType || TestPlanLabType.TestsigmaLab, [Validators.required]),

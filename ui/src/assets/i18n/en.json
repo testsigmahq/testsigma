@@ -2035,5 +2035,6 @@
   "test_plan.suite.add_machine.map.title": "Add Test Suites to Machine",
   "test_plan.suite.add_machine.map.no_machine": "No Test Machine available for this Test Plan",
   "test_plan.suite.add_machine.map.no_machine_appid": "No Test Machine matching application version of currently selected Test Suites available",
-  "test_plan.suite.add_machine.disabled.not_selected": "Select Test Suites to add them to Test Machine"
+  "test_plan.suite.add_machine.disabled.not_selected": "Select Test Suites to add them to Test Machine",
+  "test_plan.test_suite.all_suite_machine_error": "All Test Suites must be associated with Test Machines"
 }

@@ -51,5 +51,4 @@ public class TestPlanResultDTO {
   private int totalQueuedCount;
   private Timestamp createdDate;
   private Timestamp updatedDate;
-  private List<TestDeviceResultDTO> testDeviceResults;
 }

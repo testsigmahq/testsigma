@@ -23,22 +23,13 @@ export class VersionSelectionComponent extends WorkspaceSwitcherComponent implem
   public WorkSpaceType = WorkspaceType;
 
   ngOnInit(): void {
-    this.addControllers();
+    this.workSpaceType = this.version.workspace.workspaceType
     this.fetchWorkspaces();
 
     this.projectSwitcherForm.valueChanges.subscribe(()=> {
       if(this.showWithoutDropdown && this.version && this.version.id != this.selectedVersion?.id) this.go();
     });
   }
-
-  addControllers() {
-    this.projectSwitcherForm = new FormGroup({
-      project: new FormControl(this.version.workspace, []),
-      application: new FormControl(this.version.workspace, []),
-      version: new FormControl(this.version, [])
-    });
-  }
-
 
   get canEnableGo() {
     return super.version?.id != this.selectedVersion?.id;
@@ -92,5 +83,9 @@ export class VersionSelectionComponent extends WorkspaceSwitcherComponent implem
         break;
       }
     }
+  }
+
+  get selectedVersion(){
+    return this.projectSwitcherForm?.get('version').value;
   }
 }

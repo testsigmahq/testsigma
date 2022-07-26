@@ -2029,5 +2029,11 @@
   "test_plan.suite.disabled.mixed_apps": "This operation is not allowed for Test Plan of type End-to-End",
   "test_plan.suite.disabled.prev_diff": "This operation is not allowed as previously selected Test Suite's application version is different",
   "test_plan.suite.disabled.app_diff": "This operation is not allowed as selected Test Suites are from different application versions",
-  "test_plan.suite.disabled.select_machine": "Select Test Machine to perform this operation"
+  "test_plan.suite.disabled.select_machine": "Select Test Machine to perform this operation",
+  "test_plan.suite.add_machine.create": "Create new Machine",
+  "test_plan.suite.add_machine.map": "Add to existing Machine",
+  "test_plan.suite.add_machine.map.title": "Add Test Suites to Machine",
+  "test_plan.suite.add_machine.map.no_machine": "No Test Machine available for this Test Plan",
+  "test_plan.suite.add_machine.map.no_machine_appid": "No Test Machine matching application version of currently selected Test Suites available",
+  "test_plan.suite.add_machine.disabled.not_selected": "Select Test Suites to add them to Test Machine"
 }

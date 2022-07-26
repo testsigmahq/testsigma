@@ -145,6 +145,10 @@ export class TestDevice extends Base implements PageObject {
     return this.testPlanLabType === TestPlanLabType.TestsigmaLab;
   }
 
+  get isPrivateGrid(){
+    return this.testPlanLabType === TestPlanLabType.PrivateGrid;
+  }
+
   get isWindows() {
     return this.platform == Platform.Windows;
   }

@@ -106,6 +106,7 @@ public class AgentExecutionService {
   private Long scheduleId;
 
   private ExecutionTriggeredType triggeredType = ExecutionTriggeredType.MANUAL;
+  private final WorkspaceVersionService workspaceVersionService;
 
 
   // ################################################  START  ###################################################
@@ -700,6 +701,7 @@ public class AgentExecutionService {
       environmentEntityDTO.setAgentDeviceUuid(agentDevice.getUniqueId());
     }
     environmentEntityDTO.setStorageType(storageServiceFactory.getStorageService().getStorageType());
+    testDevice.setWorkspaceVersion(workspaceVersionService.find(testDevice.getWorkspaceVersionId()));
     environmentEntityDTO.setWorkspaceType(testDevice.getWorkspaceVersion().getWorkspace().getWorkspaceType());
     environmentEntityDTO.setExecutionLabType(testDevice.getTestPlanLabType());
     environmentEntityDTO.setTestPlanSettings(testPlanSettingEntityDTO);

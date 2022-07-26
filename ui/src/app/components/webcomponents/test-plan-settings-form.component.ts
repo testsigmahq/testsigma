@@ -82,8 +82,8 @@ export class TestPlanSettingsFormComponent extends BaseComponent implements OnIn
     this.testPlan.testDevices.forEach((env, index) => {
       env.matchBrowserVersion = this.testPlan.matchBrowserVersion
       if(this.version.workspace.isMobileNative){
-        if(Boolean(json.testDevices[index].settings.app_upload_id)) env.settings.appUploadId = json.testDevices[index].settings.app_upload_id;
-        env.settings.appPathType = this.formGroup.getRawValue().testDevices[index].settings.appPathType;
+        if(Boolean(json.testDevices[index].appUploadId)) env.appUploadId = json.testDevices[index].appUploadId;
+        env.appPathType = this.formGroup.getRawValue().testDevices[index].appPathType;
       }
     });
     if(this.checkNameEnvironment()) {

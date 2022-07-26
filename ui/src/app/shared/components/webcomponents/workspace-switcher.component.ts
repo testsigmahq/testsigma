@@ -187,7 +187,4 @@ export class WorkspaceSwitcherComponent implements OnInit {
     return false;
   }
 
-  get selectedVersion(){
-    return this.projectSwitcherForm.get('version').value;
-  }
 }

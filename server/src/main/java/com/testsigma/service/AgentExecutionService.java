@@ -1011,7 +1011,7 @@ public class AgentExecutionService {
 
   protected void setTestLabDetails(TestDevice testDevice, TestDeviceSettings settings,EnvironmentEntityDTO environmentEntityDTO)
     throws Exception {
-    if (this.testPlan.getWorkspaceVersion().getWorkspace().getWorkspaceType().isRest())
+    if (testDevice.getWorkspaceVersion().getWorkspace().getWorkspaceType().isRest())
       return;
     TestPlanLabType exeLabType = testDevice.getTestPlanLabType();
     setPlatformDetails(testDevice, settings, exeLabType, testDevice.getAgent(), environmentEntityDTO);
@@ -1096,7 +1096,7 @@ public class AgentExecutionService {
     elementNames.addAll(testStepService.findAddonActionElementsByTestCaseIds(testCaseIds));
 
     List<Element> elementList = elementService.findByNameInAndWorkspaceVersionId(elementNames,
-      testPlan.getWorkspaceVersionId());
+      testDevice.getWorkspaceVersionId());
     Map<String, Element> elements = new HashMap<>();
     for (Element element : elementList) {
       elements.put(element.getName().toLowerCase(), element);

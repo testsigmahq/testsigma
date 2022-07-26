@@ -43,7 +43,8 @@ CREATE TABLE `test_device_results`
   KEY `index_test_device_results_on_status_index` (`status`),
   KEY `index_test_device_results_on_result_index` (`result`),
   KEY `index_test_device_results_on_re_run_parent_id_index` (`re_run_parent_id`),
-  CONSTRAINT `fk_test_plan_run_id_in_test_device_results_to_test_plan_results` FOREIGN KEY (`test_plan_result_id`) REFERENCES `test_plan_results` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+  CONSTRAINT `fk_test_plan_run_id_in_test_device_results_to_test_plan_results` FOREIGN KEY (`test_plan_result_id`) REFERENCES `test_plan_results` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `fk_workspace_version_id_in_device_results_to_workspace_versions` FOREIGN KEY (`workspace_version_id`) REFERENCES `workspace_versions` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 238
   DEFAULT CHARSET = utf8

@@ -36,6 +36,7 @@ CREATE TABLE `test_devices`
   KEY `index_test_devices_on_test_plan_id` (`test_plan_id`),
   KEY `index_test_devices_on_agent_id` (`agent_id`),
   CONSTRAINT `fk_test_plan_id_in_test_devices_to_test_plans` FOREIGN KEY (`test_plan_id`) REFERENCES `test_plans` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `fk_workspace_version_id_in_test_devices_to_workspace_versions` FOREIGN KEY (`workspace_version_id`) REFERENCES `workspace_versions` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `fk_agent_id_in_test_devices_to_uploads` FOREIGN KEY (`agent_id`) REFERENCES `agents` (`id`) ON DELETE RESTRICT ON UPDATE NO ACTION
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 59

@@ -701,6 +701,7 @@ public class AgentExecutionService {
     }
     environmentEntityDTO.setStorageType(storageServiceFactory.getStorageService().getStorageType());
     environmentEntityDTO.setWorkspaceType(testDevice.getWorkspaceVersion().getWorkspace().getWorkspaceType());
+    environmentEntityDTO.setExecutionLabType(testDevice.getTestPlanLabType());
     environmentEntityDTO.setTestPlanSettings(testPlanSettingEntityDTO);
     environmentEntityDTO.setMatchBrowserVersion(testDevice.getMatchBrowserVersion());
     environmentEntityDTO.setCreateSessionAtCaseLevel(testDevice.getCreateSessionAtCaseLevel());

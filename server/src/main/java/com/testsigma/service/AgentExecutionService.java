@@ -595,9 +595,9 @@ public class AgentExecutionService {
             this.testPlanResult.getId());
     for(TestDeviceResult testDeviceResult : testDeviceResults) {
       if (canPushToLabAgent(testDeviceResult)) {
-        processResultEntriesForLabAgent(testDeviceResults);
+        processResultEntriesForLabAgent(testDeviceResult);
       } else if (canPushToHybridAgent(testDeviceResult)) {
-        processResultEntriesForHybridAgent(testDeviceResults);
+        processResultEntriesForHybridAgent(testDeviceResult);
       }
     }
   }
@@ -611,48 +611,40 @@ public class AgentExecutionService {
     return testDeviceResult.getTestPlanLabType().equals(TestPlanLabType.Hybrid);
   }
 
-  private void processResultEntriesForLabAgent(List<TestDeviceResult> testDeviceResults) throws Exception {
-    processResultEntries(testDeviceResults, StatusConstant.STATUS_CREATED);
+  private void processResultEntriesForLabAgent(TestDeviceResult testDeviceResult) throws Exception {
+    processResultEntries(testDeviceResult, StatusConstant.STATUS_CREATED);
   }
 
-  private void processResultEntriesForHybridAgent(List<TestDeviceResult> testDeviceResults) throws Exception {
-    processResultEntries(testDeviceResults, StatusConstant.STATUS_CREATED);
+  private void processResultEntriesForHybridAgent(TestDeviceResult testDeviceResult) throws Exception {
+    processResultEntries(testDeviceResult, StatusConstant.STATUS_CREATED);
   }
 
-  public void processResultEntries(List<TestDeviceResult> testDeviceResults, StatusConstant inStatus)
+  public void processResultEntries(TestDeviceResult testDeviceResult, StatusConstant inStatus)
     throws Exception {
-    for (TestDeviceResult testDeviceResult : testDeviceResults) {
-      if (testDeviceResult.getTestDevice().getAgent() == null && testDeviceResult.getTestPlanLabType().isHybrid()) {
-        testDeviceResultService.markEnvironmentResultAsFailed(testDeviceResult, AutomatorMessages.AGENT_HAS_BEEN_REMOVED, StatusConstant.STATUS_CREATED);
-      } else if (testDeviceResult.getTestPlanLabType().isHybrid() && !agentService.isAgentActive(testDeviceResult.getTestDevice().getAgentId())) {
-          testDeviceResultService.markEnvironmentResultAsFailed(testDeviceResult,
-            AutomatorMessages.AGENT_INACTIVE, StatusConstant.STATUS_CREATED);
-      } else if(testDeviceResult.getTestPlanLabType().isHybrid() && testDeviceResult.getTestDevice().getDeviceId()!=null &&
-        agentService.isAgentActive(testDeviceResult.getTestDevice().getAgentId()) && !agentDeviceService.isDeviceOnline(testDeviceResult.getTestDevice().getDeviceId())){
-        testDeviceResultService.markEnvironmentResultAsFailed(testDeviceResult,
-          agentDeviceService.find(testDeviceResult.getTestDevice().getDeviceId()).getName()+ " "+AutomatorMessages.DEVICE_NOT_ONLINE, StatusConstant.STATUS_CREATED);
-      }
-      else {
-          processEnvironmentResult(testDeviceResult, inStatus);
-      }
+    if (testDeviceResult.getTestDevice().getAgent() == null && testDeviceResult.getTestPlanLabType().isHybrid()) {
+      testDeviceResultService.markEnvironmentResultAsFailed(testDeviceResult, AutomatorMessages.AGENT_HAS_BEEN_REMOVED, StatusConstant.STATUS_CREATED);
+    } else if (testDeviceResult.getTestPlanLabType().isHybrid() && !agentService.isAgentActive(testDeviceResult.getTestDevice().getAgentId())) {
+      testDeviceResultService.markEnvironmentResultAsFailed(testDeviceResult, AutomatorMessages.AGENT_INACTIVE, StatusConstant.STATUS_CREATED);
+    } else if(testDeviceResult.getTestPlanLabType().isHybrid() && testDeviceResult.getTestDevice().getDeviceId()!=null && agentService.isAgentActive(testDeviceResult.getTestDevice().getAgentId()) && !agentDeviceService.isDeviceOnline(testDeviceResult.getTestDevice().getDeviceId())){
+      testDeviceResultService.markEnvironmentResultAsFailed(testDeviceResult, agentDeviceService.find(testDeviceResult.getTestDevice().getDeviceId()).getName()+ " "+AutomatorMessages.DEVICE_NOT_ONLINE, StatusConstant.STATUS_CREATED);
+    } else if(!isWaitingOnEnvironmentPrerequisite(testDeviceResult)){
+      processEnvironmentResult(testDeviceResult, inStatus);
     }
     testDeviceResultService.updateExecutionConsolidatedResults(this.testPlanResult.getId(),
       Boolean.TRUE);
   }
 
   public void processEnvironmentResult(TestDeviceResult testDeviceResult, StatusConstant inStatus) throws Exception {
-    if(!isWaitingOnEnvironmentPrerequisite(testDeviceResult)) {
-      testDeviceResultService.markEnvironmentResultAsInPreFlight(testDeviceResult, inStatus);
-      if (!testDeviceResult.getTestPlanLabType().isHybrid()) {
-        EnvironmentEntityDTO environmentEntityDTO = loadEnvironment(testDeviceResult,
+    testDeviceResultService.markEnvironmentResultAsInPreFlight(testDeviceResult, inStatus);
+    if (!testDeviceResult.getTestPlanLabType().isHybrid()) {
+      EnvironmentEntityDTO environmentEntityDTO = loadEnvironment(testDeviceResult,
+              StatusConstant.STATUS_PRE_FLIGHT);
+      try {
+        pushEnvironmentToLab(testDeviceResult, environmentEntityDTO);
+      } catch (Exception e) {
+        log.error(e.getMessage(), e);
+        testDeviceResultService.markEnvironmentResultAsFailed(testDeviceResult, e.getMessage(),
                 StatusConstant.STATUS_PRE_FLIGHT);
-        try {
-          pushEnvironmentToLab(testDeviceResult, environmentEntityDTO);
-        } catch (Exception e) {
-          log.error(e.getMessage(), e);
-          testDeviceResultService.markEnvironmentResultAsFailed(testDeviceResult, e.getMessage(),
-                  StatusConstant.STATUS_PRE_FLIGHT);
-        }
       }
     }
   }

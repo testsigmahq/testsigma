@@ -332,7 +332,9 @@ public class TestDeviceResultService {
               AgentExecutionService agentExecutionService = agentExecutionServiceObjectFactory.getObject();
               agentExecutionService.setTestPlan(testPlan);
               agentExecutionService.setTestPlanResult(testPlanResult);
-              agentExecutionService.processResultEntries(envResults, StatusConstant.STATUS_QUEUED);
+              for(TestDeviceResult testDeviceResult : envResults ) {
+                agentExecutionService.processResultEntries(testDeviceResult, StatusConstant.STATUS_QUEUED);
+              }
             } catch (Exception e) {
               log.error(e.getMessage(), e);
               String message = " Error while sending pending test plans for test plan result - " + testPlanResult.getId();

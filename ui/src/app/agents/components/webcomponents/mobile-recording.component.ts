@@ -208,7 +208,7 @@ export class MobileRecordingComponent extends BaseComponent implements OnInit {
           this.mobileSessionId = null;
         }
         console.log("Error while creating the session - ", error);
-        this.showNotification(NotificationType.Error, this.translate.instant("mobile_recorder.message.refresh"), false);
+        this.showNotification(NotificationType.Error, this.translate.instant("mobile_recorder.message.error"));
         this.loadingActions = false;
         this.loading = false;
       }
@@ -590,18 +590,23 @@ export class MobileRecordingComponent extends BaseComponent implements OnInit {
     }
     const temp = {
       type: type,
-      title: "Error",
-      content: message,
+      title: message,
       timeOut: 0,
-      positionClass: 'toast-bottom-left',
       showProgressBar: true,
       pauseOnHover: true,
       animate: 'fromLeft',
       showCloseButton: true,
       enableHtml: true,
-      disableTimeOut:clickToClose
+      clickToClose: false,
+      clickIconToClose: true,
+      theClass: "paused-notification",
     };
-    this.toastrService.show( temp.content,temp.title, temp, temp.type);
+    let notification = this.notificationsService.create(temp.title, "", temp.type, temp);
+    notification.click.subscribe((event)=>{
+      if(event["target"] == document.querySelector(".icon")){
+        this.notificationsService.remove(notification.id);
+      }
+    })
   }
 
   get isFullModeScreen() {

@@ -28,7 +28,7 @@ import {Router} from "@angular/router";
             <div class="rb-regular-i default-font" [translate]="'settings.telemetry.message1'"></div>
             <div class="p-2 pt-10 default-font bd-highlight" [innerHTML]="'settings.telemetry.message2'|translate"></div>
             <div class="p-2 pt-10 default-font bd-highlight">
-              If you’d like to opt-out of sending usage stats, you can disable <a (click)="routeToTelemetry()" class="text-link">telemetry&nbsp;here</a>. For more information, check out our <a target="_blank" href="https://testsigma.com/privacy-policy">privacy policy.</a>
+              If you’d like to opt-out of sending usage stats, you can disable <a (click)="routeToTelemetry()" class="text-link">telemetry&nbsp;here</a>. For more information, check out our <a target="_blank" rel="nofollow" href="https://testsigma.com/privacy-policy">privacy policy.</a>
             </div>
           </div>
         </div>

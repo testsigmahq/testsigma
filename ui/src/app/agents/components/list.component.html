@@ -88,7 +88,9 @@
                     agent.currentAgentVersion}">
                 <i class="fa-exclamation-triangle-solid text-pale-orange pr-6"></i>
               {{'agents.list_view.out_of_sync'|translate}}
-              <a href='https://testsigma.com/docs/agent/troubleshooting/setup-issues/' target='_blank' style='text-decoration:none' class='text-link text-secondary pl-4' [translate]="'agents.devices_troubleshoot'" >  </a>
+              <a
+                rel="nofollow"
+                href='https://testsigma.com/docs/agent/troubleshooting/setup-issues/' target='_blank' style='text-decoration:none' class='text-link text-secondary pl-4' [translate]="'agents.devices_troubleshoot'" >  </a>
               </span>
             <span *ngIf="!agent.isOnline()"
                   class="pl-5 pt-5 text-t-secondary d-inline-block"
@@ -96,7 +98,9 @@
                     translate: {updatedAt: (agent.updatedAt | amTimeAgo)}">
                   <i class="fa-exclamation-triangle-solid text-pale-orange pr-6"></i>
                   {{'agents.unable_to_reach'|translate}}
-              <a href='https://testsigma.com/docs/agent/troubleshooting/setup-issues/' target='_blank' style='text-decoration:none' class='text-link text-secondary pl-4' [translate]="'agents.devices_troubleshoot'" >  </a>
+              <a
+                rel="nofollow"
+                href='https://testsigma.com/docs/agent/troubleshooting/setup-issues/' target='_blank' style='text-decoration:none' class='text-link text-secondary pl-4' [translate]="'agents.devices_troubleshoot'" >  </a>
 
                 </span>
           </div>
@@ -170,7 +174,9 @@
       <div class="empty-full-content">
         <div class="empty-run-md" *ngIf="isFiltered || filteredBy!= 'all'"></div>
         <div *ngIf="!isFiltered && filteredBy=='all'; else showEmptyMessage">
-          <a href="https://testsigma.com/docs/agent/faqs/" target="_blank" class="fz-24 d-block text-black text-decoration-none pb-15 lh-2point6 ts-col-45 mx-auto text-center" [translate]="'agents.know_more'"></a>
+          <a
+            rel="nofollow"
+            href="https://testsigma.com/docs/agent/faqs/" target="_blank" class="fz-24 d-block text-black text-decoration-none pb-15 lh-2point6 ts-col-45 mx-auto text-center" [translate]="'agents.know_more'"></a>
           <div
             class="ts-col-100 mx-auto"
             (click)="showVideo= !showVideo"

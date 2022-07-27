@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {BaseComponent} from "../../shared/components/base.component";
 import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
 import {NotificationsService, NotificationType} from 'angular2-notifications';
@@ -14,6 +14,7 @@ import {Pageable} from "../../shared/models/pageable";
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {TestStepType} from "../../enums/test-step-type.enum";
 import {ChromeRecorderService} from "../../services/chrome-recoder.service";
+import {CdkVirtualScrollViewport} from "@angular/cdk/scrolling";
 
 
 @Component({
@@ -29,6 +30,7 @@ export abstract class TestCaseStepsListComponent extends BaseComponent implement
   @Output('onStepDrag') public onStepDrag = new EventEmitter<TestStep[]>();
   @Output('onSelectedStepType') public onSelectedStepType = new EventEmitter<string>();
   @Input('isCheckHelpPreference') isCheckHelpPreference: boolean;
+  @ViewChild('stepsVirtualScrollViewNonReorderDisabled') virtualScroll: CdkVirtualScrollViewport;
   public isStepFetchCompletedTmp: Boolean = false;
 
   public testSteps: Page<TestStep>;
@@ -58,6 +60,7 @@ export abstract class TestCaseStepsListComponent extends BaseComponent implement
       (!(Object.keys(changes).length && Object.keys(changes)[0] === "addonTemplates")))
       this.fetchSteps();
     this.selectedSteps=[];
+    this.invokeScrollToStep();
   }
 
   trackByIdx(i, item: TestStep) {
@@ -384,6 +387,26 @@ export abstract class TestCaseStepsListComponent extends BaseComponent implement
   }
   private callBack(steps: Page<TestStep>) {
     this.fetchSteps()
+  }
+
+  invokeScrollToStep() {
+    let position = window.location.hash.replace('#position:', '');
+
+    if(position) {
+      window.location.hash = '';
+      this.scrollToStepPosition(position);
+    }
+  }
+
+  scrollToStepPosition(position) {
+    const testSteps = this.testSteps?.content;
+    if (this.virtualScroll && testSteps?.length)
+      this.virtualScroll.scrollToIndex(position - 5,'smooth');
+    else {
+      setTimeout(() => {
+        this.scrollToStepPosition(position);
+      }, 200)
+    }
   }
 
 }

@@ -646,6 +646,7 @@
   "mobile_recorder.notification.go_to_home.failure": "Action Failed",
   "mobile_recorder.message.preparing": "<span class=\"text-center\"> Please wait <br>while the Testsigma Mobile Inspector finishes loading <span class=\"loading-dots\"></span></span>",
   "mobile_recorder.message.refresh": "Loading. Please wait...",
+  "mobile_recorder.message.error": "Error, please contact support",
   "mobile_recorder.notification.start.failure_troubleshoot": "Mobile inspector Failed to Load, please <a href='https://testsigma.com/docs/troubleshooting/mobile-apps/failed-to-launch-test-recorder/' target='_blank'>Click Here</a> to access the Trouble Shooting guide to understand how to fix this",
   "mobile_recorder.notification.action.failure_troubleshoot": "Failed to Perform the {{actionType}} action, please <a href='https://testsigma.com/docs/troubleshooting/mobile-apps/mobile-recorder-actions-failures/{{guideLink}}' target='_blank'>Click Here</a> to access the Trouble Shooting guide to understand how to fix this",
   "mobile_recorder.notification.session_expired": "Session expired, please <a href='https://testsigma.com/docs/troubleshooting/mobile-apps/mobile-recorder-actions-failures/#3--mobile-inspection-session-expired' target='_blank'>Click Here</a> to access the Trouble Shooting guide to understand how to fix this",
@@ -2036,5 +2037,12 @@
   "test_plan.suite.add_machine.map.no_machine": "No Test Machine available for this Test Plan",
   "test_plan.suite.add_machine.map.no_machine_appid": "No Test Machine matching application version of currently selected Test Suites available",
   "test_plan.suite.add_machine.disabled.not_selected": "Select Test Suites to add them to Test Machine",
-  "test_plan.test_suite.all_suite_machine_error": "All Test Suites must be associated with Test Machines"
+  "test_plan.test_suite.all_suite_machine_error": "All Test Suites must be associated with Test Machines",
+  "suggestion.runtime_vars.note": "We will use last stored value for the selected runtime variable.",
+  "suggestion.runtime_vars.var_name": "Runtime variable name",
+  "suggestion.runtime_vars.testcase": "Testcase",
+  "suggestion.runtime_vars.step": "Step",
+  "suggestion.runtime_vars.name": "Runtime Variables",
+  "suggestion.runtime_vars.empty": "You currently have no runtime variables.",
+  "suggestion.runtime_vars.click_here.tooltip": "Click here to select the runtime variable"
 }

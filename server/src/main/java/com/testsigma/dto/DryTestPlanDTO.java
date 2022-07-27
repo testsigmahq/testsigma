@@ -33,7 +33,6 @@ public class DryTestPlanDTO {
   PreRequisiteAction onSuitePreRequisiteFail;
   PreRequisiteAction onTestcasePreRequisiteFail;
   RecoverAction onStepPreRequisiteFail;
-  //TestPlanLabType testPlanLabType;
   TestPlanType testPlanType;
   WorkspaceVersionDTO workspaceVersion;
   List<TestDeviceDTO> testDevices;

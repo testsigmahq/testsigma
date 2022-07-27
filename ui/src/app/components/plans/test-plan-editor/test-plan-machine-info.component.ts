@@ -81,8 +81,8 @@ export class TestPlanMachineInfoComponent implements OnInit {
 
   ngOnChanges(){
     if(this.isHybrid){
-      let targetMachine = this.executionEnvironment?.deviceId;
-      this.agentService.findAll("systemId:" + targetMachine).subscribe(res=> {
+      let targetMachine = this.executionEnvironment?.deviceId || this.executionEnvironment?.agentId;
+      this.agentService.findAll("id:" + targetMachine).subscribe(res=> {
         if(res.content.length){
           this.agent = res.content[0];
           if(this.executionEnvironment.browser!=null){

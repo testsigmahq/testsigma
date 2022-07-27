@@ -57,7 +57,7 @@ export class TestPlanLabTypeDropdownComponent extends SelectTestLabComponent imp
     })
 
     let executionEnv = this.executionEnvironments.find((item, idx)=> idx == this.activeExecutionEnvIndex);
-    this.preRequisiteExecutionEnvironment = this.executionEnvironments.find((item, idx)=>((item.id == executionEnv?.prerequisiteEnvironmentId && item.id) || (executionEnv?.prerequisiteEnvironmentIdIndex == idx)));
+    this.preRequisiteExecutionEnvironment = this.executionEnvironments.find((item, idx)=>((item.id == executionEnv?.prerequisiteTestDevicesId && item.id) || (executionEnv?.prerequisiteTestDevicesIdIndex == idx)));
   }
 
   ngOnChanges(simpleChanges: SimpleChanges) {
@@ -92,7 +92,6 @@ export class TestPlanLabTypeDropdownComponent extends SelectTestLabComponent imp
   }
 
   selectEnvironmentPreRequisite(executionEnvironment?: TestDevice | undefined) {
-    console.log(executionEnvironment);
     this.preRequisiteExecutionEnvironment = executionEnvironment;
     this.onPreRequisiteSelect.emit(executionEnvironment);
   }
@@ -107,8 +106,8 @@ export class TestPlanLabTypeDropdownComponent extends SelectTestLabComponent imp
 
     return this.executionEnvironments.filter((item, idx)=> {
       let isItemPrecessor = idx < this.activeExecutionEnvIndex;
-      let isItemNotRelated = activeEnvID? (item.id != activeEnvID && item.prerequisiteEnvironmentId != activeEnvID) : ( idx != this.activeExecutionEnvIndex && item.prerequisiteEnvironmentIdIndex != this.activeExecutionEnvIndex);
-      let isitemNotSelected = activeEnvID? (executionEnv.prerequisiteEnvironmentId != item.id) : ( this.selectTestLabForm.value.prerequisiteEnvironmentIdIndex != idx );
+      let isItemNotRelated = activeEnvID? (item.id != activeEnvID && item.prerequisiteTestDevicesId != activeEnvID) : ( idx != this.activeExecutionEnvIndex && item.prerequisiteTestDevicesIdIndex != this.activeExecutionEnvIndex);
+      let isitemNotSelected = activeEnvID? (executionEnv.prerequisiteTestDevicesId != item.id) : ( this.selectTestLabForm.value.prerequisiteTestDevicesIdIndex != idx );
 
       return isItemPrecessor && isItemNotRelated && isitemNotSelected;
     });

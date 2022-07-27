@@ -53,16 +53,16 @@
     </mat-form-field>
 
   </div>
-  <div class="test-plan-prerequisite" *ngIf="executionEnvironments.length && isDistributed && activeExecutionEnvIndex != 0">
+  <div class="test-plan-prerequisite" *ngIf="executionEnvironments.length && activeExecutionEnvIndex != 0">
     <div class="fz-14 rb-medium" [translate]="'common.prerequisite'"></div>
     <div class="my-10 lab-item dropdown mouse-over d-inline-block">
       <div class="selection-cutsom-skin btn-group pointer d-flex align-items-center bg-default-grey-light py-10 pr-10 pl-6 grey-on-hover border-rds-4">
         <div class="min-w-250p h-18p">
           <app-test-plan-execution-environment-info
             *ngIf="preRequisiteExecutionEnvironment && !isNewUI"
-            [execution]="execution"
+            [testPlan]="execution"
             [version]="preRequisiteExecutionEnvironment.version"
-            [executionEnvironment]="preRequisiteExecutionEnvironment"></app-test-plan-execution-environment-info>
+            [testDevice]="preRequisiteExecutionEnvironment"></app-test-plan-execution-environment-info>
           <span class="text-truncate-d-block w-100" *ngIf="isNewUI && preRequisiteExecutionEnvironment">{{ preRequisiteExecutionEnvironment?.title }}</span>
           <span *ngIf="!preRequisiteExecutionEnvironment" [translate]="'message.common.none'" ></span>
         </div>
@@ -74,9 +74,9 @@
         <div
           class="bg-white border-rds-4 d-flex ng-scope py-10 shadow-all2-b4 px-15">
           <ul class="rb-regular-i-d ts-col-100 ml-auto my-0 p-0 theme-text" style="list-style: none">
-            <!--<li class="d-flex align-items-center pl-10 py-10 grey-on-hover pointer" (click)="selectEnvironmentPreRequisite(executionEnvironment)">
+            <li class="d-flex align-items-center pl-10 py-10 grey-on-hover pointer" (click)="selectEnvironmentPreRequisite()">
               <span [translate]="'message.common.none'" ></span>
-            </li>-->
+            </li>
             <li class="d-flex align-items-center p-10 grey-on-hover pointer"
                 (click)="selectEnvironmentPreRequisite(executionEnvironment)"  *ngFor="let executionEnvironment of prerequisiteList">
               <app-test-plan-execution-environment-info

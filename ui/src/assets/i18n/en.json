@@ -2044,5 +2044,9 @@
   "suggestion.runtime_vars.step": "Step",
   "suggestion.runtime_vars.name": "Runtime Variables",
   "suggestion.runtime_vars.empty": "You currently have no runtime variables.",
-  "suggestion.runtime_vars.click_here.tooltip": "Click here to select the runtime variable"
+  "suggestion.runtime_vars.click_here.tooltip": "Click here to select the runtime variable",
+  "test_plan.drag.reorder.testsuite": "Drag to re-order Test Suite",
+  "test_plan.filter.reorder.testsuite": "Select Test Machine to re-order Test Suite in it",
+  "test_plan.filter.reorder.testsuite.no_machine": "Add Test Machine to reorder Test Suite",
+  "common.prerequisite": "Prerequisite"
 }

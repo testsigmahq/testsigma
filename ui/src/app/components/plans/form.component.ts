@@ -60,7 +60,7 @@ export class FormComponent implements OnInit {
     } else {
       this.testPlan = new TestPlan();
       this.testPlan.testPlanLabType = TestPlanLabType.TestsigmaLab;
-      this.testPlan.testPlanType = TestPlanType.CROSS_BROWSER;
+      this.testPlan.testPlanType = TestPlanType.DISTRIBUTED;
       this.versionId = this.route.snapshot.params.versionId;
       this.fetchVersion();
     }

@@ -297,9 +297,9 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
 
   setEnvironmentPreRequisite(executionEnvironment: TestDevice) {
     const index = this.testPlan.testDevices.findIndex(env => env == executionEnvironment);
-    const prerequisiteEnvironmentIdIndex = index > -1 ? index : null;
-    this.activeEnvironmentFormGroup.controls['prerequisiteEnvironmentIdIndex'].setValue(prerequisiteEnvironmentIdIndex);
-    this.activeEnvironmentFormGroup.controls['prerequisiteEnvironmentId'].setValue(executionEnvironment?.id || null);
+    const prerequisiteTestDevicesIdIndex = index > -1 ? index : null;
+    this.activeEnvironmentFormGroup.controls['prerequisiteTestDevicesIdIndex'].setValue(prerequisiteTestDevicesIdIndex);
+    this.activeEnvironmentFormGroup.controls['prerequisiteTestDevicesId'].setValue(executionEnvironment?.id || null);
   }
 
   get testLabType() {

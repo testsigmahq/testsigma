@@ -47,6 +47,7 @@ public class TestDeviceRequest {
   Long envRunId;
   Boolean disable;
   Long prerequisiteTestDevicesId;
+  Long prerequisiteTestDevicesIdIndex;
   Long workspaceVersionId;
   TestPlanLabType testPlanLabType;
   Boolean matchBrowserVersion = false;

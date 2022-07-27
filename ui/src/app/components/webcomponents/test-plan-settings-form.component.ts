@@ -126,6 +126,7 @@ export class TestPlanSettingsFormComponent extends BaseComponent implements OnIn
     }
 
     if(this.checkNameEnvironment()) {
+      this.testPlan.testPlanType = TestPlanType.DISTRIBUTED;
       this.testPlanService.create(this.testPlan).subscribe(res => {
         this.saving = false;
         this.translate.get('message.common.created.success', {FieldName: 'Test Plan'})

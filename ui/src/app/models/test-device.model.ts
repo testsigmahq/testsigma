@@ -198,9 +198,10 @@ export class TestDevice extends Base implements PageObject {
   }
 
   @serializable
-  public prerequisiteEnvironmentId: number;
+  public prerequisiteTestDevicesId: number;
   @serializable
-  public prerequisiteEnvironmentIdIndex: number;
+  public prerequisiteTestDevicesIdIndex: number;
+
   public version: WorkspaceVersion;
   @serializable
   public testPlanLabType: TestPlanLabType;

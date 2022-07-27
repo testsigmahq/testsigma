@@ -120,6 +120,9 @@ public class TestDevice {
   @Column(name = "prerequisite_test_devices_id")
   private Long prerequisiteTestDevicesId;
 
+  @Transient
+  private Long prerequisiteTestDevicesIdIndex;
+
   @Column(name = "workspace_version_id")
   private Long workspaceVersionId;
 

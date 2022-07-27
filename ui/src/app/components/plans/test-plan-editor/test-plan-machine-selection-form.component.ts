@@ -99,15 +99,15 @@ export class TestPlanMachineSelectionFormComponent extends BaseComponent impleme
 
   initFormGroup(environment?: TestDevice) {
     let testSuites = this.data.testSuites.map(suite => suite.id);
-
+    let prerequisiteTestDevicesId =  environment ? environment.prerequisiteTestDevicesId : this.data?.executionEnvironments[this.data.executionEnvironments.length - 1]?.id;
     let environmentFormGroup = this.formBuilder.group({
       agentId: new FormControl(environment?.agentId, [this.requiredIfValidator(() => environment?.isHybrid)]),
       id: new FormControl(environment?.id, []),
       title: new FormControl(environment?.title, [Validators.required, Validators.minLength(4), Validators.maxLength(120)]),
       testPlanLabType: new FormControl(environment?.testPlanLabType || TestPlanLabType.TestsigmaLab, [Validators.required]),
       workspaceVersionId: new FormControl(environment?.workspaceVersionId || this.version.id, [Validators.required]),
-      prerequisiteEnvironmentId: new FormControl(environment?.prerequisiteEnvironmentId, []),
-      prerequisiteEnvironmentIdIndex: new FormControl(environment?.prerequisiteEnvironmentIdIndex, []),
+      prerequisiteTestDevicesId: new FormControl(prerequisiteTestDevicesId, []),
+      prerequisiteTestDevicesIdIndex: new FormControl(environment?.prerequisiteTestDevicesIdIndex, []),
       //targetMachine: new FormControl(environment?.targetMachine, [this.requiredIfValidator(() => this.isHybrid)]),
       deviceId: new FormControl(environment?.deviceId, [this.requiredIfValidator(() => this.isHybrid && this.version?.workspace.isMobile)]),
       createSessionAtCaseLevel: new FormControl(environment?.createSessionAtCaseLevel, []),
@@ -159,9 +159,9 @@ export class TestPlanMachineSelectionFormComponent extends BaseComponent impleme
 
   setEnvironmentPreRequisite(executionEnvironment: TestDevice) {
     const index = this.data.executionEnvironments.findIndex(env => env == executionEnvironment);
-    const prerequisiteEnvironmentIdIndex = index > -1 ? index : null;
-    this.activeEnvironmentFormGroup.controls['prerequisiteEnvironmentIdIndex'].setValue(prerequisiteEnvironmentIdIndex);
-    this.activeEnvironmentFormGroup.controls['prerequisiteEnvironmentId'].setValue(executionEnvironment?.id || null);
+    const prerequisiteTestDevicesIdIndex = index > -1 ? index : null;
+    this.activeEnvironmentFormGroup.controls['prerequisiteTestDevicesIdIndex'].setValue(prerequisiteTestDevicesIdIndex);
+    this.activeEnvironmentFormGroup.controls['prerequisiteTestDevicesId'].setValue(executionEnvironment?.id || null);
   }
 
   saveMachine() {

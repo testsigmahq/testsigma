@@ -491,11 +491,11 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
   }
 
   setEnvironmentPreRequisite(executionEnvironment: TestDevice) {
-    this.activeExecutionEnvironment.prerequisiteEnvironmentId = executionEnvironment?.id || null;
+    this.activeExecutionEnvironment.prerequisiteTestDevicesId = executionEnvironment?.id || null;
     let index = this.testDevices.findIndex(env => env == executionEnvironment);
-    this.activeExecutionEnvironment.prerequisiteEnvironmentIdIndex = index > -1 ? index : null;
-    this.activeEnvironmentFormGroup.controls['prerequisiteEnvironmentIdIndex'].setValue(this.activeExecutionEnvironment.prerequisiteEnvironmentIdIndex);
-    this.activeEnvironmentFormGroup.controls['prerequisiteEnvironmentId'].setValue(executionEnvironment?.id || null);
+    this.activeExecutionEnvironment.prerequisiteTestDevicesIdIndex = index > -1 ? index : null;
+    this.activeEnvironmentFormGroup.controls['prerequisiteTestDevicesIdIndex'].setValue(this.activeExecutionEnvironment.prerequisiteTestDevicesIdIndex);
+    this.activeEnvironmentFormGroup.controls['prerequisiteTestDevicesId'].setValue(executionEnvironment?.id || null);
   }
 
   addControls(environmentFormGroup: FormGroup, environment?: TestDevice) {

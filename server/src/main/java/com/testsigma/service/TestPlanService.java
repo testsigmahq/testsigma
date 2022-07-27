@@ -115,6 +115,17 @@ public class TestPlanService extends XMLExportImportService<TestPlan> {
         testDeviceService.update(testDevice);
       }
     }
+
+    List<TestDevice> testDevices =  testPlan.getTestDevices();
+    for(TestDevice testDevice : testDevices) {
+      if(testDevice.getPrerequisiteTestDevicesIdIndex() != null) {
+        TestDevice preRequisiteTestDevice = testDevices.get(
+                testDevice.getPrerequisiteTestDevicesIdIndex().intValue());
+        testDevice.setPrerequisiteTestDevicesId(preRequisiteTestDevice.getId());
+        testDeviceService.update(testDevice);
+      }
+    }
+
   }
 
   public void publishEvent(TestPlan testPlan, EventType eventType) {

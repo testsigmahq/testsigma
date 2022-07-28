@@ -2020,7 +2020,7 @@
   "first_chrome_install.description": "Testsigma Chrome Extension will help you capture the “element” details automatically. Elements can be anything on a web page that you are trying to automate (or interact with) like buttons, text boxes, links, divs, texts, etc.",
   "test_plan.test.machine.device": "Test Machines",
   "test_plan.machine.empty": "Select Test Suites from the right and click 'Add Machine'",
-  "test_plan.add.machine": "Add Machine",
+  "test_plan.add.machine": "Add Machine/Device",
   "test_plan.suite.empty.popup": "Click <strong>Add Test Suites</strong> to add Test Suites to this Test Plan",
   "btn.common.switch_to_classic": "Switch to Classic UI",
   "test_plan.suite.filters": "Filters",

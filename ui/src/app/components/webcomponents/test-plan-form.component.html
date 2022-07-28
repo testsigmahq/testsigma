@@ -29,10 +29,9 @@
   <div class="ts-col-100 form-group">
     <span
       [translate]="'message.common.description_optional'"
-      [class.text-underline]="!showDescription"
-      class="text-dark pointer" (click)="showDescription=!showDescription"></span>
+      class="text-dark pointer"></span>
     <div
-      @fade *ngIf="showDescription" class="mt-15">
+      class="mt-15">
       <app-description class="without-label" [formCtrlName]="testPlanForm.controls.description"></app-description>
     </div>
   </div>

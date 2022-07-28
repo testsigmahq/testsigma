@@ -691,6 +691,7 @@
   "test_case_result.report_bug.zepel.item": "Item",
   "test_case_result.report_bug.zepel.todo": "Todo",
   "test_plan.run_results.create_test_plan": "Create Test Plan",
+  "test_plan.remove.machine": "Unlink Test Suite from Test Machine",
   "elements.title": "Elements",
   "mobile_recorder.confirm.close.title": "Confirm Close",
   "mobile_recorder.confirm.close.message": "The Inspector has been inactive for {{minutes}} minutes, Can it be Closed?",

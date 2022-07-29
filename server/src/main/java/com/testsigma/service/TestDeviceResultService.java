@@ -206,32 +206,6 @@ public class TestDeviceResultService {
     }
   }
 
-  public void markQueuedEnvironmentResultAsNotExecuted(TestDeviceResult testDeviceResult, Boolean cascade) {
-    if(testDeviceResult.getResult() == ResultConstant.QUEUED) {
-      log.info("Moving EnvironmentResult[" + testDeviceResult.getId() + "] from result " + testDeviceResult.getResult()
-              + " to NOT_EXECUTED");
-      log.info(String.format("Updating environment result with status - %s, message - %s where environment result id " +
-              "is - %s ", StatusConstant.STATUS_QUEUED, AutomatorMessages.MSG_EXECUTION_QUEUED, testDeviceResult.getId()));
-      testDeviceResult.setStatus(StatusConstant.STATUS_COMPLETED);
-      testDeviceResult.setResult(ResultConstant.NOT_EXECUTED);
-      testDeviceResult.setMessage(AutomatorMessages.MSG_EXECUTION_NOT_EXECUTED);
-      this.update(testDeviceResult);
-      if (cascade) {
-        Timestamp currentTime = new Timestamp(java.lang.System.currentTimeMillis());
-        this.testSuiteResultService.updateResultByResult(ResultConstant.NOT_EXECUTED, StatusConstant.STATUS_COMPLETED,
-                AutomatorMessages.MSG_EXECUTION_NOT_EXECUTED, 0L,
-                currentTime, currentTime, testDeviceResult.getId(), ResultConstant.QUEUED
-        );
-        this.testCaseResultService.updateTestCaseResultByEnvironmentIdAndResult(ResultConstant.NOT_EXECUTED, StatusConstant.STATUS_COMPLETED,
-                AutomatorMessages.MSG_EXECUTION_NOT_EXECUTED, 0L,
-                currentTime, currentTime, testDeviceResult.getId(), ResultConstant.QUEUED
-        );
-      }
-    } else {
-      log.debug("Environment Result is not queued");
-    }
-  }
-
   public void markEnvironmentResultAsFailed(TestDeviceResult testDeviceResult, String message, StatusConstant inStatus) {
     log.info(String.format("Updating environment result with result - %s, status - %s, message - %s where environment " +
       "result id is - %s ", ResultConstant.FAILURE, StatusConstant.STATUS_COMPLETED, message, testDeviceResult.getId()));

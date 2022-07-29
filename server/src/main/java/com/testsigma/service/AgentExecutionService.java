@@ -639,7 +639,7 @@ public class AgentExecutionService {
       if (testDeviceResult.getPrerequisiteTestDeviceResultId() == null || isEnvironmentPrerequisiteResultSuccessful(testDeviceResult)) {
         processEnvironmentResult(testDeviceResult, inStatus);
       } else {
-        testDeviceResultService.markQueuedEnvironmentResultAsNotExecuted(testDeviceResult, true);
+        testDeviceResultService.markEnvironmentResultAsFailed(testDeviceResult, AutomatorMessages.MSG_EXECUTION_NOT_EXECUTED, StatusConstant.STATUS_QUEUED);
       }
     } else {
       testDeviceResultService.markEnvironmentResultAsQueued(testDeviceResult, inStatus, true);

@@ -4,12 +4,12 @@
 
 @font-face {
   font-family: "font_custom";
-  src: url("~/assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.eot");
-  src: url("~/assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.eot?#iefix") format("embedded-opentype"),
-       url("~/assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.woff2") format("woff2"),
-       url("~/assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.woff") format("woff"),
-       url("~/assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.ttf") format("truetype"),
-       url("~/assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.svg#font_custom") format("svg");
+  src: url("~/assets/font_icons/font_custom_db29410e4e37ae8a986fed84279ce22e.eot");
+  src: url("~/assets/font_icons/font_custom_db29410e4e37ae8a986fed84279ce22e.eot?#iefix") format("embedded-opentype"),
+       url("~/assets/font_icons/font_custom_db29410e4e37ae8a986fed84279ce22e.woff2") format("woff2"),
+       url("~/assets/font_icons/font_custom_db29410e4e37ae8a986fed84279ce22e.woff") format("woff"),
+       url("~/assets/font_icons/font_custom_db29410e4e37ae8a986fed84279ce22e.ttf") format("truetype"),
+       url("~/assets/font_icons/font_custom_db29410e4e37ae8a986fed84279ce22e.svg#font_custom") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -17,7 +17,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: "font_custom";
-    src: url("~/assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.svg#font_custom") format("svg");
+    src: url("~/assets/font_icons/font_custom_db29410e4e37ae8a986fed84279ce22e.svg#font_custom") format("svg");
   }
 }
 
@@ -29,6 +29,7 @@
 .fa-add:before,
 .fa-add-next:before,
 .fa-add-previous:before,
+.fa-add-to-queue:before,
 .fa-addon:before,
 .fa-addons:before,
 .fa-alert:before,
@@ -363,6 +364,7 @@
 .fa-schedule:before,
 .fa-schedule-demo:before,
 .fa-schedule-with-tick:before,
+.fa-screen-resolution:before,
 .fa-screen-rotation:before,
 .fa-scroll:before,
 .fa-search:before,
@@ -479,6 +481,7 @@
 .fa-add:before { content: "\f2b1"; }
 .fa-add-next:before { content: "\f102"; }
 .fa-add-previous:before { content: "\f103"; }
+.fa-add-to-queue:before { content: "\f2d0"; }
 .fa-addon:before { content: "\f291"; }
 .fa-addons:before { content: "\f2c8"; }
 .fa-alert:before { content: "\f104"; }
@@ -813,6 +816,7 @@
 .fa-schedule:before { content: "\f1fe"; }
 .fa-schedule-demo:before { content: "\f274"; }
 .fa-schedule-with-tick:before { content: "\f247"; }
+.fa-screen-resolution:before { content: "\f2d1"; }
 .fa-screen-rotation:before { content: "\f289"; }
 .fa-scroll:before { content: "\f1b5"; }
 .fa-search:before { content: "\f1b6"; }
@@ -916,6 +920,7 @@ $font-font_custom-action-text: "\f2cb";
 $font-font_custom-add: "\f2b1";
 $font-font_custom-add-next: "\f102";
 $font-font_custom-add-previous: "\f103";
+$font-font_custom-add-to-queue: "\f2d0";
 $font-font_custom-addon: "\f291";
 $font-font_custom-addons: "\f2c8";
 $font-font_custom-alert: "\f104";
@@ -1250,6 +1255,7 @@ $font-font_custom-save-regular: "\f1b4";
 $font-font_custom-schedule: "\f1fe";
 $font-font_custom-schedule-demo: "\f274";
 $font-font_custom-schedule-with-tick: "\f247";
+$font-font_custom-screen-resolution: "\f2d1";
 $font-font_custom-screen-rotation: "\f289";
 $font-font_custom-scroll: "\f1b5";
 $font-font_custom-search: "\f1b6";

@@ -46,7 +46,8 @@ export class TestPlanAddSuiteFormComponent implements OnInit {
       testDevice: TestDevice,
       version: WorkspaceVersion,
       execution: TestPlan,
-      isE2E: boolean
+      isE2E: boolean,
+      returnTestSuites: boolean
     },
     public dialogRef: MatDialogRef<TestPlanAddSuiteFormComponent>,
     private testSuiteTagService: TestSuiteTagService,
@@ -182,8 +183,14 @@ export class TestPlanAddSuiteFormComponent implements OnInit {
   save() {
     this.submitted = true;
     if (this.selectedSuites.length == 0) return;
-    this.options.testDevice.testSuites = this.selectedSuites;
-    this.dialogRef.close(true);
+
+    if(this.options.returnTestSuites) {
+      this.dialogRef.close(this.selectedSuites);
+    }
+    else if(this.options.testDevice) {
+      this.options.testDevice.testSuites = this.selectedSuites;
+      this.dialogRef.close(true);
+    }
   }
 
   toggleCheckAll(checkAll, array: TestSuite[]) {

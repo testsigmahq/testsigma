@@ -42,7 +42,7 @@ public interface TestDeviceResultRepository extends JpaRepository<TestDeviceResu
     "JOIN exResult.testPlan exe ON exResult.testPlanId = exe.id " +
     "JOIN envResult.testDevice ee ON ee.id = envResult.testDeviceId " +
     "JOIN envResult.testSuiteResults tsr ON tsr.environmentResultId = envResult.id " +
-    "AND tsr.status = com.testsigma.model.StatusConstant.STATUS_QUEUED " +
+    "AND tsr.result = com.testsigma.model.ResultConstant.QUEUED " +
     "WHERE ee.disable=FALSE " +
     "ORDER BY envResult.id")
   List<Long> findAllPendingEnvironments();

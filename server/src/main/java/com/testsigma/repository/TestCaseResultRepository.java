@@ -124,6 +124,17 @@ public interface TestCaseResultRepository extends JpaRepository<TestCaseResult, 
 
   @Modifying
   @Query("UPDATE TestCaseResult tcr SET tcr.result = :result, tcr.status = :status,  tcr.message = :message, " +
+          "tcr.duration = :duration, tcr.startTime = :startTime, tcr.endTime = :endTime " +
+          "WHERE tcr.environmentResultId = :environmentResultId and tcr.result =:resultConstant ")
+  void updateTestCaseResultByEnvironmentIdAndResult(@Param("result") ResultConstant result,
+                                           @Param("status") StatusConstant status, @Param("message") String message,
+                                           @Param("duration") Long duration, @Param("startTime") Timestamp startTime,
+                                           @Param("endTime") Timestamp endTime,
+                                           @Param("environmentResultId") Long environmentResultId,
+                                           @Param("resultConstant") ResultConstant resultConstant);
+
+  @Modifying
+  @Query("UPDATE TestCaseResult tcr SET tcr.result = :result, tcr.status = :status,  tcr.message = :message, " +
     "tcr.duration = :duration, tcr.startTime = :startTime, tcr.endTime = :endTime " +
     "WHERE tcr.environmentResultId = :environmentResultId and tcr.status NOT IN (:notInStatus) ")
   void stopIncompleteTestCaseResults(@Param("result") ResultConstant result, @Param("status") StatusConstant status,

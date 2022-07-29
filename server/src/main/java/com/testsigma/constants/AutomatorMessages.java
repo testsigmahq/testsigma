@@ -19,6 +19,7 @@ public class AutomatorMessages {
   public static final String MSG_EXECUTION_IN_PROGRESS = "Test Plan in Progress";
   public static final String MSG_EXECUTION_PRE_FLIGHT = "Test plan is moved to pre flight status";
   public static final String MSG_EXECUTION_QUEUED = "Test plan is queued";
+  public static final String MSG_EXECUTION_NOT_EXECUTED = "Prerequisite test device execution failed";
   public static final String MSG_EXECUTION_CREATED = "Test Plan execution is initiated and waiting to be queued";
   public static final String MSG_ENVIRONMENT_COMPLETED = "Execution Environment Finished Running";
   public static final String MSG_ENVIRONMENT_FAILURE = "Failed While Running Execution Environment";

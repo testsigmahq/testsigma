@@ -182,6 +182,56 @@ public class TestDeviceResultService {
     }
   }
 
+  public void markEnvironmentResultAsQueued(TestDeviceResult testDeviceResult, StatusConstant inStatus,
+                                                Boolean cascade) {
+    log.info("Moving EnvironmentResult[" + testDeviceResult.getId() + "] from status " + testDeviceResult.getStatus()
+            + " to STATUS_QUEUED");
+    if (testDeviceResult.getStatus() != StatusConstant.STATUS_QUEUED) {
+      log.info(String.format("Updating environment result with status - %s, message - %s where environment result id " +
+              "is - %s ", StatusConstant.STATUS_QUEUED, AutomatorMessages.MSG_EXECUTION_QUEUED, testDeviceResult.getId()));
+      testDeviceResult.setStatus(StatusConstant.STATUS_QUEUED);
+      testDeviceResult.setMessage(AutomatorMessages.MSG_EXECUTION_QUEUED);
+      this.update(testDeviceResult);
+    }
+    if (cascade) {
+      Timestamp currentTime = new Timestamp(java.lang.System.currentTimeMillis());
+      this.testSuiteResultService.updateResult(ResultConstant.QUEUED, StatusConstant.STATUS_QUEUED,
+              AutomatorMessages.MSG_EXECUTION_QUEUED, 0L,
+              currentTime, currentTime, testDeviceResult.getId(), inStatus
+      );
+      this.testCaseResultService.updateResultByEnvironmentId(ResultConstant.QUEUED, StatusConstant.STATUS_QUEUED,
+              AutomatorMessages.MSG_EXECUTION_QUEUED, 0L,
+              currentTime, currentTime, testDeviceResult.getId(), inStatus
+      );
+    }
+  }
+
+  public void markQueuedEnvironmentResultAsNotExecuted(TestDeviceResult testDeviceResult, Boolean cascade) {
+    if(testDeviceResult.getResult() == ResultConstant.QUEUED) {
+      log.info("Moving EnvironmentResult[" + testDeviceResult.getId() + "] from result " + testDeviceResult.getResult()
+              + " to NOT_EXECUTED");
+      log.info(String.format("Updating environment result with status - %s, message - %s where environment result id " +
+              "is - %s ", StatusConstant.STATUS_QUEUED, AutomatorMessages.MSG_EXECUTION_QUEUED, testDeviceResult.getId()));
+      testDeviceResult.setStatus(StatusConstant.STATUS_COMPLETED);
+      testDeviceResult.setResult(ResultConstant.NOT_EXECUTED);
+      testDeviceResult.setMessage(AutomatorMessages.MSG_EXECUTION_NOT_EXECUTED);
+      this.update(testDeviceResult);
+      if (cascade) {
+        Timestamp currentTime = new Timestamp(java.lang.System.currentTimeMillis());
+        this.testSuiteResultService.updateResultByResult(ResultConstant.NOT_EXECUTED, StatusConstant.STATUS_COMPLETED,
+                AutomatorMessages.MSG_EXECUTION_NOT_EXECUTED, 0L,
+                currentTime, currentTime, testDeviceResult.getId(), ResultConstant.QUEUED
+        );
+        this.testCaseResultService.updateTestCaseResultByEnvironmentIdAndResult(ResultConstant.NOT_EXECUTED, StatusConstant.STATUS_COMPLETED,
+                AutomatorMessages.MSG_EXECUTION_NOT_EXECUTED, 0L,
+                currentTime, currentTime, testDeviceResult.getId(), ResultConstant.QUEUED
+        );
+      }
+    } else {
+      log.debug("Environment Result is not queued");
+    }
+  }
+
   public void markEnvironmentResultAsFailed(TestDeviceResult testDeviceResult, String message, StatusConstant inStatus) {
     log.info(String.format("Updating environment result with result - %s, status - %s, message - %s where environment " +
       "result id is - %s ", ResultConstant.FAILURE, StatusConstant.STATUS_COMPLETED, message, testDeviceResult.getId()));
@@ -269,14 +319,13 @@ public class TestDeviceResultService {
           + "] are still pending. Waiting for them to finish before updating the final result");
         if (updateMaxStatus) {
           StatusConstant maxStatus = this.maxStatusByExecutionRunId(testPlanResultId);
-          if ((maxStatus == StatusConstant.STATUS_COMPLETED) || (maxStatus == StatusConstant.STATUS_PRE_FLIGHT)) {
+
+          if ((maxStatus == StatusConstant.STATUS_COMPLETED) || (maxStatus == StatusConstant.STATUS_PRE_FLIGHT) || (maxStatus == StatusConstant.STATUS_QUEUED)) {
             maxStatus = StatusConstant.STATUS_IN_PROGRESS;
           }
+          String message = AutomatorMessages.MSG_EXECUTION_IN_PROGRESS;
           log.info("Received update request for max status for execution - " + testPlanResultId
             + "]. Updating the test plan result with max status. Max Status - " + maxStatus);
-          String message = (maxStatus == StatusConstant.STATUS_IN_PROGRESS) ? AutomatorMessages.MSG_EXECUTION_IN_PROGRESS :
-            (maxStatus == StatusConstant.STATUS_QUEUED) ? AutomatorMessages.MSG_EXECUTION_QUEUED :
-              AutomatorMessages.MSG_EXECUTION_IN_PROGRESS;
           testPlanResultService.markTestPlanResultstatus(testPlanResult, maxStatus, message);
         }
       }

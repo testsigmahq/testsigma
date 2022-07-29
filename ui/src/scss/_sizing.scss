@@ -164,6 +164,9 @@ $abbrev in (width: w, height: h) {
 .w-min-60{
  min-width: 62px;
 }
+.min-w-250p {
+  min-width: 250px;
+}
 .h-100-64{
   height: calc(100% - 64px);
 }

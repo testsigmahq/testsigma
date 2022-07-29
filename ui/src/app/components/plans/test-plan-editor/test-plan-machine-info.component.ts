@@ -54,7 +54,7 @@ import {Platform} from "../../../enums/platform.enum";
            [class.fa-firefox-brands]="executionEnvironment?.isFirefox"
            [class.fa-safari-brands]="executionEnvironment?.isSafari"
            [class.fa-edge]="executionEnvironment?.isEdge"
-           [matTooltip]="isHybrid? '' : (executionEnvironment?.formattedBrowserVersion ? ('test_plan.environment.browser'|translate)+' : '+( executionEnvironment.browserNameI18nKey | translate) +' '+ executionEnvironment?.formattedBrowserVersion : '')"
+           [matTooltip]="isHybrid? '' : (executionEnvironment?.formattedBrowserVersion ? ('test_plan.environment.browser'|translate)+' : '+( executionEnvironment?.browserNameI18nKey | translate) +' '+ executionEnvironment?.formattedBrowserVersion : '')"
         ></i>
       </div>
       <i class="fa-screen-resolution ml-12" [matTooltip]="executionEnvironment.resolution" *ngIf="executionEnvironment.resolution"></i>

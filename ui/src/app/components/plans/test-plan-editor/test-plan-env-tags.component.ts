@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {TestDevice} from "../../../models/test-device.model";
 import {TestDeviceSettings} from "../../../models/test-device-settings.model";
 import {TestSuite} from "../../../models/test-suite.model";
@@ -58,8 +58,6 @@ export class TestPlanEnvTagsComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {}
-
-  ngOnChanges(){}
 
   openTagsDialog(){
     this.isOpen = true;

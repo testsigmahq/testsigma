@@ -56,7 +56,7 @@
   <div class="test-plan-prerequisite" *ngIf="executionEnvironments.length && activeExecutionEnvIndex != 0">
     <div class="fz-14 rb-medium" [translate]="'common.prerequisite'"></div>
     <div class="my-10 lab-item dropdown mouse-over d-inline-block">
-      <div class="selection-cutsom-skin btn-group pointer d-flex align-items-center bg-default-grey-light py-10 pr-10 pl-6 grey-on-hover border-rds-4">
+      <div class="selection-custom-skin btn-group pointer d-flex align-items-center bg-default-grey-light py-10 pr-10 pl-6 grey-on-hover border-rds-4">
         <div class="min-w-250p h-18p">
           <app-test-plan-execution-environment-info
             *ngIf="preRequisiteExecutionEnvironment && !isNewUI"
@@ -94,7 +94,7 @@
   <div class="project-info test-plan-project-info" [class.visibility-hidden]="!isDistributed" *ngIf="!isNewUI">
     <!--<div *ngIf="isDistributed" class="fz-14 rb-medium" [translate]="'test_plan.project'"></div>-->
     <app-version-selection *ngIf="selectedVersion && isDistributed"
-                           class="position-relative" [customClass]="'selection-cutsom-skin'"
+                           class="position-relative" [customClass]="'selection-custom-skin'"
                            (onVersionSelect)="setVersion($event)"
                            [version]="selectedVersion"></app-version-selection>
   </div>

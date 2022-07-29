@@ -376,6 +376,7 @@
     .drop-menu {
       border: none;
       box-shadow: none;
+      min-height:40px;
       .inner-menu {
         box-shadow: rgb(0 0 0 / 10%) 0px 0px 2px 2px;
         border-radius: 3px;
@@ -385,5 +386,16 @@
       }
     }
   }
+}
+/* Note: custom skin to make hover dropdown look like normal mat-select*/
+.selection-custom-skin {
+  @extend .border-rds-4, .bg-white, .border-brand-1, .pt-0, .pb-0;
+  min-height: 44px !important;
+  max-height: 44px !important;
+}
+.runtime-project-skin {
+  @extend .border-rds-4, .bg-white, .border-brand-1, .pt-0, .pb-0;
+  max-height: 50px;
+  min-height: 50px;
 }
 

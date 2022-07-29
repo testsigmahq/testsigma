@@ -1,6 +1,7 @@
 <div
   class="project-info flex-column bg-default-grey-light"
   [ngClass]="customClass"
+  #menuTrigger="matMenuTrigger"
   (click)="toggle()" [matMenuTriggerFor]="menu"
   *ngIf="version">
   <div
@@ -44,7 +45,7 @@
 </mat-menu>
 <ng-template #E2ESwitcherRef>
   <div class="w-100">
-    <div class="pt-10">
+    <div class="pt-10 overflow-x-hidden">
       <div (click)="enableModalClick($event)">
         <mat-form-field class="w-100" appearance="outline">
           <mat-select [value]="workSpaceType">
@@ -74,7 +75,7 @@
                 <div class="item theme-border-b rb-medium header"
                      [translate]="'work_space.switcher.select_version'"></div>
                 <div class="item-max-height">
-                  <div class="item" *ngFor="let version of liveVersions" (click)="go(version)">
+                  <div class="item" *ngFor="let version of liveVersions" (click)="go(version);menuTrigger?.closeMenu()">
                     <span [textContent]="version.name"></span>
                     <i class="fa-arrow-right ml-20"></i>
                   </div>
@@ -83,7 +84,7 @@
             </div>
           </a>
           <button class="bg-grey-light border-0 btn btn-clear-default py-10 rb-medium mb-10 text-green w-100 mx-auto"
-                  (click)="go()">
+                  (click)="go();menuTrigger?.closeMenu()">
             <span [translate]="'work_space.switcher.sample'"></span> <i class="ml-30 fa-arrow-right"></i>
           </button>
         </div>

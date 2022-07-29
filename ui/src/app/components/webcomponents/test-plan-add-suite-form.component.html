@@ -18,10 +18,21 @@
       <div
         class="empty-text"
         [textContent]="'message.common.empty_page' | translate : { categoryType:'Test Suites'}"></div>
-      <a (click)="dialogRef.close('close');"
-         [routerLink]="['/td', options.version.id, 'suites', 'new']"
-         [translate]="'btn.common.create'" mat-dialog-close
-         class="theme-btn-primary"></a>
+        <div class="d-flex">
+          <a
+            target="_blank"
+            (click)="showRefreshOption = true"
+            [routerLink]="['/td', options.version.id, 'suites', 'new']"
+            [translate]="'btn.common.create'"
+            class="theme-btn-primary"></a>
+          <button
+            *ngIf="showRefreshOption"
+            (click)="showRefreshOption=false;fetchSuites()"
+            [matTooltip]="'result.hint.click.here.refresh' | translate"
+            class="btn icon-btn border-rds-2 ml-10">
+            <i class="fa-refresh-thick"></i>
+          </button>
+        </div>
     </div>
   </div>
   <ng-template #elseBlock>
@@ -168,12 +179,34 @@
                      [matTooltip]="'hint.message.common.add' | translate"></div>
               </div>
             </cdk-virtual-scroll-viewport>
-            <div *ngIf="zeroSuites()" class="w-100 h-100-50">
+            <div *ngIf="availableSuites?.totalElements == 0 && !testSuitesNotCreated()" class="w-100 h-100-50">
               <div class="empty-full-container sm-pm">
                 <div class="empty-run-sm"></div>
                 <div class="text-t-secondary fz-15 py-12"
                      [translate]="filterSuiteNameControl?.value?.length || filterTagIds?.length ?
                      'message.common.search.not_found':'test_plan.available_suites.all_selected'"></div>
+              </div>
+            </div>
+            <div
+              *ngIf="options.isE2E && testSuitesNotCreated()"
+              class="empty-full-container sm-pm">
+              <div class="empty-run-sm"></div>
+              <div class="text-t-secondary fz-15 py-12"
+                   [textContent]="'message.common.empty_page' | translate : { categoryType:'Test Suites'}"></div>
+              <div class="d-flex mt-25">
+                <a
+                  target="_blank"
+                  (click)="showRefreshOption = true"
+                  [routerLink]="['/td', options.version.id, 'suites', 'new']"
+                  [translate]="'btn.common.create'"
+                  class="theme-btn-primary btn-sm"></a>
+                <button
+                  *ngIf="showRefreshOption"
+                  (click)="showRefreshOption=false;fetchSuites()"
+                  [matTooltip]="'result.hint.click.here.refresh' | translate"
+                  class="btn icon-btn border-rds-2 ml-10">
+                  <i class="fa-refresh-thick"></i>
+                </button>
               </div>
             </div>
           </div>

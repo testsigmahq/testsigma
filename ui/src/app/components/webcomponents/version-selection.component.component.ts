@@ -5,6 +5,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {Workspace} from "../../models/workspace.model";
 import {Page} from "../../shared/models/page";
 import {WorkspaceType} from "../../enums/workspace-type.enum";
+import {MatMenuTrigger} from "@angular/material/menu";
 
 @Component({
   selector: 'app-version-selection',
@@ -16,6 +17,7 @@ export class VersionSelectionComponent extends WorkspaceSwitcherComponent implem
   @Input('showWithoutDropdown') showWithoutDropdown:boolean;
 
   @ViewChild('applicationViewRef', { read: TemplateRef }) applicationViewRef:TemplateRef<any>;
+  @ViewChild('menuTrigger') menuTrigger: MatMenuTrigger;
   workSpaces: Page<Workspace>;
   selectedProject: any;
   sampleWorkspaceVersion: void;

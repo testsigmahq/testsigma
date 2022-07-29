@@ -2049,5 +2049,6 @@
   "test_plan.drag.reorder.testsuite": "Drag to re-order Test Suite",
   "test_plan.filter.reorder.testsuite": "Select Test Machine to re-order Test Suite in it",
   "test_plan.filter.reorder.testsuite.no_machine": "Add Test Machine to reorder Test Suite",
-  "common.prerequisite": "Prerequisite"
+  "common.prerequisite": "Prerequisite",
+  "test_plan.suite.add_machine.disabled.no_suite": "Add Test Suites to add the Test Machine"
 }

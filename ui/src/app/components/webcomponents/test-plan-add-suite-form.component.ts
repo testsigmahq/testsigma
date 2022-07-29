@@ -39,6 +39,7 @@ export class TestPlanAddSuiteFormComponent implements OnInit {
   public filteredSuites = [];
   public isE2ESelectionOpted = false;
   public selectedVersion: WorkspaceVersion;
+  public showRefreshOption: boolean = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public options: {

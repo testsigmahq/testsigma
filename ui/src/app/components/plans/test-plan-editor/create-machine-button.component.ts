@@ -9,6 +9,7 @@ import {MapTestMachineFormComponent} from "./map-test-machine-form.component";
   selector: 'app-create-machine-button',
   template: `
     <button
+      *ngIf="!isIconOnly"
       #trigger="cdkOverlayOrigin" cdkOverlayOrigin
       [ngClass]="{'disabled': isDisabled}"
       [matTooltip]="tooltip"
@@ -18,6 +19,14 @@ import {MapTestMachineFormComponent} from "./map-test-machine-form.component";
       <span [translate]="'test_plan.add.machine'"></span>
       <span *ngIf="executionEnvironments.length" class="fa fa-caret-down ml-10"></span>
     </button>
+    <i
+      *ngIf="isIconOnly"
+      #trigger="cdkOverlayOrigin" cdkOverlayOrigin
+      [ngClass]="{'disabled': isDisabled}"
+      [matTooltip]="tooltip"
+      (click)="toggleDropdown()"
+      class="fa-add-to-queue pointer ml-10 machine-add-icon-plan"
+    ></i>
     <ng-template
       #envTagsDialog="cdkConnectedOverlay"
       cdkConnectedOverlay
@@ -49,6 +58,7 @@ export class CreateMachineButtonComponent {
 
   @ViewChild('envTagsDialog') envTagsDialog: CdkConnectedOverlay;
   @ViewChild('trigger') trigger;
+  @Input('isIconOnly') isIconOnly: boolean;
 
   isOpen = false;
 

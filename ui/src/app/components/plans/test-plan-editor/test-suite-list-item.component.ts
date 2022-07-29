@@ -63,10 +63,17 @@ import {CdkConnectedOverlay} from "@angular/cdk/overlay";
           [ngClass]="{'disabled': isPreReq}"
           (click)="!isPreReq && removeSuite()"
           [matTooltip]="(isPreReq? 'test_plan.prereq.operation.blocked':'btn.common.delete') | translate"></i>
-        <i
-          class="fa-add-to-queue pointer ml-10"
-          [matTooltip]="'test_plan.add.machine' | translate"
-          (click)="addMachine()">+</i>
+        <app-create-machine-button
+          [isDisabled]="false"
+          [tooltip]="''"
+          [executionEnvironments]="executionEnvironments"
+          [testSuiteList]="testSuiteList"
+          [selectedTestSuites]="[testsuite]"
+          [applicationVersionsMap]="applicationVersionsMap"
+          [isIconOnly]="true"
+          (onCreateMachine)="addMachine()"
+          (onMapMachine)="onMapMachine.emit([$event, [testsuite], false])"
+        ></app-create-machine-button>
       </div>
     </div>`,
   styleUrls: ['./test-suite-list-item.component.scss']
@@ -88,7 +95,9 @@ export class TestSuiteListItemComponent{
   @Output('onSuiteLevelExecutionMethodChange') onSuiteLevelExecutionMethodChange: EventEmitter<{testSuite: TestSuite, isTestCaseParallel:Boolean}> = new EventEmitter<{ testSuite: TestSuite, isTestCaseParallel:Boolean }>();
 
   @ViewChild('trigger') trigger;
-
+  @Input('testSuiteList') testSuiteList: TestSuite[];
+  @Input('applicationVersionsMap') applicationVersionsMap: Object;
+  @Output('onMapMachine') onMapMachine: EventEmitter<any> = new EventEmitter();
 
   constructor() {}
 

@@ -4,10 +4,23 @@
   <div class="machine-list border-rds-4 h-100 d-flex flex-column mr-25">
     <div class="header align-items-center d-flex header position-relative">
       <div class="flex-grow-1" [translate]="'test_plan.test.machine.device'"></div>
-      <div (click)="setFilterValue('All')" class="pointer text-link" *ngIf="filter != 'All'">
-        <span class="fa-circled-close mr-7"></span>
-        <span [translate]="'message.common.clear'"></span>
-      </div>
+      <mat-form-field
+        class="mat-select-custom ts-col-35 inline-no-border text-capitalize sm ml-15"
+        appearance="fill"
+        *ngIf="executionEnvironments.length"
+      >
+        <mat-select #selectToggle disableOptionCentering panelClass="single" [(value)]="filter" [placeholder]="'test_plan.environments.all' | translate">
+          <mat-option
+            [value]="'All'"
+            (onSelectionChange)="setFilter($event)"
+            [textContent]="'test_plan.environments.all' | translate" selected></mat-option>
+          <mat-option
+            *ngFor="let item of executionEnvironments"
+            [value]="item"
+            (onSelectionChange)="setFilter($event)"
+            class="text-capitalize"> {{ item.title }} </mat-option>
+        </mat-select>
+      </mat-form-field>
       <div class="form-group position-absolute right-0 w-167p" *ngIf="formSubmitted && !executionEnvironments.length">
         <div class="error mt-n35" [textContent]="'validation.required.message' | translate: {field: 'Test Machine'}"></div>
       </div>
@@ -70,10 +83,7 @@
         </mat-form-field>
         <app-toggle-search-button
           [ngClass]="'position-absolute bg-white'"
-          [style]="'right: 0'"
-          [debounceTime]="0"
-          [hasClose]="true"
-          [InputStyle]="'width:' + (executionEnvironments.length? '320px' : '340px')"
+          [style]="'right: 0;'+ 'width:' + (executionEnvironments.length? '320px' : '340px')"
           *ngIf="testSuiteList.length"
           (searchAction)="searchTestsuite($event)"></app-toggle-search-button>
       </div>
@@ -115,6 +125,7 @@
         (onSuiteLevelExecutionMethodChange)="handleSuiteLevelExecutionMethodChange($event)"
         (onAddMachine)="openSelectTestMachineForm(null, [$event])"
         (onUnlinkTestsuite)="unlinkTestsuite($event)"
+        (onMapMachine)="mapTestSuitesToMachine($event[0], $event[1], $event[2])"
       ></app-test-suite-list-item>
 
       <!-- Test suites empty-->

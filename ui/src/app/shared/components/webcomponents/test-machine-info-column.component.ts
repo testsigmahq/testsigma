@@ -75,7 +75,7 @@ import {Platform} from "../../../enums/platform.enum";
           [class.fa-firefox-brands]="testDevice?.isFirefox"
           [class.fa-safari-brands]="testDevice?.isSafari"
           [class.fa-edge]="testDevice?.isEdge"
-          [matTooltip]="(testDevice?.formattedBrowserVersion || testDevice.browserNameI18nKey) ? ('test_plan.environment.browser'|translate)+' : '+( testDevice.browserNameI18nKey | translate) +' '+ (testDevice?.formattedBrowserVersion||'') : ''"
+          [matTooltip]="(testDevice?.formattedBrowserVersion || testDevice.browserNameI18nKey) ? ('test_plan.environment.browser'|translate)+' : '+( testDevice?.browserNameI18nKey | translate) +' '+ (testDevice?.formattedBrowserVersion||'') : ''"
         ></i>
       </div>
     </div>
@@ -103,7 +103,7 @@ import {Platform} from "../../../enums/platform.enum";
           [class.fa-safari-brands]="testDevice?.isSafari"
           [class.fa-edge]="testDevice?.isEdge"
           *ngIf="!testDevice?.deviceName && !(testDevice?.isIOS || testDevice?.isAndroid)"
-          [matTooltip]="(testDevice?.formattedBrowserVersion|| testDevice.browserNameI18nKey) ? ('test_plan.environment.browser'|translate)+' : '+( testDevice.browserNameI18nKey | translate) +' '+ (testDevice?.formattedBrowserVersion||'') : ''"
+          [matTooltip]="(testDevice?.formattedBrowserVersion|| testDevice?.browserNameI18nKey) ? ('test_plan.environment.browser'|translate)+' : '+( testDevice?.browserNameI18nKey | translate) +' '+ (testDevice?.formattedBrowserVersion||'') : ''"
         ></i>
       </div>
     </div>

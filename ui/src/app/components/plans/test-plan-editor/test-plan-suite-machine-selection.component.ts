@@ -124,7 +124,7 @@ export class TestPlanSuiteMachineSelectionComponent extends BaseComponent implem
   }
 
   addSuites() {
-    let selectedTestSuites = this.filter == 'All'? (this.versionFilter? this.testSuiteList.filter(item=> item.appVersionId == this.versionFilter.id) : this.testSuiteList) : this.filter?.testSuites;
+    let selectedTestSuites = this.filter == 'All'? (this.versionFilter? this.testSuiteList.filter(item=> item.workspaceVersionId == this.versionFilter.id) : this.testSuiteList) : this.filter?.testSuites;
     let testDevice = new TestDevice();
     testDevice.testSuites =selectedTestSuites;
     this.matDialog.open(TestPlanAddSuiteFormComponent, {
@@ -155,7 +155,6 @@ export class TestPlanSuiteMachineSelectionComponent extends BaseComponent implem
   }
 
   mapTestSuitesToMachine(testDevice: TestDevice, testSuites: TestSuite[], isOverwrite = true) {
-
     if(!isOverwrite) {
       let currentSuites = testDevice.testSuites || this.testSuiteList.filter(suite=> testDevice.suiteIds.includes(suite.id));
       let currentSuiteIds = currentSuites.map(i=>i.id);
@@ -178,8 +177,8 @@ export class TestPlanSuiteMachineSelectionComponent extends BaseComponent implem
   }
 
   handleCreateMachine() {
-    let versionFilter = (item)=> (!this.versionFilter || item.appVersionId == this.versionFilter.id);
-    let allFilter = (item)=> (this.filter == 'All' || item.appVersionId == this.filter.workspaceVersionId);
+    let versionFilter = (item)=> (!this.versionFilter || item.workspaceVersionId == this.versionFilter.id);
+    let allFilter = (item)=> (this.filter == 'All' || item.workspaceVersionId == this.filter.workspaceVersionId);
     let testSuites = this.selectedTestSuites.filter((item: TestSuite)=> ( versionFilter(item) && allFilter(item)) );
     this.openSelectTestMachineForm(null, testSuites);
   }
@@ -532,7 +531,7 @@ export class TestPlanSuiteMachineSelectionComponent extends BaseComponent implem
   }
 
   get currentSelectedVersion() {
-    return this.selectedTestSuites?.[0]?.appVersionId;
+    return this.selectedTestSuites?.[0]?.workspaceVersionId;
   }
 
   get selectedTestSuiteIds() {

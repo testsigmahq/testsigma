@@ -68,8 +68,8 @@ export class TestPlanSuiteFilterComponent{
     setTimeout(() => {
       this.filterDialog.overlayRef._outsidePointerEvents.subscribe(res => {
         if(
-          !res['path'][6].classList.contains('cdk-overlay-container') &&
-          res['path']?.map(path => path.tagName == 'MAT-OPTION')?.filter(item=> item)?.length == 0
+          !res['path'][6].classList.contains('cdk-overlay-container') && !res['path'][6].classList.contains('mat-menu-content') &&
+          res['path']?.map(path => path.tagName == 'MAT-OPTION' || path.classList?.contains('mat-menu-content'))?.filter(item=> item)?.length == 0
         ) { // TODO: need to Properly handle click out
           this.close();
         }

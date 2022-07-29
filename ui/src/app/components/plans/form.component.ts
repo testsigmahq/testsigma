@@ -75,16 +75,14 @@ export class FormComponent implements OnInit {
   }
 
   fetchSuites() {
-    this.testPlan.testDevices.forEach((environment: TestDevice, index: number) => {
-      this.testSuiteService.findAll("testPlanId:" + environment.testPlanId).subscribe(res => {
+    this.testPlan.testDevices.forEach((testDevice: TestDevice, index: number) => {
         let page = new Pageable();
         page.pageSize = 500;
-        this.testSuiteService.findAll("testPlanId:" + environment.testPlanId, undefined, page).subscribe(res => {
-          environment.testSuites = res.content;
+        this.testSuiteService.findAll("testDeviceId:" + testDevice.id, undefined, page).subscribe(res => {
+          testDevice.testSuites = res.content;
           if (index == this.testPlan.testDevices.length - 1)
             this.initForControls();
         })
-      })
     })
   }
 

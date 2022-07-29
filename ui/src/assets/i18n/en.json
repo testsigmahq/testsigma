@@ -1493,6 +1493,7 @@
   "dashboard.latest_runs.LAST_90_DAYS.empty": "There are no Runs in a Quarter.",
   "dashboard.testsigma.love_message": "Send your love {{heart}} to Testsigma Project contributors with a Star or a Tweet.",
   "test_data_grid.validation.set_name.required": "Test data set name is missing. Please correct it or remove the row if not required.",
+  "test_plan.prereq.operation.blocked": "This operation is not allowed for prerequisite Test Suite",
   "test_plan.environment.machine.edit.title": "Select Test Machines(Edit)",
   "test_plan.environment.device.edit.title": "Select Test Device(Edit)",
   "test_data_grid.validation.set_name.duplicate": "Duplicate Set Names Found",

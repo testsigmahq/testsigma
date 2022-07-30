@@ -23,7 +23,7 @@ import {MapTestMachineFormComponent} from "./map-test-machine-form.component";
       *ngIf="isIconOnly"
       #trigger="cdkOverlayOrigin" cdkOverlayOrigin
       [ngClass]="{'disabled': isDisabled}"
-      [matTooltip]="tooltip"
+      [matTooltip]="'test_plan.add.machine'|translate"
       (click)="toggleDropdown()"
       class="fa-add-to-queue pointer ml-10 machine-add-icon-plan"
     ></i>

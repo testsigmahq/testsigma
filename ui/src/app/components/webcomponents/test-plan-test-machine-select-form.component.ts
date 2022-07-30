@@ -159,15 +159,23 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
       testDevice.suiteIds = this.activeEnvironmentFormGroup.getRawValue().suiteIds;
       testDevice.createSessionAtCaseLevel = this.activeEnvironmentFormGroup.getRawValue().createSessionAtCaseLevel;
     }
-    if(this.testPlan.isHybrid)
+    if (this.testPlan.isHybrid) {
       testDevice.agentId = this.activeEnvironmentFormGroup.getRawValue().agentId;
-    testDevice.title = testDevice.platform + "(" + testDevice.osVersion + ")";
-    if(testDevice.browser)
-      testDevice.title +=testDevice.browser+"";
-    if(testDevice.browserVersion)
-      testDevice.title += " (" + testDevice.browserVersion + ")";
-    if(testDevice.deviceName)
-      testDevice.title += " ("+testDevice.deviceName+")";
+    }
+    if(!this.activeEnvironmentFormGroup?.value?.title){
+      if (this.testPlan.isHybrid) {
+        testDevice.title = testDevice.platform + "(" + testDevice.osVersion + ")";
+      }
+      if (testDevice.browser)
+        testDevice.title += testDevice.browser + "";
+      if (testDevice.browserVersion)
+        testDevice.title += " (" + testDevice.browserVersion + ")";
+      if (testDevice.deviceName)
+        testDevice.title += " (" + testDevice.deviceName + ")";
+    } else{
+      testDevice.title = this.activeEnvironmentFormGroup.value.title
+    }
+
 
     testDevice = this.normalizeFormValue(testDevice);
     if(this.isRest){
@@ -247,6 +255,7 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
           testPlanLabType: new FormControl(environment?.testPlanLabType),
           prerequisiteTestDevicesId: new FormControl(environment?.prerequisiteTestDevicesId, []),
           prerequisiteTestDevicesIdIndex: new FormControl(environment?.prerequisiteTestDevicesIdIndex, []),
+          title: environment?.title || ''
     });
     if(this.activeExecutionEnvironment.testSuites?.length > 0) {
       environmentFormGroup.setControl('suiteIds', this.formBuilder.array([]));
@@ -332,6 +341,10 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
 
   get appPathTypeValue(): ApplicationPathType {
     return <ApplicationPathType>(<FormGroup>this.activeEnvironmentFormGroup)?.controls['appPathType']?.value;
+  }
+
+  updateTitle($event) {
+    this.activeEnvironmentFormGroup.get('title').setValue($event.target.value);
   }
 
 }

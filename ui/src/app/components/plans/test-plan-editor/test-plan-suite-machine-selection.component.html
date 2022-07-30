@@ -83,7 +83,7 @@
         </mat-form-field>
         <app-toggle-search-button
           [ngClass]="'position-absolute bg-white'"
-          [style]="'right: 0;'+ 'width:' + (executionEnvironments.length? '60px' : '80px')"
+          [style]="'right: 0;'"
           *ngIf="testSuiteList.length"
           (searchAction)="searchTestsuite($event)"></app-toggle-search-button>
       </div>

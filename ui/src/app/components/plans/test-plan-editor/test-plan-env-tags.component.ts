@@ -19,7 +19,8 @@ import {CdkConnectedOverlay} from "@angular/cdk/overlay";
         [matTooltip]="(isRemoveDisabled[0]? 'test_plan.prereq.operation.blocked' : 'test_plan.remove.machine') | translate"
         (click)="!isRemoveDisabled[0] && unlinkTestsuite(filteredEnvironments[0])"></i>
     </span>
-      <span class="align-items-center d-inline-flex env-tag fz-10 ml-5 pointer" #trigger="cdkOverlayOrigin" cdkOverlayOrigin (click)="openTagsDialog()" *ngIf="moreEnvs.length">
+    <span class="align-items-center d-inline-flex env-tag fz-10 ml-5 pointer" #trigger="cdkOverlayOrigin" cdkOverlayOrigin (click)="openTagsDialog()" *ngIf="moreEnvs.length>1">
+      {{moreEnvs.length-1}}+
     </span>
 
       <ng-template
@@ -30,7 +31,7 @@ import {CdkConnectedOverlay} from "@angular/cdk/overlay";
         cdkConnectedOverlayPanelClass="filter-dropdown">
         <div class="plan-tags-popup d-flex flex-wrap">
         <span class="align-items-center d-inline-flex env-tag rb-light" *ngFor="let env of moreEnvs; let i=index;">
-          <!--tooltipIfTruncated-->s
+          <!--tooltipIfTruncated-->
           <span class="tag-content text-truncate d-inline-block" [matTooltip]="env.title">{{ env.title }}</span>
           <i
             class="fa-close-alt fz-10 pointer ml-10"
@@ -90,6 +91,6 @@ export class TestPlanEnvTagsComponent implements OnInit {
   }
 
   get moreEnvs() {
-    return this.filteredEnvironments.slice(1);
+    return this.filteredEnvironments;
   }
 }

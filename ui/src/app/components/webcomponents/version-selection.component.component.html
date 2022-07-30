@@ -68,9 +68,10 @@
           </mat-select>
         </mat-form-field>
         <div class="d-flex flex-column justify-content-around e2e_switcher pt-10">
-          <a class="live_btn live_dropdown_container mx-auto version_selector_dropdown">
+          <div class="live_btn live_dropdown_container mx-auto version_selector_dropdown" #versionTrigger="matMenuTrigger" [matMenuTriggerFor]="version">
             <span [translate]="'work_space.switcher.live'"></span> <i class="ml-20 fa-arrow-right"></i>
-            <div class="drop-menu">
+          </div>
+          <mat-menu #version="matMenu" class="switcher-dropdown-version p-0">
               <div class="inner-menu">
                 <div class="item theme-border-b rb-medium header"
                      [translate]="'work_space.switcher.select_version'"></div>
@@ -81,8 +82,7 @@
                   </div>
                 </div>
               </div>
-            </div>
-          </a>
+          </mat-menu>
           <button class="bg-grey-light border-0 btn btn-clear-default py-10 rb-medium mb-10 text-green w-100 mx-auto"
                   (click)="go();menuTrigger?.closeMenu()">
             <span [translate]="'work_space.switcher.sample'"></span> <i class="ml-30 fa-arrow-right"></i>

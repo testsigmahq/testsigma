@@ -23,7 +23,7 @@ import {WorkspaceVersionService} from "../../../shared/services/workspace-versio
           <span class="flex-grow-1 mr-15" [textContent]="'btn.common.filter' | translate"></span>
           <i class="pointer fa-close-alt" (click)="close()" [matTooltip]="'btn.common.close' | translate"></i>
         </div>
-        <div class="form-group px-18 mt-15 pb-0">
+        <div class="form-group px-18 my-15 pb-0">
           <app-version-selection
             class="position-relative" [customClass]="'runtime-project-skin'"
             (onVersionSelect)="setCurrentVersion($event)"
@@ -79,9 +79,13 @@ export class TestPlanSuiteFilterComponent{
 
   setCurrentVersion(version) {
     if(typeof version == 'number') {
-      this.versionService.show(version).subscribe(res=> this.selectedVersion = res);
+      this.versionService.show(version).subscribe(res=> {
+        this.selectedVersion = res;
+        this.version = this.selectedVersion;
+      });
     } else {
       this.selectedVersion = version;
+      this.version = this.selectedVersion
     }
   }
 

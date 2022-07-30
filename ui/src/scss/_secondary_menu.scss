@@ -387,6 +387,20 @@
     }
   }
 }
+.switcher-dropdown-version{
+  width: 180px;
+  .item{
+    @extend .p-10, .text-center, .pointer;
+  }
+  .item-max-height {
+    &:hover {
+      @extend .bg-active;
+    }
+  }
+  .mat-menu-content {
+    @extend .p-0;
+  }
+}
 /* Note: custom skin to make hover dropdown look like normal mat-select*/
 .selection-custom-skin {
   @extend .border-rds-4, .bg-white, .border-brand-1, .pt-0, .pb-0;

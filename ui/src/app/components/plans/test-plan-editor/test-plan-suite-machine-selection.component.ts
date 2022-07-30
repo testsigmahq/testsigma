@@ -409,15 +409,11 @@ export class TestPlanSuiteMachineSelectionComponent extends BaseComponent implem
     environmentFormGroup.addControl('appUploadVersionId', new FormControl(environment?.appUploadVersionId, []));
     environmentFormGroup.addControl('appUrl', new FormControl(environment?.appUrl, []));
     if (this.selectedVersion?.application?.isAndroidNative) {
-      environmentFormGroup.addControl('androidAppPackage', new FormControl(environment?.appPackage, []));
-      environmentFormGroup.addControl('androidAppActivity', new FormControl(environment?.appActivity, []));
-      /*environmentFormGroup.addControl('sauceLabAppId', new FormControl(environment?.sauceLabAppId, []));
-      environmentFormGroup.addControl('browserStackAppId', new FormControl(environment?.browserStackAppId, []));*/
+      environmentFormGroup.addControl('appPackage', new FormControl(environment?.appPackage, []));
+      environmentFormGroup.addControl('appActivity', new FormControl(environment?.appActivity, []));
     }
     else {
-      environmentFormGroup.addControl('iosBundleId', new FormControl(environment?.appBundleId, []));
-      /*environmentFormGroup.addControl('sauceLabAppId', new FormControl(environment?.sauceLabAppId, []));
-      environmentFormGroup.addControl('browserStackAppId', new FormControl(environment?.browserStackAppId, []));*/
+      environmentFormGroup.addControl('appBundleId', new FormControl(environment?.appBundleId, []));
     }
     return environmentFormGroup;
   }
@@ -517,7 +513,7 @@ export class TestPlanSuiteMachineSelectionComponent extends BaseComponent implem
 
   get isNextDisabled() {
     let map = [];
-    this.executionEnvironments.forEach(env => map = [...map, ...env.suiteIds]);
+    this.executionEnvironments.forEach(env => map = [...map, ...env?.suiteIds? env?.suiteIds:[] ]);
 
     for(let i=0;i< this.testSuiteList.length;i++) {
       if(!map.includes( this.testSuiteList[i].id )) return true;

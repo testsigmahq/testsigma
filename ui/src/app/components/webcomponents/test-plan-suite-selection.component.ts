@@ -505,15 +505,11 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
     environmentFormGroup.addControl('appUploadVersionId', new FormControl(environment?.appUploadVersionId, []));
     environmentFormGroup.addControl('appUrl', new FormControl(environment?.appUrl, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.USE_PATH), Validators.pattern(/^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/)]));
     if (this.version.workspace.isAndroidNative) {
-      environmentFormGroup.addControl('androidAppPackage', new FormControl(environment?.appPackage, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.APP_DETAILS && this.isHybrid)]));
-      environmentFormGroup.addControl('androidAppActivity', new FormControl(environment?.appActivity, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.APP_DETAILS&& this.isHybrid)]));
-      /*environmentFormGroup.addControl('sauceLabAppId', new FormControl(environment?.sauceLabAppId, [this.requiredIfValidator(() => this.appPathTypeValue == ApplicationPathType.APP_DETAILS && this.isExternalLabs && this.isSauceLab)]));
-      environmentFormGroup.addControl('browserStackAppId', new FormControl(environment?.browserStackAppId, [this.requiredIfValidator(() => this.appPathTypeValue == ApplicationPathType.APP_DETAILS && this.isExternalLabs && this.isBrowserStack)]));*/
+      environmentFormGroup.addControl('appPackage', new FormControl(environment?.appPackage, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.APP_DETAILS && this.isHybrid)]));
+      environmentFormGroup.addControl('appActivity', new FormControl(environment?.appActivity, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.APP_DETAILS&& this.isHybrid)]));
     }
     else {
-      environmentFormGroup.addControl('iosBundleId', new FormControl(environment?.appBundleId, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.APP_DETAILS && this.isHybrid)]));
-      /*environmentFormGroup.addControl('sauceLabAppId', new FormControl(environment?.sauceLabAppId, [this.requiredIfValidator(() => this.appPathTypeValue == ApplicationPathType.APP_DETAILS && this.isExternalLabs && this.isSauceLab)]));
-      environmentFormGroup.addControl('browserStackAppId', new FormControl(environment?.browserStackAppId, [this.requiredIfValidator(() => this.appPathTypeValue == ApplicationPathType.APP_DETAILS && this.isExternalLabs && this.isBrowserStack)]));*/
+      environmentFormGroup.addControl('appBundleId', new FormControl(environment?.appBundleId, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.APP_DETAILS && this.isHybrid)]));
     }
     return environmentFormGroup;
   }
@@ -548,5 +544,10 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
         }
       ]
     });
+  }
+
+  get activeExecutionEnvIndex() {
+    let idx = this.testDevices.indexOf(this.activeExecutionEnvironment);
+    return idx >= 0? idx : this.testDevices.length;
   }
 }

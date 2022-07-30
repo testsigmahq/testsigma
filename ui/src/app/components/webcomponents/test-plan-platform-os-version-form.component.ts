@@ -82,19 +82,21 @@ export class TestPlanPlatformOsVersionFormComponent implements OnInit {
   }
 
   fetchPlatForms() {
-    this.platformService
-      .findAll(this.version.workspace.workspaceType, this.testPlanLabType)
-      .subscribe(res => {
-        this.platforms = res;
-        if (this.environmentFormGroup?.controls['platform']?.value) {
-          this.platform = this.platforms.find(platform => platform.id == this.environmentFormGroup?.controls['platform'].value);
-        }
-        if (this.platform==null) {
-          this.platform = this.platforms[0];
-          this.environmentFormGroup?.controls['platform']?.setValue(this.platform?.id);
-        }
-        this.fetchOsVersions();
-      });
+    setTimeout(()=>{
+      this.platformService
+        .findAll(this.version.workspace.workspaceType, this.testPlanLabType)
+        .subscribe(res => {
+          this.platforms = res;
+          if (this.environmentFormGroup?.controls['platform']?.value) {
+            this.platform = this.platforms.find(platform => platform.id == this.environmentFormGroup?.controls['platform'].value);
+          }
+          if (this.platform==null) {
+            this.platform = this.platforms[0];
+            this.environmentFormGroup?.controls['platform']?.setValue(this.platform?.id);
+          }
+          this.fetchOsVersions();
+        });
+    }, 100)
   }
 
   setPlatform(platformId) {

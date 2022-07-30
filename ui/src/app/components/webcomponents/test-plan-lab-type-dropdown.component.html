@@ -58,12 +58,7 @@
     <div class="my-10 lab-item dropdown mouse-over d-inline-block">
       <div class="selection-custom-skin btn-group pointer d-flex align-items-center bg-default-grey-light py-10 pr-10 pl-6 grey-on-hover border-rds-4">
         <div class="min-w-250p h-18p">
-          <app-test-plan-execution-environment-info
-            *ngIf="preRequisiteExecutionEnvironment && !isNewUI"
-            [testPlan]="execution"
-            [version]="preRequisiteExecutionEnvironment.version"
-            [testDevice]="preRequisiteExecutionEnvironment"></app-test-plan-execution-environment-info>
-          <span class="text-truncate-d-block w-100" *ngIf="isNewUI && preRequisiteExecutionEnvironment">{{ preRequisiteExecutionEnvironment?.title }}</span>
+          <span class="text-truncate-d-block w-100" *ngIf="preRequisiteExecutionEnvironment">{{ preRequisiteExecutionEnvironment?.title }}</span>
           <span *ngIf="!preRequisiteExecutionEnvironment" [translate]="'message.common.none'" ></span>
         </div>
         <i class="fa-arrow-down-filled ml-5"></i>
@@ -79,20 +74,15 @@
             </li>
             <li class="d-flex align-items-center p-10 grey-on-hover pointer"
                 (click)="selectEnvironmentPreRequisite(executionEnvironment)"  *ngFor="let executionEnvironment of prerequisiteList">
-              <app-test-plan-execution-environment-info
-                *ngIf="!isNewUI"
-                [testPlan]="execution"
-                [version]="executionEnvironment.version"
-                [testDevice]="executionEnvironment"></app-test-plan-execution-environment-info>
-              <span class="text-truncate-d-block w-100" *ngIf="isNewUI">{{ executionEnvironment?.title }}</span>
+              <span class="text-truncate-d-block w-100">{{ executionEnvironment?.title }}</span>
             </li>
           </ul>
         </div>
       </div>
     </div>
   </div>
-  <div class="project-info test-plan-project-info" [class.visibility-hidden]="!isDistributed" *ngIf="!isNewUI">
-    <!--<div *ngIf="isDistributed" class="fz-14 rb-medium" [translate]="'test_plan.project'"></div>-->
+  <div class="project-info flex-column" [class.visibility-hidden]="!isDistributed" *ngIf="!isNewUI">
+    <div *ngIf="isDistributed" class="fz-14 rb-medium pb-6" [translate]="'message.common.text.workspace'"></div>
     <app-version-selection *ngIf="selectedVersion && isDistributed"
                            class="position-relative" [customClass]="'selection-custom-skin'"
                            (onVersionSelect)="setVersion($event)"

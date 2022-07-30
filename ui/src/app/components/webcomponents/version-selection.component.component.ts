@@ -18,9 +18,7 @@ export class VersionSelectionComponent extends WorkspaceSwitcherComponent implem
 
   @ViewChild('applicationViewRef', { read: TemplateRef }) applicationViewRef:TemplateRef<any>;
   @ViewChild('menuTrigger') menuTrigger: MatMenuTrigger;
-  workSpaces: Page<Workspace>;
   selectedProject: any;
-  sampleWorkspaceVersion: void;
   public workSpaceType: WorkspaceType;
   public WorkSpaceType = WorkspaceType;
 

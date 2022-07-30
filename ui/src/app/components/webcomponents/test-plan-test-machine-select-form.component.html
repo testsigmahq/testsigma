@@ -34,11 +34,11 @@
         [executionType]="activeEnvironmentFormGroup.controls['testPlanLabType']?.value"
         [executionEnvironments]="testPlan.testDevices"
         [version]="activeExecutionEnvironment.version"
-        [activeExecutionEnvIndex]="activeExecutionEnvironment.id"
+        [activeExecutionEnvIndex]="activeExecutionEnvIndex"
         [formGroup]="activeEnvironmentFormGroup"></app-test-plan-lab-type-dropdown>
       <app-test-plan-test-machine-form
         class="column"
-        *ngIf="workspace?.isWeb && activeEnvironmentFormGroup"
+        *ngIf="version?.workspace?.isWeb && activeEnvironmentFormGroup"
         [testPlanLabType]="testLabType"
         [formGroup]="activeEnvironmentFormGroup"
         [isAvailableCheck]="false"
@@ -46,15 +46,14 @@
         [isEdit]="isEdit"></app-test-plan-test-machine-form>
       <app-test-plan-device-form
         class="column"
-        *ngIf="workspace?.isMobile && activeEnvironmentFormGroup"
+        *ngIf="version?.workspace?.isMobile && activeEnvironmentFormGroup"
         [formGroup]="activeEnvironmentFormGroup"
         [version]="version"
         [isEdit]="isEdit"
         [testPlanLabType]="testLabType"></app-test-plan-device-form>
       <app-test-plan-app-uploads-form
-        *ngIf="workspace?.isMobileNative && environmentControl"
+        *ngIf="version?.workspace?.isMobileNative && environmentControl"
         [formGroup] = "activeEnvironmentFormGroup"
-        [testPlanLabType]="this.testPlan?.testPlanLabType"
         [version]="version"
         [isEdit]="isEdit"
         [testPlanLabType]="testLabType"></app-test-plan-app-uploads-form>

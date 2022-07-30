@@ -103,11 +103,10 @@ export class TestPlanLabTypeDropdownComponent extends SelectTestLabComponent imp
   get prerequisiteList() {
     let activeEnvID = this.selectTestLabForm.value.id;
     let executionEnv = this.executionEnvironments.find((item, idx)=> idx == this.activeExecutionEnvIndex);
-
     return this.executionEnvironments.filter((item, idx)=> {
       let isItemPrecessor = idx < this.activeExecutionEnvIndex;
       let isItemNotRelated = activeEnvID? (item.id != activeEnvID && item.prerequisiteTestDevicesId != activeEnvID) : ( idx != this.activeExecutionEnvIndex && item.prerequisiteTestDevicesIdIndex != this.activeExecutionEnvIndex);
-      let isitemNotSelected = activeEnvID? (executionEnv.prerequisiteTestDevicesId != item.id) : ( this.selectTestLabForm.value.prerequisiteTestDevicesIdIndex != idx );
+      let isitemNotSelected = activeEnvID? (executionEnv?.prerequisiteTestDevicesId != item.id) : ( this.selectTestLabForm.value.prerequisiteTestDevicesIdIndex != idx );
 
       return isItemPrecessor && isItemNotRelated && isitemNotSelected;
     });

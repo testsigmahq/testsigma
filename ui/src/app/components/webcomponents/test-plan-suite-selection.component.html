@@ -118,7 +118,7 @@
       [executionType]="testPlanForm.controls['testPlanType'].value"
       [executionEnvironments]="testDevices"
       [version]="activeExecutionEnvironment.version"
-      [activeExecutionEnvIndex]="activeExecutionEnvironment.id"
+      [activeExecutionEnvIndex]="activeExecutionEnvIndex"
       [formGroup]="activeEnvironmentFormGroup"></app-test-plan-lab-type-dropdown>
     <app-test-plan-test-machine-form
       *ngIf="(selectedVersion?.workspace?.isWeb || (isHybrid && !selectedVersion?.workspace?.isMobile)) && activeEnvironmentFormGroup"

@@ -137,15 +137,11 @@ export class TestPlanMachineSelectionFormComponent extends BaseComponent impleme
     environmentFormGroup.addControl('appUploadVersionId', new FormControl(environment?.appUploadVersionId, []));
     environmentFormGroup.addControl('appUrl', new FormControl(environment?.appUrl, [this.requiredIfValidator(() => this.appPathTypeValue == ApplicationPathType.USE_PATH), Validators.pattern(/^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/)]));
     if (this.version.workspace.isAndroidNative) {
-      environmentFormGroup.addControl('androidAppPackage', new FormControl(environment?.appPackage, [this.requiredIfValidator(() => this.appPathTypeValue == ApplicationPathType.APP_DETAILS && this.isHybrid)]));
-      environmentFormGroup.addControl('androidAppActivity', new FormControl(environment?.appActivity, [this.requiredIfValidator(() => this.appPathTypeValue == ApplicationPathType.APP_DETAILS&& this.isHybrid)]));/*
-      environmentFormGroup.addControl('sauceLabAppId', new FormControl(environment?.sauceLabAppId, [this.requiredIfValidator(() => this.appPathTypeValue == ApplicationPathType.APP_DETAILS && this.isExternalLabs && this.isSauceLab)]));
-      environmentFormGroup.addControl('browserStackAppId', new FormControl(environment?.browserStackAppId, [this.requiredIfValidator(() => this.appPathTypeValue == ApplicationPathType.APP_DETAILS && this.isExternalLabs && this.isBrowserStack)]));*/
+      environmentFormGroup.addControl('appPackage', new FormControl(environment?.appPackage, [this.requiredIfValidator(() => this.appPathTypeValue == ApplicationPathType.APP_DETAILS && this.isHybrid)]));
+      environmentFormGroup.addControl('appActivity', new FormControl(environment?.appActivity, [this.requiredIfValidator(() => this.appPathTypeValue == ApplicationPathType.APP_DETAILS&& this.isHybrid)]));
     }
     else {
-      environmentFormGroup.addControl('iosBundleId', new FormControl(environment?.appBundleId, [this.requiredIfValidator(() => this.appPathTypeValue == ApplicationPathType.APP_DETAILS && this.isHybrid)]));/*
-      environmentFormGroup.addControl('sauceLabAppId', new FormControl(environment?.sauceLabAppId, [this.requiredIfValidator(() => this.appPathTypeValue == ApplicationPathType.APP_DETAILS && this.isExternalLabs && this.isSauceLab)]));
-      environmentFormGroup.addControl('browserStackAppId', new FormControl(environment?.browserStackAppId, [this.requiredIfValidator(() => this.appPathTypeValue == ApplicationPathType.APP_DETAILS && this.isExternalLabs && this.isBrowserStack)]));*/
+      environmentFormGroup.addControl('appBundleId', new FormControl(environment?.appBundleId, [this.requiredIfValidator(() => this.appPathTypeValue == ApplicationPathType.APP_DETAILS && this.isHybrid)]));
     }
     return environmentFormGroup;
   }
@@ -165,35 +161,7 @@ export class TestPlanMachineSelectionFormComponent extends BaseComponent impleme
   }
 
   saveMachine() {
-    if(!this.isEdit && this.isHybrid) {
-      /*this.activeEnvironmentFormGroup.controls['runTestCasesInParallel'].setValue(false);
-      this.activeEnvironmentFormGroup.controls['runTestSuitesInParallel'].setValue(false);
-      this.activeEnvironmentFormGroup.controls['createSessionAtCaseLevel'].setValue(false);*/
-    }
-/*    if(!this.isEdit) {
-      let isRunTestCasesInParallel = this.activeEnvironmentFormGroup.value.runTestCasesInParallel;
-      let value = isRunTestCasesInParallel? [] : this.activeExecutionEnvironment.suiteIds;
-      this.activeEnvironmentFormGroup.controls['runTestCasesInSequenceSuiteIds'].setValue(value);
-    }*/
     this.dialogRef.close({formGroup: this.activeEnvironmentFormGroup, isEdit: this.isEdit });
   }
 
-  handleMachineSettings(action, value) {
-    switch (action) {
-      case 'runTestSuitesInParallel':
-      case 'createSessionAtCaseLevel':
-        this.updateMachineSettings(action, value);
-        break;
-      case 'runTestCasesInParallel':
-        this.updateMachineSettings('createSessionAtCaseLevel', value);
-        this.updateMachineSettings('runTestCasesInParallel', value);
-        this.updateMachineSettings('runTestCasesInSequenceSuiteIds', value? [] : this.activeExecutionEnvironment.suiteIds);
-        break;
-    }
-  }
-
-  updateMachineSettings(key, value) {
-    this.activeExecutionEnvironment[key] = value;
-    this.activeEnvironmentFormGroup.get(key).patchValue(value);
-  }
 }

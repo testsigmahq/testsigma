@@ -1602,7 +1602,7 @@
   "usage_details.mobile_inspections.runs.empty_message": "There are no Mobile Inspector sessions.",
   "usage_details.runs.runs.empty_message": "There are no Runs.",
   "usage_details.runs.name": "Name",
-  "usage_details.runs.type": "Type(Test Lab)",
+  "usage_details.runs.type": "Type",
   "usage_details.runs.running_count": "Parallel Count",
   "usage_details.runs.start_time": "Start Time",
   "usage_details.runs.workspace_details": "Workspace Details",
@@ -2051,5 +2051,6 @@
   "test_plan.filter.reorder.testsuite": "Select Test Machine to re-order Test Suite in it",
   "test_plan.filter.reorder.testsuite.no_machine": "Add Test Machine to reorder Test Suite",
   "common.prerequisite": "Prerequisite",
-  "test_plan.suite.add_machine.disabled.no_suite": "Add Test Suites to add the Test Machine"
+  "test_plan.suite.add_machine.disabled.no_suite": "Add Test Suites to add the Test Machine",
+  "suggestion.runtime_vars.project": "Project"
 }

@@ -221,6 +221,7 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
 
   initFormGroup(environment?: TestDevice) {
     let environmentFormGroup = this.formBuilder.group({
+          id: new FormControl(environment?.id),
           agentId: new FormControl(environment?.agentId, [this.requiredIfValidator(() => this.isHybrid)]),
           deviceId: new FormControl(environment?.deviceId, [this.requiredIfValidator(() => this.isHybrid && this.version?.workspace.isMobile)]),
           createSessionAtCaseLevel: new FormControl(environment?.createSessionAtCaseLevel, []),
@@ -242,8 +243,10 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
           appUrl: new FormControl(environment?.appUrl, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.USE_PATH), Validators.pattern(/^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/)]),
           appPackage: new FormControl(environment?.appPackage, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.APP_DETAILS)]),
           appActivity:  new FormControl(environment?.appActivity, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.APP_DETAILS)]),
-          workspaceVersionId: new FormControl(environment?.workspaceVersionId),
-          testPlanLabType: new FormControl(environment?.testPlanLabType)
+          workspaceVersionId: new FormControl(environment?.workspaceVersionId || this?.version?.id),
+          testPlanLabType: new FormControl(environment?.testPlanLabType),
+          prerequisiteTestDevicesId: new FormControl(environment?.prerequisiteTestDevicesId, []),
+          prerequisiteTestDevicesIdIndex: new FormControl(environment?.prerequisiteTestDevicesIdIndex, []),
     });
     if(this.activeExecutionEnvironment.testSuites?.length > 0) {
       environmentFormGroup.setControl('suiteIds', this.formBuilder.array([]));
@@ -274,7 +277,7 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
 
   setEnvironmentVersion(version: WorkspaceVersion) {
     this.activeExecutionEnvironment.version = version;
-    //this.addControls(this.activeEnvironmentFormGroup, this.activeExecutionEnvironment);
+    this.addControls(this.activeEnvironmentFormGroup, this.activeExecutionEnvironment);
     this.activeExecutionEnvironment.testSuites = [];
     this.activeEnvironmentFormGroup.setControl('suiteIds', this.formBuilder.array([]));
     if(version.workspace.isMobileNative) {
@@ -304,6 +307,31 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
 
   get testLabType() {
     return this.activeEnvironmentFormGroup.controls['testPlanLabType'].value;
+  }
+
+  get activeExecutionEnvIndex() {
+    let idx = this.testPlan.testDevices.indexOf(this.testPlan.testDevices.find(device => device.id == this.activeEnvironmentFormGroup.value.id));
+    return idx >= 0? idx : this.testPlan.testDevices.length;
+  }
+
+  addControls(environmentFormGroup: FormGroup, environment?: TestDevice) {
+    environmentFormGroup.addControl('deviceId', new FormControl(environment?.deviceId, [this.requiredIfValidator(() => this.isHybrid)]));
+    environmentFormGroup.addControl('appPathType', new FormControl(environment?.appPathType || ApplicationPathType.UPLOADS, [Validators.required]));
+    environmentFormGroup.addControl('appUploadId', new FormControl(environment?.appUploadId, [this.requiredIfValidator(() => this.appPathTypeValue == ApplicationPathType.UPLOADS)]));
+    environmentFormGroup.addControl('appUploadVersionId', new FormControl(environment?.appUploadVersionId, []));
+    environmentFormGroup.addControl('appUrl', new FormControl(environment?.appUrl, [this.requiredIfValidator(() => this.appPathTypeValue == ApplicationPathType.USE_PATH), Validators.pattern(/^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/)]));
+    if (this.version.workspace.isAndroidNative) {
+      environmentFormGroup.addControl('appPackage', new FormControl(environment?.appPackage, [this.requiredIfValidator(() => this.appPathTypeValue == ApplicationPathType.APP_DETAILS && this.isHybrid)]));
+      environmentFormGroup.addControl('appActivity', new FormControl(environment?.appActivity, [this.requiredIfValidator(() => this.appPathTypeValue == ApplicationPathType.APP_DETAILS&& this.isHybrid)]));
+    }
+    else {
+      environmentFormGroup.addControl('appBundleId', new FormControl(environment?.appBundleId, [this.requiredIfValidator(() => this.appPathTypeValue == ApplicationPathType.APP_DETAILS && this.isHybrid)]));
+    }
+    return environmentFormGroup;
+  }
+
+  get appPathTypeValue(): ApplicationPathType {
+    return <ApplicationPathType>(<FormGroup>this.activeEnvironmentFormGroup)?.controls['appPathType']?.value;
   }
 
 }

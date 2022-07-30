@@ -53,7 +53,7 @@
     </mat-form-field>
 
   </div>
-  <div class="test-plan-prerequisite" *ngIf="executionEnvironments.length && activeExecutionEnvIndex != 0">
+  <div class="test-plan-prerequisite" *ngIf="executionEnvironments.length && isDistributed && activeExecutionEnvIndex != 0">
     <div class="fz-14 rb-medium" [translate]="'common.prerequisite'"></div>
     <div class="my-10 lab-item dropdown mouse-over d-inline-block">
       <div class="selection-custom-skin btn-group pointer d-flex align-items-center bg-default-grey-light py-10 pr-10 pl-6 grey-on-hover border-rds-4">

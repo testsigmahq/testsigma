@@ -11,7 +11,6 @@ package com.testsigma.service;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.testsigma.automator.actions.constants.ErrorCodes;
 import com.testsigma.automator.entity.TestDeviceEntity;
 import com.testsigma.config.ApplicationConfig;
 import com.testsigma.config.StorageServiceFactory;
@@ -628,14 +627,14 @@ public class AgentExecutionService {
     } else if(testDeviceResult.getTestPlanLabType().isHybrid() && testDeviceResult.getTestDevice().getDeviceId()!=null && agentService.isAgentActive(testDeviceResult.getTestDevice().getAgentId()) && !agentDeviceService.isDeviceOnline(testDeviceResult.getTestDevice().getDeviceId())){
       testDeviceResultService.markEnvironmentResultAsFailed(testDeviceResult, agentDeviceService.find(testDeviceResult.getTestDevice().getDeviceId()).getName()+ " "+AutomatorMessages.DEVICE_NOT_ONLINE, StatusConstant.STATUS_CREATED);
     } else {
-      processEnvironmentResultIfPrerequisiteIsCompleted(testDeviceResult, inStatus);
+      processEnvironmentResultOnSuccessfulChecks(testDeviceResult, inStatus);
     }
     testDeviceResultService.updateExecutionConsolidatedResults(this.testPlanResult.getId(),
       Boolean.TRUE);
   }
 
-  public void processEnvironmentResultIfPrerequisiteIsCompleted(TestDeviceResult testDeviceResult, StatusConstant inStatus) throws Exception {
-    if (!isWaitingOnEnvironmentPrerequisite(testDeviceResult)) {
+  public void processEnvironmentResultOnSuccessfulChecks(TestDeviceResult testDeviceResult, StatusConstant inStatus) throws Exception {
+    if (!isWaitingOnEnvironmentPrerequisite(testDeviceResult) && !isAnyEnvironmentExecutionInProgress()) {
       if (testDeviceResult.getPrerequisiteTestDeviceResultId() == null || isEnvironmentPrerequisiteResultSuccessful(testDeviceResult)) {
         processEnvironmentResult(testDeviceResult, inStatus);
       } else {
@@ -1444,7 +1443,7 @@ public class AgentExecutionService {
       }
     }
   }
-  protected  boolean isWaitingOnEnvironmentPrerequisite(TestDeviceResult environmentResult) throws ResourceNotFoundException {
+  protected boolean isWaitingOnEnvironmentPrerequisite(TestDeviceResult environmentResult) throws ResourceNotFoundException {
     Long preRequisiteEnvironmentResultId = environmentResult.getPrerequisiteTestDeviceResultId();
     if(preRequisiteEnvironmentResultId != null){
       TestDeviceResult preRequisiteEnvironmentResult = testDeviceResultService.find(preRequisiteEnvironmentResultId);
@@ -1455,13 +1454,21 @@ public class AgentExecutionService {
     return false;
   }
 
-  protected  boolean isEnvironmentPrerequisiteResultSuccessful(TestDeviceResult environmentResult) throws ResourceNotFoundException {
+  protected boolean isEnvironmentPrerequisiteResultSuccessful(TestDeviceResult environmentResult) throws ResourceNotFoundException {
     Long preRequisiteEnvironmentResultId = environmentResult.getPrerequisiteTestDeviceResultId();
     if(preRequisiteEnvironmentResultId != null){
       TestDeviceResult preRequisiteEnvironmentResult = testDeviceResultService.find(preRequisiteEnvironmentResultId);
       if(preRequisiteEnvironmentResult.getResult() == ResultConstant.SUCCESS){
         return true;
       }
+    }
+    return false;
+  }
+
+  protected boolean isAnyEnvironmentExecutionInProgress() {
+    List<TestDeviceResult> testDeviceResultList = testDeviceResultService.findAllByTestPlanResultIdAndStatus(this.getTestPlanResult().getId(), StatusConstant.STATUS_IN_PROGRESS);
+    if(testDeviceResultList.size() > 0) {
+      return true;
     }
     return false;
   }

@@ -552,7 +552,7 @@ public class AgentExecutionService {
     TestDeviceSettings settings = new TestDeviceSettings();
     TestPlanLabType exeLabType = testDevice.getTestPlanLabType();
 
-    if (testDevice.getPlatformDeviceId() != null) {
+    if (!(testDevice.getTestPlanLabType().isHybrid() && testDevice.getWorkspaceVersion().getWorkspace().getWorkspaceType().isMobile()) && testDevice.getPlatformDeviceId() != null) {
       settings.setDeviceName(platformsService.getPlatformDevice(testDevice.getPlatformDeviceId(), exeLabType).getName());
     }
     if (testDevice.getPlatformBrowserVersionId() != null) {

@@ -51,7 +51,7 @@ export class ActionTestDataRuntimeVariableSuggestionComponent implements OnInit 
     }
     this.selectedVersion = new FormControl(this.option.version, []);
     this.fetchTemplates();
-    //this.selectedVersion.valueChanges.subscribe(() => this.fetchTestSteps(this.storeTemplates));
+    this.selectedVersion.valueChanges.subscribe(() => this.fetchTestSteps(this.storeTemplates));
     this.attachDebounceEvent();
   }
 

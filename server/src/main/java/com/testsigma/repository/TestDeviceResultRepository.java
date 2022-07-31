@@ -34,8 +34,6 @@ public interface TestDeviceResultRepository extends JpaRepository<TestDeviceResu
 
   List<TestDeviceResult> findAllByTestPlanResultIdAndResultIsNot(Long testPlanResultId, ResultConstant notInResult);
 
-  List<TestDeviceResult> findAllByTestPlanResultIdAndStatus(Long testPlanResultId, StatusConstant status);
-
   List<TestDeviceResult> findAllByTestPlanResultId(Long testPlanResultId);
 
   @Query("SELECT DISTINCT(envResult.id) " +

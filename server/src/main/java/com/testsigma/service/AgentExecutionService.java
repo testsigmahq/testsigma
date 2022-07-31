@@ -634,7 +634,7 @@ public class AgentExecutionService {
   }
 
   public void processEnvironmentResultOnSuccessfulChecks(TestDeviceResult testDeviceResult, StatusConstant inStatus) throws Exception {
-    if (!isWaitingOnEnvironmentPrerequisite(testDeviceResult) && !isAnyEnvironmentExecutionInProgress()) {
+    if (!isWaitingOnEnvironmentPrerequisite(testDeviceResult)) {
       if (testDeviceResult.getPrerequisiteTestDeviceResultId() == null || isEnvironmentPrerequisiteResultSuccessful(testDeviceResult)) {
         processEnvironmentResult(testDeviceResult, inStatus);
       } else {
@@ -1461,14 +1461,6 @@ public class AgentExecutionService {
       if(preRequisiteEnvironmentResult.getResult() == ResultConstant.SUCCESS){
         return true;
       }
-    }
-    return false;
-  }
-
-  protected boolean isAnyEnvironmentExecutionInProgress() {
-    List<TestDeviceResult> testDeviceResultList = testDeviceResultService.findAllByTestPlanResultIdAndStatus(this.getTestPlanResult().getId(), StatusConstant.STATUS_IN_PROGRESS);
-    if(testDeviceResultList.size() > 0) {
-      return true;
     }
     return false;
   }

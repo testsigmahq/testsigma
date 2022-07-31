@@ -67,10 +67,6 @@ public class TestDeviceResultService {
     return testDeviceResultRepository.findByTestPlanResultIdAndTestDeviceId(testPlanResultId, prerequisiteTestDevicesId);
   }
 
-  public List<TestDeviceResult> findAllByTestPlanResultIdAndStatus(Long testPlanId, StatusConstant status) {
-    return this.testDeviceResultRepository.findAllByTestPlanResultIdAndStatus(testPlanId, status);
-  }
-
   public List<TestDeviceResult> findAllByTestPlanResultIdAndResultIsNot(Long testPlanResultId, ResultConstant notInResult) {
     return testDeviceResultRepository.findAllByTestPlanResultIdAndResultIsNot(testPlanResultId, notInResult);
   }

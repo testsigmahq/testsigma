@@ -61,7 +61,10 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
             [height]="20"
             [resultEntity]="testCaseDataDrivenResult?.iterationResult?.lastRun || testCaseDataDrivenResult?.iterationResult"></app-result-pie-chart-column>
           <div class="ml-auto fz-12 text-t-secondary d-flex">
-            <app-re-run-icon [resultEntity]="testCaseDataDrivenResult?.iterationResult"></app-re-run-icon>
+            <app-re-run-icon
+              [iterateId]="testCaseDataDrivenResult?.iterationResult?.id"
+              [resultEntity]="testCaseDataDrivenResult?.iterationResult?.parentResult" [isDataDriven]="true"
+              [resultEntity]="testCaseDataDrivenResult?.iterationResult"></app-re-run-icon>
             <app-duration-format
               *ngIf="!testCaseDataDrivenResult?.iterationResult?.isExecuting"
               [duration]="testCaseDataDrivenResult?.iterationResult?.duration"></app-duration-format>

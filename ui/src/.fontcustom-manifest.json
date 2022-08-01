@@ -1,14 +1,14 @@
 {
   "checksum": {
-    "previous": "db29410e4e37ae8a986fed84279ce22e6f9f1e6e128af367826129fa64e3fbd6",
-    "current": "db29410e4e37ae8a986fed84279ce22e6f9f1e6e128af367826129fa64e3fbd6"
+    "previous": "dfe3adc8b6910088075e8c0b3b2f6fe0ad8d708e9ecd4c966bbe92cd08d0c7be",
+    "current": "dfe3adc8b6910088075e8c0b3b2f6fe0ad8d708e9ecd4c966bbe92cd08d0c7be"
   },
   "fonts": [
-    "./assets/font_icons/font_custom_db29410e4e37ae8a986fed84279ce22e.ttf",
-    "./assets/font_icons/font_custom_db29410e4e37ae8a986fed84279ce22e.svg",
-    "./assets/font_icons/font_custom_db29410e4e37ae8a986fed84279ce22e.woff",
-    "./assets/font_icons/font_custom_db29410e4e37ae8a986fed84279ce22e.eot",
-    "./assets/font_icons/font_custom_db29410e4e37ae8a986fed84279ce22e.woff2"
+    "./assets/font_icons/font_custom_dfe3adc8b6910088075e8c0b3b2f6fe0.ttf",
+    "./assets/font_icons/font_custom_dfe3adc8b6910088075e8c0b3b2f6fe0.svg",
+    "./assets/font_icons/font_custom_dfe3adc8b6910088075e8c0b3b2f6fe0.woff",
+    "./assets/font_icons/font_custom_dfe3adc8b6910088075e8c0b3b2f6fe0.eot",
+    "./assets/font_icons/font_custom_dfe3adc8b6910088075e8c0b3b2f6fe0.woff2"
   ],
   "glyphs": {
     "4-quabs": {
@@ -1162,6 +1162,10 @@
     "power-loop": {
       "codepoint": 61849,
       "source": "./icons/power-loop.svg"
+    },
+    "prerequisite": {
+      "codepoint": 62162,
+      "source": "./icons/prerequisite.svg"
     },
     "productivity": {
       "codepoint": 62058,

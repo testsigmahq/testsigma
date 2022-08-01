@@ -3,11 +3,11 @@
 //
 
 @font-face {
-  font-family: "font_custom";
-  src: url("~/assets/font_icons/font_custom_db29410e4e37ae8a986fed84279ce22e.woff2") format("woff2"),
-       url("~/assets/font_icons/font_custom_db29410e4e37ae8a986fed84279ce22e.woff") format("woff"),
-       url("~/assets/font_icons/font_custom_db29410e4e37ae8a986fed84279ce22e.ttf") format("truetype"),
-       url("~/assets/font_icons/font_custom_db29410e4e37ae8a986fed84279ce22e.svg#font_custom") format("svg");
+  font-family: "font_custom";=
+  src: url("~/assets/font_icons/font_custom_dfe3adc8b6910088075e8c0b3b2f6fe0.woff2") format("woff2"),
+       url("~/assets/font_icons/font_custom_dfe3adc8b6910088075e8c0b3b2f6fe0.woff") format("woff"),
+       url("~/assets/font_icons/font_custom_dfe3adc8b6910088075e8c0b3b2f6fe0.ttf") format("truetype"),
+       url("~/assets/font_icons/font_custom_dfe3adc8b6910088075e8c0b3b2f6fe0.svg#font_custom") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -15,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: "font_custom";
-    src: url("~/assets/font_icons/font_custom_db29410e4e37ae8a986fed84279ce22e.svg#font_custom") format("svg");
+    src: url("~/assets/font_icons/font_custom_dfe3adc8b6910088075e8c0b3b2f6fe0.svg#font_custom") format("svg");
   }
 }
 
@@ -310,6 +310,7 @@
 .fa-power-bulb:before,
 .fa-power-flash:before,
 .fa-power-loop:before,
+.fa-prerequisite:before,
 .fa-productivity:before,
 .fa-profile:before,
 .fa-project-andriod:before,
@@ -762,6 +763,7 @@
 .fa-power-bulb:before { content: "\f198"; }
 .fa-power-flash:before { content: "\f220"; }
 .fa-power-loop:before { content: "\f199"; }
+.fa-prerequisite:before { content: "\f2d2"; }
 .fa-productivity:before { content: "\f26a"; }
 .fa-profile:before { content: "\f19a"; }
 .fa-project-andriod:before { content: "\f28c"; }
@@ -1201,6 +1203,7 @@ $font-font_custom-power: "\f197";
 $font-font_custom-power-bulb: "\f198";
 $font-font_custom-power-flash: "\f220";
 $font-font_custom-power-loop: "\f199";
+$font-font_custom-prerequisite: "\f2d2";
 $font-font_custom-productivity: "\f26a";
 $font-font_custom-profile: "\f19a";
 $font-font_custom-project-andriod: "\f28c";

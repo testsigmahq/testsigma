@@ -10,12 +10,6 @@ import {Router} from "@angular/router";
       <div class="flex-grow-1 d-flex">
         <span class="go-back-icon" (click)="handleBack()"></span>
         <span [translate]="isEdit? 'test_plans.form.edit.title' : 'test_plans.form.create.title'" class="fz-18 ml-10 rb-medium"></span>
-
-        <div class="border-rds-4 d-inline-flex flex-wrap ml-30">
-          <mat-slide-toggle aria-labelledby="example-radio-group-label" [checked]="!isNewUI" (change)="handleUISwitch($event)">
-            <span [translate]="'btn.common.switch_to_classic'"></span>
-          </mat-slide-toggle>
-        </div>
       </div>
 
       <div class="ml-30">

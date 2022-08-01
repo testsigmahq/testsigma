@@ -50,7 +50,8 @@
         [stepper]="stepper"
         [formGroup]="testPlanForm"
         (formSubmitted)="formSubmitted = true"
-        [testPlan]="testPlan" ></app-test-plan-settings-form>
+        [testPlan]="testPlan"
+        [hasTestSuitesWithoutMachine]="hasTestSuitesWithoutMachine"></app-test-plan-settings-form>
     </mat-step>
   </mat-horizontal-stepper>
     </div>

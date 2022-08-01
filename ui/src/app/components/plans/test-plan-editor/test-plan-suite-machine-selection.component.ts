@@ -188,7 +188,7 @@ export class TestPlanSuiteMachineSelectionComponent extends BaseComponent implem
       width: '750px',
       height: '100vh',
       data: {
-        execution: this.testPlanForm.value,
+        execution: this.execution,
         executionType: this.testPlanForm?.value?.executionType,
         executionEnvironments: this.executionEnvironments,
         executionEnvironment: environment,
@@ -513,7 +513,7 @@ export class TestPlanSuiteMachineSelectionComponent extends BaseComponent implem
 
   get isNextDisabled() {
     let map = [];
-    this.executionEnvironments.forEach(env => map = [...map, ...env?.suiteIds? env?.suiteIds:[] ]);
+    this.executionEnvironments.forEach(env => map = [...map, ...env.suiteIds]);
 
     for(let i=0;i< this.testSuiteList.length;i++) {
       if(!map.includes( this.testSuiteList[i].id )) return true;

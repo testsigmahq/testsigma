@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import {Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, Input} from '@angular/core';
 import { fromEvent } from 'rxjs';
 import { filter, debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 
@@ -11,6 +11,7 @@ import { filter, debounceTime, distinctUntilChanged, tap } from 'rxjs/operators'
 export class ToggleSearchButtonComponent implements OnInit {
   @Output('searchAction') searchAction = new EventEmitter<string>();
   @ViewChild('searchInput', {static: false}) searchInput: ElementRef;
+  @Input('hasClose') hasClose = false;
 
   public showSearch: boolean = false;
   inputValue: any;
@@ -24,6 +25,8 @@ export class ToggleSearchButtonComponent implements OnInit {
     this.showSearch=(!this.showSearch);
     if(this.showSearch)
       this.attachSearchEvents()
+    else
+      this.clearSearch();
   }
   clearSearch() {
     this.searchInput.nativeElement.value = null;

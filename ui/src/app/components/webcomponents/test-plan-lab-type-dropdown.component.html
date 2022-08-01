@@ -27,8 +27,8 @@
       <mat-select disableOptionCentering panelClass="single" [value]="testPlanLabType" (selectionChange)="$event.source.close()">
         <mat-select-trigger>
           <div class="d-flex align-items-center max-h-18">
-            <span [ngClass]="testLabsMap[testPlanLabType].iconClass + ' h-18p d-inline-block'"></span>
-            <span class="ml-10" [translate]="testLabsMap[testPlanLabType].name"></span>
+            <span [ngClass]="testLabsMap[testPlanLabType]?.iconClass + ' h-18p d-inline-block'"></span>
+            <span class="ml-10" [translate]="testLabsMap[testPlanLabType]?.name"></span>
           </div>
         </mat-select-trigger>
         <mat-option *ngFor="let lab of testLabsList" [value]="lab.value">

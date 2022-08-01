@@ -31,6 +31,7 @@ export class TestPlanSettingsFormComponent extends BaseComponent implements OnIn
   public saving: boolean;
   @Input('tabPosition') tabPosition: Number;
   @Output('updateHeaderBtns') updateHeaderBtns = new EventEmitter<{tabPosition: Number, buttons: any[]}>();
+  @Input('hasTestSuitesWithoutMachine') hasTestSuitesWithoutMachine: boolean;
 
   constructor(
     public authGuard: AuthenticationGuard,
@@ -149,7 +150,8 @@ export class TestPlanSettingsFormComponent extends BaseComponent implements OnIn
     }
 
     if(!this.testPlan?.testDevices?.length ||
-      this.testPlan?.testDevices?.filter(environment => !environment?.suiteIds?.length)?.length) {
+      this.testPlan?.testDevices?.filter(environment => !environment?.suiteIds?.length)?.length ||
+      this.hasTestSuitesWithoutMachine) {
       this.stepper.selectedIndex = 1;
       this.saving = false;
       return false;

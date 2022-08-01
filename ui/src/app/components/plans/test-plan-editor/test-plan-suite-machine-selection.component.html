@@ -64,26 +64,9 @@
           [checked]="testSuiteList?.length && (testSuiteList?.length == selectedTestSuites?.length) && !hasMixedAppVersion"></mat-checkbox>
         <span [translate]="'test_plans.suites.title'" class="ml-15"></span>
 
-        <mat-form-field
-          class="mat-select-custom ts-col-35 inline-no-border text-capitalize sm ml-15"
-          appearance="fill"
-          *ngIf="executionEnvironments.length"
-        >
-          <mat-select #selectToggle disableOptionCentering panelClass="single" [(value)]="filter" [placeholder]="'test_plan.environments.all' | translate">
-            <mat-option
-              [value]="'All'"
-              (onSelectionChange)="setFilter($event)"
-              [textContent]="'test_plan.environments.all' | translate" selected></mat-option>
-            <mat-option
-              *ngFor="let item of executionEnvironments"
-              [value]="item"
-              (onSelectionChange)="setFilter($event)"
-              class="text-capitalize"> {{ item.title }} </mat-option>
-          </mat-select>
-        </mat-form-field>
         <app-toggle-search-button
-          [ngClass]="'position-absolute bg-white'"
-          [style]="'right: 0;'"
+          [hasClose]="true"
+          [ngClass]="'bg-white pl-10 ml-auto'"
           *ngIf="testSuiteList.length"
           (searchAction)="searchTestsuite($event)"></app-toggle-search-button>
       </div>

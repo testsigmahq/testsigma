@@ -135,10 +135,7 @@ export class TestPlanSuiteMachineSelectionComponent extends BaseComponent implem
     }).afterClosed().subscribe(res => {
       if(res) {
         if(this.filter == 'All') {
-          //this.testSuiteList = testDevice.testSuites;
           this.testSuiteList = this.versionFilter? [...this.testSuiteList.filter(item=> item.workspaceVersionId != this.versionFilter.id), ...res] : res;
-          //this.selectedTestSuites = this.hasMixedAppVersion? [] : res;
-          this.selectedTestSuites = this.testSuiteList;
           this.constructTestSuiteIdMap();
         } else {
           this.mapTestSuitesToMachine(this.filter, res);

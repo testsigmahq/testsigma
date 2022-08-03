@@ -5,16 +5,24 @@ import {TestDeviceResult} from "../../models/test-device-result.model";
 import {TestPlanResult} from "../../models/test-plan-result.model";
 import { MatDialog } from '@angular/material/dialog';
 import {ReRunDetailsComponent} from "./re-run-details.component";
+import {TestCaseResultService} from "../../services/test-case-result.service";
 
 @Component({
   selector: 'app-re-run-icon',
-  template: `<i [matTooltip]="'runs.details.hint.re_run' | translate" (click)="openDetails();$event.stopImmediatePropagation();$event.stopPropagation();$event.preventDefault()"
-                class="fa-re-run mr-5 text-t-secondary pointer" *ngIf="resultEntity?.lastRun?.id != resultEntity.id"></i>`
+  template: `<i [matTooltip]="'runs.details.hint.re_run' | translate"
+                (click)="isDataDriven ? showTestCaseResult() : openDetails();$event.stopImmediatePropagation();$event.stopPropagation();$event.preventDefault()"
+                class="fa-re-run mr-5 text-t-secondary pointer"
+                *ngIf="resultEntity?.lastRun?.id != resultEntity.id || resultEntity?.reRunParentId!=null"></i>`
 })
 export class ReRunIconComponent implements OnInit {
   @Input('resultEntity') resultEntity: TestCaseResult | TestSuiteResult | TestDeviceResult | TestPlanResult;
+  @Input('isDataDriven') isDataDriven: boolean;
+  @Input('iterateId') iterateId: number;
+  public dataDrivenResult: TestCaseResult;
 
-  constructor(private matModal: MatDialog) { }
+  constructor(
+    private matModal: MatDialog,
+    private testCaseResultService: TestCaseResultService) { }
 
   ngOnInit(): void {
   }
@@ -57,6 +65,17 @@ export class ReRunIconComponent implements OnInit {
   get testSuiteResult() {
     if(this.resultEntity instanceof TestSuiteResult)
       return this.resultEntity;
+  }
+
+  showTestCaseResult() {
+    this.testCaseResultService.show(this.iterateId).subscribe((res:TestCaseResult) => {
+      this.dataDrivenResult = res;
+      this.openDetails();
+    });
+  }
+
+  ngOnDestroy() {
+    delete this.dataDrivenResult;
   }
 
 }

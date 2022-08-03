@@ -3,7 +3,7 @@ import {HttpHeadersService} from "../shared/services/http-headers.service";
 import {UrlConstantsService} from "../shared/services/url.constants.service";
 import {Pageable} from "../shared/models/pageable";
 import {Page} from "../shared/models/page";
-import {Observable, throwError} from 'rxjs';
+import {Observable, Subject, throwError} from 'rxjs';
 import {TestDevice} from "../models/test-device.model";
 import {map} from 'rxjs/internal/operators/map';
 import {catchError} from 'rxjs/operators';
@@ -13,7 +13,7 @@ import {HttpClient} from '@angular/common/http';
   providedIn: 'root'
 })
 export class TestDeviceService {
-
+  public formValueChanges: Subject<any> = new Subject<any>();
   constructor(
     private http: HttpClient,
     private httpHeaders: HttpHeadersService,

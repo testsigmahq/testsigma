@@ -1,0 +1,42 @@
+div[module="plan-machines-list-item"] {
+  border: 1px solid #DDDFE0;
+  border-radius: 4px;
+  padding: 12px 16px;
+  background-color: #fff;
+  box-sizing: border-box;
+  transition: border 0.25s;
+
+  &:hover,&.item-selected {
+    background-color: #F0F3F7;
+
+    & .machine-actions .hover-only {
+      opacity: 1;
+    }
+  }
+
+  &.item-selected {
+    border: 2px solid #03A973;
+  }
+
+  .machine-actions {
+    top: 40px;
+    right: 10px;
+
+    i {
+      border-radius: 4px;
+      padding: 5px;
+      transition: all 0.5s;
+      color: #7F8A96;
+
+
+      &.hover-only {
+        opacity: 0;
+      }
+
+      &:hover {
+        background: #dddddd;
+        color: #183247;
+      }
+    }
+  }
+}

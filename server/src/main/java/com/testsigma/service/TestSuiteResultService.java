@@ -107,6 +107,16 @@ public class TestSuiteResultService {
       environmentRunId, statusConstant);
   }
 
+  public void updateResultByResult(ResultConstant result, StatusConstant status, String message, Long duration,
+                           Timestamp startTime, Timestamp endTime, Long environmentRunId,
+                           ResultConstant resultConstant) {
+    log.info(String.format("Updating test suites with result - %s, status - %s, message - %s with environment result " +
+            "id - %s and result is %s ", result, status, message, environmentRunId, resultConstant));
+
+    testSuiteResultRepository.updateTestSuiteResultByResultCheck(result, message, status, duration, startTime, endTime,
+            environmentRunId, resultConstant);
+  }
+
   public void stopTestSuiteResultsByEnvironmentResult(String message, ResultConstant result, Long environmentRunId) {
     log.info(String.format("Updating test suites with result - %s, status - %s, message - %s with environment result " +
       "id - %s ", result, StatusConstant.STATUS_COMPLETED, message, environmentRunId));

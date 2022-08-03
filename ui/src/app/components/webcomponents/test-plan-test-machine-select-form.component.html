@@ -27,28 +27,53 @@
         <mat-checkbox class="mat-checkbox" id="createSessionAtCaseLevel" [formControlName]="['createSessionAtCaseLevel']">
           <span [translate]="'test_plan.environment.select_suite.run_at_testcase_level'"></span></mat-checkbox>
       </div>
+      <div class="form-group pb-20 ml-auto ts-col-100" [formGroup]="activeEnvironmentFormGroup" >
+        <label class="required fz-14 rb-medium" [translate]="'message.common.label.name'"></label>
+        <input
+          class="form-control mt-10" required name="title" formControlName="title" autofocus
+          [value]="activeEnvironmentFormGroup?.value?.title"
+          (input)="updateTitle($event)"
+          [minlength]="4"
+          [maxlength]="120"
+        />
+
+        <div class="error left"
+             *ngIf="activeEnvironmentFormGroup?.controls?.title?.errors?.minlength"
+             [textContent]="'form.validation.common.min_length' | translate: {FieldName:'Name' , min:'4'}"></div>
+        <div class="error left"
+             *ngIf="activeEnvironmentFormGroup?.controls?.title?.errors?.maxLength"
+             [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'120'}"></div>
+      </div>
+      <app-test-plan-lab-type-dropdown
+        (onVersionSelect)="setEnvironmentVersion($event)"
+        (onPreRequisiteSelect)="setEnvironmentPreRequisite($event)"
+        [execution]="testPlan"
+        [executionType]="activeEnvironmentFormGroup.controls['testPlanLabType']?.value"
+        [executionEnvironments]="testPlan.testDevices"
+        [version]="activeExecutionEnvironment.version"
+        [activeExecutionEnvIndex]="activeExecutionEnvIndex"
+        [formGroup]="activeEnvironmentFormGroup"></app-test-plan-lab-type-dropdown>
       <app-test-plan-test-machine-form
         class="column"
-        *ngIf="workspace?.isWeb && activeEnvironmentFormGroup && testPlan"
-        [testPlanLabType]="testPlan?.testPlanLabType"
+        *ngIf="version?.workspace?.isWeb && activeEnvironmentFormGroup"
+        [testPlanLabType]="testLabType"
         [formGroup]="activeEnvironmentFormGroup"
         [isAvailableCheck]="false"
         [version]="version"
         [isEdit]="isEdit"></app-test-plan-test-machine-form>
       <app-test-plan-device-form
         class="column"
-        *ngIf="workspace?.isMobile && activeEnvironmentFormGroup && testPlan"
+        *ngIf="version?.workspace?.isMobile && activeEnvironmentFormGroup"
         [formGroup]="activeEnvironmentFormGroup"
         [version]="version"
         [isEdit]="isEdit"
-        [testPlanLabType]="testPlan?.testPlanLabType"></app-test-plan-device-form>
+        [testPlanLabType]="testLabType"></app-test-plan-device-form>
       <app-test-plan-app-uploads-form
-        *ngIf="workspace?.isMobileNative && environmentControl"
+        *ngIf="version?.workspace?.isMobileNative && environmentControl"
         [formGroup] = "activeEnvironmentFormGroup"
-        [testPlanLabType]="this.testPlan?.testPlanLabType"
         [version]="version"
         [isEdit]="isEdit"
-        [testPlanLabType]="testPlan?.testPlanLabType"></app-test-plan-app-uploads-form>
+        [testPlanLabType]="testLabType"></app-test-plan-app-uploads-form>
       <app-desired-capabilities
         *ngIf="environmentControl"
         [capabilities]="activeExecutionEnvironment?.capabilities"

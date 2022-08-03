@@ -29,6 +29,9 @@ export class TestPlanSettingsFormComponent extends BaseComponent implements OnIn
   @Input('testPlan') testPlan: TestPlan;
   @Input('stepper') stepper: MatHorizontalStepper;
   public saving: boolean;
+  @Input('tabPosition') tabPosition: Number;
+  @Output('updateHeaderBtns') updateHeaderBtns = new EventEmitter<{tabPosition: Number, buttons: any[]}>();
+  @Input('hasTestSuitesWithoutMachine') hasTestSuitesWithoutMachine: boolean;
 
   constructor(
     public authGuard: AuthenticationGuard,
@@ -53,6 +56,7 @@ export class TestPlanSettingsFormComponent extends BaseComponent implements OnIn
     this.formGroup.addControl('onTestCasePreRequisiteFail', new FormControl(this.testPlan.onTestCasePreRequisiteFail || PreRequisiteAction.Abort, [Validators.required]));
     this.formGroup.addControl('onSuitePreRequisiteFail', new FormControl(this.testPlan.onSuitePreRequisiteFail || PreRequisiteAction.Abort, [Validators.required]));
     this.formGroup.addControl('reRunType', new FormControl(this.testPlan.reRunType || ReRunType.NONE));
+    this.invokeBtnState();
   }
 
   previous() {
@@ -79,8 +83,8 @@ export class TestPlanSettingsFormComponent extends BaseComponent implements OnIn
     this.testPlan.testDevices.forEach((env, index) => {
       env.matchBrowserVersion = this.testPlan.matchBrowserVersion
       if(this.version.workspace.isMobileNative){
-        if(Boolean(json.testDevices[index].settings.app_upload_id)) env.settings.appUploadId = json.testDevices[index].settings.app_upload_id;
-        env.settings.appPathType = this.formGroup.getRawValue().testDevices[index].settings.appPathType;
+        if(Boolean(json.testDevices[index].appUploadId)) env.appUploadId = json.testDevices[index].appUploadId;
+        env.appPathType = this.formGroup.getRawValue().testDevices[index].appPathType;
       }
     });
     if(this.checkNameEnvironment()) {
@@ -108,11 +112,11 @@ export class TestPlanSettingsFormComponent extends BaseComponent implements OnIn
       environment.testSuites = json.testDevices[index].suiteIds
       environment.matchBrowserVersion = this.testPlan.matchBrowserVersion;
       if(this.version.workspace.isMobileNative){
-        if(Boolean(json.testDevices[index].settings.app_upload_id)) {
-          environment.settings.appUploadId = json.testDevices[index].settings.app_upload_id;
+        if(Boolean(json.testDevices[index].appUploadId)) {
+          environment.appUploadId = json.testDevices[index].appUploadId;
           environment.appUploadVersionId = json.testDevices[index].appUploadVersionId;
         }
-        environment.settings.appPathType = this.formGroup.getRawValue().testDevices[index].settings.appPathType;
+        environment.appPathType = this.formGroup.getRawValue().testDevices[index].appPathType;
       }
     })
     if(this.isRest)
@@ -123,6 +127,7 @@ export class TestPlanSettingsFormComponent extends BaseComponent implements OnIn
     }
 
     if(this.checkNameEnvironment()) {
+      this.testPlan.testPlanType = TestPlanType.DISTRIBUTED;
       this.testPlanService.create(this.testPlan).subscribe(res => {
         this.saving = false;
         this.translate.get('message.common.created.success', {FieldName: 'Test Plan'})
@@ -145,12 +150,35 @@ export class TestPlanSettingsFormComponent extends BaseComponent implements OnIn
     }
 
     if(!this.testPlan?.testDevices?.length ||
-      this.testPlan?.testDevices?.filter(environment => !environment?.suiteIds?.length)?.length) {
+      this.testPlan?.testDevices?.filter(environment => !environment?.suiteIds?.length)?.length ||
+      this.hasTestSuitesWithoutMachine) {
       this.stepper.selectedIndex = 1;
       this.saving = false;
       return false;
     }
     return true;
+  }
+
+  invokeBtnState() {
+    this.updateHeaderBtns.emit({
+      tabPosition: this.tabPosition,
+      buttons: [
+        {
+          className: 'theme-btn-clear-default',
+          content: this.translate.instant('pagination.previous'),
+          clickHandler: ()=> this.previous()
+        },
+        {
+          className: 'theme-btn-primary ml-15',
+          content: this.translate.instant(
+            this.testPlan.id?
+              (this.saving ? 'message.common.saving': 'btn.common.update') :
+              (this.saving ? 'message.common.saving': 'btn.common.create')),
+          isDisabled: this.saving,
+          clickHandler: ()=> (this.testPlan.id? (this.saving ? '' : this.save()) : (this.saving ? '' : this.create()))
+        }
+      ]
+    });
   }
 
 }

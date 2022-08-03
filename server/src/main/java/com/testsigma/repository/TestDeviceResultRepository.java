@@ -66,7 +66,9 @@ public interface TestDeviceResultRepository extends JpaRepository<TestDeviceResu
 
   Page<TestDeviceResult> findAll(Specification<TestDeviceResult> spec, Pageable pageable);
 
-  TestDeviceResult findFirstByTestDeviceAgentIdAndTestPlanResultTestPlanTestPlanLabTypeAndResultOrderByIdAsc(Long id, TestPlanLabType type, ResultConstant result);
+  TestDeviceResult findByTestPlanResultIdAndTestDeviceId(Long testPlanResultId, Long prerequisiteTestDevicesId);
+
+  TestDeviceResult findFirstByTestDeviceAgentIdAndTestPlanLabTypeAndTestPlanResultResultOrderByIdAsc(Long id, TestPlanLabType type, ResultConstant result);
 
   @Query(value = "UPDATE test_device_results as tcr " +
     "INNER JOIN (SELECT test_device_result_id, COUNT(id) totalCount FROM test_case_results where iteration is null and test_device_result_id=:id group by test_device_result_id) as tsr" +

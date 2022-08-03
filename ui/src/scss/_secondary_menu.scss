@@ -303,11 +303,7 @@
   }
 }
 
-.workspace_card{
-  @extend .pointer;
-  &:hover {
-    @extend .border-active-1, .shadow-all-b2;
-  }
+.workspace_card, .e2e_switcher{
   .bg-active.btn:hover{
     @extend .shadow-all-b2;
     background: #BDDCBF;
@@ -323,8 +319,6 @@
     .drop-menu {
       @extend .dropdown-menu, .ml-n80, .mt-0, .overflow-x-hidden, .overflow-y-auto;
       padding: 0.1em 6.2em;
-      border: none;
-      box-shadow: none;
       margin-left: 0;
       right: 0;
       background: transparent;
@@ -353,6 +347,69 @@
     }
   }
   .live_btn {
-    @extend .bg-active, .btn, .mb-10, .ml-0, .py-10, .rb-medium, .text-brand, .w-80, .text-nowrap;
+    @extend .bg-active, .btn, .mb-10, .py-10, .rb-medium, .text-brand, .w-80, .text-nowrap;
   }
 }
+.workspace_card {
+  @extend .pointer;
+  &:hover {
+    @extend .border-active-1, .shadow-all-b2;
+  }
+  .live_dropdown_container {
+    .drop-menu {
+      border: none;
+      box-shadow: none;
+    }
+  }
+  .live_btn{
+    @extend .ml-0;
+  }
+}
+.switcher-dropdown.mat-menu-panel {
+  height: auto !important;
+}
+.e2e_switcher {
+  .live_btn {
+    width: 100% !important;
+  }
+  .live_dropdown_container {
+    .drop-menu {
+      border: none;
+      box-shadow: none;
+      min-height:40px;
+      .inner-menu {
+        box-shadow: rgb(0 0 0 / 10%) 0px 0px 2px 2px;
+        border-radius: 3px;
+        background: white;
+        overflow: hidden;
+        @extend .position-fixed;
+      }
+    }
+  }
+}
+.switcher-dropdown-version{
+  width: 180px;
+  .item{
+    @extend .p-10, .text-center, .pointer;
+  }
+  .item-max-height {
+    &:hover {
+      @extend .bg-active;
+    }
+  }
+  .mat-menu-content {
+    @extend .p-0;
+  }
+}
+/* Note: custom skin to make hover dropdown look like normal mat-select*/
+.selection-custom-skin {
+  @extend .border-rds-4, .bg-white, .border-brand-1, .pt-0, .pb-0;
+  min-height: 44px !important;
+  max-height: 44px !important;
+}
+.runtime-project-skin {
+  @extend .border-rds-4, .bg-white, .border-brand-1, .pt-0, .pb-0;
+  max-height: 50px;
+  min-height: 50px;
+}
+

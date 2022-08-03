@@ -37,12 +37,17 @@ export class TestPlanAddSuiteFormComponent implements OnInit {
   public filterCheckAllSelectedSuites: TestSuite[] = [new TestSuite()]
   public isSearched = false;
   public filteredSuites = [];
+  public isE2ESelectionOpted = false;
+  public selectedVersion: WorkspaceVersion;
+  public showRefreshOption: boolean = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public options: {
       testDevice: TestDevice,
       version: WorkspaceVersion,
-      execution: TestPlan
+      execution: TestPlan,
+      isE2E: boolean,
+      returnTestSuites: boolean
     },
     public dialogRef: MatDialogRef<TestPlanAddSuiteFormComponent>,
     private testSuiteTagService: TestSuiteTagService,
@@ -79,7 +84,7 @@ export class TestPlanAddSuiteFormComponent implements OnInit {
   fetchSuites(term?: string) {
     this.checkAllAvailable = false;
     this.isNameFilter = false;
-    let query = "workspaceVersionId:" + this.options.version.id;
+    let query = "workspaceVersionId:" + this.currentApplicationVersion?.id;
     if (term) {
       query += ",name:*" + term + "*";
       this.isNameFilter = true
@@ -178,8 +183,14 @@ export class TestPlanAddSuiteFormComponent implements OnInit {
   save() {
     this.submitted = true;
     if (this.selectedSuites.length == 0) return;
-    this.options.testDevice.testSuites = this.selectedSuites;
-    this.dialogRef.close(true);
+
+    if(this.options.returnTestSuites) {
+      this.dialogRef.close(this.selectedSuites);
+    }
+    else if(this.options.testDevice) {
+      this.options.testDevice.testSuites = this.selectedSuites;
+      this.dialogRef.close(true);
+    }
   }
 
   toggleCheckAll(checkAll, array: TestSuite[]) {
@@ -215,4 +226,25 @@ export class TestPlanAddSuiteFormComponent implements OnInit {
     return this.filteredSuites?.length == 0;
   }
 
+  get hasMixedAppVersion() {
+    return [...new Set(this.selectedSuites.map(item=> item.workspaceVersionId))].length > 1;
+  }
+
+  get e2eEnabled() {
+    return this.isE2ESelectionOpted || this.hasMixedAppVersion;
+  }
+
+  handleE2ESwitch(event) {
+    this.isE2ESelectionOpted = event.checked;
+  }
+  setCurrentVersion(version: WorkspaceVersion) {
+    this.selectedVersion = version;
+
+    this.fetchTags();
+    this.fetchSuites();
+  }
+
+  get currentApplicationVersion() {
+    return this.selectedVersion || this.options?.version;
+  }
 }

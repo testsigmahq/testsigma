@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnInit, SimpleChanges} from '@angular/core';
 import {WorkspaceVersion} from "../../models/workspace-version.model";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
@@ -57,7 +57,7 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
   }
 
   get version(): WorkspaceVersion {
-    return this.testPlan?.workspaceVersion;
+    return this.activeExecutionEnvironment?.version || this.data.testDevice?.version || this.testPlan?.workspaceVersion;
   }
 
   get isHybrid() {
@@ -159,15 +159,23 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
       testDevice.suiteIds = this.activeEnvironmentFormGroup.getRawValue().suiteIds;
       testDevice.createSessionAtCaseLevel = this.activeEnvironmentFormGroup.getRawValue().createSessionAtCaseLevel;
     }
-    if(this.testPlan.isHybrid)
+    if (this.testPlan.isHybrid) {
       testDevice.agentId = this.activeEnvironmentFormGroup.getRawValue().agentId;
-    testDevice.title = testDevice.platform + "(" + testDevice.osVersion + ")";
-    if(testDevice.browser)
-      testDevice.title +=testDevice.browser+"";
-    if(testDevice.browserVersion)
-      testDevice.title += " (" + testDevice.browserVersion + ")";
-    if(testDevice.deviceName)
-      testDevice.title += " ("+testDevice.deviceName+")";
+    }
+    if(!this.activeEnvironmentFormGroup?.value?.title){
+      if (this.testPlan.isHybrid) {
+        testDevice.title = testDevice.platform + "(" + testDevice.osVersion + ")";
+      }
+      if (testDevice.browser)
+        testDevice.title += testDevice.browser + "";
+      if (testDevice.browserVersion)
+        testDevice.title += " (" + testDevice.browserVersion + ")";
+      if (testDevice.deviceName)
+        testDevice.title += " (" + testDevice.deviceName + ")";
+    } else{
+      testDevice.title = this.activeEnvironmentFormGroup.value.title
+    }
+
 
     testDevice = this.normalizeFormValue(testDevice);
     if(this.isRest){
@@ -221,6 +229,7 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
 
   initFormGroup(environment?: TestDevice) {
     let environmentFormGroup = this.formBuilder.group({
+          id: new FormControl(environment?.id),
           agentId: new FormControl(environment?.agentId, [this.requiredIfValidator(() => this.isHybrid)]),
           deviceId: new FormControl(environment?.deviceId, [this.requiredIfValidator(() => this.isHybrid && this.version?.workspace.isMobile)]),
           createSessionAtCaseLevel: new FormControl(environment?.createSessionAtCaseLevel, []),
@@ -242,6 +251,11 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
           appUrl: new FormControl(environment?.appUrl, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.USE_PATH), Validators.pattern(/^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/)]),
           appPackage: new FormControl(environment?.appPackage, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.APP_DETAILS)]),
           appActivity:  new FormControl(environment?.appActivity, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.APP_DETAILS)]),
+          workspaceVersionId: new FormControl(environment?.workspaceVersionId || this?.version?.id),
+          testPlanLabType: new FormControl(environment?.testPlanLabType),
+          prerequisiteTestDevicesId: new FormControl(environment?.prerequisiteTestDevicesId, []),
+          prerequisiteTestDevicesIdIndex: new FormControl(environment?.prerequisiteTestDevicesIdIndex, []),
+          title: environment?.title || ''
     });
     if(this.activeExecutionEnvironment.testSuites?.length > 0) {
       environmentFormGroup.setControl('suiteIds', this.formBuilder.array([]));
@@ -268,6 +282,69 @@ export class TestPlanTestMachineSelectFormComponent extends BaseComponent implem
       }
       return null;
     })
+  }
+
+  setEnvironmentVersion(version: WorkspaceVersion) {
+    this.activeExecutionEnvironment.version = version;
+    this.addControls(this.activeEnvironmentFormGroup, this.activeExecutionEnvironment);
+    this.activeExecutionEnvironment.testSuites = [];
+    this.activeEnvironmentFormGroup.setControl('suiteIds', this.formBuilder.array([]));
+    if(version.workspace.isMobileNative) {
+
+      // setTimeout(()=>{
+      this.activeExecutionEnvironment.browser=undefined;
+      this.activeExecutionEnvironment.browserVersion=undefined;
+      this.activeExecutionEnvironment.resolution=undefined;
+      this.activeExecutionEnvironment.testSuites = [];
+      this.activeExecutionEnvironment.appUploadId = undefined;
+
+      this.activeEnvironmentFormGroup.get('suiteIds').patchValue([]);
+      this.activeEnvironmentFormGroup.get('browser').patchValue('');
+      this.activeEnvironmentFormGroup.get('browserVersion').patchValue('');
+      this.activeEnvironmentFormGroup.get('resolution').patchValue('');
+      this.activeEnvironmentFormGroup.get('appUploadId').patchValue(undefined);
+      // }, 500);
+    }
+  }
+
+  setEnvironmentPreRequisite(executionEnvironment: TestDevice) {
+    const index = this.testPlan.testDevices.findIndex(env => env == executionEnvironment);
+    const prerequisiteTestDevicesIdIndex = index > -1 ? index : null;
+    this.activeEnvironmentFormGroup.controls['prerequisiteTestDevicesIdIndex'].setValue(prerequisiteTestDevicesIdIndex);
+    this.activeEnvironmentFormGroup.controls['prerequisiteTestDevicesId'].setValue(executionEnvironment?.id || null);
+  }
+
+  get testLabType() {
+    return this.activeEnvironmentFormGroup.controls['testPlanLabType'].value;
+  }
+
+  get activeExecutionEnvIndex() {
+    let idx = this.testPlan.testDevices.indexOf(this.testPlan.testDevices.find(device => device.id == this.activeEnvironmentFormGroup.value.id));
+    return idx >= 0? idx : this.testPlan.testDevices.length;
+  }
+
+  addControls(environmentFormGroup: FormGroup, environment?: TestDevice) {
+    environmentFormGroup.addControl('deviceId', new FormControl(environment?.deviceId, [this.requiredIfValidator(() => this.isHybrid)]));
+    environmentFormGroup.addControl('appPathType', new FormControl(environment?.appPathType || ApplicationPathType.UPLOADS, [Validators.required]));
+    environmentFormGroup.addControl('appUploadId', new FormControl(environment?.appUploadId, [this.requiredIfValidator(() => this.appPathTypeValue == ApplicationPathType.UPLOADS)]));
+    environmentFormGroup.addControl('appUploadVersionId', new FormControl(environment?.appUploadVersionId, []));
+    environmentFormGroup.addControl('appUrl', new FormControl(environment?.appUrl, [this.requiredIfValidator(() => this.appPathTypeValue == ApplicationPathType.USE_PATH), Validators.pattern(/^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/)]));
+    if (this.version.workspace.isAndroidNative) {
+      environmentFormGroup.addControl('appPackage', new FormControl(environment?.appPackage, [this.requiredIfValidator(() => this.appPathTypeValue == ApplicationPathType.APP_DETAILS && this.isHybrid)]));
+      environmentFormGroup.addControl('appActivity', new FormControl(environment?.appActivity, [this.requiredIfValidator(() => this.appPathTypeValue == ApplicationPathType.APP_DETAILS&& this.isHybrid)]));
+    }
+    else {
+      environmentFormGroup.addControl('appBundleId', new FormControl(environment?.appBundleId, [this.requiredIfValidator(() => this.appPathTypeValue == ApplicationPathType.APP_DETAILS && this.isHybrid)]));
+    }
+    return environmentFormGroup;
+  }
+
+  get appPathTypeValue(): ApplicationPathType {
+    return <ApplicationPathType>(<FormGroup>this.activeEnvironmentFormGroup)?.controls['appPathType']?.value;
+  }
+
+  updateTitle($event) {
+    this.activeEnvironmentFormGroup.get('title').setValue($event.target.value);
   }
 
 }

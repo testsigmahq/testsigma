@@ -16,6 +16,7 @@ public enum Platform {
   Generic("Testsigma", ""),
   Windows("Windows", "Windows"),
   Mac("OS X", "macOS"),
+  MACOSX("MACOSX", "MACOSX"),
   Linux("Linux", ""),
   Android("Android", ""),
   iOS("iOS", "");

@@ -5,6 +5,7 @@ import com.testsigma.model.StorageAccessLevel;
 import com.testsigma.constants.TSCapabilityType;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaException;
+import com.testsigma.sdk.ApplicationType;
 import com.testsigma.tasks.PlatformAppUploader;
 import com.testsigma.model.*;
 import lombok.extern.log4j.Log4j2;
@@ -84,7 +85,8 @@ public abstract class MobileCapabilities extends Capabilities {
   @Override
   public void setHybridCapabilities(TestDevice testDevice,
                                     Integrations integrations,
-                                    List<WebDriverCapability> capabilities)
+                                    List<WebDriverCapability> capabilities,
+                                    TestPlanLabType testPlanLabType)
     throws TestsigmaException {
 
   }

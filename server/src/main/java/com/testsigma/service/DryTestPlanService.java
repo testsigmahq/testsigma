@@ -48,6 +48,7 @@ public class DryTestPlanService {
     testSuite.setCreatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
     testSuite.setName(new Timestamp(Calendar.getInstance().getTimeInMillis()).toString());
     testSuite.setWorkspaceVersionId(execution.getWorkspaceVersionId());
+    testDevice.setWorkspaceVersionId(execution.getWorkspaceVersionId());
     testSuite.setTestCaseId(execution.getTestCaseId());
     testSuite = testSuiteService.create(testSuite);
     testDevice.setSuiteIds(Collections.singletonList(testSuite.getId()));

@@ -70,6 +70,16 @@ public interface TestSuiteResultRepository extends JpaRepository<TestSuiteResult
 
   @Modifying
   @Query("UPDATE TestSuiteResult tcgr SET tcgr.result = :result, tcgr.message = :message, " +
+          "tcgr.status = :status, tcgr.duration = :duration, tcgr.startTime = :startTime, tcgr.endTime = :endTime " +
+          "WHERE tcgr.environmentResultId = :environmentResultId and tcgr.result = :resultConstant ")
+  void updateTestSuiteResultByResultCheck(@Param("result") ResultConstant result, @Param("message") String message,
+                             @Param("status") StatusConstant status, @Param("duration") Long duration,
+                             @Param("startTime") Timestamp startTime, @Param("endTime") Timestamp endTime,
+                             @Param("environmentResultId") Long environmentResultId,
+                             @Param("resultConstant") ResultConstant resultConstant);
+
+  @Modifying
+  @Query("UPDATE TestSuiteResult tcgr SET tcgr.result = :result, tcgr.message = :message, " +
     "tcgr.status = :status, tcgr.duration = :duration, tcgr.startTime = :startTime, tcgr.endTime = :endTime " +
     "WHERE tcgr.environmentResultId = :environmentResultId and tcgr.status NOT IN (:notInStatus)")
   void stopIncompleteTestSuiteResults(@Param("result") ResultConstant result, @Param("message") String message,

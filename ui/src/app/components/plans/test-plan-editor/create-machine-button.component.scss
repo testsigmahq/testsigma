@@ -1,0 +1,19 @@
+.create-machine-options {
+
+  ul {
+    list-style: none;
+
+    & li {
+      border-radius: 3px;
+
+      &.disabled {
+        opacity: 0.2;
+        cursor: not-allowed;
+      }
+    }
+
+    & li:hover {
+      background-color: #f5f5f5;
+    }
+  }
+}

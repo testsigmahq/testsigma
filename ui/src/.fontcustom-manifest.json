@@ -1,14 +1,14 @@
 {
   "checksum": {
-    "previous": "cc56d6d170c505986bb6ae74475e4aecb1b70a3dde648a9c52b3ebe1e1e1b1a3",
-    "current": "cc56d6d170c505986bb6ae74475e4aecb1b70a3dde648a9c52b3ebe1e1e1b1a3"
+    "previous": "dfe3adc8b6910088075e8c0b3b2f6fe0ad8d708e9ecd4c966bbe92cd08d0c7be",
+    "current": "dfe3adc8b6910088075e8c0b3b2f6fe0ad8d708e9ecd4c966bbe92cd08d0c7be"
   },
   "fonts": [
-    "./assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.ttf",
-    "./assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.svg",
-    "./assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.woff",
-    "./assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.eot",
-    "./assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.woff2"
+    "./assets/font_icons/font_custom_dfe3adc8b6910088075e8c0b3b2f6fe0.ttf",
+    "./assets/font_icons/font_custom_dfe3adc8b6910088075e8c0b3b2f6fe0.svg",
+    "./assets/font_icons/font_custom_dfe3adc8b6910088075e8c0b3b2f6fe0.woff",
+    "./assets/font_icons/font_custom_dfe3adc8b6910088075e8c0b3b2f6fe0.eot",
+    "./assets/font_icons/font_custom_dfe3adc8b6910088075e8c0b3b2f6fe0.woff2"
   ],
   "glyphs": {
     "4-quabs": {
@@ -30,6 +30,10 @@
     "add-previous": {
       "codepoint": 61699,
       "source": "./icons/add-previous.svg"
+    },
+    "add-to-queue": {
+      "codepoint": 62160,
+      "source": "./icons/add-to-queue.svg"
     },
     "addon": {
       "codepoint": 62097,
@@ -1159,6 +1163,10 @@
       "codepoint": 61849,
       "source": "./icons/power-loop.svg"
     },
+    "prerequisite": {
+      "codepoint": 62162,
+      "source": "./icons/prerequisite.svg"
+    },
     "productivity": {
       "codepoint": 62058,
       "source": "./icons/productivity.svg"
@@ -1366,6 +1374,10 @@
     "schedule-with-tick": {
       "codepoint": 62023,
       "source": "./icons/schedule-with-tick.svg"
+    },
+    "screen-resolution": {
+      "codepoint": 62161,
+      "source": "./icons/screen-resolution.svg"
     },
     "screen-rotation": {
       "codepoint": 62089,

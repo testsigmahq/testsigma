@@ -125,6 +125,16 @@ public class TestCaseResultService {
       environmentRunId, statusConstant);
   }
 
+  public void updateTestCaseResultByEnvironmentIdAndResult(ResultConstant result, StatusConstant status, String message, Long duration,
+                                                           Timestamp startTime, Timestamp endTime, Long environmentRunId,
+                                                           ResultConstant resultConstant) {
+    log.info(String.format("Updating test cases with result - %s, status - %s, message - %s" +
+            "with environment result id - %s and result in %s", result, status, message, environmentRunId, resultConstant));
+
+    testCaseResultRepository.updateTestCaseResultByEnvironmentIdAndResult(result, status, message, duration, startTime, endTime,
+            environmentRunId, resultConstant);
+  }
+
   public void updateResultByTestSuiteId(ResultConstant result, StatusConstant status, String message, Long duration,
                                         Timestamp startTime, Timestamp endTime, Long testSuiteResultId,
                                         StatusConstant statusConstant) {

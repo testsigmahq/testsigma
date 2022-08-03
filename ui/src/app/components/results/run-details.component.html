@@ -18,19 +18,6 @@
       </div>
     </div>
     <div class="details-container no-wrap ts-col-100">
-      <div class="details-items pl-30 text-nowrap">
-        <label
-          class="details-title"
-          [translate]="'test_plan.lab_type'"></label>
-        <div class="details-info align-items-center d-flex" style="margin-top: 4px">
-          <div class="d-inline-block mr-2 h-18p"
-               [class.testsigma-lab-logo]="testPlanResult?.testPlan?.isTestsigmaLab || testPlanResult?.testPlan?.isHybrid"
-               [class.grid]="testPlanResult?.testPlan?.isPrivateLab"
-               [matTooltip]="testPlanResult?.testPlan?.testPlanLabType"></div>
-          <div class="d-inline-block pt-2 line-height-none"
-               [translate]="'execution.lab_type.'+testPlanResult?.testPlan?.testPlanLabType"></div>
-        </div>
-      </div>
       <div
         *ngIf="testPlanResult?.environment?.name"
         class="details-items pl-30 mw-25 text-truncate">

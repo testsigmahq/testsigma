@@ -50,8 +50,8 @@
     <!-- RHS: Header -->
     <div class="align-items-center bg-white d-flex header w-100 position-relative">
 
-      <div style="width: 450px;top: 45px;" class="form-group position-absolute right-0" *ngIf="formSubmitted && isNextDisabled && executionEnvironments.length">
-        <div class="error mt-n35" [textContent]="'test_plan.test_suite.all_suite_machine_error' | translate"></div>
+      <div style="width: 450px;top: -40px;" class="form-group position-absolute right-0" *ngIf="formSubmitted && isNextDisabled && executionEnvironments.length">
+        <div class="error mt-n35 bottom-center-error" [textContent]="'test_plan.test_suite.all_suite_machine_error' | translate"></div>
       </div>
 
       <div class="flex-grow-1 d-flex align-items-center position-relative">

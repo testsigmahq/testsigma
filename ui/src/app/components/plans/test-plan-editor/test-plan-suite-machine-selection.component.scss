@@ -1,4 +1,8 @@
 div[module="plan-suite-machine-selection"] {
+  .form-group .error.bottom-center-error::before {
+    top: 22px !important;
+    transform: rotate(180deg);
+  }
   .suite-list {
     border: 1px solid #E1E4E8;
     min-height: 490px;

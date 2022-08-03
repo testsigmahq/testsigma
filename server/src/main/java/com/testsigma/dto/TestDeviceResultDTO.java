@@ -9,8 +9,15 @@ package com.testsigma.dto;
 
 import com.testsigma.model.ResultConstant;
 import com.testsigma.model.StatusConstant;
+import com.testsigma.model.TestPlanLabType;
+import com.testsigma.model.WorkspaceVersion;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Data
@@ -46,5 +53,7 @@ public class TestDeviceResultDTO {
   private Timestamp createdDate;
   private Timestamp updatedDate;
   private Long appUploadVersionId;
-
+  private Long prerequisiteTestDeviceResultId;
+  private Long workspaceVersionId;
+  private TestPlanLabType testPlanLabType;
 }

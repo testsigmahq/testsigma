@@ -15,6 +15,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @ToString
@@ -50,5 +51,4 @@ public class TestPlanResultDTO {
   private int totalQueuedCount;
   private Timestamp createdDate;
   private Timestamp updatedDate;
-
 }

@@ -119,7 +119,7 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
       agentExecutionService.setTestPlan(testPlan);
       agentExecutionService.checkTestCaseIsInReadyState(testCase);
       agentExecutionService
-        .loadTestCase(testDataSetName, testCaseEntityDTO, testPlan, workspace);
+        .loadTestCase(testDataSetName, testCaseEntityDTO, testPlan, testDevice, workspace);
     } catch (TestsigmaNoMinsAvailableException e) {
       log.debug("======= Testcase Error=========");
       log.error(e.getMessage(), e);

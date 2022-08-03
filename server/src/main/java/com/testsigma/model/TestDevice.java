@@ -117,6 +117,26 @@ public class TestDevice {
   @Column(name = "imported_id")
   private Long importedId;
 
+  @Column(name = "prerequisite_test_devices_id")
+  private Long prerequisiteTestDevicesId;
+
+  @Transient
+  private Long prerequisiteTestDevicesIdIndex;
+
+  @Column(name = "workspace_version_id")
+  private Long workspaceVersionId;
+
+  @ManyToOne
+  @Fetch(value = FetchMode.SELECT)
+  @JoinColumn(name = "workspace_version_id", referencedColumnName = "id", insertable = false, updatable = false)
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  private WorkspaceVersion workspaceVersion;
+
+  @Column(name = "test_lab_type")
+  @Enumerated(EnumType.STRING)
+  private TestPlanLabType testPlanLabType;
+
   @ManyToOne
   @Fetch(value = FetchMode.SELECT)
   @JoinColumn(name = "test_plan_id", referencedColumnName = "id", insertable = false, updatable = false)

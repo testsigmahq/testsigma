@@ -13,6 +13,7 @@ package com.testsigma.dto;
 import com.google.api.gax.rpc.PagedListDescriptor;
 import com.testsigma.model.AppPathType;
 import com.testsigma.model.Platform;
+import com.testsigma.model.TestPlanLabType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -45,4 +46,7 @@ public class TestDeviceDTO {
   private Boolean matchBrowserVersion;
   private Long deviceId;
   private Boolean createSessionAtCaseLevel;
+  private TestPlanLabType testPlanLabType;
+  private Long workspaceVersionId;
+  private Long prerequisiteTestDevicesId;
 }

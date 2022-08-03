@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {TestPlan} from "../../models/test-plan.model";
@@ -12,6 +12,9 @@ import {TestDeviceService} from "../../services/test-device.service";
 import {TestSuiteService} from "../../services/test-suite.service";
 import {TestDevice} from "../../models/test-device.model";
 import {Pageable} from "../../shared/models/pageable";
+import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
+import {UserPreferenceService} from "../../services/user-preference.service";
+import { MatHorizontalStepper } from '@angular/material/stepper';
 
 @Component({
   animations: [fade],
@@ -28,6 +31,10 @@ export class FormComponent implements OnInit {
   public version: WorkspaceVersion;
   public isFetchingComplete: boolean = false;
   public formSubmitted: boolean;
+  public headerBtnsMap = {};
+  public hasTestSuitesWithoutMachine = false;
+  @ViewChild('stepper') stepper: MatHorizontalStepper;
+  public leapUISwitchForm = new FormControl( false);
 
   constructor(
     private versionService: WorkspaceVersionService,
@@ -35,7 +42,9 @@ export class FormComponent implements OnInit {
     private testDeviceService: TestDeviceService,
     private testSuiteService: TestSuiteService,
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute) {
+    private route: ActivatedRoute,
+    private authGuard: AuthenticationGuard,
+    private userPreferenceService: UserPreferenceService) {
 
   }
 
@@ -51,11 +60,11 @@ export class FormComponent implements OnInit {
     } else {
       this.testPlan = new TestPlan();
       this.testPlan.testPlanLabType = TestPlanLabType.TestsigmaLab;
-      this.testPlan.testPlanType = TestPlanType.CROSS_BROWSER;
-      this.initForControls();
+      this.testPlan.testPlanType = TestPlanType.DISTRIBUTED;
       this.versionId = this.route.snapshot.params.versionId;
       this.fetchVersion();
     }
+    this.hasTestSuitesWithoutMachine = false;
   }
 
   fetchEnvironments() {
@@ -66,16 +75,14 @@ export class FormComponent implements OnInit {
   }
 
   fetchSuites() {
-    this.testPlan.testDevices.forEach((environment: TestDevice, index: number) => {
-      this.testSuiteService.findAll("testPlanId:" + environment.testPlanId).subscribe(res => {
+    this.testPlan.testDevices.forEach((testDevice: TestDevice, index: number) => {
         let page = new Pageable();
         page.pageSize = 500;
-        this.testSuiteService.findAll("testPlanId:" + environment.testPlanId, undefined, page).subscribe(res => {
-          environment.testSuites = res.content;
+        this.testSuiteService.findAll("testDeviceId:" + testDevice.id, undefined, page).subscribe(res => {
+          testDevice.testSuites = res.content;
           if (index == this.testPlan.testDevices.length - 1)
             this.initForControls();
         })
-      })
     })
   }
 
@@ -90,6 +97,7 @@ export class FormComponent implements OnInit {
       name: new FormControl(this.testPlan.name, [Validators.required, Validators.minLength(4), Validators.maxLength(120),this.noWhitespaceValidator]),
       description: new FormControl(this.testPlan.description, []),
       testPlanLabType: new FormControl(this.testPlan.testPlanLabType, [Validators.required]),
+      workspaceVersionId: new FormControl(this.testPlan.workspaceVersionId|| this.version.id, [Validators.required]),
       matchBrowserVersion: new FormControl(this.testPlan.matchBrowserVersion, []),
       testDevices: this.formBuilder.array([]),
       mailList: this.formBuilder.array([]),
@@ -104,6 +112,33 @@ export class FormComponent implements OnInit {
       this.version = res
       if(!this.testPlan.id)
         this.testPlan.testPlanType = this.version.workspace.isRest ? TestPlanType.DISTRIBUTED : this.testPlan.testPlanType;
+      this.initForControls();
     });
+  }
+
+  updateHeaderBtns(event: {tabPosition: Number, buttons: any[]}) {
+    let isDiff = (prev, cur) => {
+      if((!prev && cur) || (!cur && prev) || (prev.length != cur.length)) return true;
+
+      for(let i = 0;i < prev.length;i++) {
+        if(!cur[i]) return true;
+
+        for(let key in prev[i]) {
+          if(cur[i][key] != prev[i][key] && key != 'clickHandler') return true;
+        }
+      }
+
+      return false;
+    }
+
+    if(isDiff(this.headerBtnsMap[event.tabPosition as number], event.buttons))
+      this.headerBtnsMap[event.tabPosition as number] = event.buttons;
+  }
+
+  updateLeapUIPref(isLeapUI) {
+    this.leapUISwitchForm.patchValue(isLeapUI);
+    if(isLeapUI) {
+      this.hasTestSuitesWithoutMachine = false;
+    }
   }
 }

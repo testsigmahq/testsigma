@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.testsigma.annotation.JsonListRootName;
 import com.testsigma.model.AppPathType;
+import com.testsigma.model.TestPlanLabType;
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -61,6 +62,8 @@ public class TestDeviceXMLDTO extends BaseXMLDTO {
   private AppPathType appPathType;
   @JsonProperty("capabilities")
   private String capabilities;
+  @JsonProperty("execution-lab-type")
+  private TestPlanLabType testPlanLabType;
   @JsonProperty("disable")
   private Boolean disable = false;
   @JsonProperty("created-date")

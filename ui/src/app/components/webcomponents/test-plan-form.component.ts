@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatHorizontalStepper } from '@angular/material/stepper';
 import {WorkspaceVersion} from "../../models/workspace-version.model";
@@ -9,6 +9,7 @@ import {BaseComponent} from "../../shared/components/base.component";
 import { NotificationsService } from 'angular2-notifications';
 import {TranslateService} from '@ngx-translate/core';
 import {ToastrService} from "ngx-toastr";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-test-plan-form',
@@ -23,17 +24,22 @@ export class TestPlanFormComponent extends BaseComponent implements OnInit {
   @Input('version') version: WorkspaceVersion;
   @Input('testPlan') testPlan: TestPlan;
   public showDescription: Boolean;
-  public formSubmitted: boolean;
+  @Input('formSubmitted') formSubmitted: boolean;
+  @Input('tabPosition') tabPosition: Number;
+  @Input('isNewUI') isNewUI: boolean;
+  @Output('updateHeaderBtns') updateHeaderBtns = new EventEmitter<{tabPosition: Number, buttons: any[]}>();
 
   constructor(
     public authGuard: AuthenticationGuard,
     public notificationsService: NotificationsService,
     public translate: TranslateService,
-    public toastrService: ToastrService) {
+    public toastrService: ToastrService,
+    public router: Router) {
     super(authGuard, notificationsService, translate, toastrService)
   }
 
   ngOnInit(): void {
+    this.invokeInitialBtnState();
   }
 
   get isInValid() {
@@ -42,5 +48,27 @@ export class TestPlanFormComponent extends BaseComponent implements OnInit {
 
   next() {
     this.stepper.next();
+  }
+
+  invokeInitialBtnState() {
+    this.updateHeaderBtns.emit({
+      tabPosition: this.tabPosition,
+      buttons: [
+        {
+          className: 'theme-btn-clear-default',
+          content: this.translate.instant('btn.common.cancel'),
+          clickHandler: ()=> {
+            this.router.navigate(['/td', this.version?.id, 'plans']);
+          }
+        },
+        {
+          className: 'theme-btn-primary ml-15',
+          content: this.translate.instant('pagination.next'),
+          clickHandler: ()=> {
+            (this.isInValid ? this.formSubmitted = true : this.next());
+          }
+        }
+      ]
+    });
   }
 }

@@ -50,7 +50,6 @@
                 <div class="ts-col-20">
                   <span [translate]="'usage_details.test_plan'" *ngIf="!isDry(testPlanResult)" ></span>
                   <span [translate]="'usage_details.dry_run'" *ngIf="isDry(testPlanResult)" ></span>
-                  (<span [translate]="'execution.lab_type.'+ testPlanResult?.testPlan?.testPlanLabType"></span>)
                 </div>
                 <div class="ts-col-20 d-flex">
         <span
@@ -78,8 +77,7 @@
                 <div class="d-flex pr-10 rb-medium text-dark ts-col-20" [textContent]="testPlanResult.testCase.name"></div>
                 <div class="ts-col-20">
                   <span [translate]="'usage_details.test_plan'" *ngIf="!isDry(testPlanResult)" ></span>
-                  <span [translate]="'usage_details.dry_run'" *ngIf="isDry(testPlanResult)" ></span>
-                  <span [translate]="'execution.lab_type.'+ testPlanResult?.testPlan?.testPlanLabType"></span>)
+                  <span [translate]="'usage_details.dry_run'" *ngIf="isDry(testPlanResult)" ></span>)
                 </div>
                 <div class="ts-col-20 d-flex">
         <span

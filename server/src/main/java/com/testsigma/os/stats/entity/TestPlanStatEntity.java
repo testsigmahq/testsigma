@@ -9,7 +9,5 @@ import lombok.EqualsAndHashCode;
 @Data
 public class TestPlanStatEntity extends BaseStatEntity {
   private Long testPlanId;
-  private TestPlanLabType testPlanLabType;
-  private WorkspaceType applicationType;
   private String entityType;
 }

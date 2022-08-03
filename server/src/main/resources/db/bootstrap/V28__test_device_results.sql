@@ -30,6 +30,9 @@ CREATE TABLE `test_device_results`
   `is_visually_passed`           BIT(1)            DEFAULT NULL,
   `session_id`                   VARCHAR(256)      DEFAULT NULL,
   `re_run_parent_id`             BIGINT(20)        DEFAULT NULL,
+  `prerequisite_test_device_result_id` BIGINT(20)  DEFAULT NULL,
+  `test_lab_type`                VARCHAR(255)      DEFAULT NULL,
+  `workspace_version_id`         BIGINT(20)        DEFAULT NULL,
   `platform_assets_endpoint_url` TEXT              DEFAULT NULL,
   `queued`                       TINYINT(1)        DEFAULT 0,
   `initiated`                    TINYINT(1)        DEFAULT 0,
@@ -40,7 +43,8 @@ CREATE TABLE `test_device_results`
   KEY `index_test_device_results_on_status_index` (`status`),
   KEY `index_test_device_results_on_result_index` (`result`),
   KEY `index_test_device_results_on_re_run_parent_id_index` (`re_run_parent_id`),
-  CONSTRAINT `fk_test_plan_run_id_in_test_device_results_to_test_plan_results` FOREIGN KEY (`test_plan_result_id`) REFERENCES `test_plan_results` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+  CONSTRAINT `fk_test_plan_run_id_in_test_device_results_to_test_plan_results` FOREIGN KEY (`test_plan_result_id`) REFERENCES `test_plan_results` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `fk_workspace_version_id_in_device_results_to_workspace_versions` FOREIGN KEY (`workspace_version_id`) REFERENCES `workspace_versions` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 238
   DEFAULT CHARSET = utf8

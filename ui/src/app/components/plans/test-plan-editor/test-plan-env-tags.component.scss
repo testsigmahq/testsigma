@@ -1,0 +1,25 @@
+.env-tag {
+  background-color: #CCE2FF;
+  padding: 3px 6px;
+  border-radius: 4px;
+  text-overflow: ellipsis;
+
+  .tag-content {
+    max-width: 100px;
+  }
+
+  & .disabled {
+    cursor: not-allowed !important;
+    opacity: .35;
+  }
+}
+.plan-tags-popup {
+  background: #FFFFFF;
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.2), 0px 10px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  padding: 10px;
+  width: 244px;
+  max-height: 320px;
+  overflow: auto;
+  gap: 10px;
+}

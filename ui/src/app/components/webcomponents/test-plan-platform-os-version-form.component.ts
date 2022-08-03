@@ -238,7 +238,7 @@ export class TestPlanPlatformOsVersionFormComponent implements OnInit {
       this.agentsEmpty = true;
       setTimeout(()=> {this.agentsEmpty=false}, 10);
     }
-    this.environmentFormGroup.controls['platform'].setValue(data['platform'])
+    this.environmentFormGroup.controls['platform'].setValue(this.version.workspace.isMobile?null:data['platform'])
     this.environmentFormGroup.controls['osVersion'].setValue(data['osVersion']);
     this.environmentFormGroup.controls['browser']?.setValue(data['browser']);
     this.environmentFormGroup.controls['browserVersion']?.setValue(data['browserVersion']);

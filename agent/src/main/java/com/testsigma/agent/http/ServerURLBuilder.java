@@ -26,6 +26,7 @@ public class ServerURLBuilder {
   private final static String deviceStatusURI = deviceListURI + "/status";
   private final static String deviceDeveloperImageURI = deviceListURI + "/developer/{osVersion}/";
   private final static String wdaDownloadURI = deviceListURI + "/{deviceUuid}/wda";
+  private final static String xcTestDownloadURI = deviceListURI + "/xctest";
   private final static String executionURI = agentURI + "/execution";
   private final static String executableURI = agentURI + "/driver/executable_path";
   private final static String webServerConfigURI = agentURI + "/webserver/config";
@@ -224,6 +225,13 @@ public class ServerURLBuilder {
     String serverURL = AutomatorConfig.getInstance().getCloudServerUrl();
     UriComponents uriComponents =
       UriComponentsBuilder.fromUriString(wdaDownloadURI).build().expand(uuid, deviceUuid).encode();
+    return serverURL + uriComponents.toUriString();
+  }
+
+  public static String XcTestDownloadURL(String uuid) {
+    String serverURL = AutomatorConfig.getInstance().getCloudServerUrl();
+    UriComponents uriComponents =
+            UriComponentsBuilder.fromUriString(xcTestDownloadURI).build().expand(uuid).encode();
     return serverURL + uriComponents.toUriString();
   }
 

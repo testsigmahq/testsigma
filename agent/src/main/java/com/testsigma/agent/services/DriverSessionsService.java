@@ -30,6 +30,7 @@ import com.testsigma.automator.drivers.mobile.IosDriver;
 import com.testsigma.automator.entity.*;
 import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.http.HttpResponse;
+import com.testsigma.automator.mobile.ios.AppInstaller;
 import com.testsigma.automator.utilities.PathUtil;
 import io.appium.java_client.remote.MobileCapabilityType;
 import lombok.Data;
@@ -173,7 +174,7 @@ public class DriverSessionsService {
       if ((appCapability != null) && appPathType != AppPathType.APP_DETAILS) {
         caps.remove(appCapability);
         String appPresignedUrl = (String) appCapability.getCapabilityValue();
-        String bundleId = iosDeviceService.installApp(device, appPresignedUrl);
+        String bundleId = iosDeviceService.installApp(device, appPresignedUrl, device.getIsEmulator());
         caps.add(new WebDriverCapability(TSCapabilityType.BUNDLE_ID, bundleId));
       }
     }

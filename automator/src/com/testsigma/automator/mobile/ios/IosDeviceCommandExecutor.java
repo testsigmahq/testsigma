@@ -1,6 +1,7 @@
 package com.testsigma.automator.mobile.ios;
 
 import com.testsigma.automator.exceptions.AutomatorException;
+import com.testsigma.automator.exceptions.TestsigmaException;
 import com.testsigma.automator.service.ObjectMapperService;
 import com.testsigma.automator.utilities.PathUtil;
 import lombok.RequiredArgsConstructor;
@@ -21,17 +22,31 @@ import java.util.Arrays;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class IosDeviceCommandExecutor {
 
-  public String getIosIdeviceExecutablePath() {
+  private static final String IDB_EXECUTABLE = "idb";
+
+  public String getTiDeviceExecutablePath() {
     if (SystemUtils.IS_OS_WINDOWS) {
       return PathUtil.getInstance().getIosPath() + File.separator + "tidevice.exe";
     } else {
-      return "/opt/homebrew/bin/idb";
+      return PathUtil.getInstance().getIosPath() + File.separator + "tidevice";
     }
   }
 
-  public Process runDeviceCommand(String[] subCommand) throws AutomatorException {
+  public String getIdbExecutablePath() throws TestsigmaException {
+    if (SystemUtils.IS_OS_WINDOWS) {
+      throw new TestsigmaException("Idb is not supported for Windows platform");
+    } else {
+      return IDB_EXECUTABLE;
+    }
+  }
+
+  public Process runDeviceCommand(String[] subCommand, Boolean executeWithTiDevice) throws AutomatorException {
     try {
-      String[] command = ArrayUtils.addAll(new String[]{getIosIdeviceExecutablePath()}, subCommand);
+      String iosDeviceExecutablePath = getIdbExecutablePath();
+      if(executeWithTiDevice) {
+        iosDeviceExecutablePath = getTiDeviceExecutablePath();
+      }
+      String[] command = ArrayUtils.addAll(new String[]{iosDeviceExecutablePath}, subCommand);
 
       log.debug("Running the command - " + Arrays.toString(command));
 

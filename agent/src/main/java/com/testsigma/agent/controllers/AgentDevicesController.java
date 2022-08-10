@@ -43,7 +43,7 @@ public class AgentDevicesController {
     log.info("Received request fetch device details - " + uniqueId);
     MobileDevice mobileDevice = deviceContainer.getDevice(uniqueId);
     if (mobileDevice == null) {
-      throw new DeviceNotConnectedException("IosDevice not online. Please check if the device is connected properly.");
+      throw new DeviceNotConnectedException("Device not online. Please check if the device is connected properly.");
     }
     return mobileDeviceMapper.map(mobileDevice);
   }

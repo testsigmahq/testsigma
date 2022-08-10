@@ -12,6 +12,7 @@ package com.testsigma.controller.api.agent;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.testsigma.config.StorageServiceFactory;
 import com.testsigma.config.URLConstants;
+import com.testsigma.dto.IosXCTestResponseDTO;
 import com.testsigma.model.StorageAccessLevel;
 import com.testsigma.dto.AgentDeviceDTO;
 import com.testsigma.dto.IosDeveloperImageDTO;
@@ -29,6 +30,7 @@ import com.testsigma.service.ProvisioningProfileDeviceService;
 import com.testsigma.service.TestsigmaOSConfigService;
 import com.testsigma.util.HttpClient;
 import com.testsigma.util.HttpResponse;
+import com.testsigma.util.ZipUtil;
 import com.testsigma.web.request.AgentDeviceRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -39,7 +41,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 
 @Log4j2
@@ -55,6 +59,7 @@ public class AgentDevicesController {
   private final StorageServiceFactory storageServiceFactory;
   private final ProvisioningProfileDeviceService provisioningProfileDeviceService;
   private final TestsigmaOSConfigService testsigmaOSConfigService;
+  private static final String XCTEST_RUNNER_FILEPATH = "https://s3.amazonaws.com/ios.testsigma.com/wda/WebDriverAgentRunner.xctest.zip";
 
   @RequestMapping(value = "/status", method = RequestMethod.PUT)
   public void syncInitialDeviceStatus(@PathVariable("agentUuid") String agentUuid) throws TestsigmaDatabaseException,
@@ -147,6 +152,19 @@ public class AgentDevicesController {
     iosWdaResponseDTO.setWdaPresignedUrl(presignedUrl);
     log.info("Ios Wda Response DTO - " + iosWdaResponseDTO);
     return iosWdaResponseDTO;
+  }
+
+  @RequestMapping(value = "/xctest", method = RequestMethod.GET)
+  public IosXCTestResponseDTO deviceXCTestLocalPath(@PathVariable String agentUuid)
+          throws TestsigmaException, IOException {
+    log.info(String.format("Received a GET request api/agents/%s/devices/xctest", agentUuid));
+    IosXCTestResponseDTO iosXCTestResponseDTO = new IosXCTestResponseDTO();
+    //String filePath = storageServiceFactory.getStorageService().downloadFromRemoteUrl("");
+    File destFolder = Files.createTempDirectory("wda_xctest").toFile();
+    File unZippedFolder = new ZipUtil().unZipFile(XCTEST_RUNNER_FILEPATH, destFolder);
+    iosXCTestResponseDTO.setXcTestLocalPath(unZippedFolder.getAbsolutePath() + "/WebDriverAgentRunner.xctest");
+    log.info("Ios XCTest Response DTO - " + iosXCTestResponseDTO);
+    return iosXCTestResponseDTO;
   }
 
   private ArrayList<Header> getHeaders() {

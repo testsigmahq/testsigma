@@ -17,10 +17,12 @@ import com.testsigma.automator.service.ObjectMapperService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.SystemUtils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -102,7 +104,7 @@ public class IosDeviceService {
     log.info("Fetching iOS device list");
     List<MobileDevice> deviceList = new ArrayList<>();
     IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
-    Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"list-targets", "--json"});
+    Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"list-targets", "--json"}, false);
     String devicesJsonString = iosDeviceCommandExecutor.getProcessStreamResponse(p);
     log.info(objectMapperService.convertToJson(devicesJsonString), new TypeReference<>(){});
     String[] devices = devicesJsonString.split("\n");
@@ -124,7 +126,7 @@ public class IosDeviceService {
     try {
       log.info("Fetching device properties for device uniqueID - " + uniqueId);
       IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
-      Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"-u", uniqueId, "info", "--json"});
+      Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"-u", uniqueId, "info", "--json"}, true);
       String devicePropertiesJsonString = iosDeviceCommandExecutor.getProcessStreamResponse(p);
       log.info("Fetched device properties for device - " + uniqueId + ", properties - " + devicePropertiesJsonString);
       JSONObject devicePropertiesJson = new JSONObject(devicePropertiesJsonString);
@@ -171,13 +173,13 @@ public class IosDeviceService {
     }
   }
 
-  public String installApp(MobileDevice device, String appUrl) throws AutomatorException {
-    return new AppInstaller(httpClient).installApp(device.getName(), device.getUniqueId(), appUrl);
+  public String installApp(MobileDevice device, String appUrl, Boolean isEmulator) throws AutomatorException {
+    return new AppInstaller(httpClient).installApp(device.getName(), device.getUniqueId(), appUrl, isEmulator);
   }
 
   public MobileDevice getSimulatorDevice(String udid) throws AutomatorException, TestsigmaException {
     IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
-    Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"describe", "--udid", udid, "--json"});
+    Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"describe", "--udid", udid, "--json"}, false);
     String deviceDescriptionJson = iosDeviceCommandExecutor.getProcessStreamResponse(p);
     JSONObject device = getSimulatorProperties(deviceDescriptionJson);
     MobileDevice mobileDevice = new MobileDevice();

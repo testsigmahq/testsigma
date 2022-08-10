@@ -2,6 +2,7 @@ package com.testsigma.agent.mobile.ios;
 
 import com.testsigma.agent.config.AgentConfig;
 import com.testsigma.agent.dto.IosWdaResponseDTO;
+import com.testsigma.agent.dto.IosXCTestResponseDTO;
 import com.testsigma.agent.exception.TestsigmaException;
 import com.testsigma.agent.http.ServerURLBuilder;
 import com.testsigma.agent.http.WebAppHttpClient;
@@ -46,14 +47,14 @@ public class WdaService {
       Process p;
       if(device.getIsEmulator()) {
         p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"install", "--udid", device.getUniqueId(),
-                downloadedWdaFile.getAbsolutePath()});
+                downloadedWdaFile.getAbsolutePath()}, false);
       } else {
         p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"-u", device.getUniqueId(), "install",
-                downloadedWdaFile.getAbsolutePath()});
+                downloadedWdaFile.getAbsolutePath()}, true);
       }
       String devicePropertiesJsonString = iosDeviceCommandExecutor.getProcessStreamResponse(p);
       log.info("Output from installing WDA file on the device - " + devicePropertiesJsonString);
-      if (devicePropertiesJsonString.contains("ApplicationVerificationFailed")) {
+      if (devicePropertiesJsonString.contains("ApplicationVerificationFailed") || p.exitValue() == 1) {
         throw new TestsigmaException("Failed to install WDA on device - " + device.getUniqueId(),
           "Failed to install WDA on device - " + device.getUniqueId());
       }
@@ -74,10 +75,11 @@ public class WdaService {
     try {
       IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
       log.info("Installing XCTest on device - " + device.getUniqueId());
-      downloadedWdaFile = new File("/Users/tarunava/Documents/wda_simulator.app/PlugIns/WebDriverAgentRunner.xctest");
-      log.info("Downloaded WDA to local file - " + downloadedWdaFile.getAbsolutePath());
+      String xcTestLocalPath = fetchXcTestRunnerUrl(device);
+      downloadedWdaFile = new File(xcTestLocalPath);
+      log.info("Downloaded XCTest to local file - " + downloadedWdaFile.getAbsolutePath());
       Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"xctest", "install", downloadedWdaFile.getAbsolutePath(),
-              "--udid", device.getUniqueId()});
+              "--udid", device.getUniqueId()}, false);
       String devicePropertiesJsonString = iosDeviceCommandExecutor.getProcessStreamResponse(p);
       log.info("Output from installing XCTest file on the device - " + devicePropertiesJsonString);
       if (devicePropertiesJsonString.contains("ApplicationVerificationFailed")) {
@@ -96,7 +98,7 @@ public class WdaService {
     }
   }
 
-  public void startWdaOnDevice(MobileDevice device) throws TestsigmaException, AutomatorException {
+  public void startWdaOnDevice(MobileDevice device) throws TestsigmaException {
     try {
       log.info("Starting WDA on device - " + device.getName());
       log.info("Checking for any previously started WDA processes on device - " + device.getName());
@@ -111,10 +113,10 @@ public class WdaService {
           Process p;
           if(device.getIsEmulator()) {
             p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"launch", "--udid", device.getUniqueId(),
-                    "com.facebook.WebDriverAgentRunner.xctrunner"});
+                    WDA_BUNDLE_ID}, false);
           } else {
             p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"-u", device.getUniqueId(), "xctest",
-                    "-B", WDA_BUNDLE_ID});
+                    "-B", WDA_BUNDLE_ID}, true);
           }
           device.setWdaProcess(p);
         } catch (Exception e) {
@@ -131,7 +133,7 @@ public class WdaService {
         device.getWdaRelayExecutorService().execute(() -> {
           try {
             Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"-u", device.getUniqueId(), "relay",
-                    WDA_PORT.toString(), WDA_PORT.toString()});
+                    WDA_PORT.toString(), WDA_PORT.toString()}, true);
             device.setWdaRelayProcess(p);
           } catch (Exception e) {
             log.info(e.getMessage(), e);
@@ -263,4 +265,23 @@ public class WdaService {
     }
     return null;
   }
+
+  public String fetchXcTestRunnerUrl(MobileDevice device) throws Exception {
+    log.info("Fetching XCTest presigned url for device - " + device.getName());
+    String authHeader = WebAppHttpClient.BEARER + " " + agentConfig.getJwtApiKey();
+    IosXCTestResponseDTO iosXCTestResponseDTO;
+    HttpResponse<IosXCTestResponseDTO> response =
+            httpClient.get(ServerURLBuilder.XcTestDownloadURL(this.agentConfig.getUUID()),
+                    new TypeReference<>() {
+                    }, authHeader);
+    log.info("Response of XCTest presigned url fetch request - " + response.getStatusCode());
+    if (response.getStatusCode() == HttpStatus.OK.value()) {
+      iosXCTestResponseDTO = response.getResponseEntity();
+      log.info("Fetched XCTest local path - " + iosXCTestResponseDTO.getXcTestLocalPath());
+      return iosXCTestResponseDTO.getXcTestLocalPath();
+    }
+    return null;
+  }
+
+
 }

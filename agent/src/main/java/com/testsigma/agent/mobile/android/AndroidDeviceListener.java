@@ -135,7 +135,7 @@ public class AndroidDeviceListener extends DeviceListener implements AndroidDebu
 
   @Override
   public void deviceDisconnected(IDevice device) {
-    log.info("IosDevice disconnected event received by Listener");
+    log.info("Device disconnected event received by Listener");
     try {
       MobileDevice mobileDevice = mobileDeviceMapper.map(device);
       this.removeDevice(mobileDevice);
@@ -146,7 +146,7 @@ public class AndroidDeviceListener extends DeviceListener implements AndroidDebu
 
   @Override
   public void deviceChanged(IDevice device, int i) {
-    log.info("IosDevice changed event received by Listener");
+    log.info("Device changed event received by Listener");
     try {
       MobileDevice mobileDevice = mobileDeviceMapper.map(device);
       if (IDevice.DeviceState.ONLINE.equals(device.getState())) {

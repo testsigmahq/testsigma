@@ -69,7 +69,7 @@ public class IosDeviceListener extends DeviceListener {
       return;
     }
     try {
-      //this.usbMuxSocket = iosDeviceService.createConnection();
+      this.usbMuxSocket = iosDeviceService.createConnection();
       bridgeInitialized = true;
     } catch (Exception e) {
       log.error(e.getMessage(), e);
@@ -77,7 +77,7 @@ public class IosDeviceListener extends DeviceListener {
     }
   }
 
-  public void getInitialDeviceList() throws TestsigmaException, DeviceContainerException, AutomatorException {
+  public void getInitialDeviceList() throws TestsigmaException, DeviceContainerException {
     getInitialSimulatorDevices();
     List<Device> devices = iosDeviceService.deviceList();
     for (Device device : devices) {
@@ -142,19 +142,14 @@ public class IosDeviceListener extends DeviceListener {
     }
   }
 
-  public void getInitialSimulatorDevices() throws TestsigmaException, DeviceContainerException, AutomatorException {
-    List<MobileDevice> devices = iosDeviceService.simulatorDeviceList();
-    for (MobileDevice device : devices) {
-      this.addDevice(device);
-    }
-  }
-
-  public Optional<MobileDevice> getActiveSimulators(String uuid) {
+  public void getInitialSimulatorDevices() {
     try {
-      return Optional.of(this.deviceContainer.getDevice(uuid));
-    } catch(TestsigmaException e) {
-      log.info(e);
-      return Optional.empty();
+      List<MobileDevice> devices = iosDeviceService.simulatorDeviceList();
+      for (MobileDevice device : devices) {
+        this.addDevice(device);
+      }
+    } catch(Exception e) {
+      log.error(e.getMessage());
     }
   }
 

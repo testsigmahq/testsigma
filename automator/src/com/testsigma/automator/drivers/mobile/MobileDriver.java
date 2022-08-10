@@ -6,12 +6,16 @@ import com.testsigma.automator.drivers.WebDriverCapability;
 import com.testsigma.automator.entity.AppPathType;
 import com.testsigma.automator.entity.WorkspaceType;
 import com.testsigma.automator.exceptions.AutomatorException;
+import com.testsigma.automator.exceptions.TestsigmaException;
 import com.testsigma.automator.mobile.ios.AppInstaller;
+import com.testsigma.automator.mobile.ios.IosDeviceCommandExecutor;
 import com.testsigma.automator.runners.EnvironmentRunner;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.SystemUtils;
+import org.json.JSONObject;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -61,7 +65,7 @@ public class MobileDriver extends TestsigmaDriver {
       if ((appCapability != null) && StringUtils.isNotBlank(appCapability.getCapabilityValue().toString())) {
         AppInstaller appInstaller = new AppInstaller(EnvironmentRunner.getWebAppHttpClient());
         String bundleId = appInstaller.installApp(settings.getDeviceName(), settings.getDeviceUniqueId(),
-          appCapability.getCapabilityValue().toString());
+          appCapability.getCapabilityValue().toString(), isDeviceAnEmulator(settings.getDeviceUniqueId()));
         log.info("Bundle Id From Installed Application - " + bundleId);
         settings.setBundleId(bundleId);
       }
@@ -88,5 +92,34 @@ public class MobileDriver extends TestsigmaDriver {
   }
 
   protected void createDriverInstance(DesiredCapabilities desiredCapabilities) throws AutomatorException {
+  }
+
+  public Boolean isDeviceAnEmulator(String udid) {
+    try {
+      IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
+      if (SystemUtils.IS_OS_WINDOWS) {
+        return false;
+      }
+      Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"describe", "--udid", udid, "--json"}, false);
+      String deviceDescriptionJson = iosDeviceCommandExecutor.getProcessStreamResponse(p);
+      JSONObject device = getProperties(deviceDescriptionJson);
+      if (device.getString("target_type").equals("simulator")) {
+        return true;
+      }
+    } catch(Exception e) {
+      log.error(e.getMessage());
+    }
+    return false;
+  }
+
+  private JSONObject getProperties(String deviceJson) throws TestsigmaException {
+    try {
+      log.info("Fetching device properties for device - " + deviceJson);
+      JSONObject devicePropertiesJson = new JSONObject(deviceJson);
+      log.info("Fetched device properties for device in json format - " + devicePropertiesJson);
+      return devicePropertiesJson;
+    } catch (Exception e) {
+      throw new TestsigmaException(e.getMessage());
+    }
   }
 }

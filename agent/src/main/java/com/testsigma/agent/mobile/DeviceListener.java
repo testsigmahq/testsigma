@@ -46,7 +46,7 @@ public abstract class DeviceListener implements Runnable {
   protected String listenerType;
 
   public void run() {
-    log.debug("IosDevice listener triggered for " + listenerType + " devices");
+    log.debug("Device listener triggered for " + listenerType + " devices");
     if (!shouldListen()) {
       return;
     }
@@ -66,7 +66,7 @@ public abstract class DeviceListener implements Runnable {
       return;
     }
     if (!device.getIsOnline()) {
-      log.info("IosDevice is offline. Skipping the device from container.");
+      log.info("Device is offline. Skipping the device from container.");
       return;
     }
     deviceContainer.addDevice(device);

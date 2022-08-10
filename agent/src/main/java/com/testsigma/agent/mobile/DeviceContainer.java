@@ -75,7 +75,7 @@ public class DeviceContainer {
         syncBrowserDrivers(mobileDevice);
 
       } else {
-        log.info("Device " + deviceUniqueId + " already in container...");
+        log.info("IosDevice " + deviceUniqueId + " already in container...");
       }
     } catch (Exception e) {
       log.error(e.getMessage(), e);

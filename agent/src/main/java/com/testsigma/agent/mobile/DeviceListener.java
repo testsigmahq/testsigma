@@ -21,6 +21,7 @@ import com.testsigma.agent.mobile.android.CommandExecutor;
 import com.testsigma.agent.mobile.ios.DeveloperImageService;
 import com.testsigma.agent.mobile.ios.IosDeviceService;
 import com.testsigma.agent.services.DriverSessionsService;
+import com.testsigma.automator.exceptions.AutomatorException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public abstract class DeviceListener implements Runnable {
   protected String listenerType;
 
   public void run() {
-    log.debug("Device listener triggered for " + listenerType + " devices");
+    log.debug("IosDevice listener triggered for " + listenerType + " devices");
     if (!shouldListen()) {
       return;
     }
@@ -65,7 +66,7 @@ public abstract class DeviceListener implements Runnable {
       return;
     }
     if (!device.getIsOnline()) {
-      log.info("Device is offline. Skipping the device from container.");
+      log.info("IosDevice is offline. Skipping the device from container.");
       return;
     }
     deviceContainer.addDevice(device);
@@ -84,7 +85,7 @@ public abstract class DeviceListener implements Runnable {
     this.addDevice(device);
   }
 
-  public abstract void getInitialDeviceList() throws TestsigmaException, DeviceContainerException;
+  public abstract void getInitialDeviceList() throws TestsigmaException, DeviceContainerException, AutomatorException;
 
   public abstract void initializeNativeBridge() throws TestsigmaException, NativeBridgeException;
 

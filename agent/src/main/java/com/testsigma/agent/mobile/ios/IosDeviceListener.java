@@ -22,6 +22,7 @@ import com.testsigma.agent.mobile.SessionContainer;
 import com.testsigma.agent.mobile.android.AdbBridge;
 import com.testsigma.agent.mobile.android.CommandExecutor;
 import com.testsigma.agent.services.DriverSessionsService;
+import com.testsigma.automator.exceptions.AutomatorException;
 import lombok.extern.log4j.Log4j2;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
@@ -30,12 +31,14 @@ import javax.annotation.PreDestroy;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Log4j2
 @Component
 public class IosDeviceListener extends DeviceListener {
+
   private final IosDeviceListenerTask iosDeviceListenerTask;
   private final ExecutorService executorService;
   private boolean isStarted = false;
@@ -43,16 +46,16 @@ public class IosDeviceListener extends DeviceListener {
   private String registerUid;
 
   public IosDeviceListener(
-    MobileDeviceMapper mobileDeviceMapper,
-    WebAppHttpClient httpClient,
-    DeviceContainer deviceContainer,
-    AgentConfig agentConfig,
-    AdbBridge adbBridge,
-    CommandExecutor commandExecutor,
-    SessionContainer sessionContainer,
-    DriverSessionsService driverSessionsService,
-    IosDeviceService iosDeviceService,
-    DeveloperImageService developerImageService
+          MobileDeviceMapper mobileDeviceMapper,
+          WebAppHttpClient httpClient,
+          DeviceContainer deviceContainer,
+          AgentConfig agentConfig,
+          AdbBridge adbBridge,
+          CommandExecutor commandExecutor,
+          SessionContainer sessionContainer,
+          DriverSessionsService driverSessionsService,
+          IosDeviceService iosDeviceService,
+          DeveloperImageService developerImageService
   ) {
     super(mobileDeviceMapper, httpClient, deviceContainer, agentConfig,
       adbBridge, commandExecutor, sessionContainer, driverSessionsService, iosDeviceService, developerImageService);
@@ -66,7 +69,7 @@ public class IosDeviceListener extends DeviceListener {
       return;
     }
     try {
-      this.usbMuxSocket = iosDeviceService.createConnection();
+      //this.usbMuxSocket = iosDeviceService.createConnection();
       bridgeInitialized = true;
     } catch (Exception e) {
       log.error(e.getMessage(), e);
@@ -74,15 +77,17 @@ public class IosDeviceListener extends DeviceListener {
     }
   }
 
-  public void getInitialDeviceList() throws TestsigmaException, DeviceContainerException {
+  public void getInitialDeviceList() throws TestsigmaException, DeviceContainerException, AutomatorException {
+    getInitialSimulatorDevices();
     List<Device> devices = iosDeviceService.deviceList();
     for (Device device : devices) {
-      MobileDevice mobileDevice = getMobileDevice(device.getSerialNumber());
+      MobileDevice mobileDevice = getRealMobileDevice(device.getSerialNumber());
       mobileDevice.setMuxDeviceId(device.getDeviceId().toString());
       this.addDevice(mobileDevice);
     }
   }
 
+  @Override
   public void addDeviceListenerCallback() {
     log.info("Starting iOS Device Listener");
     try {
@@ -91,7 +96,7 @@ public class IosDeviceListener extends DeviceListener {
           case Add:
             try {
               log.info("Device connected - " + m.device);
-              MobileDevice device = getMobileDevice(m.device.getSerialNumber());
+              MobileDevice device = getRealMobileDevice(m.device.getSerialNumber());
               device.setMuxDeviceId(m.device.getDeviceId().toString());
               this.addDevice(device);
               this.developerImageService.mountDeveloperImage(device);
@@ -133,13 +138,28 @@ public class IosDeviceListener extends DeviceListener {
       } catch (Exception e) {
         usbMuxSocket = null;
       }
+      isStarted = false;
     }
-    isStarted = false;
   }
 
-  public MobileDevice getMobileDevice(String uniqueId) throws TestsigmaException {
-    MobileDevice mobileDevice = new MobileDevice();
+  public void getInitialSimulatorDevices() throws TestsigmaException, DeviceContainerException, AutomatorException {
+    List<MobileDevice> devices = iosDeviceService.simulatorDeviceList();
+    for (MobileDevice device : devices) {
+      this.addDevice(device);
+    }
+  }
 
+  public Optional<MobileDevice> getActiveSimulators(String uuid) {
+    try {
+      return Optional.of(this.deviceContainer.getDevice(uuid));
+    } catch(TestsigmaException e) {
+      log.info(e);
+      return Optional.empty();
+    }
+  }
+
+  public MobileDevice getRealMobileDevice(String uniqueId) throws TestsigmaException {
+    MobileDevice mobileDevice = new MobileDevice();
     mobileDevice.setOsName(MobileOs.IOS);
     mobileDevice.setUniqueId(uniqueId);
     JSONObject deviceProperties = iosDeviceService.getDeviceProperties(uniqueId);
@@ -154,4 +174,6 @@ public class IosDeviceListener extends DeviceListener {
     mobileDevice.setIsEmulator(false);
     return mobileDevice;
   }
+
 }
+

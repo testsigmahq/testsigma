@@ -38,6 +38,7 @@ import org.apache.http.message.BasicHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -130,16 +131,22 @@ public class AgentDevicesController {
     IosWdaResponseDTO iosWdaResponseDTO = new IosWdaResponseDTO();
     Agent agent = agentService.findByUniqueId(agentUuid);
     AgentDevice agentDevice = agentDeviceService.findAgentDeviceByUniqueId(agent.getId(), deviceUuid);
-    ProvisioningProfileDevice profileDevice = provisioningProfileDeviceService.findByAgentDeviceId(agentDevice.getId());
-    if (profileDevice != null) {
-      URL presignedUrl = storageServiceFactory.getStorageService().generatePreSignedURL("wda/"
-        + profileDevice.getProvisioningProfileId() + "/wda.ipa", StorageAccessLevel.READ, 180);
-      iosWdaResponseDTO.setWdaPresignedUrl(presignedUrl.toString());
-      log.info("Ios Wda Response DTO - " + iosWdaResponseDTO);
-      return iosWdaResponseDTO;
+    String presignedUrl;
+    if (!agentDevice.getIsEmulator()) {
+      ProvisioningProfileDevice profileDevice = provisioningProfileDeviceService.findByAgentDeviceId(agentDevice.getId());
+      if(profileDevice == null) {
+        throw new TestsigmaException("could not find a provisioning profile for this device. Unable to fetch WDA");
+      }
+      presignedUrl = storageServiceFactory.getStorageService().generatePreSignedURL("wda/"
+              + profileDevice.getProvisioningProfileId() + "/wda.ipa", StorageAccessLevel.READ, 180).toString();
     } else {
-      throw new TestsigmaException("could not find a provisioning profile for this device. Unable to fetch WDA");
+      String filePath = storageServiceFactory.getStorageService().downloadFromRemoteUrl("https://s3.amazonaws.com/ios.testsigma.com/wda/wda_simulator.ipa");
+      storageServiceFactory.getStorageService().addFile("wda/wda_simulator.ipa", new File(filePath));
+      presignedUrl = storageServiceFactory.getStorageService().generatePreSignedURLIfExists("wda/wda_simulator.ipa", StorageAccessLevel.READ, 180).get().toString();
     }
+    iosWdaResponseDTO.setWdaPresignedUrl(presignedUrl);
+    log.info("Ios Wda Response DTO - " + iosWdaResponseDTO);
+    return iosWdaResponseDTO;
   }
 
   private ArrayList<Header> getHeaders() {

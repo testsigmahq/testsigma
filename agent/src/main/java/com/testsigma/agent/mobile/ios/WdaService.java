@@ -43,13 +43,46 @@ public class WdaService {
       downloadedWdaFile = File.createTempFile("wda_", ".ipa");
       FileUtils.copyURLToFile(new URL(wdaPresignedUrl), downloadedWdaFile, (60 * 1000), (60 * 1000));
       log.info("Downloaded WDA to local file - " + downloadedWdaFile.getAbsolutePath());
-      Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"-u", device.getUniqueId(), "install",
-        downloadedWdaFile.getAbsolutePath()});
+      Process p;
+      if(device.getIsEmulator()) {
+        p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"install", "--udid", device.getUniqueId(),
+                downloadedWdaFile.getAbsolutePath()});
+      } else {
+        p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"-u", device.getUniqueId(), "install",
+                downloadedWdaFile.getAbsolutePath()});
+      }
       String devicePropertiesJsonString = iosDeviceCommandExecutor.getProcessStreamResponse(p);
       log.info("Output from installing WDA file on the device - " + devicePropertiesJsonString);
       if (devicePropertiesJsonString.contains("ApplicationVerificationFailed")) {
         throw new TestsigmaException("Failed to install WDA on device - " + device.getUniqueId(),
           "Failed to install WDA on device - " + device.getUniqueId());
+      }
+    } catch (Exception e) {
+      throw new TestsigmaException(e.getMessage(), e);
+    } finally {
+      if ((downloadedWdaFile != null) && downloadedWdaFile.exists()) {
+        boolean deleted = downloadedWdaFile.delete();
+        if (!deleted) {
+          log.error("Error while deleting the downloaded wda.ipa file - " + downloadedWdaFile.getAbsolutePath());
+        }
+      }
+    }
+  }
+
+  public void installXCTestToDevice(MobileDevice device) throws TestsigmaException {
+    File downloadedWdaFile = null;
+    try {
+      IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
+      log.info("Installing XCTest on device - " + device.getUniqueId());
+      downloadedWdaFile = new File("/Users/tarunava/Documents/wda_simulator.app/PlugIns/WebDriverAgentRunner.xctest");
+      log.info("Downloaded WDA to local file - " + downloadedWdaFile.getAbsolutePath());
+      Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"xctest", "install", downloadedWdaFile.getAbsolutePath(),
+              "--udid", device.getUniqueId()});
+      String devicePropertiesJsonString = iosDeviceCommandExecutor.getProcessStreamResponse(p);
+      log.info("Output from installing XCTest file on the device - " + devicePropertiesJsonString);
+      if (devicePropertiesJsonString.contains("ApplicationVerificationFailed")) {
+        throw new TestsigmaException("Failed to install WDA on device - " + device.getUniqueId(),
+                "Failed to install WDA on device - " + device.getUniqueId());
       }
     } catch (Exception e) {
       throw new TestsigmaException(e.getMessage(), e);
@@ -75,8 +108,14 @@ public class WdaService {
 
       device.getWdaExecutorService().execute(() -> {
         try {
-          Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"-u", device.getUniqueId(), "xctest",
-            "-B", WDA_BUNDLE_ID});
+          Process p;
+          if(device.getIsEmulator()) {
+            p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"launch", "--udid", device.getUniqueId(),
+                    "com.facebook.WebDriverAgentRunner.xctrunner"});
+          } else {
+            p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"-u", device.getUniqueId(), "xctest",
+                    "-B", WDA_BUNDLE_ID});
+          }
           device.setWdaProcess(p);
         } catch (Exception e) {
           log.info(e.getMessage(), e);
@@ -88,22 +127,23 @@ public class WdaService {
 
       checkWDAProcessStatus(device);
 
-      device.getWdaRelayExecutorService().execute(() -> {
-        try {
-          Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"-u", device.getUniqueId(), "relay",
-            WDA_PORT.toString(), WDA_PORT.toString()});
-          device.setWdaRelayProcess(p);
-        } catch (Exception e) {
-          log.info(e.getMessage(), e);
-        }
-      });
+      if(!device.getIsEmulator()) {
+        device.getWdaRelayExecutorService().execute(() -> {
+          try {
+            Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"-u", device.getUniqueId(), "relay",
+                    WDA_PORT.toString(), WDA_PORT.toString()});
+            device.setWdaRelayProcess(p);
+          } catch (Exception e) {
+            log.info(e.getMessage(), e);
+          }
+        });
 
-      log.info("Putting the thread to sleep for 2 seconds so as wait for WDA relay process to start on device - " +
-        device.getName());
+        log.info("Putting the thread to sleep for 2 seconds so as wait for WDA relay process to start on device - " +
+                device.getName());
 
-      Thread.sleep(2000);
-
-      checkWDARelayProcessStatus(device);
+        Thread.sleep(2000);
+        checkWDARelayProcessStatus(device);
+      }
     } catch (Exception e) {
       throw new TestsigmaException(e.getMessage(), e);
     }
@@ -112,7 +152,7 @@ public class WdaService {
   private void checkWDAProcessStatus(MobileDevice device) throws TestsigmaException, AutomatorException {
     IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
 
-    if ((device.getWdaProcess() != null) && device.getWdaProcess().isAlive()) {
+    if ((device.getWdaProcess() != null) && (device.getWdaProcess().isAlive() || device.getWdaProcess().exitValue() == 0)) {
       log.info("Checked if the WDA process is still alive and it seems to be still running on device - " +
         device.getName());
       return;

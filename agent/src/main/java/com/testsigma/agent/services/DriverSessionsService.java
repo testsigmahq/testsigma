@@ -203,7 +203,7 @@ public class DriverSessionsService {
         if((device != null) && (device.getOsName() == MobileOs.IOS)) {
           iosDeviceService.cleanupWda(device);
         } else {
-          log.info("Device os is not iOS. Skipping WDA cleanup");
+          log.info("IosDevice os is not iOS. Skipping WDA cleanup");
         }
       }
     } else {

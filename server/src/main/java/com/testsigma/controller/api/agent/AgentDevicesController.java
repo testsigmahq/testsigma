@@ -59,6 +59,7 @@ public class AgentDevicesController {
   private final StorageServiceFactory storageServiceFactory;
   private final ProvisioningProfileDeviceService provisioningProfileDeviceService;
   private final TestsigmaOSConfigService testsigmaOSConfigService;
+  private static final String WDA_APP_FILEPATH = "https://s3.amazonaws.com/ios.testsigma.com/wda/wda_simulator.ipa";
   private static final String XCTEST_RUNNER_FILEPATH = "https://s3.amazonaws.com/ios.testsigma.com/wda/WebDriverAgentRunner.xctest.zip";
 
   @RequestMapping(value = "/status", method = RequestMethod.PUT)
@@ -145,7 +146,7 @@ public class AgentDevicesController {
       presignedUrl = storageServiceFactory.getStorageService().generatePreSignedURL("wda/"
               + profileDevice.getProvisioningProfileId() + "/wda.ipa", StorageAccessLevel.READ, 180).toString();
     } else {
-      String filePath = storageServiceFactory.getStorageService().downloadFromRemoteUrl("https://s3.amazonaws.com/ios.testsigma.com/wda/wda_simulator.ipa");
+      String filePath = storageServiceFactory.getStorageService().downloadFromRemoteUrl(WDA_APP_FILEPATH);
       storageServiceFactory.getStorageService().addFile("wda/wda_simulator.ipa", new File(filePath));
       presignedUrl = storageServiceFactory.getStorageService().generatePreSignedURLIfExists("wda/wda_simulator.ipa", StorageAccessLevel.READ, 180).get().toString();
     }
@@ -156,10 +157,9 @@ public class AgentDevicesController {
 
   @RequestMapping(value = "/xctest", method = RequestMethod.GET)
   public IosXCTestResponseDTO deviceXCTestLocalPath(@PathVariable String agentUuid)
-          throws TestsigmaException, IOException {
+          throws IOException {
     log.info(String.format("Received a GET request api/agents/%s/devices/xctest", agentUuid));
     IosXCTestResponseDTO iosXCTestResponseDTO = new IosXCTestResponseDTO();
-    //String filePath = storageServiceFactory.getStorageService().downloadFromRemoteUrl("");
     File destFolder = Files.createTempDirectory("wda_xctest").toFile();
     File unZippedFolder = new ZipUtil().unZipFile(XCTEST_RUNNER_FILEPATH, destFolder);
     iosXCTestResponseDTO.setXcTestLocalPath(unZippedFolder.getAbsolutePath() + "/WebDriverAgentRunner.xctest");

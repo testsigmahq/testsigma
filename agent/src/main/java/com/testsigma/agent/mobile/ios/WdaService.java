@@ -71,28 +71,27 @@ public class WdaService {
   }
 
   public void installXCTestToDevice(MobileDevice device) throws TestsigmaException {
-    File downloadedWdaFile = null;
+    File downloadedXCTestFile = null;
     try {
       IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
       log.info("Installing XCTest on device - " + device.getUniqueId());
       String xcTestLocalPath = fetchXcTestRunnerUrl(device);
-      downloadedWdaFile = new File(xcTestLocalPath);
-      log.info("Downloaded XCTest to local file - " + downloadedWdaFile.getAbsolutePath());
-      Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"xctest", "install", downloadedWdaFile.getAbsolutePath(),
+      downloadedXCTestFile = new File(xcTestLocalPath);
+      log.info("Downloaded XCTest to local file - " + downloadedXCTestFile.getAbsolutePath());
+      Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"xctest", "install", downloadedXCTestFile.getAbsolutePath(),
               "--udid", device.getUniqueId()}, false);
       String devicePropertiesJsonString = iosDeviceCommandExecutor.getProcessStreamResponse(p);
       log.info("Output from installing XCTest file on the device - " + devicePropertiesJsonString);
-      if (devicePropertiesJsonString.contains("ApplicationVerificationFailed")) {
-        throw new TestsigmaException("Failed to install WDA on device - " + device.getUniqueId(),
-                "Failed to install WDA on device - " + device.getUniqueId());
+      if (p.exitValue() == 1) {
+        throw new TestsigmaException("Failed to install XCTest on device - " + device.getUniqueId());
       }
     } catch (Exception e) {
       throw new TestsigmaException(e.getMessage(), e);
     } finally {
-      if ((downloadedWdaFile != null) && downloadedWdaFile.exists()) {
-        boolean deleted = downloadedWdaFile.delete();
+      if ((downloadedXCTestFile != null) && downloadedXCTestFile.exists()) {
+        boolean deleted = downloadedXCTestFile.delete();
         if (!deleted) {
-          log.error("Error while deleting the downloaded wda.ipa file - " + downloadedWdaFile.getAbsolutePath());
+          log.error("Error while deleting the downloaded xcTest directory - " + downloadedXCTestFile.getAbsolutePath());
         }
       }
     }

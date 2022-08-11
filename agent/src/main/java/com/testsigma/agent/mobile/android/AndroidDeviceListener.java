@@ -120,7 +120,7 @@ public class AndroidDeviceListener extends DeviceListener implements AndroidDebu
 
   @Override
   public void deviceConnected(IDevice device) {
-    log.info("IosDevice connected event received by Listener");
+    log.info("Device connected event received by Listener");
     try {
       if (IDevice.DeviceState.ONLINE.equals(device.getState())) {
         MobileDevice mobileDevice = mobileDeviceMapper.map(device);

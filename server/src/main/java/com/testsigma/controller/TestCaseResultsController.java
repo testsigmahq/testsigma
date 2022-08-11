@@ -52,6 +52,9 @@ public class TestCaseResultsController {
   public TestCaseResultDTO show(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
     log.info("Request /test_case_results/" + id);
     TestCaseResult testCaseResult = testCaseResultService.find(id);
+    if(testCaseResult.getMessage().contains("architecture is unsupported")) {
+      testCaseResult.setMessage("Architecture is unsupported for the selected application. Please select the correct application file or change the device architecture");
+    }
     return testCaseResultMapper.mapDTO(testCaseResult);
   }
 }

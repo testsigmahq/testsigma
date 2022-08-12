@@ -4,5 +4,5 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum SupportedDeviceType {
-    REAL_DEVICE, EMULATOR
+    IOS_DEVICE, IOS_EMULATOR
 }

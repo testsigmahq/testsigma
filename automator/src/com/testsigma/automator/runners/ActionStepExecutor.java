@@ -50,7 +50,6 @@ public class ActionStepExecutor {
 
     snippet.setTestDataProfileEntity(new TestDataProfileEntity(testCaseStepEntity.getTestDataIndex(),
             testCaseStepEntity.getSetName(), testCaseStepEntity.getTestDataProfileName()));
-    snippet.setTestDataParameterName(testCaseStepEntity.getStepDetails().getDataMap().getTestData());
     ActionResult snippetResult = snippet.run();
     //We retry test step execution on failure based on the exception type.
     snippetResult = reTrySnippetIfEligible(snippetResult, snippet, testCaseStepEntity, testCaseStepResult);

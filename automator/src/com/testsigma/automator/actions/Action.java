@@ -50,7 +50,6 @@ public abstract class Action {
   protected String errorMessage;
   @Getter
   protected String successMessage;
-  private String testDataParameterName;
 
   public ActionResult run() throws AutomatorException {
     try {

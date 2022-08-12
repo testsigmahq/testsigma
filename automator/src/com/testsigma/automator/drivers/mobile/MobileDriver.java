@@ -96,10 +96,11 @@ public class MobileDriver extends TestsigmaDriver {
 
   public Boolean isDeviceAnEmulator(String udid) {
     try {
-      IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
       if (SystemUtils.IS_OS_WINDOWS) {
+        log.info("Xcode emulators are not supported in Windows currently. Device: {} cant be an emulator", udid);
         return false;
       }
+      IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
       Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"describe", "--udid", udid, "--json"}, false);
       String deviceDescriptionJson = iosDeviceCommandExecutor.getProcessStreamResponse(p);
       JSONObject device = getProperties(deviceDescriptionJson);
@@ -107,7 +108,7 @@ public class MobileDriver extends TestsigmaDriver {
         return true;
       }
     } catch(Exception e) {
-      log.error(e.getMessage());
+      log.error(e.getMessage(), e);
     }
     return false;
   }

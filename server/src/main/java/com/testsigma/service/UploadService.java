@@ -79,6 +79,7 @@ public class UploadService extends XMLExportImportService<Upload> {
     upload.setCreatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
     upload.setUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
     upload.setWorkspaceId(uploadRequest.getWorkspaceId());
+    upload.setSupportedDeviceType(uploadRequest.getSupportedDeviceType());
     upload = this.save(upload);
     upload.setWorkspace(this.workspaceService.find(uploadRequest.getWorkspaceId()));
     UploadVersion version = uploadVersionService.create(uploadRequest.getVersion(), upload.getId(), uploadRequest.getFileContent(), uploadRequest.getUploadType(), upload);
@@ -90,6 +91,7 @@ public class UploadService extends XMLExportImportService<Upload> {
 
   public Upload update(Upload upload, UploadRequest uploadRequest) throws TestsigmaException {
     upload.setName(uploadRequest.getName());
+    upload.setSupportedDeviceType(uploadRequest.getSupportedDeviceType());
     upload.setUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
     if(!(uploadRequest.getFileContent() == null || (uploadRequest.getFileContent() != null && "".equals(uploadRequest.getFileContent().getOriginalFilename())))) {
       UploadVersion version = uploadVersionService.create(uploadRequest.getVersion(), upload.getId(), uploadRequest.getFileContent(), uploadRequest.getUploadType(), upload);

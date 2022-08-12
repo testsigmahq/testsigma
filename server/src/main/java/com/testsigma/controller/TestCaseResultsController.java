@@ -53,7 +53,7 @@ public class TestCaseResultsController {
     log.info("Request /test_case_results/" + id);
     TestCaseResult testCaseResult = testCaseResultService.find(id);
     if(testCaseResult.getMessage().contains("architecture is unsupported")) {
-      testCaseResult.setMessage("Architecture is unsupported for the selected application. Please select the correct application file or change the device architecture");
+      testCaseResult.setMessage("Architecture is unsupported for the selected application. If running on Simulator, try uploading a simulator build");
     }
     return testCaseResultMapper.mapDTO(testCaseResult);
   }

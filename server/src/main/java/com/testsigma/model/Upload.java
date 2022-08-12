@@ -12,7 +12,6 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.*;
-
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -46,6 +45,10 @@ public class Upload {
     @Column(name = "updated_date")
     @UpdateTimestamp
     private Timestamp updatedDate;
+
+    @Column(name = "supported_device")
+    @Enumerated(EnumType.STRING)
+    private SupportedDeviceType supportedDeviceType;
 
     @Transient
     private String preSignedURL;

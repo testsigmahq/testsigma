@@ -149,7 +149,7 @@ public class IosDeviceListener extends DeviceListener {
         this.addDevice(device);
       }
     } catch(Exception e) {
-      log.error(e.getMessage());
+      log.error("Error in fetching Simulator devices",e);
     }
   }
 

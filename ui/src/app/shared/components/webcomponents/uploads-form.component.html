@@ -50,6 +50,43 @@
           <label class="control-label required" [translate]="'uploads.form.version.name'"></label>
         </div>
 
+        <div *ngIf="data?.version?.workspace?.isIosNative"
+             class="form-group ts-col-100">
+          <label
+            class="rb-medium pr-20"
+            [translate]="'uploads.form.label.supported_device_type'"></label>
+          <div class="d-flex pt-10">
+            <div
+              class="d-flex align-items-center pr-20" >
+              <input
+                type="radio"
+                id="realDevice"
+                name="created_type"
+                [value]="SupportedDeviceType.IOS_DEVICE"
+                [ngModelOptions]="{standalone: true}"
+                [(ngModel)]="upload.supportedDeviceType"/>
+              <label
+                for="realDevice"
+                class="pl-5 pointer"
+                [translate]="'uploads.form.label.supported_device_type.ios_device'"></label>
+            </div>
+            <div
+              class="d-flex align-items-center pr-20" >
+              <input
+                type="radio"
+                id="emulator"
+                name="created_type"
+                [value]="SupportedDeviceType.IOS_EMULATOR"
+                [ngModelOptions]="{standalone: true}"
+                [(ngModel)]="upload.supportedDeviceType"/>
+              <label
+                for="emulator"
+                class="pl-5 pointer"
+                [translate]="'uploads.form.label.supported_device_type.ios_emulator'"></label>
+            </div>
+          </div>
+        </div>
+
       </form>
     </div>
 

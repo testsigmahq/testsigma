@@ -190,6 +190,7 @@ public class IosDeviceService {
     mobileDevice.setApiLevel(mobileDevice.getOsVersion());
     mobileDevice.setAbi(device.getString("architecture"));
     mobileDevice.setIsOnline(device.getString("state").equals(DeviceStatus.BOOTED.getStatus()));
+    mobileDevice.setProductModel(device.getString("model"));
     mobileDevice.setIsEmulator(device.getString("target_type").equals("simulator"));
     mobileDevice.setScreenHeight(device.getJSONObject("screen_dimensions").getInt("height"));
     mobileDevice.setScreenWidth(device.getJSONObject("screen_dimensions").getInt("width"));

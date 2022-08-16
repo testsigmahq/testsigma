@@ -62,6 +62,11 @@ public class RestApiResponseValidator {
   }
 
   private void validateResponseBody(String expectedStr, String actualStr, String compareType, String msg) throws AutomatorException {
+
+    if (StringUtils.isBlank(expectedStr)  || StringUtils.isBlank(actualStr)) {
+      return;
+    }
+
     if (!isJSONValid(actualStr)) {
       throw new AutomatorException(MSG_INVALID_JSON);
     }

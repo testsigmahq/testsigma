@@ -56,7 +56,7 @@
              [textContent]="'form.validation.common.min_length' | translate: {FieldName:'Name' , min:'4'}"></div>
         <div class="error left"
              *ngIf="formSubmitted && testDataForm.controls.name.errors?.maxlength"
-             [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'126'}"></div>
+             [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'250'}"></div>
         <div class="error"
              *ngIf="testDataForm?.touched  && testDataForm.controls.name.hasError('whitespace')"
              [textContent]="'form.validation.cannot_have_white_spaces' | translate: {FieldName:'Name'}"></div>

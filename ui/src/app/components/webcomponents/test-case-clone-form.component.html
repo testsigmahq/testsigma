@@ -50,6 +50,13 @@
             [translate]="'message.common.label.name'"
             for="name" class="required"></label>
         </div>
+        <div class="error"
+             *ngIf="stepGroupForm.controls.name.errors?.minlength"
+             [textContent]="'form.validation.common.min_length' | translate: {FieldName:'Name' , min:'4'}">
+        </div>
+        <div class="error"
+             *ngIf="stepGroupForm.controls.name.errors?.maxlength"
+             [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'250'}"></div>
       </div>
   </form>
     <div class="theme-overlay-footer">

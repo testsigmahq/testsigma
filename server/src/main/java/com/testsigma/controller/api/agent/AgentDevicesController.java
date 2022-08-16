@@ -36,12 +36,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
+import org.apache.http.HttpStatus;
 import org.apache.http.message.BasicHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -59,8 +61,6 @@ public class AgentDevicesController {
   private final StorageServiceFactory storageServiceFactory;
   private final ProvisioningProfileDeviceService provisioningProfileDeviceService;
   private final TestsigmaOSConfigService testsigmaOSConfigService;
-  private static final String WDA_APP_FILEPATH = "https://s3.amazonaws.com/ios.testsigma.com/wda/wda_simulator.ipa";
-  private static final String XCTEST_RUNNER_FILEPATH = "https://s3.amazonaws.com/ios.testsigma.com/wda/WebDriverAgentRunner.xctest.zip";
 
   @RequestMapping(value = "/status", method = RequestMethod.PUT)
   public void syncInitialDeviceStatus(@PathVariable("agentUuid") String agentUuid) throws TestsigmaDatabaseException,
@@ -138,30 +138,53 @@ public class AgentDevicesController {
     Agent agent = agentService.findByUniqueId(agentUuid);
     AgentDevice agentDevice = agentDeviceService.findAgentDeviceByUniqueId(agent.getId(), deviceUuid);
     String presignedUrl;
-    if (!agentDevice.getIsEmulator()) {
-      ProvisioningProfileDevice profileDevice = provisioningProfileDeviceService.findByAgentDeviceId(agentDevice.getId());
-      if(profileDevice == null) {
-        throw new TestsigmaException("could not find a provisioning profile for this device. Unable to fetch WDA");
-      }
-      presignedUrl = storageServiceFactory.getStorageService().generatePreSignedURL("wda/"
-              + profileDevice.getProvisioningProfileId() + "/wda.ipa", StorageAccessLevel.READ, 180).toString();
-    } else {
-      String filePath = storageServiceFactory.getStorageService().downloadFromRemoteUrl(WDA_APP_FILEPATH);
-      storageServiceFactory.getStorageService().addFile("wda/wda_simulator.ipa", new File(filePath));
-      presignedUrl = storageServiceFactory.getStorageService().generatePreSignedURLIfExists("wda/wda_simulator.ipa", StorageAccessLevel.READ, 180).get().toString();
+    ProvisioningProfileDevice profileDevice = provisioningProfileDeviceService.findByAgentDeviceId(agentDevice.getId());
+    if(profileDevice == null) {
+      throw new TestsigmaException("could not find a provisioning profile for this device. Unable to fetch WDA");
     }
+    presignedUrl = storageServiceFactory.getStorageService().generatePreSignedURL("wda/"
+            + profileDevice.getProvisioningProfileId() + "/wda.ipa", StorageAccessLevel.READ, 180).toString();
     iosWdaResponseDTO.setWdaPresignedUrl(presignedUrl);
     log.info("Ios Wda Response DTO - " + iosWdaResponseDTO);
     return iosWdaResponseDTO;
   }
 
-  @RequestMapping(value = "/xctest", method = RequestMethod.GET)
+  @RequestMapping(value = "/wda_emulator", method = RequestMethod.GET)
+  public IosWdaResponseDTO deviceWdaEmulatorUrl(@PathVariable String agentUuid)
+          throws TestsigmaException, MalformedURLException {
+    log.info(String.format("Received a GET request api/agents/%s/devices/wda_emulator", agentUuid));
+    IosWdaResponseDTO iosWdaResponseDTO = new IosWdaResponseDTO();
+
+    ArrayList<Header> headers = new ArrayList<>();
+    headers.add(new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/json"));
+    HttpResponse<String> response = httpClient.get(testsigmaOSConfigService.getUrl() +
+            URLConstants.TESTSIGMA_OS_PUBLIC_WDA_EMULATOR_URL, headers, new TypeReference<>() {
+    });
+    URL wdaEmulatorRemoteURL = new URL(response.getResponseEntity());
+    log.info("Received wda emulator remote url from proxy service: " + wdaEmulatorRemoteURL);
+    String presignedUrl;
+    String filePath = storageServiceFactory.getStorageService().downloadFromRemoteUrl(wdaEmulatorRemoteURL.toString());
+    storageServiceFactory.getStorageService().addFile("wda/wda_simulator.ipa", new File(filePath));
+    presignedUrl = storageServiceFactory.getStorageService().generatePreSignedURLIfExists("wda/wda_simulator.ipa", StorageAccessLevel.READ, 180).get().toString();
+    iosWdaResponseDTO.setWdaPresignedUrl(presignedUrl);
+    log.info("Ios Wda Response DTO - " + iosWdaResponseDTO);
+    return iosWdaResponseDTO;
+  }
+
+    @RequestMapping(value = "/xctest", method = RequestMethod.GET)
   public IosXCTestResponseDTO deviceXCTestLocalPath(@PathVariable String agentUuid)
-          throws IOException {
+            throws IOException, TestsigmaException {
     log.info(String.format("Received a GET request api/agents/%s/devices/xctest", agentUuid));
+    ArrayList<Header> headers = new ArrayList<>();
+    headers.add(new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/json"));
+    HttpResponse<String> response = httpClient.get(testsigmaOSConfigService.getUrl() +
+            URLConstants.TESTSIGMA_OS_PUBLIC_XCTEST_URL, headers, new TypeReference<>() {
+    });
+    URL xcTestRemoteURL = new URL(response.getResponseEntity());
+    log.info("Received xctest remote url from proxy service: " + xcTestRemoteURL);
     IosXCTestResponseDTO iosXCTestResponseDTO = new IosXCTestResponseDTO();
     File destFolder = Files.createTempDirectory("wda_xctest").toFile();
-    File unZippedFolder = new ZipUtil().unZipFile(XCTEST_RUNNER_FILEPATH, destFolder);
+    File unZippedFolder = ZipUtil.unZipFile(xcTestRemoteURL.toString(), destFolder);
     iosXCTestResponseDTO.setXcTestLocalPath(unZippedFolder.getAbsolutePath() + "/WebDriverAgentRunner.xctest");
     log.info("Ios XCTest Response DTO - " + iosXCTestResponseDTO);
     return iosXCTestResponseDTO;

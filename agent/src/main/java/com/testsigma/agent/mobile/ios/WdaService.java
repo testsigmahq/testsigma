@@ -252,10 +252,14 @@ public class WdaService {
     log.info("Fetching WDA presigned url for device - " + device.getName());
     String authHeader = WebAppHttpClient.BEARER + " " + agentConfig.getJwtApiKey();
     IosWdaResponseDTO iosWdaResponseDTO;
-    HttpResponse<IosWdaResponseDTO> response =
-      httpClient.get(ServerURLBuilder.wdaDownloadURL(this.agentConfig.getUUID(), device.getUniqueId()),
-        new TypeReference<>() {
-        }, authHeader);
+    HttpResponse<IosWdaResponseDTO> response;
+    if(device.getIsEmulator()) {
+      response = httpClient.get(ServerURLBuilder.wdaEmulatorDownloadURL(this.agentConfig.getUUID()), new TypeReference<>() {}, authHeader);
+    } else {
+      response = httpClient.get(ServerURLBuilder.wdaRealDeviceDownloadURL(this.agentConfig.getUUID(), device.getUniqueId()),
+              new TypeReference<>() {
+              }, authHeader);
+    }
     log.info("Response of wda presigned url fetch request - " + response.getStatusCode());
     if (response.getStatusCode() == HttpStatus.OK.value()) {
       iosWdaResponseDTO = response.getResponseEntity();

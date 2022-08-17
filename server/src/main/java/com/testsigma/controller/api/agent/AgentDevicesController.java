@@ -165,7 +165,7 @@ public class AgentDevicesController {
     String presignedUrl;
     String filePath = storageServiceFactory.getStorageService().downloadFromRemoteUrl(wdaEmulatorRemoteURL.toString());
     storageServiceFactory.getStorageService().addFile("wda/wda_simulator.ipa", new File(filePath));
-    presignedUrl = storageServiceFactory.getStorageService().generatePreSignedURLIfExists("wda/wda_simulator.ipa", StorageAccessLevel.READ, 180).get().toString();
+    presignedUrl = storageServiceFactory.getStorageService().generatePreSignedURL("wda/wda_simulator.ipa", StorageAccessLevel.READ, 180).toString();
     iosWdaResponseDTO.setWdaPresignedUrl(presignedUrl);
     log.info("Ios Wda Response DTO - " + iosWdaResponseDTO);
     return iosWdaResponseDTO;

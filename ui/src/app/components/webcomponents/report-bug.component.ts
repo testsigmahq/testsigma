@@ -21,7 +21,7 @@ export class ReportBugComponent extends BaseComponent implements OnInit {
   public configs: Integrations[] = [];
   public externalMapping: TestCaseResultExternalMapping;
   public externalMappingIssueDetails: TestCaseResultExternalMapping[] = [];
-  public showExternalApplication: String = 'JBR';
+  public showExternalApplication: String = 'ADD_NEW';
   public selectedList: String[] = [];
   public unSelectedList: String[] = [];
   public isButtonClicked: Boolean = false;
@@ -137,9 +137,14 @@ export class ReportBugComponent extends BaseComponent implements OnInit {
             this.showExternalApplication = 'CBR';
           }
           this.fetchIssueDetails();
+          if(!this.showExternalApplication){
+            this.showExternalApplication = this.selectedList[0];
+          }
+
         } else {
-          this.showExternalApplication = this.selectedList[0];
-          this.mappingIssueFindAll()
+          if(this.selectedList?.length && !this.showExternalApplication)
+            this.showExternalApplication = this.selectedList[0];
+            this.mappingIssueFindAll()
         }
       })
   }
@@ -301,6 +306,9 @@ export class ReportBugComponent extends BaseComponent implements OnInit {
   get showWarning() {
     return this?.options?.testCaseResult?.isPassed || this?.options?.testCaseResult?.isQueued || this?.options?.testCaseResult?.isStopped;
   }
+  get showAddPlugIn(){
+    return this.showExternalApplication == 'ADD_NEW';
+  }
 
   public showList(app: String) {
     switch (app) {
@@ -326,6 +334,8 @@ export class ReportBugComponent extends BaseComponent implements OnInit {
         return this.showLinearApplication;
       case 'CBR':
         return this.showClickUpApplication;
+      case 'ADD_NEW':
+        return this.showAddPlugIn;
       default:
         return false;
     }

@@ -16,7 +16,7 @@ public class UpdateTestDataParamWithElementAttributeAction extends ElementAction
     findElement();
     String attributeValue = getElement().getAttribute(getAttribute());
     Assert.isTrue(!(StringUtils.isEmpty(attributeValue)), String.format(FAILURE_EMPTY_VALUE, getAttribute()));
-    String testdataName = getAdditionalData().get("testData").toString();
+    String testdataName = getTestDataPropertiesEntity(TEST_STEP_DATA_MAP_KEY_TEST_DATA).getTestDataName();
     testDataParams.put(testdataName, attributeValue.trim());
     setSuccessMessage(String.format(SUCCESS_MESSAGE, testdataName, attributeValue.trim()));
   }

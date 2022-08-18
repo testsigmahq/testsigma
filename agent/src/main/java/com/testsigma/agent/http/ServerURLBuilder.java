@@ -25,7 +25,7 @@ public class ServerURLBuilder {
   private final static String deviceListURI = agentURI + "/devices";
   private final static String deviceStatusURI = deviceListURI + "/status";
   private final static String deviceDeveloperImageURI = deviceListURI + "/developer/{osVersion}/";
-  private final static String wdaRealDeviceDownloadURI = deviceListURI + "/{deviceUuid}/wda";
+  private final static String wdaRealDeviceDownloadURI = deviceListURI + "/{deviceUuid}/wda_real_device";
   private final static String wdaEmulatorDownloadURI = deviceListURI + "/wda_emulator";
   private final static String xcTestDownloadURI = deviceListURI + "/xctest";
   private final static String executionURI = agentURI + "/execution";

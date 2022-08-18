@@ -146,6 +146,7 @@ public class IosDeviceListener extends DeviceListener {
     try {
       List<MobileDevice> devices = iosDeviceService.simulatorDeviceList();
       for (MobileDevice device : devices) {
+        log.info("Adding device {} to device container", device);
         this.addDevice(device);
       }
     } catch(Exception e) {

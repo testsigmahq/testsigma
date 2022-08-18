@@ -52,6 +52,7 @@ public class WdaService {
         p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"-u", device.getUniqueId(), "install",
                 downloadedWdaFile.getAbsolutePath()}, true);
       }
+      p.waitFor(20, TimeUnit.SECONDS);
       String devicePropertiesJsonString = iosDeviceCommandExecutor.getProcessStreamResponse(p);
       log.info("Output from installing WDA file on the device - " + devicePropertiesJsonString);
       if (devicePropertiesJsonString.contains("ApplicationVerificationFailed") || p.exitValue() == 1) {
@@ -80,6 +81,7 @@ public class WdaService {
       log.info("Downloaded XCTest to local file - " + downloadedXCTestFile.getAbsolutePath());
       Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"xctest", "install", downloadedXCTestFile.getAbsolutePath(),
               "--udid", device.getUniqueId()}, false);
+      p.waitFor(20, TimeUnit.SECONDS);
       String devicePropertiesJsonString = iosDeviceCommandExecutor.getProcessStreamResponse(p);
       log.info("Output from installing XCTest file on the device - " + devicePropertiesJsonString);
       if (p.exitValue() == 1) {

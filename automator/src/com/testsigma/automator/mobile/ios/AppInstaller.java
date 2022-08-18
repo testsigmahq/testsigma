@@ -35,7 +35,7 @@ public class AppInstaller {
       if(isEmulator) {
         Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"install", "--udid", deviceUniqueId,
                 appFile.getAbsolutePath()}, false);
-        p.waitFor(60, TimeUnit.SECONDS);
+        p.waitFor(30, TimeUnit.SECONDS);
         String devicePropertiesJsonString = iosDeviceCommandExecutor.getProcessStreamResponse(p);
         log.info("Output from installing app on the device - " + devicePropertiesJsonString);
         if(devicePropertiesJsonString.contains("not in the bundles supported architectures")) {

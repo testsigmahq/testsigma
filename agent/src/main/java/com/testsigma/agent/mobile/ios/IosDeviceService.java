@@ -101,12 +101,11 @@ public class IosDeviceService {
   }
 
   public List<MobileDevice> simulatorDeviceList() throws AutomatorException, TestsigmaException {
-    log.info("Fetching iOS device list");
+    log.info("Fetching iOS simulator list");
     List<MobileDevice> deviceList = new ArrayList<>();
     IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
     Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"list-targets", "--json"}, false);
     String devicesJsonString = iosDeviceCommandExecutor.getProcessStreamResponse(p);
-    log.info(objectMapperService.convertToJson(devicesJsonString), new TypeReference<>(){});
     String[] devices = devicesJsonString.split("\n");
     for(String deviceJson : devices) {
       JSONObject deviceJsonObject = getSimulatorProperties(deviceJson);
@@ -139,10 +138,7 @@ public class IosDeviceService {
 
   public JSONObject getSimulatorProperties(String deviceJson) throws TestsigmaException {
     try {
-      log.info("Fetching device properties for device - " + deviceJson);
-      JSONObject devicePropertiesJson = new JSONObject(deviceJson);
-      log.info("Fetched device properties for device in json format - " + devicePropertiesJson);
-      return devicePropertiesJson;
+      return new JSONObject(deviceJson);
     } catch (Exception e) {
       throw new TestsigmaException(e.getMessage());
     }

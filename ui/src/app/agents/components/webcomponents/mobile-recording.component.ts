@@ -214,13 +214,8 @@ export class MobileRecordingComponent extends BaseComponent implements OnInit {
             });
           this.mobileSessionId = null;
         }
-        if (error == "Incompatible app and device architecture") {
-          console.log("Incompatible app and device architecture");
-          this.showNotification(NotificationType.Error, this.translate.instant("mobile_recorder.message.incompatible.error"));
-        } else {
-          console.log("Error while creating the session - ", error);
-          this.showNotification(NotificationType.Error, this.translate.instant("mobile_recorder.message.error"));
-        }
+        console.log("Error while creating the session - ", error);
+        this.showNotification(NotificationType.Error, this.translate.instant("mobile_recorder.message.error"));
         this.loadingActions = false;
         this.loading = false;
       }

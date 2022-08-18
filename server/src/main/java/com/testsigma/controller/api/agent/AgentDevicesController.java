@@ -24,10 +24,7 @@ import com.testsigma.mapper.AgentDeviceMapper;
 import com.testsigma.model.Agent;
 import com.testsigma.model.AgentDevice;
 import com.testsigma.model.ProvisioningProfileDevice;
-import com.testsigma.service.AgentDeviceService;
-import com.testsigma.service.AgentService;
-import com.testsigma.service.ProvisioningProfileDeviceService;
-import com.testsigma.service.TestsigmaOSConfigService;
+import com.testsigma.service.*;
 import com.testsigma.util.HttpClient;
 import com.testsigma.util.HttpResponse;
 import com.testsigma.util.ZipUtil;
@@ -61,6 +58,8 @@ public class AgentDevicesController {
   private final StorageServiceFactory storageServiceFactory;
   private final ProvisioningProfileDeviceService provisioningProfileDeviceService;
   private final TestsigmaOSConfigService testsigmaOSConfigService;
+
+  private final ResignService resignWdaService;
 
   @RequestMapping(value = "/status", method = RequestMethod.PUT)
   public void syncInitialDeviceStatus(@PathVariable("agentUuid") String agentUuid) throws TestsigmaDatabaseException,
@@ -130,15 +129,29 @@ public class AgentDevicesController {
     return iosDeveloperImageDTO;
   }
 
-  @RequestMapping(value = "/{deviceUuid}/wda", method = RequestMethod.GET)
+  @RequestMapping(value = "/{deviceUuid}/wda_real_device", method = RequestMethod.GET)
   public IosWdaResponseDTO deviceWdaUrl(@PathVariable String agentUuid, @PathVariable String deviceUuid)
-    throws TestsigmaException {
+          throws TestsigmaException, MalformedURLException {
     log.info(String.format("Received a GET request api/agents/%s/devices/%s/wda", agentUuid, deviceUuid));
     IosWdaResponseDTO iosWdaResponseDTO = new IosWdaResponseDTO();
+
+    ArrayList<Header> headers = new ArrayList<>();
+    headers.add(new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/json"));
+    HttpResponse<String> response = httpClient.get(testsigmaOSConfigService.getUrl() +
+            URLConstants.TESTSIGMA_OS_PUBLIC_WDA_REAL_DEVICE_URL, headers, new TypeReference<>() {
+    });
+    URL wdaRealDeviceURL = new URL(response.getResponseEntity());
+    log.info("Received wda real device remote url from proxy service: " + wdaRealDeviceURL);
+
+
     Agent agent = agentService.findByUniqueId(agentUuid);
     AgentDevice agentDevice = agentDeviceService.findAgentDeviceByUniqueId(agent.getId(), deviceUuid);
     String presignedUrl;
+    String filePath = storageServiceFactory.getStorageService().downloadFromRemoteUrl(wdaRealDeviceURL.toString());
     ProvisioningProfileDevice profileDevice = provisioningProfileDeviceService.findByAgentDeviceId(agentDevice.getId());
+    storageServiceFactory.getStorageService().addFile("wda/"
+            + profileDevice.getProvisioningProfileId() + "/wda.ipa", new File(filePath));
+    resignWdaService.reSignWda(profileDevice.getProvisioningProfile());
     if(profileDevice == null) {
       throw new TestsigmaException("could not find a provisioning profile for this device. Unable to fetch WDA");
     }

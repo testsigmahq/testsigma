@@ -141,18 +141,18 @@ export class ListComponent extends BaseComponent implements OnInit {
     }
   }
 
-  checkForLinkedEnvironments(id) {
+  checkForLinkedEnvironments(id, name?: string) {
     let environmentResults: InfiniteScrollableDataSource;
     environmentResults = new InfiniteScrollableDataSource(this.environmentService, "appUploadId@"+(id ? id : this.selectedUploads.join("#"))+",entityType:TEST_PLAN");
-    waitTillRequestResponds();
+    waitTillRequestResponds(environmentResults, id, name);
     let _this = this;
 
-    function waitTillRequestResponds() {
+    function waitTillRequestResponds(environmentResults: InfiniteScrollableDataSource, id, name?: string) {
       if (environmentResults.isFetching)
-        setTimeout(() => waitTillRequestResponds(), 100);
+        setTimeout(() => waitTillRequestResponds(environmentResults, id, name), 100);
       else {
         if (environmentResults.isEmpty)
-          _this.openDeleteDialog(id);
+          _this.openDeleteDialog(id, name);
         else
           _this.openLinkedUploadsDialog(environmentResults);
       }
@@ -173,13 +173,18 @@ export class ListComponent extends BaseComponent implements OnInit {
     });
   }
 
-  openDeleteDialog(id?) {
+  openDeleteDialog(id?, name?: string) {
     let message = id ? "message.common.confirmation.default" : "uploads.bulk_delete.confirmation.message";
     this.translate.get(message, {FieldName: this.selectedUploads.length}).subscribe((res) => {
       const dialogRef = this.matDialog.open(ConfirmationModalComponent, {
         width: '450px',
         data: {
-          description: res
+          description: res,
+          isPermanentDelete: true,
+          title: name? 'Upload' : 'Uploads',
+          item: 'upload',
+          name: name ? name : 'multiple uploads',
+          note: this.translate.instant('message.common.confirmation.upload_des', {Item:'upload'})
         },
         panelClass: ['matDialog', 'delete-confirm']
       });

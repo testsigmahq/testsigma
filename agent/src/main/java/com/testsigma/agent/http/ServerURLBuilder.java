@@ -25,7 +25,9 @@ public class ServerURLBuilder {
   private final static String deviceListURI = agentURI + "/devices";
   private final static String deviceStatusURI = deviceListURI + "/status";
   private final static String deviceDeveloperImageURI = deviceListURI + "/developer/{osVersion}/";
-  private final static String wdaDownloadURI = deviceListURI + "/{deviceUuid}/wda";
+  private final static String wdaRealDeviceDownloadURI = deviceListURI + "/{deviceUuid}/wda_real_device";
+  private final static String wdaEmulatorDownloadURI = deviceListURI + "/wda_emulator";
+  private final static String xcTestDownloadURI = deviceListURI + "/xctest";
   private final static String executionURI = agentURI + "/execution";
   private final static String executableURI = agentURI + "/driver/executable_path";
   private final static String webServerConfigURI = agentURI + "/webserver/config";
@@ -220,10 +222,24 @@ public class ServerURLBuilder {
     return serverURL + uriComponents.toUriString();
   }
 
-  public static String wdaDownloadURL(String uuid, String deviceUuid) {
+  public static String wdaRealDeviceDownloadURL(String uuid, String deviceUuid) {
     String serverURL = AutomatorConfig.getInstance().getCloudServerUrl();
     UriComponents uriComponents =
-      UriComponentsBuilder.fromUriString(wdaDownloadURI).build().expand(uuid, deviceUuid).encode();
+      UriComponentsBuilder.fromUriString(wdaRealDeviceDownloadURI).build().expand(uuid, deviceUuid).encode();
+    return serverURL + uriComponents.toUriString();
+  }
+
+  public static String wdaEmulatorDownloadURL(String uuid) {
+    String serverURL = AutomatorConfig.getInstance().getCloudServerUrl();
+    UriComponents uriComponents =
+            UriComponentsBuilder.fromUriString(wdaEmulatorDownloadURI).build().expand(uuid).encode();
+    return serverURL + uriComponents.toUriString();
+  }
+
+  public static String XcTestDownloadURL(String uuid) {
+    String serverURL = AutomatorConfig.getInstance().getCloudServerUrl();
+    UriComponents uriComponents =
+            UriComponentsBuilder.fromUriString(xcTestDownloadURI).build().expand(uuid).encode();
     return serverURL + uriComponents.toUriString();
   }
 

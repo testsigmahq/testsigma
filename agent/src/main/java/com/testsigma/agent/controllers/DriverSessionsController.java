@@ -14,7 +14,9 @@ import com.testsigma.agent.exception.TestsigmaException;
 import com.testsigma.agent.request.DriverSessionRequest;
 import com.testsigma.agent.services.AgentService;
 import com.testsigma.agent.services.DriverSessionsService;
+import com.testsigma.automator.constants.AutomatorMessages;
 import com.testsigma.automator.exceptions.AutomatorException;
+import com.testsigma.automator.http.HttpResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,12 +48,19 @@ public class DriverSessionsController {
     if (driverSessionRequest.getMobileSessionId() != null) {
       try {
         String sessionId = driverSessionsService.createSession(driverSessionRequest);
-
         DriverSessionDTO driverSessionDTO = new DriverSessionDTO();
         driverSessionDTO.setSessionId(sessionId);
         driverSessionDTO.setHostname(AgentService.getComputerName());
         return driverSessionDTO;
-      } catch (IOException e) {
+      } catch(AutomatorException e) {
+        if(e.getMessage().equals(AutomatorMessages.MSG_INCOMPATIBLE_DEVICE_AND_APP)) {
+          log.error(e.getMessage());
+          DriverSessionDTO driverSessionDTO = new DriverSessionDTO();
+          driverSessionDTO.setMessage(AutomatorMessages.MSG_INCOMPATIBLE_DEVICE_AND_APP);
+          return driverSessionDTO;
+        }
+        throw e;
+      } catch(IOException e) {
         log.error(e.getMessage(), e);
         throw new AutomatorException(e.getMessage(), e);
       }

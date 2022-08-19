@@ -32,7 +32,11 @@ public interface URLConstants {
 
   String TESTSIGMA_OS_PUBLIC_IOS_IMAGE_FILES_URL = "/api_public/agents/ios_images";
 
-  String TESTSIGMA_OS_PUBLIC_WDA_URL = "/api_public/agents/wda";
+  String TESTSIGMA_OS_PUBLIC_WDA_REAL_DEVICE_URL = "/api_public/agents/wda_real_device";
+
+  String TESTSIGMA_OS_PUBLIC_WDA_EMULATOR_URL = "/api_public/agents/wda_emulator";
+
+  String TESTSIGMA_OS_PUBLIC_XCTEST_URL = "/api_public/agents/xctest";
 
   String TESTSIGMA_OS_PUBLIC_SERVERS_URL = "/api_public/servers";
 

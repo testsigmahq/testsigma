@@ -79,7 +79,7 @@ public class TestsigmaStorageService extends StorageService {
     Calendar cal = Calendar.getInstance();
     cal.add(Calendar.MINUTE, expiryTimeInMinutes);
     PreSignedRequestDTO preSignedRequestDTO = new PreSignedRequestDTO();
-    preSignedRequestDTO.setKey(relativeFilePathFromBase);
+    preSignedRequestDTO.setKey(relativeFilePathFromBase.startsWith("/") ? relativeFilePathFromBase : "/" + relativeFilePathFromBase);
     preSignedRequestDTO.setExpiration(new Timestamp(cal.getTime().getTime()));
     preSignedRequestDTO.setMethod(getHttpMethod(storageAccessLevel));
     HttpResponse<String> response = null;

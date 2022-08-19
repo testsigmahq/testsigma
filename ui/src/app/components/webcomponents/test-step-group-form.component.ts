@@ -130,6 +130,11 @@ export class TestStepGroupFormComponent extends BaseComponent implements OnInit 
       'stepGroupId', new FormControl(this.testStep.stepGroupId, [])
     );
   }
+  get stepGroupDescriptionText(){
+    const tempDescElem = document.createElement('div');
+    tempDescElem.innerHTML = ( this.testStep?.stepGroup?.description || '' ) as string;
+    return tempDescElem?.textContent;
+  }
 
   private createStep() {
     this.testStep.type = TestStepType.STEP_GROUP;

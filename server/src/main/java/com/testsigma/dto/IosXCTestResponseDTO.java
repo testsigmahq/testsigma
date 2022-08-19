@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class IosXCTestResponseDTO {
-    String xcTestLocalPath;
+    String xcTestRemoteUrl;
 }

@@ -11,6 +11,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.http.HttpResponse;
 import com.testsigma.automator.mobile.ios.IosDeviceCommandExecutor;
+import com.testsigma.agent.utils.ZipUtil;
+import java.nio.file.Files;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
@@ -76,8 +78,10 @@ public class WdaService {
     try {
       IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
       log.info("Installing XCTest on device - " + device.getUniqueId());
-      String xcTestLocalPath = fetchXcTestRunnerUrl(device);
-      downloadedXCTestFile = new File(xcTestLocalPath);
+      String xcTestRemotePath = fetchXcTestRunnerUrl(device);
+      File destFolder = Files.createTempDirectory("wda_xctest").toFile();
+      File unZippedFolder = ZipUtil.unZipFile(xcTestRemotePath, destFolder);
+      downloadedXCTestFile = new File(unZippedFolder.getAbsolutePath() + "/WebDriverAgentRunner.xctest");
       log.info("Downloaded XCTest to local file - " + downloadedXCTestFile.getAbsolutePath());
       Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"xctest", "install", downloadedXCTestFile.getAbsolutePath(),
               "--udid", device.getUniqueId()}, false);
@@ -282,8 +286,8 @@ public class WdaService {
     log.info("Response of XCTest presigned url fetch request - " + response.getStatusCode());
     if (response.getStatusCode() == HttpStatus.OK.value()) {
       iosXCTestResponseDTO = response.getResponseEntity();
-      log.info("Fetched XCTest local path - " + iosXCTestResponseDTO.getXcTestLocalPath());
-      return iosXCTestResponseDTO.getXcTestLocalPath();
+      log.info("Fetched XCTest local path - " + iosXCTestResponseDTO.getXcTestRemoteUrl());
+      return iosXCTestResponseDTO.getXcTestRemoteUrl();
     }
     return null;
   }

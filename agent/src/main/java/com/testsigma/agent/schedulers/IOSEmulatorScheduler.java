@@ -24,7 +24,7 @@ public class IOSEmulatorScheduler extends BaseScheduler {
         super(webApplicationContext);
     }
 
-    @Scheduled(cron = "0/15 * * * * *")
+    @Scheduled(cron = "0/20 * * * * *")
     public void run() {
         try {
             Thread.currentThread().setName("IOSEmulatorScheduler");

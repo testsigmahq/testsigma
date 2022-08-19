@@ -27,22 +27,18 @@ import com.testsigma.model.ProvisioningProfileDevice;
 import com.testsigma.service.*;
 import com.testsigma.util.HttpClient;
 import com.testsigma.util.HttpResponse;
-import com.testsigma.util.ZipUtil;
 import com.testsigma.web.request.AgentDeviceRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
-import org.apache.http.HttpStatus;
 import org.apache.http.message.BasicHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.ArrayList;
 
 @Log4j2
@@ -161,11 +157,7 @@ public class AgentDevicesController {
     });
     URL wdaEmulatorRemoteURL = new URL(response.getResponseEntity());
     log.info("Received wda emulator remote url from proxy service: " + wdaEmulatorRemoteURL);
-    String presignedUrl;
-    String filePath = storageServiceFactory.getStorageService().downloadFromRemoteUrl(wdaEmulatorRemoteURL.toString());
-    storageServiceFactory.getStorageService().addFile("wda/wda_simulator.ipa", new File(filePath));
-    presignedUrl = storageServiceFactory.getStorageService().generatePreSignedURL("wda/wda_simulator.ipa", StorageAccessLevel.READ, 180).toString();
-    iosWdaResponseDTO.setWdaPresignedUrl(presignedUrl);
+    iosWdaResponseDTO.setWdaPresignedUrl(wdaEmulatorRemoteURL.toString());
     log.info("Ios Wda Response DTO - " + iosWdaResponseDTO);
     return iosWdaResponseDTO;
   }
@@ -182,9 +174,7 @@ public class AgentDevicesController {
     URL xcTestRemoteURL = new URL(response.getResponseEntity());
     log.info("Received xctest remote url from proxy service: " + xcTestRemoteURL);
     IosXCTestResponseDTO iosXCTestResponseDTO = new IosXCTestResponseDTO();
-    File destFolder = Files.createTempDirectory("wda_xctest").toFile();
-    File unZippedFolder = ZipUtil.unZipFile(xcTestRemoteURL.toString(), destFolder);
-    iosXCTestResponseDTO.setXcTestLocalPath(unZippedFolder.getAbsolutePath() + "/WebDriverAgentRunner.xctest");
+    iosXCTestResponseDTO.setXcTestRemoteUrl(xcTestRemoteURL.toString());
     log.info("Ios XCTest Response DTO - " + iosXCTestResponseDTO);
     return iosXCTestResponseDTO;
   }

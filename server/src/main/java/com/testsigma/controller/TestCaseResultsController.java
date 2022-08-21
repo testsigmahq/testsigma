@@ -9,6 +9,7 @@
 
 package com.testsigma.controller;
 
+import com.testsigma.constants.AutomatorMessages;
 import com.testsigma.dto.TestCaseResultDTO;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.mapper.TestCaseResultMapper;
@@ -52,7 +53,7 @@ public class TestCaseResultsController {
   public TestCaseResultDTO show(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
     log.info("Request /test_case_results/" + id);
     TestCaseResult testCaseResult = testCaseResultService.find(id);
-    if(testCaseResult.getMessage() != null && testCaseResult.getMessage().contains("architecture is unsupported")) {
+    if(testCaseResult.getMessage() != null && testCaseResult.getMessage().contains(AutomatorMessages.MSG_INCOMPATIBLE_DEVICE_AND_APP)) {
       testCaseResult.setMessage("Architecture is unsupported for the selected application. If running on Simulator, try uploading a simulator build");
     }
     return testCaseResultMapper.mapDTO(testCaseResult);

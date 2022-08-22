@@ -10,6 +10,18 @@
     <app-toggle-search-button
       *ngIf="testPlans?.content.length || searchQuery"
       (searchAction)="search($event)"></app-toggle-search-button>
+    <app-sort-by-button
+      [sortByColumns]="sortByColumns"
+      [sortedBy]="sortedBy"
+      [direction]="direction"
+      [translatePreFix]="'test_case.list.sort_by.'"
+      (sortAction)="sortThisBy($event.sortBy, $event.direction)"></app-sort-by-button>
+    <button
+      (click)="openFilter()"
+      [matTooltip]="'hint.message.common.filter' | translate"
+      class="btn icon-btn border-rds-2 ml-14 filter-icon-with-reset mr-15">
+      <i class="filter-icon" [class.filtered]="!!this.query"></i>
+    </button>
     <app-pagination [paginationData]="testPlans" [currentPage]="currentPage"
                     (paginationAction)="fetchTestPlans()"></app-pagination>
   </div>
@@ -20,8 +32,12 @@
   <div *ngIf="testPlans?.content.length">
     <div class="list-header ml-4">
       <div
-        class="ts-col-15"
-        [textContent]="'runs.list_view.last_run' | translate"></div>
+        class="ts-col-15">
+        <app-inline-sort
+          [ascending]="sortedBy!='lastRun'? undefined : direction == ',asc'"
+          [heading]="'runs.list_view.last_run'"
+          (click)="sortThisBy('lastRun', ((sortedBy!='lastRun' || direction == ',desc')?',asc':',desc'))"></app-inline-sort>
+      </div>
       <div class="ts-col-35 pl-10 pr-7 ">
         <app-inline-sort
         [ascending]="sortedBy!='name'? undefined : direction == ',asc'"
@@ -29,11 +45,19 @@
         [heading]="'runs.list_view.title' | translate"></app-inline-sort>
       </div>
       <div
-        class="ts-col-15"
-        [textContent]="'runs.list_view.test_lab' | translate"></div>
+        class="ts-col-15 sort-header">
+        <app-inline-sort
+          [ascending]="sortedBy!='testPlanType'? undefined : direction == ',asc'"
+          [heading]="'runs.list_view.test_lab'"
+          (click)="sortThisBy('testPlanType', ((sortedBy!='testPlanType' || direction == ',desc')?',asc':',desc'))"></app-inline-sort>
+      </div>
       <div
-        class="ts-col-20 px-20"
-        [textContent]="'runs.list_view.last_run_at' | translate"></div>
+        class="ts-col-20 px-20 sort-header">
+        <app-inline-sort
+          [ascending]="sortedBy!='lastRun'? undefined : direction == ',asc'"
+          [heading]="'runs.list_view.last_run_at'"
+          (click)="sortThisBy('lastRun', ((sortedBy!='lastRun' || direction == ',desc')?',asc':',desc'))"></app-inline-sort>
+      </div>
       <div class="ts-col-15"></div>
     </div>
     <div class="card-container">

@@ -44,4 +44,5 @@ public class TestPlanRequest {
   ReRunType reRunType;
   Boolean retrySessionCreation = false;
   Integer retrySessionCreationTimeout;
+  List<String> tags;
 }

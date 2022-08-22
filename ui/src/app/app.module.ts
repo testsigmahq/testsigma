@@ -275,6 +275,10 @@ import { TestPlanSuiteFilterComponent } from './components/plans/test-plan-edito
 import { TestSuiteListItemComponent } from './components/plans/test-plan-editor/test-suite-list-item.component';
 import { FormHeaderComponent } from './components/plans/form-header.component';
 import {ActionTestDataRuntimeVariableSuggestionComponent} from './components/webcomponents/action-test-data-runtime-variable-suggestion.component';
+import {TestCaseMultiSelectComponent} from "./components/webcomponents/test-case-multi-select.component";
+import { FilterFormComponent } from './components/suites/filter-form.component';
+import { FilterFormComponent as ResultFilterFormComponent} from './components/results/filter-form.component';
+import { FilterFormComponent as PlanFilterComponet} from './components/plans/filter-form.component';
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -530,7 +534,11 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     TestPlanSuiteFilterComponent,
     TestSuiteListItemComponent,
     FormHeaderComponent,
-    ActionTestDataRuntimeVariableSuggestionComponent
+    ActionTestDataRuntimeVariableSuggestionComponent,
+    TestCaseMultiSelectComponent,
+    FilterFormComponent,
+    ResultFilterFormComponent,
+    PlanFilterComponet
   ],
   imports: [
     BrowserModule,

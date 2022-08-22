@@ -66,6 +66,8 @@ export class TestPlan extends Base implements PageObject {
 
   @serializable
   public matchBrowserVersion: boolean;
+  @serializable(custom(v => v, v => v))
+  public tags: String[];
   public selected: Boolean;
   public environment: Environment;
 

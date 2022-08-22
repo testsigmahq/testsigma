@@ -35,4 +35,14 @@
       <app-description class="without-label" [formCtrlName]="testPlanForm.controls.description"></app-description>
     </div>
   </div>
+
+  <div class="form-group p-0">
+    <app-tags-chip-list
+      [entityId]="testPlan.id"
+      [service]="tagService"
+      (onValueChange)="setTags($event)"
+    ></app-tags-chip-list>
+    <label class="control-label" [translate]="'testcase.list.tags'"></label>
+  </div>
 </form>
+

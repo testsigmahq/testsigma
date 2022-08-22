@@ -233,7 +233,7 @@ export class TestStep extends Base implements PageObject {
                 value = '!|' + value + '|';
                 break;
             }
-            parsedStep = parsedStep.replace(referenceName, '<TSTESTDAT ref="' + parameter.reference + '">' + value + '</TSTESTDAT>')
+            parsedStep = parsedStep.replace(referenceName, '<TSTESTDAT ref="' + parameter.reference + '">' + this.getTestData(value) + '</TSTESTDAT>')
           } else if (parameter.isElement) {
             parsedStep = parsedStep.replace(referenceName, '<TSELEMENT ref="' + parameter.reference + '">' + this.addonElements[parameter.reference]?.name + '</TSELEMENT>')
           }
@@ -413,7 +413,7 @@ export class TestStep extends Base implements PageObject {
   private replaceTestDataRaw(parsedStep: String): String {
     let testData = this.testDataVal ? this.testDataVal : '';
     let span_class= this.template.allowedValues?'action-selected-data':'action-test-data';
-    return parsedStep.replace(new RegExp("\\${.*?}"), "<span class="+span_class+">"+testData+"</span>")
+    return parsedStep.replace(new RegExp("\\${.*?}"), "<span class="+span_class+">"+this.getTestData(testData)+"</span>")
   }
 
   private replaceElement(parsedStep: String): String {
@@ -592,6 +592,19 @@ export class TestStep extends Base implements PageObject {
     return this.priority == TestStepPriority.MAJOR;
   };
 
+  get isCoordinateStep() {
+    return true;
+    let template_ids = [1060, 10164, 20091, 20139, 20164, 30090, 30128, 30162];
+    return template_ids.includes(this.naturalTextActionId as number);
+  }
+
+  formatCoordinates(coordinates: string) {
+    if(!this.isCoordinateStep) return (coordinates || '');
+    return (coordinates || '').split(/\s*,\s*/).map(num=> parseFloat(num).toFixed(2)).join(', ');
+  }
   public runTimeDataList: any[];
 
+  private getTestData(value: any) {
+    return this.isCoordinateStep? this.formatCoordinates(value):value;
+  }
 }

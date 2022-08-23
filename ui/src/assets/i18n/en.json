@@ -472,6 +472,8 @@
   "execution.type.PARALLEL": "Parallel Testing",
   "execution.type.DISTRIBUTED": "Distributed Testing",
   "result.test_step": "Test Steps",
+  "result.test_step.executed": "Test Steps (Executed)",
+  "result.test_step.current": "Test Steps (Current)",
   "result.test_cases": "Test Cases",
   "result.hint.click.here.refresh": "Click here to refresh",
   "result.hint.click.here": "Click here",

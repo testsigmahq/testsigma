@@ -156,9 +156,9 @@ export class UsageDetailsComponent extends BaseComponent implements OnInit {
     })
   }
   private fetchTestCasResultForTestCaseName() {
-    let adhocResultIds = this.runsArray.filter((testPlanResult:TestPlanResult ) => testPlanResult?.testPlan.entityType== "ADHOC_EXECUTION")
+    let adhocResultIds = this.runsArray.filter((testPlanResult:TestPlanResult ) => testPlanResult?.testPlan.entityType== "ADHOC_TEST_PLAN")
       .map((testPlanResult:TestPlanResult ) => testPlanResult.id);
-    this.testCaseResultService.findAll("executionResultId@" + adhocResultIds.join("#")).subscribe((res: Page<TestCaseResult>) => {
+    this.testCaseResultService.findAll("testPlanResultId@" + adhocResultIds.join("#")).subscribe((res: Page<TestCaseResult>) => {
       this.runsList.subscribe(array => {
         array.forEach((result : TestPlanResult) => {
           let testCaseResult = res.content.find(testCaseResult => testCaseResult.testPlanResultId == result.id)

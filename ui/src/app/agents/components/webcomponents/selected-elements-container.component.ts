@@ -46,7 +46,7 @@ export class SelectedElementsContainerComponent{
 
   public tap(mobileElement: MobileElement) {
     this.beforeAction();
-    if (mobileElement?.text.length <4 && mobileElement?.text.length>0)
+    if (mobileElement?.text?.length <4 && mobileElement?.text?.length>0)
       mobileElement.text = mobileElement.text +'-'+ this.getCurrentTimeStamp();
     this.devicesService.tapElement(this.sessionId, mobileElement)
       .subscribe({

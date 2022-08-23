@@ -42,7 +42,7 @@ export class ActionElementSuggestionComponent implements OnInit {
     private elementService: ElementService,
     private matModal: MatDialog,
     private mobileRecorderEventService: MobileRecorderEventService,
-    @Inject(MAT_DIALOG_DATA) public option: { version: WorkspaceVersion, testCase: TestCase, testCaseResultId?:number, isDryRun: boolean, isStepRecordView: boolean},
+    @Inject(MAT_DIALOG_DATA) public option: { version: WorkspaceVersion, testCase: TestCase, testCaseResultId?:number, isDryRun: boolean, isStepRecordView: boolean, previousStepElementName?:string},
   ) {
     this.workspaceVersion = this.option?.version;
   }
@@ -67,6 +67,9 @@ export class ActionElementSuggestionComponent implements OnInit {
     } else {
       this.isQueryBased = false
     }
+    if(this.option.previousStepElementName) {
+      searchName += ",previousStepElementName:" + this.option.previousStepElementName;
+    }
 
     this.elements = new InfiniteScrollableDataSource(this.elementService, "workspaceVersionId:"+this.option.version.id+searchName, undefined, 50);
     this.setNewElement(term)
@@ -85,7 +88,9 @@ export class ActionElementSuggestionComponent implements OnInit {
     } else {
       this.isQueryBased = false
     }
-
+    if(this.option.previousStepElementName) {
+      searchName += ",previousStepElementName:" + this.option.previousStepElementName;
+    }
     this.elements = new InfiniteScrollableDataSource(this.elementService, "workspaceVersionId:"+this.option.version.id+searchName, undefined, 50);
     this.setNewElement(term);
   }

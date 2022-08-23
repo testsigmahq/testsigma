@@ -1272,13 +1272,22 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   //   }
   // }
 
+  private getPreviousStepElement() {
+    for (let i = this.testStep.position - 1; i >= 0; i--) {
+      let elementName = this.testSteps.content[i].element;
+      if(elementName) {
+        return elementName;
+      }
+    }
+  }
   private openElementsPopup(targetElement?) {
     let sendDetails = {
       version: this.version,
       testCase: this.testCase,
       testCaseResultId: this.testCaseResultId,
       isDryRun: this.isDryRun,
-      isStepRecordView: this.stepRecorderView
+      isStepRecordView: this.stepRecorderView,
+      previousStepElementName:  this.getPreviousStepElement()
     };
     if (this.stepRecorderView) {
       if(targetElement)

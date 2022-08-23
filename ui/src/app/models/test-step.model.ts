@@ -593,7 +593,6 @@ export class TestStep extends Base implements PageObject {
   };
 
   get isCoordinateStep() {
-    return true;
     let template_ids = [1060, 10164, 20091, 20139, 20164, 30090, 30128, 30162];
     return template_ids.includes(this.naturalTextActionId as number);
   }

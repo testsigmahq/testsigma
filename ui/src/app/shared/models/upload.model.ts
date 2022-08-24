@@ -1,10 +1,8 @@
 import {Base} from "./base.model";
 import {PageObject} from "./page-object";
-import {deserialize, serializable} from 'serializr';
-import {UploadType} from "../enums/upload-type.enum";
-import {PlatformType} from "../enums/platform-type.enum";
-import {UploadStatus} from "../enums/upload-status.enum";
+import {deserialize, optional, serializable} from 'serializr';
 import {UploadVersion} from "./upload-version.model";
+import {SupportedDeviceType} from "../../agents/enums/supported-device-type";
 
 export class Upload extends Base implements PageObject {
   @serializable
@@ -12,6 +10,9 @@ export class Upload extends Base implements PageObject {
 
   @serializable
   public latestVersionId: number;
+
+  @serializable(optional())
+  public supportedDeviceType: SupportedDeviceType = SupportedDeviceType.IOS_DEVICE;
 
   public selected: Boolean;
   public filePathCopied: boolean;

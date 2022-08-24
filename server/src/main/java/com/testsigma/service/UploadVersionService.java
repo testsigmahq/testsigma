@@ -151,7 +151,7 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
       for (UploadVersion version : versions) {
         if (version.getUploadType() == UploadType.IPA) {
           ProvisioningProfileUpload profileUpload = profileUploadService.findByDeviceIdAndUploadId(deviceId,
-            version.getUploadId());
+            version.getUploadId()).get();
           version.setSigned((profileUpload != null));
         }
       }

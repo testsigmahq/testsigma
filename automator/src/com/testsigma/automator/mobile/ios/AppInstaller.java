@@ -1,5 +1,6 @@
 package com.testsigma.automator.mobile.ios;
 
+import com.testsigma.automator.constants.AutomatorMessages;
 import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.http.HttpClient;
 import com.testsigma.automator.mobile.MobileApp;
@@ -25,15 +26,25 @@ public class AppInstaller {
     this.httpClient = httpClient;
   }
 
-  public String installApp(String deviceName, String deviceUniqueId, String appUrl) throws AutomatorException {
+  public String installApp(String deviceName, String deviceUniqueId, String appUrl, Boolean isEmulator) throws AutomatorException {
     File appFile = null;
     log.info(String.format("Install app %s on device %s", appUrl, deviceName));
     try {
       appFile = downloadApp(appUrl);
       String bundleId = getAppBundleId(appFile);
-
+      if(isEmulator) {
+        Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"install", "--udid", deviceUniqueId,
+                appFile.getAbsolutePath()}, false);
+        p.waitFor(30, TimeUnit.SECONDS);
+        String devicePropertiesJsonString = iosDeviceCommandExecutor.getProcessStreamResponse(p);
+        log.info("Output from installing app on the device - " + devicePropertiesJsonString);
+        if(devicePropertiesJsonString.contains("not in the bundles supported architectures")) {
+          throw new AutomatorException(AutomatorMessages.MSG_INCOMPATIBLE_DEVICE_AND_APP);
+        }
+        return bundleId;
+      }
       Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"-u", deviceUniqueId, "install",
-        appFile.getAbsolutePath()});
+        appFile.getAbsolutePath()}, true);
       p.waitFor(60, TimeUnit.SECONDS);
       String installOutput = iosDeviceCommandExecutor.getProcessStreamResponse(p);
       log.info(installOutput);
@@ -75,7 +86,7 @@ public class AppInstaller {
   public String getAppBundleId(File appFile) throws Exception {
     String bundleId = null;
     log.info("Fetching bundle id from app - " + appFile.getAbsolutePath());
-    Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"parse", appFile.getAbsolutePath()});
+    Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"parse", appFile.getAbsolutePath()}, true);
     BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
     String line;
     while ((line = br.readLine()) != null) {
@@ -120,7 +131,7 @@ public class AppInstaller {
     List<MobileApp> apps = new ArrayList<>();
     log.info("Fetching list of mobile apps on device - " + deviceName);
     try {
-      Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"-u", deviceUniqueId, "applist"});
+      Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"-u", deviceUniqueId, "applist"}, true);
       BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
       String line;
       while ((line = br.readLine()) != null) {

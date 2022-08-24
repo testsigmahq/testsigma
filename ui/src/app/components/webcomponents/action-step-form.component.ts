@@ -201,7 +201,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     this.subscribeMobileRecorderEvents();
     this.mobileRecorderEventService.returnData.subscribe(res => {
       this.mobileRecorderEventService.setEmptyAction();
-      if(res.type == 'element') {
+      if(res.type == 'element' && this.mobileRecorderEventService.currentlyTargetElement) {
         let name = typeof res.data == "string" ? res.data : res.data.name;
         this.assignElement(name, this.mobileRecorderEventService.currentlyTargetElement);
       }else if(res.type == TestDataType.environment) {
@@ -1280,9 +1280,9 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       isDryRun: this.isDryRun,
       isStepRecordView: this.stepRecorderView
     };
+    if(targetElement)
+      this.mobileRecorderEventService.currentlyTargetElement = targetElement;
     if (this.stepRecorderView) {
-      if(targetElement)
-        this.mobileRecorderEventService.currentlyTargetElement = targetElement;
       this.mobileRecorderEventService.suggestionContent.next(Object.assign(sendDetails, {
         content: 'suggestionElement'
       }));

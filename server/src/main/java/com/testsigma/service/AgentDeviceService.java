@@ -104,6 +104,10 @@ public class AgentDeviceService {
 
   public void setProvisionedFlag(List<AgentDeviceDTO> agentDeviceDTOs) {
     for (AgentDeviceDTO agentDeviceDTO : agentDeviceDTOs) {
+      if(agentDeviceDTO.getIsEmulator()) {
+        agentDeviceDTO.setProvisioned(true);
+        continue;
+      }
       ProvisioningProfileDevice profileDevice = profileDeviceService.findByAgentDeviceId(agentDeviceDTO.getId());
       agentDeviceDTO.setProvisioned(profileDevice != null);
     }

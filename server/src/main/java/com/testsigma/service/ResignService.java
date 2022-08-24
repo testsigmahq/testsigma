@@ -51,17 +51,27 @@ public class ResignService {
   private final StorageServiceFactory storageServiceFactory;
   private final TestsigmaOSConfigService testsigmaOSConfigService;
 
-  public void reSignWda(ProvisioningProfile profile) throws TestsigmaException {
+  public void reSignWda(ProvisioningProfile profile) throws TestsigmaException, MalformedURLException {
+    ArrayList<Header> headers = new ArrayList<>();
+    headers.add(new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/json"));
+    HttpResponse<String> response = httpClient.get(testsigmaOSConfigService.getUrl() +
+            URLConstants.TESTSIGMA_OS_PUBLIC_WDA_REAL_DEVICE_URL, headers, new TypeReference<>() {
+    });
+    URL wdaRealDeviceURL = new URL(response.getResponseEntity());
+    log.info("Received wda real device remote url from proxy service: " + wdaRealDeviceURL);
+    String filePath = storageServiceFactory.getStorageService().downloadFromRemoteUrl(wdaRealDeviceURL.toString());
+    storageServiceFactory.getStorageService().addFile("wda/"
+            + profile.getId() + "/wda.ipa", new File(filePath));
     log.info(String.format("Resigning wda.ipa file for provisioning profile [%s] - [%s]", profile.getId(),
       profile.getName()));
     certificateService.setPreSignedURLs(profile);
     String ipaName = profile.getId() + "_wda";
     String resignedPathPrefix = "wda/" + profile.getId() + "/wda.ipa";
     if (storageServiceFactory.getStorageService().getStorageType() == StorageType.ON_PREMISE) {
-      File resignedIpa = resignUsingFiles(profile, ipaName, commonWdaS3Path());
+      File resignedIpa = resignUsingFiles(profile, ipaName, commonWdaRealDeviceS3Path());
       storageServiceFactory.getStorageService().addFile(resignedPathPrefix, resignedIpa);
     } else {
-      resignUsingUrls(profile, ipaName, commonWdaS3Path(),
+      resignUsingUrls(profile, ipaName, commonWdaRealDeviceS3Path(),
         storageServiceFactory.getStorageService().generatePreSignedURL(resignedPathPrefix, StorageAccessLevel.WRITE, 60));
     }
   }
@@ -123,11 +133,11 @@ public class ResignService {
     }
   }
 
-  public URL commonWdaS3Path() throws TestsigmaException {
+  public URL commonWdaRealDeviceS3Path() throws TestsigmaException {
     ArrayList<Header> headers = new ArrayList<>();
     headers.add(new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/json"));
     HttpResponse<String> response = httpClient.get(testsigmaOSConfigService.getUrl() +
-      URLConstants.TESTSIGMA_OS_PUBLIC_WDA_URL, headers, new TypeReference<>() {
+      URLConstants.TESTSIGMA_OS_PUBLIC_WDA_REAL_DEVICE_URL, headers, new TypeReference<>() {
     });
     try {
       return new URL(response.getResponseEntity());

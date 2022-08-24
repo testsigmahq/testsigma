@@ -94,7 +94,7 @@ public class Launcher {
         command = launcher.agentStartCommand(launcher.wrapperServer.getLocalPort());
         launcher.agentProcess = launcher.startAgentProcess(command);
         log.debug("Waiting for Agent to start...");
-        int agentStartupChecks = 60;
+        int agentStartupChecks = 600;
 
         while (agentStartupChecks > 0) {
           try {

@@ -42,6 +42,7 @@ public class AutomatorMessages {
   public static final String MSG_REST_ERROR_PATH = "Content for path ?1 doesn't match with the expected value";
   public static final String MSG_REST_ERROR_BODY_EMPTY = "No Test body provided to validate response";
   public static final String MSG_REST_SCHEMA_ERROR_EMPTY = "No schema provided to validate response";
+  public static final String MSG_INCOMPATIBLE_DEVICE_AND_APP = "Incompatible app and device architecture";
   // Used in ActionConstants check for dependencies.
 
   public static final String KEYWORD_GO_TO = "Navigate to";

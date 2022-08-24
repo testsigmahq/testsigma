@@ -66,7 +66,7 @@ public class DeveloperImageService {
     }
     IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
     Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"-u", device.getUniqueId(), "developer",
-      developerImageDirectory});
+      developerImageDirectory}, true);
     String mountCommandOutput = iosDeviceCommandExecutor.getProcessStreamResponse(p);
     log.info("Response from mount developer image on device - " + mountCommandOutput);
 

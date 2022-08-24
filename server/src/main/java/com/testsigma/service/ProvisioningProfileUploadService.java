@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 @Log4j2
 @Service
@@ -30,9 +31,12 @@ public class ProvisioningProfileUploadService {
     return repository.findAllByUploadVersionId(uploadId);
   }
 
-  public ProvisioningProfileUpload findByDeviceIdAndUploadId(Long deviceId, Long uploadId) {
+  public Optional<ProvisioningProfileUpload> findByDeviceIdAndUploadId(Long deviceId, Long uploadId) {
     ProvisioningProfileDevice profile = provisioningProfileDeviceService.findByAgentDeviceId(deviceId);
-    return this.repository.findByProvisioningProfileIdAndUploadVersionId(profile.getProvisioningProfileId(), uploadId);
+    if(profile == null) {
+      return Optional.empty();
+    }
+    return Optional.of(this.repository.findByProvisioningProfileIdAndUploadVersionId(profile.getProvisioningProfileId(), uploadId));
   }
 
   public void create(ProvisioningProfile profile, UploadVersion version) {

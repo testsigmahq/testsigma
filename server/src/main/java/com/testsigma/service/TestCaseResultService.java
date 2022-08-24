@@ -57,6 +57,10 @@ public class TestCaseResultService {
     return this.testCaseResultRepository.findAllByTestPlanResultId(testPlanResultId);
   }
 
+  public List<TestCaseResult> findAllBySuiteResultIdAndIsDataDrivenTrueAndResultIsNot(Long parentTestCaseId, ResultConstant result){
+    return this.testCaseResultRepository.findAllBySuiteResultIdAndIsDataDrivenTrueAndResultIsNot(parentTestCaseId, result);
+  }
+
   public Timestamp findMinTimeStampByEnvironmentResultId(Long environmentResultId) {
     return this.testCaseResultRepository.findMinTimeStampByEnvironmentResultId(environmentResultId);
   }

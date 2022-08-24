@@ -34,6 +34,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -42,6 +43,8 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 
 @Data
@@ -89,23 +92,17 @@ public class AgentExecutionService {
   public AbstractTestPlan testPlan;
   private JSONObject runTimeData;
   private TestPlanResult testPlanResult;
-
   private Boolean isReRun = Boolean.FALSE;
-
   private ReRunType reRunType = ReRunType.NONE;
-
   private Long parentTestPlanResultId;
-
   private List<TestDeviceResult> testDeviceResultsReRunList;
-
   private List<TestSuiteResult> testSuiteResultsReRunList;
-
   private List<TestCaseResult> testCaseResultsReRunList;
-
   private Long scheduleId;
-
   private ExecutionTriggeredType triggeredType = ExecutionTriggeredType.MANUAL;
   private final WorkspaceVersionService workspaceVersionService;
+  private List<TestCaseDataDrivenResult> dataDrivenResultsReRunList;
+  private Boolean isDataDrivenRerun;
 
 
   // ################################################  START  ###################################################
@@ -280,23 +277,25 @@ public class AgentExecutionService {
                                                  TestSuiteResult testSuiteResult,
                                                  TestCaseResult parentTestCaseResult) throws TestsigmaException {
     log.info("Creating Data driven TestcaseResult for testcase:" + testCase.getName());
+    TestPlanResult testPlanResult = testPlanResultService.find(testDeviceResult.getTestPlanResultId());
+    isDataDrivenRerun = testDeviceResult.getReRunParentId() != null;
     TestData testData = testCase.getTestData();
     List<TestDataSet> testDataSets = testData.getData();
-    int start = testCase.getTestDataStartIndex() != null && testCase.getTestDataStartIndex() != -1 ? testCase.getTestDataStartIndex() : 0;
-    int end = testCase.getTestDataEndIndex() != null && testCase.getTestDataStartIndex() != -1  ? testCase.getTestDataEndIndex() : testDataSets.size() - 1;
-    for (int i = start; i <= end && i < testDataSets.size(); i++) {
-      testCase.setIsDataDriven(false);
-      TestDataSet testDataSet = testDataSets.get(i);
-      testCase.setIsDataDriven(false);
-      testCase.setTestDataStartIndex(testDataSets.indexOf(testDataSet));
-      TestCaseResult testCaseResult = createTestCaseResult(testSuite, testCase, testDeviceResult, testSuiteResult,
-        parentTestCaseResult);
-      if (testCaseResult != null) {
-        createTestCaseDataDrivenResult(testDataSet, testCaseResult);
+    if(isDataDrivenRerun){
+      log.info("Creating data driven re run iteration results for test case - " + parentTestCaseResult.getId());
+      this.createTestCaseDataDrivenReRunResult(testPlanResult, testDataSets, testCase, testSuite, testDeviceResult,
+              testSuiteResult, parentTestCaseResult);
+    } else {
+      int start = testCase.getTestDataStart();
+      int end = testCase.getTestDataEnd(testDataSets.size());
+      for (int i = start; i <= end && i < testDataSets.size(); i++) {
+        TestDataSet testDataSet = testDataSets.get(i);
+        this.createTestCaseIterationResult(testDataSets, testDataSet, testCase, testSuite, testDeviceResult,
+                testSuiteResult, parentTestCaseResult);
       }
+      testCase.setTestDataStartIndex(start);
     }
     testCase.setIsDataDriven(true);
-    testCase.setTestDataStartIndex(start);
   }
 
   private TestCaseDataDrivenResult createTestCaseDataDrivenResult(TestDataSet testDataSet, TestCaseResult testCaseResult) {
@@ -813,7 +812,7 @@ public class AgentExecutionService {
     testDeviceResultsReRunList = new ArrayList<>();
     if (getReRunType() == ReRunType.ALL_TESTS) {
       testDeviceResultsReRunList = testDeviceResultService.findAllByTestPlanResultId(this.getParentTestPlanResultId());
-    } else if (getReRunType() == ReRunType.ONLY_FAILED_TESTS) {
+    } else if (ReRunType.runFailedTestCases(getReRunType())) {
       testDeviceResultsReRunList = testDeviceResultService.findAllByTestPlanResultIdAndResultIsNot
         (this.getParentTestPlanResultId(), ResultConstant.SUCCESS);
     }
@@ -827,7 +826,7 @@ public class AgentExecutionService {
       if (parentTestDeviceResult != null) {
         if (getReRunType() == ReRunType.ALL_TESTS) {
           testSuiteResultsReRunList = testSuiteResultService.findAllByEnvironmentResultId(parentTestDeviceResult.getId());
-        } else if (getReRunType() == ReRunType.ONLY_FAILED_TESTS) {
+        } else if (ReRunType.runFailedTestCases(getReRunType())) {
           failedTestSuites = testSuiteResultService.findAllByEnvironmentResultIdAndResultIsNot
             (parentTestDeviceResult.getId(), ResultConstant.SUCCESS);
           if (failedTestSuites.size() > 0) {
@@ -877,9 +876,15 @@ public class AgentExecutionService {
       if (parentTestSuiteResult != null) {
         if (getReRunType() == ReRunType.ALL_TESTS || isTestSuiteAPrerequisite(parentTestSuiteResult)) {
           testCaseResultsReRunList = testCaseResultService.findAllBySuiteResultId(parentTestSuiteResult.getId());
-        } else if (getReRunType() == ReRunType.ONLY_FAILED_TESTS) {
-          failedTestCases = testCaseResultService.findAllBySuiteResultIdAndResultIsNot
-            (parentTestSuiteResult.getId(), ResultConstant.SUCCESS);
+        } else if (ReRunType.runFailedTestCases(getReRunType())) {
+          if(getReRunType() == ReRunType.ONLY_FAILED_ITERATIONS_IN_FAILED_TESTS) {
+            log.info("Fetching all failed data driven test case results re run list for suite result id - " + parentTestSuiteResult.getId());
+            failedTestCases = testCaseResultService.findAllBySuiteResultIdAndIsDataDrivenTrueAndResultIsNot(parentTestSuiteResult.getId(), ResultConstant.SUCCESS);
+          }
+          else {
+            log.info("Fetching all failed test case results re run list for suite result id - " + parentTestSuiteResult.getId());
+            failedTestCases = testCaseResultService.findAllBySuiteResultIdAndResultIsNot(parentTestSuiteResult.getId(), ResultConstant.SUCCESS);
+          }
           if (failedTestCases.size() > 0) {
             for (TestCaseResult testCaseResult : failedTestCases) {
               List<Long> testCasePreRequisiteIds = findTestCasePreRequisiteIds(testCaseResult, new ArrayList<>(), 0);
@@ -1463,5 +1468,62 @@ public class AgentExecutionService {
       }
     }
     return false;
+  }
+
+  private void createTestCaseDataDrivenReRunResult(TestPlanResult result, List<TestDataSet> testDataSets,
+                                                   TestCase testCase, AbstractTestSuite testSuite,
+                                                   TestDeviceResult environmentResult, TestSuiteResult testSuiteResult,
+                                                   TestCaseResult parentTestCaseResult) throws DataIntegrityViolationException, TestsigmaException {
+    if(ReRunType.runAllIterations(result.getReRunType())){
+      log.info("Fetching all iteration re run list of test case result id - " + parentTestCaseResult.getReRunParentId());
+      dataDrivenResultsReRunList = this.testCaseDataDrivenResultService.findAllByTestCaseResultId(parentTestCaseResult.getReRunParentId());
+    }
+    else if(ReRunType.runFailedIterations(result.getReRunType())) {
+      log.info("Fetching all failed iteration re run list of test case result id - " + parentTestCaseResult.getReRunParentId());
+      dataDrivenResultsReRunList = this.testCaseDataDrivenResultService.findByTestCaseResultIdAndResultNot(parentTestCaseResult.getReRunParentId(),
+              ResultConstant.SUCCESS);
+    }
+    Set<String> setNames = dataDrivenResultsReRunList.stream().map(TestCaseDataDrivenResult::getTestDataName).collect(Collectors.toSet());
+    List<TestDataSet> failedIterationFailedSets = new ArrayList<>();
+    List<TestDataSet> parentTestCaseDataSets = parentTestCaseResult.getTestCase().getTestData().getData();
+    for(TestDataSet parentTestDataSet : parentTestCaseDataSets) {
+      if(setNames.contains(parentTestDataSet.getName())) {
+        failedIterationFailedSets.add(parentTestDataSet);
+      }
+    }
+    for (TestDataSet testDataSet : failedIterationFailedSets) {
+      this.createTestCaseIterationResult(testDataSets, testDataSet, testCase, testSuite, environmentResult,
+              testSuiteResult, parentTestCaseResult);
+    }
+  }
+
+  private void createTestCaseIterationResult(List<TestDataSet> testDataSets, TestDataSet testDataSet,
+                                             TestCase testCase, AbstractTestSuite testSuite,
+                                             TestDeviceResult environmentResult, TestSuiteResult testSuiteResult,
+                                             TestCaseResult parentTestCaseResult) throws DataIntegrityViolationException, TestsigmaException {
+    testCase.setIsDataDriven(false);
+    testCase.setTestDataStartIndex(testDataSets.indexOf(testDataSet));
+    log.info("Populating DataDrivenTestcaseResult for test data set - " + testDataSet);
+    TestCaseResult testCaseResult = createTestCaseResult(testSuite, testCase, environmentResult, testSuiteResult,
+            parentTestCaseResult);
+    if (testCaseResult != null)
+      createTestCaseDataDrivenResult(testDataSet, testCaseResult);
+    if(isDataDrivenRerun)
+      setReRunParentId(testCaseResult, testDataSet, parentTestCaseResult.getReRunParentId());
+  }
+
+  private void setReRunParentId(TestCaseResult testCaseResult, TestDataSet testDataSet, Long parentResultId ){
+    log.info("Populating re-run parentId for the data driven iteration result -" + testCaseResult.getId());
+    TestCaseDataDrivenResult result = this.getTestCaseDataDrivenResult(testDataSet.getName(), parentResultId);
+    testCaseResult.setReRunParentId(result.getIterationResultId());
+    this.testCaseResultService.create(testCaseResult);
+  }
+
+  private TestCaseDataDrivenResult getTestCaseDataDrivenResult(String setName, Long parentTestCaseId){
+    Predicate<TestCaseDataDrivenResult> name = dResult -> Objects.equals(dResult.getTestDataName(), setName);
+    Predicate<TestCaseDataDrivenResult> parent = dResult -> Objects.equals(dResult.getTestCaseResultId(), parentTestCaseId);
+    Predicate<TestCaseDataDrivenResult> resultPredicate = name.and(parent);
+    List<TestCaseDataDrivenResult> testCaseDataDrivenResult = dataDrivenResultsReRunList.stream().filter(resultPredicate).collect(Collectors.toList());
+    return testCaseDataDrivenResult.get(0);
   }
 }

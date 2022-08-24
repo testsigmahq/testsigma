@@ -35,6 +35,8 @@ public interface TestCaseResultRepository extends JpaRepository<TestCaseResult, 
 
   List<TestCaseResult> findAllByEnvironmentResultId(Long environmentResultId);
 
+  List<TestCaseResult> findAllBySuiteResultIdAndIsDataDrivenTrueAndResultIsNot(Long parentTestCaseId, ResultConstant result);
+
   List<TestCaseResult> findAllBySuiteResultIdAndIsVisuallyPassedIsNull(Long id);
 
   List<TestCaseResult> findAllBySuiteResultIdAndIsVisuallyPassed(Long suiteResultId, boolean visualResult);

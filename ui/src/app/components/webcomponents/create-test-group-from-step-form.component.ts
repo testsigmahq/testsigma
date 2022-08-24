@@ -98,7 +98,7 @@ export class CreateTestGroupFromStepFormComponent extends BaseComponent implemen
       (testCase) => {
         this.translate.get('test_step.copy_as.step_group.success').subscribe((res: string) => {
           this.showNotification(NotificationType.Success, res);
-          this.dialogRef.close(testCase);
+          this.dialogRef.close({testCase: testCase, isReplace: isReplace});
           this.saving = false;
         });
       },
@@ -112,12 +112,20 @@ export class CreateTestGroupFromStepFormComponent extends BaseComponent implemen
   }
 
   get checkSelectionContinue() {
-    let lastPosition = 0;
-    let sortedByPosition = this.options.steps.sort((test:TestStep, test2:TestStep) => test.position - test2.position);
-    let isContinueSteps = sortedByPosition.filter((item: TestStep) => {
-      lastPosition = !lastPosition ? item.position : lastPosition
-      return !((lastPosition != item.position && item.position - lastPosition == 1) || lastPosition == item.position);
-    });
-    return !isContinueSteps.length;
+    let lastPosition = null;
+    if(this.options.steps.length > 1) {
+      let sortedByPosition = this.options.steps.sort((test: TestStep, test2: TestStep) => test.position - test2.position);
+      let isContinueSteps = sortedByPosition.filter((item: TestStep) => {
+        lastPosition = lastPosition == null ? item.position : lastPosition
+        if ((lastPosition != item.position && item.position - lastPosition == 1) || lastPosition == item.position) {
+          lastPosition = item.position;
+          return false;
+        }
+        return true
+      });
+      return !isContinueSteps.length;
+    } else {
+      return true;
+    }
   }
 }

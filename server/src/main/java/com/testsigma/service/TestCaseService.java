@@ -337,7 +337,7 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
     step.setTestCaseId(currentTestCase.getId());
     step.setParentId(steps.get(0).getParentId() != null ? steps.get(0).getParentId() : null);
     step.setType(TestStepType.STEP_GROUP);
-    //step.setTestComponentId(testCase.getId());
+    step.setStepGroupId(testCase.getId());
     step.setId(null);
     if (step.getConditionType() != null && TestStepConditionType.CONDITION_ELSE_IF.equals(step.getConditionType())
             && step.getParentId() == null) {

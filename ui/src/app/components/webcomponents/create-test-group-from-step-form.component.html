@@ -47,17 +47,15 @@
       [translate]="'btn.common.close'">
     </button>
     <button
-      appAsyncBtn
-      [isLoading]="saving || !stepGroupForm.valid  || containsStepGroup() || canBtnDisable()"
+      [disabled]="saving || !stepGroupForm.valid  || containsStepGroup() || canBtnDisable()"
       class="theme-btn-primary"
       type="submit"
       (click)="saveAsStepGroup(false)"
       [translate]="saving ? 'message.common.saving' : 'btn.common.create'">
     </button>
     <button
-      appAsyncBtn
       *ngIf="checkSelectionContinue"
-      [isLoading]="saving || !stepGroupForm.valid  || containsStepGroup() || canBtnDisable()"
+      [disabled]="saving || !stepGroupForm.valid  || containsStepGroup() || canBtnDisable()"
       class="theme-btn-primary"
       type="submit"
       (click)="saveAsStepGroup(true)"

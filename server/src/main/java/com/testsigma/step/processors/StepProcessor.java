@@ -275,8 +275,8 @@ public class StepProcessor {
         testDataValue = environmentParameters.get(testDataValue);
         break;
       case parameter:
+        testDataName = testDataValue;
         testDataValue = populateTestDataParameter(testDataSet, testCaseStepEntityDTO, testDataValue, testDataPropertiesEntity);
-        testDataName = testDataSet.getData().keys().next();
         break;
       case random:
       case runtime:

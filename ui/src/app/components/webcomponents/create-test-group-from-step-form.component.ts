@@ -85,13 +85,14 @@ export class CreateTestGroupFromStepFormComponent extends BaseComponent implemen
     })
   }
 
-  saveAsStepGroup() {
+  saveAsStepGroup(isReplace?: boolean) {
     this.saving = true;
     let copyStepGroup = {
       name: this.stepGroupForm.get('name').value,
       testCaseId: this.options.testCase.id,
       stepIds: this.options.steps.map(step => step.id),
-      isStepGroup: true
+      isStepGroup: true,
+      isReplace: isReplace
     }
     this.testCaseService.copy(copyStepGroup).subscribe(
       (testCase) => {
@@ -108,5 +109,15 @@ export class CreateTestGroupFromStepFormComponent extends BaseComponent implemen
         });
       }
     );
+  }
+
+  get checkSelectionContinue() {
+    let lastPosition = 0;
+    let sortedByPosition = this.options.steps.sort((test:TestStep, test2:TestStep) => test.position - test2.position);
+    let isContinueSteps = sortedByPosition.filter((item: TestStep) => {
+      lastPosition = !lastPosition ? item.position : lastPosition
+      return !((lastPosition != item.position && item.position - lastPosition == 1) || lastPosition == item.position);
+    });
+    return !isContinueSteps.length;
   }
 }

@@ -152,6 +152,12 @@ public class TestCaseResult implements Serializable {
   private TestCase testCase;
 
   @ManyToOne
+  @JoinColumn(name = "suite_result_id", referencedColumnName = "id", insertable = false, updatable = false)
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  private TestSuiteResult testSuiteResult;
+
+  @ManyToOne
   @Fetch(value = FetchMode.SELECT)
   @JoinColumn(name = "test_device_result_id", referencedColumnName = "id", insertable = false, updatable = false)
   @EqualsAndHashCode.Exclude

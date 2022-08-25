@@ -8,7 +8,6 @@
 package com.testsigma.util;
 
 import com.amazonaws.HttpMethod;
-import com.testsigma.service.AwsS3Service;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
@@ -41,9 +40,6 @@ public class XLSUtil {
     private Boolean status = false;
     private CellStyle cellDateStyle = null;
 
-    @Setter
-    @Getter
-    private AwsS3Service awsS3Service;
 
     /**
      *
@@ -379,32 +375,6 @@ public class XLSUtil {
 
     }
 
-    public String writeToS3(String tenant, Long userId) {
-        ByteArrayOutputStream bos = null;
-        InputStream is = null;
-        try {
-            String fileName = System.currentTimeMillis() + ".xls";
-            bos = new ByteArrayOutputStream();
-            workbook.write(bos);
-            byte[] barray = bos.toByteArray();
-            is = new ByteArrayInputStream(barray);
-            String filePath = AwsS3Service.S3_FILE_SEPARATOR + "export_xlsx" + AwsS3Service.S3_FILE_SEPARATOR + tenant +
-                    AwsS3Service.S3_FILE_SEPARATOR + userId + fileName;
-            this.awsS3Service.putObjectInAttachments(filePath, is);
-            return this.awsS3Service.generatePreSignedUrl(filePath,
-                    DateTime.now().plus(AwsS3Service.MAX_EXECUTION_TIME).toDate(), HttpMethod.GET).toString();
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
-        } finally {
-            try {
-                assert bos != null;
-                bos.close();
-                assert is != null;
-                is.close();
-            } catch (Exception ignored) {
-            }
-        }
-        return null;
-    }
+
 
 }

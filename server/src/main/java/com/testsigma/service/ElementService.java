@@ -319,10 +319,5 @@ public class ElementService extends XMLExportImportService<Element> {
     previous.setImportedId(element.getId());
     save(previous);
   }
-  public Page<Element> findAllSortedByPreviousStepElement(Pageable pageable, Long applicationVersionId,
-                                                          String name, String screenName, String previousStepElementName) {
-    Element previousElement = elementRepository.findFirstElementByNameAndWorkspaceVersionId(previousStepElementName, applicationVersionId);
-    return elementRepository.findWithOrderByPreviousStepElementID(pageable, applicationVersionId, name, screenName, previousElement.getScreenNameId());
-  }
 
 }

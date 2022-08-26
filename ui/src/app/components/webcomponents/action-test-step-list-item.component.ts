@@ -148,9 +148,6 @@ import {MobileRecorderEventService} from "../../services/mobile-recorder-event.s
               *ngIf="testStep?.action && !(testStep?.isContinueLoop || testStep?.isBreakLoop || testStep?.isAddonAction)"
               [innerHTML]="testStep?.parsedStep"></span>
             <span *ngIf="testStep?.isStepGroup" [textContent]="testStep.stepGroup?.name"></span>
-            <span
-              *ngIf="testStep?.isRestStep && (!testStep?.isContinueLoop && !testStep?.isBreakLoop && !testStep?.isAddonAction && !testStep.template)"
-              [textContent]="testStep?.action"></span>
             <span *ngIf="testStep?.isAddonAction">
               <i class="fa-addon mr-5 text-nowrap"></i><span [innerHTML]="testStep?.parsedAddonStep"></span>
             </span>

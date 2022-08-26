@@ -30,6 +30,7 @@
   "nlp.data_profile.suggestion.title": "Test Data Profile",
   "btn.common.new": "New",
   "btn.common.create.element": "+Create Element",
+  "btn.common.create_replace": "Create And Replace",
   "btn.common.create_new": "Create New",
   "btn.common.close": "Close",
   "btn.common.edit": "Edit",

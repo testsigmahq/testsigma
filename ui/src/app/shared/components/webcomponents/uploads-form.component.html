@@ -43,11 +43,17 @@
           <label class="control-label required" [translate]="'uploads.form.label.name'"></label>
           <div class="error" *ngIf="uploadForm.controls.name.invalid"
                [textContent]="'form.validation.common.min_length'| translate: {FieldName: 'Name' ,min: '4' }"></div>
+          <div class="error" *ngIf="uploadForm.controls.name?.errors?.maxlength"
+               [textContent]="'form.validation.common.max_length'| translate: {FieldName: 'Name' ,max: '256' }"></div>
         </div>
 
         <div class="form-group pb-18 upload-version" *ngIf="uploadedFileObject?.name" @fade>
           <input class="form-control" formControlName="version">
           <label class="control-label required" [translate]="'uploads.form.version.name'"></label>
+          <div class="error position-sticky mt-10" *ngIf="uploadForm.controls.version?.errors?.minlength"
+               [textContent]="'form.validation.common.min_length'| translate: {FieldName: ('uploads.form.version.name'|translate) ,min: '4' }"></div>
+          <div class="error position-sticky mt-10" *ngIf="uploadForm.controls.version?.errors?.maxlength"
+               [textContent]="'form.validation.common.max_length'| translate: {FieldName: ('uploads.form.version.name'|translate) ,max: '256' }"></div>
         </div>
 
         <div *ngIf="data?.version?.workspace?.isIosNative"

@@ -45,7 +45,7 @@ export class TestCaseCloneFormComponent extends BaseComponent implements OnInit 
     this.translate.get('test_step.copy_as.name', {testCaseName: this.options.testCase.name}).subscribe((res: string) => {
       this.stepGroupForm = new FormGroup({
         name: new FormControl(res, [
-          Validators.required
+          Validators.required, Validators.minLength(4), Validators.maxLength(250)
         ]),
         isStepGroup: new FormControl(false, [Validators.required])
       });

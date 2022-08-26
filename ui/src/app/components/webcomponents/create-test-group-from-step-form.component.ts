@@ -78,7 +78,7 @@ export class CreateTestGroupFromStepFormComponent extends BaseComponent implemen
     this.translate.get('test_step.copy_as.name', {testCaseName: this.options.testCase.name}).subscribe((res: string) => {
       this.stepGroupForm = new FormGroup({
         name: new FormControl(res, [
-          Validators.required
+          Validators.required, Validators.minLength(4), Validators.maxLength(250)
         ])
       });
       setTimeout(() => this.searchInput.nativeElement.focus(), 200);

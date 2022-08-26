@@ -9,18 +9,42 @@ package com.testsigma.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
+@Getter
 @AllArgsConstructor
 public enum TestStepConditionType {
-  NOT_USED("Not Used"),
-  CONDITION_IF("If"),
-  CONDITION_IFNOT("If not"),
-  CONDITION_ELSE_IF("Else If"),
-  CONDITION_ELSE_IFNOT("Else If not"),
-  CONDITION_ELSE("Else"),
-  LOOP_FOR("For"),
-  LOOP_WHILE("While");
+  NOT_USED(0,"Not Used"),
+  CONDITION_IF(1,"If"),
+  CONDITION_IFNOT(2,"If not"),
+  CONDITION_ELSE_IF(3,"Else If"),
+  CONDITION_ELSE_IFNOT(4,"Else If not"),
+  CONDITION_ELSE(5,"Else"),
+  LOOP_FOR(6,"For"),
+  LOOP_WHILE(7,"While");
 
-  @Getter
+  private final Integer id;
   private final String name;
+
+
+  public static TestStepConditionType getConditionType(Integer id) {
+    switch (id) {
+      case 1:
+        return CONDITION_IF;
+      case 2:
+        return CONDITION_IFNOT;
+      case 3:
+        return CONDITION_ELSE_IF;
+      case 4:
+        return CONDITION_ELSE_IFNOT;
+      case 5:
+        return CONDITION_ELSE;
+      case 6:
+        return LOOP_FOR;
+      case 7:
+        return LOOP_WHILE;
+
+      default:
+        return null;
+
+    }
+  }
 }

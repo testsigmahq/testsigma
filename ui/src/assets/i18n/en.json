@@ -1602,6 +1602,8 @@
   "global_add.testcase.title": "Test Case",
   "global.add_title": "Create a new",
   "usage_details.title": "Active Sessions",
+  "runs.details.export_as_junit": "Export as Junit Report",
+  "runs.details.export_as_xls": "Export as XLS",
   "usage_details.runs.title": "Test Plan Runs & Dry Runs",
   "usage_details.mobile_inspections.runs.title": "Mobile Inspector Sessions",
   "usage_details.mobile_inspections.runs.empty_message": "There are no Mobile Inspector sessions.",

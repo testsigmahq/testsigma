@@ -96,6 +96,35 @@
             [translate]="'testcase.status.update.btn'"
             class="btn icon-btn border-rds-2 ml-14">
           </button>
+          <div
+            class="dropdown section-title mouse-over d-inline-block">
+            <div class="btn-group">
+              <button
+                class="btn icon-btn border-rds-2 ml-14 mt-n2">
+                <i class="fa-export-thin"></i>
+              </button>
+            </div>
+            <div
+              class="dropdown-menu drop-down-transparent min-w left-md">
+              <ul
+                class="bg-white border-rds-4 ng-scope p-15 shadow-all2-b4">
+                <li
+                  class="border-rds-10 btn rb-medium grey-on-hover text-dark">
+                  <a
+                    [href]="( isDry? '/dry_test_case_results':'/test_case_results')+ '/export/'+ testCaseResult?.id"
+                    class="text-dark text-decoration-none"
+                    target="_blank" [translate]="'runs.details.export_as_xls'"></a>
+                </li>
+                <li
+                  class="border-rds-10 btn rb-medium grey-on-hover text-dark ml-0">
+                  <a
+                    [href]="'/reports/junit/'+testCaseResult?.testDeviceResult?.testPlanResult?.id"
+                    class="text-dark text-decoration-none"
+                    target="_blank" [translate]="'runs.details.export_as_junit'"></a>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
       <div class="ts-col-100 position-relative d-flex pt-18" [class.pt-30]="isDry">

@@ -165,6 +165,29 @@ public class TestPlanResult {
   @Fetch(value = FetchMode.SELECT)
   private TestPlanResult childResult;
 
+  @Transient
+  private Long consolidatedTotalTestcasesCount = 0L;
+
+  @Transient
+  private Long consolidatedPassedCount = 0L;
+  @Transient
+  private Long consolidatedFailedCount = 0L;
+  @Transient
+  private Long consolidatedAbortedCount = 0L;
+  @Transient
+  private Long consolidatedStoppedCount = 0L;
+  @Transient
+  private Long consolidatedNotExecutedCount = 0L;
+  @Transient
+  private Long consolidatedPrerequisiteFailedCount = 0L;
+  @Transient
+  private Long consolidatedQueuedCount = 0L;
+  @Transient
+  private ResultConstant consolidatedResult;
+  @Transient
+  private String consolidatedMessage;
+
+
   public TestPlanDetails getTestPlanDetails() {
     return new ObjectMapperService().parseJson(this.testPlanDetails, TestPlanDetails.class);
   }

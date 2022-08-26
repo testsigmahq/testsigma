@@ -21,6 +21,7 @@ import com.testsigma.agent.mobile.android.CommandExecutor;
 import com.testsigma.agent.mobile.ios.DeveloperImageService;
 import com.testsigma.agent.mobile.ios.IosDeviceService;
 import com.testsigma.agent.services.DriverSessionsService;
+import com.testsigma.automator.exceptions.AutomatorException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +85,7 @@ public abstract class DeviceListener implements Runnable {
     this.addDevice(device);
   }
 
-  public abstract void getInitialDeviceList() throws TestsigmaException, DeviceContainerException;
+  public abstract void getInitialDeviceList() throws TestsigmaException, DeviceContainerException, AutomatorException;
 
   public abstract void initializeNativeBridge() throws TestsigmaException, NativeBridgeException;
 

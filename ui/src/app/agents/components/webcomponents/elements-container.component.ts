@@ -19,6 +19,7 @@ import {AuthenticationGuard} from "../../../shared/guards/authentication.guard";
 import {NotificationsService} from "angular2-notifications";
 import {ToastrService} from "ngx-toastr";
 import {DuplicateLocatorWarningComponent} from "../../../components/webcomponents/duplicate-locator-warning.component";
+import {MobileRecorderEventService} from "../../../services/mobile-recorder-event.service";
 
 @Component({
   selector: 'app-save-elements',
@@ -70,7 +71,8 @@ export class ElementsContainerComponent extends BaseComponent implements OnInit 
     public toastrService: ToastrService,
     private elementService: ElementService,
     private elementScreenNameService: ElementScreenNameService,
-    private dialog: MatDialog) {
+    private dialog: MatDialog,
+    private mobileRecorderEventService: MobileRecorderEventService) {
     super(authGuard, notificationsService, translate, toastrService);
     this.screenNameOptions = new Observable<Set<ElementScreenName>>();
     this.screenNames = new Set<ElementScreenName>();
@@ -264,6 +266,7 @@ export class ElementsContainerComponent extends BaseComponent implements OnInit 
       let summaryPopupOpen: StepSummaryComponent = this.dialog.openDialogs.find(dialog => dialog.componentInstance instanceof StepSummaryComponent)?.componentInstance;
       if (summaryPopupOpen) summaryPopupOpen.updateElement(element.name);
     }
+    this.mobileRecorderEventService.returnData.next({type: 'element', data: element});
     this.handleElementUpdateEventEmitter.emit({err: false, isCreate: isCreate});
   }
 

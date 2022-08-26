@@ -51,14 +51,14 @@ public class DeviceEventCallback implements LibIMobileDevice.idevice_event_cb_t 
   }
 
   public void onDeviceAdded(String uuid) throws TestsigmaException, DeviceContainerException {
-    MobileDevice mobileDevice = iosDeviceListener.getMobileDevice(uuid);
+    MobileDevice mobileDevice = iosDeviceListener.getRealMobileDevice(uuid);
     mobileDevice.setIsOnline(true);
     mobileDevice.setIsEmulator(false);
     iosDeviceListener.addDevice(mobileDevice);
   }
 
   public void onDeviceRemoved(String uuid) throws TestsigmaException, DeviceContainerException {
-    MobileDevice mobileDevice = iosDeviceListener.getMobileDevice(uuid);
+    MobileDevice mobileDevice = iosDeviceListener.getRealMobileDevice(uuid);
     mobileDevice.setIsOnline(false);
     mobileDevice.setIsEmulator(false);
     iosDeviceListener.removeDevice(mobileDevice);
@@ -66,7 +66,7 @@ public class DeviceEventCallback implements LibIMobileDevice.idevice_event_cb_t 
   }
 
   public void onDevicePaired(String uuid) throws TestsigmaException, DeviceContainerException {
-    MobileDevice mobileDevice = iosDeviceListener.getMobileDevice(uuid);
+    MobileDevice mobileDevice = iosDeviceListener.getRealMobileDevice(uuid);
     mobileDevice.setIsOnline(true);
     mobileDevice.setIsEmulator(false);
     iosDeviceListener.updateDevice(mobileDevice);

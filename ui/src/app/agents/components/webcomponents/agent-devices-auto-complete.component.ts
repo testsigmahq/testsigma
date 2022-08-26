@@ -62,18 +62,18 @@ export class AgentDevicesAutoCompleteComponent implements OnInit {
           let filtered = this.devices.content.filter(device => this.mobileOsType == device.osName)
           this.devices.content = [...filtered];
           this.devices.content.forEach( device => {
-            if(checkForProvision == true && !device['provisioned']){
+            if(!device['isOnline']){
               device['isDisabled'] = true;
-            } else if (checkForProvision == true && device['provisioned']){
+            } else if (checkForProvision == true && device['provisioned']) {
               device['isDisabled'] = false;
-            } else if(!device['isOnline']) {
+            } else if(checkForProvision == true && !device['provisioned']) {
               device['isDisabled'] = true;
             } else if(this.device == null && this.formControl.value) {
               if(device.id == this.formControl.value) {
                 this.device = device;
                 this.setDevice(this.device);
               }
-            } else if(this.device == null){
+            } else if(this.device == null) {
               this.device = device;
               this.setDevice(this.device)
             }

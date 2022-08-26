@@ -45,6 +45,16 @@ public interface ElementRepository extends BaseRepository<Element, Long> {
   Optional<Element> findAllByWorkspaceVersionIdAndImportedId(Long applicationVersionId, Long id);
 
   Optional<Element> findByNameAndWorkspaceVersionId(String name, Long workspaceVersionId);
+  @Query(value= "SELECT * FROM elements T1 " +
+          "INNER JOIN element_screen_names T2 on T1.screen_name_id=T2.id " +
+          "where T1.workspace_version_id=:versionId " +
+          "AND T1.element_name LIKE %:fieldName% " +
+          "AND T2.name LIKE %:snName% " +
+          "ORDER BY FIELD(screen_name_id,  :snId) DESC, screen_name_id", nativeQuery = true)
+  Page<Element> findWithOrderByPreviousStepElementID(Pageable pageable,
+                                                            @Param("versionId") Long applicationVersionId,
+                                                            @Param("fieldName") String name, @Param("snName") String screenName,
+                                                            @Param("snId") Long previousElementId);
 
   @Query(value= "SELECT * FROM elements T1 " +
           "INNER JOIN element_screen_names T2 on T1.screen_name_id=T2.id " +

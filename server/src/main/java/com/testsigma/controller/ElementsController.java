@@ -91,6 +91,7 @@ public class ElementsController {
         previousStepElementName = param.getValue().toString();
       }
     }
+
     Page<Element> elements;
     if(previousStepElementName != null) {
       elements = elementService.findAllSortedByPreviousStepElement(pageable, applicationVersion, name, screenName, previousStepElementName);

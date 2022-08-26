@@ -1273,6 +1273,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   //     this.attributePlaceholder().click();
   //   }
   // }
+
   private getCurrentStepElement(targetElement?){
     let name:String;
     if(this.selectedElementName){
@@ -1285,6 +1286,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
     return name;
   }
+
   private getPreviousStepElement() {
     for (let i = this.testStep.position - 1; i >= 0; i--) {
       let elementName = this.testSteps.content[i].element;
@@ -1300,8 +1302,10 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       testCaseResultId: this.testCaseResultId,
       isDryRun: this.isDryRun,
       isStepRecordView: this.stepRecorderView,
+
       previousStepElementName:  this.getPreviousStepElement(),
       currentStepElementName: this.getCurrentStepElement(targetElement)
+
     };
     if(targetElement)
       this.mobileRecorderEventService.currentlyTargetElement = targetElement;

@@ -20,6 +20,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Log4j2
@@ -60,5 +61,9 @@ public class StepResultScreenshotComparisonService {
     if (!failedList.isEmpty()) {
       testCaseResultService.propagateVisualResult(testCaseResult);
     }
+  }
+
+  Optional<StepResultScreenshotComparison> findByTestStepResultId(Long testStepResultId){
+    return this.repository.findByTestStepResultId(testStepResultId);
   }
 }

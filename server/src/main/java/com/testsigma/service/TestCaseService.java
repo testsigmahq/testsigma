@@ -324,8 +324,30 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
         newSteps.add(step);
         position++;
       }
+      if(testCaseRequest.getIsReplace() != null && testCaseRequest.getIsReplace().booleanValue()) {
+        createAndReplace(steps, testCase, parentCase);
+      }
     }
     return testCase;
+  }
+
+  private void createAndReplace(List<TestStep> steps, TestCase testCase, TestCase currentTestCase) throws ResourceNotFoundException, SQLException {
+    TestStep step = new TestStep();
+    step.setPosition(steps.get(0).getPosition());
+    step.setTestCaseId(currentTestCase.getId());
+    step.setParentId(steps.get(0).getParentId() != null ? steps.get(0).getParentId() : null);
+    step.setType(TestStepType.STEP_GROUP);
+    step.setStepGroupId(testCase.getId());
+    step.setId(null);
+    if (step.getConditionType() != null && TestStepConditionType.CONDITION_ELSE_IF.equals(step.getConditionType())
+            && step.getParentId() == null) {
+      step.setConditionType(TestStepConditionType.CONDITION_IF);
+    }
+    this.testStepService.create(step);
+    for (TestStep parent : steps) {
+      TestStep destroyStep = this.testStepService.find(parent.getId());
+      this.testStepService.destroy(destroyStep);
+    }
   }
 
   private List<TestStep> fetchTestSteps(TestCase testCase, List<Long> stepIds) {

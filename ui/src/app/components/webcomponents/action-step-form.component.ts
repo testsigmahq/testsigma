@@ -75,7 +75,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   @Input('isDryRun') isDryRun: boolean;
   @Output('onSuggestion') public onSuggestion = new EventEmitter<any>();
   @Optional() @Input('conditionTypeChange') conditionTypeChange: TestStepConditionType;
-
+  
   @ViewChild('searchInput') searchInput: ElementRef;
   @ViewChild('replacer') replacer: ElementRef;
   @ViewChild('actionsDropDownContainer') actionsDropDownContainer: ElementRef;
@@ -139,6 +139,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   private oldStepData: TestStep;
   isAttachTestDataEvent: boolean = false;
   private runtimeSuggestion: MatDialogRef<ActionTestDataRuntimeVariableSuggestionComponent>;
+  public selectedElementName : String;
 
   get mobileStepRecorder(): MobileStepRecorderComponent {
     return this.matModal.openDialogs.find(dialog => dialog.componentInstance instanceof MobileStepRecorderComponent).componentInstance;
@@ -201,7 +202,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     this.subscribeMobileRecorderEvents();
     this.mobileRecorderEventService.returnData.subscribe(res => {
       this.mobileRecorderEventService.setEmptyAction();
-      if(res.type == 'element') {
+      if(res.type == 'element' && this.mobileRecorderEventService.currentlyTargetElement) {
         let name = typeof res.data == "string" ? res.data : res.data.name;
         this.assignElement(name, this.mobileRecorderEventService.currentlyTargetElement);
       }else if(res.type == TestDataType.environment) {
@@ -278,7 +279,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         this.testStep.addonTemplate = this.filteredAddonTemplates.find(item => item.id === this.testStep.addonActionId);
         delete this.testStep.template;
       }
-      // this.testStep.dataMap = new StepDetailsDataMap().deserialize(this.currentStepDataMap ? this.currentStepDataMap : this.testStep.dataMap);
+      //this.testStep.dataMap = new StepDetailsDataMap().deserialize(this.currentStepDataMap ? this.currentStepDataMap : this.testStep.dataMap);
     }
     this.showDataTypes = false;
     this.currentDataTypeIndex = 0;
@@ -288,6 +289,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     this.currentTestDataFunctionParameters = null;
     this.currentAddonTDF = null;
     this.mobileRecorderEventService.setEmptyAction();
+    this.selectedElementName = undefined;
   }
 
   attachContentEditableDivKeyEvent() {
@@ -1272,6 +1274,19 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   //   }
   // }
 
+  private getCurrentStepElement(targetElement?){
+    let name:String;
+    if(this.selectedElementName){
+      name = this.selectedElementName;
+    }else {
+      name = this.testStep.element;
+      if(!name && this.testStep?.addonElements && targetElement?.dataset?.reference){
+        name = this.testStep.addonElements[targetElement.dataset.reference]?.name;
+      }
+    }
+    return name;
+  }
+
   private getPreviousStepElement() {
     for (let i = this.testStep.position - 1; i >= 0; i--) {
       let elementName = this.testSteps.content[i].element;
@@ -1287,11 +1302,14 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       testCaseResultId: this.testCaseResultId,
       isDryRun: this.isDryRun,
       isStepRecordView: this.stepRecorderView,
-      previousStepElementName:  this.getPreviousStepElement()
+
+      previousStepElementName:  this.getPreviousStepElement(),
+      currentStepElementName: this.getCurrentStepElement(targetElement)
+
     };
+    if(targetElement)
+      this.mobileRecorderEventService.currentlyTargetElement = targetElement;
     if (this.stepRecorderView) {
-      if(targetElement)
-        this.mobileRecorderEventService.currentlyTargetElement = targetElement;
       this.mobileRecorderEventService.suggestionContent.next(Object.assign(sendDetails, {
         content: 'suggestionElement'
       }));
@@ -1308,6 +1326,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       if (element) {
         let name = typeof element == "string" ? element : element.name;
         this.assignElement(name, targetElement);
+        this.selectedElementName = name;
       }
     }
     this.elementSuggestion.afterClosed().subscribe(element => afterClose(element));

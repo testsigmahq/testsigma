@@ -16,9 +16,12 @@ import com.testsigma.event.TestPlanResultNotificationEvent;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.model.*;
 import com.testsigma.repository.TestPlanResultRepository;
+import com.testsigma.util.XLSUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -28,6 +31,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -37,6 +41,7 @@ import java.util.List;
 @Log4j2
 public class TestPlanResultService {
 
+  private final TestCaseResultService testCaseResultService;
   private final TestPlanResultRepository testPlanResultRepository;
   private final ObjectFactory<AgentExecutionService> agentExecutionServiceObjectFactory;
   private final ApplicationEventPublisher applicationEventPublisher;
@@ -47,7 +52,7 @@ public class TestPlanResultService {
   }
 
 
-  public TestPlanResult findByIdAndTestPlanId(Long id, Long testPlanId) {
+  public TestPlanResult findByIdAndtestPlanId(Long id, Long testPlanId) {
     return this.testPlanResultRepository.findByIdAndTestPlanId(id, testPlanId);
   }
 
@@ -202,5 +207,169 @@ public class TestPlanResultService {
       return childResult;
     return getFirstParentResult(childResult.getParentResult());
   }
+
+  public TestPlanResult findByIdAndTestPlanId(Long id, Long testPlanId) throws ResourceNotFoundException {
+    return this.testPlanResultRepository.findByIdAndTestPlanId(id, testPlanId);
+  }
+
+  public void export(TestPlanResult testPlanResult, XLSUtil wrapper, boolean isConsolidatedReport) throws ResourceNotFoundException {
+    int childCount = 0;
+    List<TestPlanResult> allRunResults = new ArrayList<>();
+    this.populateAllChildResults(testPlanResult,allRunResults);
+    for(TestPlanResult result: allRunResults) {
+      String sheetTitle;
+      if (!isConsolidatedReport)
+        sheetTitle = result.getReRunParentId() == null ? "Run Result" : "Re-Run " + ++childCount;
+      else {
+        sheetTitle = "Consolidated Result Summary";
+      }
+      wrapper.getWorkbook().setSheetName(wrapper.getWorkbook().getSheetIndex(wrapper.getSheet()), sheetTitle);
+      wrapper.setCurrentRow(-1);
+      setResultDetails(result, wrapper);
+      setTestCasesSummary(result, wrapper, isConsolidatedReport);
+      setDetailedTestCaseList(result, wrapper, isConsolidatedReport);
+      if(isConsolidatedReport) {
+        wrapper.getWorkbook().setSheetOrder("Consolidated Result Summary", 0);
+        return;
+      }
+      wrapper.createSheet();
+    }
+    this.findConsolidatedResultByTestPlanId(testPlanResult);
+    this.export(testPlanResult,wrapper,true);
+  }
+
+  private void findConsolidatedResultByTestPlanId(TestPlanResult testPlanResult) {
+    TestPlanResult childResult = testPlanResult.getTestPlan().getLastRun();
+    TestPlanResult tempChildResult = testPlanResult.getChildResult();
+    setConsolidatedResults(testPlanResult,childResult);
+    while (tempChildResult != null) {
+      if(ReRunType.runFailedTestCases(tempChildResult.getReRunType())) {
+        testPlanResult.setConsolidatedPassedCount(testPlanResult.getPassedCount() + tempChildResult.getPassedCount());
+
+      }
+      else {
+        testPlanResult.setConsolidatedPassedCount(tempChildResult.getPassedCount());
+        testPlanResult.setConsolidatedTotalTestcasesCount(tempChildResult.getTotalCount());
+      }
+      tempChildResult = tempChildResult.getChildResult();
+    }
+  }
+
+  private void setConsolidatedResults(TestPlanResult testPlanResult, TestPlanResult childResult){
+    testPlanResult.setConsolidatedMessage(childResult.getConsolidatedMessage());
+    testPlanResult.setConsolidatedResult(childResult.getResult());
+    testPlanResult.setConsolidatedTotalTestcasesCount(testPlanResult.getTotalCount());
+    testPlanResult.setConsolidatedPassedCount(testPlanResult.getPassedCount());
+    testPlanResult.setConsolidatedFailedCount(childResult.getFailedCount());
+    testPlanResult.setConsolidatedAbortedCount(childResult.getAbortedCount());
+    testPlanResult.setConsolidatedStoppedCount(childResult.getStoppedCount());
+    testPlanResult.setConsolidatedNotExecutedCount(childResult.getNotExecutedCount());
+    //testPlanResult.setConsolidatedPrerequisiteFailedCount(childResult.getPreRequisiteFailedCount());
+    testPlanResult.setConsolidatedQueuedCount(childResult.getQueuedCount());
+  }
+
+  private void setDetailedTestCaseList(TestPlanResult testPlanResult, XLSUtil wrapper, boolean isConsolidated) throws ResourceNotFoundException {
+    setHeading(wrapper, "Test Cases List");
+    String[] keys = {"Test Case", "Test Suite", "Test Machine", "Result", "Start Time", "End Time", "Visual Test Results"};
+    setCellsHorizontally(wrapper, keys, true);
+    List<TestCaseResult> testCaseResults = new ArrayList<>();
+    if (isConsolidated)
+      testCaseResults = testCaseResultService.findConsolidatedTestCaseResultsByExecutionResultId(testPlanResult.getId());
+    else
+      testCaseResults = testCaseResultService.findAllByTestPlanResultId(testPlanResult.getId());
+    for (TestCaseResult testCaseResult : testCaseResults) {
+      Object[] values = {testCaseResult.getTestCase().getName(), testCaseResult.getTestSuite().getName(),
+              testCaseResult.getTestDeviceResult().getTestDevice().getTitle(),
+              testCaseResult.getResult().getName(), testCaseResult.getStartTime(),
+              testCaseResult.getEndTime(), testCaseResult.getIsVisuallyPassed() == null ? "N/A" : testCaseResult.getIsVisuallyPassed() ? "PASS" :"FAIL"};
+      setCellsHorizontally(wrapper, values, false);
+    }
+  }
+  public void populateAllChildResults(TestPlanResult testPlanResult, List<TestPlanResult> allResults){
+    if(testPlanResult != null){
+      allResults.add(testPlanResult);
+      populateAllChildResults(testPlanResult.getChildResult(),allResults);
+    }
+  }
+
+  private void setResultDetails(TestPlanResult testPlanResult, XLSUtil wrapper)
+          throws ResourceNotFoundException {
+    setHeading(wrapper, "TestPlan Details");
+    setDetailsKeyValue("Test Plan Name", testPlanResult.getTestPlan().getName(),wrapper);
+    if (testPlanResult.getTestPlan().getDescription() != null)
+      setDetailsKeyValue("Description", testPlanResult.getTestPlan().getDescription().replaceAll("\\&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-fA-F]{1,6});|\\<.*?\\>", ""), wrapper);
+    setDetailsKeyValue("RunId", testPlanResult.getId().toString(), wrapper);
+    setDetailsKeyValue("Build No", testPlanResult.getBuildNo(), wrapper);
+    //setDetailsKeyValue("Triggered By", userService.find(testPlanResult.getExecutedBy()).getUserName(), wrapper);
+    setDetailsKeyValue("TestPlan Start Time", testPlanResult.getStartTime().toString(), wrapper);
+    setDetailsKeyValue("TestPlan End Time", testPlanResult.getEndTime() != null ? testPlanResult.getEndTime().toString() : "-", wrapper);
+    setDetailsKeyValue("TestPlan Result", testPlanResult.getResult().getName(), wrapper);
+    setDetailsKeyValue("TestPlan Message", testPlanResult.getMessage(), wrapper);
+  }
+
+  private void setDetailsKeyValue(String key, String value, XLSUtil wrapper) {
+    Integer count = 0;
+    Row row = wrapper.getDataRow(wrapper, wrapper.getNewRow());
+    row.createCell(count).setCellValue(key);
+    row.getCell(count).setCellStyle(XLSUtil.getSecondAlignStyle(wrapper));
+    row.createCell(++count).setCellValue(value);
+  }
+
+  private void setHeading(XLSUtil wrapper, String key) {
+    if (wrapper.getCurrentRow() != -1)
+      wrapper.getDataRow(wrapper, wrapper.getNewRow());
+    Row row = wrapper.getDataRow(wrapper, wrapper.getNewRow());
+    CellStyle header = XLSUtil.getTableHeaderStyle(wrapper);
+    row.setRowStyle(header);
+    row.createCell(1).setCellValue(key);
+    row.getCell(1).setCellStyle(header);
+  }
+
+  private void setTestCasesSummary(TestPlanResult testPlanResult, XLSUtil wrapper, Boolean isConsolidated) {
+    setHeading(wrapper, "Summary");
+    Object[] keys = {"Total Test Cases", "Queued", "Passed", "Failed", "Aborted", "Not Executed", "Stopped"};
+    Object[] counts;
+    if(isConsolidated)
+      counts = getConsolidatedResultCounts(testPlanResult);
+    else
+      counts = getResultCounts(testPlanResult);
+    setCellsHorizontally(wrapper, keys, true);
+    setCellsHorizontally(wrapper, counts, false);
+  }
+
+  private void setCellsHorizontally(XLSUtil wrapper, Object[] keys, boolean isBold) {
+    Integer count = -1;
+    Row row = wrapper.getDataRow(wrapper, wrapper.getNewRow());
+    for (Object key : keys) {
+      row.createCell(++count).setCellValue(key.toString());
+    }
+    if (isBold) {
+      count = -1;
+      for (Object key : keys) {
+        row.getCell(++count).setCellStyle(XLSUtil.getSecondAlignStyle(wrapper));
+      }
+    }
+  }
+
+  private Object[] getResultCounts(TestPlanResult testPlanResult){
+    return new Object[]{testPlanResult.getTotalCount(), testPlanResult.getQueuedCount(),
+            testPlanResult.getPassedCount(), testPlanResult.getFailedCount(), testPlanResult.getAbortedCount(),
+            testPlanResult.getNotExecutedCount(),
+            //testPlanResult.getPreRequisiteFailedCount(),
+            testPlanResult.getStoppedCount()};
+  }
+
+  private Object[] getConsolidatedResultCounts(TestPlanResult testPlanResult){
+    return new Object[]{testPlanResult.getConsolidatedTotalTestcasesCount(),
+                        testPlanResult.getConsolidatedQueuedCount(),
+                        testPlanResult.getConsolidatedPassedCount(),
+                        testPlanResult.getConsolidatedFailedCount(),
+                        testPlanResult.getConsolidatedAbortedCount(),
+                        testPlanResult.getConsolidatedNotExecutedCount(),
+                        testPlanResult.getConsolidatedPrerequisiteFailedCount(),
+                        testPlanResult.getConsolidatedStoppedCount()
+    };
+  }
+
 
 }

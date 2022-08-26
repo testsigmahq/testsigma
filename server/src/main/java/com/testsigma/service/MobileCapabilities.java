@@ -50,7 +50,7 @@ public abstract class MobileCapabilities extends Capabilities {
     return newPreSignedURL.get().toString();
   }
 
-  private String copyUploadToLocal(TestDevice testDevice) throws TestsigmaException {
+  public String copyUploadToLocal(TestDevice testDevice) throws TestsigmaException {
     UploadVersion upload = this.uploadVersionService.find(testDevice.getAppUploadVersionId());
     return storageServiceFactory.getStorageService().downloadToLocal(upload.getPath(),
       StorageAccessLevel.READ);

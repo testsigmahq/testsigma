@@ -1,4 +1,5 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, Optional, ViewChild} from '@angular/core';
+
 import {ActivatedRoute, Params} from '@angular/router';
 import {TestCaseService} from "../../services/test-case.service";
 import {TestCase} from "../../models/test-case.model";
@@ -48,6 +49,8 @@ export class StepsListComponent extends BaseComponent implements OnInit {
   @ViewChild('searchInput') searchInput: ElementRef;
   @ViewChild(TestCaseActionStepsComponent)
   private actionStepsComponent: TestCaseActionStepsComponent;
+  @Optional() @Input('testCaseId') testCaseId;
+  @Optional() @Input('headerTabListhidden') headerTabListhidden: Boolean;
   public version: WorkspaceVersion;
   public templates: Page<NaturalTextActions>;
   public bulkStepUpdateDialogRef: MatDialogRef<StepBulkUpdateFormComponent, any>;
@@ -77,6 +80,7 @@ export class StepsListComponent extends BaseComponent implements OnInit {
   inputValue: any;
   public addonAction: Page<AddonNaturalTextAction>;
   public saving: boolean = false;
+  public activeTab: string ='steps';
 
   constructor(
     private route: ActivatedRoute,
@@ -95,9 +99,16 @@ export class StepsListComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if(this.testCaseId){
+      this.fetchTestCase(this.testCaseId);
+    }else{
     this.route.parent.params.subscribe((params: Params) => {
       this.fetchTestCase(params.testCaseId);
-    })
+    });
+    }
+    this.testCaseService.refresh.subscribe((id)=>{
+      this.fetchTestCase(id || this.testCaseId || this.route.parent.snapshot.params.testCaseId );
+    });
   }
 
   fetchTestCase(id: number) {
@@ -196,6 +207,10 @@ export class StepsListComponent extends BaseComponent implements OnInit {
     this.createStepGroupFromPopUp.afterClosed().subscribe(testCase => {
       if(testCase?.id)
         window.open('/ui/td/cases/'+testCase.id+"/steps", '_blank');
+      this.selectedStepsList = [];
+      let testCaseId = this.testCase.id;
+      this.testCase = undefined;
+      this.fetchTestCase(testCaseId || this.route.parent.snapshot.params.testCaseId);
     })
   }
 

@@ -46,7 +46,7 @@ export class SelectedElementsContainerComponent{
 
   public tap(mobileElement: MobileElement) {
     this.beforeAction();
-    if (mobileElement?.text.length <4 && mobileElement?.text.length>0)
+    if (mobileElement?.text?.length <4 && mobileElement?.text?.length>0)
       mobileElement.text = mobileElement.text +'-'+ this.getCurrentTimeStamp();
     this.devicesService.tapElement(this.sessionId, mobileElement)
       .subscribe({
@@ -66,7 +66,7 @@ export class SelectedElementsContainerComponent{
 
   private sendkeys(sendKeysRequest: SendKeysRequest) {
     this.beforeAction(true);
-    if (sendKeysRequest?.mobileElement?.text.length < 4 && sendKeysRequest?.mobileElement?.text.length>0)
+    if (sendKeysRequest?.mobileElement?.text?.length < 4 && sendKeysRequest?.mobileElement?.text?.length>0)
       sendKeysRequest.mobileElement.text = sendKeysRequest?.mobileElement?.text +'-'+ this.getCurrentTimeStamp();
     this.devicesService.sendKeys(this.sessionId, sendKeysRequest)
       .subscribe({

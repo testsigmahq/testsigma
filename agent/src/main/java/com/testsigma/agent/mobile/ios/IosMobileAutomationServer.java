@@ -50,8 +50,7 @@ public class IosMobileAutomationServer {
       log.info("Creating IosDriver Session on device - " + device.getUniqueId());
       DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
       desiredCapabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobileOs.IOS.getPlatformName());
-      desiredCapabilities
-        .setCapability(MobileCapabilityType.PLATFORM_VERSION, device.getOsVersion());
+      desiredCapabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, device.getOsVersion());
       desiredCapabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, MobileOs.IOS.getAutomationName());
       desiredCapabilities.setCapability(MobileCapabilityType.DEVICE_NAME, device.getName());
       desiredCapabilities.setCapability(MobileCapabilityType.UDID, device.getUniqueId());

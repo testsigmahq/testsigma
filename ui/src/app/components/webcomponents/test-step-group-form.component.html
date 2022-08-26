@@ -16,6 +16,26 @@
     ></app-auto-complete>
   </div>
   <div
+    class="align-items-center d-flex"
+    *ngIf="(stepGroups?.content?.length || searchQuery?.length) && testStep?.stepGroup"
+  >
+    <div class="text-secondary text-truncate d-flex flex-col">
+      <div class="rb-semi-medium">{{'test_case.create_help.description.label' | translate}} : </div>
+      <div
+        #stepGroupDescElem
+        class="ml-5 text-truncate"
+        [textContent]="stepGroupDescriptionText || ('results.list_view.no_description' | translate)"
+        [matTooltip]="stepGroupDescElem.offsetWidth < stepGroupDescElem.scrollWidth? stepGroupDescElem.textContent:''"
+      ></div>
+    </div>
+    <a
+      class="action-icon fa-external-link-alt-solid"
+      target="_blank"
+      [routerLink]="['/td', 'cases', testStep.stepGroup.id, 'steps']"
+      [matTooltip]="'test_step.step_group.view_details' | translate"
+    ></a>
+  </div>
+  <div
     *ngIf="stepGroups?.content?.length || searchQuery?.length"
     class="action-cf-btn-container">
     <i class="fa-help text-t-secondary pr-7"></i>

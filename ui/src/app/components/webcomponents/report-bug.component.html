@@ -23,11 +23,26 @@
     class="ts-col-15 bug-report-tab pt-4">
     <div [class]="this.classList[app]"></div>
   </div>
-  <div *ngFor="let app of this.unSelectedList"
-       (click)="toggleView(app)"
-       [class.active]="this.showList(app)"
-       class="ts-col-15 bug-report-tab pt-4">
-    <div [class]="this.classList[app]"></div>
+  <div
+    (click)="toggleView('ADD_NEW')"
+    [class.active]="this.showList('ADD_NEW')"
+    [class.text-brand]="this.showList('ADD_NEW')"
+    class="bug-report-tab pt-4 ts-col-20 fz-16 text-center">
+    + {{'common.add_new'|translate}}
+  </div>
+</div>
+
+<div *ngIf="showAddPlugIn" class="list-container overflow-y-auto rb-regular d-flex align-items-center justify-content-around" [ngStyle]="{height: options && showWarning ? 'calc(100% - 141px)': 'calc(100% - 105px)' }">
+  <div class="d-flex flex-column align-items-center w-fit-content">
+    <div class="d-flex align-items-center justify-content-around bg-selected-light-green-color rounded-circle" style="width: 96px;height: 96px;">
+      <i class="fa-plug fz-48 text-brand ml-10"></i>
+    </div>
+    <div class="mt-16 fz-16 text-t-secondary text-center" [innerHTML]="( !this.selectedList?.length ? 'plan_result.report_bug.no_plugin_enabled.label' : 'plan_result.report_bug.enable_plugin.label')|translate"></div>
+    <a
+      #navigateToPluginButton
+      (mouseout)="navigateToPluginButton.blur()"
+      target="_blank"
+      [routerLink]="['/settings', 'plugs','bug_report']" class="text-decoration-none text-white border-rds-bottom-4 border-rds-top-4 btn-primary fz-18 px-30 py-10 mt-16">{{'plan_result.report_bug.btn_go_plugins'|translate}}<i class="fa-external-link-alt-solid ml-10"></i></a>
   </div>
 </div>
 

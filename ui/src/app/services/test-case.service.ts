@@ -23,7 +23,7 @@ export class TestCaseService implements FilterableDataSourceService {
     private httpHeaders: HttpHeadersService,
     private URLConstants: UrlConstantsService) {
   }
-
+  public refresh: Subject<number|null> = new Subject<number|null>();
   public stepsFetch: EventEmitter<any> = new EventEmitter();
   public emitStepLength(preferenceName: any) {
     this.stepsFetch.emit(preferenceName);

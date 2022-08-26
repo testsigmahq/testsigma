@@ -121,7 +121,7 @@ export class TestCaseService implements FilterableDataSourceService {
     );
   }
 
-  copy(copyRequest: { name: string; stepIds?: number[]; testCaseId: number,  isStepGroup: boolean}) : Observable<TestCase>{
+  copy(copyRequest: { name: string; stepIds?: number[]; testCaseId: number,  isStepGroup: boolean, isReplace: boolean}) : Observable<TestCase>{
     return this.http.post<TestCase>(this.URLConstants.testCasesUrl+"/copy", copyRequest, {
       headers: this.httpHeaders.contentTypeApplication
     }).pipe(

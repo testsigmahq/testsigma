@@ -1,4 +1,5 @@
 import {Component, ElementRef, Input, OnInit, Optional, ViewChild} from '@angular/core';
+
 import {ActivatedRoute, Params} from '@angular/router';
 import {TestCaseService} from "../../services/test-case.service";
 import {TestCase} from "../../models/test-case.model";
@@ -206,6 +207,10 @@ export class StepsListComponent extends BaseComponent implements OnInit {
     this.createStepGroupFromPopUp.afterClosed().subscribe(testCase => {
       if(testCase?.id)
         window.open('/ui/td/cases/'+testCase.id+"/steps", '_blank');
+      this.selectedStepsList = [];
+      let testCaseId = this.testCase.id;
+      this.testCase = undefined;
+      this.fetchTestCase(testCaseId || this.route.parent.snapshot.params.testCaseId);
     })
   }
 

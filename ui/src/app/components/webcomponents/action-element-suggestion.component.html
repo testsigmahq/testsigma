@@ -143,9 +143,12 @@
         [class.py-10]="elementSuggestion"
         [class.py-7]="!elementSuggestion"
         class="list-view green-highlight px-5 pointer align-items-center grey-on-hover"
-        *cdkVirtualFor='let element of elements; let index = index'
-          [class.h-active]="currentFocusedIndex == index"
-          (mouseover)="currentFocusedIndex = index">
+        *cdkVirtualFor='let element of elements.cachedItems; let index = index'
+        [class.h-active]="currentFocusedIndex == index"
+        (mouseover)="currentFocusedIndex = index"
+        [class.bg-selected-light-green-color]="element.name===option?.currentStepElementName"
+        [class.text-primary]="element.name===option?.currentStepElementName"
+      >
           <div
             class="ts-col-50 overlay-text" (click)="selectElement()">
             <span

@@ -58,7 +58,8 @@ export class TestCaseCloneFormComponent extends BaseComponent implements OnInit 
     let copyStepGroup = {
       name: this.stepGroupForm.get('name').value,
       testCaseId: this.options.testCase.id,
-      isStepGroup: this.stepGroupForm.get('isStepGroup').value
+      isStepGroup: this.stepGroupForm.get('isStepGroup').value,
+      isReplace: false
     }
 
     let messageKey, fieldName1, fieldName2;

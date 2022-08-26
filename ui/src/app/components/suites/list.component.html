@@ -96,7 +96,7 @@
             data-placement="bottom"
             href="javascript:void(0)"></a>
           <a
-            (click)="fetchLinkedPlans(testSuite.id)" [matTooltip]="'pagination.delete' | translate"
+            (click)="fetchLinkedPlans([testSuite.id], testSuite.name)" [matTooltip]="'pagination.delete' | translate"
             class="fa-trash-thin action-icon"
             data-placement="bottom"
             href="javascript:void(0)"></a>

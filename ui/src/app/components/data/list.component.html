@@ -81,7 +81,7 @@
           [routerLink]="['/td', 'data', dataProfile.id, 'edit']"
           class="fa-pencil-on-paper action-icon"></a>
         <a
-          data-placement="bottom" (click)="fetchLinkedCases(dataProfile.id)"
+          data-placement="bottom" (click)="fetchLinkedCases(dataProfile)"
           [matTooltip]="'pagination.delete' | translate"
           class="fa-trash-thin action-icon"></a>
       </div>

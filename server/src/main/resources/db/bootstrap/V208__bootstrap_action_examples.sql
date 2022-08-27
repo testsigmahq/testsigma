@@ -1,4 +1,6 @@
---Dumping data for table natural_text_action_examples
+--
+-- Dumping data for table `natural_text_action_examples`
+--
 
 LOCK TABLES `natural_text_action_examples` WRITE;
 INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `description`, `example`, `workspace`, `data`, `created_date`, `updated_date`) VALUES (1,1,'Wait until specified text is present on current Page','In this example, execution will wait until specified text \"Register\" is present on current Page','https://travel.testsigma.com/login','{\"test data\": \"Register\"}','2022-08-17 14:08:28','2022-08-17 14:08:28');

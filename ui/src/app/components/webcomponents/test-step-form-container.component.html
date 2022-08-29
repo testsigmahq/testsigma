@@ -116,9 +116,13 @@
     [class.theme-border-b]="!isActionText"
     class=" py-15 ml-5 pl-7 form-group p-0 ts-col-auto d-flex align-items-baseline flex-nowrap">
     <div
-      class="result-status-8 ng-binding x-sm-size text-white"
-      style="overflow: hidden !important;text-overflow: ellipsis !important; padding: 3px !important; white-space: nowrap !important; border-radius: 4px !important; width: 22px; text-align: center"
-      [textContent]="indexPosition()"></div>
+      class="result-status-8 ng-binding x-sm-size text-white list-number">
+      <div
+        class="text-truncate p-2"
+        [matTooltip]="indexPosition().toString()"
+        [textContent]="indexPosition()">
+      </div>
+    </div>
     <div class="d-flex align-items-center">
       <i
         class="px-5 text-warning"

@@ -304,7 +304,7 @@ export class ReportBugComponent extends BaseComponent implements OnInit {
   }
 
   get showWarning() {
-    return this?.options?.testCaseResult?.isQueued || this?.options?.testCaseResult?.isStopped || this.options?.testCaseResult?.isFailed;
+    return this?.options?.testCaseResult?.isPassed || this?.options?.testCaseResult?.isQueued || this?.options?.testCaseResult?.isStopped;
   }
   get showAddPlugIn(){
     return this.showExternalApplication == 'ADD_NEW';

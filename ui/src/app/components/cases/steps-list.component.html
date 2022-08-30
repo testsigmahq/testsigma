@@ -1,7 +1,7 @@
   <div
-  class="page-details-navigation-md" *ngIf="!headerTabListhidden" >
+  class="page-details-navigation-md min-h-45"  >
   <ul class="tab-nav" role="tablist" *ngIf="!canDrag">
-    <li class="nav-items" role="presentation">
+    <li class="nav-items" *ngIf="!headerTabListhidden" role="presentation">
       <a
         [routerLink]="['/td', 'cases', testCase?.id, 'steps']"
         [routerLinkActive]="'active'"
@@ -11,7 +11,7 @@
       </a>
     </li>
     <li
-      *ngIf="testCase?.isStepGroup"
+      *ngIf="testCase?.isStepGroup && !headerTabListhidden"
       class="nav-items" role="presentation">
       <a
         [routerLink]="['/td', 'cases', testCase?.id, 'dependents']"
@@ -22,7 +22,7 @@
       </a>
     </li>
     <li
-      *ngIf="canShowRunResult && stepLength"
+      *ngIf="canShowRunResult && stepLength && !headerTabListhidden"
       class="nav-items" role="presentation">
       <a
         [routerLink]="['/td', 'cases', testCase?.id, 'dry_runs']"

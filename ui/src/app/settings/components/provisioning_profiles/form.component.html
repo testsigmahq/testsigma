@@ -26,8 +26,11 @@
           <div class="error"
                *ngIf="nameFormControl?.hasError('whitespace') && !showNameInput "
                [textContent]="'form.validation.cannot_have_white_spaces' | translate: {FieldName:'Profile Name'}"></div>
-          <div class="ts-col-60" *ngIf="showNameInput">
-            <input type="text" #name [formControl]="nameFormControl" class="form-control theme-border border-rds-4 py-8 w-70"/>
+          <div class="ts-col-60 form-group " *ngIf="showNameInput">
+            <input type="text" #name [formControl]="nameFormControl" class="form-control theme-border border-rds-4 py-8 w-100"/>
+            <div
+              class="error " *ngIf="nameFormControl?.errors?.['maxlength']"
+              [textContent]="'form.validation.common.max_length' | translate: {FieldName:('Profile Name'|translate) , max:'250'}"></div>
             <button (click)="saveProvisioningProfile()" *ngIf="provisioningProfile?.id && nameFormControl.valid" class="btn-clear border-0 ml-20 pointer fa-tick icon-btn" [matTooltip]="'hint.message.common.save' | translate" >
             </button>
             <button (click)="hideInputForm()" *ngIf="provisioningProfile?.id" class="btn-clear border-0 pointer icon-btn fa-close-alt fz-11" [matTooltip]="'hint.message.common.discard' | translate">

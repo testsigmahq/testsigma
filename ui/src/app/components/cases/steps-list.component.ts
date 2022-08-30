@@ -226,7 +226,7 @@ export class StepsListComponent extends BaseComponent implements OnInit {
       if (result) {
         this.selectedStepsList = [];
         this.testCase = undefined;
-        this.fetchTestCase(this.route.parent.snapshot.params.testCaseId);
+        this.fetchTestCase(this.testCaseId || this.route.parent.snapshot.params.testCaseId);
       }
     })
   }

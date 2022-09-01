@@ -109,7 +109,7 @@ public class IosDeviceService {
     String[] devices = devicesJsonString.split("\n");
     for(String deviceJson : devices) {
       JSONObject deviceJsonObject = getSimulatorProperties(deviceJson);
-      if(deviceJsonObject.getString("state").equals(DeviceStatus.BOOTED.getStatus())) {
+      if(deviceJsonObject.getString("state").equals(DeviceStatus.BOOTED.getStatus()) && deviceJsonObject.getString("type").equals("simulator")) {
         try {
           MobileDevice device = getSimulatorDevice(deviceJsonObject.getString("udid"));
           deviceList.add(device);

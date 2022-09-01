@@ -18,7 +18,7 @@
              [textContent]="'form.validation.common.min_length' | translate: {FieldName:'Name' , min:'4'}"></div>
         <div class="error left"
              *ngIf="activeEnvironmentFormGroup?.controls?.title?.errors?.maxLength"
-             [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'120'}"></div>
+             [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'250'}"></div>
       </div>
       <app-test-plan-lab-type-dropdown
         *ngIf="activeExecutionEnvironment"

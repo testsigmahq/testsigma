@@ -127,13 +127,18 @@ export class ListComponent extends BaseComponent implements OnInit {
     }
   }
 
-  openDeleteDialog(id?) {
+  openDeleteDialog(id?, name?: string) {
     let message = id ? "message.common.confirmation.default" : "test_suites.bulk_delete.confirmation.message";
     this.translate.get(message, {FieldName: this.selectedSuites.length}).subscribe((res) => {
       const dialogRef = this.matDialog.open(ConfirmationModalComponent, {
         width: '450px',
         data: {
-          description: res
+          description: res,
+          isPermanentDelete: true,
+          title: name? 'Test Suite' : 'Test Suites',
+          item: 'test suite',
+          name: name ? name : 'multiple test suites',
+          note: this.translate.instant('message.common.confirmation.test_suite_des', {Item:'test suite'})
         },
         panelClass: ['matDialog', 'delete-confirm']
       });
@@ -201,7 +206,7 @@ export class ListComponent extends BaseComponent implements OnInit {
       }))
   }
 
-  public fetchLinkedPlans(id) {
+  public fetchLinkedPlans(id, name?: string) {
     let testPlans: InfiniteScrollableDataSource;
     testPlans = new InfiniteScrollableDataSource(this.testPlanService, "suiteId:" + id , "name,asc" );
     waitTillRequestResponds();
@@ -212,7 +217,7 @@ export class ListComponent extends BaseComponent implements OnInit {
         setTimeout(() => waitTillRequestResponds(), 100);
       else {
         if (testPlans.isEmpty)
-          _this.openDeleteDialog(id);
+          _this.openDeleteDialog(id, name);
         else
           _this.openLinkedTestPlansDialog(testPlans);
       }

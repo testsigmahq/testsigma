@@ -72,7 +72,7 @@ export class FormComponent extends BaseComponent implements OnInit {
   private initiateForm(): void {
     this.environmentForm = new FormGroup({
       name: new FormControl(this.environment.name, [Validators.required, Validators.minLength(4),
-        Validators.maxLength(125), this.noWhitespaceValidator]),
+        Validators.maxLength(126), this.noWhitespaceValidator]),
       description: new FormControl(this.environment.description),
       parameters: this.formBuilder.array([]),
       paramsJson: new FormControl(this.environment.parametersJson,  this.validateJson())

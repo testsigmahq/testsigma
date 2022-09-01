@@ -16,6 +16,7 @@ import com.testsigma.mapper.TestCaseResultMapper;
 import com.testsigma.model.TestCaseResult;
 import com.testsigma.service.TestCaseResultService;
 import com.testsigma.specification.TestCaseResultSpecificationsBuilder;
+import com.testsigma.util.XLSUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +24,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
@@ -57,5 +58,18 @@ public class TestCaseResultsController {
       testCaseResult.setMessage("Architecture is unsupported for the selected application. If running on Simulator, try uploading a simulator build");
     }
     return testCaseResultMapper.mapDTO(testCaseResult);
+  }
+
+  @GetMapping(value = "/export/{id}")
+  @PreAuthorize("hasPermission('RESULTS','READ')")
+  public void exportRunResults(
+          HttpServletRequest request,
+          @PathVariable(value = "id") Long id,
+          HttpServletResponse response) throws ResourceNotFoundException {
+    XLSUtil wrapper = new XLSUtil();
+    TestCaseResult testCaseResult = testCaseResultService.find(id);
+    String testCaseName = testCaseResult.getIteration() != null ? testCaseResult.getIteration() : testCaseResult.getTestCase().getName();
+    testCaseResultService.export(testCaseResult, wrapper);
+    wrapper.writeToStream(request, response, testCaseName);
   }
 }

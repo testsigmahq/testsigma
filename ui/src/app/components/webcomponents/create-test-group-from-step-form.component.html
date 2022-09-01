@@ -33,7 +33,14 @@
               [translate]="'message.common.label.name'"
               for="name" class="required"></label>
           </div>
-        </div>
+          <div class="error"
+               *ngIf="stepGroupForm.controls.name.errors?.minlength"
+               [textContent]="'form.validation.common.min_length' | translate: {FieldName:'Name' , min:'4'}">
+          </div>
+          <div class="error"
+               *ngIf="stepGroupForm.controls.name.errors?.maxlength"
+               [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'250'}"></div>
+          </div>
     </form>
   </div>
   <div class="theme-overlay-content">
@@ -47,14 +54,19 @@
       [translate]="'btn.common.close'">
     </button>
     <button
-      [disabled]="!stepGroupForm.valid || containsStepGroup() || canBtnDisable()"
+      [disabled]="saving || !stepGroupForm.valid  || containsStepGroup() || canBtnDisable()"
       class="theme-btn-primary"
       type="submit"
-      (click)="saveAsStepGroup()"
-      [isLoading]="saving"
-      [message]="'message.common.saving'"
-      appAsyncBtn
-      [textContent]="'btn.common.create' | translate">
+      (click)="saveAsStepGroup(false)"
+      [translate]="saving ? 'message.common.saving' : 'btn.common.create'">
+    </button>
+    <button
+      *ngIf="checkSelectionContinue"
+      [disabled]="saving || !stepGroupForm.valid  || containsStepGroup() || canBtnDisable()"
+      class="theme-btn-primary"
+      type="submit"
+      (click)="saveAsStepGroup(true)"
+      [translate]="saving ? 'message.common.saving' : 'btn.common.create_replace'">
     </button>
   </div>
 </div>

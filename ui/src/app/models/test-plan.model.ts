@@ -51,6 +51,8 @@ export class TestPlan extends Base implements PageObject {
   public lastRunId: number;
   @serializable(object(WorkspaceVersion))
   public workspaceVersion: WorkspaceVersion;
+  @serializable
+  public entityType:String;
 
   @serializable(custom((v) => SKIP, v => {
     if (v)

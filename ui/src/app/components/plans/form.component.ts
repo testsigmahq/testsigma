@@ -96,7 +96,7 @@ export class FormComponent implements OnInit {
 
   initForControls() {
     this.testPlanForm = this.formBuilder.group({
-      name: new FormControl(this.testPlan.name, [Validators.required, Validators.minLength(4), Validators.maxLength(120),this.noWhitespaceValidator]),
+      name: new FormControl(this.testPlan.name, [Validators.required, Validators.minLength(4), Validators.maxLength(250),this.noWhitespaceValidator]),
       description: new FormControl(this.testPlan.description, []),
       testPlanLabType: new FormControl(this.testPlan.testPlanLabType, [Validators.required]),
       workspaceVersionId: new FormControl(this.testPlan.workspaceVersionId|| this.version.id, [Validators.required]),

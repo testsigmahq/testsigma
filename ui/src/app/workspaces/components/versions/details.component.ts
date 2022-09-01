@@ -78,6 +78,11 @@ export class DetailsComponent extends BaseComponent implements OnInit {
         width: '450px',
         data: {
           description: res,
+          isPermanentDelete: true,
+          title: 'Version',
+          item: 'version',
+          name: this.version.name,
+          note: this.translate.instant('message.common.confirmation.project_des', {Item:'version'}),
           disabled: singleMandatoryVersion
         },
         panelClass: ['matDialog', 'delete-confirm']

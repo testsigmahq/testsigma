@@ -343,4 +343,4 @@ $transition-fade:             opacity .15s linear !default;
 $transition-collapse:         height .35s ease !default;
 
 $line-heights: () !default;
-$line-heights: map-merge((1:10px, 1point5: 15px, 2:20px, 2point6: 26px, 3:30px, 4:40px) ,$line-heights);
+$line-heights: map-merge((1:10px, 1point5: 15px, 2:20px, 2point2:22px, 2point6: 26px, 3:30px, 4:40px) ,$line-heights);

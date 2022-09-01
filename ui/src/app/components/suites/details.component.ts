@@ -64,7 +64,12 @@ export class DetailsComponent extends BaseComponent implements OnInit {
       const dialogRef = this.matDialog.open(ConfirmationModalComponent, {
         width: '450px',
         data: {
-          description: res
+          description: res,
+          isPermanentDelete: true,
+          title: 'Test Suite',
+          item: 'test suite',
+          name: this.suite.name,
+          note: this.translate.instant('message.common.confirmation.test_plan_des', {Item:'test suite'})
         },
         panelClass: ['matDialog', 'delete-confirm']
       });

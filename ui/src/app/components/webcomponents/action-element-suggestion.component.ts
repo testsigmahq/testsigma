@@ -42,7 +42,9 @@ export class ActionElementSuggestionComponent implements OnInit {
     private elementService: ElementService,
     private matModal: MatDialog,
     private mobileRecorderEventService: MobileRecorderEventService,
-    @Inject(MAT_DIALOG_DATA) public option: { version: WorkspaceVersion, testCase: TestCase, testCaseResultId?:number, isDryRun: boolean, isStepRecordView: boolean},
+
+    @Inject(MAT_DIALOG_DATA) public option: { version: WorkspaceVersion, testCase: TestCase, testCaseResultId?:number, isDryRun: boolean, isStepRecordView: boolean, previousStepElementName?:string, currentStepElementName?:string},
+
   ) {
     this.workspaceVersion = this.option?.version;
   }
@@ -68,8 +70,12 @@ export class ActionElementSuggestionComponent implements OnInit {
       this.isQueryBased = false
     }
 
+    if(this.option.previousStepElementName || this.option.currentStepElementName ){
+      searchName += ",previousStepElementName:" + (this.option.currentStepElementName || this.option.previousStepElementName);
+    }
+
     this.elements = new InfiniteScrollableDataSource(this.elementService, "workspaceVersionId:"+this.option.version.id+searchName, undefined, 50);
-    this.setNewElement(term)
+    this.setNewElement(term);
     // this.elementService.findAll("workspaceVersionId:"+this.option.version.id+searchName, undefined, pageable).subscribe(res => {
     //   this.filteredElements = res.content;
     // })
@@ -85,7 +91,9 @@ export class ActionElementSuggestionComponent implements OnInit {
     } else {
       this.isQueryBased = false
     }
-
+    if(this.option.previousStepElementName) {
+      searchName += ",previousStepElementName:" + this.option.previousStepElementName;
+    }
     this.elements = new InfiniteScrollableDataSource(this.elementService, "workspaceVersionId:"+this.option.version.id+searchName, undefined, 50);
     this.setNewElement(term);
   }
@@ -93,11 +101,24 @@ export class ActionElementSuggestionComponent implements OnInit {
   setNewElement(term?:string) {
     if(!this.elements.isFetching){
       this.isNew = this.checkElementIsMatchedOrNot(term)? true : false;
+      this.putCurrentElementOnTop();
     } else if(this.elements.isFetching) {
       setTimeout(()=> this.setNewElement(term), 200)
     }
   }
-
+  putCurrentElementOnTop(){
+    if(!this.elements.isEmpty){
+      const reOrderedElements:Element[] = [];
+      this.elements?.cachedItems?.forEach((element :Element ,ind)=>{
+        if( this.option?.currentStepElementName === element?.name ){
+          reOrderedElements.unshift(element);
+        }else{
+          reOrderedElements.push(element);
+        }
+      });
+      this.elements.cachedItems = reOrderedElements;
+    }
+  }
   checkElementIsMatchedOrNot(term?:string) {
       let isNotMatched = false
     if(this.elements.isEmpty) {

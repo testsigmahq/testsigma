@@ -116,8 +116,13 @@
     [class.theme-border-b]="!isActionText"
     class=" py-15 ml-5 pl-7 form-group p-0 ts-col-auto d-flex align-items-baseline flex-nowrap">
     <div
-      class="result-status-8 list-number ng-binding x-sm-size text-white"
-      [textContent]="indexPosition()"></div>
+      class="result-status-8 ng-binding x-sm-size text-white list-number">
+      <div
+        class="text-truncate p-2"
+        [matTooltip]="indexPosition().toString()"
+        [textContent]="indexPosition()">
+      </div>
+    </div>
     <div class="d-flex align-items-center">
       <i
         class="px-5 text-warning"

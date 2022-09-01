@@ -127,7 +127,7 @@ export class FormComponent extends BaseComponent implements OnInit {
 
   initFormControls() {
     this.testSuiteForm = new FormGroup({
-      name: new FormControl(this.testSuite.name, [Validators.required, Validators.minLength(4), Validators.maxLength(125),this.noWhitespaceValidator]),
+      name: new FormControl(this.testSuite.name, [Validators.required, Validators.minLength(4), Validators.maxLength(250),this.noWhitespaceValidator]),
       description: new FormControl(this.testSuite.description),
       preRequisite: new FormControl(this.testSuite.preRequisite),
       activeTestCases: new FormControl(this.activeTestCases, [Validators.required])

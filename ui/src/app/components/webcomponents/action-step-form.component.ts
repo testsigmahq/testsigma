@@ -1289,8 +1289,8 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
 
   private getPreviousStepElement() {
     for (let i = this.testStep.position - 1; i >= 0; i--) {
-      let elementName = this.testSteps.content[i].element;
-      if(elementName) {
+      let elementName = this.testSteps.content?.[i]?.element;
+      if (elementName) {
         return elementName;
       }
     }

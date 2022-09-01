@@ -7,15 +7,18 @@
 
 package com.testsigma.specification;
 
-import com.testsigma.model.TestPlanLabType;
-import com.testsigma.model.TestPlanType;
-import com.testsigma.model.TestPlan;
+import com.testsigma.model.*;
+import lombok.extern.log4j.Log4j2;
 
 import javax.persistence.criteria.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+import java.util.Locale;
+@Log4j2
 public class TestPlanSpecification extends BaseSpecification<TestPlan> {
 
   public TestPlanSpecification(final SearchCriteria criteria) {
@@ -25,6 +28,10 @@ public class TestPlanSpecification extends BaseSpecification<TestPlan> {
   @Override
   protected Object getEnumValueIfEnum(String key, Object value, SearchOperation op) {
     switch (key) {
+      case "lastRunOn":
+      case "createdDate":
+      case "updatedDate":
+        return parseDate(value, op);
       case "testPlanType":
         if (op == SearchOperation.IN) {
           if (value.getClass().getName().equals("java.lang.String")) {
@@ -51,6 +58,16 @@ public class TestPlanSpecification extends BaseSpecification<TestPlan> {
           }
         }
         return TestPlanLabType.valueOf(value.toString());
+      case "result":
+      case "lastRunResult":
+        if (op == SearchOperation.IN) {
+          List<ResultConstant> resultConstants = new ArrayList<>();
+          Arrays.asList(value.toString().split("#")).forEach(string -> {
+            resultConstants.add(ResultConstant.valueOf(string));
+          });
+          return resultConstants;
+        }
+        return ResultConstant.valueOf(value.toString());
       default:
         return super.getEnumValueIfEnum(key, value, op);
     }
@@ -62,13 +79,25 @@ public class TestPlanSpecification extends BaseSpecification<TestPlan> {
       Join environments = root.join("testDevices", JoinType.INNER);
       Join envSuites = environments.join("environmentSuites", JoinType.INNER);
       return envSuites.get("suiteId");
+    } else if (criteria.getKey().equals("tagId")) {
+      Join s = root.join("tagUses", JoinType.INNER);
+      return s.get("tagId");
     } else if (criteria.getKey().equals("agentId")) {
       Join environments = root.join("testDevices", JoinType.INNER);
       return environments.get("agentId");
     } else if(criteria.getKey().equals("testPlanLabType")){
       Join environments = root.join("testDevices", JoinType.INNER);
       return environments.get("testPlanLabType");
-    }
+    } else if(criteria.getKey().equals("lastRunOn")){
+      Join results = root.join("lastRun", JoinType.INNER);
+      return results.get("startTime");
+    } else if(criteria.getKey().equals("lastRunResult")){
+      Join results = root.join("lastRun", JoinType.INNER);
+      return results.get("result");
+    } else if (criteria.getKey().equals("createdBy")) // TO support old filters if any having createdBy as filter key
+      return root.get("createdById");
+    else if (criteria.getKey().equals("updatedBy")) // TO support old filters if any having updatedBy as filter key
+      return root.get("updatedById");
     return root.get(criteria.getKey());
   }
 
@@ -82,5 +111,19 @@ public class TestPlanSpecification extends BaseSpecification<TestPlan> {
       }
     }
     return predicate;
+  }
+  protected Object parseDate(Object value, SearchOperation op) {
+    String valueStr = value.toString();
+    if (op.equals(SearchOperation.LESS_THAN))
+      valueStr = valueStr + " 23:59:59";
+    if (op.equals(SearchOperation.GREATER_THAN))
+      valueStr = valueStr + " 00:00:00";
+    DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+    try {
+      return format.parse(valueStr);
+    } catch (ParseException e) {
+      log.error(e.getMessage(), e);
+      return null;
+    }
   }
 }

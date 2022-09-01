@@ -4,7 +4,7 @@ import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
 import {TestSuiteService} from "../../services/test-suite.service";
 import {NotificationsService, NotificationType} from 'angular2-notifications';
 import {TranslateService} from '@ngx-translate/core';
-import {ActivatedRoute, Params} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {TestSuite} from "../../models/test-suite.model";
 import {Page} from "../../shared/models/page";
 import {Pageable} from "../../shared/models/pageable";
@@ -15,6 +15,11 @@ import {LinkedEntitiesModalComponent} from "../../shared/components/webcomponent
 import {InfiniteScrollableDataSource} from "../../data-sources/infinite-scrollable-data-source";
 import {TestPlanService} from "../../services/test-plan.service";
 import {ToastrService} from "ngx-toastr";
+import {WorkspaceVersionService} from "../../shared/services/workspace-version.service";
+import {WorkspaceVersion} from "../../models/workspace-version.model";
+import {FilterFormComponent} from "./filter-form.component";
+import * as moment from "moment";
+
 
 @Component({
   selector: 'app-test-suites',
@@ -28,7 +33,9 @@ export class ListComponent extends BaseComponent implements OnInit {
   public selectedSuites = [];
   public searchQuery = "";
   public testSuites: Page<TestSuite>;
-  sortByColumns = ["name", "createdDate", "updatedDate"];
+  public query: string;
+  public version: WorkspaceVersion;
+  sortByColumns = ["name", "isManual","lastRun", "createdDate", "updatedDate"];
   direction = ",asc";
   sortedBy = "name";
   public sortByQuery:string
@@ -45,29 +52,47 @@ export class ListComponent extends BaseComponent implements OnInit {
     private testSuiteService: TestSuiteService,
     private testPlanService: TestPlanService,
     public route: ActivatedRoute,
+    private router: Router,
+    private workspaceVersionService: WorkspaceVersionService,
     private matDialog: MatDialog) {
     super(authGuard, notificationsService, translate, toastrService);
   }
 
   get hideHeaderToolBar() {
     return (this.selectedSuites.length ||
-      (!this.testSuites?.content.length && !this.searchQuery))
+      (!this.testSuites?.content.length && !this.searchQuery && !this.query?.length))
   };
 
   ngOnInit(): void {
     this.route.parent.params.subscribe((params: Params) => {
       this.versionId = params.versionId;
+      this.fetchVersion();
       this.pushToParent(this.route, this.route.parent.snapshot.params);
       this.defaultQuery = "workspaceVersionId:" + this.versionId;
       this.fetchTestSuites();
     });
+    this.route.params.subscribe((params) => {
+      const allParams = {...params, ...{versionId: this.versionId}};
+      this.pushToParent(this.route, allParams);
+      this.refreshListView(this.route.snapshot.queryParamMap['params']['q']);
+    })
   };
+
+  refreshListView(query) {
+    this.query = query;
+    setTimeout(()=>{
+      this.fetchTestSuites();
+    },0);
+  }
+
+  fetchVersion() {
+    this.workspaceVersionService.show(this.versionId).subscribe(res => this.version = res);
+  }
 
   fetchTestSuites() {
     let sortBy = this.sortedBy + this.direction;
-    let query = this.defaultQuery + this.searchQuery;
-    this.testSuiteService.findAll(query, sortBy, this.currentPage)
-      .subscribe(res => {
+    let query = this.defaultQuery + this.searchQuery + (this.query||'');
+    this.testSuiteService.findAll(query, sortBy, this.currentPage).subscribe(res => {
         this.isFiltered = !!this.searchQuery.length;
         this.goToPreviousPageIfEmpty(res)
         this.fetchingCompleted = true;
@@ -212,6 +237,37 @@ export class ListComponent extends BaseComponent implements OnInit {
         panelClass: ['mat-dialog', 'rds-none']
       });
     });
+  }
+  openFilter() {
+
+    let filterDialogRef = this.matDialog.open(FilterFormComponent, {
+      width: '25%',
+      height: '100vh',
+      position: {top: '0', right: '0', bottom: '0'},
+      panelClass: ['mat-overlay'],
+      data: {
+        query: this.query,
+        version:this.version
+      }
+    });
+    filterDialogRef.componentInstance.filterEvent.subscribe(query => {
+      if (query) {
+        this.query = query;
+        this.router.navigate(['/td', this.version.id, 'suites'], {queryParams: {q: this.query}});
+        this.fetchTestSuites();
+      } else
+        this.discard();
+    });
+  }
+
+  discard() {
+    this.query = undefined;
+    this.router.navigate(['/td', this.version.id, 'suites']);
+    this.fetchTestSuites();
+  }
+
+  humanizedDate(date) {
+    return moment.duration(moment().diff(date)).humanize() + ' ago';
   }
 
 }

@@ -13,6 +13,7 @@ import com.testsigma.exception.TestsigmaException;
 import com.testsigma.mapper.TestPlanMapper;
 import com.testsigma.model.TestDevice;
 import com.testsigma.model.TestPlan;
+import com.testsigma.service.TagService;
 import com.testsigma.service.TestDeviceService;
 import com.testsigma.service.TestPlanService;
 import com.testsigma.specification.TestPlanSpecificationsBuilder;
@@ -41,6 +42,7 @@ public class TestPlansController {
   private final TestPlanService testPlanService;
   private final TestDeviceService testDeviceService;
   private final TestPlanMapper testPlanMapper;
+  private final TagService tagService;
 
 
   @GetMapping

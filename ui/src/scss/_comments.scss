@@ -9,7 +9,7 @@
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    border-radius: 50%;
+    border-radius: 4px;
     background: $grey-light-bgc;
     @extend .fz-13;
     &.lg-size {
@@ -37,7 +37,7 @@
   }
   &.pill-number {
     width: unset;
-    border-radius: 10px!important;
+    border-radius: 4px!important;
     padding: 0 8px;
   }
 }

@@ -137,7 +137,7 @@ export class JiraIssueFormComponent extends BaseComponent implements OnInit {
       mapping.fields["project"] = {"id": this.selectedProject.id};
       mapping.fields["issuetype"] = {"id": this.selectedIssueType.id};
       var description="";
-      mapping.fields["description"] = mapping.fields["description"]+", "+this.getJiraDescription(description);
+      mapping.fields["description"] = this.getJiraDescription(description)+mapping.fields["description"]+", ";
       mapping.fields["summary"] = "[Automated Test Failed]"+this.testCaseResult.testCase.name;
 
     }
@@ -158,7 +158,7 @@ export class JiraIssueFormComponent extends BaseComponent implements OnInit {
     var JIRA_STEPS="steps";
     var JIRA_MESSAGE="Message";
 
-    description = JIRA_DESCRIPTION+" : "+" "+this.testCaseResult.testCase.description+",  ";
+    description = JIRA_DESCRIPTION+" : "+" "+this.form.value.description+",  ";
     var isDataDriven = (this.testCaseResult.testCase.isDataDriven)? 'Yes,' : 'No,';
     description =  description + JIRA_IS_DATA_DRIVEN + " : " + isDataDriven + "  " ;
     description =  description +  JIRA_TEST_CASE_RESULT + " : " +  " " + this.testCaseResult.result +", " ;

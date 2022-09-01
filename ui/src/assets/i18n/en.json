@@ -104,6 +104,7 @@
   "message.common.confirmation.default_change": "Are you sure to change this?",
   "message.common.confirmation.title": "Delete Confirmation",
   "message.common.confirmation.note": "You cannot undo this action!",
+  "message.common.confirmation.note_trash": "You can always restore the deleted test cases back from Trash!",
   "message.common.createdDate": "Created Date",
   "message.common.updatedDate": "Updated Date",
   "message.common.clear": "Clear",

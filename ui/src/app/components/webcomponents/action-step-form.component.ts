@@ -1283,18 +1283,19 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       if(!name && this.testStep?.addonElements && targetElement?.dataset?.reference){
         name = this.testStep.addonElements[targetElement.dataset.reference]?.name;
       }
-    }
-    return name;
+    };
+    return name !="element" ? name : undefined;
   }
 
   private getPreviousStepElement() {
     for (let i = this.testStep.position - 1; i >= 0; i--) {
       let elementName = this.testSteps.content?.[i]?.element;
-      if (elementName) {
+      if (elementName && elementName != "element") {
         return elementName;
       }
     }
   }
+
   private openElementsPopup(targetElement?) {
     let sendDetails = {
       version: this.version,

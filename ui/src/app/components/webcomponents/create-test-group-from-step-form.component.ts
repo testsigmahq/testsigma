@@ -116,6 +116,9 @@ export class CreateTestGroupFromStepFormComponent extends BaseComponent implemen
     if(this.options.steps.length > 1) {
       let sortedByPosition = this.options.steps.sort((test: TestStep, test2: TestStep) => test.position - test2.position);
       let isContinueSteps = sortedByPosition.filter((item: TestStep) => {
+        if(lastPosition != null && !item.position) {
+          item.position = lastPosition + 1;
+        }
         lastPosition = lastPosition == null ? item.position : lastPosition
         if ((lastPosition != item.position && item.position - lastPosition == 1) || lastPosition == item.position) {
           lastPosition = item.position;

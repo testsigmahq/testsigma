@@ -61,7 +61,7 @@
       [translate]="saving ? 'message.common.saving' : 'btn.common.create'">
     </button>
     <button
-      *ngIf="checkSelectionContinue"
+      *ngIf="checkSelectionContinue && !options?.testCase?.isStepGroup"
       [disabled]="saving || !stepGroupForm.valid  || containsStepGroup() || canBtnDisable()"
       class="theme-btn-primary"
       type="submit"

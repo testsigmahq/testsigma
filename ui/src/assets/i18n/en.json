@@ -2078,7 +2078,7 @@
   "common.prerequisite": "Prerequisite",
   "test_plan.suite.add_machine.disabled.no_suite": "Add Test Suites to add the Test Machine",
   "suggestion.runtime_vars.project": "Project",
-  "dashboard.test_cases.name": "Test Case Name"
+  "dashboard.test_cases.name": "Test Case Name",
   "partial_schedule.plan.title" : "Schedule Partial Test Run",
   "plan_result.report_bug.enable_plugin.label": "Enable new plugins by going to <b>Settings/Plugins</b>",
   "plan_result.report_bug.no_plugin_enabled.label": "No plugin is <b>enabled</b>, Enable new plugins by<br/> going to <b>Settings/Plugins</b>",

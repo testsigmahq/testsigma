@@ -15,6 +15,7 @@ import {Pageable} from "../../shared/models/pageable";
 import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
 import {UserPreferenceService} from "../../services/user-preference.service";
 import { MatHorizontalStepper } from '@angular/material/stepper';
+import {TestPlanTagService} from "../../services/test-plan-tag.service";
 
 @Component({
   animations: [fade],
@@ -44,7 +45,8 @@ export class FormComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private authGuard: AuthenticationGuard,
-    private userPreferenceService: UserPreferenceService) {
+    private userPreferenceService: UserPreferenceService,
+    private testPlanTagService: TestPlanTagService) {
 
   }
 
@@ -94,14 +96,15 @@ export class FormComponent implements OnInit {
 
   initForControls() {
     this.testPlanForm = this.formBuilder.group({
-      name: new FormControl(this.testPlan.name, [Validators.required, Validators.minLength(4), Validators.maxLength(120),this.noWhitespaceValidator]),
+      name: new FormControl(this.testPlan.name, [Validators.required, Validators.minLength(4), Validators.maxLength(250),this.noWhitespaceValidator]),
       description: new FormControl(this.testPlan.description, []),
       testPlanLabType: new FormControl(this.testPlan.testPlanLabType, [Validators.required]),
       workspaceVersionId: new FormControl(this.testPlan.workspaceVersionId|| this.version.id, [Validators.required]),
       matchBrowserVersion: new FormControl(this.testPlan.matchBrowserVersion, []),
       testDevices: this.formBuilder.array([]),
       mailList: this.formBuilder.array([]),
-      testPlanType: new FormControl(this.testPlan.testPlanType, [Validators.required])
+      testPlanType: new FormControl(this.testPlan.testPlanType, [Validators.required]),
+      tags: new FormControl(this.testPlan.tags)
     })
 
     setTimeout(()=> this.isFetchingComplete = true, 100)

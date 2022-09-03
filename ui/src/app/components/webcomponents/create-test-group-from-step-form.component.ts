@@ -78,26 +78,27 @@ export class CreateTestGroupFromStepFormComponent extends BaseComponent implemen
     this.translate.get('test_step.copy_as.name', {testCaseName: this.options.testCase.name}).subscribe((res: string) => {
       this.stepGroupForm = new FormGroup({
         name: new FormControl(res, [
-          Validators.required
+          Validators.required, Validators.minLength(4), Validators.maxLength(250)
         ])
       });
       setTimeout(() => this.searchInput.nativeElement.focus(), 200);
     })
   }
 
-  saveAsStepGroup() {
+  saveAsStepGroup(isReplace?: boolean) {
     this.saving = true;
     let copyStepGroup = {
       name: this.stepGroupForm.get('name').value,
       testCaseId: this.options.testCase.id,
       stepIds: this.options.steps.map(step => step.id),
-      isStepGroup: true
+      isStepGroup: true,
+      isReplace: isReplace
     }
     this.testCaseService.copy(copyStepGroup).subscribe(
       (testCase) => {
         this.translate.get('test_step.copy_as.step_group.success').subscribe((res: string) => {
           this.showNotification(NotificationType.Success, res);
-          this.dialogRef.close(testCase);
+          this.dialogRef.close({testCase: testCase, isReplace: isReplace});
           this.saving = false;
         });
       },
@@ -108,5 +109,26 @@ export class CreateTestGroupFromStepFormComponent extends BaseComponent implemen
         });
       }
     );
+  }
+
+  get checkSelectionContinue() {
+    let lastPosition = null;
+    if(this.options.steps.length > 1) {
+      let sortedByPosition = this.options.steps.sort((test: TestStep, test2: TestStep) => test.position - test2.position);
+      let isContinueSteps = sortedByPosition.filter((item: TestStep) => {
+        if(lastPosition != null && !item.position) {
+          item.position = lastPosition + 1;
+        }
+        lastPosition = lastPosition == null ? item.position : lastPosition
+        if ((lastPosition != item.position && item.position - lastPosition == 1) || lastPosition == item.position) {
+          lastPosition = item.position;
+          return false;
+        }
+        return true
+      });
+      return !isContinueSteps.length;
+    } else {
+      return true;
+    }
   }
 }

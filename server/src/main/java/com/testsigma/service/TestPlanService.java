@@ -20,8 +20,10 @@ import com.testsigma.event.TestPlanEvent;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaDatabaseException;
 import com.testsigma.mapper.TestPlanMapper;
+import com.testsigma.model.TagType;
 import com.testsigma.model.TestDevice;
 import com.testsigma.model.TestPlan;
+import com.testsigma.repository.TagRepository;
 import com.testsigma.repository.TestPlanRepository;
 import com.testsigma.specification.SearchCriteria;
 import com.testsigma.specification.SearchOperation;
@@ -51,6 +53,8 @@ public class TestPlanService extends XMLExportImportService<TestPlan> {
   private final TestDeviceService testDeviceService;
   private final ApplicationEventPublisher applicationEventPublisher;
   private final TestPlanMapper mapper;
+  private final TagService tagService;
+  private final TagRepository tagRepository;
 
   public Optional<TestPlan> findOptional(Long id) {
     return testPlanRepository.findById(id);
@@ -77,13 +81,18 @@ public class TestPlanService extends XMLExportImportService<TestPlan> {
     List<TestDevice> environments = testPlan.getTestDevices();
     testPlan = this.testPlanRepository.save(testPlan);
     testPlan.setTestDevices(environments);
+    tagService.updateTags(testPlan.getTags(), TagType.TEST_PLAN, testPlan.getId());
     saveExecutionEnvironments(testPlan, false);
     publishEvent(testPlan, EventType.CREATE);
     return testPlan;
   }
 
   public TestPlan update(TestPlan testPlan) {
+    List<String> tagNames = testPlan.getTags();
     testPlan = this.testPlanRepository.save(testPlan);
+    testPlan.setTags(tagNames);
+    if (testPlan.getTags() != null)
+      tagService.updateTags(testPlan.getTags(), TagType.TEST_PLAN, testPlan.getId());
     publishEvent(testPlan, EventType.UPDATE);
     return testPlan;
   }

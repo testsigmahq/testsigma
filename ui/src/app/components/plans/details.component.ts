@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {TestPlan} from "../../models/test-plan.model";
 import {TestPlanService} from "../../services/test-plan.service";
 import { ActivatedRoute } from '@angular/router';
+import {TestPlanTagService} from "../../services/test-plan-tag.service";
 
 @Component({
   selector: 'app-details',
@@ -18,7 +19,8 @@ export class DetailsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private testPlanService: TestPlanService) { }
+    private testPlanService: TestPlanService,
+    public testPlanTagService: TestPlanTagService) { }
 
   ngOnInit(): void {
     this.testPlanService.find(this.route.parent.snapshot.params.testPlanId).subscribe(res => this.testPlan = res);

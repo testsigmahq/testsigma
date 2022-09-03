@@ -38,6 +38,7 @@ export class UrlConstantsService {
   public workspacesUrl = this.apiBase + '/workspaces';
   public testCaseTagsUrl = this.apiBase + '/testcase_tags';
   public testSuiteTagsUrl = this.apiBase + '/testsuite_tags';
+  public testPlanTagsUrl = this.apiBase + '/test_plan_tags';
   public elementTagsUrl = this.apiBase + "/element_tags"
   public screenshotComparisonsUrl = this.apiBase + '/screenshot_comparisons';
   public testStepScreenshotsUrl = this.apiBase + '/test_step_screenshots';

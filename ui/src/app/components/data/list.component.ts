@@ -121,21 +121,25 @@ export class ListComponent extends BaseComponent implements OnInit {
     }
   }
 
-  openDeleteDialog(id) {
-    let message = id ? "message.common.confirmation.default" : "test_data_profiles.bulk_delete.confirmation.message";
+  openDeleteDialog(testDataProfile: TestData) {
+    let message = testDataProfile?.id ? "message.common.confirmation.default" : "test_data_profiles.bulk_delete.confirmation.message";
     this.translate.get(message, {selectedDataProfiles: this.selectedDataProfiles.length}).subscribe((res) => {
       const dialogRef = this.matDialog.open(ConfirmationModalComponent, {
         width: '450px',
         data: {
-          description: res
-        },
+          description: res,
+          isPermanentDelete: true,
+          title: testDataProfile? 'Test Data' : 'List of Test Data',
+          item: 'test data',
+          name: testDataProfile ? testDataProfile.name : 'multiple test data',
+          note: this.translate.instant('message.common.confirmation.test_data_des', {Item:'test data'})        },
         panelClass: ['matDialog', 'delete-confirm']
       });
       dialogRef.afterClosed()
         .subscribe(result => {
           if (result) {
-            if (id)
-              this.destroyDataProfile(id);
+            if (testDataProfile?.id)
+              this.destroyDataProfile(testDataProfile?.id);
             else
               this.multipleDelete()
           }
@@ -164,10 +168,10 @@ export class ListComponent extends BaseComponent implements OnInit {
 
   public fetchLinkedCases(id) {
     let testCases: InfiniteScrollableDataSource;
-    testCases = new InfiniteScrollableDataSource(this.testCaseService, "workspaceVersionId:" + this.versionId + ",testDataId:" + id);
+    testCases = new InfiniteScrollableDataSource(this.testCaseService, "workspaceVersionId:" + this.versionId + ",testDataId:" + (id instanceof TestData? id.id : id));
 
     let testCasesWithProfileInForLoop :InfiniteScrollableDataSource;
-    testCasesWithProfileInForLoop = new InfiniteScrollableDataSource(this.testCaseService, "workspaceVersionId:" + this.versionId + ",forLoopTestDataId:" + id);
+    testCasesWithProfileInForLoop = new InfiniteScrollableDataSource(this.testCaseService, "workspaceVersionId:" + this.versionId + ",forLoopTestDataId:" + (id instanceof TestData? id.id : id));
 
     waitTillRequestResponds();
     let _this = this;

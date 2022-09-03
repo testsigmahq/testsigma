@@ -399,42 +399,42 @@ export class GetStartedBaseComponent extends BaseComponent implements OnInit {
 
   private fetchDryTestCaseCount(user) {
     if (this.userCreatedAt)
-      this.dryTestPlanService.findAll("createdDate>" + this.userCreatedAt ).subscribe(
+      this.dryTestPlanService.findAll("createdDate>" + moment(this.userCreatedAt).format("YYYY-MM-DD")).subscribe(
       res => this.getStartedCounts["dryTestCaseCount"] = res.content.length
     );
   }
 
   private fetchTestDataCount(user) {
     if (this.userCreatedAt)
-      this.testDataService.findAll("createdDate>" + this.userCreatedAt).subscribe(
+      this.testDataService.findAll("createdDate>" + moment(this.userCreatedAt).format("YYYY-MM-DD")).subscribe(
       res => this.getStartedCounts["testDataCount"] = res.content.length
     );
   }
 
   private fetchCrossExecutionCount(user) {
     if (this.userCreatedAt)
-      this.testPlanService.findAll("testPlanType:" + TestPlanType.CROSS_BROWSER.toString() + ",createdDate>" + this.userCreatedAt).subscribe(
+      this.testPlanService.findAll("testPlanType:" + TestPlanType.CROSS_BROWSER.toString() + ",createdDate>" + moment(this.userCreatedAt).format("YYYY-MM-DD")).subscribe(
       res => this.getStartedCounts["crossExecutionCount"] = res.content.length
     );
   }
 
   private fetchTestSuiteCount(user) {
     if (this.userCreatedAt)
-      this.testSuiteService.findAll("createdDate>" + this.userCreatedAt).subscribe(
+      this.testSuiteService.findAll("createdDate>" + moment(this.userCreatedAt).format("YYYY-MM-DD")).subscribe(
       res => this.getStartedCounts["testSuiteCount"] = res.content.length
     );
   }
 
   private fetchExecutionCount(user) {
     if (this.userCreatedAt)
-      this.testPlanService.findAll("createdDate>" + this.userCreatedAt).subscribe(
+      this.testPlanService.findAll("createdDate>" + moment(this.userCreatedAt).format("YYYY-MM-DD")).subscribe(
       res => this.getStartedCounts["executionCount"] = res.content.length
     );
   }
 
   private fetchLocalExecutionCount(user) {
     if (this.userCreatedAt)
-      this.testPlanService.findAll("testPlanLabType:" + TestPlanLabType.Hybrid.toString() + ",createdDate>" + this.userCreatedAt).subscribe(
+      this.testPlanService.findAll("testPlanLabType:" + TestPlanLabType.Hybrid.toString() + ",createdDate>" + moment(this.userCreatedAt).format("YYYY-MM-DD")).subscribe(
       res => this.getStartedCounts["hybridExecutionCount"] = res.content.length
     );
   }

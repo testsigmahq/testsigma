@@ -31,7 +31,7 @@ export class TestSuite extends Base implements PageObject {
   public lastRun: TestSuiteResult;
   @serializable(custom(v => v, v => SKIP))
   public testCaseIds: number[];
-  @serializable(custom(v => v, v => SKIP))
+  @serializable(custom(v => v, v => v))
   public tags: String[];
 
   public isSelected: Boolean;

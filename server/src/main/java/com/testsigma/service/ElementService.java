@@ -29,6 +29,7 @@ import com.testsigma.web.request.ElementRequest;
 import com.testsigma.web.request.ElementScreenNameRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.checkerframework.checker.index.qual.PolyUpperBound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -69,6 +70,11 @@ public class ElementService extends XMLExportImportService<Element> {
 
   public Page<Element> findAll(Specification<Element> specification, Pageable pageable) {
     return elementRepository.findAll(specification, pageable);
+  }
+  public Page<Element> findAllSortedByPreviousStepElement(Pageable pageable, Long applicationVersionId,
+                                                               String name, String screenName, String previousStepElementName) {
+    Element previousElement = elementRepository.findFirstElementByNameAndWorkspaceVersionId(previousStepElementName, applicationVersionId);
+    return elementRepository.findWithOrderByPreviousStepElementID(pageable, applicationVersionId, name, screenName, previousElement.getScreenNameId());
   }
 
   public Element create(Element element) {

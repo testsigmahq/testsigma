@@ -64,6 +64,31 @@
       <app-re-run-button
         *ngIf="testPlanResult.canReRun"
         [testPlanResult]="testPlanResult"></app-re-run-button>
+      <div class="dropdown section-title mouse-over d-inline-block">
+        <div class="btn-group">
+          <i class="fa-export-thin section-action-icons pointer"></i>
+        </div>
+        <div
+          class="dropdown-menu drop-down-transparent min-w left-md">
+          <ul
+            class="bg-white border-rds-4 ng-scope p-15 shadow-all2-b4">
+            <li
+              class="border-rds-10 btn rb-medium grey-on-hover text-dark">
+              <a
+                [href]="'/test_plan_results/export/'+ testPlanResult?.testPlanId + '/runs/' + testPlanResult?.id"
+                class="text-dark text-decoration-none"
+                target="_blank" [translate]="'runs.details.export_as_xls'"></a>
+            </li>
+            <li
+              class="border-rds-10 btn rb-medium grey-on-hover text-dark ml-0">
+              <a
+                [href]="'/reports/junit/'+testPlanResult?.id"
+                class="text-dark text-decoration-none"
+                target="_blank" [translate]="'runs.details.export_as_junit'"></a>
+            </li>
+          </ul>
+        </div>
+      </div>
       <div class="position-relative">
         <span
           [class.active]="showFilter"

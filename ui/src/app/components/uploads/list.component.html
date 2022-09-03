@@ -97,7 +97,7 @@
               (click)="openSaveUploadForm(upload)"
               class="fa-pencil-on-paper action-icon"></a>
             <a
-              data-placement="bottom" (click)="checkForLinkedEnvironments(upload.id)"
+              data-placement="bottom" (click)="checkForLinkedEnvironments(upload.id, upload.name)"
               [matTooltip]="'pagination.delete' | translate"
               href="javascript:void(0)"
               class="fa-trash-thin action-icon"></a>

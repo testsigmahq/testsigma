@@ -51,6 +51,8 @@ export class TestPlan extends Base implements PageObject {
   public lastRunId: number;
   @serializable(object(WorkspaceVersion))
   public workspaceVersion: WorkspaceVersion;
+  @serializable
+  public entityType:String;
 
   @serializable(custom((v) => SKIP, v => {
     if (v)
@@ -66,6 +68,8 @@ export class TestPlan extends Base implements PageObject {
 
   @serializable
   public matchBrowserVersion: boolean;
+  @serializable(custom(v => v, v => v))
+  public tags: String[];
   public selected: Boolean;
   public environment: Environment;
 

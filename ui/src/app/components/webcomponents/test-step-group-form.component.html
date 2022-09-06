@@ -3,7 +3,8 @@
   [formGroup]="stepGroupForm">
   <div
     *ngIf="stepGroups?.content?.length || searchQuery?.length"
-    class="px-5 pt-14 pb-15 step-container-section">
+    class="px-5 pt-14 pb-15 step-container-section"
+    [style]="'padding-left: calc('+ indentation*3 +'px + 5px) !important' ">
     <app-auto-complete
       class="pb-2 ts-col-100 d-block mt-n4"
       [formGroup]="stepGroupForm"

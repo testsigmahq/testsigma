@@ -75,7 +75,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   @Input('isDryRun') isDryRun: boolean;
   @Output('onSuggestion') public onSuggestion = new EventEmitter<any>();
   @Optional() @Input('conditionTypeChange') conditionTypeChange: TestStepConditionType;
-  
+
   @ViewChild('searchInput') searchInput: ElementRef;
   @ViewChild('replacer') replacer: ElementRef;
   @ViewChild('actionsDropDownContainer') actionsDropDownContainer: ElementRef;
@@ -1336,8 +1336,10 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   private assignElement(elementName, targetElement?) {
     this.showTemplates = false;
     if (elementName) {
-      if (elementName && elementName.length)
+      if (elementName && elementName.length) {
         targetElement.innerHTML = elementName;
+        this.selectedElementName = elementName;
+      }
       if (this.testDataPlaceholder()?.length && !this.isEdit) {
         this.testDataPlaceholder()?.[this.currentDataItemIndex || 0]?.click();
         this.selectTestDataPlaceholder();

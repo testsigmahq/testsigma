@@ -33,3 +33,10 @@ body {
     @extend .px-0;
   }
 }
+app-test-case-priorities, app-test-case-types{
+  .cdk-virtual-scroll-viewport{
+    .cdk-virtual-scroll-content-wrapper{
+      @extend .pb-40;
+    }
+  }
+}

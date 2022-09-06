@@ -31,9 +31,6 @@
           class="error mt-30" *ngIf="versionForm.controls.versionName.errors?.required && submitted"
           [textContent]="'form.validation.common.required' | translate:{FieldName: ('version.form.label.version_name'|translate)}"></div>
         <div
-          class="error mt-30" *ngIf="versionForm.controls.versionName.errors?.minlength && submitted"
-          [textContent]="'form.validation.common.min_length' | translate: {FieldName:('version.form.label.version_name'|translate) , min:'4'}"></div>
-        <div
           class="error mt-30" *ngIf="versionForm.controls.versionName.errors?.maxlength && submitted"
           [textContent]="'form.validation.common.max_length' | translate: {FieldName:('version.form.label.version_name'|translate) , max:'250'}"></div>
       </div>

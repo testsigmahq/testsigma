@@ -42,6 +42,12 @@
             (keyup.enter)="updateTestCasePriority(testCasePriority)"
             (blur)="testCasePriority.isEdit=undefined;editMode=false"
             [value]="testCasePriority.name">
+          <div
+            class="error mt-10" *ngIf="rowNameControl.errors?.minlength "
+            [textContent]="'form.validation.common.min_length' | translate: {FieldName:('testcase.summary.priority'|translate) , min:'4'}"></div>
+          <div
+            class="error mt-10" *ngIf="rowNameControl.errors?.maxlength "
+            [textContent]="'form.validation.common.max_length' | translate: {FieldName:('testcase.summary.priority'|translate) , max:'250'}"></div>
           <span
             class="input-control"
             [translate]="'message.common.place_holder.enter_to_save'"></span>
@@ -58,6 +64,12 @@
             (keyup.escape)="newRow=false"
             (keyup.enter)="createTestCasePriority()"
             (blur)="newRow=false">
+          <div
+            class="error mt-10" *ngIf="rowNameControl.errors?.minlength "
+            [textContent]="'form.validation.common.min_length' | translate: {FieldName:('testcase.summary.priority'|translate) , min:'4'}"></div>
+          <div
+            class="error mt-10" *ngIf="rowNameControl.errors?.maxlength "
+            [textContent]="'form.validation.common.max_length' | translate: {FieldName:('testcase.summary.priority'|translate) , max:'250'}"></div>
           <span
             class="input-control"
             [translate]="'message.common.place_holder.enter_to_save'"></span>

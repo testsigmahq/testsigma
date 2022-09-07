@@ -27,8 +27,8 @@ import {TestPlanLabType} from '../../../enums/test-plan-lab-type.enum';
       <input
         type="text" readonly [class.pl-20]="hasProjectIcon || hasApplicationIcon"
              [value]="noneValue ? 'None' : value?.name"
-             class="autocomplete-placeholder text-truncate">
-      <i class="fa-down-arrow-filled" [class.fz-12]="inline"></i>
+             class="autocomplete-placeholder text-truncate z-in-2 py-10 my-n10 pl-10 ml-n8">
+      <i class="fa-down-arrow-filled z-in-2 px-14 mx-n14 py-15 my-n15" [class.fz-12]="inline"></i>
       </div>
       <input
         type="text" matInput

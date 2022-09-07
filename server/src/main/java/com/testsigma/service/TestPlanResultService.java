@@ -31,7 +31,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -59,10 +62,6 @@ public class TestPlanResultService {
 
   public TestPlanResult findByTestPlanIdAndStatusIsNot(Long testPlanId, StatusConstant status) {
     return this.testPlanResultRepository.findByTestPlanIdAndStatusIsNot(testPlanId, status);
-  }
-
-  public List<TestPlanResult> findByStatus(StatusConstant status) {
-    return this.testPlanResultRepository.findByStatus(status);
   }
 
   public TestPlanResult create(TestPlanResult testPlanResult) {

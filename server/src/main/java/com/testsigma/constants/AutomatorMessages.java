@@ -34,5 +34,4 @@ public class AutomatorMessages {
   public static final String DEVICE_NOT_ONLINE = "Device is not online. Please check the device connection";
 
   public static final String RE_RUN_PARENT_ID_ALREADY_EXSISTS = "ReRun Parent Id Already Exists";
-  public static final String ANOTHER_TEST_PLAN_IN_PROGRESS = "Another test plan is already in progress";
 }

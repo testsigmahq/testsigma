@@ -34,6 +34,8 @@ public interface TestPlanResultRepository extends JpaRepository<TestPlanResult, 
 
   TestPlanResult findByReRunParentId(Long ReRunParentId);
 
+  List<TestPlanResult> findByStatus(StatusConstant status);
+
   Page<TestPlanResult> findAll(Specification<TestPlanResult> spec, Pageable pageable);
 
   @Query(value = "UPDATE test_plan_results as tcr " +

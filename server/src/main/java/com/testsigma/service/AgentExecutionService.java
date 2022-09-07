@@ -140,14 +140,24 @@ public class AgentExecutionService {
   }
 
   private void checkAlreadyRunning() throws TestsigmaException {
+    checkIfAnotherTestPlanIsRunning();
     checkIfAlreadyHasAnotherRun();
     checkIfAlreadyHasReRunParentId();
   }
 
+  public void checkIfAnotherTestPlanIsRunning() throws TestsigmaException {
+    List<TestPlanResult> testPlanResults = this.testPlanResultService.findByStatus(StatusConstant.STATUS_IN_PROGRESS);
+    if(testPlanResults.size() > 0) {
+      log.info(String.format("Execution [%s] cannot be executed as another test plan [%d] is already running", this.testPlan.getId(),
+              testPlanResults.get(0).getId()));
+      throw new TestsigmaException(AutomatorMessages.ANOTHER_TEST_PLAN_IN_PROGRESS);
+    }
+  }
+
   public void checkIfAlreadyHasReRunParentId() throws TestsigmaException {
     if (this.getParentTestPlanResultId() != null) {
-      boolean ReRunParentIdAlreadyExsists = this.testPlanResultService.findByReRunParentId(this.getParentTestPlanResultId());
-      if (ReRunParentIdAlreadyExsists) {
+      boolean ReRunParentIdAlreadyExists = this.testPlanResultService.findByReRunParentId(this.getParentTestPlanResultId());
+      if (ReRunParentIdAlreadyExists) {
         log.info(String.format("Execution [%s] cannot be executed as its rerun parent id [%d] already exists", this.testPlan.getId(),
           testPlanResult.getReRunParentId()));
         throw new TestsigmaException(AutomatorMessages.RE_RUN_PARENT_ID_ALREADY_EXSISTS);

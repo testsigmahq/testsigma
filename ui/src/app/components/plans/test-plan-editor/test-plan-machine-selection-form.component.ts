@@ -143,6 +143,7 @@ export class TestPlanMachineSelectionFormComponent extends BaseComponent impleme
     else {
       environmentFormGroup.addControl('appBundleId', new FormControl(environment?.appBundleId, [this.requiredIfValidator(() => this.appPathTypeValue == ApplicationPathType.APP_DETAILS && this.isHybrid)]));
     }
+    environmentFormGroup.addControl('workspaceType', new FormControl(this.version.workspace.workspaceType));
     return environmentFormGroup;
   }
 

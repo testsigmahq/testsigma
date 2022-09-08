@@ -59,7 +59,7 @@ export class LabEnvironmentsInfoComponent implements OnInit {
 
   ngOnChanges(changes : SimpleChanges) : void{
     this.testDevices.forEach((env)=>{
-      if(this.testPlan.testPlanLabType == TestPlanLabType.Hybrid){
+      if(env.testPlanLabType == TestPlanLabType.Hybrid){
         this.agentService.findAll("id:"+env?.agentId).subscribe(res=> {
           let agent;
           if(res.content.length){
@@ -77,7 +77,7 @@ export class LabEnvironmentsInfoComponent implements OnInit {
               console.log(agentDevice);
               env.platform = AgentDevice.getPlatformFromMobileOStype(agentDevice.osName);
               env.osVersion = agentDevice.osVersion;
-              env.browser = env.platform === Platform.Android ? 'CHROME' : "SAFARI";
+              //env.browser = env.platform === Platform.Android ? 'CHROME' : "SAFARI";
               env.deviceName = agentDevice.name;
             })
         });

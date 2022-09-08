@@ -511,6 +511,7 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
     else {
       environmentFormGroup.addControl('appBundleId', new FormControl(environment?.appBundleId, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.APP_DETAILS && this.isHybrid)]));
     }
+    environmentFormGroup.addControl('workspaceType', new FormControl(this.selectedVersion.workspace.workspaceType));
     return environmentFormGroup;
   }
 

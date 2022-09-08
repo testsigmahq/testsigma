@@ -16,6 +16,7 @@ import {BaseComponent} from "../../shared/components/base.component";
 import {Router} from '@angular/router';
 import {TestPlanType} from "../../enums/execution-type.enum";
 import {ReRunType} from "../../enums/re-run-type.enum";
+import {Platform} from "../../enums/platform.enum";
 
 @Component({
   selector: 'app-test-plan-settings-form',
@@ -88,6 +89,7 @@ export class TestPlanSettingsFormComponent extends BaseComponent implements OnIn
       }
     });
     if(this.checkNameEnvironment()) {
+      this.testPlan.testDevices?.forEach(environment => environment.removeRedundantProps());
       this.testPlanService.update(this.testPlan).subscribe(res => {
         this.saving = false;
         this.translate.get('message.common.update.success', {FieldName: 'Test Plan'})
@@ -107,8 +109,7 @@ export class TestPlanSettingsFormComponent extends BaseComponent implements OnIn
     let json = this.formGroup.getRawValue();
     this.testPlan = new TestPlan().deserialize(json);
     this.testPlan?.testDevices?.forEach((environment, index) => {
-      if (this.testPlan.isHybrid)
-          environment.platform = null;
+      environment.removeRedundantProps()
       environment.testSuites = json.testDevices[index].suiteIds
       environment.matchBrowserVersion = this.testPlan.matchBrowserVersion;
       if(this.version.workspace.isMobileNative){

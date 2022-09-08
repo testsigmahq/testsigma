@@ -181,7 +181,7 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
   openAddEditElement(elementId) {
     const dialogRef = this.matDialog.open(ElementFormComponent, {
       height: "100vh",
-      width: '60%',
+      width: '540px',
       position: {top: '0px', right: '0px'},
       data: {
         versionId: this.versionId,

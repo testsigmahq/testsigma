@@ -30,6 +30,7 @@ import {MobileRecorderEventService} from "../../services/mobile-recorder-event.s
 @Component({
   selector: 'app-element-form',
   templateUrl: './element-form.component.html',
+  styleUrls:['./element-form.component.scss']
 })
 
 export class ElementFormComponent extends BaseComponent implements OnInit {
@@ -45,6 +46,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
   public versionId: number;
   public testCaseId: number;
   public elementId: number;
+  public isRecording:boolean = false;
   public elementCreateType = ElementCreateType;
   public defaultScreenName = "Default Screen";
   private userPreference: UserPreference;
@@ -136,8 +138,8 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
       this.createElement();
       this.element.name = this.options?.name || '';
       this.addValidations();
-      if (this.element.createdType == ElementCreateType.CHROME && this.chromeRecorderService?.isChrome)
-        this.startCapture();
+      // if (this.element.createdType == ElementCreateType.CHROME && this.chromeRecorderService?.isChrome)
+      //   this.startCapture();
     } else {
       setTimeout(() => this.setElement(), 300);
     }
@@ -303,6 +305,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
   }
 
   startCapture() {
+    this.isRecording=true;
     this.chromeRecorderService.recorderVersion = this.workspaceVersion;
     this.setLocatorTypeToXpath();
     this.chromeRecorderService.pingRecorder();
@@ -318,6 +321,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
   // }
 
   stopCapture(isClose?:Boolean) {
+    this.isRecording=false;
     this.chromeRecorderService.elementCallBackContext = undefined;
     this.chromeRecorderService.elementCallBack = undefined;
     this.chromeRecorderService.stopSpying();

@@ -1,0 +1,29 @@
+div[module="element-recorder-popup"] {
+  .record-btn {
+    min-width: 200px;
+    background-color: #1AA874;
+    color: white;
+    border-radius: 4px;
+    border: 1px solid #1AA874;
+  }
+
+  .stop-btn {
+    min-width: 200px;
+    background-color: transparent;
+    border-radius: 4px;
+    border: 1px solid #C4D3DD;
+
+    .btn {
+      color: #DC3545 !important;
+    }
+  }
+
+  .el-rec-link {
+    color: #0345A8 !important;
+  }
+}
+
+::ng-deep .stand-alone-ui-recorder .mat-expansion-panel-body {
+  padding: 0;
+  font-size: 14px !important;
+}

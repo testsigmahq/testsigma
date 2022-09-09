@@ -35,10 +35,10 @@ jobs:
       - name: Building 
         run: |
           if [[ "${{ github.event.inputs.buildType }}" == "Testing" ]]; then
-            cd ${{GITHUB_WORKSPACE}} && sh deploy/docker/build.sh --DOCKER_VERSION=v${{ github.event.inputs.buildVersion }} --AGENT_TAG=v${{ github.event.inputs.buildVersion }} --IMAGE_NAME=server-dev
+            sh deploy/docker/build.sh --DOCKER_VERSION=v${{ github.event.inputs.buildVersion }} --AGENT_TAG=v${{ github.event.inputs.buildVersion }} --IMAGE_NAME=server-dev
           fi
           if [[ "${{ github.event.inputs.buildType }}" == "Release" ]]; then
-            cd ${{GITHUB_WORKSPACE}} && sh deploy/docker/build.sh --DOCKER_VERSION=v${{ github.event.inputs.buildVersion }} --AGENT_TAG=v${{ github.event.inputs.buildVersion }} --IMAGE_NAME=server
+            sh deploy/docker/build.sh --DOCKER_VERSION=v${{ github.event.inputs.buildVersion }} --AGENT_TAG=v${{ github.event.inputs.buildVersion }} --IMAGE_NAME=server
           fi
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

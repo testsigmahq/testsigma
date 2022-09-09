@@ -21,6 +21,8 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '11'
+      - name: Build with Maven
+        run: mvn --batch-mode --update-snapshots package
       - name: Downloading Packages
         run: |
           mkdir $HOME/.testsigma_os
@@ -32,7 +34,7 @@ jobs:
           AWS_DEFAULT_OUTPUT: json
       - name: Building 
         run: |
-          cd ${{GITHUB_WORKSPACE}} && sh agent/scripts/build.sh --VERSION=v${{ github.event.inputs.buildVersion }} --PUBLISH_TO_GIT=[[ "${{ github.event.inputs.buildType }}" == "Release" ]]
+          sh agent/scripts/build.sh --VERSION=v${{ github.event.inputs.buildVersion }} --PUBLISH_TO_GIT=[[ "${{ github.event.inputs.buildType }}" == "Release" ]]
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

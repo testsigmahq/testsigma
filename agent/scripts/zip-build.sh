@@ -39,9 +39,9 @@ chmod +x "$BUILD_FOLDER/start.sh"
 chmod +x "$BUILD_FOLDER/stop.sh"
 chmod -R +xw "$BUILD_FOLDER/jre"
 
-cp -Rf $HOME/.testsigma/$OS_PATH_SUFFIX/android "$BUILD_FOLDER"
-cp -Rf $HOME/.testsigma/$OS_PATH_SUFFIX/ios "$BUILD_FOLDER"
-cp -Rf $HOME/.testsigma/$OS_PATH_SUFFIX/appium "$BUILD_FOLDER"
+cp -Rf $HOME/.testsigma_os/$OS_PATH_SUFFIX/android "$BUILD_FOLDER"
+cp -Rf $HOME/.testsigma_os/$OS_PATH_SUFFIX/ios "$BUILD_FOLDER"
+cp -Rf $HOME/.testsigma_os/$OS_PATH_SUFFIX/appium "$BUILD_FOLDER"
 
 chmod -R +xw "$BUILD_FOLDER/appium"
 chmod -R +xw "$BUILD_FOLDER/android"

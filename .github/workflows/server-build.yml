@@ -32,7 +32,12 @@ jobs:
           AWS_DEFAULT_OUTPUT: json
       - name: Building 
         run: |
-          sh deploy/installer/build.sh --VERSION=v${{ github.event.inputs.buildVersion }} --PUBLISH_TO_GIT=[[ "${{ github.event.inputs.buildType }}" == "Release" ]]
+          if [[ "${{ github.event.inputs.buildType }}" == "Testing" ]]; then
+            sh deploy/installer/build.sh --VERSION=v${{ github.event.inputs.buildVersion }} --PUBLISH_TO_GIT=false
+          fi
+          if [[ "${{ github.event.inputs.buildType }}" == "Release" ]]; then
+            sh deploy/installer/build.sh --VERSION=v${{ github.event.inputs.buildVersion }} --PUBLISH_TO_GIT=true
+          fi
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

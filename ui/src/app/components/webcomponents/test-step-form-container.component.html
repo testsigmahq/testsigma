@@ -116,12 +116,9 @@
     [class.theme-border-b]="!isActionText"
     class=" py-15 ml-5 pl-7 form-group p-0 ts-col-auto d-flex align-items-baseline flex-nowrap">
     <div
-      class="result-status-8 ng-binding x-sm-size text-white list-number">
-      <div
-        class="text-truncate p-2"
+      class="result-status-8 ng-binding x-sm-size text-white list-number pill-number"
         [matTooltip]="indexPosition().toString()"
         [textContent]="indexPosition()">
-      </div>
     </div>
     <div class="d-flex align-items-center">
       <i
@@ -164,6 +161,7 @@
   <app-action-step-form
     [class.has-else-if]="isElseIfType"
     [class.has-if]="isIfType"
+    [indentation]="indexPosition().toString().length > 3 ? indexPosition().toString().length : 0"
     [class.has-while-loop]="isConditionalWhileType"
     *ngIf="isActionText && testSteps"
     [testStep]="testStep"
@@ -184,6 +182,7 @@
   ></app-action-step-form>
   <app-test-step-rest-form
     [class.has-else-if]="isElseIfType"
+    [indentation]="indexPosition().toString().length > 3 ? indexPosition().toString().length : 0"
     [class.has-if]="isIfType"
     [class.has-while-loop]="isConditionalWhileType"
     *ngIf="isRest && showForm"
@@ -198,6 +197,7 @@
     *ngIf="isForLoop && showForm"
     [testStep]="testStep"
     [version]="version"
+    [indentation]="indexPosition().toString().length > 3 ? indexPosition().toString().length : 0"
     [stepForm]="stepForm"
     [stepRecorderView]="stepRecorderView"
     (onSave)="afterSaveStep($event)"
@@ -205,6 +205,7 @@
   <app-test-step-group-form
     [class.has-else-if]="isElseIfType"
     [class.has-if]="isIfType"
+    [indentation]="indexPosition().toString().length > 3 ? indexPosition().toString().length : 0"
     [class.has-while-loop]="isConditionalWhileType"
     [testStep]="testStep"
     [version]="version"

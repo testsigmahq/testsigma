@@ -64,6 +64,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   @Input('testStep') public testStep: TestStep;
   @Input('testSteps') testSteps: Page<TestStep>;
   @Input('testCase') testCase: TestCase;
+  @Input('indentation') indentation:number;
   @Input('testStepsLength') testStepsLength: number;
   @Output('onCancel') onCancel = new EventEmitter<void>();
   @Output('onSave') onSave = new EventEmitter<TestStep>();

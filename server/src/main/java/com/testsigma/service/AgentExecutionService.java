@@ -212,11 +212,14 @@ public class AgentExecutionService {
   private void populateTestCaseResults(AbstractTestSuite testSuite, TestSuiteResult testSuiteResult,
                                        TestDeviceResult testDeviceResult) throws TestsigmaException {
     List<TestCase> testCases = this.testCaseService.findAllBySuiteId(testSuiteResult.getSuiteId());
+    int testDataStartIndex;
     for (TestCase testCase : testCases) {
+      testDataStartIndex = testCase.getTestDataStartIndex();
       TestCaseResult testCaseResult = createTestCaseResult(testSuite, testCase, testDeviceResult, testSuiteResult,
         null);
       if (testCaseResult != null && testPlan instanceof TestPlan) {
         testCase.setLastRunId(testCaseResult.getId());
+        testCase.setTestDataStartIndex(testDataStartIndex);
         testCaseService.update(testCase);
       }
     }
@@ -281,7 +284,7 @@ public class AgentExecutionService {
     isDataDrivenRerun = testDeviceResult.getReRunParentId() != null;
     TestData testData = testCase.getTestData();
     List<TestDataSet> testDataSets = testData.getData();
-    if(isDataDrivenRerun){
+    if(isDataDrivenRerun && !parentTestCaseResult.getIsStepGroup()){
       log.info("Creating data driven re run iteration results for test case - " + parentTestCaseResult.getId());
       this.createTestCaseDataDrivenReRunResult(testPlanResult, testDataSets, testCase, testSuite, testDeviceResult,
               testSuiteResult, parentTestCaseResult);
@@ -299,7 +302,7 @@ public class AgentExecutionService {
   }
 
   private TestCaseDataDrivenResult createTestCaseDataDrivenResult(TestDataSet testDataSet, TestCaseResult testCaseResult) {
-    TestCaseDataDrivenResult testCaseDataDrivenResult = new TestCaseDataDrivenResult();
+      TestCaseDataDrivenResult testCaseDataDrivenResult = new TestCaseDataDrivenResult();
     testCaseDataDrivenResult.setEnvRunId(testCaseResult.getEnvironmentResultId());
     testCaseDataDrivenResult.setTestData(new ObjectMapperService().convertToJson(testDataSet));
     testCaseDataDrivenResult.setTestDataName(testDataSet.getName());
@@ -319,7 +322,7 @@ public class AgentExecutionService {
     TestCaseResult testCaseResult = new TestCaseResult();
     testCaseResult = setReRunParentId(testSuiteResult, testCase, testCaseResult, parentTestCaseResult);
     if (testCaseResult == null)
-      return null;
+        return null;
 
     testCaseResult.setEnvironmentResultId(testDeviceResult.getId());
     testCaseResult.setTestPlanResultId(testDeviceResult.getTestPlanResultId());
@@ -872,12 +875,19 @@ public class AgentExecutionService {
     testCaseResultsReRunList = new ArrayList<>();
     try {
       TestSuiteResult parentTestSuiteResult = testSuiteResultService.find(parentTestSuiteResultId);
-      List<TestCaseResult> failedTestCases;
+      List<TestCaseResult> failedTestCases = new ArrayList<>();
       if (parentTestSuiteResult != null) {
         if (getReRunType() == ReRunType.ALL_TESTS || isTestSuiteAPrerequisite(parentTestSuiteResult)) {
           testCaseResultsReRunList = testCaseResultService.findAllBySuiteResultId(parentTestSuiteResult.getId());
         } else if (ReRunType.runFailedTestCases(getReRunType())) {
-          if(getReRunType() == ReRunType.ONLY_FAILED_ITERATIONS_IN_FAILED_TESTS) {
+          if(getReRunType() == ReRunType.ALL_ITERATIONS) {
+            log.info("Fetching all iterations in failed data driven test case results for suite result id - " + parentTestSuiteResult.getId());
+            List<TestCaseResult> failedTestCaseResults = testCaseResultService.findAllBySuiteResultIdAndIsDataDrivenTrueAndResultIsNot(parentTestSuiteResult.getId(), ResultConstant.SUCCESS);
+            for (TestCaseResult testCaseResult : failedTestCaseResults) {
+              failedTestCases.addAll(testCaseResultService.findAllBySuiteResultIdAndTestCaseId(parentTestSuiteResult.getId(), testCaseResult.getTestCaseId()));
+            }
+          }
+          else if(getReRunType() == ReRunType.ONLY_FAILED_ITERATIONS_IN_FAILED_TESTS) {
             log.info("Fetching all failed data driven test case results re run list for suite result id - " + parentTestSuiteResult.getId());
             failedTestCases = testCaseResultService.findAllBySuiteResultIdAndIsDataDrivenTrueAndResultIsNot(parentTestSuiteResult.getId(), ResultConstant.SUCCESS);
           }
@@ -1484,16 +1494,11 @@ public class AgentExecutionService {
               ResultConstant.SUCCESS);
     }
     Set<String> setNames = dataDrivenResultsReRunList.stream().map(TestCaseDataDrivenResult::getTestDataName).collect(Collectors.toSet());
-    List<TestDataSet> failedIterationFailedSets = new ArrayList<>();
-    List<TestDataSet> parentTestCaseDataSets = parentTestCaseResult.getTestCase().getTestData().getData();
-    for(TestDataSet parentTestDataSet : parentTestCaseDataSets) {
-      if(setNames.contains(parentTestDataSet.getName())) {
-        failedIterationFailedSets.add(parentTestDataSet);
+    for(TestDataSet testDataSet : testDataSets) {
+      if(setNames.contains(testDataSet.getName())) {
+        this.createTestCaseIterationResult(testDataSets, testDataSet, testCase, testSuite, environmentResult,
+                testSuiteResult, parentTestCaseResult);
       }
-    }
-    for (TestDataSet testDataSet : failedIterationFailedSets) {
-      this.createTestCaseIterationResult(testDataSets, testDataSet, testCase, testSuite, environmentResult,
-              testSuiteResult, parentTestCaseResult);
     }
   }
 
@@ -1508,15 +1513,17 @@ public class AgentExecutionService {
             parentTestCaseResult);
     if (testCaseResult != null)
       createTestCaseDataDrivenResult(testDataSet, testCaseResult);
-    if(isDataDrivenRerun)
+    if(isDataDrivenRerun && !parentTestCaseResult.getIsStepGroup())
       setReRunParentId(testCaseResult, testDataSet, parentTestCaseResult.getReRunParentId());
   }
 
   private void setReRunParentId(TestCaseResult testCaseResult, TestDataSet testDataSet, Long parentResultId ){
-    log.info("Populating re-run parentId for the data driven iteration result -" + testCaseResult.getId());
-    TestCaseDataDrivenResult result = this.getTestCaseDataDrivenResult(testDataSet.getName(), parentResultId);
-    testCaseResult.setReRunParentId(result.getIterationResultId());
-    this.testCaseResultService.create(testCaseResult);
+    if(testCaseResult != null && testDataSet != null) {
+      log.info("Populating re-run parentId for the data driven iteration result -" + testCaseResult.getId());
+      TestCaseDataDrivenResult result = this.getTestCaseDataDrivenResult(testDataSet.getName(), parentResultId);
+      testCaseResult.setReRunParentId(result.getIterationResultId());
+      this.testCaseResultService.create(testCaseResult);
+    }
   }
 
   private TestCaseDataDrivenResult getTestCaseDataDrivenResult(String setName, Long parentTestCaseId){

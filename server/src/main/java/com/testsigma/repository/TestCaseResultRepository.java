@@ -312,4 +312,6 @@ public interface TestCaseResultRepository extends JpaRepository<TestCaseResult, 
     "AND parent_id = :id GROUP BY parent_id) AS tsr ON tsr.parent_id = tcr.id " +
     "SET tcr.stopped_count = COALESCE(stoppedCount, 0) WHERE tcr.id = :id", nativeQuery = true)
   void updateIterationStoppedTestCaseResultsCount(@Param("id") Long id);
+
+    List<TestCaseResult> findAllByTestPlanResultIdAndResultIsNot(Long testPlanResultId, ResultConstant resultConstant);
 }

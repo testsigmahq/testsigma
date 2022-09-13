@@ -53,8 +53,8 @@ public class TestCaseResultService {
     return this.testCaseResultRepository.findAll(spec, pageable);
   }
 
-  public List<TestCaseResult> findAllByTestPlanResultId(Long testPlanResultId) {
-    return this.testCaseResultRepository.findAllByTestPlanResultId(testPlanResultId);
+  public List<TestCaseResult> findAllByTestPlanResultIdAndResultIsNot(Long testPlanResultId, ResultConstant resultConstant) {
+    return this.testCaseResultRepository.findAllByTestPlanResultIdAndResultIsNot(testPlanResultId, resultConstant);
   }
 
   public List<TestCaseResult> findAllBySuiteResultIdAndIsDataDrivenTrueAndResultIsNot(Long parentTestCaseId, ResultConstant result){

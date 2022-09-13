@@ -105,7 +105,7 @@
           class="d-flex fz-12 align-items-center"
           [class.ts-col-20]="showFilter || showRunDetails"
           [class.ts-col-13]="!(showFilter || showRunDetails)">
-          <app-re-run-icon [resultEntity]="testCaseResult"></app-re-run-icon>
+          <app-re-run-icon [resultEntity]="testCaseResult?.lastRun"></app-re-run-icon>
           <app-result-pie-chart-column
             [width]="24"
             [height]="24"

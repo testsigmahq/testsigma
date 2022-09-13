@@ -275,6 +275,8 @@ import { TestPlanSuiteFilterComponent } from './components/plans/test-plan-edito
 import { TestSuiteListItemComponent } from './components/plans/test-plan-editor/test-suite-list-item.component';
 import { FormHeaderComponent } from './components/plans/form-header.component';
 import {ActionTestDataRuntimeVariableSuggestionComponent} from './components/webcomponents/action-test-data-runtime-variable-suggestion.component';
+import {ReRunPopupComponent} from "./agents/components/webcomponents/re-run-popup.component";
+import {ReRunFormComponent} from "./agents/components/webcomponents/re-run-form.component";
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -530,7 +532,9 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     TestPlanSuiteFilterComponent,
     TestSuiteListItemComponent,
     FormHeaderComponent,
-    ActionTestDataRuntimeVariableSuggestionComponent
+    ActionTestDataRuntimeVariableSuggestionComponent,
+    ReRunPopupComponent,
+    ReRunFormComponent
   ],
   imports: [
     BrowserModule,

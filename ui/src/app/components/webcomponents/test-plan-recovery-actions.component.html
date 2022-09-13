@@ -103,22 +103,18 @@
               </mat-radio-group>
             </div>
           </div>
-<!--          <div class="radio-wrapper">-->
-<!--            <div class="ts-col-50 text-right">-->
-<!--              <label class="fz-14 text-black pb-18 pr-30" [translate]="'test_plan.environment.recover_actions.re_run_failure_action'"></label>-->
-<!--            </div>-->
-<!--            <div class="ts-col-50 separator-line">-->
-<!--              <mat-radio-group-->
-<!--                [formControl]="testPlanFormGroup.controls['reRunType']"-->
-<!--                name="reRunType" aria-labelledby="reRunType">-->
-<!--                <mat-radio-button class="pl-30"-->
-<!--                  *ngFor="let reRunOn of reRunType"-->
-<!--                  [value]="reRunOn">-->
-<!--                  <div [textContent]="'execution.recover_actions.re_run_on_failure.'+reRunOn | translate"></div>-->
-<!--                </mat-radio-button>-->
-<!--              </mat-radio-group>-->
-<!--            </div>-->
-<!--          </div>-->
+          <div class="radio-wrapper">
+            <div class="ts-col-50 text-right">
+              <label class="fz-14 text-black pb-18 pr-30" [translate]="'test_plan.environment.recover_actions.re_run_failure_action'"></label>
+            </div>
+            <div class="ts-col-50 separator-line">
+              <re-run-form
+                [defaultType] = "this.testPlanFormGroup?.controls['reRunType']?.value"
+                [isDataDriven] = "this.isDataDriven"
+                (onTypeChange) = "this.reRunTypeChange($event)">
+              </re-run-form>
+            </div>
+          </div>
         </div>
       </div>
     </mat-expansion-panel>

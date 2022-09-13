@@ -6,40 +6,17 @@ import {BaseComponent} from "../../shared/components/base.component";
 import { NotificationsService, NotificationType } from 'angular2-notifications';
 import {TranslateService} from '@ngx-translate/core';
 import {ToastrService} from "ngx-toastr";
-import {ReRunType} from "../../enums/re-run-type.enum";
 import { Router } from '@angular/router';
+import {ReRunPopupComponent} from "../../agents/components/webcomponents/re-run-popup.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-re-run-button',
   template: `
-    <div [class.mouse-over]="!inTransit"
-      class="dropdown section-title d-inline-block mx-10">
-      <button class="border-rds-right-1 btn btn-primary">
-        <span [translate]="inTransit ? 'btn.common.please_wait' : 'btn.common.re_run'"></span>
+    <div class="dropdown section-title d-inline-block mx-10">
+      <button class="border-rds-right-1 btn btn-primary" (click)="showRun()">
+        <span [translate]="'btn.common.re_run'"></span>
       </button>
-      <button class="border-rds-left-1 btn btn-primary px-4" style="margin-left: 1px">
-        <i class="fa-caret-down mx-0 fz-12" style="margin-left: 0 !important;margin-right: 0 !important;"></i>
-      </button>
-      <div
-        class="dropdown-menu"
-        style="box-shadow: none;margin-top: -6px;padding-top: .5rem;background:
-           transparent;left: -110px;">
-        <ul
-          class="bg-white border-rds-4 ng-scope p-10 shadow-all2-b4">
-          <li
-            class="border-rds-10 btn rb-medium grey-on-hover text-dark ml-0">
-            <a
-              (click)="reRun(reRunTypes.ONLY_FAILED_TESTS)"
-              class="text-dark text-decoration-none" [translate]="'re_run.ONLY_FAILED_TESTS'"></a>
-          </li>
-          <li
-            class="border-rds-10 btn rb-medium grey-on-hover text-dark ml-0">
-            <a
-              (click)="reRun(reRunTypes.ALL_TESTS)"
-              class="text-dark text-decoration-none" [translate]="'re_run.ALL_TESTS'"></a>
-          </li>
-        </ul>
-      </div>
     </div>
   `
 })
@@ -47,8 +24,6 @@ export class ReRunButtonComponent extends BaseComponent implements OnInit {
   @Input('testPlanResult') parentExecutionResult: TestPlanResult;
 
   public testPlanResult: TestPlanResult;
-  public inTransit: boolean;
-  public reRunTypes = ReRunType;
 
   constructor(
     public authGuard: AuthenticationGuard,
@@ -56,33 +31,24 @@ export class ReRunButtonComponent extends BaseComponent implements OnInit {
     public translate: TranslateService,
     public toastrService: ToastrService,
     private testPlanResultService: TestPlanResultService,
-    private router: Router) {
+    private router: Router,
+    private matModal: MatDialog) {
     super(authGuard, notificationsService, translate, toastrService);
   }
 
   ngOnInit(): void {
   }
 
-  reRun(reRunType: ReRunType) {
-    this.inTransit = true;
-    let testPlanResult = new TestPlanResult();
-    let lastRunId = this.parentExecutionResult.lastRun?.id;
-    if(lastRunId)
-      testPlanResult.parenttestPlanResultId = lastRunId;
-    else
-      testPlanResult.parenttestPlanResultId = this.parentExecutionResult.id;
-    testPlanResult.testPlanId = this.parentExecutionResult.testPlanId;
-    testPlanResult.isReRun = true;
-    testPlanResult.reRunType = reRunType;
-    this.testPlanResultService.create(testPlanResult).subscribe((result: TestPlanResult) => {
-      this.inTransit = false;
-      this.translate.get("re_run.initiate.success").subscribe((res: string) => {
-        this.showNotification(NotificationType.Success, res);
-        this.router.navigate(['/td', 'runs', result.id]);
-      })
-    }, error => {
-      this.inTransit = false;
-      this.showNotification(NotificationType.Error, error);
+  showRun(){
+    const dialogRef = this.matModal.open(ReRunPopupComponent, {
+      width: '450px',
+      height: '250px',
+      panelClass: ['re-run-popup', 'rds-none'],
+      disableClose: true,
+      data: {parentExecutionResult: this.parentExecutionResult}
+    });
+    dialogRef.afterClosed().subscribe(runType => {
+      console.log("Re Run Popup Closed", runType);
     })
   }
 

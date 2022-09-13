@@ -9,13 +9,14 @@
 
 import {Pageable} from "../shared/models/pageable";
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
 import {PageObject} from "../shared/models/page-object";
 import {DataSourceService} from "../shared/services/data-source.service";
 
 export class InfiniteScrollableDataSource extends DataSource<PageObject> {
   public cachedItems = Array.from<PageObject>({length: 0});
   protected dataStream = new BehaviorSubject<(PageObject)[]>(this.cachedItems);
+  public latestFetchData = new Subject<PageObject[]>();
   protected subscription = new Subscription();
 
   protected pageSize: number;
@@ -62,7 +63,10 @@ export class InfiniteScrollableDataSource extends DataSource<PageObject> {
   protected _fetchFactPage(): void {
     this.isFetching = true;
     this.lastPageable.pageNumber += 1;
-    this.dataSourceService.findAll(this.query, this.sortBy, this.lastPageable).subscribe(res => this.processResponse(res));
+    this.dataSourceService.findAll(this.query, this.sortBy, this.lastPageable).subscribe(res => {
+      this.latestFetchData.next(res.content);
+      this.processResponse(res);
+    });
   }
 
   protected processResponse(res): void {

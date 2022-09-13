@@ -1,11 +1,19 @@
 <mat-dialog-content>
-  <div
-    class="confirm-message"
-    [translate]="'message.common.confirmation.warning'"></div>
+  <div class="confirm-message d-flex justify-content-between">
+    <div
+      [translate]="'message.common.confirmation.warning'"></div>
+    <button
+      class="theme-overlay-close"
+      type="button"
+      [matTooltip]="'hint.message.common.close' | translate"
+      [mat-dialog-close]="'close'"
+    >
+    </button>
+  </div>
   <div class="p-14 pb-0-i"
        [innerHTML]="(data?.number == 0? 'agents.mobile.inspection.quit_warning':'agents.mobile.inspection.numbered_quit_warning')|translate:{number:data?.number}"></div>
 </mat-dialog-content>
-<mat-dialog-actions class="confirm-actions">
+<mat-dialog-actions class="confirm-actions" [style]="'padding-right:0px !important;'">
   <button class="theme-btn-primary"
           [mat-dialog-close]="false"
           [translate]="'agents.mobile.inspection.save_n_quit'"></button>

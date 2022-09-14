@@ -4,6 +4,7 @@ import {OnAbortedAction} from "../../enums/on-aborted-action.enum";
 import {PreRequisiteAction} from "../../enums/pre-requisite-action.enum";
 import { FormGroup } from '@angular/forms';
 import {ReRunType} from "../../enums/re-run-type.enum";
+import {TestSuiteService} from "../../services/test-suite.service";
 
 @Component({
   selector: 'app-test-plan-recovery-actions',
@@ -14,8 +15,10 @@ import {ReRunType} from "../../enums/re-run-type.enum";
 export class TestPlanRecoveryActionsComponent implements OnInit {
   @Input('formGroup') testPlanFormGroup: FormGroup;
   public panelOpenState: Boolean = false;
+  @Input('executionId') public executionId: number;
+  public isDataDriven: Boolean;
 
-  constructor() { }
+  constructor(private testSuiteService: TestSuiteService) { }
 
   get recoverActions() {
     return Object.keys(RecoverAction);
@@ -34,8 +37,35 @@ export class TestPlanRecoveryActionsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.testPlanFormGroup.valueChanges.subscribe(()=> {
+      let testSuites = this.getTestSuites;
+      if (testSuites.length > 0) {
+        this.testSuiteService.findAll(`id@${testSuites.join('#')}`+ ",hasDataDrivenCases:"+true).subscribe(res => {
+          if(res.content.length > 0)
+            this.isDataDriven = true;
+          else
+            this.isDataDriven = false;
+        })
+      }
+      else
+        this.isDataDriven = false;
+    });
   }
 
+  reRunTypeChange(reRunType: ReRunType){
+    this.testPlanFormGroup.controls['reRunType'].setValue(reRunType);
+  }
 
+  get getEnvironments(){
+    return this.testPlanFormGroup.controls['testDevices'];
+  }
 
+  get getTestSuites(){
+    let testSuites = [];
+    this.getEnvironments?.value?.forEach(res => {testSuites.push(...res?.suiteIds)});
+    let uniTestSuites = testSuites.filter((c, index) => {
+      return testSuites.indexOf(c) === index;
+    });
+    return uniTestSuites;
+  }
 }

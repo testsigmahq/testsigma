@@ -275,6 +275,8 @@ import { TestPlanSuiteFilterComponent } from './components/plans/test-plan-edito
 import { TestSuiteListItemComponent } from './components/plans/test-plan-editor/test-suite-list-item.component';
 import { FormHeaderComponent } from './components/plans/form-header.component';
 import {ActionTestDataRuntimeVariableSuggestionComponent} from './components/webcomponents/action-test-data-runtime-variable-suggestion.component';
+import {ReRunPopupComponent} from "./agents/components/webcomponents/re-run-popup.component";
+import {ReRunFormComponent} from "./agents/components/webcomponents/re-run-form.component";
 import {TestCaseMultiSelectComponent} from "./components/webcomponents/test-case-multi-select.component";
 import { FilterFormComponent } from './components/suites/filter-form.component';
 import { FilterFormComponent as ResultFilterFormComponent} from './components/results/filter-form.component';
@@ -535,6 +537,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     TestSuiteListItemComponent,
     FormHeaderComponent,
     ActionTestDataRuntimeVariableSuggestionComponent,
+    ReRunPopupComponent,
+    ReRunFormComponent
     TestCaseMultiSelectComponent,
     FilterFormComponent,
     ResultFilterFormComponent,

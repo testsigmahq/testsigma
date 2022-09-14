@@ -80,9 +80,9 @@ public class TestPlanResultsController {
     agentExecutionService.setRunTimeData(runTimeData);
     if (testPlanResultRequest.getReRunType() != null
       && testPlanResultRequest.getReRunType() != ReRunType.NONE
-      && testPlanResultRequest.getParenttestPlanResultId() != null) {
+      && testPlanResultRequest.getReRunParentId() != null) {
       agentExecutionService.setReRunType(testPlanResultRequest.getReRunType());
-      agentExecutionService.setParentTestPlanResultId(testPlanResultRequest.getParenttestPlanResultId());
+      agentExecutionService.setParentTestPlanResultId(testPlanResultRequest.getReRunParentId());
 
     }
     agentExecutionService.start();

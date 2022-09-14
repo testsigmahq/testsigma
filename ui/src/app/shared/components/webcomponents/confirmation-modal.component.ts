@@ -29,7 +29,7 @@ import {FormControl} from "@angular/forms";
       </mat-dialog-actions>
     </div>
     <div *ngIf="modalData?.isPermanentDelete && !modalData.disabled">
-      <div class="pb-25">
+      <div class="pb-25 pt-25">
         <div class="fz-20 pb-25 d-flex">
           <span [translate]="'message.common.confirmation.title_with_name'| translate: {Title: modalData?.title}"></span>
           <button
@@ -50,7 +50,7 @@ import {FormControl} from "@angular/forms";
                  [placeholder]="'message.common.confirmation.placeholder' | translate"/>
         </div>
       </div>
-      <div class="d-flex justify-content-end">
+      <div class="d-flex justify-content-end pb-25">
         <button
           mat-dialog-close
           class="theme-btn-clear-default"

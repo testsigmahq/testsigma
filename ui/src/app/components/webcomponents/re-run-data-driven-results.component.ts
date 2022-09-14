@@ -24,7 +24,7 @@ export class ReRunDataDrivenResultsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let query = "childRunId:"+this.testPlanResult.lastRun.id+",testCaseResultId:" + this.testCaseResult.id;
+    let query = ",testCaseResultId:" + this.testCaseResult.id;
     this.testCaseDataDrivenResults = new InfiniteScrollableDataSource(this.testCaseDataDrivenResultService, query);
     this.testCaseDataDrivenResults.latestFetchData.subscribe(drivenResults => {
       let drivenResultIds = [];

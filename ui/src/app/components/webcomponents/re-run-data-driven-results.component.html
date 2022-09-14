@@ -30,7 +30,8 @@
               class="ml-auto"
               [width]="24"
               [height]="24"
-              [resultEntity]="testCaseDataDrivenResult?.iterationResult"></app-result-pie-chart-column>
+              [resultEntity]="testCaseDataDrivenResult?.iterationResult"
+              [totalCount]="testCaseDataDrivenResult?.iterationResult?.parentResult?.totalCount"></app-result-pie-chart-column>
             <div class="text-right text-t-secondary fz-12 ml-auto mr-10">
               <div [textContent]="testCaseDataDrivenResult?.iterationResult?.startTime | date:'MMM d, h:mm:ss'"></div>
               <div class="pt-4">
@@ -42,13 +43,13 @@
           <div class="ts-col-50 d-flex theme-border-l pl-10">
             <div class="text-t-secondary fz-12">
               <div [translate]="'re_run.previous_result'"></div>
-              <app-result-status-label [resultEntity]="testCaseDataDrivenResult?.iterationResult?.previousResult"></app-result-status-label>
+              <app-result-status-label [resultEntity]="testCaseDataDrivenResult?.iterationResult?.parentResult"></app-result-status-label>
             </div>
             <div class="text-right text-t-secondary fz-12 ml-auto">
-              <div [textContent]="testCaseDataDrivenResult?.iterationResult?.previousResult?.startTime | date:'MMM d, h:mm:ss'"></div>
+              <div [textContent]="testCaseDataDrivenResult?.iterationResult?.parentResult?.startTime | date:'MMM d, h:mm:ss'"></div>
               <div class="pt-4">
                 <app-duration-format
-                  [duration]="testCaseDataDrivenResult?.iterationResult?.previousResult?.duration"></app-duration-format>
+                  [duration]="testCaseDataDrivenResult?.iterationResult?.parentResult?.duration"></app-duration-format>
               </div>
             </div>
           </div>

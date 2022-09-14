@@ -2,9 +2,9 @@
   <a [matTooltip]="'hint.message.common.close' | translate" class="go-back-icon pl-10 text-decoration-none" mat-dialog-close></a>
   <div class="ts-col-90 d-flex align-items-center">
     <div class="ts-col-50">
-      <div class="rb-medium mb-4 fz-18" *ngIf="activeTestCaseResult" [textContent]="activeTestCaseResult.testCase.name"></div>
-      <div class="rb-medium mb-4 fz-18" *ngIf="activeTestSuiteResult" [textContent]="activeTestSuiteResult.testSuite.name"></div>
-      <div class="rb-medium mb-4 fz-18" *ngIf="activeEnvironmentResult" [textContent]="activeEnvironmentResult.testDevice.title"></div>
+      <div class="rb-medium mb-4 fz-18" *ngIf="activeTestCaseResult" [textContent]="activeTestCaseResult?.testCase?.name"></div>
+      <div class="rb-medium mb-4 fz-18" *ngIf="activeTestSuiteResult" [textContent]="activeTestSuiteResult?.testSuite?.name"></div>
+      <div class="rb-medium mb-4 fz-18" *ngIf="activeEnvironmentResult" [textContent]="activeEnvironmentResult?.testDevice?.title"></div>
       <span
         (click)="showExecutionResult()"
         [class.rb-medium]="activeExecutionResult"
@@ -33,7 +33,8 @@
       <app-result-pie-chart-column
         [width]="24"
         [height]="24"
-        [resultEntity]="activeExecutionResult?.lastRun || activeTestSuiteResult?.lastRun || activeEnvironmentResult?.lastRun || activeTestCaseResult?.lastRun"></app-result-pie-chart-column>
+        [resultEntity]="activeExecutionResult?.lastRun || activeTestSuiteResult?.lastRun || activeEnvironmentResult?.lastRun || activeTestCaseResult?.lastRun"
+        [totalCount]="activeExecutionResult?.totalCount || activeTestSuiteResult?.totalCount || activeTestCaseResult?.totalCount"></app-result-pie-chart-column>
     </div>
     <div class="text-right text-t-secondary fz-12 pr-20">
       <div
@@ -127,13 +128,13 @@
       *ngIf="view == 'TMR'"></app-re-run-test-machine-results>
   </div>
   <app-re-run-data-driven-results
-    *ngIf="activeTestCaseResult && activeTestCaseResult.isDataDriven"
+    *ngIf="activeTestCaseResult && activeTestCaseResult.isDataDriven && !isShowSteps"
     [testCaseResult]="activeTestCaseResult"
     [testPlanResult]="options.testPlanResult"
     (onTestCaseResultShow)="showTestCaseResult($event)">
   </app-re-run-data-driven-results>
   <app-re-run-test-step-result
-    *ngIf="activeTestCaseResult && !activeTestCaseResult.isDataDriven"
+    *ngIf="activeTestCaseResult && (!activeTestCaseResult.isDataDriven || isShowSteps)"
     [testCaseResult]="activeTestCaseResult"
     [testPlanResult]="options.testPlanResult">
   </app-re-run-test-step-result>

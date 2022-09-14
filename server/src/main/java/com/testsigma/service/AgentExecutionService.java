@@ -889,7 +889,10 @@ public class AgentExecutionService {
           }
           else if(getReRunType() == ReRunType.ONLY_FAILED_ITERATIONS_IN_FAILED_TESTS) {
             log.info("Fetching all failed data driven test case results re run list for suite result id - " + parentTestSuiteResult.getId());
-            failedTestCases = testCaseResultService.findAllBySuiteResultIdAndIsDataDrivenTrueAndResultIsNot(parentTestSuiteResult.getId(), ResultConstant.SUCCESS);
+            List<TestCaseResult> failedTestCaseResults = testCaseResultService.findAllBySuiteResultIdAndIsDataDrivenTrueAndResultIsNot(parentTestSuiteResult.getId(), ResultConstant.SUCCESS);
+            for (TestCaseResult testCaseResult : failedTestCaseResults) {
+              failedTestCases.addAll(testCaseResultService.findAllBySuiteResultIdAndTestCaseIdAndResultIsNot(parentTestSuiteResult.getId(), testCaseResult.getTestCaseId(), ResultConstant.SUCCESS));
+            }
           }
           else {
             log.info("Fetching all failed test case results re run list for suite result id - " + parentTestSuiteResult.getId());

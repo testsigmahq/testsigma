@@ -81,6 +81,10 @@ public class TestCaseResultService {
     return this.testCaseResultRepository.findAllBySuiteResultId(suiteResultId);
   }
 
+  public List<TestCaseResult> findAllBySuiteResultIdAndTestCaseIdAndResultIsNot(Long suiteResultId, Long preRequisite, ResultConstant result) {
+    return this.testCaseResultRepository.findAllBySuiteResultIdAndTestCaseIdAndResultIsNot(suiteResultId, preRequisite, result);
+  }
+
   public List<TestCaseResult> findAllBySuiteResultIdAndTestCaseId(Long suiteResultId, Long preRequisite) {
     return this.testCaseResultRepository.findAllBySuiteResultIdAndTestCaseId(suiteResultId, preRequisite);
   }

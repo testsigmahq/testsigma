@@ -59,12 +59,12 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
             class="row-chart-status test123"
             [width]="20"
             [height]="20"
-            [resultEntity]="testCaseDataDrivenResult?.iterationResult?.lastRun || testCaseDataDrivenResult?.iterationResult"></app-result-pie-chart-column>
+            [resultEntity]="testCaseDataDrivenResult?.iterationResult?.lastRun || testCaseDataDrivenResult?.iterationResult"
+            [totalCount]="testCaseDataDrivenResult?.iterationResult?.totalCount"></app-result-pie-chart-column>
           <div class="ml-auto fz-12 text-t-secondary d-flex">
             <app-re-run-icon
               [iterateId]="testCaseDataDrivenResult?.iterationResult?.id"
-              [resultEntity]="testCaseDataDrivenResult?.iterationResult?.parentResult" [isDataDriven]="true"
-              [resultEntity]="testCaseDataDrivenResult?.iterationResult"></app-re-run-icon>
+              [resultEntity]="testCaseDataDrivenResult?.iterationResult?.parentResult" [isDataDriven]="true"></app-re-run-icon>
             <app-duration-format
               *ngIf="!testCaseDataDrivenResult?.iterationResult?.isExecuting"
               [duration]="testCaseDataDrivenResult?.iterationResult?.duration"></app-duration-format>
@@ -111,7 +111,7 @@ export class TestCaseDataDrivenResultListComponent implements OnInit {
   fetchIterations(query?: string) {
     this.scrollSubscription?.unsubscribe();
     this.currentUrl = this.router.url.split('/');
-    query += ",testCaseResultId:" + this.data.resultEntity?.parentId;
+    query += ",testCaseResultId:" + (this.data.resultEntity?.parentId || this.data.resultEntity?.parentResult?.reRunParentId);
     this.testCaseDataDrivenResults = new InfiniteScrollableDataSource(this.testCaseDataDrivenResultService, query);
     this.isDataDrivenFetchCompleted = true;
     this.searchDataSets();
@@ -123,22 +123,24 @@ export class TestCaseDataDrivenResultListComponent implements OnInit {
       setTimeout(() => this.scrollIterationToView(), 500);
       return;
     }
-    let activeItemInCache = this.testCaseDataDrivenResults.cachedItems?.find( testCaseResult =>
-      testCaseResult['iterationResultId']==this.currentUrl[3]);
-    let activeItemVisible = Boolean(activeItemInCache)? ((activeItemInCache['iterationResultId']
-      - activeItemInCache['testCaseResultId'] ) <= this.viewPort.getRenderedRange().end)
-      &&((activeItemInCache['iterationResultId']
-        - activeItemInCache['testCaseResultId'] ) >= this.viewPort.getRenderedRange().start) : false;
-    if(activeItemInCache && !activeItemVisible) {
-      this.viewPort.scrollToIndex(((activeItemInCache['iterationResultId'] - activeItemInCache['testCaseResultId']) -1 ));
+    let activeItemInCache = this.testCaseDataDrivenResults.cachedItems?.find( (testCaseResult : TestCaseDataDrivenResult) => {
+      return testCaseResult.iterationResult?.lastRun?.id == parseInt(this.currentUrl[3]) || testCaseResult.iterationResultId == parseInt(this.currentUrl[3]);
+    });
+    if(activeItemInCache) {
+      let index = this.testCaseDataDrivenResults.cachedItems?.findIndex( (testCaseResult : TestCaseDataDrivenResult) => {
+        return testCaseResult.iterationResult?.lastRun?.id == parseInt(this.currentUrl[3]) || testCaseResult.iterationResultId == parseInt(this.currentUrl[3]);
+      });
+      this.viewPort.scrollToIndex(index, "smooth");
       this.scrollAndUnSubscribe();
     } else if(!Boolean(activeItemInCache)){
       if(this.viewPort.getRenderedRange().end ==0) return;
       this.viewPort.scrollToIndex(this.viewPort.getRenderedRange().end, "smooth");
       this.scrollAndUnSubscribe();
     }
-    if(activeItemInCache && activeItemVisible)
+    if(activeItemInCache)
       this.completeScroll(activeItemInCache);
+    else if (this.viewPort.getRenderedRange().end > 0)
+      this.disableMouse = false;
     else
       this.disableMouse = true;
   }

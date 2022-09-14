@@ -45,7 +45,6 @@ public class TestPlanResultService {
   private final TestPlanResultRepository testPlanResultRepository;
   private final ObjectFactory<AgentExecutionService> agentExecutionServiceObjectFactory;
   private final ApplicationEventPublisher applicationEventPublisher;
-  private final TestCaseResultService testCaseResultService;
 
   public TestPlanResult find(Long id) throws ResourceNotFoundException {
     return this.testPlanResultRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Resource not " +

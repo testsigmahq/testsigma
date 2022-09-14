@@ -1,6 +1,7 @@
 package com.testsigma.constants;
 
 public class MessageConstants {
+  public static final String MSG_REPORT_GENERATION_FAILED_EXECUTION_IN_PROGRESS = "Report generation failed, Test plan execution is not completed";
   public static final String MSG_UNKNOWN_TEST_DATA_DATA = "No Test data profile is mapped to Test case  ?1";
   public static final String REPORT_GENERATION_FAILED_TEST_PLAN_RUN_IS_NOT_COMPLETED = "Report generation failed, Test plan run is not completed";
   public static final String ELEMENT_WITH_THE_NAME_IS_NOT_AVAILABLE = "Element with the name \"?1\" is not available";

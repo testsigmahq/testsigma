@@ -20,53 +20,27 @@ import {TestDevice} from "../../models/test-device.model";
   selector: 'app-lab-environments-info',
   template: `
     <div class="align-items-center d-flex justify-content-start flex-wrap">
-      <span class="d-inline-block mr-5 no-bg-transparent"
-            style="height: 20px;min-width: 20px"
-            *ngIf="testPlan.testPlanLabType"
-            [class.testsigma-lab-logo]="testPlan.isTestsigmaLab || testPlan.isHybrid"
-            [class.grid]="testPlan.isPrivateLab"
-            [matTooltip]="('testPlan.lab_type.'+testPlan.testPlanLabType) | translate"></span>
-      <span *ngIf="isHybridMobileWeb">
-        <span *ngFor="let env of testDevices"
-              [matTooltip]="
-            ('platform.name.'+env?.platform | translate) + '( '+ env?.osVersion+' ) '+
-            (env?.browser? ('browser.name.'+env?.browser | translate) : env?.deviceName) +
-            (env?.browserVersion ? '( '+env?.browserVersion+' )' : '')">
-            <span class="mr-5 fz-18 text-t-secondary"
-                  [class.fa-apple]="env?.isIOS"
-                  [class.fa-android-solid]="env?.isAndroid"
-            ></span>
-            <span class="mr-5 fz-18 text-t-secondary"
-                  [class.fa-chrome]="env?.isChrome"
-                  [class.fa-firefox-brands]="env?.isFirefox"
-                  [class.fa-safari-brands]="env?.isSafari"
-                  [class.fa-edge]="env?.isEdge"
-            ></span>
-          </span>
-      </span>
-      <span *ngIf="!isHybridMobileNative && !isHybridMobileWeb">
-      <span *ngFor="let env of testDevices"
+        <span *ngFor="let env of testPlan.testDevices" class="align-items-center d-flex justify-content-start flex-wrap">
+          <span class="d-inline-block mr-5 no-bg-transparent"
+                style="height: 20px;min-width: 20px"
+                *ngIf="env.testPlanLabType"
+                [class.testsigma-lab-logo]="env.isTestsigmaLab"
+                [class.testsigma-local-devices-logo]="env.isHybrid"
+                [matTooltip]="('execution.lab_type.'+env.testPlanLabType) | translate"></span>
+          <span
             [matTooltip]="
-            ('platform.name.'+env?.platform | translate) + '( '+ env?.osVersion+' ) '+
+            (env?.platform ? ('platform.name.'+env?.platform | translate) : '') +
+            ((env?.platform && env?.osVersion)? '( '+ env?.osVersion+' ) ' : ' ') +
             (env?.browser? ('browser.name.'+env?.browser | translate) : env?.deviceName) +
             (env?.browserVersion ? '( '+env?.browserVersion+' )' : '')"
             class="mr-5 fz-18 text-t-secondary"
             [class.fa-chrome]="env?.isChrome"
             [class.fa-firefox-brands]="env?.isFirefox"
-            [class.fa-safari-brands]="env?.isSafari"
+            [class.fa-safari-brands]="env.isSafari"
             [class.fa-edge]="env?.isEdge"
             [class.fa-apple]="!env?.browser && env?.isIOS"
-            [class.fa-android-solid]="!env?.browser && env?.isAndroid"
-      ></span>
-      </span>
-      <span *ngIf="isHybridMobileNative && !isHybridMobileWeb">
-      <span
-        *ngFor="let env of testDevices"
-        [matTooltip]="env?.title"
-        class="mr-5 fz-18 text-t-secondary"
-        [class.fa-apple]="isIosNative"
-        [class.fa-android-solid]="isAndroidNative"></span>
-      </span>
+            [class.fa-android-solid]="!env?.browser && env?.isAndroid"></span>
+        </span>
     </div>
   `,
   styles: []
@@ -85,7 +59,7 @@ export class LabEnvironmentsInfoComponent implements OnInit {
 
   ngOnChanges(changes : SimpleChanges) : void{
     this.testDevices.forEach((env)=>{
-      if(this.testPlan.testPlanLabType == TestPlanLabType.Hybrid){
+      if(env.testPlanLabType == TestPlanLabType.Hybrid){
         this.agentService.findAll("id:"+env?.agentId).subscribe(res=> {
           let agent;
           if(res.content.length){
@@ -103,7 +77,7 @@ export class LabEnvironmentsInfoComponent implements OnInit {
               console.log(agentDevice);
               env.platform = AgentDevice.getPlatformFromMobileOStype(agentDevice.osName);
               env.osVersion = agentDevice.osVersion;
-              env.browser = env.platform === Platform.Android ? 'CHROME' : "SAFARI";
+              //env.browser = env.platform === Platform.Android ? 'CHROME' : "SAFARI";
               env.deviceName = agentDevice.name;
             })
         });

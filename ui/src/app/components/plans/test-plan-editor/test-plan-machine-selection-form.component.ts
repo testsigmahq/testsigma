@@ -103,7 +103,7 @@ export class TestPlanMachineSelectionFormComponent extends BaseComponent impleme
     let environmentFormGroup = this.formBuilder.group({
       agentId: new FormControl(environment?.agentId, [this.requiredIfValidator(() => environment?.isHybrid)]),
       id: new FormControl(environment?.id, []),
-      title: new FormControl(environment?.title, [Validators.required, Validators.minLength(4), Validators.maxLength(120)]),
+      title: new FormControl(environment?.title, [Validators.required, Validators.minLength(4), Validators.maxLength(250)]),
       testPlanLabType: new FormControl(environment?.testPlanLabType || TestPlanLabType.TestsigmaLab, [Validators.required]),
       workspaceVersionId: new FormControl(environment?.workspaceVersionId || this.version.id, [Validators.required]),
       prerequisiteTestDevicesId: new FormControl(prerequisiteTestDevicesId, []),
@@ -143,6 +143,7 @@ export class TestPlanMachineSelectionFormComponent extends BaseComponent impleme
     else {
       environmentFormGroup.addControl('appBundleId', new FormControl(environment?.appBundleId, [this.requiredIfValidator(() => this.appPathTypeValue == ApplicationPathType.APP_DETAILS && this.isHybrid)]));
     }
+    environmentFormGroup.addControl('workspaceType', new FormControl(this.version.workspace.workspaceType));
     return environmentFormGroup;
   }
 

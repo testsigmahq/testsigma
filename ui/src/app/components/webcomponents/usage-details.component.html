@@ -43,8 +43,12 @@
                  class="list-view green-highlight lg-pm pl-10 text-t-secondary ts-col-100">
               <div class="ts-col-100 d-flex align-items-center" *ngIf="testPlanResult">
                 <div class="d-flex pr-10 rb-medium text-dark ts-col-20">
+                  <a [routerLink]="isDry(testPlanResult)? ['/td', 'test_case_results', testCaseResultMap[testPlanResult?.id]?.id] : ['/td', 'runs', testPlanResult.id]"
+                     mat-dialog-close
+                     class="d-flex pointer">
                   <span [textContent]="testPlanResult?.testPlan?.name"></span>
                   <span class="pl-10" [textContent]="'usage_details.runs_run_id' | translate : {id:testPlanResult?.id }"></span>
+                  </a>
                 </div>
                 <div class="ts-col-10" [textContent]="testPlanResult?.totalRunningCount+ testPlanResult?.totalQueuedCount"></div>
                 <div class="ts-col-20">

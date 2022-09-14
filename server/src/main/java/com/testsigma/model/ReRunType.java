@@ -19,5 +19,6 @@ public enum ReRunType {
   public static Boolean runAllIterations(ReRunType reRunType){
     // ONLY_FAILED_TESTS Type added to support the old executions
     return (reRunType == ALL_TESTS || reRunType == ALL_ITERATIONS || reRunType == ONLY_FAILED_TESTS);
+
   }
 }

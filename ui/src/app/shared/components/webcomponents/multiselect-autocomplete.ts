@@ -39,6 +39,9 @@ export class MultiSelectAutocomplete {
   ngOnChanges() {
     this.loadingSearch = false;
     this.filteredOptions=this.items.content;
+    if(this.value && this.selectFormControl?.patchValue) {
+      this.selectFormControl.patchValue(this.value);
+    }
     //this.onValueChange.emit(this.selectFormControl.value);
   }
 

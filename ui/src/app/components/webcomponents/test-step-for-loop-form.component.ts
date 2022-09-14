@@ -17,13 +17,13 @@ import {TestStepConditionType} from "../../enums/test-step-condition-type.enum";
 import {Page} from "../../shared/models/page";
 
 @Component({
-  selector: '' +
-    'app-test-step-for-loop-form',
+  selector: 'app-test-step-for-loop-form',
   templateUrl: './test-step-for-loop-form.component.html',
   styles: []
 })
 export class TestStepForLoopFormComponent extends BaseComponent implements OnInit {
   @Input('version') version: WorkspaceVersion;
+  @Input('indentation') indentation:number;
   @Input('testStep') public testStep: TestStep;
   @Output('onCancel') onCancel = new EventEmitter<void>();
   @Output('onSave') onSave = new EventEmitter<TestStep>();

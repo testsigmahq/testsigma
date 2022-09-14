@@ -461,7 +461,7 @@
 
 .delete-confirm {
   delete-dialog, app-warning-modal, app-save-work-warning {
-    @extend .p-30, .d-block;
+    @extend .pr-30,.pl-30, .d-block;
     .mat-dialog-content {
       @extend .p-0;
     }
@@ -479,6 +479,7 @@
     }
   }
 }
+
 
 .feedback-modal {
   .mat-dialog-content {

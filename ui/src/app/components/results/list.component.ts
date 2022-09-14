@@ -5,11 +5,14 @@ import {BaseComponent} from "../../shared/components/base.component";
 import {TestPlanService} from "../../services/test-plan.service";
 import {TestPlan} from "app/models/test-plan.model";
 import {TestDeviceService} from "../../services/test-device.service";
-import {ActivatedRoute, Params} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {interval, Subscription} from "rxjs";
 import {WorkspaceVersion} from "../../models/workspace-version.model";
 import {WorkspaceVersionService} from "../../shared/services/workspace-version.service";
 import {TestPlanType} from "../../enums/execution-type.enum";
+import {FilterFormComponent} from "../results/filter-form.component";
+import {MatDialog} from "@angular/material/dialog";
+
 
 @Component({
   selector: 'app-list',
@@ -33,11 +36,15 @@ export class ResultsListComponent extends BaseComponent implements OnInit {
   public version: WorkspaceVersion
   public direction = ",asc";
   public sortedBy = "name";
+  public sortByColumns = ["name", "executionType", "createdDate", "updatedDate","lastRun"];
+  public query: string;
 
   constructor(
     private testPlanService: TestPlanService,
     public testDeviceService: TestDeviceService,
     public route: ActivatedRoute,
+    private router: Router,
+    public matModal: MatDialog,
     private versionService: WorkspaceVersionService) {
     super();
   }
@@ -49,7 +56,19 @@ export class ResultsListComponent extends BaseComponent implements OnInit {
       this.fetchVersion();
       this.fetchTestPlans();
       this.attachAutoRefreshEvents();
-    })
+    });
+    this.route.params.subscribe((params) => {
+      const allParams = {...params, ...{versionId: this.versionId}};
+      this.pushToParent(this.route, allParams);
+      this.refreshListView(this.route.snapshot.queryParamMap['params']['q']);
+    });
+  }
+
+  refreshListView(query) {
+    this.query = query;
+    setTimeout(()=>{
+      this.fetchTestPlans(this.query);
+    },0);
   }
 
   fetchVersion() {
@@ -162,5 +181,29 @@ export class ResultsListComponent extends BaseComponent implements OnInit {
   checkIfLastRunExsists(testPlan: TestPlan){
     return !(testPlan?.lastRun == null && testPlan?.lastRun?.id == null);
 
+  }
+  openFilter() {
+
+    let filterDialogRef = this.matModal.open(FilterFormComponent, {
+      width: '25%',
+      height: '100vh',
+      position: {top: '0', right: '0', bottom: '0'},
+      panelClass: ['mat-overlay'],
+      data: {query: this.query}
+    });
+    filterDialogRef.componentInstance.filterEvent.subscribe(query => {
+      if (query) {
+        this.query = query;
+        this.router.navigate(['/td', this.version.id, 'results'], {queryParams: {q: this.query}});
+        this.fetchTestPlans(this.query);
+      } else
+        this.discard();
+    });
+  }
+
+  discard() {
+    this.query = undefined;
+    this.router.navigate(['/td', this.version.id, 'results']);
+    this.fetchTestPlans();
   }
 }

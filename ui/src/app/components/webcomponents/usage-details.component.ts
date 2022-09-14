@@ -15,6 +15,9 @@ import * as moment from 'moment';
 import {TestPlanResultService} from "../../services/test-plan-result.service";
 import {TestPlanResult} from "../../models/test-plan-result.model";
 import {BaseComponent} from "../../shared/components/base.component";
+import {TestCaseResultService} from "../../services/test-case-result.service";
+import {TestCaseResult} from "../../models/test-case-result.model";
+import {Page} from "../../shared/models/page";
 
 @Component({
   selector: 'app-usage-details',
@@ -28,13 +31,16 @@ export class UsageDetailsComponent extends BaseComponent implements OnInit {
   public inspectionsList: Observable<MobileInspection[]>;
   public inspectionsArray: MobileInspection[] = [];
   public isFetching: boolean;
+  public isFetchingTestPlans: boolean;
   public runsQuery: String;
   public userIds: Number[] = [];
+  public testCaseResultMap = {};
 
   constructor(
     public authGuard: AuthenticationGuard,
     public notificationsService: NotificationsService,
     public translate: TranslateService,
+    public testCaseResultService:TestCaseResultService,
     public toastrService: ToastrService,
     private testPlanResultService: TestPlanResultService,
     private mobileInspectionService: MobileInspectionService,
@@ -88,6 +94,7 @@ export class UsageDetailsComponent extends BaseComponent implements OnInit {
       this.runsArray.unshift(...res.content);
       this.runsList = of(this.runsArray);
       this.fetchMobileInspections();
+      this.fetchTestCasResultForTestCaseName();
     })
   }
 
@@ -148,4 +155,24 @@ export class UsageDetailsComponent extends BaseComponent implements OnInit {
       return 0;
     })
   }
+  private fetchTestCasResultForTestCaseName() {
+    let adhocResultIds = this.runsArray.filter((testPlanResult:TestPlanResult ) => testPlanResult?.testPlan.entityType== "ADHOC_TEST_PLAN")
+      .map((testPlanResult:TestPlanResult ) => testPlanResult.id);
+    this.testCaseResultService.findAll("testPlanResultId@" + adhocResultIds.join("#")).subscribe((res: Page<TestCaseResult>) => {
+      this.runsList.subscribe(array => {
+        array.forEach((result : TestPlanResult) => {
+          let testCaseResult = res.content.find(testCaseResult => testCaseResult.testPlanResultId == result.id)
+          if ((result instanceof TestPlanResult) || (testCaseResult && !testCaseResult.testSuite)) {
+            result.testPlan.name = testCaseResult?.testCase?.name;
+          }
+
+          if(testCaseResult) {
+            this.testCaseResultMap[result.id] = testCaseResult;
+          }
+        })
+      })
+      this.isFetchingTestPlans=false;
+    })
+  }
+
 }

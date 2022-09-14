@@ -10,6 +10,7 @@ import { NotificationsService } from 'angular2-notifications';
 import {TranslateService} from '@ngx-translate/core';
 import {ToastrService} from "ngx-toastr";
 import {Router} from "@angular/router";
+import {TestPlanTagService} from "../../services/test-plan-tag.service";
 
 @Component({
   selector: 'app-test-plan-form',
@@ -34,7 +35,8 @@ export class TestPlanFormComponent extends BaseComponent implements OnInit {
     public notificationsService: NotificationsService,
     public translate: TranslateService,
     public toastrService: ToastrService,
-    public router: Router) {
+    public router: Router,
+    public tagService: TestPlanTagService) {
     super(authGuard, notificationsService, translate, toastrService)
   }
 
@@ -63,12 +65,18 @@ export class TestPlanFormComponent extends BaseComponent implements OnInit {
         },
         {
           className: 'theme-btn-primary ml-15',
-          content: this.translate.instant('pagination.next'),
+          content:  this.translate.instant('pagination.next'),
           clickHandler: ()=> {
             (this.isInValid ? this.formSubmitted = true : this.next());
           }
         }
       ]
     });
+  }
+  setTags(tags: any) {
+    if (tags)
+      this.testPlanForm?.controls?.['tags']?.setValue(tags);
+    else
+      this.testPlanForm?.controls?.['tags']?.setValue(tags);
   }
 }

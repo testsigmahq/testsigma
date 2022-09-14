@@ -1,0 +1,135 @@
+<div class="theme-overlay-container">
+  <div class="theme-overlay-header">
+    <div
+      class="theme-overlay-title"
+      [translate]="'testcase.list.filter.title'">
+    </div>
+    <button
+      class="close"
+      type="button"
+      [matTooltip]="'hint.message.common.close' | translate"
+      mat-dialog-close>
+    </button>
+  </div>
+
+  <div class="theme-overlay-filter-content theme-overlay-content">
+    <form
+      class="ts-form pt-30" id="testcaseStatusForm"
+      (keydown.enter)="false"
+      novalidate="novalidate">
+
+      <div class="form-group">
+        <input class="form-control" (keyup)="constructQueryString()" [(ngModel)]="filterName"
+               [ngModelOptions]="{standalone: true}"
+               [placeholder]="'elements.filter.form.placeholder.name' | translate">
+        <label class="control-label" [translate]="'message.common.label.name'"></label>
+      </div>
+      <div class="form-group">
+        <app-test-case-multi-select
+          [value]="filterTestCases"
+          [versionId]="data?.version?.id"
+          (onValueChange) = "setFilteredTestCases($event)"
+        ></app-test-case-multi-select>
+        <label class="control-label" [translate]="'dashboard.test_cases.name'"></label>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill">
+          <mat-select
+            (selectionChange)="constructQueryString()"
+            [placeholder]="'message.common.any' | translate"
+            disableOptionCentering panelClass="multiple"
+            multiple [(value)]="filterByStatusResult">
+            <mat-option
+              *ngFor="let result of resultStatusConstant"
+              [value]="result"
+              [textContent]="convertToResultTypeFormat(result)"></mat-option>
+          </mat-select>
+        </mat-form-field>
+        <label class="control-label" [translate]="'message.common.text.status'"></label>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field class="mat-date-custom w-100" appearance="fill">
+          <mat-label [translate]="'testcase.list.created_date_placeholder'"></mat-label>
+          <mat-date-range-input [rangePicker]="createdDateRangePicker" [formGroup]="createdDateRange" [max]="maxDate">
+            <input matStartDate formControlName="start" placeholder="Start date" [max]="maxDate" required>
+            <input matEndDate formControlName="end" placeholder="End date" [max]="maxDate" required>
+          </mat-date-range-input>
+          <mat-datepicker-toggle matSuffix [for]="createdDateRangePicker"></mat-datepicker-toggle>
+          <mat-date-range-picker #createdDateRangePicker></mat-date-range-picker>
+        </mat-form-field>
+        <label class="control-label" [translate]="'message.common.createdDate'"></label>
+        <div class="error"
+             *ngIf="dateInvalid(createdDateRange) && !createdDateRangePicker.opened"
+             [translate]="'form.validation.common.invalid' | translate:{FieldName: 'Created Date'}"></div>
+      </div>
+
+      <div class="form-group">
+
+        <mat-form-field class="mat-date-custom w-100" appearance="fill">
+          <mat-label [translate]="'testcase.list.updated_date_placeholder'"></mat-label>
+          <mat-date-range-input [rangePicker]="updatedDateRangePicker" [formGroup]="updatedDateRange" [max]="maxDate">
+            <input matStartDate formControlName="start" placeholder="Start date" [max]="maxDate" required>
+            <input matEndDate formControlName="end" placeholder="End date" [max]="maxDate" required>
+          </mat-date-range-input>
+          <mat-datepicker-toggle matSuffix [for]="updatedDateRangePicker"></mat-datepicker-toggle>
+          <mat-date-range-picker #updatedDateRangePicker></mat-date-range-picker>
+        </mat-form-field>
+        <label class="control-label" [translate]="'message.common.updatedDate'"></label>
+        <div class="error"
+             *ngIf="dateInvalid(updatedDateRange) && !updatedDateRangePicker.opened"
+             [translate]="'form.validation.common.invalid' | translate:{FieldName: 'Updated Date'}"></div>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field class="mat-date-custom w-100" appearance="fill">
+          <mat-label [translate]="'testcase.list.created_date_placeholder'"></mat-label>
+          <mat-date-range-input [rangePicker]="lastRunRangePicker" [formGroup]="lastRunDateRange" [max]="maxDate">
+            <input matStartDate formControlName="start" placeholder="Start date" [max]="maxDate" required>
+            <input matEndDate formControlName="end" placeholder="End date" [max]="maxDate" required>
+          </mat-date-range-input>
+          <mat-datepicker-toggle matSuffix [for]="lastRunRangePicker"></mat-datepicker-toggle>
+          <mat-date-range-picker #lastRunRangePicker></mat-date-range-picker>
+        </mat-form-field>
+        <label class="control-label" [translate]="'message.common.lastRunDate'"></label>
+        <div
+          class="error"
+          *ngIf="dateInvalid(lastRunDateRange) && !lastRunRangePicker.opened"
+          [translate]="'form.validation.common.invalid' | translate:{FieldName: ('message.common.lastRunDate'|translate)}"
+        ></div>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill">
+          <mat-select
+            (selectionChange)="constructQueryString()"
+            [placeholder]="'message.common.any' | translate"
+            disableOptionCentering panelClass="multiple"
+            multiple [(value)]="filterTagIds">
+            <mat-option
+              *ngFor="let tag of tags"
+              [value]="tag.id"
+              [textContent]="tag.name"></mat-option>
+          </mat-select>
+        </mat-form-field>
+        <label class="control-label" [translate]="'testcase.list.tags'"></label>
+      </div>
+    </form>
+  </div>
+  <div class="theme-overlay-footer">
+    <button
+      class="theme-btn-clear-default"
+      mat-dialog-close
+      [translate]="'btn.common.close'"></button>
+    <button
+      *ngIf="filterApplied"
+      class="theme-btn-clear-default"
+      [translate]="'btn.common.reset'"
+      (click)="reset();"></button>
+    <button
+      class="theme-btn-primary"
+      [translate]="'btn.common.filter'"
+      [disabled]="disableFilter()"
+      (click)="filter()"></button>
+  </div>
+</div>

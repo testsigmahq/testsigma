@@ -3,7 +3,8 @@
   [formGroup]="loopForm">
   <div
     *ngIf="testDataList?.content?.length"
-    class="align-items-center pb-15 step-container-section pt-4 pl-4">
+    class="align-items-center pb-15 step-container-section pt-4 pl-4"
+    [style]="'padding-left: calc('+ indentation*3 +'px + 15px) !important' ">
     <div class="py-10">
       <span
         class="bg-white rb-medium"

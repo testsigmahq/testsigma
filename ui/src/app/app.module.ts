@@ -277,6 +277,10 @@ import { FormHeaderComponent } from './components/plans/form-header.component';
 import {ActionTestDataRuntimeVariableSuggestionComponent} from './components/webcomponents/action-test-data-runtime-variable-suggestion.component';
 import {ReRunPopupComponent} from "./agents/components/webcomponents/re-run-popup.component";
 import {ReRunFormComponent} from "./agents/components/webcomponents/re-run-form.component";
+import {TestCaseMultiSelectComponent} from "./components/webcomponents/test-case-multi-select.component";
+import { FilterFormComponent } from './components/suites/filter-form.component';
+import { FilterFormComponent as ResultFilterFormComponent} from './components/results/filter-form.component';
+import { FilterFormComponent as PlanFilterComponet} from './components/plans/filter-form.component';
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -535,6 +539,10 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     ActionTestDataRuntimeVariableSuggestionComponent,
     ReRunPopupComponent,
     ReRunFormComponent
+    TestCaseMultiSelectComponent,
+    FilterFormComponent,
+    ResultFilterFormComponent,
+    PlanFilterComponet
   ],
   imports: [
     BrowserModule,

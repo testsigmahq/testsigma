@@ -33,6 +33,12 @@
       [direction]="direction"
       [translatePreFix]="'test_suites.list.sort_by.'"
       (sortAction)="sortBy($event.sortBy, $event.direction)"></app-sort-by-button>
+    <button
+      (click)="openFilter()"
+      [matTooltip]="'hint.message.common.filter' | translate"
+      class="btn icon-btn border-rds-2 filter-icon-with-reset mr-15">
+      <i class="filter-icon" [class.filtered]="!!this.query"></i>
+    </button>
     <div class="pl-15 theme-border-l">
       <app-pagination (paginationAction)="fetchTestSuites()" *ngIf="testSuites?.totalElements"
                       [currentPage]="currentPage" [paginationData]="testSuites"></app-pagination>
@@ -44,7 +50,7 @@
     *ngIf="testSuites?.content.length != 0"
     class="list-header">
     <div
-      class="pr-10 d-flex ts-col-75 align-items-center">
+      class="pr-10 d-flex ts-col-60 align-items-center">
       <mat-checkbox
         [(ngModel)]="selectAll" [ngModelOptions]="{standalone: true}"
         (change)="selectAllToggle(selectAll)"
@@ -58,15 +64,27 @@
       </span>
     </div>
     <div
-      class="ts-col-25 pl-40"
-      [translate]="'message.common.text.status'"></div>
+      class="ts-col-20 d-flex align-items-center">
+      <app-inline-sort
+        [ascending]="sortedBy!='createdDate'? undefined : direction == ',asc'"
+        [heading]="'message.common.createdDate'"
+        (click)="sortBy('createdDate', ((sortedBy!='createdDate' || direction == ',desc')?',asc':',desc'))"></app-inline-sort>
+    </div>
+  <div
+    class="ts-col-20 d-flex align-items-center">
+
+    <app-inline-sort
+      [ascending]="sortedBy!='lastRun'? undefined : direction == ',asc'"
+      [heading]="'message.common.text.status'"
+      (click)="sortBy('lastRun', ((sortedBy!='lastRun' || direction == ',desc')?',asc':',desc'))"></app-inline-sort>
+  </div>
   </div>
   <app-placeholder-loader
     *ngIf="!fetchingCompleted"></app-placeholder-loader>
   <div class="list-container">
     <div *ngFor="let testSuite of testSuites?.content; let i = index"
          class="list-view green-highlight lg-pm pl-10 pointer align-items-center">
-      <div class="ts-col-75 my-auto text-truncate">
+      <div class="ts-col-60 my-auto text-truncate">
         <div class="pb-7 list-title d-flex">
           <mat-checkbox
             (change)="setSelectedList(testSuite.id,testSuite.isSelected)" [(ngModel)]="testSuite.isSelected"
@@ -79,7 +97,14 @@
           <span [translate]="'message.common.automated'"></span>
         </div>
       </div>
-      <div class="ts-col-25 d-flex">
+      <div class="ts-col-15">
+        <span class="ml-n3" [matTooltip]="testSuite?.createdAt  ? (testSuite?.createdAt | date:'short') : ''"
+              [textContent]="testSuite?.createdAt  ? humanizedDate(testSuite?.createdAt) : '-'"></span>
+      </div>
+<!--      <div class="d-flex flex-column ts-col-20">-->
+<!--        <app-user-card class="text-truncate w-100" [user]="testSuite?.createdBy"></app-user-card>-->
+<!--      </div>-->
+      <div class="ts-col-20 d-flex">
         <div class="ts-col-50 pl-40">
           <a [routerLink]="['/td', 'suite_results', testSuite.lastRun?.id]" *ngIf="testSuite?.lastRun">
             <app-result-pie-chart-column
@@ -96,7 +121,7 @@
             data-placement="bottom"
             href="javascript:void(0)"></a>
           <a
-            (click)="fetchLinkedPlans(testSuite.id)" [matTooltip]="'pagination.delete' | translate"
+            (click)="fetchLinkedPlans([testSuite.id], testSuite.name)" [matTooltip]="'pagination.delete' | translate"
             class="fa-trash-thin action-icon"
             data-placement="bottom"
             href="javascript:void(0)"></a>

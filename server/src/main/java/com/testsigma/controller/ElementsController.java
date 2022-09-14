@@ -76,8 +76,29 @@ public class ElementsController {
 
   @RequestMapping(method = RequestMethod.GET)
   public Page<ElementDTO> index(ElementSpecificationsBuilder builder, Pageable pageable) {
-    Specification<Element> spec = builder.build();
-    Page<Element> elements = elementService.findAll(spec, pageable);
+    Long applicationVersion = null;
+    String name = "";
+    String screenName = "";
+    String previousStepElementName = null;
+    for(SearchCriteria param : builder.params) {
+      if(param.getKey().equals("workspaceVersionId")) {
+        applicationVersion = Long.parseLong(param.getValue().toString());
+      } else if(param.getKey().equals("name")) {
+        name =  param.getValue().toString();
+      } else if(param.getKey().equals("screenName")) {
+        screenName =  param.getValue().toString();
+      } else if(param.getKey().equals("previousStepElementName")) {
+        previousStepElementName = param.getValue().toString();
+      }
+    }
+
+    Page<Element> elements;
+    if(previousStepElementName != null) {
+      elements = elementService.findAllSortedByPreviousStepElement(pageable, applicationVersion, name, screenName, previousStepElementName);
+    } else {
+      Specification<Element> spec = builder.build();
+      elements = elementService.findAll(spec, pageable);
+    }
     List<ElementDTO> elementDTOS = elementMapper.map(elements.getContent());
     return new PageImpl<>(elementDTOS, pageable, elements.getTotalElements());
   }

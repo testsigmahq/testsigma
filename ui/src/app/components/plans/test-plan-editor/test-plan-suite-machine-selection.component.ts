@@ -369,6 +369,7 @@ export class TestPlanSuiteMachineSelectionComponent extends BaseComponent implem
     let createSessionAtCaseLevel = environment?.createSessionAtCaseLevel || false;
 
     let environmentFormGroup =  new FormGroup({
+      agentId: new FormControl(environment?.agentId, [this.requiredIfValidator(() => environment?.isHybrid)]),
       id: new FormControl(environment?.id, []),
       testPlanLabType: new FormControl(environment?.testPlanLabType || TestPlanLabType.TestsigmaLab, []),
       workspaceVersionId: new FormControl(environment?.workspaceVersionId || this.version.id, []),
@@ -412,6 +413,7 @@ export class TestPlanSuiteMachineSelectionComponent extends BaseComponent implem
     else {
       environmentFormGroup.addControl('appBundleId', new FormControl(environment?.appBundleId, []));
     }
+    environmentFormGroup.addControl('workspaceType', new FormControl(this.selectedVersion.workspace.workspaceType));
     return environmentFormGroup;
   }
 

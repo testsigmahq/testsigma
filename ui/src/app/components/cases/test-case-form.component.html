@@ -54,7 +54,7 @@
         </div>
         <div class="error"
              *ngIf="formSubmitted && testCaseForm.controls.name.errors?.maxlength"
-             [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'126'}"></div>
+             [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'250'}"></div>
         <div class="error"
              *ngIf="formSubmitted && testCaseForm.controls.name.errors?.minlength"
              [textContent]="'form.validation.common.min_length' | translate: {FieldName:'Name' , min:'4'}"></div>
@@ -143,6 +143,16 @@
               ></app-auto-complete>
               <label class="control-label" [translate]="'test_step.results.prerequisite'"></label>
             </div>
+            <div class="form-group ts-col-50">
+              <app-tags-chip-list
+                class="ts-col-100"
+                [entityId]="testCaseId"
+                [service]="tagService"
+                (onValueChange)="setTags($event)"
+              ></app-tags-chip-list>
+              <label class="control-label" [translate]="'testcase.list.tags'"></label>
+            </div>
+            <div class="form-group ts-col-50"> </div>
             <div
               *ngIf="testDataList?.content && !isStepGroup && !associatedParametersPopupOpen"
               class="form-group ts-col-50">
@@ -160,6 +170,18 @@
               <label class="control-label" [translate]="'testcase.list.test_data'"></label>
             </div>
             <div
+              *ngIf="!testCase.isStepGroup || !isStepGroup"
+              class="form-group ts-col-50" style="margin-top: auto !important;margin-bottom: auto !important;">
+              <div
+                [matTooltip]="!testCase.testDataId ? ('testcase.form.data_not_enable' | translate) : isRunning ? ('testcase.form.running' | translate) : ''">
+                <mat-slide-toggle
+                  [disabled]="!testCase.testDataId || isRunning"
+                  [(ngModel)]="testCase.isDataDriven"
+                  (change)="setTestDataStartIndex()"><span [translate]="'testcase.summary.data_driven'"></span>
+                </mat-slide-toggle>
+              </div>
+            </div>
+            <div
               *ngIf="!testCase.isDataDriven && testCase.testDataId && !isStepGroup"
               class="form-group ts-col-50">
               <mat-form-field class="mat-select-custom w-100" appearance="fill">
@@ -175,30 +197,7 @@
               </mat-form-field>
               <label class="control-label" [translate]="'testcase.form.data_set'"></label>
             </div>
-
-            <div class="form-group p-0 ts-col-50">
-              <app-tags-chip-list
-                class="ts-col-100"
-                [entityId]="testCaseId"
-                [service]="tagService"
-                (onValueChange)="setTags($event)"
-              ></app-tags-chip-list>
-              <label class="control-label" [translate]="'testcase.list.tags'"></label>
-            </div>
-            <div
-              *ngIf="!testCase.isStepGroup || !isStepGroup"
-              class="form-group ts-col-50">
-              <div
-                [matTooltip]="!testCase.testDataId ? ('testcase.form.data_not_enable' | translate) : isRunning ? ('testcase.form.running' | translate) : ''">
-                <mat-slide-toggle
-                  [disabled]="!testCase.testDataId || isRunning"
-                  [(ngModel)]="testCase.isDataDriven"
-                  (change)="setTestDataStartIndex()"><span [translate]="'testcase.summary.data_driven'"></span>
-                </mat-slide-toggle>
-              </div>
-            </div>
-            <div class="ts-col-100 d-flex pt-20" *ngIf="testCase.isDataDriven" [formGroup]="testCaseForm">
-                <div class="form-group ts-col-50">
+                <div class="form-group ts-col-50" *ngIf="testCase.isDataDriven" [formGroup]="testCaseForm">
                   <mat-form-field class="mat-select-custom w-100" appearance="fill">
                     <mat-select
                       disableOptionCentering panelClass="single"
@@ -216,7 +215,7 @@
                   </mat-form-field>
                   <label class="control-label" [translate]="'testcase.form.iteration_from'"></label>
                 </div>
-                <div class="form-group ts-col-50">
+                <div class="form-group ts-col-50" *ngIf="testCase.isDataDriven" [formGroup]="testCaseForm">
                   <mat-form-field class="mat-select-custom w-100" appearance="fill">
                     <mat-select
                       disableOptionCentering panelClass="single"
@@ -233,7 +232,6 @@
                   </mat-form-field>
                   <label class="control-label" [translate]="'testcase.form.iteration_to'"></label>
                 </div>
-              </div>
             </div>
         </mat-expansion-panel>
       </mat-accordion>

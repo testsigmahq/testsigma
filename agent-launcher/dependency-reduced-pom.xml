@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.testsigma</groupId>
   <artifactId>testsigma-agent-launcher</artifactId>
-  <name>agent-launcher</name>
+  <name>Testsigma Agent Launcher</name>
   <version>1.0.0</version>
   <developers>
     <developer>

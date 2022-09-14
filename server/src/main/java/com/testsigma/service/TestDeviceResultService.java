@@ -16,11 +16,14 @@ import com.testsigma.exception.TestsigmaException;
 import com.testsigma.mapper.TestDeviceResultMapper;
 import com.testsigma.model.*;
 import com.testsigma.repository.TestDeviceResultRepository;
+import com.testsigma.util.XLSUtil;
 import com.testsigma.web.request.EnvironmentRunResultRequest;
 import com.testsigma.web.request.TestDeviceResultRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -56,7 +59,7 @@ public class TestDeviceResultService {
   }
 
   public TestDeviceResult findQueuedHybridEnvironment(Long id) {
-    return testDeviceResultRepository.findFirstByTestDeviceAgentIdAndTestPlanLabTypeAndTestPlanResultResultOrderByIdAsc(id, TestPlanLabType.Hybrid, ResultConstant.QUEUED);
+    return testDeviceResultRepository.findFirstByTestDeviceAgentIdAndTestPlanLabTypeAndStatusOrderByIdAsc(id, TestPlanLabType.Hybrid, StatusConstant.STATUS_PRE_FLIGHT);
   }
 
   public Page<TestDeviceResult> findAll(Specification<TestDeviceResult> spec, Pageable pageable) {
@@ -471,5 +474,89 @@ public class TestDeviceResultService {
     if(childResult.getReRunParentId() == null)
       return childResult;
     return getFirstParentResult(childResult.getReRunParentId());
+  }
+
+  public void export(TestDeviceResult testDeviceResult, XLSUtil wrapper) throws ResourceNotFoundException {
+    wrapper.getWorkbook().setSheetName(wrapper.getWorkbook().getSheetIndex(wrapper.getSheet()),
+            "Run result summary");
+    setResultDetails(testDeviceResult, wrapper);
+    setTestCasesSummary(testDeviceResult, wrapper);
+    setDetailedTestCaseList(testDeviceResult, wrapper);
+  }
+
+  private void setTestCasesSummary(TestDeviceResult environmentResult, XLSUtil wrapper) {
+    setHeading(wrapper, "Summary");
+    Object[] keys = {"Total Test Cases", "Queued", "Passed", "Failed", "Aborted", "Not Executed", "Stopped"};
+    Object[] counts = {environmentResult.getTotalCount(), environmentResult.getQueuedCount(),
+            environmentResult.getPassedCount(), environmentResult.getFailedCount(), environmentResult.getAbortedCount(),
+            environmentResult.getNotExecutedCount(),
+            //environmentResult.getPreRequisiteFailedCount(),
+            environmentResult.getStoppedCount()};
+    setCellsHorizontally(wrapper, keys, true);
+    setCellsHorizontally(wrapper, counts, false);
+  }
+
+  private void setResultDetails(TestDeviceResult testDeviceResult, XLSUtil wrapper)
+          throws ResourceNotFoundException {
+    setHeading(wrapper, "Execution Details");
+    setDetailsKeyValue("Test Machine Name", testDeviceResult.getTestDevice().getTitle(), wrapper);
+    setDetailsKeyValue("Test Plan Name", testDeviceResult.getTestDevice().getTestPlan().getName(),
+            wrapper);
+    if (testDeviceResult.getTestDevice().getTestPlan().getDescription() != null)
+      setDetailsKeyValue("Description", testDeviceResult.getTestDevice().getTestPlan().getDescription()
+              .replaceAll("\\&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-fA-F]{1,6});|\\<.*?\\>", ""), wrapper);
+    setDetailsKeyValue("RunId", testDeviceResult.getTestPlanResult().getId().toString(), wrapper);
+    setDetailsKeyValue("Build No", testDeviceResult.getTestPlanResult().getBuildNo(), wrapper);
+//    setDetailsKeyValue("Triggered By", userService.find(testDeviceResult.getExecutionResult().getExecutedBy()).getUserName(), wrapper);
+    setDetailsKeyValue("Execution Start Time", testDeviceResult.getTestPlanResult().getStartTime().toString(), wrapper);
+    setDetailsKeyValue("Execution End Time", testDeviceResult.getEndTime() != null ? testDeviceResult.getEndTime().toString() : "-", wrapper);
+    setDetailsKeyValue("Execution Result",
+            testDeviceResult.getTestPlanResult().getResult().getName(),
+            wrapper);
+    setDetailsKeyValue("Execution Message", testDeviceResult.getTestPlanResult().getMessage(), wrapper);
+  }
+
+  private void setDetailsKeyValue(String key, String value, XLSUtil wrapper) {
+    Integer count = 0;
+    Row row = wrapper.getDataRow(wrapper, wrapper.getNewRow());
+    row.createCell(count).setCellValue(key);
+    row.getCell(count).setCellStyle(XLSUtil.getSecondAlignStyle(wrapper));
+    row.createCell(++count).setCellValue(value);
+  }
+
+  private void setDetailedTestCaseList(TestDeviceResult testDeviceResult, XLSUtil wrapper) {
+    setHeading(wrapper, "Test Cases List");
+    String[] keys = {"Test Case", "Test Suite", "Result", "Start Time", "End Time", "Visual Test Results"};
+    setCellsHorizontally(wrapper, keys, true);
+    List<TestCaseResult> testCaseResults = testCaseResultService.findAllByEnvironmentResultId(testDeviceResult.getId());
+    for (TestCaseResult testCaseResult : testCaseResults) {
+      Object[] values = {testCaseResult.getTestCase().getName(), testCaseResult.getTestSuite().getName(),
+              testCaseResult.getResult().getName(), testCaseResult.getStartTime(),
+              testCaseResult.getEndTime(), testCaseResult.getIsVisuallyPassed() == null ? "N/A" : testCaseResult.getIsVisuallyPassed() ? "PASS" :"FAIL"};
+      setCellsHorizontally(wrapper, values, false);
+    }
+  }
+
+  private void setCellsHorizontally(XLSUtil wrapper, Object[] keys, boolean isBold) {
+    Integer count = -1;
+    Row row = wrapper.getDataRow(wrapper, wrapper.getNewRow());
+    for (Object key : keys) {
+      row.createCell(++count).setCellValue(key.toString());
+    }
+    if (isBold) {
+      count = -1;
+      for (Object key : keys) {
+        row.getCell(++count).setCellStyle(XLSUtil.getSecondAlignStyle(wrapper));
+      }
+    }
+  }
+
+  private void setHeading(XLSUtil wrapper, String key) {
+    wrapper.getDataRow(wrapper, wrapper.getNewRow());
+    Row row = wrapper.getDataRow(wrapper, wrapper.getNewRow());
+    CellStyle header = XLSUtil.getTableHeaderStyle(wrapper);
+    row.setRowStyle(header);
+    row.createCell(1).setCellValue(key);
+    row.getCell(1).setCellStyle(header);
   }
 }

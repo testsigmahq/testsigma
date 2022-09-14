@@ -119,7 +119,13 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
       const dialogRef = this.matModal.open(ConfirmationModalComponent, {
         width: '450px',
         data: {
-          description: res
+          description: this.translate.instant("message.common.confirmation.message", {FieldName: this.isGroup }),
+          isPermanentDelete: permanently,
+          title: 'Test Case',
+          item: 'test case',
+          name: this.testCase.name,
+          note: this.translate.instant('message.common.confirmation.test_data_des', {Item:'test case'}),
+          confirmation: permanently ? this.translate.instant("message.common.confirmation.note") : this.translate.instant("message.common.confirmation.note_trash"),
         },
         panelClass: ['matDialog', 'delete-confirm']
       });

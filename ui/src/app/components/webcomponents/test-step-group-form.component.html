@@ -3,7 +3,8 @@
   [formGroup]="stepGroupForm">
   <div
     *ngIf="stepGroups?.content?.length || searchQuery?.length"
-    class="px-5 pt-14 pb-15 step-container-section">
+    class="px-5 pt-14 pb-15 step-container-section"
+    [style]="'padding-left: calc('+ indentation*3 +'px + 5px) !important' ">
     <app-auto-complete
       class="pb-2 ts-col-100 d-block mt-n4"
       [formGroup]="stepGroupForm"
@@ -14,6 +15,26 @@
       (onSearch)="fetchStepGroups($event)"
       (onValueChange)="setStepGroup($event)"
     ></app-auto-complete>
+  </div>
+  <div
+    class="align-items-center d-flex"
+    *ngIf="(stepGroups?.content?.length || searchQuery?.length) && testStep?.stepGroup"
+  >
+    <div class="text-secondary text-truncate d-flex flex-col">
+      <div class="rb-semi-medium">{{'test_case.create_help.description.label' | translate}} : </div>
+      <div
+        #stepGroupDescElem
+        class="ml-5 text-truncate"
+        [textContent]="stepGroupDescriptionText || ('results.list_view.no_description' | translate)"
+        [matTooltip]="stepGroupDescElem.offsetWidth < stepGroupDescElem.scrollWidth? stepGroupDescElem.textContent:''"
+      ></div>
+    </div>
+    <a
+      class="action-icon fa-external-link-alt-solid"
+      target="_blank"
+      [routerLink]="['/td', 'cases', testStep.stepGroup.id, 'steps']"
+      [matTooltip]="'test_step.step_group.view_details' | translate"
+    ></a>
   </div>
   <div
     *ngIf="stepGroups?.content?.length || searchQuery?.length"

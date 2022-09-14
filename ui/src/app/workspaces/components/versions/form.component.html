@@ -28,11 +28,11 @@
         <label class="label fz-14 rb-medium" [translate]="'version.form.label.version_name'"></label>
         <input type="text" class="form-control mt-10" [formControlName]="['versionName']"  required/>
         <div
-          class="error" *ngIf="versionForm?.controls.versionName.errors?.minLength"
-          [textContent]="'form.validation.common.min_length' | translate: {FieldName:'Name' , min:'4'}"></div>
-        <div class="error"
-             *ngIf="(versionForm?.touched || submitted)  && versionForm?.controls?.versionName?.hasError('whitespace')"
-             [textContent]="'form.validation.cannot_have_white_spaces' | translate: {FieldName:'Version Name'}"></div>
+          class="error mt-30" *ngIf="versionForm.controls.versionName.errors?.required && submitted"
+          [textContent]="'form.validation.common.required' | translate:{FieldName: ('version.form.label.version_name'|translate)}"></div>
+        <div
+          class="error mt-30" *ngIf="versionForm.controls.versionName.errors?.maxlength && submitted"
+          [textContent]="'form.validation.common.max_length' | translate: {FieldName:('version.form.label.version_name'|translate) , max:'250'}"></div>
       </div>
       <div class="form-group mb-10">
         <app-description [formCtrlName]="versionForm.controls.description"></app-description>

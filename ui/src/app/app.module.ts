@@ -538,7 +538,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     FormHeaderComponent,
     ActionTestDataRuntimeVariableSuggestionComponent,
     ReRunPopupComponent,
-    ReRunFormComponent
+    ReRunFormComponent,
     TestCaseMultiSelectComponent,
     FilterFormComponent,
     ResultFilterFormComponent,

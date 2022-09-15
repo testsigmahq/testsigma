@@ -7,7 +7,9 @@
 
 package com.testsigma.util;
 
-import com.amazonaws.HttpMethod;
+import com.testsigma.model.StorageAccessLevel;
+import com.testsigma.service.AwsS3StorageService;
+import com.testsigma.service.StorageService;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
@@ -15,7 +17,6 @@ import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.joda.time.DateTime;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,6 +41,9 @@ public class XLSUtil {
     private Boolean status = false;
     private CellStyle cellDateStyle = null;
 
+    @Setter
+    @Getter
+    private StorageService storageService;
 
     /**
      *
@@ -375,6 +379,30 @@ public class XLSUtil {
 
     }
 
-
+    public String writeToStorage() {
+        ByteArrayOutputStream bos = null;
+        InputStream is = null;
+        try {
+            String fileName = System.currentTimeMillis() + ".xls";
+            bos = new ByteArrayOutputStream();
+            workbook.write(bos);
+            byte[] barray = bos.toByteArray();
+            is = new ByteArrayInputStream(barray);
+            String filePath =  "/export_xlsx/" + fileName;
+            this.storageService.addFile(filePath, is);
+            return this.storageService.generatePreSignedURL(filePath, StorageAccessLevel.FULL_ACCESS, 180).toString();
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            try {
+                assert bos != null;
+                bos.close();
+                assert is != null;
+                is.close();
+            } catch (Exception ignored) {
+            }
+        }
+        return null;
+    }
 
 }

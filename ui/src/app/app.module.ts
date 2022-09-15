@@ -111,6 +111,7 @@ import 'codemirror/addon/fold/foldcode';
 import 'codemirror/addon/fold/foldgutter';
 import 'codemirror/addon/fold/brace-fold';
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {TestDataImportComponent} from "./components/webcomponents/test-data-import.component";
 import {CreateComponent as TestDataCreateComponent} from './components/data/create.component';
 import {DetailsComponent as TestDataDetailsComponent} from './components/data/details.component';
 import {EditComponent as TestDataEditComponent} from './components/data/edit.component';
@@ -382,6 +383,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     TestStepHelpSamplesComponent,
     ElementAddTagComponent,
     TestDataProfilesListComponent,
+    TestDataImportComponent,
     DryRunFormComponent,
     TestDataCreateComponent,
     TestDataDetailsComponent,

@@ -64,6 +64,11 @@ public class TestData {
   @Setter
   private Long copiedFrom;
 
+  @Column(name = "passwords")
+  @Getter
+  @Setter
+  private String passwords;
+
   @Column(name = "created_date")
   @CreationTimestamp
   @Getter
@@ -97,5 +102,13 @@ public class TestData {
     this.data = new TestDataSetConverter().convertToDatabaseColumn(dataSets);
   }
 
+  public List<String> getPasswords() {
+    return new StringSetConverter().convertToEntityAttribute(this.passwords);
+  }
 
+  public void setPasswords(List<String> passwordList) {
+    if (passwordList != null) {
+      this.passwords = new StringSetConverter().convertToDatabaseColumn(passwordList);
+    }
+  }
 }

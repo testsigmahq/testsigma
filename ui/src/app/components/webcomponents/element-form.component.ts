@@ -36,10 +36,12 @@ import {MobileRecorderEventService} from "../../services/mobile-recorder-event.s
 export class ElementFormComponent extends BaseComponent implements OnInit {
   @ViewChild('submitReviewButton') public submitReviewButton: ElementRef;
   @Optional() @Input('formDetails') formDetails;
+  @Optional() @Input('isFullScreen') isFullScreen:boolean;
   public control = new FormControl();
   public workspaceVersion: WorkspaceVersion;
   public element: Element;
   public elementForm: FormGroup;
+  public saving:boolean=false;
   public agentInstalled: Boolean;
   public formSubmitted: Boolean = false;
   public showDetails: Boolean = false;
@@ -51,7 +53,6 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
   public defaultScreenName = "Default Screen";
   private userPreference: UserPreference;
   public canNotShowLaunch: boolean = false;
-  public saving = false;
   public testCaseResultId: number;
   public reviewSubmittedElement: Element;
   public screenNameOptions: Observable<Set<ElementScreenName>>;
@@ -74,6 +75,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
     private sanitizer: DomSanitizer,
     @Inject(MAT_DIALOG_DATA) public options: {
       isStepRecordView: boolean;
+      isNewUI:boolean;
       elementId?: number, versionId?: number,
       name?: string, isNew?: boolean, isDryRun?: boolean,
       testCaseId: number, testCaseResultId: number
@@ -506,6 +508,10 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
           this.showAPIError(error, res)
         })
       });
+  }
+
+  get isNewUI(){
+    return this.options.isNewUI;
   }
 
 }

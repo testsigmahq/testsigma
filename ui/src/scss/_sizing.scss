@@ -140,6 +140,22 @@ $abbrev in (width: w, height: h) {
   height: 300px;
 }
 
+.h-100vh-50px {
+  height: calc(100vh - 50px) !important;
+}
+
+.h-100vh-100px {
+  height: calc(100vh - 100px) !important;
+}
+
+.h-100vh-110px {
+  height: calc(100vh - 110px) !important;
+}
+
+.h-100vh-70px {
+  height: calc(100vh - 70px) !important;
+}
+
 .w-100-60 {
   width: calc(100% - 60px);
 }
@@ -157,6 +173,9 @@ $abbrev in (width: w, height: h) {
 }
 .w-33p {
   width: 33px!important;
+}
+.w-100p{
+  width: 100px !important;
 }
 .w-167p {
   width: 167px

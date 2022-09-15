@@ -2,6 +2,7 @@
      module="element-recorder-popup">
   <div
     [class.theme-border-b]="!formDetails"
+    *ngIf="!isFullScreen"
     class="theme-overlay-header flex-auto justify-content-between">
     <div
       class="theme-overlay-title"
@@ -16,7 +17,8 @@
       </button>
     </div>
   </div>
-  <div class="theme-overlay-content p-20">
+  <div class="theme-overlay-content p-20"
+  [ngClass]="{'h-100vh-110px': isFullScreen}">
     <form
       class="ts-form" id="elementForm"
       (keydown.enter)="false"
@@ -27,40 +29,45 @@
       <div [ngSwitch]="element.createdType">
         <div *ngIf="!options?.isStepRecordView"
           class="form-group ts-col-100 d-flex">
-<!--          <label-->
-<!--            class="rb-medium pr-20"-->
-<!--            [translate]="'elements.form.selection.title'"></label>-->
-<!--          <div-->
-<!--            class="d-flex align-items-center pr-20" >-->
-<!--            <input-->
-<!--              type="radio"-->
-<!--              id="manual"-->
-<!--              name="created_type"-->
-<!--              [value]="elementCreateType.MANUAL"-->
-<!--              [ngModelOptions]="{standalone: true}"-->
-<!--              [(ngModel)]="element.createdType"-->
-<!--              (ngModelChange)="workspaceVersion?.workspace.isWeb? stopCapture(false):''"/>-->
-<!--            <label-->
-<!--              for="manual"-->
-<!--              class="pl-5 pointer"-->
-<!--              [translate]="'elements.form.label.manually'"></label>-->
-<!--          </div>-->
-
+          <div *ngIf="workspaceVersion?.workspace.isMobileNative"
+          class="d-flex">
+          <label
+            class="rb-medium pr-20"
+            [translate]="'elements.form.selection.title'"></label>
           <div
-            *ngIf="workspaceVersion?.workspace.isMobileNative"
-            class="d-flex align-items-center">
-            <div *ngIf="!isRecording"
-                 class="record-btn text-nowrap fz-16 pointer d-inline-block align-items-center d-flex justify-content-center" (click)="element.createdType = elementCreateType.CHROME; startCapture();">
-              <div class="fa-play-circle btn mr-5 p-4 my-2 fz-24"></div> <span [translate]="'agents.mobile.inspection.record_title'"></span>
+            class="d-flex align-items-center pr-20" >
+            <input
+              type="radio"
+              id="manual"
+              name="created_type"
+              [value]="elementCreateType.MANUAL"
+              [ngModelOptions]="{standalone: true}"
+              [(ngModel)]="element.createdType"
+              (ngModelChange)="workspaceVersion?.workspace.isWeb? stopCapture(false):''"/>
+            <label
+              for="manual"
+              class="pl-5 pointer"
+              [translate]="'elements.form.label.manually'"></label>
+          </div>
+            <div
+              class="d-flex align-items-center pl-25">
+              <input
+                type="radio"
+                id="element_inspect"
+                [value]="elementCreateType.MOBILE_INSPECTOR"
+                name="created_type"
+                [disabled]="!hasInspectorFeature()"
+                [ngModelOptions]="{standalone: true}"
+                [(ngModel)]="element.createdType"/>
+              <label
+                for="element_inspect"
+                class="pl-5 pointer"
+                [translate]="'elements.form.label.element_inspect'"></label>
+              <i
+                *ngIf="!hasInspectorFeature()"
+                [matTooltip]="'hint.message.common.upgrade' | translate"
+                class="fa-bolt-solid fz-10 result-status-text-4 ml-5"></i>
             </div>
-            <div *ngIf="isRecording"
-                 class="stop-btn text-nowrap fz-16 pointer d-inline-block align-items-center d-flex justify-content-center" (click)="element.createdType = elementCreateType.MANUAL; stopCapture();">
-              <div class="fa-stop-circle-solid btn mr-5 p-4 my-2 fz-24"></div> <span  class="text-dark" [translate]="'Stop Recording'"></span>
-            </div>
-            <i
-              *ngIf="!hasInspectorFeature()"
-              [matTooltip]="'hint.message.common.upgrade' | translate"
-              class="fa-bolt-solid fz-10 result-status-text-4 ml-5"></i>
           </div>
           <div
             *ngIf="workspaceVersion?.workspace.isWeb || workspaceVersion?.workspace?.isMobileWeb"
@@ -73,11 +80,11 @@
                  class="stop-btn text-nowrap fz-16 pointer d-inline-block align-items-center d-flex justify-content-center" (click)="element.createdType = elementCreateType.MANUAL; stopCapture();">
               <div class="fa-stop-circle-solid btn mr-5 p-4 my-2 fz-24"></div> <span  class="text-dark" [translate]="'Stop Recording'"></span>
             </div>
-          </div>
-          <div class="flex-grow-1 ml-10 d-flex align-items-center">
-            <div class="d-flex">
-              <span class="fa-info fz-14 mb-10 text-secondary"></span>
-              <div class="fz-12 ml-10" [innerHTML]="'chrome.recorder.use' | translate"></div>
+            <div class="flex-grow-1 ml-10 d-flex align-items-center">
+              <div class="d-flex">
+                <span class="fa-info fz-14 mb-10 text-secondary"></span>
+                <div class="fz-12 ml-10" [innerHTML]="'chrome.recorder.use' | translate"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -164,7 +171,8 @@
           </div>
         </div>
         <div class="d-flex flex-wrap justify-content-between theme-border-t ">
-          <div class="d-flex flex-wrap justify-content-between ts-col-100 mt-25">
+          <div class="d-flex flex-wrap justify-content-between ts-col-100 mt-25"
+               *ngIf="elementCreateType.MOBILE_INSPECTOR != element.createdType">
             <div class="form-group ts-col-50 pr-20">
               <div class="p-0 field mb-0">
                 <input
@@ -181,9 +189,9 @@
               </div>
               <div
                 *ngIf="formSubmitted && elementForm.get('name').hasError('required')"
-                class="error" [translate]="'element.message.title.required'">
+                class="error" [translate]="'form.validation.common.required'">
               </div>
-              <div *ngIf="elementForm.controls.name.errors?.pattern && elementForm?.get('name')?.touched"
+              <div *ngIf="elementForm?.get('name')?.touched && elementForm.controls.name.errors?.pattern "
                    [translate]="'element.message.name.invalid_characters'" class="error">
               </div>
               <div
@@ -196,7 +204,7 @@
                 class="error" [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'250'}">
               </div>
               <div class="error"
-                   *ngIf="elementForm?.touched  && elementForm.controls.name.hasError('whitespace')"
+                   *ngIf="elementForm?.touched  && elementForm.controls.name.hasError('whitespace') && !elementForm.get('name').hasError('required')"
                    [textContent]="'form.validation.cannot_have_white_spaces'| translate: {FieldName:'Name'}"></div>
             </div>
             <div class="form-group ts-col-50 pl-20" matAutocompleteOrigin #origin="matAutocompleteOrigin">
@@ -228,7 +236,7 @@
           <div class="ts-col-100 flex-wrap d-flex justify-content-between"
                *ngIf="elementCreateType.MOBILE_INSPECTOR != element.createdType">
             <div
-              class="form-group ts-col-100">
+              class="form-group" [ngClass]="{'ts-col-100': isNewUI,'pr-20 ts-col-50': !isNewUI}">
               <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill">
                 <mat-select
                   disableOptionCentering panelClass="single"
@@ -245,7 +253,8 @@
               <label class="control-label" [translate]="'elements.form.label.locator_type'"></label>
             </div>
             <div
-              class="form-group ts-col-100">
+              class="form-group"
+              [ngClass]="{'ts-col-100': isNewUI,'pl-20 ts-col-50':!isNewUI}">
               <div class="p-0 field mb-0">
                 <input
                   type="text"
@@ -272,13 +281,13 @@
       </div>
     </form>
   </div>
-  <div class="theme-overlay-footer">
+  <div class="theme-overlay-footer shadow-all2-b4">
     <button
       (click) = "stopCapture(true)"
       class="theme-btn-clear-default"
       [translate]="'btn.common.cancel'"></button>
     <button
-      [disabled]="!elementForm?.valid || this.isInProgress"
+      [disabled]="saving || this.isInProgress"
       (click)="saveOrUpdate()"
       appAsyncBtn
       [isLoading]="saving"

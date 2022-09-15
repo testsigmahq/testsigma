@@ -16,12 +16,12 @@ import {TestStepMoreActionFormComponent} from "./test-step-more-action-form.comp
 import {MobileStepRecorderComponent} from "../../agents/components/webcomponents/mobile-step-recorder.component";
 import {WorkspaceType} from "../../enums/workspace-type.enum";
 import {MobileRecorderEventService} from "../../services/mobile-recorder-event.service";
+import {CdkConnectedOverlay} from "@angular/cdk/overlay";
 
 @Component({
   selector: 'app-action-element-suggestion',
   templateUrl: './action-element-suggestion.component.html',
-  styles: [
-  ]
+  styleUrls: ['action-element-suggestion.component.scss']
 })
 export class ActionElementSuggestionComponent implements OnInit {
   @Optional() @Input('elementSuggestion') elementSuggestion;
@@ -30,8 +30,13 @@ export class ActionElementSuggestionComponent implements OnInit {
   public filteredElements: Element[];
   public isNew: Boolean = false;
   public searchText: string;
+  public isScreenSearch = false;
+  public isSearchOptionsOpen = false;
   @ViewChild('searchInput') searchInput: ElementRef;
   @ViewChild('searchScreenInput') searchScreenInput: ElementRef;
+
+  @ViewChild('searchOptionsDialog') searchOptionsDialog: CdkConnectedOverlay;
+  @ViewChild('searchOptionsTrigger') searchOptionsTrigger;
   public currentFocusedIndex: number;
   private elementForm: MatDialogRef<ElementFormComponent>;
   public showVideo: Boolean = false;
@@ -43,7 +48,16 @@ export class ActionElementSuggestionComponent implements OnInit {
     private matModal: MatDialog,
     private mobileRecorderEventService: MobileRecorderEventService,
 
-    @Inject(MAT_DIALOG_DATA) public option: { version: WorkspaceVersion, testCase: TestCase, testCaseResultId?:number, isDryRun: boolean, isStepRecordView: boolean, previousStepElementName?:string, currentStepElementName?:string},
+    @Inject(MAT_DIALOG_DATA) public option: { version: WorkspaceVersion,
+      testCase: TestCase,
+      testCaseResultId?:number,
+      isDryRun: boolean,
+      isStepRecordView: boolean,
+      previousStepElementName?:string,
+      currentStepElementName?:string,
+      isNewUI:boolean
+      versionId:number;
+    },
 
   ) {
     this.workspaceVersion = this.option?.version;
@@ -326,5 +340,21 @@ export class ActionElementSuggestionComponent implements OnInit {
 
   closeSuggestion() {
     this.elementSuggestion ? this.mobileRecorderEventService.setEmptyAction() : this.dialogRef.close();
+  }
+
+  openSearchOptions() {
+    this.isSearchOptionsOpen = true;
+    setTimeout(() => {
+      this.searchOptionsDialog.overlayRef._outsidePointerEvents.subscribe(res => this.closeSearchOptions());
+    }, 200);
+  }
+
+  closeSearchOptions() {
+    this.searchOptionsDialog.overlayRef.detach();
+    this.isSearchOptionsOpen = false;
+  }
+
+  get isNewUI(){
+    return this.option.isNewUI;
   }
 }

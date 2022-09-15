@@ -75,7 +75,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   @Input('isDryRun') isDryRun: boolean;
   @Output('onSuggestion') public onSuggestion = new EventEmitter<any>();
   @Optional() @Input('conditionTypeChange') conditionTypeChange: TestStepConditionType;
-  
+
   @ViewChild('searchInput') searchInput: ElementRef;
   @ViewChild('replacer') replacer: ElementRef;
   @ViewChild('actionsDropDownContainer') actionsDropDownContainer: ElementRef;
@@ -1296,13 +1296,15 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
   }
   private openElementsPopup(targetElement?) {
+    let isNewUI=this.version.workspace.isWeb || this.version.workspace.isMobileWeb
     let sendDetails = {
+      versionId:this.version?.id,
       version: this.version,
       testCase: this.testCase,
       testCaseResultId: this.testCaseResultId,
       isDryRun: this.isDryRun,
       isStepRecordView: this.stepRecorderView,
-
+      isNewUI:isNewUI,
       previousStepElementName:  this.getPreviousStepElement(),
       currentStepElementName: this.getCurrentStepElement(targetElement)
 
@@ -1317,7 +1319,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
     this.elementSuggestion = this.matModal.open(ActionElementSuggestionComponent, {
       height: "100vh",
-      width: '40%',
+      width: '540px',
       position: {top: '0', right: '0'},
       panelClass: ['mat-dialog', 'rds-none'],
       data: sendDetails

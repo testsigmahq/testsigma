@@ -50,15 +50,15 @@
       <div
         class="text-nowrap"
         [translate]="'re_run.previous_result'"></div>
-      <app-result-status-label [resultEntity]="activeExecutionResult || activeTestSuiteResult || activeEnvironmentResult || activeTestCaseResult"></app-result-status-label>
+      <app-result-status-label [resultEntity]="activeExecutionResult?.childResult || activeTestSuiteResult?.childResult || activeEnvironmentResult?.childResult || activeTestCaseResult?.parentResult"></app-result-status-label>
     </div>
     <div class="text-right text-t-secondary fz-12">
       <div
         class="text-nowrap"
-        [textContent]="(activeExecutionResult || activeExecutionResult || activeTestSuiteResult || activeEnvironmentResult || activeTestCaseResult).startTime | date:'MMM d, h:mm:ss'"></div>
+        [textContent]="(activeExecutionResult?.childResult || activeTestSuiteResult?.childResult || activeEnvironmentResult?.childResult || activeTestCaseResult?.parentResult)?.startTime | date:'MMM d, h:mm:ss'"></div>
       <div class="pt-4">
         <app-duration-format
-          [duration]="(activeExecutionResult || activeTestSuiteResult || activeEnvironmentResult || activeTestCaseResult).duration"></app-duration-format>
+          [duration]="(activeExecutionResult?.childResult || activeTestSuiteResult?.childResult || activeEnvironmentResult?.childResult || activeTestCaseResult?.parentResult)?.duration"></app-duration-format>
       </div>
     </div>
   </div>

@@ -38,6 +38,7 @@
 
   <div class="form-group p-0">
     <app-tags-chip-list
+      [autofocus]="false"
       [entityId]="testPlan.id"
       [service]="tagService"
       (onValueChange)="setTags($event)"

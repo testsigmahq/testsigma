@@ -1608,6 +1608,7 @@
   "test_data_profiles.sort_by.createdDate": "Created Date",
   "test_data_profiles.sort_by.updatedDate": "Updated Date",
   "test_data_profiles.sort_by.testDataName": "Title",
+  "test_data_profiles.import.async.init": "The Test Data Profile import has been initiated successfully. Please refresh to see updated list.",
   "runs.list_view.title": "Title",
   "test_case_result.details.description": "Description",
   "test_case_result.details.btn.link_to_existing": "Link To Issue",

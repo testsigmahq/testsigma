@@ -25,16 +25,12 @@ public class TestDataProfilesXLSImportService extends XLSImportService {
     private final TestDataImportService testDataImportService;
 
     public void importFile(String name, List<String> passwords, MultipartFile testDataFile, Long versionId, boolean isReplace) throws Exception {
-        String fileName = upload(testDataFile);
-        String filePath = "import_xlsx/" + fileName;
-        String preSignedURL = super.getStorageServiceFactory().getStorageService().generatePreSignedURLIfExists(filePath,
-                StorageAccessLevel.READ, 180).get().toString();
-        downloadAndProcessTestData(preSignedURL, name, versionId, passwords, !isReplace);
+        downloadAndProcessTestData(testDataFile, name, versionId, passwords, !isReplace);
     }
 
-    public void downloadAndProcessTestData(String preSignedURL, String name, Long versionId, List<String> passwords, boolean canIgnore) throws Exception {
+    public void downloadAndProcessTestData(MultipartFile testDataFile, String name, Long versionId, List<String> passwords, boolean canIgnore) throws Exception {
         Map<String, Integer> testDataProfileColumnNameIndexMap;
-        Workbook workBook = new XSSFWorkbook(new URL(preSignedURL).openStream());
+        Workbook workBook = new XSSFWorkbook(testDataFile.getInputStream());
         Collection<List<Object>> columnNames = ReadExcel.getExelFieldNames(workBook).values();
         try {
             testDataProfileColumnNameIndexMap = TestDataImportService.getFirstSheetFieldIdMap(TestDataImportService.getFiledNames(), columnNames);
@@ -133,19 +129,6 @@ public class TestDataProfilesXLSImportService extends XLSImportService {
         } else {
             log.info("Test Data import partially successful");
         }
-    }
-
-    private String upload(MultipartFile testDataFile) {
-        String fileName = "";
-        try {
-            fileName = System.currentTimeMillis() + ".xlsx";
-            String filePath = "import_xlsx/" + fileName;
-            super.getStorageServiceFactory().getStorageService().addFile(filePath, testDataFile.getInputStream());
-            log.debug("uploaded to storage ::" + fileName);
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
-        }
-        return fileName;
     }
 
     @Override

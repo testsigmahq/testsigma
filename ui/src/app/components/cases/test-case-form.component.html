@@ -62,9 +62,6 @@
              *ngIf="formSubmitted && testCaseForm.controls.name.hasError('whitespace')"
              [textContent]="'form.validation.cannot_have_white_spaces' | translate: {FieldName:'Name'}"></div>
       </div>
-      <div [formGroup]="testCaseForm" class="form-group ts-col-100">
-        <app-description [formCtrlName]="testCaseForm.controls.description"></app-description>
-      </div>
       <mat-accordion class="test-case-form-details">
         <!--toggle details-->
         <a class="advance-option" (click)="showDetails=!showDetails">
@@ -232,6 +229,9 @@
                   </mat-form-field>
                   <label class="control-label" [translate]="'testcase.form.iteration_to'"></label>
                 </div>
+            <div [formGroup]="testCaseForm" class="form-group ts-col-100">
+              <app-description [formCtrlName]="testCaseForm.controls.description"></app-description>
+            </div>
             </div>
         </mat-expansion-panel>
       </mat-accordion>

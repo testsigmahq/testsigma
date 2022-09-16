@@ -33,7 +33,7 @@ export class ReRunIconComponent implements OnInit {
       height: '100vh',
       position: {top: '0', right: '0', bottom: '0'},
       data: {
-        testCaseResult: this.testCaseResult,
+        testCaseResult: this.dataDrivenResult ? this.dataDrivenResult : this.testCaseResult,
         testSuiteResult: this.testSuiteResult,
         environmentResult: this.environmentResult,
         testPlanResult: this.testPlanResult},
@@ -49,7 +49,7 @@ export class ReRunIconComponent implements OnInit {
     else if(this.resultEntity instanceof TestDeviceResult)
       return this.resultEntity?.testPlanResult;
     else if(this.resultEntity instanceof TestCaseResult)
-      return this.resultEntity?.testDeviceResult?.testPlanResult;
+      return this.dataDrivenResult ? this.dataDrivenResult?.testDeviceResult?.testPlanResult : this.resultEntity?.testDeviceResult?.testPlanResult;
   }
 
   get testCaseResult() {

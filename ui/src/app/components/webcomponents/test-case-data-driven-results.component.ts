@@ -62,7 +62,7 @@ export class TestCaseDataDrivenResultsComponent implements OnInit {
       return false
     } else if(changes["resultEntity"] && changes["resultEntity"]["previousValue"]) {
       return  changes["resultEntity"]["previousValue"]["result"] == ResultConstant.QUEUED ||
-        changes["resultEntity"]["previousValue"]["execution"]["lastRun"]?.result == ResultConstant.QUEUED;
+        changes["resultEntity"]["previousValue"]["lastRun"]?.result == ResultConstant.QUEUED;
     }
   }
 

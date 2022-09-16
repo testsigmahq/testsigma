@@ -235,6 +235,9 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
       this.showDetails = true;
       return false;
     }
+    if(this.testCase.testDataStartIndex < 0) {
+      this.testCase.testDataStartIndex = 0;
+    }
     if (this.testCaseForm.valid) {
       this.saving = true;
       if (this.testCase.testDataId == 0) {

@@ -39,8 +39,8 @@ ROOT_FOLDER="$(cd "$(dirname "$0")"; cd ../../ ; pwd -P)"
 cd "$ROOT_FOLDER"
 
 
-sed -i '' -E "s/agent.version=[0-9]+.[0-9].+[0-9]+/agent.version=$VERSION/g" agent/src/main/resources/agent.properties
-sed -i '' -E "s/currentAgentVersion = \"[0-9]+.[0-9].+[0-9]+\"/currentAgentVersion = \"$VERSION\"/g" server/src/main/java/com/testsigma/dto/AgentDTO.java
+sed -i -E "s/agent.version=[0-9]+.[0-9].+[0-9]+/agent.version=$VERSION/g" agent/src/main/resources/agent.properties
+sed -i -E "s/currentAgentVersion = \"[0-9]+.[0-9].+[0-9]+\"/currentAgentVersion = \"$VERSION\"/g" server/src/main/java/com/testsigma/dto/AgentDTO.java
 
 
 echo "Generating complete agent builds with web and mobile"

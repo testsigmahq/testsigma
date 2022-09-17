@@ -44,8 +44,8 @@ ROOT_FOLDER="$(
   pwd -P
 )"
 
-sed -i '' -E "s/agent.version=[0-9]+.[0-9].+[0-9]+/agent.version=$DOCKER_VERSION/g" agent/src/main/resources/agent.properties
-sed -i '' -E "s/currentAgentVersion = \"[0-9]+.[0-9].+[0-9]+\"/currentAgentVersion = \"$DOCKER_VERSION\"/g" server/src/main/java/com/testsigma/dto/AgentDTO.java
+sed -i -E "s/agent.version=[0-9]+.[0-9].+[0-9]+/agent.version=$DOCKER_VERSION/g" agent/src/main/resources/agent.properties
+sed -i -E "s/currentAgentVersion = \"[0-9]+.[0-9].+[0-9]+\"/currentAgentVersion = \"$DOCKER_VERSION\"/g" server/src/main/java/com/testsigma/dto/AgentDTO.java
 
 cd "$ROOT_FOLDER" || exit 1
 

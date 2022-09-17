@@ -19,14 +19,12 @@ import com.testsigma.event.EventType;
 import com.testsigma.event.TestDataEvent;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.mapper.TestDataProfileMapper;
-import com.testsigma.model.Element;
 import com.testsigma.model.TestData;
 import com.testsigma.model.TestDataSet;
 import com.testsigma.repository.TestDataProfileRepository;
 import com.testsigma.specification.SearchCriteria;
 import com.testsigma.specification.SearchOperation;
 import com.testsigma.specification.TestDataProfileSpecificationsBuilder;
-import com.testsigma.util.EncryptDecrypt;
 import com.testsigma.web.request.TestDataSetRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -174,7 +172,7 @@ public class TestDataProfileService extends XMLExportImportService<TestData> {
     for (String password : passwords) {
       JSONObject data = set.getData();
       if (data.has(password)) {
-        data.put(password, new EncryptDecrypt().encrypt(data.getString(password)));
+        data.put(password, data.getString(password));
       }
       set.setData(data);
     }

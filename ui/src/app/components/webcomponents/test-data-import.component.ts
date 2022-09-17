@@ -55,21 +55,6 @@ import {TranslateService} from '@ngx-translate/core';
                [textContent]="'form.validation.common.max_length' | translate: {FieldName:('test_data_profiles.sort_by.testDataName'|translate) , max:'256'}"></div>
           <div class="error left" *ngIf="formControl?.errors?.required && isSubmited" [textContent]="'form.validation.common.required'| translate:{ FieldName:('test_data_profiles.sort_by.testDataName'|translate) }"></div>
         </div>
-        <div>
-          <span class="rb-medium" [textContent]="(hasDuplicateColumns ? 'test_data_profiles.import.duplicate_columns':'test_data_profiles.import.label.select_encryption') | translate:{duplicateColumns: duplicateColumns} "></span>
-          <div class="d-flex py-20 overflow-y-auto" style="max-height:100px">
-            <mat-chip-list>
-              <mat-chip *ngFor="let field of fields;"
-                        [class.border-fail-1]="field.isDuplicate"
-                        class="d-flex border-rds-4 bg-grey-x-light"
-                        (click)="hasDuplicateColumns? '' : field.isSelected = !field.isSelected ">
-                {{field.name}}
-                <i *ngIf="!hasDuplicateColumns"
-                  class="pl-5 fz-10 pointer my-auto {{ field.isSelected ? 'fa-lock-solid' : 'fa-lock-open-solid'}}"></i>
-              </mat-chip>
-            </mat-chip-list>
-          </div>
-        </div>
       </div>
       <div *ngIf="uploadedFileObject?.name" class="overflow-x-hidden pt-20" @collapse>
         <span class="rb-medium" [translate]="'import.label.how_do_we_handle'"></span>

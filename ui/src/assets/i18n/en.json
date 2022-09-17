@@ -1237,7 +1237,6 @@
   "rest.step.placeholder.expected_value": "Expected Value",
   "rest.step.json_path.help_msg": "to know more about JSON Path",
   "test_data_profiles.title": "Test Data Profiles",
-  "test_data_profiles.import.label.select_encryption": "Do you want to encrypt any of the columns?",
   "test_data_profiles.linked_with_cases": "This Test Data Profile is used in the below Test Cases,<br>Please remove the mapping and try again.",
   "test_data_profiles.bulk_delete.confirmation.message": "Are you sure you want to delete the selected ( {{selectedDataProfiles}} ) Test Data Profiles?",
   "test_data_profiles.table.header.serial_number": "S.No",

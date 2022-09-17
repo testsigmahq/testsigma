@@ -37,7 +37,7 @@ cd "$ROOT_FOLDER"
 
 cd $ROOT_FOLDER/ui
 
-npm install --force
+npm install --legacy-peer-deps
 
 $ROOT_FOLDER/ui/node_modules/.bin/ng build --configuration=$UI_BUILD_CONF
 

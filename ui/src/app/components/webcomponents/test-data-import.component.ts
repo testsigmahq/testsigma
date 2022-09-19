@@ -42,7 +42,7 @@ import {TranslateService} from '@ngx-translate/core';
           <i class="fa-trash-thin pointer ml-auto" (click)="removeUpload()"></i>
         </div>
       </div>
-      <div *ngIf="uploadedFileObject?.name" class="overflow-x-hidden pt-20" @collapse>
+      <div *ngIf="uploadedFileObject?.name" class="pt-20" @collapse>
         <div class="form-group">
           <input id="name" class="form-control" type="text" [(ngModel)]="name" [formControl]="formControl"/>
           <label class="control-label required" for="name"

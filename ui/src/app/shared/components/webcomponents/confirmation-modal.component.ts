@@ -18,7 +18,7 @@ import {FormControl} from "@angular/forms";
           *ngIf="modalData?.message"
           [innerHTML]="modalData.message"></div>
       </mat-dialog-content>
-      <mat-dialog-actions class="confirm-actions">
+      <mat-dialog-actions class="confirm-actions" [style]="'padding-right: 0px !important'">
         <button class="theme-btn-primary"
                 mat-dialog-close
                 [translate]="'btn.common.cancel'"></button>

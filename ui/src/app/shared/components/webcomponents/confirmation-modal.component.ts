@@ -6,7 +6,7 @@ import {FormControl} from "@angular/forms";
 @Component({
   selector: 'delete-dialog',
   template: `
-                <div *ngIf="!modalData?.isPermanentDelete || modalData.disabled">
+                <div class="delete-dialog" *ngIf="!modalData?.isPermanentDelete || modalData.disabled">
       <mat-dialog-content>
         <div
           class="confirm-message"
@@ -18,7 +18,7 @@ import {FormControl} from "@angular/forms";
           *ngIf="modalData?.message"
           [innerHTML]="modalData.message"></div>
       </mat-dialog-content>
-      <mat-dialog-actions class="confirm-actions" [style]="'padding-right: 0px !important'">
+      <mat-dialog-actions class="confirm-actions">
         <button class="theme-btn-primary"
                 mat-dialog-close
                 [translate]="'btn.common.cancel'"></button>

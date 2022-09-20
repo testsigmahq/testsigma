@@ -179,11 +179,13 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
 
 
   openAddEditElement(elementId) {
+    let isNewUI = this.version.workspace.isWeb || this.version.workspace.isMobileWeb ;
     const dialogRef = this.matDialog.open(ElementFormComponent, {
       height: "100vh",
-      width: '60%',
+      width: isNewUI?  '540px' : '60%',
       position: {top: '0px', right: '0px'},
       data: {
+        isNewUI: isNewUI,
         versionId: this.versionId,
         elementId: elementId
       },

@@ -50,6 +50,9 @@ export class UserPreference extends Base implements Deserializable {
   @serializable
   public showedGitHubStar : boolean  = false;
 
+  @serializable
+  public clickedSkipForNow : number = 0;
+
   @serializable(alias('workspaceId', custom(v => v, v => SKIP)))
   get selectedworkspaceId(): String {
     return this.selectedWorkspace ? this.selectedWorkspace.id.toString() : this.workspaceId?.toString();

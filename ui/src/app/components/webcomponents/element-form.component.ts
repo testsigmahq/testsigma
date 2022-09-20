@@ -60,6 +60,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
   public isInProgress: Boolean;
   public isElementsChanged:Boolean;
 
+
   constructor(
     public authGuard: AuthenticationGuard,
     public notificationsService: NotificationsService,
@@ -511,7 +512,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
   }
 
   get isNewUI(){
-    return this.options.isNewUI;
+    return this.workspaceVersion?.workspace?.isWeb || this.workspaceVersion?.workspace?.isMobileWeb;
   }
 
 }

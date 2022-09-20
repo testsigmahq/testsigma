@@ -215,7 +215,7 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
   openEditElement(name, isAddonElement?: boolean) {
     this.matDialog.open(ElementFormComponent, {
       height: "100vh",
-      width: '60%',
+      width: '540px',
       position: {top: '0px', right: '0px'},
       data: {
         name: name,

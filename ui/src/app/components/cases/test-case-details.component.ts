@@ -125,6 +125,7 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
           item: 'test case',
           name: this.testCase.name,
           note: this.translate.instant('message.common.confirmation.test_data_des', {Item:'test case'}),
+          confirmation: permanently ? this.translate.instant("message.common.confirmation.note") : this.translate.instant("message.common.confirmation.note_trash"),
         },
         panelClass: ['matDialog', 'delete-confirm']
       });

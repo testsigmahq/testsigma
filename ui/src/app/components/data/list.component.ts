@@ -12,6 +12,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {NotificationsService, NotificationType} from 'angular2-notifications';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {TestCaseService} from "../../services/test-case.service";
+import {TestDataImportComponent} from "../webcomponents/test-data-import.component";
 import {TestCase} from "../../models/test-case.model";
 import {InfiniteScrollableDataSource} from "../../data-sources/infinite-scrollable-data-source";
 import {LinkedEntitiesModalComponent} from "../../shared/components/webcomponents/linked-entities-modal.component";
@@ -37,6 +38,7 @@ export class ListComponent extends BaseComponent implements OnInit {
   public isFiltered: Boolean = false;
   public filteredByEnumList: string[] = ['all', 'used', 'unused'];
   public filteredByValue: string = 'all';
+  private importDialogRef: MatDialogRef<TestDataImportComponent>;
   public filteredByValueString: string;
 
   constructor(
@@ -63,6 +65,25 @@ export class ListComponent extends BaseComponent implements OnInit {
       this.pushToParent(this.route, params);
       this.defaultQuery = "versionId:" + this.versionId;
       this.fetchDataProfiles();
+    });
+  }
+
+  importPopup() {
+    this.importDialogRef = this.matDialog.open(TestDataImportComponent, {
+      backdropClass: 'cdk-overlay-transparent-backdrop',
+      width: '350px',
+      position: {top: '63px', right: '40px', bottom: '0'},
+      panelClass: ['mat-overlay'],
+      data: {versionId: this.versionId}
+    });
+    this.importDialogRef.afterClosed().subscribe(res => {
+      if (res) {
+        this.translate.get('test_data_profiles.import.async.init')
+          .subscribe(key => {
+            this.showNotification(NotificationType.Success, key);
+            this.router.navigate(['td', 'data', res.id, 'sets']);
+          });
+      }
     });
   }
 

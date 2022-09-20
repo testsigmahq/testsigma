@@ -77,11 +77,11 @@ export class RunListComponent extends BaseComponent implements OnInit {
   }
 
   getStatus(changes) {
-    if (changes["executionResult"] && changes["executionResult"].firstChange) {
+    if (changes["testPlanResult"] && changes["testPlanResult"].firstChange) {
       return false
-    } else if(changes["executionResult"] && changes["executionResult"]["previousValue"]) {
-      return  changes["executionResult"]["previousValue"]["result"] == ResultConstant.QUEUED ||
-        changes["executionResult"]["previousValue"]["childResult"]["result"] == ResultConstant.QUEUED;
+    } else if(changes["testPlanResult"] && changes["testPlanResult"]["previousValue"]) {
+      return  changes["testPlanResult"]["previousValue"]["result"] == ResultConstant.QUEUED ||
+        changes["testPlanResult"]["previousValue"]["childResult"]["result"] == ResultConstant.QUEUED;
     }
   }
 

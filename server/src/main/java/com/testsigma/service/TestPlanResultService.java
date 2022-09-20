@@ -118,7 +118,17 @@ public class TestPlanResultService {
       && testPlan.getReRunType() != null
       && testPlanResult.getReRunParentId() == null
       && testPlanResult.getResult() != ResultConstant.STOPPED
-      && testPlanResult.getResult() != ResultConstant.SUCCESS);
+      && testPlanResult.getResult() != ResultConstant.SUCCESS
+      && isReRunEligibleForDataDriven(testPlan, testPlanResult));
+  }
+
+  private boolean isReRunEligibleForDataDriven(AbstractTestPlan testPlan, TestPlanResult testPlanResult){
+    if(ReRunType.ONLY_FAILED_ITERATIONS_IN_FAILED_TESTS.equals(testPlan.getReRunType())){
+      List<TestCaseResult> failedTestCases = testCaseResultService.findAllByTestPlanResultIdAndResultIsNot(testPlanResult.getId(), ResultConstant.SUCCESS);
+      if(failedTestCases.size() == 0)
+        return false;
+    }
+    return true;
   }
 
   public void updateResultCounts(TestPlanResult testPlanResult) {

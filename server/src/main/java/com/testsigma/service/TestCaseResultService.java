@@ -57,8 +57,16 @@ public class TestCaseResultService {
     return this.testCaseResultRepository.findAll(spec, pageable);
   }
 
-  public List<TestCaseResult> findAllByTestPlanResultId(Long testPlanResultId) {
-    return this.testCaseResultRepository.findAllByTestPlanResultId(testPlanResultId);
+  public List<TestCaseResult> findAllByTestPlanResultId(Long id) {
+    return this.testCaseResultRepository.findAllByTestPlanResultId(id);
+  }
+
+  public List<TestCaseResult> findAllByTestPlanResultIdAndResultIsNot(Long testPlanResultId, ResultConstant resultConstant) {
+    return this.testCaseResultRepository.findAllByTestPlanResultIdAndResultIsNot(testPlanResultId, resultConstant);
+  }
+
+  public List<TestCaseResult> findAllBySuiteResultIdAndIsDataDrivenTrueAndResultIsNot(Long parentTestCaseId, ResultConstant result){
+    return this.testCaseResultRepository.findAllBySuiteResultIdAndIsDataDrivenTrueAndResultIsNot(parentTestCaseId, result);
   }
 
   public Timestamp findMinTimeStampByEnvironmentResultId(Long environmentResultId) {
@@ -79,6 +87,10 @@ public class TestCaseResultService {
 
   public List<TestCaseResult> findAllBySuiteResultId(Long suiteResultId) {
     return this.testCaseResultRepository.findAllBySuiteResultId(suiteResultId);
+  }
+
+  public List<TestCaseResult> findAllBySuiteResultIdAndTestCaseIdAndResultIsNot(Long suiteResultId, Long preRequisite, ResultConstant result) {
+    return this.testCaseResultRepository.findAllBySuiteResultIdAndTestCaseIdAndResultIsNot(suiteResultId, preRequisite, result);
   }
 
   public List<TestCaseResult> findAllBySuiteResultIdAndTestCaseId(Long suiteResultId, Long preRequisite) {

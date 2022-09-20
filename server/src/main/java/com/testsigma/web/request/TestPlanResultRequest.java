@@ -25,7 +25,7 @@ public class TestPlanResultRequest {
   private StatusConstant status;
   private Boolean isReRun = false;
   private ReRunType reRunType = ReRunType.NONE;
-  private Long parenttestPlanResultId;
+  private Long reRunParentId;
   private Map<Long, Long> uploadVersions;
 
 }

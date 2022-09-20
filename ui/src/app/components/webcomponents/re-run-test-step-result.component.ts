@@ -47,7 +47,7 @@ export class ReRunTestStepResultComponent implements OnInit {
     query += ",groupResultId:null,testCaseResultId:" +this.testCaseResult.id;
     this.testStepResultService.findAll(query).subscribe(oldResult => {
       this.testStepResults = oldResult;
-      this.testStepResultService.findAll(",groupResultId:null,testCaseResultId:" +this.testCaseResult?.lastRun?.id).subscribe(res => {
+      this.testStepResultService.findAll(",groupResultId:null,testCaseResultId:" +this.testCaseResult?.reRunParentId).subscribe(res => {
         res.content.forEach(childStep => {
           this.testStepResults.content.forEach(step => {
             if (step.stepId === childStep.stepId && step?.stepDetails?.order_id === childStep?.stepDetails?.order_id)
@@ -55,11 +55,6 @@ export class ReRunTestStepResultComponent implements OnInit {
           })
         })
       });
-      this.fetchTestSteps(this.testCaseResult.testCase.id);
-    });
-    query += ",groupResultId:null,testCaseResultId:" +this.testCaseResult?.lastRun?.id;
-    this.testStepResultService.findAll(query).subscribe(res => {
-      this.testStepResults = res;
       this.fetchTestSteps(this.testCaseResult.testCase.id);
     });
   }

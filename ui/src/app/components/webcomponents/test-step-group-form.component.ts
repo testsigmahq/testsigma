@@ -22,6 +22,7 @@ import {group} from "@angular/animations";
 })
 export class TestStepGroupFormComponent extends BaseComponent implements OnInit {
   @Input('testStep') testStep: TestStep;
+  @Input('indentation') indentation:number;
   @Input('version') version: WorkspaceVersion;
   @Input('stepForm') stepGroupForm: FormGroup;
   @Output('onCancel') onCancel = new EventEmitter<void>();

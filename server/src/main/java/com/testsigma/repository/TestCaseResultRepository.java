@@ -35,9 +35,13 @@ public interface TestCaseResultRepository extends JpaRepository<TestCaseResult, 
 
   List<TestCaseResult> findAllByEnvironmentResultId(Long environmentResultId);
 
+  List<TestCaseResult> findAllBySuiteResultIdAndIsDataDrivenTrueAndResultIsNot(Long parentTestCaseId, ResultConstant result);
+
   List<TestCaseResult> findAllBySuiteResultIdAndIsVisuallyPassedIsNull(Long id);
 
   List<TestCaseResult> findAllBySuiteResultIdAndIsVisuallyPassed(Long suiteResultId, boolean visualResult);
+
+  List<TestCaseResult> findAllBySuiteResultIdAndTestCaseIdAndResultIsNot(Long suiteResultId, Long preRequisite, ResultConstant result);
 
   List<TestCaseResult> findAllBySuiteResultIdAndTestCaseId(Long suiteResultId, Long preRequisite);
 
@@ -310,4 +314,6 @@ public interface TestCaseResultRepository extends JpaRepository<TestCaseResult, 
     "AND parent_id = :id GROUP BY parent_id) AS tsr ON tsr.parent_id = tcr.id " +
     "SET tcr.stopped_count = COALESCE(stoppedCount, 0) WHERE tcr.id = :id", nativeQuery = true)
   void updateIterationStoppedTestCaseResultsCount(@Param("id") Long id);
+
+    List<TestCaseResult> findAllByTestPlanResultIdAndResultIsNot(Long testPlanResultId, ResultConstant resultConstant);
 }

@@ -40,6 +40,26 @@ export class TestDataService {
     )
   }
 
+  public importFieldNames(file: File): Observable<any> {
+    let formData: FormData = new FormData();
+    formData.append("file", file);
+    return this.http.put<any>(this.URLConstants.dataProfileUrl + "/import_field_names", formData)
+      .pipe(
+        map(data => data),
+        catchError(() => throwError('Problem while importing Test Data Profile field name'))
+      )
+  }
+
+  public importAsync(file: File, name: String, passwords: String[],  isReplace: Boolean, versionId: number): Observable<any> {
+    let params = new HttpParams().set("versionId", versionId.toString()).set("name", name.toString()).set("passwords[]", passwords.toString()).set("isReplace", isReplace.toString());
+    let formData: FormData = new FormData();
+    formData.append("file", file)
+    return this.http.put(this.URLConstants.dataProfileUrl + "/import", formData, {
+      params: params
+    }).pipe(
+      catchError((exception) => throwError(exception)));
+  }
+
   public delete(id: Number): Observable<void> {
     return this.http.delete<void>(this.URLConstants.dataProfileUrl + '/' + id,
       {headers: this.httpHeaders.contentTypeApplication}).pipe(

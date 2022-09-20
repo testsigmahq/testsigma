@@ -19,8 +19,8 @@ import com.testsigma.event.EventType;
 import com.testsigma.event.TestDataEvent;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.mapper.TestDataProfileMapper;
-import com.testsigma.model.Element;
 import com.testsigma.model.TestData;
+import com.testsigma.model.TestDataSet;
 import com.testsigma.repository.TestDataProfileRepository;
 import com.testsigma.specification.SearchCriteria;
 import com.testsigma.specification.SearchOperation;
@@ -28,6 +28,7 @@ import com.testsigma.specification.TestDataProfileSpecificationsBuilder;
 import com.testsigma.web.request.TestDataSetRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -54,6 +55,12 @@ public class TestDataProfileService extends XMLExportImportService<TestData> {
   public TestData find(Long id) throws ResourceNotFoundException {
     return testDataProfileRepository.findById(id)
       .orElseThrow(() -> new ResourceNotFoundException("Test Data Not Found with id: " + id));
+  }
+
+  public TestData findByTestDataNameAndVersionId(String testDataName, Long versionId) throws ResourceNotFoundException {
+    return testDataProfileRepository.findByTestDataNameAndVersionId(testDataName, versionId)
+            .orElseThrow(() -> new ResourceNotFoundException(
+                    "Test Data Not Found with profileName: " + testDataName + " in version Id:" + versionId));
   }
 
   public TestData findTestDataByTestCaseId(Long testCaseId) throws ResourceNotFoundException {
@@ -146,6 +153,29 @@ public class TestDataProfileService extends XMLExportImportService<TestData> {
     log.debug("import process for Test Data initiated");
     importFiles("test_data", importDTO);
     log.debug("import process for Test Data completed");
+  }
+
+  public TestData encryptPasswords(TestData testData){
+    if (testData.getPasswords() != null && testData.getPasswords().size() > 0) {
+      List<TestDataSet> sets = new ArrayList<>();
+      List<TestDataSet> testDataSets = testData.getData();
+      for (TestDataSet set : testDataSets) {
+        encryptPasswordsInTestDataSet(set, testData.getPasswords());
+        sets.add(set);
+      }
+      testData.setData(sets);
+    }
+    return testData;
+  }
+
+  private void encryptPasswordsInTestDataSet(TestDataSet set, List<String> passwords) {
+    for (String password : passwords) {
+      JSONObject data = set.getData();
+      if (data.has(password)) {
+        data.put(password, data.getString(password));
+      }
+      set.setData(data);
+    }
   }
 
   @Override

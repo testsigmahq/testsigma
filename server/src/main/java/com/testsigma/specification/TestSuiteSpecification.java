@@ -46,6 +46,8 @@ public class TestSuiteSpecification extends BaseSpecification<TestSuite> {
           return statusConstants;
         }
         return StatusConstant.valueOf(value.toString());
+      case "hasDataDrivenCases":
+        return Boolean.parseBoolean(value.toString());
       default:
         return super.getEnumValueIfEnum(key, value, op);
     }
@@ -100,9 +102,15 @@ public class TestSuiteSpecification extends BaseSpecification<TestSuite> {
     } else if (criteria.getKey().equals("testDeviceId")) {
       Join s = root.join("testDeviceSuites", JoinType.INNER);
       return s.get("testDeviceId");
-    } else if (criteria.getKey().equals("testCaseId")) {
+    } else if (criteria.getKey().equals("testCaseId") || criteria.getKey().equals("hasDataDrivenCases")) {
       Join s = root.join("testSuiteMappings", JoinType.INNER);
-      return s.get("testCaseId");
+      if(criteria.getKey().equals("hasDataDrivenCases")) {
+        Join r = s.join("testCase", JoinType.INNER);
+        return r.get("isDataDriven");
+      }
+      else {
+        return s.get("testCaseId");
+      }
     }
     return root.get(criteria.getKey());
   }

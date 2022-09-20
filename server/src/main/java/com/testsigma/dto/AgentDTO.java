@@ -30,5 +30,5 @@ public class AgentDTO {
   private String hostName;
   private AgentOs osType;
   private String osVersion;
-  private String currentAgentVersion = "2.0.0";
+  private String currentAgentVersion = "2.1";
 }

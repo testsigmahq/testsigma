@@ -21,6 +21,9 @@ public class MessageConstants {
   public static final String STEP_GROUP_NOT_READY = "Step group ?1 currently not in Ready state. Please change to Ready state before executing";
   public static final String DRAFT_PLUGIN_ALLOWED_IN_HYBRID_ONLY = "Addon in draft mode is allowed to run only in local " +
     "test machine. Please publish your addon before running in cloud machines.";
+  public static final String INVALID_TEST_DATA_SET_SPECIAL_CHARACTER = "This data set(row) contains an invalid special character (a line break, carriage return e.t.c) at position %s in parameter(column) with name: ";
+  public static final String INVALID_TEST_DATA_PARAMETER_SPECIAL_CHARACTER = "An invalid special character (a line break, carriage return e.t.c) is found at position %s in the parameter name(column header): ";
+  public static final String INVALID_TEST_DATA_SET_TRY_AGAIN = "Please rectify that and try importing again.";
   public static final String BACKUP_IS_IN_PROGRESS = "Backup is in progress";
   public static final String BACKUP_IS_SUCCESS = "Backup is completed";
   public static final String IMPORT_IS_IN_PROGRESS = "Import is in progress";

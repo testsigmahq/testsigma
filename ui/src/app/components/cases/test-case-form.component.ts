@@ -207,6 +207,9 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
       if (this.testCase.testDataId == 0) {
         delete this.testCase.testDataId;
       }
+      if(this.testCase.testDataStartIndex < 0) {
+        this.testCase.testDataStartIndex = 0;
+      }
       this.testCase.workspaceVersionId = this.versionId;
       let fieldName = this.isStepGroupUrl ? 'Step Group' : 'Test Case';
       this.testCaseService.create(this.testCase).subscribe((testcase) => {
@@ -231,6 +234,9 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
     if (this.testCaseForm.invalid) {
       this.showDetails = true;
       return false;
+    }
+    if(this.testCase.testDataStartIndex < 0) {
+      this.testCase.testDataStartIndex = 0;
     }
     if (this.testCaseForm.valid) {
       this.saving = true;

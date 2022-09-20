@@ -62,9 +62,6 @@
              *ngIf="formSubmitted && testCaseForm.controls.name.hasError('whitespace')"
              [textContent]="'form.validation.cannot_have_white_spaces' | translate: {FieldName:'Name'}"></div>
       </div>
-      <div [formGroup]="testCaseForm" class="form-group ts-col-100">
-        <app-description [formCtrlName]="testCaseForm.controls.description"></app-description>
-      </div>
       <mat-accordion class="test-case-form-details">
         <!--toggle details-->
         <a class="advance-option" (click)="showDetails=!showDetails">
@@ -143,6 +140,16 @@
               ></app-auto-complete>
               <label class="control-label" [translate]="'test_step.results.prerequisite'"></label>
             </div>
+            <div class="form-group ts-col-50">
+              <app-tags-chip-list
+                class="ts-col-100"
+                [entityId]="testCaseId"
+                [service]="tagService"
+                (onValueChange)="setTags($event)"
+              ></app-tags-chip-list>
+              <label class="control-label" [translate]="'testcase.list.tags'"></label>
+            </div>
+            <div class="form-group ts-col-50"> </div>
             <div
               *ngIf="testDataList?.content && !isStepGroup && !associatedParametersPopupOpen"
               class="form-group ts-col-50">
@@ -222,14 +229,8 @@
                   </mat-form-field>
                   <label class="control-label" [translate]="'testcase.form.iteration_to'"></label>
                 </div>
-            <div class="form-group p-0 ts-col-50">
-              <app-tags-chip-list
-                class="ts-col-100"
-                [entityId]="testCaseId"
-                [service]="tagService"
-                (onValueChange)="setTags($event)"
-              ></app-tags-chip-list>
-              <label class="control-label" [translate]="'testcase.list.tags'"></label>
+            <div [formGroup]="testCaseForm" class="form-group ts-col-100">
+              <app-description [formCtrlName]="testCaseForm.controls.description"></app-description>
             </div>
             </div>
         </mat-expansion-panel>

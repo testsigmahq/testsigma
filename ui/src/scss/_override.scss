@@ -966,3 +966,14 @@ ngx-json-viewer.custom-json-view {
   }
 }
 
+.delete-dialog{
+  .mat-dialog-actions{
+    @extend .pr-0
+  }
+}
+.ui-identifier-tab{
+  .mat-tab-header{
+    @extend .px-20;
+  }
+}
+

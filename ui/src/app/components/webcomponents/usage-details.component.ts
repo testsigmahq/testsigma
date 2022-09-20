@@ -163,9 +163,10 @@ export class UsageDetailsComponent extends BaseComponent implements OnInit {
         array.forEach((result : TestPlanResult) => {
           let testCaseResult = res.content.find(testCaseResult => testCaseResult.testPlanResultId == result.id)
           if ((result instanceof TestPlanResult) || (testCaseResult && !testCaseResult.testSuite)) {
-            result.testPlan.name = testCaseResult?.testCase?.name;
+            if (testCaseResult?.testCase?.name) {
+              result.testPlan.name = testCaseResult?.testCase?.name;
+            }
           }
-
           if(testCaseResult) {
             this.testCaseResultMap[result.id] = testCaseResult;
           }
@@ -174,5 +175,4 @@ export class UsageDetailsComponent extends BaseComponent implements OnInit {
       this.isFetchingTestPlans=false;
     })
   }
-
 }

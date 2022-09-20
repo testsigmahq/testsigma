@@ -85,6 +85,7 @@
           </button>
           <button
             *ngIf="!isDry"
+            [disabled]="testCaseResult?.isExecuting"
             (click)="reportBug()"
             [matTooltip]="'result.hint.report.bug' | translate"
             class="btn icon-btn border-rds-2 ml-14">

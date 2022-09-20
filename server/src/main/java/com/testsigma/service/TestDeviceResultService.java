@@ -59,7 +59,7 @@ public class TestDeviceResultService {
   }
 
   public TestDeviceResult findQueuedHybridEnvironment(Long id) {
-    return testDeviceResultRepository.findFirstByTestDeviceAgentIdAndTestPlanLabTypeAndTestPlanResultResultOrderByIdAsc(id, TestPlanLabType.Hybrid, ResultConstant.QUEUED);
+    return testDeviceResultRepository.findFirstByTestDeviceAgentIdAndTestPlanLabTypeAndStatusOrderByIdAsc(id, TestPlanLabType.Hybrid, StatusConstant.STATUS_PRE_FLIGHT);
   }
 
   public Page<TestDeviceResult> findAll(Specification<TestDeviceResult> spec, Pageable pageable) {

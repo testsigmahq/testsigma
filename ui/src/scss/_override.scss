@@ -971,3 +971,9 @@ ngx-json-viewer.custom-json-view {
     @extend .pr-0
   }
 }
+.ui-identifier-tab{
+  .mat-tab-header{
+    @extend .px-20;
+  }
+}
+

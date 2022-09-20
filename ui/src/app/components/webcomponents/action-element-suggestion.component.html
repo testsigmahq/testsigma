@@ -1,6 +1,7 @@
 <div class="theme-overlay-container">
   <div
     [class.with-br-bottom]="!elementSuggestion"
+    *ngIf="!isNewUI"
     class="theme-overlay-header">
     <div
       class="theme-overlay-title"
@@ -13,7 +14,28 @@
       (click)="closeSuggestion()">
     </button>
   </div>
-
+    <mat-tab-group animationDuration="0ms" class="tab-group-row  ui-identifier-tab" *ngIf="isNewUI">
+      <mat-tab [label]="'agents.mobile.inspection.inspection_mode' | translate">
+        <ng-container *ngTemplateOutlet="elselector"></ng-container>
+      </mat-tab>
+      <mat-tab [label]="'element.form.create_title' | translate">
+        <app-element-form
+          isFullScreen="false"
+          class="h-100vh-50px"
+        ></app-element-form>
+      </mat-tab>
+    </mat-tab-group>
+  <button
+    *ngIf="isNewUI"
+    class="theme-overlay-close position-absolute right-10 z-in-3"
+    [style]="'top:18px !important'"
+    type="button"
+    [matTooltip]="'hint.message.common.close' | translate"
+    (click)="closeSuggestion()">
+  </button>
+  <ng-container *ngTemplateOutlet="!isNewUI && elselector"></ng-container>
+</div>
+<ng-template #elselector>
   <div class="identifier-record text-center" *ngIf="elements?.isEmpty && !isQueryBased && !elements?.isFetching">
     <div class="identifier-bg px-60 py-20">
       <div [translate]="'create_element.record.title'" class="fz-20 rb-medium py-20"></div>
@@ -48,20 +70,21 @@
 
       </div>
     </div>
-    <div class="pt-20">
-      <div [translate]="'create_element.start.title'" class="fz-14 pb-10"></div>
-      <button class="btn theme-btn-primary" (click)="openElementForm(searchText)">
-        <span [textContent]="'+ ' +('elements.form.create_title' | translate)"></span>
-      </button>
-    </div>
+<!--    <div class="pt-20">-->
+<!--      <div [translate]="'create_element.start.title'" class="fz-14 pb-10"></div>-->
+<!--      <button class="btn theme-btn-primary" (click)="openElementForm(searchText)">-->
+<!--        <span [textContent]="'+ ' +('elements.form.create_title' | translate)"></span>-->
+<!--      </button>-->
+<!--    </div>-->
   </div>
 
   <form
     class="ts-form modal-full-view" id="testcaseStatusForm"
     (keydown.enter)="false"
+    [ngClass]="{'h-100vh-50px': isNewUI, 'h-100vh-70px': !isNewUI && !option.isStepRecordView}"
     novalidate="novalidate">
     <div
-      class="full-view-content pb-0" *ngIf="!elements?.isEmpty || isQueryBased || elements?.isFetching">
+      class="full-view-content pr-20 pt-20 pl-20 pb-0" *ngIf="!elements?.isEmpty || isQueryBased || elements?.isFetching">
       <div
         [class.d-flex]="elementSuggestion"
         [class.mt-n10]="elementSuggestion"
@@ -70,46 +93,62 @@
         <div
           [class.rounded-search]="elementSuggestion"
           [style]="{'padding-bottom': elementSuggestion ? '10px!important': 'unset'}"
-          class="search-input ml-4">
+          class="border-dark-separator-1 border-rds-6 d-flex w-100"
+          [ngClass]="{'px-16 py-10 mb-20': !option.isStepRecordView, 'search-input': option.isStepRecordView}">
           <i
             [matTooltip]="'hint.message.common.search' | translate"
-            class="fa-search fz-13 mr-5"></i>
+            class="fa-search fz-13 mr-10"></i>
           <div
-            [class.ts-col-55]="!elementSuggestion"
-            [class.ts-col-85]="elementSuggestion"
-            class="form-control data-placeholder-content d-inline-block border-0 p-0"
+            [class.d-none-important]="isScreenSearch"
+            class="border-0 d-inline-block data-placeholder-content flex-grow-1 form-control p-0 cursor-text"
             #searchInput
             (focus)="this.currentFocusedIndex=0"
             (keydown.enter)="selectElement()"
             (keydown.arrowup)="scrollUpElementFocus()"
             (keydown.arrowDown)="scrollDownElementFocus()"
             contenteditable="true"
-            [attr.data-placeholder]="'action.element.suggestion.placeholder' | translate"></div>
+            [attr.data-placeholder]="'nlp.element.suggestion.placeholder' | translate"></div>
           <div
             *ngIf="!elementSuggestion"
-          class="form-control border-0 ts-col-40 data-placeholder-content d-inline-block p-0"
-          #searchScreenInput
-          (focus)="this.currentFocusedIndex=0"
-          (keydown.enter)="selectScreenElement()"
-          (keydown.arrowup)="scrollUpElementFocus()"
-          (keydown.arrowDown)="scrollDownElementFocus()"
-          contenteditable="true"
-          [attr.data-placeholder]="'action.element.screen.name.suggestion.placeholder' | translate"></div>
+            class="border-0 d-inline-block data-placeholder-content flex-grow-1 form-control p-0 cursor-text"
+            [class.d-none-important]="!isScreenSearch"
+            #searchScreenInput
+            (focus)="this.currentFocusedIndex=0"
+            (keydown.enter)="selectScreenElement()"
+            (keydown.arrowup)="scrollUpElementFocus()"
+            (keydown.arrowDown)="scrollDownElementFocus()"
+            contenteditable="true"
+            [attr.data-placeholder]="'nlp.element.screen.name.suggestion.placeholder' | translate"></div>
+
+          <!-- Search dropdown -->
+          <div *ngIf="!option.isStepRecordView"
+               class="border-rds-bottom-0 align-items-center d-inline-flex min-100 ml-15 pointer w-100p text-secondary" #searchOptionsTrigger="cdkOverlayOrigin" cdkOverlayOrigin (click)="openSearchOptions()">
+            <span class="flex-grow-1" [textContent]="(isScreenSearch? 'nlp_templates.list.action.screen' : 'step_result.element') | translate"></span>
+            <span class="fa-down-arrow-filled fz-10 ml-10"></span>
+          </div>
+
+          <!-- Search options -->
+          <ng-template #searchOptionsDialog="cdkConnectedOverlay"
+                       cdkConnectedOverlay
+                       [cdkConnectedOverlayPositions]="[{originX:'end',originY:'bottom',overlayX:'end',overlayY:'top'}]"
+                       [cdkConnectedOverlayOrigin]="searchOptionsTrigger"
+                       [cdkConnectedOverlayOpen]="isSearchOptionsOpen"
+                       cdkConnectedOverlayPanelClass="filter-dropdown">
+            <div class="search-options-popup d-flex flex-column w-100p">
+              <div class="search-item pointer" [translate]="'step_result.element'" (click)="isScreenSearch=false;closeSearchOptions()"></div>
+              <div class="search-item pointer" [translate]="'nlp_templates.list.action.screen'" (click)="isScreenSearch=true;closeSearchOptions()"></div>
+            </div>
+          </ng-template>
         </div>
-        <button
-          *ngIf="!elementSuggestion"
-          (click)="openAddEditElement()"
-          class="theme-btn-primary ml-14 my-auto"
-          [translate]="'btn.common.create.element' | translate"></button>
         <div class="ml-auto d-flex align-items-center">
           <button
             *ngIf="elementSuggestion"
             class="theme-btn-clear-default" (click)="openElementForm()">
             <span [textContent]="'+ ' +('btn.common.new' | translate)"></span>
           </button>
-        <span
-          #stepResultFilterBtn
-          class="filter-icon-with-reset text-t-secondary d-none">
+          <span
+            #stepResultFilterBtn
+            class="filter-icon-with-reset text-t-secondary d-none">
           <i
             class="filter-icon fz-13"
             [matTooltip]="'hint.message.common.filter' | translate">
@@ -124,7 +163,7 @@
         [class.list-header]="!elementSuggestion"
         [class.rb-semi-bold]="elementSuggestion"
         [class.d-flex]="elementSuggestion"
-        class="px-5 py-10">
+        class="px-5 py-10 border-dark-separator-1 border-rds-bottom-0" >
         <div
           class="ts-col-50 pr-10 d-flex">
           <span
@@ -137,12 +176,12 @@
       </div>
       <cdk-virtual-scroll-viewport
         itemSize="{{elementSuggestion ? '36' : '30'}}"
-        class="list-container virtual-scroll-viewport theme-details-scroll h-100-120">
+        class="list-container virtual-scroll-viewport theme-details-scroll h-100-120 border-dark-separator-1 border-rds-bottom-6 border-t-0">
       <a
         [class.border-0]="!elementSuggestion"
         [class.py-10]="elementSuggestion"
         [class.py-7]="!elementSuggestion"
-        class="list-view green-highlight px-5 pointer align-items-center grey-on-hover"
+        class="list-view green-highlight px-5 pointer align-items-center"
         *cdkVirtualFor='let element of elements.cachedItems; let index = index'
         [class.h-active]="currentFocusedIndex == index"
         (mouseover)="currentFocusedIndex = index"
@@ -185,4 +224,4 @@
       </cdk-virtual-scroll-viewport>
     </div>
   </form>
-</div>
+</ng-template>

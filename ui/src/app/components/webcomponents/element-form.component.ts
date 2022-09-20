@@ -30,26 +30,29 @@ import {MobileRecorderEventService} from "../../services/mobile-recorder-event.s
 @Component({
   selector: 'app-element-form',
   templateUrl: './element-form.component.html',
+  styleUrls:['./element-form.component.scss']
 })
 
 export class ElementFormComponent extends BaseComponent implements OnInit {
   @ViewChild('submitReviewButton') public submitReviewButton: ElementRef;
   @Optional() @Input('formDetails') formDetails;
+  @Optional() @Input('isFullScreen') isFullScreen:boolean;
   public control = new FormControl();
   public workspaceVersion: WorkspaceVersion;
   public element: Element;
   public elementForm: FormGroup;
+  public saving:boolean=false;
   public agentInstalled: Boolean;
   public formSubmitted: Boolean = false;
   public showDetails: Boolean = false;
   public versionId: number;
   public testCaseId: number;
   public elementId: number;
+  public isRecording:boolean = false;
   public elementCreateType = ElementCreateType;
   public defaultScreenName = "Default Screen";
   private userPreference: UserPreference;
   public canNotShowLaunch: boolean = false;
-  public saving = false;
   public testCaseResultId: number;
   public reviewSubmittedElement: Element;
   public screenNameOptions: Observable<Set<ElementScreenName>>;
@@ -72,6 +75,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
     private sanitizer: DomSanitizer,
     @Inject(MAT_DIALOG_DATA) public options: {
       isStepRecordView: boolean;
+      isNewUI:boolean;
       elementId?: number, versionId?: number,
       name?: string, isNew?: boolean, isDryRun?: boolean,
       testCaseId: number, testCaseResultId: number
@@ -136,8 +140,8 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
       this.createElement();
       this.element.name = this.options?.name || '';
       this.addValidations();
-      if (this.element.createdType == ElementCreateType.CHROME && this.chromeRecorderService?.isChrome)
-        this.startCapture();
+      // if (this.element.createdType == ElementCreateType.CHROME && this.chromeRecorderService?.isChrome)
+      //   this.startCapture();
     } else {
       setTimeout(() => this.setElement(), 300);
     }
@@ -303,6 +307,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
   }
 
   startCapture() {
+    this.isRecording=true;
     this.chromeRecorderService.recorderVersion = this.workspaceVersion;
     this.setLocatorTypeToXpath();
     this.chromeRecorderService.pingRecorder();
@@ -318,6 +323,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
   // }
 
   stopCapture(isClose?:Boolean) {
+    this.isRecording=false;
     this.chromeRecorderService.elementCallBackContext = undefined;
     this.chromeRecorderService.elementCallBack = undefined;
     this.chromeRecorderService.stopSpying();
@@ -502,6 +508,10 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
           this.showAPIError(error, res)
         })
       });
+  }
+
+  get isNewUI(){
+    return this.options.isNewUI;
   }
 
 }

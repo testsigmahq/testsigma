@@ -607,6 +607,7 @@
   "test_step.bulk.update.Failure": "Failed to update Test Step details.",
   "test_step.copy_as.step_group.success": "Step Group created successfully.",
   "test_step.copy_as.name": "copy of ({{testCaseName}})",
+  "chrome.recorder.use": "Use Chrome extension to <a class=\"el-rec-link\" href=\"https://testsigma.com/docs/test-step-recorder/install-chrome-extension/\" target=\"_blank\" rel='nofollow'>Record Elements</a> or enter value manually",
   "common.yes": "Yes",
   "common.no": "No",
   "test_step.priority.MAJOR_STOP": "Stop Test Case execution on Test Step failure",
@@ -2098,5 +2099,10 @@
   "plan_result.report_bug.enable_plugin.label": "Enable new plugins by going to <b>Settings/Plugins</b>",
   "plan_result.report_bug.no_plugin_enabled.label": "No plugin is <b>enabled</b>, Enable new plugins by<br/> going to <b>Settings/Plugins</b>",
   "plan_result.report_bug.btn_go_plugins": "Go to Plugins",
-  "common.add_new":"Add new"
+  "common.add_new":"Add new",
+  "nlp_templates.list.action.screen": "Screen",
+  "step_result.element": "Element",
+  "nlp.element.screen.name.suggestion.placeholder": "Search Using Screen Name",
+  "nlp.element.suggestion.placeholder": "Search in Elements by Name",
+  "element.form.create_title": "Create Element"
 }

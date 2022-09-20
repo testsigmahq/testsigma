@@ -39,6 +39,14 @@
 	 fill: $grey-x-light;
 	}
 }
+
+.green-on-hover{
+  transition: background 0.1s ease-in-out;
+  &:hover, &:active, &.h-active{
+    background: $light-green-color;
+    fill: $light-green-color;
+  }
+}
 /*
 .selection-on-hover{
   transition: background 0.1s ease-in-out;

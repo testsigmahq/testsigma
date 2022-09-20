@@ -1,0 +1,31 @@
+div[module="ui-identifier-popup"] {
+  .list-header {
+    border: 1px solid #E1E4E8;
+    background-color: #FAFBFC;
+  }
+
+  .list-container {
+    border: 1px solid #E1E4E8;
+    border-top: none;
+  }
+
+  .list-view:hover, .list-view.h-active {
+    background-color: #ECF8F3 !important;
+  }
+}
+
+.search-options-popup {
+  padding: 6px 0px;
+
+  .search-item {
+    padding: 6px 12px;
+
+    &:hover {
+      background-color: #ECF8F3;
+    }
+  }
+}
+
+div[module="ui-identifier-popup"] ::ng-deep .tab-group-row .mat-tab-label.mat-tab-label-active .mat-tab-label-content {
+  color: #0c862f !important;
+}

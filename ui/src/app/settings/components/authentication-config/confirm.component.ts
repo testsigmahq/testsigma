@@ -13,7 +13,7 @@ import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 
         <div class="theme-overlay-content">
           <div  class="form-group ts-form">
-            <div class="text-truncate rb-medium mt-8">
+            <div class="rb-medium mt-8">
               <p [translate]="'message.common.restart_server'"></p>
             </div>
           </div>

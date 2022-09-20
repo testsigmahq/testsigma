@@ -179,8 +179,8 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
     this.elementService.show(this.elementId).subscribe((res: Element) => {
       this.element = res;
       this.element.screenName = res.screenNameObj.name;
-      if (this.element.createdType == ElementCreateType.CHROME)
-        this.startCapture();
+      // if (this.element.createdType == ElementCreateType.CHROME)
+      //   this.startCapture();
       this.addValidations();
     });
   }

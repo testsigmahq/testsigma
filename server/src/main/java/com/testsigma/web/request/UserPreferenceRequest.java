@@ -23,4 +23,5 @@ public class UserPreferenceRequest {
   private Long workspaceId;
   @JsonProperty(value = "showedGitHubStar")
   private boolean showedGitHubStar;
+  private Long clickedSkipForNow;
 }

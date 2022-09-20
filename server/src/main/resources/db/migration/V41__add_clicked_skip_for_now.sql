@@ -1,0 +1,1 @@
+ALTER TABLE `user_preferences` ADD COLUMN   `clicked_skip_for_now`  SMALLINT     DEFAULT 0;

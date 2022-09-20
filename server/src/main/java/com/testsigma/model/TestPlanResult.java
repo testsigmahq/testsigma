@@ -108,6 +108,7 @@ public class TestPlanResult {
 
   @Column(name = "created_date")
   @CreationTimestamp
+  @ToString.Include
   private Timestamp createdDate;
 
   @Column(name = "updated_date")

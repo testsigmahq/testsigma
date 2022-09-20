@@ -26,6 +26,7 @@ import {TestsigmaLoveComponent} from "./testsigma-love.component";
 import moment from "moment";
 import {UserPreference} from "../../models/user-preference.model";
 import {TestsigmaGitHubStarLoveComponent} from "../../shared/components/webcomponents/testsigma-github-star-love.component";
+import {TestPlanService} from "../../services/test-plan.service";
 
 @Component({
   selector: 'app-left-nav',
@@ -55,6 +56,7 @@ export class LeftNavComponent extends BaseComponent implements OnInit,OnDestroy 
     public userPreferenceService: UserPreferenceService,
     public onBoardingSharedService: OnBoardingSharedService,
     private sessionService: SessionService,
+    public testPlanService: TestPlanService,
     private router: Router) {
     super(authGuard, notificationsService, translate, toastrService);
   }
@@ -71,27 +73,27 @@ export class LeftNavComponent extends BaseComponent implements OnInit,OnDestroy 
     })
     this.fetchAuthConfig()
   }
+  GithubStarPopup(){
+    this.clearIntervalIfGitHubStarIsShown();
+    let dialogRef = this.matDialog.open(TestsigmaGitHubStarLoveComponent, {
+      position: {top: '10vh', right: '35vw'},
+      panelClass: ['mat-dialog', 'rds-none'],
+      data: {
+        showTwitter: false,
+        userPreference: this.userPreference
+      }
+    });
+  }
 
   checkIfGithubStarIsShown() {
     this.userPreferenceService.show().subscribe(res => {
       this.userPreference = res;
-      if ((moment(this.userPreference.createdDate) < moment().subtract(15, 'minute')) &&
-        !this.userPreference?.showedGitHubStar) {
-        this.clearIntervalIfGitHubStarIsShown();
-        let dialogRef = this.matDialog.open(TestsigmaGitHubStarLoveComponent, {
-          position: {top: '10vh', right: '35vw'},
-          panelClass: ['mat-dialog', 'rds-none'],
-          data: {
-            showTwitter: false
-          }
-        });
-
-        dialogRef.afterOpened().subscribe(() => {
-          this.clearIntervalIfGitHubStarIsShown();
-          this.userPreference.showedGitHubStar = true;
-          this.userPreferenceService.save(this.userPreference).subscribe();
-        });
+      const testCaseResults = "test_case_results";
+      if((moment(this.userPreference.createdDate) < moment().subtract(5, 'minute')) &&
+        !this.userPreference?.showedGitHubStar && this.userPreference.clickedSkipForNow<2 && !this.router.url.includes(testCaseResults)) {
+        this.GithubStarPopup();
       }
+
     })
   }
 

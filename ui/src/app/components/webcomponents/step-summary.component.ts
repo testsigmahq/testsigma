@@ -104,7 +104,7 @@ export class StepSummaryComponent implements OnInit {
     this.editedElement = name;
     const dialogRef = this.matDialog.open(ElementFormComponent, {
       height: "100vh",
-      width: '60%',
+      width: '540px',
       position: {top: '0px', right: '0px'},
       data: sendDetails,
       panelClass: ['mat-dialog', 'rds-none'],

@@ -37,6 +37,12 @@
 </div>
 <ng-template #elselector>
   <div class="identifier-record text-center" *ngIf="elements?.isEmpty && !isQueryBased && !elements?.isFetching">
+    <div class="pt-10 pb-10">
+      <div [translate]="'create_element.start.title'" class="fz-14 pb-10"></div>
+      <button class="btn theme-btn-primary" (click)="openElementForm(searchText)">
+        <span [textContent]="'+ ' +('element.form.create_title' | translate)"></span>
+      </button>
+    </div>
     <div class="identifier-bg px-60 py-20">
       <div [translate]="'create_element.record.title'" class="fz-20 rb-medium py-20"></div>
       <div class="" *ngIf="workspaceVersion?.workspace?.isWebMobile">

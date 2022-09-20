@@ -151,7 +151,8 @@ export class TestCaseResultDetailsComponent extends BaseComponent implements OnI
       if(res.checkIfChildRunExists())
         this.router.navigate(['/td/test_case_results', res.lastRun.id]);
       if (res.isDataDriven) {
-        this.testCaseResultService.findAll("parentId:" + res.id).subscribe(res => {
+        let parentId = res.checkIfChildRunExists()? res.lastRun.id : res.id;
+        this.testCaseResultService.findAll("parentId:" + parentId).subscribe(res => {
           if(res.content[0])
           this.navigate(res.content[0]);
         });

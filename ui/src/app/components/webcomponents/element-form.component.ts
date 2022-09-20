@@ -344,8 +344,8 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
       }
       this.element = res.content[0];
       this.elementId = this.element.id;
-      if (this.element.createdType == ElementCreateType.CHROME)
-        this.startCapture();
+      // if (this.element.createdType == ElementCreateType.CHROME)
+      //   this.startCapture();
       this.addValidations();
     })
   }

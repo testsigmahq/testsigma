@@ -89,7 +89,7 @@
                 <i class="fa-exclamation-triangle-solid text-pale-orange pr-6"></i>
               {{'agents.list_view.out_of_sync'|translate}}
               <a
-                rel="nofollow"
+                rel="noreferrer nofollow"
                 href='https://testsigma.com/docs/agent/troubleshooting/setup-issues/' target='_blank' style='text-decoration:none' class='text-link text-secondary pl-4' [translate]="'agents.devices_troubleshoot'" >  </a>
               </span>
             <span *ngIf="!agent.isOnline()"
@@ -99,7 +99,7 @@
                   <i class="fa-exclamation-triangle-solid text-pale-orange pr-6"></i>
                   {{'agents.unable_to_reach'|translate}}
               <a
-                rel="nofollow"
+                rel="noreferrer nofollow"
                 href='https://testsigma.com/docs/agent/troubleshooting/setup-issues/' target='_blank' style='text-decoration:none' class='text-link text-secondary pl-4' [translate]="'agents.devices_troubleshoot'" >  </a>
 
                 </span>
@@ -175,7 +175,7 @@
         <div class="empty-run-md" *ngIf="isFiltered || filteredBy!= 'all'"></div>
         <div *ngIf="!isFiltered && filteredBy=='all'; else showEmptyMessage">
           <a
-            rel="nofollow"
+            rel="noreferrer nofollow"
             href="https://testsigma.com/docs/agent/faqs/" target="_blank" class="fz-24 d-block text-black text-decoration-none pb-15 lh-2point6 ts-col-45 mx-auto text-center" [translate]="'agents.know_more'"></a>
           <div
             class="ts-col-100 mx-auto"

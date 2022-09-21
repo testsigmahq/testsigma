@@ -191,20 +191,20 @@
                 *ngIf="formSubmitted && elementForm.get('name').hasError('required')"
                 class="error" [translate]="'form.validation.common.required'">
               </div>
-              <div *ngIf="elementForm?.get('name')?.touched && elementForm.controls.name.errors?.pattern "
+              <div *ngIf="formSubmitted && elementForm?.get('name')?.touched && elementForm.controls.name.errors?.pattern "
                    [translate]="'element.message.name.invalid_characters'" class="error">
               </div>
               <div
-                *ngIf="elementForm.controls.name.errors?.minlength && !elementForm.controls.name.errors?.pattern
+                *ngIf="formSubmitted && elementForm.controls.name.errors?.minlength && !elementForm.controls.name.errors?.pattern
                 && elementForm?.get('name')?.touched && !elementForm.controls.name.hasError('whitespace')"
                 [translate]="'element.message.name.minlength'" class="error">
               </div>
               <div
-                *ngIf="elementForm.controls.name.errors?.maxlength && !elementForm.controls.name.errors?.pattern && elementForm?.get('name')?.touched "
+                *ngIf="formSubmitted && elementForm.controls.name.errors?.maxlength && !elementForm.controls.name.errors?.pattern && elementForm?.get('name')?.touched "
                 class="error" [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'250'}">
               </div>
               <div class="error"
-                   *ngIf="elementForm?.touched  && elementForm.controls.name.hasError('whitespace') && !elementForm.get('name').hasError('required')"
+                   *ngIf="formSubmitted && elementForm?.touched  && elementForm.controls.name.hasError('whitespace') && !elementForm.get('name').hasError('required')"
                    [textContent]="'form.validation.cannot_have_white_spaces'| translate: {FieldName:'Name'}"></div>
             </div>
             <div class="form-group ts-col-50 pl-20" matAutocompleteOrigin #origin="matAutocompleteOrigin">
@@ -223,10 +223,10 @@
                   class="error" [translate]="'agents.message.title.required'">
                 </div>
                 <div
-                  *ngIf="elementForm.controls.screen_name.errors?.minlength"
+                  *ngIf="formSubmitted && elementForm.controls.screen_name.errors?.minlength"
                   [translate]="'agents.mobile.inspection.screen_name.minlength'" class="error"></div>
                 <div
-                  *ngIf="elementForm.controls.screen_name.errors?.maxlength && formSubmitted "
+                  *ngIf="formSubmitted && elementForm.controls.screen_name.errors?.maxlength && formSubmitted "
                   class="error" [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Screen Name' , max:'250'}">
                 </div>
               </div>

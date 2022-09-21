@@ -30,6 +30,7 @@ import {OnBoarding} from "../../enums/onboarding.enum";
             (click)="removePreference()"
             class="text-link text-nowrap pl-4"
             target="_blank"
+            rel="noreferrer nofollow"
             href="https://testsigma.com/docs/faqs/why-chrome-extension/"
             [translate]="'message.common.lean_more'">
           </a>

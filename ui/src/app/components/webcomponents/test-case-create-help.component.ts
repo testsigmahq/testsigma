@@ -36,6 +36,7 @@ import {WorkspaceType} from "../../enums/workspace-type.enum";
           &nbsp;
           <a
             class="small-sub-header rb-medium text-link"
+            rel="noreferrer nofollow"
             href="https://testsigma.com/tutorials/test-cases/data-driven-testing/"
             target="_blank" [translate]="'message.common.help_document'"></a>
           &nbsp;
@@ -46,6 +47,7 @@ import {WorkspaceType} from "../../enums/workspace-type.enum";
           <span [translate]="'message.common.refer_this'"></span>&nbsp;
           <a
             class="small-sub-header rb-medium text-link"
+            rel="noreferrer nofollow"
             href="https://testsigma.com/tutorials/test-cases/data-driven-testing/"
             target="_blank" [translate]="'message.common.help_document'"></a>
             &nbsp;

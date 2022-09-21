@@ -318,7 +318,7 @@ export class QuickStartComponent extends GetStartedBaseComponent implements OnIn
   }
 
   openArticleByLink(articleLink) {
-    window.open(articleLink, '_blank', 'nofollow');
+    window.open(articleLink, '_blank', 'noreferrer nofollow');
   }
 
   onDrop() {

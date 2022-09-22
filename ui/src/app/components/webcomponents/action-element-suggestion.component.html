@@ -168,6 +168,13 @@
         </div>
       </div>
       <div
+        *ngIf="!elementSuggestion && !isNewUI"
+        class="ml-auto d-flex mb-10">
+        <button class="btn theme-btn-primary" (click)="openElementForm()">
+          <span [textContent]="'+ ' +('element.form.create_title' | translate)"></span>
+        </button>
+      </div>
+      <div
         [class.list-header]="!elementSuggestion"
         [class.rb-semi-bold]="elementSuggestion"
         [class.d-flex]="elementSuggestion"

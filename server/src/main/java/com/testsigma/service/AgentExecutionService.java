@@ -568,7 +568,7 @@ public class AgentExecutionService {
     if (testDevice.getPlatformOsVersionId() != null) {
       PlatformOsVersion platformOsVersion = platformsService.getPlatformOsVersion(testDevice.getPlatformOsVersionId(), exeLabType);
       settings.setPlatform(platformOsVersion.getPlatform());
-      settings.setOsVersion(platformOsVersion.getPlatformVersion());
+      settings.setOsVersion(platformOsVersion.getVersion());
     }
     if (exeLabType == TestPlanLabType.Hybrid || exeLabType == TestPlanLabType.PrivateGrid) {
       settings.setBrowser(testDevice.getBrowser());

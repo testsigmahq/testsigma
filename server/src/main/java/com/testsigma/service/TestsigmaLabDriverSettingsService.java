@@ -72,7 +72,7 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
     PlatformDevice device = platformsService.getPlatformDevice(testDevice.getPlatformDeviceId(), testDevice.getTestPlanLabType());
     PlatformOsVersion platformOsVersion = platformsService.getPlatformOsVersion(testDevice.getPlatformOsVersionId(),testDevice.getTestPlanLabType());
     Platform os = device.getPlatform();
-    capabilities.add(new WebDriverCapability(TSCapabilityType.DEVICE_NAME, device.getName()));
+    capabilities.add(new WebDriverCapability(TSCapabilityType.DEVICE_NAME, device.getName() == null ? device.getDisplayName() : device.getName()));
     capabilities.add(new WebDriverCapability(TSCapabilityType.PLATFORM_VERSION, platformOsVersion.getPlatformVersion()));
     capabilities.add(new WebDriverCapability(TSCapabilityType.DEVICE_ORIENTATION, TSCapabilityType.PORTRAIT));
     if (Platform.Android.equals(os)) {

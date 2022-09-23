@@ -253,9 +253,10 @@ export class ActionElementSuggestionComponent implements OnInit {
       }));
       return
     }
+    let isNewUI=this.isWeb||this.isMobileWeb
     this.elementForm = this.matModal.open(ElementFormComponent, {
       height: "100vh",
-      width: '60%',
+      width: isNewUI ? "540px" : "60%",
       position: {top: '0px', right: '0px'},
       data: sendDetails,
       panelClass: ['mat-dialog', 'rds-none'],

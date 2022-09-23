@@ -410,7 +410,7 @@ export class TestStepResult extends ResultBase implements PageObject {
   }
   get isCoordinateStep() {
     let template_ids = [1060, 10164, 20091, 20139, 20164, 30090, 30128, 30162];
-    return template_ids.includes(this.testStep.naturalTextActionId as number);
+    return template_ids.includes(this.testStep?.naturalTextActionId as number);
   }
 
   formatCoordinates(coordinates: string) {

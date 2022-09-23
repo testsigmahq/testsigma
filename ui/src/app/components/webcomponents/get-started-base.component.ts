@@ -348,7 +348,7 @@ export class GetStartedBaseComponent extends BaseComponent implements OnInit {
   }
 
   openArticle() {
-    window.open(this.selectedTopic.articleLink, '_blank', 'nofollow');
+    window.open(this.selectedTopic.articleLink, '_blank', 'noreferrer nofollow');
   }
 
   tryIt(navigateTo, versionId?:number| String) {

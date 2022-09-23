@@ -77,7 +77,7 @@ export class LeftNavComponent extends BaseComponent implements OnInit,OnDestroy 
     this.clearIntervalIfGitHubStarIsShown();
     let dialogRef = this.matDialog.open(TestsigmaGitHubStarLoveComponent, {
       position: {top: '10vh', right: '35vw'},
-      panelClass: ['mat-dialog', 'rds-none'],
+      panelClass: ['mat-dialog', 'rds-none','mx-auto'],
       data: {
         showTwitter: false,
         userPreference: this.userPreference

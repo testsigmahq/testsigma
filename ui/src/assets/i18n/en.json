@@ -607,7 +607,7 @@
   "test_step.bulk.update.Failure": "Failed to update Test Step details.",
   "test_step.copy_as.step_group.success": "Step Group created successfully.",
   "test_step.copy_as.name": "copy of ({{testCaseName}})",
-  "chrome.recorder.use": "Use Chrome extension to <a class=\"el-rec-link\" href=\"https://testsigma.com/docs/test-step-recorder/install-chrome-extension/\" target=\"_blank\" rel='nofollow'>Record Elements</a> or enter value manually",
+  "chrome.recorder.use": "Use Chrome extension to <a class=\"el-rec-link\" href=\"https://testsigma.com/docs/test-step-recorder/install-chrome-extension/\" target=\"_blank\" rel='noreferrer nofollow'>Record Elements</a> or enter value manually",
   "common.yes": "Yes",
   "common.no": "No",
   "test_step.priority.MAJOR_STOP": "Stop Test Case execution on Test Step failure",

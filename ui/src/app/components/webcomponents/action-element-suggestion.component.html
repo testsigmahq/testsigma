@@ -47,7 +47,7 @@
     </div>
     <div class="identifier-bg px-60 py-20">
       <div [translate]="'create_element.record.title'" class="fz-20 rb-medium py-20"></div>
-      <div class="" *ngIf="workspaceVersion?.workspace?.isWebMobile">
+      <div class="" *ngIf="elements?.isEmpty">
         <div
           *ngIf="!showVideo"
           class="d-flex align-items-center justify-content-center w-100 theme-border border-rds-12 bg-white pointer" style="height: 300px; color: red">

@@ -1254,7 +1254,7 @@ public class AgentExecutionService {
   private void handleFileActionStep(TestCaseStepEntityDTO testCaseStepEntity, StorageService storageService, TestDevice testDevice) {
     com.testsigma.automator.entity.TestDataPropertiesEntity testDataPropertiesEntity = testCaseStepEntity.getTestDataMap().get(
       testCaseStepEntity.getTestDataMap().keySet().stream().findFirst().get());
-    String fileUrl = testDataPropertiesEntity.getTestDataValue().replace("testsigma-storage://", "");
+    String fileUrl = testDataPropertiesEntity.getTestDataValue().replace("testsigma-storage:/", "");
     URL newUrl = storageService.generatePreSignedURL(fileUrl, StorageAccessLevel.READ, 180);
     if(TestPlanLabType.TestsigmaLab == testDevice.getTestPlanLabType()) {
       try {

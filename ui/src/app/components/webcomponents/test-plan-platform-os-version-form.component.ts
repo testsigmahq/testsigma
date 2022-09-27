@@ -67,6 +67,7 @@ export class TestPlanPlatformOsVersionFormComponent implements OnInit {
     this.platformBrowser = null;
     this.browserVersion = null;
     this.isBrowserLoaded = false;
+    this.platformOsVersions=null;
     if (changes && changes['testPlanLabType'] && !this.isEdit) {
       if (!changes['testPlanLabType']['firstChange'] &&
         (changes['testPlanLabType']['currentValue'] == TestPlanLabType.TestsigmaLab)) {

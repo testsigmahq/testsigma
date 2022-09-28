@@ -1,6 +1,6 @@
 DELIMITER //
 
-DROP PROCEDURE IF EXISTS testsigma_opensource.PrerequisiteColumnInDevices
+DROP PROCEDURE IF EXISTS testsigma_opensource.PrerequisiteColumnInDevices //
 CREATE PROCEDURE testsigma_opensource.PrerequisiteColumnInDevices ()
     MODIFIES SQL DATA
 BEGIN
@@ -11,7 +11,7 @@ BEGIN
     END IF;
 END //
 
-DROP PROCEDURE IF EXISTS testsigma_opensource.PrerequisiteColumnInDeviceResults
+DROP PROCEDURE IF EXISTS testsigma_opensource.PrerequisiteColumnInDeviceResults //
 CREATE PROCEDURE testsigma_opensource.PrerequisiteColumnInDeviceResults ()
     MODIFIES SQL DATA
 BEGIN
@@ -22,7 +22,7 @@ BEGIN
     END IF;
 END //
 
-DROP PROCEDURE IF EXISTS testsigma_opensource.WorkspaceVersionColumnInDevices
+DROP PROCEDURE IF EXISTS testsigma_opensource.WorkspaceVersionColumnInDevices //
 CREATE PROCEDURE testsigma_opensource.WorkspaceVersionColumnInDevices ()
     MODIFIES SQL DATA
 BEGIN
@@ -35,7 +35,7 @@ BEGIN
     END IF;
 END //
 
-DROP PROCEDURE IF EXISTS testsigma_opensource.WorkspaceVersionColumnInDeviceResults
+DROP PROCEDURE IF EXISTS testsigma_opensource.WorkspaceVersionColumnInDeviceResults //
 CREATE PROCEDURE testsigma_opensource.WorkspaceVersionColumnInDeviceResults ()
     MODIFIES SQL DATA
 BEGIN
@@ -48,7 +48,7 @@ BEGIN
     END IF;
 END //
 
-DROP PROCEDURE IF EXISTS testsigma_opensource.TestLabTypeColumnInDevices
+DROP PROCEDURE IF EXISTS testsigma_opensource.TestLabTypeColumnInDevices //
 CREATE PROCEDURE testsigma_opensource.TestLabTypeColumnInDevices ()
     MODIFIES SQL DATA
 BEGIN
@@ -60,7 +60,7 @@ BEGIN
     END IF;
 END //
 
-DROP PROCEDURE IF EXISTS testsigma_opensource.TestLabTypeColumnInDeviceResults
+DROP PROCEDURE IF EXISTS testsigma_opensource.TestLabTypeColumnInDeviceResults //
 CREATE PROCEDURE testsigma_opensource.TestLabTypeColumnInDeviceResults ()
     MODIFIES SQL DATA
 BEGIN
@@ -72,7 +72,7 @@ BEGIN
     END IF;
 END //
 
-DROP PROCEDURE IF EXISTS testsigma_opensource.PasswordsInTestData
+DROP PROCEDURE IF EXISTS testsigma_opensource.PasswordsInTestData //
 CREATE PROCEDURE testsigma_opensource.PasswordsInTestData ()
     MODIFIES SQL DATA
 BEGIN

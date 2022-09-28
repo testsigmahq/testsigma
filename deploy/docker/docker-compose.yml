@@ -20,7 +20,7 @@ services:
       interval: 1s
       retries: 120
   testsigma_server:
-    image: testsigmahq/server:v2.1
+    image: testsigmahq/server:v2.1.1
     container_name: testsigma_server
     ports:
       - "9090:9090"

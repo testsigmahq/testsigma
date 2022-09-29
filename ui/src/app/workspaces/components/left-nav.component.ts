@@ -18,17 +18,28 @@ import {WorkspaceVersionService} from "../../shared/services/workspace-version.s
           <div
             *ngIf="Form && applications?.content"
             class="text-truncate w-20">
-            <app-auto-complete
-              class="pb-2 d-block ml-n20 pl-10"
-              [formGroup]="Form"
-              [formCtrlName]="Form.controls['name']"
-              [value]="getCurrentItem(applications, application?.id)"
-              [items]="applications"
-              [hasProjectIcon]="true"
-              [inline]="true"
-              (onSearch)="fetchApplications($event)"
-              (onValueChange)="switchApplication($event)"
-            ></app-auto-complete>
+            <div class="d-flex position-relative">
+              <span
+                class="position-absolute pt-2"
+                style="z-index: 10;top: 2px"
+                [class.fa-project-website]="this.currentApplication?.isWeb"
+                [class.fa-project-ios]="this.currentApplication?.isIosNative"
+                [class.fa-project-andriod]="this.currentApplication?.isAndroidNative"
+                [class.fa-project-mobile]="this.currentApplication?.isMobileWeb"
+                [class.fa-project-api]="this.currentApplication?.isRest"
+              ></span>
+              <app-auto-complete
+                class="pb-2 d-block"
+                [formGroup]="Form"
+                [formCtrlName]="Form.controls['name']"
+                [value]="getCurrentItem(applications, application?.id)"
+                [items]="applications"
+                [hasProjectIcon]="true"
+                [inline]="true"
+                (onSearch)="fetchApplications($event)"
+                (onValueChange)="switchApplication($event)"
+              ></app-auto-complete>
+            </div>
             <span class="text-t-secondary fz-12" [translate]="'left_nav.workspace_settings'"></span>
           </div>
         </div>

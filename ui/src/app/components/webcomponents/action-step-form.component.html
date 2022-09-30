@@ -120,14 +120,14 @@
       <div class="p-0 field">
         <input
           [type]="inputType(argumentList[displayName.key])"
-          [placeholder]="argumentList[displayName.key]"
+          [placeholder]="argumentList[displayName.key].replace('java.lang.','')"
           class="form-control"
           [class.autofocus]="first"
           [id]="displayName.key"
           [name]="displayName.key"
           [formControlName]="[''+displayName.key]"/>
         <label
-          [translate]="displayName.value+' ('+argumentList[displayName.key]+')'"
+          [translate]="displayName.value+' ('+argumentList[displayName.key].replace('java.lang.','')+')'"
           [for]="displayName.key"></label>
       </div>
     </div>

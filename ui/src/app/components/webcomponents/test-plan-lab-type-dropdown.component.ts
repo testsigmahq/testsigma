@@ -8,6 +8,7 @@ import {TestPlanLabType} from "../../enums/test-plan-lab-type.enum";
 import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
 import {WorkspaceVersionService} from "../../shared/services/workspace-version.service";
 import {IntegrationsService} from "../../shared/services/integrations.service";
+import {FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-test-plan-lab-type-dropdown',
@@ -19,6 +20,7 @@ export class TestPlanLabTypeDropdownComponent extends SelectTestLabComponent imp
   @Input('executionEnvironments') executionEnvironments: TestDevice[];
   @Input('activeExecutionEnvIndex') activeExecutionEnvIndex: number = 0;
   @Input('isNewUI') isNewUI: boolean;
+  @Input('executionEnvironment')  executionEnvironment:TestDevice;
 
   @Output('onVersionSelect') onVersionSelect = new EventEmitter<WorkspaceVersion>();
   @Output('onPreRequisiteSelect') onPreRequisiteSelect = new EventEmitter<TestDevice|undefined>();
@@ -58,6 +60,9 @@ export class TestPlanLabTypeDropdownComponent extends SelectTestLabComponent imp
 
     let executionEnv = this.executionEnvironments.find((item, idx)=> idx == this.activeExecutionEnvIndex);
     this.preRequisiteExecutionEnvironment = this.executionEnvironments.find((item, idx)=>((item.id == executionEnv?.prerequisiteTestDevicesId && item.id) || (executionEnv?.prerequisiteTestDevicesIdIndex == idx)));
+    if(this.executionEnvironment){
+      this.selectTestLabForm.controls['testPlanLabType'].setValue(this.executionEnvironment.testPlanLabType)
+    }
   }
 
   ngOnChanges(simpleChanges: SimpleChanges) {

@@ -20,13 +20,13 @@ import {Platform} from "../../../enums/platform.enum";
           [matTooltip]="('execution.lab_type.'+executionEnvironment.testPlanLabType) | translate"></span>
     <span class="flex-shrink-0">
       <!--appTooltipOnEllipsis-->
-      <a
-        (click)="eventPrevent($event)"
-        class="mat-tooltip-trigger mr-3 mw-75 text-link text-truncate-d-block w-fit-content"
-        [routerLink]="['/agents', agent.id]"
-        [textContent]="agent.title"
-        *ngIf="isHybrid && agent"
-        ></a>
+<!--      <a-->
+<!--        (click)="eventPrevent($event)"-->
+<!--        class="mat-tooltip-trigger mr-3 mw-75 text-link text-truncate-d-block w-fit-content"-->
+<!--        [routerLink]="['/agents', agent.id]"-->
+<!--        [textContent]="agent.title"-->
+<!--        *ngIf="isHybrid && agent"-->
+<!--        ></a>-->
       <i
         [class.fa-windows-brands]="executionEnvironment?.isWindows"
         [class.fa-apple]="executionEnvironment?.isMac || executionEnvironment?.isIOS"

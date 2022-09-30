@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Optional, Output} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {IntegrationsService} from "../../shared/services/integrations.service";
 import {Integrations} from "../../shared/models/integrations.model";
@@ -6,6 +6,7 @@ import {WorkspaceVersion} from "../../models/workspace-version.model";
 import {TestPlan} from "../../models/test-plan.model";
 import {TestPlanLabType} from "../../enums/test-plan-lab-type.enum";
 import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
+import {TestDevice} from "../../models/test-device.model";
 
 @Component({
   selector: 'app-select-test-lab',
@@ -112,6 +113,7 @@ export class SelectTestLabComponent implements OnInit {
   @Input('version') version: WorkspaceVersion;
   @Input('testPlan') testPlan: TestPlan;
   @Input('isDry') isDry : boolean;
+  @Optional() @Input('executionEnvironment') executionEnvironment:TestDevice;
   @Output() closeDryRunDialog = new EventEmitter<void>();
 
   public applications: Integrations[];
@@ -125,7 +127,10 @@ export class SelectTestLabComponent implements OnInit {
     this.integrationsService.findAll().subscribe(res => {
       this.applications = res;
       if(this.isNewTestPlan) {
-        if (!this.isTestsigmaLabInstalled) {
+        if(this.executionEnvironment){
+          this.selectTestLabForm.controls['testPlanLabType'].setValue(this.executionEnvironment.testPlanLabType)
+        }
+        else if (!this.isTestsigmaLabInstalled) {
           this.selectTestLabForm.controls['testPlanLabType'].setValue(TestPlanLabType.Hybrid)
         } else {
           this.selectTestLabForm.controls['testPlanLabType'].setValue(TestPlanLabType.TestsigmaLab)

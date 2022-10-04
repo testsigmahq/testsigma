@@ -335,6 +335,8 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
     TestStep step = new TestStep();
     step.setPosition(steps.get(0).getPosition());
     step.setTestCaseId(currentTestCase.getId());
+    step.setDisabled(false);
+    step.setPriority(TestStepPriority.MAJOR);
     step.setParentId(steps.get(0).getParentId() != null ? steps.get(0).getParentId() : null);
     step.setType(TestStepType.STEP_GROUP);
     step.setStepGroupId(testCase.getId());

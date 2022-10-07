@@ -50,6 +50,7 @@ import {AddonTestDataFunction} from "../../models/addon-test-data-function.model
 import {AddonTestDataFunctionParameter} from "../../models/addon-test-data-function-parameter.model";
 import {StepActionType} from "../../enums/step-action-type.enum";
 import {ActionTestDataRuntimeVariableSuggestionComponent} from './action-test-data-runtime-variable-suggestion.component';
+import {extractStringByDelimiterByPos} from "../../utils/strings";
 
 @Component({
   selector: 'app-action-step-form',
@@ -64,7 +65,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   @Input('testStep') public testStep: TestStep;
   @Input('testSteps') testSteps: Page<TestStep>;
   @Input('testCase') testCase: TestCase;
-  @Input('indentation') indentation:number;
+  @Input('indentation') indentation: number;
   @Input('testStepsLength') testStepsLength: number;
   @Output('onCancel') onCancel = new EventEmitter<void>();
   @Output('onSave') onSave = new EventEmitter<TestStep>();
@@ -1850,10 +1851,13 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   }
 
   runtimeVariableAfterClose(data) {
-    if(data) {
+    if (data) {
       this.assignDataValue(this.getDataTypeString(TestDataType.runtime, data), true);//, this.testDataPlaceholder(), false);
-    } else  {
+    } else {
       this.showTestDataPopup();
     }
+  }
+  public extractStringByKey(str:string){
+    return extractStringByDelimiterByPos({str:str})
   }
 }

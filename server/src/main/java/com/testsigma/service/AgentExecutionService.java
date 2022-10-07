@@ -1372,12 +1372,18 @@ public class AgentExecutionService {
                                                             String dataProfile, Map<Long, Integer> dataSetIndex) throws Exception {
 
     List<Long> loopIds = new ArrayList<>();
+    List<Long> skipIds = new ArrayList<>();
     List<TestCaseStepEntityDTO> toReturn = new ArrayList<>();
     for (TestStepDTO testStepDTO : testStepDTOS) {
 
       if (loopIds.contains(testStepDTO.getParentId())) {
+        skipIds.add(testStepDTO.getId());
+        continue;
+      } else if (skipIds.contains(testStepDTO.getParentId())) {
+        skipIds.add(testStepDTO.getId());
         continue;
       }
+
 
       if (testStepDTO.getType() == TestStepType.FOR_LOOP) {
         loopIds.add(testStepDTO.getId());

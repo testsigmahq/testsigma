@@ -219,4 +219,8 @@ export class ActionTestDataRuntimeVariableSuggestionComponent implements OnInit 
     }
   }
 
+  get isStepRecorderView(){
+    return this.option.stepRecorderView;
+  }
+
 }

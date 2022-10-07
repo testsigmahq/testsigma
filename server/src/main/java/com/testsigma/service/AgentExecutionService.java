@@ -1171,7 +1171,7 @@ public class AgentExecutionService {
 
   protected void appendPreSignedURLs(List<TestCaseStepEntityDTO> executableList, TestCaseEntityDTO testCaseEntity,
                                        TestDevice testDevice, boolean isWhileLoop, Long stepGroupStepID, TestCaseStepEntityDTO parentGroupEntity)
-    throws ResourceNotFoundException {
+          throws ResourceNotFoundException, MalformedURLException {
     Calendar cal = Calendar.getInstance();
     cal.add(Calendar.HOUR, 10);
     stepGroupStepID = (stepGroupStepID == null) ? 0 : stepGroupStepID;
@@ -1235,7 +1235,7 @@ public class AgentExecutionService {
     testCaseStep.setAdditionalScreenshotPaths(additionalScreenshotPaths);
   }
 
-  private void handleUploadActionStep(TestCaseStepEntityDTO testCaseStepEntity, StorageService storageService, TestDevice testDevice) {
+  private void handleUploadActionStep(TestCaseStepEntityDTO testCaseStepEntity, StorageService storageService, TestDevice testDevice) throws MalformedURLException {
     if (testCaseStepEntity.getAction() != null && testCaseStepEntity.getAction().toLowerCase().contains("upload")
       && testCaseStepEntity.getNaturalTextActionId() != null && (testCaseStepEntity.getNaturalTextActionId().equals(969)
       || testCaseStepEntity.getNaturalTextActionId().equals(10150))) {
@@ -1243,7 +1243,7 @@ public class AgentExecutionService {
     }
   }
 
-  private void handleInstallApp(TestCaseStepEntityDTO testCaseStepEntity, StorageService storageService, TestDevice testDevice) {
+  private void handleInstallApp(TestCaseStepEntityDTO testCaseStepEntity, StorageService storageService, TestDevice testDevice) throws MalformedURLException {
     if (testCaseStepEntity.getAction() != null && testCaseStepEntity.getAction()
       .toLowerCase().contains("installApp".toLowerCase()) && (testCaseStepEntity.getNaturalTextActionId() != null)
       && (testCaseStepEntity.getNaturalTextActionId().equals(20003) || testCaseStepEntity.getNaturalTextActionId().equals(30003))) {
@@ -1251,11 +1251,16 @@ public class AgentExecutionService {
     }
   }
 
-  private void handleFileActionStep(TestCaseStepEntityDTO testCaseStepEntity, StorageService storageService, TestDevice testDevice) {
+  private void handleFileActionStep(TestCaseStepEntityDTO testCaseStepEntity, StorageService storageService, TestDevice testDevice) throws MalformedURLException {
     com.testsigma.automator.entity.TestDataPropertiesEntity testDataPropertiesEntity = testCaseStepEntity.getTestDataMap().get(
       testCaseStepEntity.getTestDataMap().keySet().stream().findFirst().get());
-    String fileUrl = testDataPropertiesEntity.getTestDataValue().replace("testsigma-storage:/", "");
-    URL newUrl = storageService.generatePreSignedURL(fileUrl, StorageAccessLevel.READ, 180);
+    URL newUrl;
+    if(testDataPropertiesEntity.getTestDataValue().startsWith("http")) {
+      newUrl = new URL(testDataPropertiesEntity.getTestDataValue());
+    } else {
+      String fileUrl = testDataPropertiesEntity.getTestDataValue().replace("testsigma-storage:/", "");
+      newUrl = storageService.generatePreSignedURL(fileUrl, StorageAccessLevel.READ, 180);
+    }
     if(TestPlanLabType.TestsigmaLab == testDevice.getTestPlanLabType()) {
       try {
         newUrl = new URL(newUrl.toString().replace(applicationConfig.getServerUrl(), applicationConfig.getServerLocalUrl()));

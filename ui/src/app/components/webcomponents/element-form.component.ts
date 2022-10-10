@@ -333,7 +333,6 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
       let version=new WorkspaceVersion();
       version.id=this.versionId;
       let sendDetails = {
-        versionId: this.versionId,
         version:version,
         isNew: true,
         testCaseId: this.testCaseId,

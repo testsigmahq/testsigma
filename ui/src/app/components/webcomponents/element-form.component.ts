@@ -340,9 +340,8 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
         testCaseResultId: this.options.testCaseResultId,
         isStepRecordView: this.options.isStepRecordView
       }
-      this.mobileRecorderEventService.suggestionContent.next(Object.assign(sendDetails, {
-        content: this.mobileRecorderEventService.suggestionElement
-      }))
+      this.mobileRecorderEventService.suggestionContent.next(
+        {...sendDetails,content: this.mobileRecorderEventService.suggestionElement})
     }
   }
 

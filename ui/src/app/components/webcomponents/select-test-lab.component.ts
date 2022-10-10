@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Optional, Output} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormGroup} from '@angular/forms';
 import {IntegrationsService} from "../../shared/services/integrations.service";
 import {Integrations} from "../../shared/models/integrations.model";
 import {WorkspaceVersion} from "../../models/workspace-version.model";
@@ -126,16 +126,16 @@ export class SelectTestLabComponent implements OnInit {
   ngOnInit(): void {
     this.integrationsService.findAll().subscribe(res => {
       this.applications = res;
+      let labType = TestPlanLabType.Hybrid
       if(this.isNewTestPlan) {
         if(this.executionEnvironment){
-          this.selectTestLabForm.controls['testPlanLabType'].setValue(this.executionEnvironment.testPlanLabType)
+          labType = this.executionEnvironment.testPlanLabType
         }
-        else if (!this.isTestsigmaLabInstalled) {
-          this.selectTestLabForm.controls['testPlanLabType'].setValue(TestPlanLabType.Hybrid)
-        } else {
-          this.selectTestLabForm.controls['testPlanLabType'].setValue(TestPlanLabType.TestsigmaLab)
+        else if (this.isTestsigmaLabInstalled) {
+          labType = TestPlanLabType.TestsigmaLab
         }
       }
+      this.selectTestLabForm.controls['testPlanLabType'].setValue(labType)
     });
   }
   get isNewTestPlan(){

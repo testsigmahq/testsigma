@@ -329,6 +329,21 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
     this.chromeRecorderService.elementCallBack = undefined;
     this.chromeRecorderService.stopSpying();
     this.formDetails ? this.mobileRecorderEventService.setEmptyAction() : ( isClose? this.dialogRef.close(this.reviewSubmittedElement): null );
+    if(isClose && this.options.isStepRecordView){
+      let version=new WorkspaceVersion();
+      version.id=this.versionId;
+      let sendDetails = {
+        versionId: this.versionId,
+        version:version,
+        isNew: true,
+        testCaseId: this.testCaseId,
+        testCaseResultId: this.options.testCaseResultId,
+        isStepRecordView: this.options.isStepRecordView
+      }
+      this.mobileRecorderEventService.suggestionContent.next(Object.assign(sendDetails, {
+        content: this.mobileRecorderEventService.suggestionElement
+      }))
+    }
   }
 
   private chromeExtensionElementCallback(chromeRecorderElement: Element) {

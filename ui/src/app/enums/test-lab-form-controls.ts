@@ -1,4 +1,4 @@
-export enum FormControlsEnum {
+export enum TestLabFormControls {
   AGENT_ID = "agentId",
   BROWSER = "browser",
   CAPABILITIES = "capabilities",

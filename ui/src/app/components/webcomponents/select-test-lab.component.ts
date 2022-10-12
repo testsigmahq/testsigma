@@ -7,7 +7,7 @@ import {TestPlan} from "../../models/test-plan.model";
 import {TestPlanLabType} from "../../enums/test-plan-lab-type.enum";
 import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
 import {TestDevice} from "../../models/test-device.model";
-import {FormControlsEnum} from "../../enums/form-controls.enum";
+import {TestLabFormControls} from "../../enums/test-lab-form-controls";
 
 @Component({
   selector: 'app-select-test-lab',
@@ -136,7 +136,7 @@ export class SelectTestLabComponent implements OnInit {
           labType = TestPlanLabType.TestsigmaLab
         }
       }
-      this.selectTestLabForm.controls[FormControlsEnum.TESTPLAN_LABTYPE].setValue(labType)
+      this.selectTestLabForm.controls[TestLabFormControls.TESTPLAN_LABTYPE].setValue(labType)
     });
   }
   get isNewTestPlan(){

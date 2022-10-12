@@ -170,7 +170,7 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
     File uploadedFile = copyUploadToTempFile(uploadedMultipartFile);
     uploadVersion.setFileSize(uploadedMultipartFile.getSize());
     uploadVersion.setFileName(ObjectUtils.defaultIfNull(uploadedMultipartFile.getOriginalFilename(), "tmp")
-      .replaceAll("\\s+", "_"));
+      .replaceAll("\\+", "_"));
     uploadVersion = this.uploadVersionRepository.save(uploadVersion);
     uploadFile(uploadedFile, uploadVersion);
     return uploadVersion;
@@ -178,7 +178,7 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
 
   private File copyUploadToTempFile(MultipartFile uploadedFile) throws TestsigmaException {
     try {
-      String fileName = uploadedFile.getOriginalFilename().replaceAll("\\s+", "_");
+      String fileName = uploadedFile.getOriginalFilename().replaceAll("\\+", "_");
       String fileBaseName = FilenameUtils.getBaseName(fileName);
       String extension = FilenameUtils.getExtension(fileName);
       if (StringUtils.isNotBlank(extension)) {
@@ -286,7 +286,7 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
   UploadVersion processAfterSave(Optional<UploadVersion> previous, UploadVersion present, UploadVersion toImport, BackupDTO importDTO) {
     try {
       String originalFileName = ObjectUtils.defaultIfNull(present.getFileName(), "tmp")
-              .replaceAll("\\s+", "_");
+              .replaceAll("\\+", "_");
       String downloadPath = Files.createTempDirectory(present.getFileName()).toFile().getAbsolutePath() + "/" + originalFileName;
       client.downloadRedirectFile(toImport.getDownloadURL(), downloadPath, new HashMap<>());
       this.updateUploadWithLatestUploadVersion(present, present.getUploadId());

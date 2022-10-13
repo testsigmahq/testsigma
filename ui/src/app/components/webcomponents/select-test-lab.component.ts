@@ -1,11 +1,13 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {Component, EventEmitter, Input, OnInit, Optional, Output} from '@angular/core';
+import {FormGroup} from '@angular/forms';
 import {IntegrationsService} from "../../shared/services/integrations.service";
 import {Integrations} from "../../shared/models/integrations.model";
 import {WorkspaceVersion} from "../../models/workspace-version.model";
 import {TestPlan} from "../../models/test-plan.model";
 import {TestPlanLabType} from "../../enums/test-plan-lab-type.enum";
 import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
+import {TestDevice} from "../../models/test-device.model";
+import {TestLabFormControls} from "../../enums/test-lab-form-controls";
 
 @Component({
   selector: 'app-select-test-lab',
@@ -112,6 +114,7 @@ export class SelectTestLabComponent implements OnInit {
   @Input('version') version: WorkspaceVersion;
   @Input('testPlan') testPlan: TestPlan;
   @Input('isDry') isDry : boolean;
+  @Optional() @Input('executionEnvironment') executionEnvironment:TestDevice;
   @Output() closeDryRunDialog = new EventEmitter<void>();
 
   public applications: Integrations[];
@@ -124,13 +127,16 @@ export class SelectTestLabComponent implements OnInit {
   ngOnInit(): void {
     this.integrationsService.findAll().subscribe(res => {
       this.applications = res;
+      let labType = TestPlanLabType.Hybrid
       if(this.isNewTestPlan) {
-        if (!this.isTestsigmaLabInstalled) {
-          this.selectTestLabForm.controls['testPlanLabType'].setValue(TestPlanLabType.Hybrid)
-        } else {
-          this.selectTestLabForm.controls['testPlanLabType'].setValue(TestPlanLabType.TestsigmaLab)
+        if(this.executionEnvironment){
+          labType = this.executionEnvironment.testPlanLabType
+        }
+        else if (this.isTestsigmaLabInstalled) {
+          labType = TestPlanLabType.TestsigmaLab
         }
       }
+      this.selectTestLabForm.controls[TestLabFormControls.TESTPLAN_LABTYPE].setValue(labType)
     });
   }
   get isNewTestPlan(){

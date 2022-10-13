@@ -1416,8 +1416,11 @@ public class AgentExecutionService {
           if (stepEntity.getTestCaseSteps() == null) {
             stepEntity.setTestCaseSteps(new ArrayList<>());
           }
-          //TODO: check logic for test step key Generation and recursive logic for step group generation
           if (loopIds.contains(subTestStepDTO.getParentId())) {
+            skipIds.add(subTestStepDTO.getId());
+            continue;
+          } else if (skipIds.contains(subTestStepDTO.getParentId())) {
+            skipIds.add(subTestStepDTO.getId());
             continue;
           }
 

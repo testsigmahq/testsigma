@@ -14,6 +14,7 @@ import {TranslateService} from "@ngx-translate/core";
 import {DevicesService} from "../../../agents/services/devices.service";
 import {TestPlanLabType} from "../../../enums/test-plan-lab-type.enum";
 import {ApplicationPathType} from "../../../enums/application-path-type.enum";
+import {ActiveEnvironmentFormControls} from "../../../enums/active-environment-form-controls";
 
 @Component({
   selector: 'app-test-plan-machine-selection-form',
@@ -101,7 +102,8 @@ export class TestPlanMachineSelectionFormComponent extends BaseComponent impleme
     let testSuites = this.data.testSuites.map(suite => suite.id);
     let prerequisiteTestDevicesId =  environment ? environment.prerequisiteTestDevicesId : this.data?.executionEnvironments[this.data.executionEnvironments.length - 1]?.id;
     let environmentFormGroup = this.formBuilder.group({
-      agentId: new FormControl(environment?.agentId, [this.requiredIfValidator(() => environment?.isHybrid)]),
+      agentId: new FormControl(environment?.agentId, [this.requiredIfValidator(() =>
+        this.activeEnvironmentFormGroup?.controls[ActiveEnvironmentFormControls.TESTPLAN_LAB_TYPE]?.value===TestPlanLabType.Hybrid)]),
       id: new FormControl(environment?.id, []),
       title: new FormControl(environment?.title, [Validators.required, Validators.minLength(4), Validators.maxLength(250)]),
       testPlanLabType: new FormControl(environment?.testPlanLabType || TestPlanLabType.TestsigmaLab, [Validators.required]),

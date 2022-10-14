@@ -19,22 +19,13 @@ import {WorkspaceVersionService} from "../../shared/services/workspace-version.s
             *ngIf="Form && applications?.content"
             class="text-truncate w-20">
             <div class="d-flex position-relative">
-              <span
-                class="position-absolute pt-2"
-                style="z-index: 10;top: 2px"
-                [class.fa-project-website]="this.currentApplication?.isWeb"
-                [class.fa-project-ios]="this.currentApplication?.isIosNative"
-                [class.fa-project-andriod]="this.currentApplication?.isAndroidNative"
-                [class.fa-project-mobile]="this.currentApplication?.isMobileWeb"
-                [class.fa-project-api]="this.currentApplication?.isRest"
-              ></span>
               <app-auto-complete
                 class="pb-2 d-block"
                 [formGroup]="Form"
                 [formCtrlName]="Form.controls['name']"
                 [value]="getCurrentItem(applications, application?.id)"
                 [items]="applications"
-                [hasProjectIcon]="true"
+                [hasApplicationIcon]=true
                 [inline]="true"
                 (onSearch)="fetchApplications($event)"
                 (onValueChange)="switchApplication($event)"

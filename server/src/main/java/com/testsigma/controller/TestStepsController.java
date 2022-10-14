@@ -98,10 +98,7 @@ public class TestStepsController {
   public void bulkDelete(@RequestParam(value = "ids[]") Long[] ids) throws ResourceNotFoundException {
     // [TODO] [Pratheepv] position update is stopping from bulk delete query
     log.debug("DELETE /test_steps/bulk_update_properties with ids::" + Arrays.toString(ids));
-    for (Long id : ids) {
-      TestStep step = this.service.find(id);
-      this.service.destroy(step);
-    }
+    this.service.bulkDelete(ids);
   }
 
   @PutMapping(value = "/bulk_update_properties")

@@ -22,6 +22,8 @@ import {NaturalTextActionsService} from "../../services/natural-text-actions.ser
 import {WorkspaceType} from "../../enums/workspace-type.enum";
 import {AddonNaturalTextAction} from "../../models/addon-natural-text-action.model";
 import {MobileStepRecorderComponent} from "../../agents/components/webcomponents/mobile-step-recorder.component";
+import {InfiniteScrollableDataSource} from "../../data-sources/infinite-scrollable-data-source";
+import {LinkedEntitiesModalComponent} from "../../shared/components/webcomponents/linked-entities-modal.component";
 
 @Component({
   selector: 'app-test-step-list-item',
@@ -88,6 +90,37 @@ export abstract class TestStepListItemComponent extends BaseComponent implements
         }
       });
     })
+  }
+
+  checkForLinkedTestSteps(testStep:TestStep){
+    let testSteps: InfiniteScrollableDataSource;
+    testSteps = new InfiniteScrollableDataSource(this.testStepService, "preRequisiteStepId:"+this.testStep.id);
+    waitTillRequestResponds();
+    let _this = this;
+
+    function waitTillRequestResponds() {
+      if (testSteps.isFetching)
+        setTimeout(() => waitTillRequestResponds(), 100);
+      else {
+        if (testSteps.isEmpty)
+          _this.deleteStep(testStep);
+        else
+          _this.openLinkedTestStepsDialog(testSteps);
+      }
+    }
+  }
+  private openLinkedTestStepsDialog(list) {
+    this.translate.get("step_is_prerequisite_to_another_step").subscribe((res) => {
+      this.matModal.open(LinkedEntitiesModalComponent, {
+        width: '568px',
+        height: 'auto',
+        data: {
+          description: res,
+          linkedEntityList: list,
+        },
+        panelClass: ['mat-dialog', 'rds-none']
+      });
+    });
   }
 
   destroyStep(testStep: TestStep) {

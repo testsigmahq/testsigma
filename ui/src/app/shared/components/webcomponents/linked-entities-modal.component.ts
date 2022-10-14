@@ -2,6 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {TestPlan} from "../../../models/test-plan.model";
 import {TestSuite} from "../../../models/test-suite.model";
+import {TestStep} from "../../../models/test-step.model";
 
 @Component({
   selector: 'app-linked-entities-modal',
@@ -27,5 +28,15 @@ export class LinkedEntitiesModalComponent implements OnInit {
     else
       entityUrl = "/ui/td/cases/" + id + "/steps";
     window.open(window.location.origin + entityUrl, "_blank");
+  }
+
+  get isTestStep(){
+    if (this.modalData.linkedEntityList['cachedItems'][0] instanceof TestStep){
+      return true
+    }
+    return false
+  }
+  public getTextContent(linkedEntity:any){
+    return this.isTestStep ? linkedEntity.action : linkedEntity.name
   }
 }

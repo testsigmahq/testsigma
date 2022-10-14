@@ -1,4 +1,4 @@
-<div class="theme-overlay-container">
+<div class="theme-overlay-container linked-entities-modal">
   <div class="theme-overlay-header">
     <div
       class="theme-overlay-title">
@@ -21,13 +21,23 @@
       <cdk-virtual-scroll-viewport
         class="list-container virtual-scroll-viewport"
         itemSize="27"
-        style="max-height:261px;height:261px">
+        style="max-height:261px;height:261px"
+      >
         <div
           *cdkVirtualFor="let linkedEntity of modalData.linkedEntityList ; let index=index; let first=first"
           [class.border-separator-t-1]="first"
-          class="list-view md-pm green-highlight">
-          <div [textContent]="linkedEntity.name" class="ts-col-50 text-truncate pr-20"></div>
-          <div (click)="openLinkedEntity(linkedEntity.id)" class="ts-col-50 pointer d-flex" target="_blank">
+          class="list-view md-pm green-highlight linked-entities-modal">
+          <div [textContent]="linkedEntity.position"
+               *ngIf="isTestStep"
+               class="result-status-8 list-number ng-binding x-sm-size text-white mtt-0 mr-10"></div>
+          <div [textContent]=getTextContent(linkedEntity)
+               [ngClass]="isTestStep ? 'mt-5':''"
+               class="ts-col-50 text-truncate pr-20"></div>
+<!--          <mat-checkbox-->
+<!--            class="mt-5"-->
+<!--            checked="true"-->
+<!--            *ngIf="isTestStep"></mat-checkbox>-->
+          <div (click)="openLinkedEntity(linkedEntity.id)" *ngIf="!isTestStep" class="ts-col-50 pointer d-flex" target="_blank">
             <span *ngIf="(linkedEntity.workspaceVersionId && !linkedEntity.type)"
               [textContent]="('linked_entities.open_test_suite'|translate)"
               class="pr-20 ts-col-90 text-truncate"></span>

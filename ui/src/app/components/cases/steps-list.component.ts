@@ -260,8 +260,8 @@ export class StepsListComponent extends BaseComponent implements OnInit {
         if (error.status == "400") {
           this.showNotification(NotificationType.Error, error.error);
         } else {
-          this.translate.get("message.common.deleted.failure", {FieldName: 'Test Steps'}).subscribe((res: string) => {
-            this.showNotification(NotificationType.Error, res);
+          this.translate.get("steps.notification.bulk_delete.failure", {FieldName: 'Test Steps'}).subscribe((res: string) => {
+            this.showAPIError(error,res);
           });
         }
       }

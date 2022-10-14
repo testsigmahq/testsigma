@@ -199,7 +199,7 @@ import {MobileRecorderEventService} from "../../services/mobile-recorder-event.s
                 class="action-icon py-10 fa-pencil-on-paper">
               </a>
               <a
-                (click)="deleteStep(testStep)"
+                (click)="checkForLinkedTestSteps(testStep)"
                 href="javascript:void(0);"
                 [matTooltip]="'hint.message.common.delete' | translate"
                 class="action-icon py-10 fa-trash-thin">

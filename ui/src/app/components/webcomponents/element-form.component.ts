@@ -60,6 +60,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
   public isInProgress: Boolean;
   public isElementsChanged:Boolean;
 
+
   constructor(
     public authGuard: AuthenticationGuard,
     public notificationsService: NotificationsService,
@@ -179,8 +180,8 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
     this.elementService.show(this.elementId).subscribe((res: Element) => {
       this.element = res;
       this.element.screenName = res.screenNameObj.name;
-      if (this.element.createdType == ElementCreateType.CHROME)
-        this.startCapture();
+      // if (this.element.createdType == ElementCreateType.CHROME)
+      //   this.startCapture();
       this.addValidations();
     });
   }
@@ -328,6 +329,19 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
     this.chromeRecorderService.elementCallBack = undefined;
     this.chromeRecorderService.stopSpying();
     this.formDetails ? this.mobileRecorderEventService.setEmptyAction() : ( isClose? this.dialogRef.close(this.reviewSubmittedElement): null );
+    if(isClose && this.options.isStepRecordView){
+      let version=new WorkspaceVersion();
+      version.id=this.versionId;
+      let sendDetails = {
+        version:version,
+        isNew: true,
+        testCaseId: this.testCaseId,
+        testCaseResultId: this.options.testCaseResultId,
+        isStepRecordView: this.options.isStepRecordView
+      }
+      this.mobileRecorderEventService.suggestionContent.next(
+        {...sendDetails,content: this.mobileRecorderEventService.suggestionElement})
+    }
   }
 
   private chromeExtensionElementCallback(chromeRecorderElement: Element) {
@@ -343,8 +357,8 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
       }
       this.element = res.content[0];
       this.elementId = this.element.id;
-      if (this.element.createdType == ElementCreateType.CHROME)
-        this.startCapture();
+      // if (this.element.createdType == ElementCreateType.CHROME)
+      //   this.startCapture();
       this.addValidations();
     })
   }
@@ -511,7 +525,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
   }
 
   get isNewUI(){
-    return this.options.isNewUI;
+    return this.workspaceVersion?.workspace?.isWeb || this.workspaceVersion?.workspace?.isMobileWeb;
   }
 
 }

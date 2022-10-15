@@ -12,6 +12,8 @@ export class TestDeviceResult extends ResultBase implements PageObject {
   @serializable
   public id: number;
   @serializable
+  public testPlanLabType: string;
+  @serializable
   public environmentId: number;
   @serializable(object(TestDevice))
   public testDevice: TestDevice;

@@ -219,4 +219,11 @@ export class ActionTestDataRuntimeVariableSuggestionComponent implements OnInit 
     }
   }
 
+  /**
+   * This method returns true if the window is an steprecorder otherwise false
+   */
+  get isStepRecorderView(){
+    return this.option.stepRecorderView;
+  }
+
 }

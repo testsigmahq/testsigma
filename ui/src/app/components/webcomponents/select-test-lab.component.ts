@@ -1,11 +1,13 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {Component, EventEmitter, Input, OnInit, Optional, Output} from '@angular/core';
+import {FormGroup} from '@angular/forms';
 import {IntegrationsService} from "../../shared/services/integrations.service";
 import {Integrations} from "../../shared/models/integrations.model";
 import {WorkspaceVersion} from "../../models/workspace-version.model";
 import {TestPlan} from "../../models/test-plan.model";
 import {TestPlanLabType} from "../../enums/test-plan-lab-type.enum";
 import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
+import {TestDevice} from "../../models/test-device.model";
+import {TestLabFormControls} from "../../enums/test-lab-form-controls";
 
 @Component({
   selector: 'app-select-test-lab',
@@ -88,7 +90,7 @@ import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
             <span [innerHTML]="'test_plan.testsigmalab.requires_access_to_cloud' | translate"></span>
             <a (click)="closeDialog()" [innerHTML]="'message.common.click_here' | translate" [routerLink]="['/settings/testsigma']"></a>
             <a [innerHTML]="'test_plan.testsigmalab.learn_more' | translate"
-               rel="nofollow"
+               rel="noreferrer nofollow"
                href="https://testsigma.com/docs/getting-started/testsigma-community-cloud/" target="_blank"></a>
             <span [innerHTML]="'test_plan.testsigmalab.communityEdition' | translate"></span>
         </div>
@@ -112,6 +114,7 @@ export class SelectTestLabComponent implements OnInit {
   @Input('version') version: WorkspaceVersion;
   @Input('testPlan') testPlan: TestPlan;
   @Input('isDry') isDry : boolean;
+  @Optional() @Input('executionEnvironment') executionEnvironment:TestDevice;
   @Output() closeDryRunDialog = new EventEmitter<void>();
 
   public applications: Integrations[];
@@ -125,11 +128,14 @@ export class SelectTestLabComponent implements OnInit {
     this.integrationsService.findAll().subscribe(res => {
       this.applications = res;
       if(this.isNewTestPlan) {
-        if (!this.isTestsigmaLabInstalled) {
-          this.selectTestLabForm.controls['testPlanLabType'].setValue(TestPlanLabType.Hybrid)
-        } else {
-          this.selectTestLabForm.controls['testPlanLabType'].setValue(TestPlanLabType.TestsigmaLab)
+        let labType = TestPlanLabType.Hybrid
+        if(this.executionEnvironment){
+          labType = this.executionEnvironment.testPlanLabType
         }
+        else if (this.isTestsigmaLabInstalled) {
+          labType = TestPlanLabType.TestsigmaLab
+        }
+        this.selectTestLabForm.controls[TestLabFormControls.TESTPLAN_LABTYPE].setValue(labType)
       }
     });
   }

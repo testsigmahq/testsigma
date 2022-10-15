@@ -309,8 +309,13 @@ export class TestStepFormContainerComponent extends BaseComponent implements OnI
     }
     testStep.stepDisplayNumber = this.indexPosition(false);
     if(testStep.preRequisiteStepId) {
-      this.testSteps.content.find(testStep => testStep.id == this.testStep.preRequisiteStepId)
-        .stepDisplayNumber = this.indexPosition(true);
+      let preRequisiteStep = this.testSteps.content.find(testStep => testStep.id == this.testStep.preRequisiteStepId)
+        if(preRequisiteStep){
+          preRequisiteStep.stepDisplayNumber = this.indexPosition(true);
+        }
+        else {
+          testStep.preRequisiteStepId=null
+        }
     }
     let moreOption = this.matDialog.open(TestStepMoreActionFormComponent, {
       backdropClass: 'cdk-overlay-transparent-backdrop',
@@ -353,7 +358,7 @@ export class TestStepFormContainerComponent extends BaseComponent implements OnI
     } else {
       testStep = this.testStep;
     }
-    if(testStep.stepDisplayNumber)
+    if(testStep?.stepDisplayNumber)
       return testStep.stepDisplayNumber;
     if (testStep?.id) {
         return this.testSteps?.content?.findIndex(step => step.id == testStep.id) + 1;

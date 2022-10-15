@@ -220,7 +220,7 @@ public abstract class TestcaseStepRunner {
 
       boolean majorFailure = (status != ResultConstant.SUCCESS && status != ResultConstant.ABORTED) &&
         (testCaseStepEntity.getPriority() == TestStepPriority.MAJOR &&
-          testPlanRunSettingEntity.getRecoveryAction() == RecoverAction.Run_Next_Testcase);
+          testPlanRunSettingEntity.getRecoveryAction() == RecoverAction.Run_Next_Testcase && testPlanRunSettingEntity.getOnStepPreRequisiteFail() !=RecoverAction.Run_Next_Step);
       boolean hasToAbortTestcase = (majorFailure && !isGroupStep && !isStepGroup);
 
       if (!testCaseStepResult.getSkipExe() && hasToAbortTestcase) {

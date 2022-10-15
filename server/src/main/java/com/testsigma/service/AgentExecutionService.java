@@ -568,7 +568,7 @@ public class AgentExecutionService {
     if (testDevice.getPlatformOsVersionId() != null) {
       PlatformOsVersion platformOsVersion = platformsService.getPlatformOsVersion(testDevice.getPlatformOsVersionId(), exeLabType);
       settings.setPlatform(platformOsVersion.getPlatform());
-      settings.setOsVersion(platformOsVersion.getPlatformVersion());
+      settings.setOsVersion(platformOsVersion.getVersion());
     }
     if (exeLabType == TestPlanLabType.Hybrid || exeLabType == TestPlanLabType.PrivateGrid) {
       settings.setBrowser(testDevice.getBrowser());
@@ -1171,7 +1171,7 @@ public class AgentExecutionService {
 
   protected void appendPreSignedURLs(List<TestCaseStepEntityDTO> executableList, TestCaseEntityDTO testCaseEntity,
                                        TestDevice testDevice, boolean isWhileLoop, Long stepGroupStepID, TestCaseStepEntityDTO parentGroupEntity)
-    throws ResourceNotFoundException {
+          throws ResourceNotFoundException, MalformedURLException {
     Calendar cal = Calendar.getInstance();
     cal.add(Calendar.HOUR, 10);
     stepGroupStepID = (stepGroupStepID == null) ? 0 : stepGroupStepID;
@@ -1235,7 +1235,7 @@ public class AgentExecutionService {
     testCaseStep.setAdditionalScreenshotPaths(additionalScreenshotPaths);
   }
 
-  private void handleUploadActionStep(TestCaseStepEntityDTO testCaseStepEntity, StorageService storageService, TestDevice testDevice) {
+  private void handleUploadActionStep(TestCaseStepEntityDTO testCaseStepEntity, StorageService storageService, TestDevice testDevice) throws MalformedURLException {
     if (testCaseStepEntity.getAction() != null && testCaseStepEntity.getAction().toLowerCase().contains("upload")
       && testCaseStepEntity.getNaturalTextActionId() != null && (testCaseStepEntity.getNaturalTextActionId().equals(969)
       || testCaseStepEntity.getNaturalTextActionId().equals(10150))) {
@@ -1243,7 +1243,7 @@ public class AgentExecutionService {
     }
   }
 
-  private void handleInstallApp(TestCaseStepEntityDTO testCaseStepEntity, StorageService storageService, TestDevice testDevice) {
+  private void handleInstallApp(TestCaseStepEntityDTO testCaseStepEntity, StorageService storageService, TestDevice testDevice) throws MalformedURLException {
     if (testCaseStepEntity.getAction() != null && testCaseStepEntity.getAction()
       .toLowerCase().contains("installApp".toLowerCase()) && (testCaseStepEntity.getNaturalTextActionId() != null)
       && (testCaseStepEntity.getNaturalTextActionId().equals(20003) || testCaseStepEntity.getNaturalTextActionId().equals(30003))) {
@@ -1251,11 +1251,16 @@ public class AgentExecutionService {
     }
   }
 
-  private void handleFileActionStep(TestCaseStepEntityDTO testCaseStepEntity, StorageService storageService, TestDevice testDevice) {
+  private void handleFileActionStep(TestCaseStepEntityDTO testCaseStepEntity, StorageService storageService, TestDevice testDevice) throws MalformedURLException {
     com.testsigma.automator.entity.TestDataPropertiesEntity testDataPropertiesEntity = testCaseStepEntity.getTestDataMap().get(
       testCaseStepEntity.getTestDataMap().keySet().stream().findFirst().get());
-    String fileUrl = testDataPropertiesEntity.getTestDataValue().replace("testsigma-storage://", "");
-    URL newUrl = storageService.generatePreSignedURL(fileUrl, StorageAccessLevel.READ, 180);
+    URL newUrl;
+    if(testDataPropertiesEntity.getTestDataValue().startsWith("http")) {
+      newUrl = new URL(testDataPropertiesEntity.getTestDataValue());
+    } else {
+      String fileUrl = testDataPropertiesEntity.getTestDataValue().replace("testsigma-storage:/", "");
+      newUrl = storageService.generatePreSignedURL(fileUrl, StorageAccessLevel.READ, 180);
+    }
     if(TestPlanLabType.TestsigmaLab == testDevice.getTestPlanLabType()) {
       try {
         newUrl = new URL(newUrl.toString().replace(applicationConfig.getServerUrl(), applicationConfig.getServerLocalUrl()));
@@ -1367,12 +1372,18 @@ public class AgentExecutionService {
                                                             String dataProfile, Map<Long, Integer> dataSetIndex) throws Exception {
 
     List<Long> loopIds = new ArrayList<>();
+    List<Long> skipIds = new ArrayList<>();
     List<TestCaseStepEntityDTO> toReturn = new ArrayList<>();
     for (TestStepDTO testStepDTO : testStepDTOS) {
 
       if (loopIds.contains(testStepDTO.getParentId())) {
+        skipIds.add(testStepDTO.getId());
+        continue;
+      } else if (skipIds.contains(testStepDTO.getParentId())) {
+        skipIds.add(testStepDTO.getId());
         continue;
       }
+
 
       if (testStepDTO.getType() == TestStepType.FOR_LOOP) {
         loopIds.add(testStepDTO.getId());
@@ -1405,8 +1416,11 @@ public class AgentExecutionService {
           if (stepEntity.getTestCaseSteps() == null) {
             stepEntity.setTestCaseSteps(new ArrayList<>());
           }
-          //TODO: check logic for test step key Generation and recursive logic for step group generation
           if (loopIds.contains(subTestStepDTO.getParentId())) {
+            skipIds.add(subTestStepDTO.getId());
+            continue;
+          } else if (skipIds.contains(subTestStepDTO.getParentId())) {
+            skipIds.add(subTestStepDTO.getId());
             continue;
           }
 

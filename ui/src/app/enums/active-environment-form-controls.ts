@@ -1,0 +1,23 @@
+export enum ActiveEnvironmentFormControls {
+  AGENT_ID="agentId",
+  ID="id",
+  TITLE="title",
+  TESTPLAN_LAB_TYPE="testPlanLabType",
+  WORKSPACE_VERSION_ID="workspaceVersionId",
+  PREREQUISITE_TESTDEVICES_ID="prerequisiteTestDevicesId",
+  PREREQUISITE_TESTDEVICES_ID_INDEX="prerequisiteTestDevicesIdIndex",
+  DEVICE_ID="deviceId",
+  CREATED_SESSION_AT_CASE_LEVEL="createSessionAtCaseLevel",
+  SUITE_IDS="suiteIds",
+  PLATFORM_OS_VERSION_ID="platformOsVersionId",
+  PLATFORM_BROWSER_VERSION_ID="platformBrowserVersionId",
+  PLATFORMS_SCREEN_RESOLUTION_ID="platformScreenResolutionId",
+  PLATFORM_DEVICE_ID="platformDeviceId",
+  PLATFORM="platform",
+  OS_VERSION="osVersion",
+  BROWSER="browser",
+  BROWSER_VERSION="browserVersion",
+  RESOLUTION="resolution",
+  DEVICE_NAME="deviceName",
+  CAPABILITES="capabilities"
+}

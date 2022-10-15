@@ -71,7 +71,8 @@
     </div>
 
     <!-- List Items-->
-    <div class="list-container h-75">
+    <div class="list-container "
+    [ngClass]="isStepRecorderView ? 'h-30' : 'h-75'">
       <cdk-virtual-scroll-viewport
         class="list-container virtual-scroll-viewport h-100"
         [itemSize]="46">

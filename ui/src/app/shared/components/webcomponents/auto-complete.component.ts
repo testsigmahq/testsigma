@@ -23,7 +23,9 @@ import {TestPlanLabType} from '../../../enums/test-plan-lab-type.enum';
         class="switcher-icon fa-{{this.projectIcon}}"  *ngIf="hasProjectIcon"></i>
       <i
         [class.icon-top]="isNativeIcons"
-        class="switcher-icon fa-{{this.applicationIcon}}" *ngIf="hasApplicationIcon"></i>
+        class="switcher-icon z-in-10 fa-{{this.applicationIcon}}" *ngIf="hasApplicationIcon"
+      [style]="'top:-4px;left:-5px'">
+      </i>
       <input
         type="text" readonly [class.pl-20]="hasProjectIcon || hasApplicationIcon"
              [value]="noneValue ? 'None' : value?.name"
@@ -183,7 +185,7 @@ export class AutoCompleteComponent implements OnInit {
     if(this.hasProjectIcon){
       this.projectIcon = this.setProjectIcon(this.value);
     } else if(this.hasApplicationIcon){
-      this.applicationIcon = this.setIcons(this.value['workspaceType']);
+      this.applicationIcon =this.setIcons(this.value['workspaceType']);
     }
   }
 

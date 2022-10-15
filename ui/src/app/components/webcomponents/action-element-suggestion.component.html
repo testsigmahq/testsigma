@@ -14,6 +14,7 @@
       (click)="closeSuggestion()">
     </button>
   </div>
+  <div module="ui-identifier-popup">
     <mat-tab-group animationDuration="0ms" class="tab-group-row  ui-identifier-tab" *ngIf="isNewUI">
       <mat-tab [label]="'agents.mobile.inspection.inspection_mode' | translate">
         <ng-container *ngTemplateOutlet="elselector"></ng-container>
@@ -25,6 +26,7 @@
         ></app-element-form>
       </mat-tab>
     </mat-tab-group>
+  </div>
   <button
     *ngIf="isNewUI"
     class="theme-overlay-close position-absolute right-10 z-in-3"
@@ -37,9 +39,15 @@
 </div>
 <ng-template #elselector>
   <div class="identifier-record text-center" *ngIf="elements?.isEmpty && !isQueryBased && !elements?.isFetching">
+    <div class="pt-10 pb-10">
+      <div [translate]="'create_element.start.title'" class="fz-14 pb-10"></div>
+      <button class="btn theme-btn-primary" (click)="openElementForm(searchText)">
+        <span [textContent]="'+ ' +('element.form.create_title' | translate)"></span>
+      </button>
+    </div>
     <div class="identifier-bg px-60 py-20">
       <div [translate]="'create_element.record.title'" class="fz-20 rb-medium py-20"></div>
-      <div class="" *ngIf="workspaceVersion?.workspace?.isWebMobile">
+      <div class="" *ngIf="elements?.isEmpty">
         <div
           *ngIf="!showVideo"
           class="d-flex align-items-center justify-content-center w-100 theme-border border-rds-12 bg-white pointer" style="height: 300px; color: red">
@@ -158,6 +166,13 @@
             class="reset sm"></i>
         </span>
         </div>
+      </div>
+      <div
+        *ngIf="!elementSuggestion && !isNewUI"
+        class="ml-auto d-flex mb-10">
+        <button class="btn theme-btn-primary" (click)="openElementForm()">
+          <span [textContent]="'+ ' +('element.form.create_title' | translate)"></span>
+        </button>
       </div>
       <div
         [class.list-header]="!elementSuggestion"

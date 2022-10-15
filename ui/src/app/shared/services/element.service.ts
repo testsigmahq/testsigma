@@ -98,7 +98,7 @@ export class ElementService implements FilterableDataSourceService {
 
   bulkUpdateScreenNameAndTag(ids: number[], screenName: string, tags: string[]) {
     let params = new HttpParams().set("ids[]", ids.toString())
-                                 .set("screenName", screenName)
+                                 .set("screenName", (screenName != undefined  && screenName) ? screenName : '');
     return this.http.put<Element>(this.URLConstants.elementURL + "/bulk_update" , tags,
       {
         headers: this.httpHeaders.contentTypeApplication,

@@ -7,8 +7,6 @@ import {AgentDevice} from "../../agents/models/agent-device.model";
 import {DevicesService} from "../../agents/services/devices.service";
 import {PlatformService} from "../../agents/services/platform.service";
 import {Browser} from "../../agents/models/browser.model";
-import {PlatformOsVersion} from "../../agents/models/platform-os-version.model";
-import {TestDeviceSettings} from "../../models/test-device-settings.model";
 import {TestDeviceResult} from "../../models/test-device-result.model";
 import {Platform} from "../../enums/platform.enum";
 import {TestPlanLabType} from "../../enums/test-plan-lab-type.enum";
@@ -20,14 +18,14 @@ import {WorkspaceVersionService} from "../../shared/services/workspace-version.s
     <div class="details-items pl-50 pr-20">
       <div class="align-items-center d-flex justify-content-start flex-wrap mb-10">
         <span class="mr-5" style="height: 20px;width: 20px;"
-              [class.testsigma-lab-logo]="testDevice.isTestsigmaLab"
+              [class.testsigma-lab-logo]="isTestsigmaLab"
               [class.testsigma-local-devices-logo]="isHybrid"
                 [class.grid]="isPrivateGrid">
         </span>
         <span
           class="rb-medium"
           [translate]="'execution.lab_type.'+
-            testDevice?.testPlanLabType" *ngIf="!isHybrid || !agent"></span>
+            environmentResult.testPlanLabType" *ngIf="!isHybrid || !agent"></span>
         <a class="text-link"
            [routerLink]="['/agents', agent.id]" [textContent]="agent.title" *ngIf="isHybrid && agent"></a>
       </div>
@@ -37,16 +35,16 @@ import {WorkspaceVersionService} from "../../shared/services/workspace-version.s
                         [textContent]="agentDevice.name"></span>
           <span class="mr-5 sm" style="height: 14px"
                 *ngIf="!agentDevice"
-                [class.windows]="testDevice?.isWindows"
-                [class.apple]="testDevice?.isMac||testDevice?.isIOS"
-                [class.android]="testDevice?.isAndroid"
-                [class.linux]="testDevice?.isLinux"></span>
+                [class.windows]="isWindows"
+                [class.apple]="isMac||isIOS"
+                [class.android]="isAndroid"
+                [class.linux]="isLinux"></span>
           <span
             class="pr-8"
-            [textContent]="isHybrid && agentDevice ? 'V. ' +agentDevice.osVersion : testDevice?.formattedOsVersion"></span>
+            [textContent]="isHybrid && agentDevice ? 'V. ' +agentDevice.osVersion : environmentResult?.testDeviceSettings.formattedOsVersion"></span>
           <span
             class="mr-5 sm" style="height: 14px"
-            [class.fa-mobile-alt-solid]="!isMobileNative && testDevice?.deviceName && (testDevice?.isIOS || testDevice?.isAndroid)"></span>
+            [class.fa-mobile-alt-solid]="!isMobileNative && testDevice?.deviceName && (isIOS || isAndroid)"></span>
           <span
             *ngIf="!isMobile"
             class="mr-5 sm" style="height: 14px"
@@ -146,7 +144,41 @@ export class LabEnvironmentScreenShortInfoComponent implements OnInit {
   }
 
   get isHybrid() {
-    return this.testDevice?.isHybrid;
+    if (this.environmentResult.testPlanLabType==TestPlanLabType.Hybrid){
+      return true;
+    }
+  }
+
+  get isWindows(){
+    if(this.environmentResult.testDeviceSettings.platform==Platform.Windows){
+      return true
+    }
+  }
+  get isMac(){
+    if(this.environmentResult.testDeviceSettings.platform==Platform.Mac){
+      return true
+    }
+  }
+  get isLinux(){
+    if(this.environmentResult.testDeviceSettings.platform==Platform.Linux){
+      return true
+    }
+  }
+  get isIOS(){
+    if(this.environmentResult.testDeviceSettings.platform==Platform.iOS){
+      return true
+    }
+  }
+  get isAndroid(){
+    if(this.environmentResult.testDeviceSettings.platform==Platform.Android){
+      return true
+    }
+  }
+
+  get isTestsigmaLab(){
+    if (this.environmentResult.testPlanLabType==TestPlanLabType.TestsigmaLab){
+      return true;
+    }
   }
 
   get isPrivateGrid() {

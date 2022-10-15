@@ -127,16 +127,16 @@ export class SelectTestLabComponent implements OnInit {
   ngOnInit(): void {
     this.integrationsService.findAll().subscribe(res => {
       this.applications = res;
-      let labType = TestPlanLabType.Hybrid
       if(this.isNewTestPlan) {
+        let labType = TestPlanLabType.Hybrid
         if(this.executionEnvironment){
           labType = this.executionEnvironment.testPlanLabType
         }
         else if (this.isTestsigmaLabInstalled) {
           labType = TestPlanLabType.TestsigmaLab
         }
+        this.selectTestLabForm.controls[TestLabFormControls.TESTPLAN_LABTYPE].setValue(labType)
       }
-      this.selectTestLabForm.controls[TestLabFormControls.TESTPLAN_LABTYPE].setValue(labType)
     });
   }
   get isNewTestPlan(){

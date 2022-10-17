@@ -17,14 +17,14 @@ import {TestPlanLabType} from '../../../enums/test-plan-lab-type.enum';
       [class.sm]="inline"
       [formGroup]="formGroup"
       [appearance]="inline ? 'fill': 'outline'" (click)="groupTrigger.openPanel();focusOnMatSelectSearch()">
-      <div>
+      <div class="d-flex align-items-center">
       <i
         [class.icon-top]="isNativeIcons"
         class="switcher-icon fa-{{this.projectIcon}}"  *ngIf="hasProjectIcon"></i>
       <i
         [class.icon-top]="isNativeIcons"
-        class="switcher-icon z-in-10 fa-{{this.applicationIcon}}" *ngIf="hasApplicationIcon"
-      [style]="'top:-4px;left:-5px'">
+        class="switcher-icon z-in-10 left-n5 fa-{{this.applicationIcon}}" *ngIf="hasApplicationIcon"
+      [ngClass]="this.applicationIcon=='project-website' ? 'top-n1':'top-n4'">
       </i>
       <input
         type="text" readonly [class.pl-20]="hasProjectIcon || hasApplicationIcon"

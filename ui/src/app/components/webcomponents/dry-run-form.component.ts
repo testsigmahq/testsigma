@@ -153,7 +153,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
         this.formBuilder.group({
           agentId : new FormControl(this.testPlan.testDevices[0].agentId, [this.requiredIfValidator(() => this.isHybrid)]),
           deviceId: new FormControl(this.testPlan.testDevices[0]?.deviceId, [this.requiredIfValidator(() => this.isHybrid && this.version?.workspace.isMobile)]),
-          platformOsVersionId :new FormControl(this.testPlan.testDevices[0].platformOsVersionId,  [this.requiredIfValidator(() => !this.isRest && !this.isHybrid && !this.isPrivateGrid)]),
+          platformOsVersionId :new FormControl(this.testPlan.testDevices[0].platformOsVersionId,  [this.requiredIfValidator(() => !this.isRest && this.isHybrid && !this.isPrivateGrid)]),
           platformScreenResolutionId : new FormControl(this.testPlan.testDevices[0].platformScreenResolutionId, [this.requiredIfValidator(() => this.version?.workspace.isWeb && !this.isHybrid && !this.isPrivateGrid)]),
           platformBrowserVersionId :new FormControl(this.testPlan.testDevices[0].platformBrowserVersionId, [this.requiredIfValidator(() => !this.version?.workspace.isMobile && !this.isRest && !this.isHybrid && !this.isPrivateGrid)]),
           platformDeviceId : new FormControl(this.testPlan.testDevices[0].platformDeviceId,  [this.requiredIfValidator(() => !this.version?.workspace.isWeb && !this.isRest && !this.isHybrid && !this.isPrivateGrid)]),
@@ -348,9 +348,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
     if (this.testPlan.isHybrid){
       environment.platformBrowserVersionId=null;
       environment.platformDeviceId = null;
-      environment.platformOsVersionId= null;
       environment.platformScreenResolutionId = null;
-      environment.platform=null;
     }
     if (!this.testPlan.isHybrid && !this.testPlan.isPrivateLab) {
       environment.agentId = null;

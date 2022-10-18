@@ -40,17 +40,17 @@ public interface TestDataProfileMapper {
 
   List<TestDataProfileDTO> mapToDTO(List<TestData> testData);
 
+  @Mapping(target="tempTestData", expression = "java(mapDataSet(request.getData()))")
   TestData map(TestDataProfileRequest request);
+
+  List<TestDataSetDTO> mapToDtos(List<TestDataSet> testDataSets);
 
   @Mapping(target = "data", expression = "java(testDataSetXMLDTO.getData())")
   TestDataSet map(TestDataSetXMLDTO testDataSetXMLDTO) throws JsonProcessingException;
 
-  @Mapping(target = "data", expression = "java(testDataSetXMLDTO.getData())")
-  TestDataSet map2(TestDataSetCloudXMLDTO testDataSetXMLDTO) throws JsonProcessingException;
-
   List<TestDataSet> map(List<TestDataSetXMLDTO> testDataSetXMLDTO);
 
- List<TestDataSet> map2(List<TestDataSetCloudXMLDTO> testDataSetXMLDTO);
+  List<TestDataSet> map2(List<TestDataSetCloudXMLDTO> testDataSetXMLDTO);
 
   default Map<String, TestDataSet> map(TestData testData) {
     Map<String, TestDataSet> testDataSetMap = new HashMap<>();
@@ -99,7 +99,7 @@ public interface TestDataProfileMapper {
     if (testDataProfileRequest.getData() != null) {
       sets = mapDataSet(testDataProfileRequest.getData());
     }
-    testData.setData(sets);
+    testData.setTempTestData(sets);
     testData.setRenamedColumns(testDataProfileRequest.getRenamedColumns());
   }
 

@@ -175,7 +175,7 @@ public class TestDataImportService implements RowAdapter {
         List<String> columns = convertColumnTypeToString(columnNames.get(0));
         testData.setTestDataName(name);
         testData.setVersionId(versionId);
-        testData.setData(testDataSetList);
+        testData.setTempTestData(testDataSetList);
         if (passwords.size() > 0) {
             testData.setPasswords(passwords);
             testData = service.encryptPasswords(testData);

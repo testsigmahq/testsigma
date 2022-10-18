@@ -109,6 +109,8 @@ public interface TestStepRepository extends JpaRepository<TestStep, Long> {
     Optional<TestStep> findByTestCaseIdInAndImportedId(List<Long> id, Long id1);
 
     List<TestStep> findAllByTestCaseIdInOrderByPositionAsc(List<Long> testCaseIds);
+    List<TestStep> findAllByTestCaseIdAndPreRequisiteStepId(Long testCaseId,Long prerequisiteId);
+    List<TestStep> findAllByTestCaseIdAndPreRequisiteStepIdNotNull(Long testCaseId);
 
   Optional<TestStep> findAllByTestCaseIdAndImportedId(Long workspaceVersionId, Long importedId);
 }

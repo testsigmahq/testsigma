@@ -2106,5 +2106,6 @@
   "step_result.element": "Element",
   "nlp.element.screen.name.suggestion.placeholder": "Search Using Screen Name",
   "nlp.element.suggestion.placeholder": "Search in Elements by Name",
-  "element.form.create_title": "Create Element"
+  "element.form.create_title": "Create Element",
+  "steps.remove.prerequisites": "please remove following mappings"
 }

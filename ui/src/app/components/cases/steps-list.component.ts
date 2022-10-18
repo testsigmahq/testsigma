@@ -32,6 +32,9 @@ import {TestStepConditionType} from "../../enums/test-step-condition-type.enum";
 import {StepActionType} from "../../enums/step-action-type.enum";
 import {ApplicationPathType} from "../../enums/application-path-type.enum";
 import {ToastrService} from "ngx-toastr";
+import {InfiniteScrollableDataSource} from "../../data-sources/infinite-scrollable-data-source";
+import {LinkedEntitiesModalComponent} from "../../shared/components/webcomponents/linked-entities-modal.component";
+import {PageObject} from "../../shared/models/page-object";
 
 @Component({
   selector: 'app-steps-list',
@@ -245,6 +248,33 @@ export class StepsListComponent extends BaseComponent implements OnInit {
           this.bulkDestroy();
       });
     })
+  }
+
+  checkForLinkedTestSteps(){
+    this.testStepService.checkForLinkedTestSteps(this.selectedStepsList).subscribe(res=>{
+      if(res.content.length==0){
+        this.bulkDeleteConfirm()
+      }
+      else {
+        let list = new InfiniteScrollableDataSource();
+        list.cachedItems=list.cachedItems.concat(res.content);
+        list.dataStream.next(list.cachedItems);
+        this.openLinkedTestStepsDialog(list)
+      }
+    })
+  }
+  private openLinkedTestStepsDialog(list) {
+    this.translate.get("step_is_prerequisite_to_another_step").subscribe((res) => {
+      this.matDialog.open(LinkedEntitiesModalComponent, {
+        width: '568px',
+        height: 'auto',
+        data: {
+          description: res,
+          linkedEntityList: list,
+        },
+        panelClass: ['mat-dialog', 'rds-none']
+      });
+    });
   }
 
   bulkDestroy() {

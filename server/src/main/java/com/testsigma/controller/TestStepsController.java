@@ -124,4 +124,12 @@ public class TestStepsController {
       this.service.update(step);
     }
   }
+
+  @GetMapping("/linked_test_steps")
+  public Page<TestStepDTO> indexTestStepsLinkedToPrerequisiteIds(@RequestParam(value = "ids[]") Long[] ids,
+                                                @PageableDefault(size = Integer.MAX_VALUE) Pageable pageable) throws ResourceNotFoundException {
+    List<TestStepDTO> testSteps = this.service.indexTestStepsLinkedToPrerequisiteIds(ids);
+    return new PageImpl<>(testSteps,pageable,testSteps.size());
+  }
+
 }

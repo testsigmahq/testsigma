@@ -381,8 +381,9 @@ export abstract class TestCaseStepsListComponent extends BaseComponent implement
   }
 
   private check() {
-    if(this.chromeRecorderService.isInstalled)
+    if(this.chromeRecorderService.isInstalled){
       this.chromeRecorderService.stepListCallBackContext = this;
+    }
     this.chromeRecorderService.stepListCallBack = this.callBack;
   }
   private callBack(steps: Page<TestStep>) {

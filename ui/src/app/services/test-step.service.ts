@@ -90,6 +90,16 @@ export class TestStepService {
     );
   }
 
+  public checkForLinkedTestSteps(steps:TestStep[]): Observable<Page<TestStep>>{
+    return this.http.get<Page<TestStep>>(this.URLConstants.linkedTestSteps,{
+      headers: this.httpHeaders.contentTypeApplication,
+      params: steps.map(step => step.id).reduce((p, id) => p.append('ids[]', id.toString()), new HttpParams())
+    }).pipe(
+      map(data => new Page<TestStep>().deserialize(data, TestStep)),
+      catchError((error) => throwError(error))
+    );
+  }
+
   public bulkUpdateProperties(steps: TestStep[], priority?: TestStepPriority, waitTime?: number,disable?:Boolean, ignoreStepResult?:Boolean,visualEnabled?:Boolean): Observable<void> {
     let params = steps.map(step => step.id).reduce((p, id) => p.append('ids[]', id.toString()), new HttpParams());
     if (priority)

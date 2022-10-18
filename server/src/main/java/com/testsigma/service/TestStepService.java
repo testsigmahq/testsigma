@@ -32,10 +32,8 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -578,39 +576,38 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         return actionsMap;
     }
     public void bulkDelete(Long[] ids) throws ResourceNotFoundException {
-        Boolean allIdsDeleted = true;
-        Long testCaseId = this.find(ids[0]).getTestCaseId();
-        List<Long> idsList=Arrays.asList(ids);
-        TestStepSpecificationsBuilder builder = new TestStepSpecificationsBuilder();
-        for(Long id:ids){
-            List<SearchCriteria> params=new ArrayList<>();
-            params.add(new SearchCriteria("preRequisiteStepId",SearchOperation.EQUALITY,id));
-            params.add(new SearchCriteria("testCaseId",SearchOperation.EQUALITY,testCaseId));
-            builder.setParams(params);
-            Specification<TestStep> specification = builder.build();
-            Boolean check= checkBulkDeleteStepsHaveAllPrerequisiteSteps(idsList,specification);
-            if(check){
-                this.destroy(this.find(id));
+        for (Long id:ids){
+              this.destroy(this.find(id));
             }
-            else {
-                allIdsDeleted=false;
-            }
-            if (!allIdsDeleted) {
-                throw new DataIntegrityViolationException("dataIntegrityViolationException: Failed to delete some of the Steps " +
-                        "since they are already associated as Prerequisite to some Test Steps.");
-            }
-        }
     }
 
-    private Boolean checkBulkDeleteStepsHaveAllPrerequisiteSteps(List<Long> ids,Specification<TestStep> specification){
-        Page<TestStep> testStepPage=this.findAll(specification,PageRequest.of(0,50));
-        List<TestStep> testSteps = testStepPage.getContent();
-        for (TestStep testStep:testSteps){
+    private Boolean checkBulkDeleteStepsHaveAllPrerequisiteSteps(List<Long> ids,List<TestStep> testStepList){
+        for (TestStep testStep:testStepList){
             if(!ids.contains(testStep.getId())){
                 return false;
             }
         }
         return true;
+    }
+
+    public List<TestStepDTO> indexTestStepsLinkedToPrerequisiteIds(Long[] testStepsIds) throws ResourceNotFoundException {
+        Long testCaseId = this.find(testStepsIds[0]).getTestCaseId();
+        List<TestStepDTO> testSteps = new ArrayList<>();
+        List<Long> idsList=Arrays.asList(testStepsIds);
+        int index=0;
+        for(Long id: testStepsIds) {
+            List<TestStep> testStepList= this.repository.findAllByTestCaseIdAndPreRequisiteStepId(testCaseId,id);
+            if(!testStepList.isEmpty() && !checkBulkDeleteStepsHaveAllPrerequisiteSteps(idsList,testStepList)){
+                TestStep mainStep = this.find(id);
+                TestStepDTO testStepDTO = this.exportTestStepMapper.mapDTO(mainStep);
+                testStepDTO.setPreRequisiteStepId(null);
+                testSteps.add(index++,testStepDTO);
+                for(TestStep testStep:testStepList){
+                    testSteps.add(index++,this.exportTestStepMapper.mapDTO(testStep));
+                }
+            }
+        }
+        return testSteps;
     }
 }
 

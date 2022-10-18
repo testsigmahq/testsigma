@@ -23,6 +23,9 @@ import java.util.List;
   nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface TestStepMapper {
   List<TestStepXMLDTO> mapTestSteps(List<TestStep> testSteps);
+  List<TestStepDTO> mapTestStepsToDTO(List<TestStep> testSteps);
+  TestStep map(TestStepDTO testStepDTO);
+
 
   @Mapping(target = "addonTestData", expression = "java(testStep.getAddonTestData())")
   @Mapping(target = "addonElements", expression = "java(testStep.getAddonElements())")

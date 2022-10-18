@@ -52,6 +52,7 @@ export class UrlConstantsService {
   public stepGroupFilterUrl = this.apiBase + '/step_group_filters';
   public scheduledPlanUrl = this.apiBase + '/schedule_test_plans';
   public testStepsUlr = this.apiBase + '/test_steps';
+  public linkedTestSteps = this.testStepsUlr +'/linked_test_steps';
   public suggestionEngineUrl = this.apiBase + "/suggestion_results";
   public testDataFunctionsUrl = this.apiBase + "/default_data_generators";
   public testSuitesUrl= this.apiBase+"/test_suites";

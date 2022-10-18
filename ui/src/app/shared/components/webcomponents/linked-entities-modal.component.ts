@@ -30,6 +30,10 @@ export class LinkedEntitiesModalComponent implements OnInit {
     window.open(window.location.origin + entityUrl, "_blank");
   }
 
+  /**
+   * Returns a boolean value true when linkedentiry list is an instance of Teststeps
+   * @returns boolean
+   */
   get isTestStep(){
     if (this.modalData.linkedEntityList['cachedItems'][0] instanceof TestStep){
       return true

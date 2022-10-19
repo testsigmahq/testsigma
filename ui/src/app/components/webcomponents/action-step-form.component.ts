@@ -1309,8 +1309,8 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       isStepRecordView: this.stepRecorderView,
       isNewUI:isNewUI,
       previousStepElementName:  this.getPreviousStepElement(),
-      currentStepElementName: this.getCurrentStepElement(targetElement)
-
+      currentStepElementName: this.getCurrentStepElement(targetElement),
+      doRefresh: true,
     };
     if(targetElement)
       this.mobileRecorderEventService.currentlyTargetElement = targetElement;

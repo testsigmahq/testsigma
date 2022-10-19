@@ -43,7 +43,7 @@ export class ChromeRecorderService {
   public stepListCallBack;
   public stepListCallBackContext: TestCaseStepsListComponent;
   public isChrome: Boolean = false;
-  public isStepRecording: Boolean = false;
+  public isStepRecorder: Boolean = false;
   public messageEvent: MessageEvent;
   public recorderStepList: Page<TestStep>;
   public recorderTestCase: TestCase;
@@ -75,8 +75,8 @@ export class ChromeRecorderService {
       this.messageEvent = event;
       if (this.isInstalledEvent) {
         this.isInstalled = true;
-      } else if (this.isStoppedRecorder) {
-        this.isStepRecording = false;
+      } else if (this.isStoppedRecorder && this.isStepRecorder) {
+        this.isStepRecorder = false;
         if(!event.data.isUiIdentifierRecorder)
           this.stepListCallBack.apply(this.stepListCallBackContext, [])
         if(this.multiElementCallBack)
@@ -210,7 +210,7 @@ export class ChromeRecorderService {
         this.recorderTestCase.startUrl = undefined;
       }
 
-      this.isStepRecording = true;
+      this.isStepRecorder = true;
       this.startRecording()
     });
   }

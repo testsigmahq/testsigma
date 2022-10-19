@@ -140,7 +140,7 @@ export class BaseComponent implements OnInit {
     let returnData = [],
       keys =[];
     query?.split(',')?.forEach(item => {
-      let operatorIndex = item.match(/!|~|:|;|>|<|@|\$/).index;
+      let operatorIndex = item.match(/!|~|:|;|>|<|@|\$/)?.index;
       let searchValue = item.slice(operatorIndex+1);
       let searchKeyWithOperator = item.slice(0,operatorIndex+1);
       if(keys.indexOf(item.slice(0,operatorIndex))>-1) return;

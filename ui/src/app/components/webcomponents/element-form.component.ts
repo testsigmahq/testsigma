@@ -37,6 +37,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
   @ViewChild('submitReviewButton') public submitReviewButton: ElementRef;
   @Optional() @Input('formDetails') formDetails;
   @Optional() @Input('isFullScreen') isFullScreen:boolean;
+  @Optional() @Input('doRefresh') doRefresh: boolean;
   public control = new FormControl();
   public workspaceVersion: WorkspaceVersion;
   public element: Element;
@@ -79,7 +80,8 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
       isNewUI:boolean;
       elementId?: number, versionId?: number,
       name?: string, isNew?: boolean, isDryRun?: boolean,
-      testCaseId: number, testCaseResultId: number
+      testCaseId: number, testCaseResultId: number,
+      doRefresh: boolean,
     },
     private userPreferenceService: UserPreferenceService,
     public chromeRecorderService: ChromeRecorderService,
@@ -119,6 +121,9 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
       this.elementId = this.options.elementId;
       this.testCaseId = this.options?.testCaseId;
       this.testCaseResultId= this.options?.testCaseResultId;
+    }
+    if(this.doRefresh){
+      this.options.doRefresh = this.doRefresh;
     }
     this.canNotShowLaunch = !this.router.url.includes('/step')
     this.userPreferenceService.show().subscribe(res => {
@@ -327,7 +332,9 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
     this.isRecording=false;
     this.chromeRecorderService.elementCallBackContext = undefined;
     this.chromeRecorderService.elementCallBack = undefined;
-    this.chromeRecorderService.stopSpying();
+    if(!this.options.doRefresh){
+      this.chromeRecorderService.stopSpying();
+    }
     this.formDetails ? this.mobileRecorderEventService.setEmptyAction() : ( isClose? this.dialogRef.close(this.reviewSubmittedElement): null );
     if(isClose && this.options.isStepRecordView){
       let version=new WorkspaceVersion();
@@ -345,6 +352,9 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
   }
 
   private chromeExtensionElementCallback(chromeRecorderElement: Element) {
+    if(chromeRecorderElement){
+      this.isRecording=false;
+    }
     this.element = chromeRecorderElement
   }
 

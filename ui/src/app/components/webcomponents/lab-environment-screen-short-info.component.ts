@@ -48,10 +48,10 @@ import {WorkspaceVersionService} from "../../shared/services/workspace-version.s
           <span
             *ngIf="!isMobile"
             class="mr-5 sm" style="height: 14px"
-            [class.chrome]="testDevice?.isChrome && testDevice?.formattedBrowserVersion"
-            [class.safari]="testDevice?.isSafari && testDevice?.formattedBrowserVersion"
-            [class.firefox]="testDevice?.isFirefox && testDevice?.formattedBrowserVersion"
-            [class.edge]="testDevice?.isEdge && testDevice?.formattedBrowserVersion"></span>
+            [class.chrome]="isChrome && testDevice?.formattedBrowserVersion"
+            [class.safari]="isSafari && testDevice?.formattedBrowserVersion"
+            [class.firefox]="isFirefox && testDevice?.formattedBrowserVersion"
+            [class.edge]="isEdge && testDevice?.formattedBrowserVersion"></span>
           <span class="pr-8"
                 *ngIf="!isMobile && testDevice?.formattedBrowserVersion"
                 [textContent]="testDevice?.formattedBrowserVersion"></span>
@@ -197,5 +197,36 @@ export class LabEnvironmentScreenShortInfoComponent implements OnInit {
     return this.testDevice?.version?.workspace?.isMobile;
   }
 
+  /**
+   * Returns a boolean value true when the browser environment is Google Chrome
+   * @returns boolean
+   */
+  get isChrome() {
+    return this.environmentResult.testDeviceSettings.isChrome
+  }
+
+  /**
+   * Returns a boolean value true when the browser environment is Mozilla Firefox
+   * @returns boolean
+   */
+  get isFirefox() {
+    return this.environmentResult.testDeviceSettings.isFirefox
+  }
+
+  /**
+   * Returns a boolean value true when the browser environment is Safari
+   * @returns boolean
+   */
+  get isSafari() {
+    return this.environmentResult.testDeviceSettings.isSafari
+  }
+
+  /**
+   * Returns a boolean value true when the browser environment is Microsoft Edge
+   * @returns boolean
+   */
+  get isEdge() {
+    return this.environmentResult.testDeviceSettings.isEdge
+  }
 
 }

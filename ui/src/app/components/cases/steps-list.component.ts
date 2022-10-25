@@ -250,8 +250,8 @@ export class StepsListComponent extends BaseComponent implements OnInit {
     })
   }
 
-  checkForLinkedTestSteps(){
-    this.testStepService.checkForLinkedTestSteps(this.selectedStepsList).subscribe(res=>{
+  indexTestStepsHavingPrerequisiteSteps(){
+    this.testStepService.indexTestStepsHavingPrerequisiteSteps(this.selectedStepsList).subscribe(res=>{
       if(res.content.length==0){
         this.bulkDeleteConfirm()
       }
@@ -263,7 +263,7 @@ export class StepsListComponent extends BaseComponent implements OnInit {
       }
     })
   }
-  private openLinkedTestStepsDialog(list) {
+  public openLinkedTestStepsDialog(list) {
     this.translate.get("step_is_prerequisite_to_another_step").subscribe((res) => {
       this.matDialog.open(LinkedEntitiesModalComponent, {
         width: '568px',

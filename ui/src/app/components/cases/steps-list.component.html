@@ -95,7 +95,7 @@
           [translate]="'testcase.details.step_create_group' | translate:{Name: 'Create'}"></span>
       </button>
       <button
-        (click)="checkForLinkedTestSteps()"
+        (click)="indexTestStepsHavingPrerequisiteSteps()"
         [matTooltip]="'hint.message.common.delete' | translate"
         class="theme-btn-clear-default fa-trash-thin">
       </button>

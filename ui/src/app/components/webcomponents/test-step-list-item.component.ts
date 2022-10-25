@@ -24,6 +24,7 @@ import {AddonNaturalTextAction} from "../../models/addon-natural-text-action.mod
 import {MobileStepRecorderComponent} from "../../agents/components/webcomponents/mobile-step-recorder.component";
 import {InfiniteScrollableDataSource} from "../../data-sources/infinite-scrollable-data-source";
 import {LinkedEntitiesModalComponent} from "../../shared/components/webcomponents/linked-entities-modal.component";
+import {StepsListComponent} from "../cases/steps-list.component";
 
 @Component({
   selector: 'app-test-step-list-item',
@@ -63,7 +64,7 @@ export abstract class TestStepListItemComponent extends BaseComponent implements
     public toastrService: ToastrService,
     public testStepService: TestStepService,
     public naturalTestActionService: NaturalTextActionsService,
-    public matModal: MatDialog
+    public matModal: MatDialog,
   ) {
     super(authGuard, notificationsService, translate, toastrService);
   }
@@ -92,7 +93,7 @@ export abstract class TestStepListItemComponent extends BaseComponent implements
     })
   }
 
-  checkForLinkedTestSteps(testStep:TestStep){
+  indexTestStepsHavingPrerequisiteSteps(testStep:TestStep) {
     let testSteps: InfiniteScrollableDataSource;
     testSteps = new InfiniteScrollableDataSource(this.testStepService, "preRequisiteStepId:"+this.testStep.id);
     waitTillRequestResponds();

@@ -23,16 +23,6 @@
         itemSize="27"
         style="max-height:261px;height:261px"
       >
-        <div *ngIf="modalData.testStepsList">
-          <div
-            *cdkVirtualFor="let linkedEntity of modalData.linkedEntityList.content ; let index=index; let first=first"
-            [class.border-separator-t-1]="first"
-            class="list-view md-pm green-highlight linked-entities-modal">
-            <div [textContent]="linkedEntity.position"
-                 *ngIf="isTestStep"
-                 class="result-status-8 list-number ng-binding x-sm-size text-white mtt-0 mr-10"></div>
-          </div>
-        </div>
         <div
           *cdkVirtualFor="let linkedEntity of modalData.linkedEntityList ; let index=index; let first=first"
           [class.border-separator-t-1]="first"
@@ -40,7 +30,7 @@
           [ngClass]="linkedEntity.preRequisiteStepId ? 'pl-45':''">
           <div [textContent]="linkedEntity.position"
                *ngIf="isTestStep"
-               class="result-status-8 list-number ng-binding x-sm-size text-white mtt-0 mr-10"></div>
+               class="result-status-8 list-number ng-binding x-sm-size text-white mt-2 mr-10"></div>
           <div [textContent]=getTextContent(linkedEntity)
                [ngClass]="isTestStep ? 'mt-5':''"
                class="ts-col-50 text-truncate pr-20"></div>

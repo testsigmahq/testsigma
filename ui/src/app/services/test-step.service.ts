@@ -90,7 +90,7 @@ export class TestStepService {
     );
   }
 
-  public checkForLinkedTestSteps(steps:TestStep[]): Observable<Page<TestStep>>{
+  public indexTestStepsHavingPrerequisiteSteps(steps:TestStep[]): Observable<Page<TestStep>>{
     return this.http.get<Page<TestStep>>(this.URLConstants.linkedTestSteps,{
       headers: this.httpHeaders.contentTypeApplication,
       params: steps.map(step => step.id).reduce((p, id) => p.append('ids[]', id.toString()), new HttpParams())

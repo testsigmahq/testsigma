@@ -575,29 +575,47 @@ public class TestStepService extends XMLExportImportService<TestStep> {
 
         return actionsMap;
     }
-    public void bulkDelete(Long[] ids) throws ResourceNotFoundException {
-        for (Long id:ids){
+    public void bulkDelete(Long[] testStepIds) throws ResourceNotFoundException {
+        for (Long id:testStepIds){
               this.destroy(this.find(id));
             }
     }
 
-    private Boolean checkBulkDeleteStepsHaveAllPrerequisiteSteps(List<Long> ids,List<TestStep> testStepList){
+    /**
+     * Returns a boolean value true whether testStepList.id is a subset of testStepsIds
+     * @param testStepsIds
+     * @param testStepList
+     * @return {boolean}
+     */
+    private Boolean isTestStepsSubsetOfIds(List<Long> testStepsIds, List<TestStep> testStepList){
         for (TestStep testStep:testStepList){
-            if(!ids.contains(testStep.getId())){
+            if(!testStepsIds.contains(testStep.getId())){
                 return false;
             }
         }
         return true;
     }
 
-    public List<TestStepDTO> indexTestStepsLinkedToPrerequisiteIds(Long[] testStepsIds) throws ResourceNotFoundException {
+    /**
+     * Returns a List of TestStepsDTO which having Prerequisite steps and the linked testSteps <br/>
+     * <ol>
+     *     <li>Iterating over the testStepsIds to know wether they are having any associated steps</li>
+     *     <li>If there are any testSteps that are having prerequiste as Current iterating Step Id then the <b>isTestStepsSubsetOfIds</b> method will check wether all the testSteps are going to be deleted or not</li>
+     *     <li>Then the main step <b>i.e</b> Step that have been selected as prerequiste step to other steps , All these steps will be added to a list in an order</li>
+     *     <li>Order of adding steps to list is <i>Add the main step followed by the associated steps</i></li>
+     * </ol>
+     * @param testStepsIds An array of Ids of the teststeps which are the part of the bultTestStepsDelete Operation
+     * @return {List<TestStepDTO>}
+     * @throws ResourceNotFoundException
+     */
+    public List<TestStepDTO> indexTestStepsHavingPrerequisiteSteps(Long[] testStepsIds) throws ResourceNotFoundException {
         Long testCaseId = this.find(testStepsIds[0]).getTestCaseId();
         List<TestStepDTO> testSteps = new ArrayList<>();
         List<Long> idsList=Arrays.asList(testStepsIds);
         int index=0;
         for(Long id: testStepsIds) {
             List<TestStep> testStepList= this.repository.findAllByTestCaseIdAndPreRequisiteStepId(testCaseId,id);
-            if(!testStepList.isEmpty() && !checkBulkDeleteStepsHaveAllPrerequisiteSteps(idsList,testStepList)){
+            if(!testStepList.isEmpty() && !isTestStepsSubsetOfIds(idsList,testStepList)) {
                 TestStep mainStep = this.find(id);
                 TestStepDTO testStepDTO = this.exportTestStepMapper.mapDTO(mainStep);
                 testStepDTO.setPreRequisiteStepId(null);

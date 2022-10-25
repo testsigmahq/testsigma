@@ -17,11 +17,9 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.json.JSONObject;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -44,15 +42,20 @@ public class TestData {
   @Setter
   private Long versionId;
 
-
   @Column(name = "test_data_name")
   @Getter
   @Setter
   private String testDataName;
 
-
   @Column(name = "test_data")
-  private String data;
+  private String tempTestData;
+
+  @OneToMany(mappedBy = "testData", fetch = FetchType.LAZY)
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  @Getter
+  @Setter
+  private List<TestDataSet> data;
 
   @Column(name = "imported_id")
   @Getter
@@ -68,6 +71,11 @@ public class TestData {
   @Getter
   @Setter
   private String passwords;
+
+  @Column(name = "is_migrated")
+  @Getter
+  @Setter
+  private Boolean isMigrated;
 
   @Column(name = "created_date")
   @CreationTimestamp
@@ -93,13 +101,13 @@ public class TestData {
   @Setter
   private Map<String, String> renamedColumns;
 
-
-  public List<TestDataSet> getData() {
-    return new TestDataSetConverter().convertToEntityAttribute(this.data);
-  }
-
-  public void setData(List<TestDataSet> dataSets) {
-    this.data = new TestDataSetConverter().convertToDatabaseColumn(dataSets);
+  public List<TestDataSet> getData(){
+    if(this.getIsMigrated()==null || this.getIsMigrated()){
+      return this.data;
+    }
+    else{
+      return this.getTempTestData();
+    }
   }
 
   public List<String> getPasswords() {
@@ -110,5 +118,14 @@ public class TestData {
     if (passwordList != null) {
       this.passwords = new StringSetConverter().convertToDatabaseColumn(passwordList);
     }
+  }
+
+  //Can remove after the test_data column removal
+  public List<TestDataSet> getTempTestData() {
+    return new TestDataSetConverter().convertToEntityAttribute(this.tempTestData);
+  }
+
+  public void setTempTestData(List<TestDataSet> dataSets) {
+    this.tempTestData = new TestDataSetConverter().convertToDatabaseColumn(dataSets);
   }
 }

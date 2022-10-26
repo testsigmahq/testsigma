@@ -47,9 +47,9 @@ import {Platform} from "../../../enums/platform.enum";
         <i
           #osTooltip="matTooltip"
           *ngIf="isHybrid && !agentDevice"
-          [class.fa-windows-brands]="agent.isWindows"
-          [class.fa-apple]="agent.isMac"
-          [class.fa-linux-2]="agent.isLinux"
+          [class.fa-windows-brands]="isWindows"
+          [class.fa-apple]="isMac"
+          [class.fa-linux-2]="isLinux"
           [matTooltip]="isHybrid && agentDevice ? 'V. ' +agentDevice.osVersion : ( 'agents.list_view.os' | translate) +' : '+ testDevice?.platform+' '+testDevice?.formattedOsVersion"
         ></i>
         <i
@@ -184,7 +184,31 @@ export class TestMachineInfoColumnComponent implements OnInit {
   }
 
   get isHybrid() {
-    return this.testPlanResult?.testPlan?.isHybrid || this.testPlan?.isHybrid;
+    return this.testDevice.isHybrid;
+  }
+
+  /**
+   * Returns a boolean value true when the execution environment is Windows
+   * @returns boolean
+   */
+  get isWindows() {
+    return this.testDevice.isWindows
+  }
+
+  /**
+   * Returns a boolean value true when the execution environment is Mac OS
+   * @returns boolean
+   */
+  get isMac() {
+    return this.testDevice.isMac
+  }
+
+  /**
+   * Returns a boolean value true when the execution environment is Linux
+   * @returns boolean
+   */
+  get isLinux() {
+    return this.testDevice.isLinux
   }
 
   get isMobileWeb() {

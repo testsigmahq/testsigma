@@ -11,6 +11,7 @@ package com.testsigma.dto;
 
 import com.testsigma.model.ElementCreateType;
 import com.testsigma.model.LocatorType;
+import com.testsigma.model.recorder.UiIdentifierScreenNameDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -35,4 +36,8 @@ public class ElementDTO {
   private Long screenNameId;
   private ElementScreenNameDTO screenNameObj;
   private Boolean isDuplicated;
+
+  public UiIdentifierScreenNameDTO getUiIdentifierScreenNameObject() {
+    return new UiIdentifierScreenNameDTO();
+  }
 }

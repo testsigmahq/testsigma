@@ -22,7 +22,7 @@ import java.util.List;
 
 @Log4j2
 @RestController
-@RequestMapping(value = {"/kibbutz"}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(value = {"/os_recorder/kibbutz"}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class KibbutzAPIsController {
     private final KibbutzPluginNLPMapper kibbutzPluginNLPMapper;

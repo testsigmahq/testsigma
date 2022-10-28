@@ -100,7 +100,7 @@ export class TestPlanMachineSelectionFormComponent extends BaseComponent impleme
 
   initFormGroup(environment?: TestDevice) {
     let testSuites = this.data.testSuites.map(suite => suite.id);
-    let prerequisiteTestDevicesId =  environment ? environment.prerequisiteTestDevicesId : this.data?.executionEnvironments[this.data.executionEnvironments.length - 1]?.id;
+    let prerequisiteTestDevicesId =  environment ? environment.prerequisiteTestDevicesId : null;
     let environmentFormGroup = this.formBuilder.group({
       agentId: new FormControl(environment?.agentId, [this.requiredIfValidator(() =>
         this.activeEnvironmentFormGroup?.controls[ActiveEnvironmentFormControls.TESTPLAN_LAB_TYPE]?.value===TestPlanLabType.Hybrid)]),

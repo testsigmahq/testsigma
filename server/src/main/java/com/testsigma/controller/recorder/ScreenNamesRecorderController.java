@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/os_recorder/elements_screen_name")
+@RequestMapping(path = "/os_recorder/ui_identifiers_screen_name")
 @Log4j2
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ScreenNamesRecorderController {

@@ -5,7 +5,9 @@ import com.testsigma.dto.ElementScreenNameDTO;
 import com.testsigma.model.recorder.UiIdentifierDTO;
 import com.testsigma.model.recorder.UiIdentifierRequest;
 import com.testsigma.model.recorder.UiIdentifierScreenNameDTO;
+import com.testsigma.model.recorder.UiIdentifierScreenNameRequest;
 import com.testsigma.web.request.ElementRequest;
+import com.testsigma.web.request.ElementScreenNameRequest;
 import org.mapstruct.*;
 
 import java.util.List;
@@ -32,12 +34,17 @@ public interface UiIdentifierMapper {
     @Mapping(target = "screenNameObj", expression = "java(mapScreenNameDTO(elementDTO.getScreenNameObj()))")
     UiIdentifierDTO mapDTO(ElementDTO elementDTO);
 
-    List<UiIdentifierDTO> mapDTO(List<ElementDTO> elementDTOs);
+    List<UiIdentifierDTO> mapDTOs(List<ElementDTO> elementDTOs);
 
     @Mapping(source = "elementScreenNameDTO.workspaceVersionId", target = "applicationVersionId")
     UiIdentifierScreenNameDTO mapScreenNameDTO(ElementScreenNameDTO elementScreenNameDTO);
 
+    List<UiIdentifierScreenNameDTO> mapScreenNameDTOs(List<ElementScreenNameDTO> elementScreenNameDTOs);
+
     @Mapping(source = "uiIdentifierRequest.applicationVersionId", target = "workspaceVersionId")
     @Mapping(source = "uiIdentifierRequest.definition", target = "locatorValue")
     ElementRequest mapRequest(UiIdentifierRequest uiIdentifierRequest);
+
+    @Mapping(source = "applicationVersionId", target = "workspaceVersionId")
+    ElementScreenNameRequest mapScreenNameRequest(UiIdentifierScreenNameRequest request);
 }

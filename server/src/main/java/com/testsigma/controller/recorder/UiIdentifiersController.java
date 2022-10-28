@@ -85,7 +85,7 @@ public class UiIdentifiersController {
             Specification<Element> spec = builder.build();
             elements = uiIdentifierService.findAll(spec, pageable);
         }
-        List<UiIdentifierDTO> uiIdentifierDTOS = uiIdentifierMapper.mapDTO(elementMapper.map(elements.getContent()));
+        List<UiIdentifierDTO> uiIdentifierDTOS = uiIdentifierMapper.mapDTOs(elementMapper.map(elements.getContent()));
         return new PageImpl<>(uiIdentifierDTOS, pageable, elements.getTotalElements());
     }
 

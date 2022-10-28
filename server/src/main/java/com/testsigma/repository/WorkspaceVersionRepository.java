@@ -10,6 +10,8 @@
 package com.testsigma.repository;
 
 import com.testsigma.model.WorkspaceVersion;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -120,4 +122,6 @@ public interface WorkspaceVersionRepository extends JpaSpecificationExecutor<Wor
   void copyTestPlanLabels(@Param("newVersionId") Long newVersionId);
 
   WorkspaceVersion findFirstByWorkspaceId(@Param("workspaceId") Long workspaceId);
+
+  Page<WorkspaceVersion> findByWorkspaceId(@Param("workspaceId") Long workspaceId, Pageable page);
 }

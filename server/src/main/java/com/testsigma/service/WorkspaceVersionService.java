@@ -58,6 +58,10 @@ public class WorkspaceVersionService extends XMLExportImportService<WorkspaceVer
       .orElseThrow(() -> new ResourceNotFoundException("Workspace Version not found with id:" + id));
   }
 
+  public Page<WorkspaceVersion> findByWorkspaceId(Long id, Pageable page) {
+    return this.workspaceVersionRepository.findByWorkspaceId(id, page);
+  }
+
   @Override
   List<WorkspaceVersion> readEntityListFromXmlData(String xmlData, XmlMapper xmlMapper, BackupDTO importDTO) throws JsonProcessingException, ResourceNotFoundException {
     return null;

@@ -9,12 +9,15 @@
 
 package com.testsigma.repository;
 
+import com.testsigma.model.TestStep;
 import com.testsigma.model.WorkspaceType;
 import com.testsigma.model.NaturalTextActions;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -25,4 +28,7 @@ public interface NaturalTextActionsRepository extends JpaRepository<NaturalTextA
   Page<NaturalTextActions> findAll(Specification<NaturalTextActions> spec, Pageable pageable);
 
   List<NaturalTextActions> findAllByDisplayName(String displayName);
+
+  List<NaturalTextActions> findAllByAction(String action);
+
 }

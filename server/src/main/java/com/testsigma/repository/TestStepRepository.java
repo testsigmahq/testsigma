@@ -106,9 +106,15 @@ public interface TestStepRepository extends JpaRepository<TestStep, Long> {
 
   List<TestStep> findAllByTestCaseIdAndDisabledIsNotAndStepGroupIdIsNotNullOrderByPositionAsc(Long testCaseId, boolean notDisabled);
 
-    Optional<TestStep> findByTestCaseIdInAndImportedId(List<Long> id, Long id1);
+  Optional<TestStep> findByTestCaseIdInAndImportedId(List<Long> id, Long id1);
 
-    List<TestStep> findAllByTestCaseIdInOrderByPositionAsc(List<Long> testCaseIds);
+  List<TestStep> findAllByTestCaseIdInOrderByPositionAsc(List<Long> testCaseIds);
 
   Optional<TestStep> findAllByTestCaseIdAndImportedId(Long workspaceVersionId, Long importedId);
+
+  @Query(value = "SELECT testStep from TestStep testStep JOIN testStep.testCase AS testCase " +
+          "ON  testStep.testCaseId = testCase.id AND testCase.workspaceVersionId = :workspaceVersionId " +
+          "WHERE  testStep.naturalTextActionId IN (:naturalTextActionIds)")
+  List<TestStep> findAllByWorkspaceVersionIdAndNaturalTextActionId(@Param(value = "workspaceVersionId") Long workspaceVersionId,
+                                                                   @Param(value = "naturalTextActionIds") List<Integer> naturalTextActionIds);
 }

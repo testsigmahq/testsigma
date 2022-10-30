@@ -41,4 +41,8 @@ public class NaturalTextActionsService {
     return this.naturalTextActionsRepository.findAllByDisplayName(displayName);
   }
 
+  public List<NaturalTextActions> findAllByAction(String action) {
+    return this.naturalTextActionsRepository.findAllByAction(action);
+  }
+
 }

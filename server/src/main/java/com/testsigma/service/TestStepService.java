@@ -575,6 +575,10 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         return actionsMap;
     }
 
+    public List<TestStep> findAllByWorkspaceVersionIdAndNaturalTextActionId(Long workspaceVersionId, List<Integer> naturalTextActionIds) {
+        return this.repository.findAllByWorkspaceVersionIdAndNaturalTextActionId(workspaceVersionId, naturalTextActionIds);
+    }
+
 
 }
 

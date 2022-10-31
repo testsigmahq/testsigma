@@ -418,7 +418,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
     } else {
       let screenNameBean: ElementScreenName = new ElementScreenName();
       screenNameBean.name = screenName.name;
-      screenNameBean.workspaceVersionId = this.versionId;
+      screenNameBean.workspaceVersionId = this.element.workspaceVersionId;
       this.elementScreenNameService.create(screenNameBean).subscribe(screenNameBean => {
         this.element.screenNameObj.name = screenNameBean.name;
         this.element.screenNameId = screenNameBean.id;

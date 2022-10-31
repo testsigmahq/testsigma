@@ -15,8 +15,6 @@ import {WorkspaceType} from "../enums/workspace-type.enum";
 import {Element} from "../models/element.model";
 import {ElementMetaData} from "../models/element-meta-data.model";
 import {ElementElementDetails} from "../models/element-locator-details.model";
-import {ElementScreenName} from "../models/element-screen-name.model";
-import {ElementCreateType} from "../enums/element-create-type.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -135,31 +133,9 @@ export class ChromeRecorderService {
   };
 
   public processingElement(currentElement) {
-    currentElement.elementDetails = new ElementElementDetails();
-    currentElement.screenNameObj = new ElementScreenName();
-    currentElement.createdType = ElementCreateType.CHROME;
-    if (currentElement?.screenTitle){
-      currentElement.screenNameObj.name = currentElement.screenTitle;
-    }
-    if (this.recorderVersion.workspaceId){
-      currentElement.screenNameObj.workspaceVersionId = this.recorderVersion.id;
-    }
-    if(currentElement?.xPath){
-      currentElement.locatorValue = currentElement.xPath;
-    }
-    if (currentElement?.screenTitle){
-      currentElement.screenName = currentElement.screenTitle
-    }
-    currentElement.isDynamic = currentElement.isDynamicElement
-
-    if (currentElement?.tag){
-      currentElement.elementDetails.tag = currentElement.tag
-    }
-    if (currentElement?.attr){
-      currentElement.elementDetails.attributes = currentElement.attr
-    }
     let element = new Element().deserialize(currentElement);
     element.metadata = new ElementMetaData().deserialize(currentElement.metaData);
+    currentElement.elementDetails.data = currentElement.elementDetails.attributes;
     element.elementDetails = new ElementElementDetails().deserialize(currentElement.elementDetails);
     return element
   }

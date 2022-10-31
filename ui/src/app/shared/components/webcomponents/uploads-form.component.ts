@@ -179,5 +179,8 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
     let version = this.version || this.data.version;
     return version?.workspace?.isAndroidNative ? this.apkTypes : version?.workspace?.isIosNative ? this.ipaTypes : this.attachmentTypes;
   }
-
+  get isButtonDisabled() {
+    return (this.upload.id ? (!this.getRawValue()?.name || this.uploadForm.controls?.name?.errors ||
+    this.uploadedFileObject?.name ? this.uploadForm.invalid : false) : this.uploadForm.invalid) || !this.upload.name || this.maxSizeError;
+  }
 }

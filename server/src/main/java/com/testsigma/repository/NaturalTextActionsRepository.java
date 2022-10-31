@@ -31,4 +31,6 @@ public interface NaturalTextActionsRepository extends JpaRepository<NaturalTextA
 
   List<NaturalTextActions> findAllByAction(String action);
 
+  Page<NaturalTextActions> findAllByWorkspaceType(WorkspaceType workspaceType, Pageable pageable);
+
 }

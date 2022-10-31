@@ -12,6 +12,7 @@ package com.testsigma.service;
 
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.model.NaturalTextActions;
+import com.testsigma.model.WorkspaceType;
 import com.testsigma.repository.NaturalTextActionsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -31,6 +32,10 @@ public class NaturalTextActionsService {
 
   public Page<NaturalTextActions> findAll(Specification<NaturalTextActions> spec, Pageable pageable) {
     return naturalTextActionsRepository.findAll(spec, pageable);
+  }
+
+  public Page<NaturalTextActions> findAllByWorkspaceType(WorkspaceType workspaceType, Pageable pageable) {
+    return naturalTextActionsRepository.findAllByWorkspaceType(workspaceType, pageable);
   }
 
   public NaturalTextActions findById(Long naturalTextActionId) throws ResourceNotFoundException {

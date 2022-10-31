@@ -1,13 +1,16 @@
 package com.testsigma.controller.recorder;
 
+import com.testsigma.constants.NaturalTextActionConstants;
 import com.testsigma.dto.NaturalTextActionsDTO;
 import com.testsigma.mapper.NaturalTextActionMapper;
 import com.testsigma.mapper.recorder.NLPTemplateMapper;
 import com.testsigma.model.NaturalTextActions;
+import com.testsigma.model.WorkspaceType;
 import com.testsigma.model.recorder.NLPTemplateDTO;
 import com.testsigma.service.NaturalTextActionsService;
 import com.testsigma.service.ObjectMapperService;
 import com.testsigma.specification.NaturalTextActionSpecificationsBuilder;
+import com.testsigma.specification.SearchCriteria;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +42,35 @@ public class NLPTemplatesController {
     @GetMapping
     public Page<NLPTemplateDTO> index(NaturalTextActionSpecificationsBuilder builder, @PageableDefault(size = Integer.MAX_VALUE) Pageable pageable) {
         log.info("Request /os_recorder/nlp_templates");
-        Specification<NaturalTextActions> spec = builder.build();
-        Page<NaturalTextActions> nlActions = naturalTextActionsService.findAll(spec, pageable);
+        WorkspaceType workspaceType = null;
+        String applicationType = null;
+        for (SearchCriteria param : builder.params) {
+            if (param.getKey().equals("applicationType")) {
+                applicationType = param.getValue().toString();
+            }
+        }
+
+        switch(applicationType) {
+            case "MobileWeb":
+                workspaceType = WorkspaceType.MobileWeb;
+                break;
+            case "WebApplication":
+                workspaceType = WorkspaceType.WebApplication;
+                break;
+            case "AndroidNative":
+                workspaceType = WorkspaceType.AndroidNative;
+                break;
+            case "IOSWeb":
+                workspaceType = WorkspaceType.IOSWeb;
+                break;
+            case "IOSNative":
+                workspaceType = WorkspaceType.IOSNative;
+                break;
+            case "Rest":
+                workspaceType = WorkspaceType.Rest;
+                break;
+        }
+        Page<NaturalTextActions> nlActions = naturalTextActionsService.findAllByWorkspaceType(workspaceType, pageable);
         List<NaturalTextActionsDTO> dtos = naturalTextActionMapper.mapDTO(nlActions.getContent());
         List<NLPTemplateDTO> results = new ArrayList<>();
         for(NaturalTextActionsDTO dto : dtos) {
@@ -52,6 +82,12 @@ public class NLPTemplatesController {
     }
 
     private LinkedHashMap<String, String> mapNLPTemplateTestData(String data) {
-        return (LinkedHashMap<String, String>) objectMapperService.parseJson(data, Map.class);
+        try {
+            return (LinkedHashMap<String, String>) objectMapperService.parseJsonModel(data, Map.class);
+        } catch (Exception e) {
+            return new LinkedHashMap<>() {{
+                put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA, data);
+            }};
+        }
     }
 }

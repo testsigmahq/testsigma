@@ -128,7 +128,7 @@ public class TestStepDTO implements Cloneable, Serializable {
     return testStepDataMap;
   }
 
-  public TestStepRecorderDataMap getDataMap() {
+  public TestStepRecorderDataMap mapTestData() {
     ObjectMapperService mapperService = new ObjectMapperService();
     try {
       return mapperService.parseJsonModel(testData, TestStepRecorderDataMap.class);

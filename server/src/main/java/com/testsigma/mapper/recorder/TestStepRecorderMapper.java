@@ -1,7 +1,6 @@
 package com.testsigma.mapper.recorder;
 
 import com.testsigma.dto.TestStepDTO;
-import com.testsigma.model.TestStep;
 import com.testsigma.model.recorder.TestStepRecorderDTO;
 import org.mapstruct.*;
 
@@ -26,7 +25,7 @@ public interface TestStepRecorderMapper {
     @Mapping(target = "importedId", ignore = true)
     @Mapping(target = "hasInvalidUiIdentifier", ignore = true)
     @Mapping(target = "hasInvalidTestData", ignore = true)
-    @Mapping(target = "dataMap", expression = "java(testStepDTO.getDataMap())")
+    @Mapping(target = "dataMap", expression = "java(testStepDTO.mapTestData())")
     @Mapping(target = "componentTestCaseEntity", ignore = true)
     @Mapping(target = "blockId", ignore = true)
     TestStepRecorderDTO mapDTO(TestStepDTO testStepDTO);

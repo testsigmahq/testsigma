@@ -8,9 +8,11 @@
 package com.testsigma.service;
 
 import com.testsigma.constants.MessageConstants;
+import com.testsigma.constants.NaturalTextActionConstants;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.model.*;
 import com.testsigma.model.recorder.RunTimeVariableDTO;
+import com.testsigma.model.recorder.TestStepNlpData;
 import com.testsigma.repository.RunTimeDataRepository;
 import com.testsigma.web.request.RuntimeRequest;
 import lombok.RequiredArgsConstructor;
@@ -96,16 +98,16 @@ public class RunTimeDataService {
     this.update(runTimeData);
   }
 
-  public List<RunTimeVariableDTO> getAllRuntimeVariablesInVersion(Long applicationVersionId) {
-    log.info("Fetching all runtime variables used in application version:"+applicationVersionId);
+  public List<RunTimeVariableDTO> getAllRuntimeVariablesInVersion(Long workspaceVersionId) {
+    log.info("Fetching all runtime variables used in application version:"+workspaceVersionId);
     List<RunTimeVariableDTO> runTimeVariableDTOS = new ArrayList<>();
     List<NaturalTextActions> storeTemplates = naturalTextActionsService.findAllByAction("store");
     List<Integer> storeTemplateIds = new ArrayList<>();
     storeTemplates.forEach(template->storeTemplateIds.add(template.getId().intValue()));
     log.info("Store Templates Ids:"+storeTemplates);
-    List<TestStep> testStepsWithStoreNlp = testStepService.findAllByWorkspaceVersionIdAndNaturalTextActionId(applicationVersionId,storeTemplateIds);
+    List<TestStep> testStepsWithStoreNlp = testStepService.findAllByWorkspaceVersionIdAndNaturalTextActionId(workspaceVersionId,storeTemplateIds);
     log.info("Test steps with Store NLPs, size:"+testStepsWithStoreNlp.size());
-    List<TestStep> testSteps = testStepService.findAllRuntimeDataRestStep(applicationVersionId);
+    List<TestStep> testSteps = testStepService.findAllRuntimeDataRestStep(workspaceVersionId);
     log.info("REST API Test steps with runtime data, size:"+testSteps.size());
 
     testSteps.addAll(testStepsWithStoreNlp);
@@ -139,7 +141,7 @@ public class RunTimeDataService {
     if(testStep.getAction().indexOf("Store current") != -1){
       runTimeVariableName = testStep.getDataMap().getAttribute();
     }else{
-      TestStepNlpData testStepNlpData = testStep.getDataMap().getTestData().getOrDefault(NlpConstants.TESTSTEP_DATAMAP_KEY_TEST_DATA,null);
+      TestStepNlpData testStepNlpData = testStep.getDataMap().getTestData().getOrDefault(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA,null);
       runTimeVariableName = (testStepNlpData != null)?testStepNlpData.getValue():runTimeVariableName;
     }
 
@@ -147,5 +149,15 @@ public class RunTimeDataService {
       runTimeVariableDTOS.add(createRunTimeVariableDTO(testStep,runTimeVariableName));
     }
     return runTimeVariableDTOS;
+  }
+
+  private RunTimeVariableDTO createRunTimeVariableDTO(TestStep testStep, String runTimeVariableName) {
+    RunTimeVariableDTO runTimeVariableDTO = new RunTimeVariableDTO();
+    runTimeVariableDTO.setStepId(testStep.getId());
+    runTimeVariableDTO.setStepPosition(testStep.getPosition());
+    runTimeVariableDTO.setTestCaseId(testStep.getTestCaseId());
+    runTimeVariableDTO.setTestCaseName(testStep.getTestCase().getName());
+    runTimeVariableDTO.setRunTimeVariableName(runTimeVariableName);
+    return runTimeVariableDTO;
   }
 }

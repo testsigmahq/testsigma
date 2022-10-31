@@ -10,12 +10,20 @@
 package com.testsigma.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.testsigma.constants.NaturalTextActionConstants;
+import com.testsigma.dto.export.CloudTestDataFunction;
 import com.testsigma.model.*;
+import com.testsigma.model.recorder.KibbutzTestStepTestData;
+import com.testsigma.model.recorder.TestStepNlpData;
+import com.testsigma.model.recorder.TestStepRecorderDataMap;
+import com.testsigma.service.ObjectMapperService;
 import lombok.Data;
 import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -118,5 +126,61 @@ public class TestStepDTO implements Cloneable, Serializable {
     forLoop.setTestDataId(forLoopTestDataId);
     testStepDataMap.setForLoop(forLoop);
     return testStepDataMap;
+  }
+
+  public TestStepRecorderDataMap getDataMap() {
+    ObjectMapperService mapperService = new ObjectMapperService();
+    try {
+      return mapperService.parseJsonModel(testData, TestStepRecorderDataMap.class);
+    }
+    catch(Exception e) {
+      Map<String, String> map = mapperService.parseJson(testData, Map.class);
+      TestStepRecorderDataMap testStepDataMap = new TestStepRecorderDataMap();
+      if(map.containsKey("test-data")) {
+        TestStepNlpData testStepNlpData = new TestStepNlpData();
+        testStepNlpData.setValue(map.get("test-data"));
+        testStepNlpData.setType(map.get("test-data-type"));
+        if(map.containsKey("test-data-function")) {
+          testStepNlpData.setTestDataFunction(new ObjectMapper().convertValue(map.get("test-data-function"), CloudTestDataFunction.class));
+        }
+        if(map.containsKey("kibbutz_test_data_function")) {
+          testStepNlpData.setKibbutzTDF(new ObjectMapper().convertValue(map.get("kibbutz_test_data_function"), KibbutzTestStepTestData.class));
+        }
+        testStepDataMap.setTestData(new HashMap<>() {{
+          put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA, testStepNlpData);
+        }});
+      }
+      if(map.containsKey("condition_if")) {
+        testStepDataMap.setIfConditionExpectedResults(map.get("condition_if"));
+      }
+      if(map.containsKey("condition-type")) {
+        testStepDataMap.setIfConditionExpectedResults(map.get("condition-type"));
+      }
+      if(map.containsKey("custom-step")) {
+        testStepDataMap.setCustomStep(new ObjectMapper().convertValue(map.get("custom-step"), TestStepCustomStep.class));
+      }
+      if(map.containsKey("ui-identifier")) {
+        testStepDataMap.setUiIdentifier(map.get("ui-identifier"));
+      }
+      if(map.containsKey("from-ui-identifier")) {
+        testStepDataMap.setFromUiIdentifier(map.get("from-ui-identifier"));
+      }
+      if(map.containsKey("to-ui-identifier")) {
+        testStepDataMap.setToUiIdentifier(map.get("to-ui-identifier"));
+      }
+      if(map.containsKey("attribute")) {
+        testStepDataMap.setAttribute(map.get("attribute"));
+      }
+      if(map.containsKey("for_loop")) {
+        testStepDataMap.setForLoop(new ObjectMapper().convertValue(map.get("for_loop"), TestStepForLoop.class));
+      }
+      if(map.containsKey("while_loop")) {
+        testStepDataMap.setWhileLoop(new ObjectMapper().convertValue(map.get("while_loop"), TestStepWhileLoop.class));
+      }
+      if(map.containsKey("whileCondition")) {
+        testStepDataMap.setWhileCondition(map.get("whileCondition"));
+      }
+      return testStepDataMap;
+    }
   }
 }

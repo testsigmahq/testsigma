@@ -21,7 +21,7 @@ public class RunTimeVariablesController {
     private final RunTimeDataService runTimeDataService;
 
     @RequestMapping(value="/app_version/{id}", method = RequestMethod.GET)
-    public List<RunTimeVariableDTO> getCreatedVariables(@PathVariable("id") Long applicationVersionId){
-        return runTimeDataService.getAllRuntimeVariablesInVersion(applicationVersionId);
+    public List<RunTimeVariableDTO> getCreatedVariables(@PathVariable("id") Long workspaceVersionId){
+        return runTimeDataService.getAllRuntimeVariablesInVersion(workspaceVersionId);
     }
 }

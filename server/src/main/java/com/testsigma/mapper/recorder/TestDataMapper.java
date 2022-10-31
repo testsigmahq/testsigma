@@ -32,6 +32,7 @@ public interface TestDataMapper {
     @Mapping(target = "testDataProfileId", source = "testDataSetDTO.testDataId")
     TestDataSetDTO mapTestDataSetDTO(com.testsigma.dto.TestDataSetDTO testDataSetDTO);
 
+    @Mapping(target = "testDataProfileId", source = "testDataSetDTO.testDataId")
     List<TestDataSetDTO> mapTestDataSetDTOs(List<com.testsigma.dto.TestDataSetDTO> testDataSetDTO);
 
     @Mapping(target = "testDataProfileId", source = "testDataId")

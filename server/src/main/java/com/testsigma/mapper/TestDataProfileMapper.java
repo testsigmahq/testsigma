@@ -83,6 +83,9 @@ public interface TestDataProfileMapper {
       JSONObject object = testDataSet.getData();
       testDataSetDTO.setData(object);
     }
+    if (testDataSet.getTestDataId() != null) {
+      testDataSetDTO.setTestDataId(testDataSet.getTestDataId());
+    }
 
     return testDataSetDTO;
   }

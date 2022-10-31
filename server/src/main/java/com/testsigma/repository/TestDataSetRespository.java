@@ -1,6 +1,8 @@
 package com.testsigma.repository;
 
 import com.testsigma.model.TestDataSet;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -20,5 +22,7 @@ public interface TestDataSetRespository extends JpaRepository<TestDataSet, Long>
     List<TestDataSet> findAllByNamesAndTestDataId(List<String> setNames, Long testDataId);
 
     Optional<TestDataSet> findTestDataSetByTestDataIdAndAndName(Long profileId, String name);
+
+    Page<TestDataSet> findAllByTestDataId(Long testDataId, Pageable page);
 }
 

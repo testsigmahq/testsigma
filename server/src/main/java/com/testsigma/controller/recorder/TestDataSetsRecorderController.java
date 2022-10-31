@@ -5,6 +5,7 @@ import com.testsigma.mapper.recorder.TestDataMapper;
 import com.testsigma.model.TestDataSet;
 import com.testsigma.model.recorder.TestDataSetDTO;
 import com.testsigma.service.TestDataSetService;
+import com.testsigma.specification.SearchCriteria;
 import com.testsigma.specification.TestDataSetSpecificationBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -32,8 +33,13 @@ public class TestDataSetsRecorderController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<TestDataSetDTO> index(TestDataSetSpecificationBuilder builder, @PageableDefault(value = 2000) Pageable pageable){
-        Specification<TestDataSet> specification = builder.build();
-        Page<TestDataSet> testDataSets = testDataSetService.findAll(specification, pageable);
+        Long testDataId = null;
+        for (SearchCriteria param : builder.params) {
+            if (param.getKey().equals("testDataProfileId")) {
+                testDataId = Long.parseLong(param.getValue().toString());
+            }
+        }
+        Page<TestDataSet> testDataSets = testDataSetService.findAllByTestDataId(testDataId, pageable);
         List<TestDataSetDTO> testDataSetDTOS = testDataMapper.mapTestDataSetDTOs(testDataProfileMapper.mapToDtos(testDataSets.getContent()));
         return new PageImpl<>(testDataSetDTOS, pageable, testDataSets.getTotalElements());
     }

@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Log4j2
 @Service
 @RequiredArgsConstructor(onConstructor = @__({@Autowired, @Lazy}))
@@ -38,6 +40,10 @@ public class TestDataSetService {
 
     public Page<TestDataSet> findAll(Specification<TestDataSet> specification, Pageable pageable) {
         return testDataSetRespository.findAll(specification, pageable);
+    }
+
+    public Page<TestDataSet> findAllByTestDataId(Long testDataId, Pageable page) {
+        return testDataSetRespository.findAllByTestDataId(testDataId, page);
     }
 
     public void bulkDestroy(Long[] ids) throws Exception {

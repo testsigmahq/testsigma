@@ -48,8 +48,6 @@ public class UiIdentifierRequest {
     private Map<String, Object> attrs;
     private ElementRequest[] siblings;
     private ElementRequest[] parents;
-
-    @JsonIgnore
     private ElementScreenNameDTO screenNameObj;
     private String currentImgBase64;
     private String currentElementSource;

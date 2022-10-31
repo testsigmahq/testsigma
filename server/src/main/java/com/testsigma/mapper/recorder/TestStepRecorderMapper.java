@@ -2,6 +2,8 @@ package com.testsigma.mapper.recorder;
 
 import com.testsigma.dto.TestStepDTO;
 import com.testsigma.model.recorder.TestStepRecorderDTO;
+import com.testsigma.model.recorder.TestStepRecorderRequest;
+import com.testsigma.web.request.TestStepRequest;
 import org.mapstruct.*;
 
 import java.util.List;
@@ -31,4 +33,25 @@ public interface TestStepRecorderMapper {
     TestStepRecorderDTO mapDTO(TestStepDTO testStepDTO);
 
     List<TestStepRecorderDTO> mapDTOs(List<TestStepDTO> testStepDTO);
+
+
+    @Mapping(target = "toElement", ignore = true)
+    @Mapping(target = "testDataType", expression = "java(testStepRecorderRequest.getDataMap().getTestData().values().stream().findFirst().get().getType())")
+    @Mapping(target = "testDataFunctionId", ignore = true)
+    @Mapping(target = "testDataFunctionArgs", ignore = true)
+    @Mapping(target = "testData", expression = "java(testStepRecorderRequest.getDataMap().getTestData().values().stream().findFirst().get().getValue())")
+    @Mapping(target = "stepGroupId", source = "testComponentId")
+    @Mapping(target = "naturalTextActionId", source = "templateId")
+    @Mapping(target = "fromElement", ignore = true)
+    @Mapping(target = "forLoopTestDataId", ignore = true)
+    @Mapping(target = "forLoopStartIndex", ignore = true)
+    @Mapping(target = "forLoopEndIndex", ignore = true)
+    @Mapping(target = "element", ignore = true)
+    @Mapping(target = "attribute", ignore = true)
+    @Mapping(target = "addonTestData", source = "kibbutzPluginNlpData.testData")
+    @Mapping(target = "addonTDF", ignore = true)
+    @Mapping(target = "addonNaturalTextActionData", ignore = true)
+    @Mapping(target = "addonElements", source = "kibbutzPluginNlpData.uiIdentifiers")
+    @Mapping(target = "addonActionId", source = "kibbutzPluginNlpId")
+    TestStepRequest mapRequest(TestStepRecorderRequest testStepRecorderRequest);
 }

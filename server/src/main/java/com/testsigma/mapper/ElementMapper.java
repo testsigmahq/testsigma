@@ -39,10 +39,10 @@ public interface ElementMapper {
 
   List<ElementDTO> map(List<Element> elementList);
 
-  @Mapping(target = "screenNameObj", ignore = true)
+  //@Mapping(target = "screenNameObj", ignore = true)
   void merge(ElementRequest elementRequest, @MappingTarget Element element);
 
-  @Mapping(target = "screenNameObj", ignore = true)
+  //@Mapping(target = "screenNameObj", ignore = true)
   Element map(ElementRequest elementRequest);
 
   @Mapping(target = "screenName", expression = "java(element.getScreenNameObj().equals(null)? null: element.getScreenNameObj().getName())")

@@ -247,6 +247,24 @@ public class TestStep {
       return mapperService.parseJsonModel(testData, TestStepRecorderDataMap.class);
     }
     catch(Exception e) {
+      TestStepRecorderDataMap testStepDataMap = new TestStepRecorderDataMap();
+      TestStepNlpData testStepNlpData = new TestStepNlpData();
+      testStepNlpData.setValue(testData);
+      testStepNlpData.setType(testDataType);
+      testStepDataMap.setTestData(new HashMap<>() {{
+        put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA, testStepNlpData);
+      }});
+      return testStepDataMap;
+    }
+  }
+
+  /*
+  public TestStepRecorderDataMap getDataMap() {
+    ObjectMapperService mapperService = new ObjectMapperService();
+    try {
+      return mapperService.parseJsonModel(testData, TestStepRecorderDataMap.class);
+    }
+    catch(Exception e) {
       Map<String, String> map = mapperService.parseJson(testData, Map.class);
       TestStepRecorderDataMap testStepDataMap = new TestStepRecorderDataMap();
       log.info("Parsing json to map: " + map);
@@ -297,7 +315,7 @@ public class TestStep {
       log.info("Parsed json to testStepDataMap: " + testStepDataMap);
       return testStepDataMap;
     }
-  }
+  }*/
 
   public void setTestDataType(String testDataType) {
     if (testDataType !=null){

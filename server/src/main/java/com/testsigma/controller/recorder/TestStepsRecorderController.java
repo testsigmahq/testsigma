@@ -4,14 +4,21 @@ import com.testsigma.dto.RestStepResponseDTO;
 import com.testsigma.dto.TestStepDTO;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaException;
+import com.testsigma.mapper.ElementMapper;
 import com.testsigma.mapper.TestStepMapper;
 import com.testsigma.mapper.recorder.TestStepRecorderMapper;
+import com.testsigma.mapper.recorder.UiIdentifierMapper;
+import com.testsigma.model.Element;
 import com.testsigma.model.TestStep;
 import com.testsigma.model.TestStepPriority;
 import com.testsigma.model.recorder.TestStepRecorderDTO;
+import com.testsigma.model.recorder.TestStepRecorderRequest;
+import com.testsigma.model.recorder.UiIdentifierRequest;
+import com.testsigma.service.ElementService;
 import com.testsigma.service.TestStepService;
 import com.testsigma.specification.TestStepSpecificationsBuilder;
 import com.testsigma.util.HttpClient;
+import com.testsigma.web.request.ElementRequest;
 import com.testsigma.web.request.RestStepRequest;
 import com.testsigma.web.request.TestStepRequest;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +47,9 @@ public class TestStepsRecorderController {
     private final HttpClient httpClient;
     private final TestStepService service;
     private final TestStepMapper mapper;
+    private final ElementService elementService;
+    private final ElementMapper elementMapper;
+    private final UiIdentifierMapper uiIdentifierMapper;
     private final TestStepRecorderMapper testStepRecorderMapper;
 
     @RequestMapping(path = "/fetch_rest_response", method = RequestMethod.POST)
@@ -55,8 +65,8 @@ public class TestStepsRecorderController {
         Page<TestStep> testStep = this.service.findAll(spec, pageable);
         List<TestStepDTO> testDataDTOS =
                 mapper.mapDTOs(testStep.getContent());
-        List<TestStepRecorderDTO> results = testStepRecorderMapper.mapDTOs(testDataDTOS);
-        return new PageImpl<>(results, pageable, testStep.getTotalElements());
+        List<TestStepRecorderDTO> testStepRecorderDTOS = testStepRecorderMapper.mapDTOs(testDataDTOS);
+        return new PageImpl<>(testStepRecorderDTOS, pageable, testStep.getTotalElements());
     }
 
     @DeleteMapping(path = "/{id}")
@@ -69,31 +79,76 @@ public class TestStepsRecorderController {
 
     @PutMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public TestStepRecorderDTO update(@PathVariable(value = "id") Long id, @RequestBody TestStepRequest request) throws TestsigmaException {
+    public TestStepRecorderDTO update(@PathVariable(value = "id") Long id, @RequestBody TestStepRecorderRequest request) throws TestsigmaException {
         log.debug("PUT /test_steps with id::" + id + " request::" + request);
         TestStep testStep = this.service.find(id);
-        mapper.merge(request, testStep);
-        testStep.setUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-        testStep = this.service.update(testStep);
-        return testStepRecorderMapper.mapDTO(this.mapper.mapDTO(testStep));
+        TestStepRecorderDTO testStepRecorderDTO;
+        TestStepDTO testStepDTO;
+        if(request.getIsStepRecorder() && request.getUiIdentifierRequest() != null){
+            log.info("Update Test step from Step recorder");
+            UiIdentifierRequest uiIdentifierRequest = request.getUiIdentifierRequest();
+            ElementRequest elementRequest = uiIdentifierMapper.mapRequest(uiIdentifierRequest);
+            Element element = elementMapper.map(elementRequest);
+            element = elementService.createUiIdentifierFromRecorder(element);
+            request.getDataMap().setUiIdentifier(element.getName());
+
+
+            TestStepRequest testStepRequest = testStepRecorderMapper.mapRequest(request);
+            mapper.merge(testStepRequest, testStep);
+            testStep.setUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+
+            if (testStep.getParentId() != null)
+                testStep.setDisabled(this.service.find(testStep.getParentId()).getDisabled());
+            testStep = this.service.update(testStep);
+            testStepDTO = mapper.mapDTO(testStep);
+
+            testStepRecorderDTO = testStepRecorderMapper.mapDTO(testStepDTO);
+            testStepRecorderDTO.setUiIdentifierDTO(uiIdentifierMapper.mapDTO(elementMapper.map(element)));
+        } else{
+            TestStepRequest testStepRequest = testStepRecorderMapper.mapRequest(request);
+            testStep = this.service.update(mapper.map(testStepRequest));
+            testStepDTO = mapper.mapDTO(testStep);
+            testStepRecorderDTO = testStepRecorderMapper.mapDTO(testStepDTO);
+        }
+        return testStepRecorderDTO;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TestStepRecorderDTO create(@RequestBody TestStepRequest request) throws TestsigmaException {
+    public TestStepRecorderDTO create(@RequestBody TestStepRecorderRequest request) throws TestsigmaException {
         log.debug("POST /test_steps with request::" + request);
-        TestStep testStep = mapper.map(request);
-        testStep.setCreatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-        if (testStep.getParentId() != null)
-            testStep.setDisabled(this.service.find(testStep.getParentId()).getDisabled());
-        testStep = service.create(testStep);
-        return testStepRecorderMapper.mapDTO(this.mapper.mapDTO(testStep));
+        TestStepRecorderDTO testStepRecorderDTO;
+        TestStepDTO testStepDTO;
+        if(request.getIsStepRecorder() && request.getUiIdentifierRequest() != null){
+            log.info("Create Test step from Step recorder");
+            UiIdentifierRequest uiIdentifierRequest = request.getUiIdentifierRequest();
+            ElementRequest elementRequest = uiIdentifierMapper.mapRequest(uiIdentifierRequest);
+            Element element = elementMapper.map(elementRequest);
+            element = elementService.createUiIdentifierFromRecorder(element);
+            request.getDataMap().setUiIdentifier(element.getName());
+
+            TestStepRequest testStepRequest = testStepRecorderMapper.mapRequest(request);
+            TestStep testStep = mapper.map(testStepRequest);
+            testStep.setCreatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+            if (testStep.getParentId() != null)
+                testStep.setDisabled(this.service.find(testStep.getParentId()).getDisabled());
+            testStep = service.create(testStep);
+            testStepDTO = mapper.mapDTO(testStep);
+
+            testStepRecorderDTO = testStepRecorderMapper.mapDTO(testStepDTO);
+            testStepRecorderDTO.setUiIdentifierDTO(uiIdentifierMapper.mapDTO(elementMapper.map(element)));
+        } else{
+            TestStepRequest testStepRequest = testStepRecorderMapper.mapRequest(request);
+            TestStep testStep = service.create(mapper.map(testStepRequest));
+            testStepDTO = mapper.mapDTO(testStep);
+            testStepRecorderDTO = testStepRecorderMapper.mapDTO(testStepDTO);
+        }
+        return testStepRecorderDTO;
     }
 
     @DeleteMapping(value = "/bulk_delete")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void bulkDelete(@RequestParam(value = "ids[]") Long[] ids) throws ResourceNotFoundException {
-        // [TODO] [Pratheepv] position update is stopping from bulk delete query
         log.debug("DELETE /test_steps/bulk_update_properties with ids::" + Arrays.toString(ids));
         for (Long id : ids) {
             TestStep step = this.service.find(id);
@@ -113,15 +168,5 @@ public class TestStepsRecorderController {
         log.debug("PUT /test_steps/bulk_update_properties with ids::" + Arrays.toString(ids) + " waitTime ::"
                 + waitTime + " priority ::" + testStepPriority + " disabled ::" + disabled +" ignoreStepResult ::" +ignoreStepResult);
         this.service.bulkUpdateProperties(ids, testStepPriority, waitTime, disabled, ignoreStepResult,visualEnabled);
-    }
-
-    @PutMapping(value = "/bulk_update")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public void bulkUpdate(@RequestBody List<TestStepRequest> testStepRequests) {
-        log.debug("PUT /test_steps/bulk_update with body::" + testStepRequests);
-        for (TestStepRequest request : testStepRequests) {
-            TestStep step = this.mapper.map(request);
-            this.service.update(step);
-        }
     }
 }

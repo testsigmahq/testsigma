@@ -112,7 +112,7 @@ public interface TestStepRepository extends JpaRepository<TestStep, Long> {
 
   Optional<TestStep> findAllByTestCaseIdAndImportedId(Long workspaceVersionId, Long importedId);
 
-  @Query(value = "select step.* from test_steps step join test_case tcase on tcase.id=step.test_case_id join rest_step_details rstep on rstep.step_id = step.id  where tcase.workspace_version_id = :versionId and (rstep.header_runtime_data IS NOT NULL OR rstep.body_runtime_data IS NOT NULL)", nativeQuery = true)
+  @Query(value = "SELECT testStep from TestStep testStep JOIN TestCase tcase on tcase.id = testStep.testCaseId JOIN RestStep rstep on rstep.stepId = testStep.id  where tcase.workspaceVersionId = :versionId and (rstep.headerRuntimeData IS NOT NULL OR rstep.bodyRuntimeData IS NOT NULL)")
   List<TestStep> getAllRestStepWithRuntime(@Param("versionId") Long versionId);
 
   @Query(value = "SELECT testStep from TestStep testStep JOIN testStep.testCase AS testCase " +

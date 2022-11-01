@@ -17,7 +17,7 @@ public class TestStepRecorderRequest {
     private Long testCaseId;
     private Long testComponentId;
     private String customFields;
-    private ResultConstant[] ifConditionExpectedResults;
+    //private ResultConstant[] ifConditionExpectedResults;
     private TestStepRecorderDataMap dataMap;
     private String exceptedResult;
     private Integer templateId;

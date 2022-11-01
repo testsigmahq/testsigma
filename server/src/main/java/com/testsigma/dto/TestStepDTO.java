@@ -130,18 +130,26 @@ public class TestStepDTO implements Cloneable, Serializable {
 
   public TestStepRecorderDataMap mapTestData() {
     ObjectMapperService mapperService = new ObjectMapperService();
+    TestStepRecorderDataMap testStepDataMap;
     try {
-      return mapperService.parseJsonModel(testData, TestStepRecorderDataMap.class);
+      testStepDataMap = mapperService.parseJsonModel(testData, TestStepRecorderDataMap.class);
     }
     catch(Exception e) {
-      TestStepRecorderDataMap testStepDataMap = new TestStepRecorderDataMap();
-        TestStepNlpData testStepNlpData = new TestStepNlpData();
-        testStepNlpData.setValue(testData);
-        testStepNlpData.setType(testDataType);
-        testStepDataMap.setTestData(new HashMap<>() {{
-          put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA, testStepNlpData);
-        }});
-      return testStepDataMap;
+      //Map<String, String> map = mapperService.parseJson(testData, Map.class);
+      testStepDataMap = new TestStepRecorderDataMap();
+      TestStepNlpData testStepNlpData = new TestStepNlpData();
+      testStepNlpData.setValue(testData);
+      testStepNlpData.setType(testDataType);
+      testStepDataMap.setTestData(new HashMap<>() {{
+        put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA, testStepNlpData);
+      }});
     }
+    if(testStepDataMap == null) {
+      testStepDataMap = new TestStepRecorderDataMap();
+    }
+    if(ifConditionExpectedResults.length > 0) {
+      testStepDataMap.setIfConditionExpectedResults(ifConditionExpectedResults);
+    }
+    return testStepDataMap;
   }
 }

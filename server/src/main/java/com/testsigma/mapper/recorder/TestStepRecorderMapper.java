@@ -51,7 +51,7 @@ public interface TestStepRecorderMapper {
     @Mapping(target = "forLoopTestDataId", ignore = true)
     @Mapping(target = "forLoopStartIndex", ignore = true)
     @Mapping(target = "forLoopEndIndex", ignore = true)
-    @Mapping(target = "element", source = "testStepRecorderRequest.uiIdentifierRequest.name")
+    @Mapping(target = "element", expression = "java(mapElement(testStepRecorderRequest))")
     @Mapping(target = "attribute", ignore = true)
     @Mapping(target = "addonTestData", source = "kibbutzPluginNlpData.testData")
     @Mapping(target = "addonTDF", ignore = true)
@@ -88,6 +88,15 @@ public interface TestStepRecorderMapper {
         if(ifCondtionExpectedResults.isPresent()) {
             ObjectMapperService mapperService = new ObjectMapperService();
             return mapperService.parseJson(ifCondtionExpectedResults.get().toString(), ResultConstant[].class);
+        }
+        return null;
+    }
+
+    default String mapElement(TestStepRecorderRequest testStepRecorderRequest) {
+        if(testStepRecorderRequest.getUiIdentifierRequest() != null) {
+            return testStepRecorderRequest.getUiIdentifierRequest().getName();
+        } else if(testStepRecorderRequest.getDataMap() != null) {
+            return testStepRecorderRequest.getDataMap().getUiIdentifier();
         }
         return null;
     }

@@ -11,6 +11,7 @@ import com.testsigma.mapper.recorder.UiIdentifierMapper;
 import com.testsigma.model.Element;
 import com.testsigma.model.TestStep;
 import com.testsigma.model.TestStepPriority;
+import com.testsigma.model.TestStepType;
 import com.testsigma.model.recorder.TestStepRecorderDTO;
 import com.testsigma.model.recorder.TestStepRecorderRequest;
 import com.testsigma.model.recorder.UiIdentifierRequest;
@@ -128,6 +129,9 @@ public class TestStepsRecorderController {
             request.getDataMap().setUiIdentifier(element.getName());
 
             TestStepRequest testStepRequest = testStepRecorderMapper.mapRequest(request);
+            if(testStepRequest.getType() == TestStepType.NLP_TEXT) {
+                testStepRequest.setType(TestStepType.ACTION_TEXT);
+            }
             TestStep testStep = mapper.map(testStepRequest);
             testStep.setCreatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
             if (testStep.getParentId() != null)

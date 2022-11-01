@@ -75,6 +75,9 @@ public class NLPTemplatesController {
         for(NaturalTextActionsDTO dto : dtos) {
             NLPTemplateDTO result = nlpTemplateMapper.mapDTO(dto);
             result.getData().setTestData(mapNLPTemplateTestData());
+            if(result.getGrammar().contains("#{ui-identifier}")) {
+                result.getData().setUiIdentifier("ui-identifier");
+            }
             results.add(result);
         }
         return new PageImpl<>(results, pageable, nlActions.getTotalElements());

@@ -15,12 +15,16 @@ import org.mapstruct.*;
 public interface NLPTemplateMapper {
 
     @Mapping(target = "keyword", source = "displayName")
-    @Mapping(target = "grammar", source = "naturalText")
+    @Mapping(target = "grammar", expression = "java(mapNaturalText(naturalTextActionDataDTO.getNaturalText()))")
     @Mapping(target = "deprecated", ignore = true)
     @Mapping(target = "applicationType", source = "workspaceType")
     @Mapping(target = "data.testData", ignore = true)
     NLPTemplateDTO mapDTO(NaturalTextActionsDTO naturalTextActionDataDTO);
 
     List<NLPTemplateDTO> mapDTOs(List<NaturalTextActionsDTO> naturalTextActionsDTOs);
+
+    default String mapNaturalText(String naturalText) {
+        return naturalText.replaceAll("#\\{element}", "#{ui-identifier}");
+    }
 
 }

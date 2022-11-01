@@ -51,7 +51,7 @@ public class KibbutzAPIsController {
         Specification<AddonNaturalTextAction> spec = builder.build();
         Page<AddonNaturalTextAction> actions = service.findAll(spec, pageable);
         List<AddonNaturalTextActionDTO> dtos = mapper.mapToDTO(actions.getContent());
-        //List<KibbutzPluginNLPDTO> results = kibbutzPluginNLPMapper.mapDTOs(dtos);
+        //List<KibbutzPluginNLPDTO> results = kibbutzPluginNLPMapper.mapKibbutzPluginNLPDTOs(dtos);
         List<KibbutzPluginNLPDTO> results = new ArrayList<>();
         return new PageImpl<>(results, pageable, actions.getTotalElements());
     }

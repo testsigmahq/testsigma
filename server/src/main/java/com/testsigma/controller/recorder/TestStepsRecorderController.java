@@ -143,6 +143,9 @@ public class TestStepsRecorderController {
             testStepDTO = mapper.mapDTO(testStep);
             testStepRecorderDTO = testStepRecorderMapper.mapDTO(testStepDTO);
         }
+        if(testStepRecorderDTO.getUiIdentifierDTO() != null) {
+            testStepRecorderDTO.getDataMap().setUiIdentifier(testStepRecorderDTO.getUiIdentifierDTO().getName());
+        }
         return testStepRecorderDTO;
     }
 

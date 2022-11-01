@@ -37,7 +37,6 @@ public class NLPTemplatesController {
     private final NaturalTextActionsService naturalTextActionsService;
     private final NaturalTextActionMapper naturalTextActionMapper;
     private final NLPTemplateMapper nlpTemplateMapper;
-    private final ObjectMapperService objectMapperService;
 
     @GetMapping
     public Page<NLPTemplateDTO> index(NaturalTextActionSpecificationsBuilder builder, @PageableDefault(size = Integer.MAX_VALUE) Pageable pageable) {
@@ -75,19 +74,15 @@ public class NLPTemplatesController {
         List<NLPTemplateDTO> results = new ArrayList<>();
         for(NaturalTextActionsDTO dto : dtos) {
             NLPTemplateDTO result = nlpTemplateMapper.mapDTO(dto);
-            result.getData().setTestData(mapNLPTemplateTestData(dto.getData().getTestData()));
+            result.getData().setTestData(mapNLPTemplateTestData());
             results.add(result);
         }
         return new PageImpl<>(results, pageable, nlActions.getTotalElements());
     }
 
-    private LinkedHashMap<String, String> mapNLPTemplateTestData(String data) {
-        try {
-            return (LinkedHashMap<String, String>) objectMapperService.parseJsonModel(data, Map.class);
-        } catch (Exception e) {
-            return new LinkedHashMap<>() {{
-                put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA, data);
-            }};
-        }
+    private LinkedHashMap<String, String> mapNLPTemplateTestData() {
+        return new LinkedHashMap<>() {{
+            put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA, "test-data");
+        }};
     }
 }

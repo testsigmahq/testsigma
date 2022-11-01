@@ -51,7 +51,7 @@ public interface TestStepRecorderMapper {
     @Mapping(target = "forLoopTestDataId", ignore = true)
     @Mapping(target = "forLoopStartIndex", ignore = true)
     @Mapping(target = "forLoopEndIndex", ignore = true)
-    @Mapping(target = "element", ignore = true)
+    @Mapping(target = "element", source = "testStepRecorderRequest.uiIdentifierRequest.name")
     @Mapping(target = "attribute", ignore = true)
     @Mapping(target = "addonTestData", source = "kibbutzPluginNlpData.testData")
     @Mapping(target = "addonTDF", ignore = true)

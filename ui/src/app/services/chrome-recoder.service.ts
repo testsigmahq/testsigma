@@ -203,7 +203,7 @@ export class ChromeRecorderService {
       baseUrl: this.recorderTestCase.startUrl,
       test_case_id: this.recorderTestCase.id,
       version_id: this.recorderTestCase.workspaceVersionId | this.recorderVersion?.id,
-      application_id: this.recorderVersion.workspaceId,
+      applicationId: this.recorderVersion.workspaceId,
       source:'OS',
       applicationType: this.recorderVersion.workspace.workspaceType,
       exclude_map: excludeListMap,

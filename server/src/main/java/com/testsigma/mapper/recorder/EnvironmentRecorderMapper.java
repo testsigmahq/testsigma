@@ -1,6 +1,8 @@
 package com.testsigma.mapper.recorder;
 
 import com.testsigma.dto.EnvironmentDTO;
+import com.testsigma.model.Element;
+import com.testsigma.web.request.ElementRequest;
 import org.mapstruct.*;
 
 import java.util.List;

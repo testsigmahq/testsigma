@@ -49,7 +49,7 @@ public class TestStepsRecorderController {
     private final TestStepService service;
     private final TestStepMapper mapper;
     private final ElementService elementService;
-    private final ElementMapper elementMapper;
+    //private final ElementMapper elementMapper;
     private final UiIdentifierMapper uiIdentifierMapper;
     private final TestStepRecorderMapper testStepRecorderMapper;
 
@@ -89,7 +89,7 @@ public class TestStepsRecorderController {
             log.info("Update Test step from Step recorder");
             UiIdentifierRequest uiIdentifierRequest = request.getUiIdentifierRequest();
             ElementRequest elementRequest = uiIdentifierMapper.mapRequest(uiIdentifierRequest);
-            Element element = elementMapper.map(elementRequest);
+            Element element = uiIdentifierMapper.map(elementRequest);
             element = elementService.createUiIdentifierFromRecorder(element);
             request.getDataMap().setUiIdentifier(element.getName());
 
@@ -104,7 +104,7 @@ public class TestStepsRecorderController {
             testStepDTO = mapper.mapDTO(testStep);
 
             testStepRecorderDTO = testStepRecorderMapper.mapDTO(testStepDTO);
-            testStepRecorderDTO.setUiIdentifierDTO(uiIdentifierMapper.mapDTO(elementMapper.map(element)));
+            testStepRecorderDTO.setUiIdentifierDTO(uiIdentifierMapper.mapDTO(uiIdentifierMapper.map(element)));
         } else{
             TestStepRequest testStepRequest = testStepRecorderMapper.mapRequest(request);
             testStep = this.service.update(mapper.map(testStepRequest));
@@ -124,7 +124,7 @@ public class TestStepsRecorderController {
             log.info("Create Test step from Step recorder");
             UiIdentifierRequest uiIdentifierRequest = request.getUiIdentifierRequest();
             ElementRequest elementRequest = uiIdentifierMapper.mapRequest(uiIdentifierRequest);
-            Element element = elementMapper.map(elementRequest);
+            Element element = uiIdentifierMapper.map(elementRequest);
             element = elementService.createUiIdentifierFromRecorder(element);
             request.getDataMap().setUiIdentifier(element.getName());
 
@@ -140,7 +140,7 @@ public class TestStepsRecorderController {
             testStepDTO = mapper.mapDTO(testStep);
 
             testStepRecorderDTO = testStepRecorderMapper.mapDTO(testStepDTO);
-            testStepRecorderDTO.setUiIdentifierDTO(uiIdentifierMapper.mapDTO(elementMapper.map(element)));
+            testStepRecorderDTO.setUiIdentifierDTO(uiIdentifierMapper.mapDTO(uiIdentifierMapper.map(element)));
         } else{
             TestStepRequest testStepRequest = testStepRecorderMapper.mapRequest(request);
             TestStep testStep = service.create(mapper.map(testStepRequest));

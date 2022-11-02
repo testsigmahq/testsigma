@@ -2,6 +2,9 @@ package com.testsigma.mapper.recorder;
 
 import com.testsigma.dto.ElementDTO;
 import com.testsigma.dto.ElementScreenNameDTO;
+import com.testsigma.model.Element;
+import com.testsigma.model.ElementMetaData;
+import com.testsigma.model.ElementMetaDataRequest;
 import com.testsigma.model.recorder.UiIdentifierDTO;
 import com.testsigma.model.recorder.UiIdentifierRequest;
 import com.testsigma.model.recorder.UiIdentifierScreenNameDTO;
@@ -47,4 +50,15 @@ public interface UiIdentifierMapper {
 
     @Mapping(source = "applicationVersionId", target = "workspaceVersionId")
     ElementScreenNameRequest mapScreenNameRequest(UiIdentifierScreenNameRequest request);
+
+    @Mapping(target = "currentElement", expression = "java(elementMetaDataRequest.getStringCurrentElement())")
+    ElementMetaData map(ElementMetaDataRequest elementMetaDataRequest);
+
+    ElementDTO map(Element element);
+
+    //@Mapping(target = "screenNameObj", ignore = true)
+    void merge(ElementRequest elementRequest, @MappingTarget Element element);
+
+    //@Mapping(target = "screenNameObj", ignore = true)
+    Element map(ElementRequest elementRequest);
 }

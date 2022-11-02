@@ -40,6 +40,8 @@ public interface TestDataProfileMapper {
 
   List<TestDataProfileDTO> mapToDTO(List<TestData> testData);
 
+  List<TestDataSetDTO> mapToDtos(List<TestDataSet> testDataSets);
+
   TestData map(TestDataProfileRequest request);
 
   @Mapping(target = "data", expression = "java(testDataSetXMLDTO.getData())")
@@ -82,9 +84,6 @@ public interface TestDataProfileMapper {
     if (testDataSet.getData() != null) {
       JSONObject object = testDataSet.getData();
       testDataSetDTO.setData(object);
-    }
-    if (testDataSet.getTestDataId() != null) {
-      testDataSetDTO.setTestDataId(testDataSet.getTestDataId());
     }
 
     return testDataSetDTO;

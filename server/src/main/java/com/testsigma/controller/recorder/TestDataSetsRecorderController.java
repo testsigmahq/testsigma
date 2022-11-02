@@ -7,7 +7,6 @@ import com.testsigma.model.TestData;
 import com.testsigma.model.TestDataSet;
 import com.testsigma.model.recorder.TestDataSetDTO;
 import com.testsigma.service.TestDataProfileService;
-import com.testsigma.service.TestDataSetService;
 import com.testsigma.specification.SearchCriteria;
 import com.testsigma.specification.TestDataSetSpecificationBuilder;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,19 +40,8 @@ public class TestDataSetsRecorderController {
             }
         }
         TestData testData = testDataProfileService.find(testDataId);
-        List<TestDataSet> testDataSets = mapTestDataSets(testData);
+        List<TestDataSet> testDataSets = testData.getData();
         List<TestDataSetDTO> testDataSetDTOS = testDataMapper.mapTestDataSetDTOs(testDataProfileMapper.mapToDtos(testDataSets));
         return new PageImpl<>(testDataSetDTOS, pageable, testDataSets.size());
-    }
-
-    private List<TestDataSet> mapTestDataSets(TestData testData) {
-        List<TestDataSet> testDataSets = testData.getTempTestData();
-        Long index = 0L;
-        for (TestDataSet testDataSet : testDataSets) {
-            testDataSet.setTestDataId(testData.getId());
-            testDataSet.setPosition(index);
-            index++;
-        }
-        return testDataSets;
     }
 }

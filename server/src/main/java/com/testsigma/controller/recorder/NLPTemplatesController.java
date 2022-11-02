@@ -13,6 +13,7 @@ import com.testsigma.specification.NaturalTextActionSpecificationsBuilder;
 import com.testsigma.specification.SearchCriteria;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -24,10 +25,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 @Log4j2
@@ -77,6 +77,15 @@ public class NLPTemplatesController {
             result.getData().setTestData(mapNLPTemplateTestData());
             if(result.getGrammar().contains("#{ui-identifier}")) {
                 result.getData().setUiIdentifier("ui-identifier");
+            }
+            Pattern pattern = Pattern.compile("\\$\\{(.*?)}");
+            Matcher matcher = pattern.matcher(result.getGrammar());
+            if (matcher.find())
+            {
+                String allowedValues = matcher.group(1);
+                String grammar = result.getGrammar().replaceAll("\\$\\{(.*?)}", "\\${test-data}");
+                result.setGrammar(grammar);
+                result.getData().setTestData(new HashMap<>() {{put("test-data", allowedValues);}});
             }
             results.add(result);
         }

@@ -275,7 +275,7 @@ export class ActionTestDataParameterSuggestionComponent  extends BaseComponent i
     }
   }
   populateDataProfileSuggestion(){
-    this.testDataService.findAll("testDataId:"+ this.selectedTdpId, 'position').subscribe(res=>{
+    this.testDataService.findAll("testDataProfileId:"+ this.selectedTdpId, 'position').subscribe(res=>{
       this.dataProfileSuggestion = Object.keys(res.content[0].data);
       this.onSearchTdp();
       this.filter()

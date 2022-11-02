@@ -50,7 +50,6 @@ import java.util.Optional;
 public class TestDataProfileService extends XMLExportImportService<TestData> {
   private final TestDataProfileRepository testDataProfileRepository;
   private final ApplicationEventPublisher applicationEventPublisher;
-  private final TestDataSetService testDataSetService;
   private final TestDataProfileMapper mapper;
 
   public TestData find(Long id) throws ResourceNotFoundException {
@@ -78,29 +77,13 @@ public class TestDataProfileService extends XMLExportImportService<TestData> {
   }
 
   public TestData create(TestData testData) {
-    List<TestDataSet> dataSets = testData.getData();
-    testData.setIsMigrated(true);
     testData = this.testDataProfileRepository.save(testData);
-    saveTestDataSets(testData.getId(), dataSets);
     publishEvent(testData, EventType.CREATE);
     return testData;
   }
 
-  private void saveTestDataSets(Long testDataId, List<TestDataSet> dataSets){
-    Long position = 0L;
-    for(TestDataSet dataSet: dataSets){
-      dataSet.setTestDataId(testDataId);
-      dataSet.setPosition(position);
-      this.testDataSetService.create(dataSet);
-      position++;
-    }
-  }
-
   public TestData update(TestData testData) {
     Map<String, String> renamedColumns = testData.getRenamedColumns();
-    List<TestDataSet> dataSets = testData.getData();
-    saveTestDataSets(testData.getId(), dataSets);
-    testData.setIsMigrated(true);
     testData = testDataProfileRepository.save(testData);
     testData.setRenamedColumns(renamedColumns);
     publishEvent(testData, EventType.UPDATE);
@@ -180,7 +163,7 @@ public class TestDataProfileService extends XMLExportImportService<TestData> {
         encryptPasswordsInTestDataSet(set, testData.getPasswords());
         sets.add(set);
       }
-      testData.setTempTestData(sets);
+      testData.setData(sets);
     }
     return testData;
   }
@@ -232,14 +215,7 @@ public class TestDataProfileService extends XMLExportImportService<TestData> {
 
   @Override
   public TestData save(TestData testData) {
-    List<TestDataSet> dataSets = testData.getData();
-    if(testData.getTempTestData()==null){
-      testData.setTempTestData(dataSets);
-    }
-    testData.setIsMigrated(true);
-    testData = testDataProfileRepository.save(testData);
-    saveTestDataSets(testData.getId(), dataSets);
-    return testData;
+    return testDataProfileRepository.save(testData);
   }
 
   @Override

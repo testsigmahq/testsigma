@@ -14,5 +14,4 @@ public class TestDataProfileDTO {
   private Timestamp createdDate;
   private Timestamp updatedDate;
   private Long versionId;
-  private Boolean isMigrated;
 }

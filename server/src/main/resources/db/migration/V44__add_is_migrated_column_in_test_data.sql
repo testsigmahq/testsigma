@@ -1,1 +1,0 @@
-ALTER TABLE `test_data` ADD COLUMN `is_migrated` tinyint(1) DEFAULT 0;

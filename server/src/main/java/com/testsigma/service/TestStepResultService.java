@@ -91,7 +91,7 @@ public class TestStepResultService {
     }
     List<TestDataSet> sets = testData.getData();
     sets.set(index, testDataSet);
-    testData.setTempTestData(sets);
+    testData.setData(sets);
   }
 
   public boolean createTestCaseSteps(List<TestStepResultRequest> testCaseStepResultList, TestDataSet testDataSet,

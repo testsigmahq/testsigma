@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/os_recorder/test_data_sets", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(value = "/os_recorder/test_data_sets")
 @Log4j2
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class TestDataSetsRecorderController {

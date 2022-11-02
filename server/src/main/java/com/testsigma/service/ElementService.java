@@ -77,7 +77,11 @@ public class ElementService extends XMLExportImportService<Element> {
   public Page<Element> findAllSortedByPreviousStepElement(Pageable pageable, Long applicationVersionId,
                                                                String name, String screenName, String previousStepElementName) {
     Element previousElement = elementRepository.findFirstElementByNameAndWorkspaceVersionId(previousStepElementName, applicationVersionId);
-    return elementRepository.findWithOrderByPreviousStepElementID(pageable, applicationVersionId, name, screenName, previousElement.getScreenNameId());
+    Long screenNameId = null;
+    if(previousElement != null) {
+      screenNameId = previousElement.getScreenNameId();
+    }
+    return elementRepository.findWithOrderByPreviousStepElementID(pageable, applicationVersionId, name, screenName, screenNameId);
   }
 
   public Element createUiIdentifierFromRecorder(Element element) throws ResourceNotFoundException {

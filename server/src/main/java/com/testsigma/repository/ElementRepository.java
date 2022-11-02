@@ -23,6 +23,7 @@ import java.util.Optional;
 @Repository
 @Transactional
 public interface ElementRepository extends BaseRepository<Element, Long> {
+
   Element findFirstElementByNameAndWorkspaceVersionId(String name, Long workspaceVersionId);
 
   List<Element> findByNameInAndWorkspaceVersionId(List<String> names, Long workspaceVersionId);

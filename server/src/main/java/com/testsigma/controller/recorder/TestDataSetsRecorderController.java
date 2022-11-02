@@ -1,9 +1,12 @@
 package com.testsigma.controller.recorder;
 
+import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.mapper.TestDataProfileMapper;
 import com.testsigma.mapper.recorder.TestDataMapper;
+import com.testsigma.model.TestData;
 import com.testsigma.model.TestDataSet;
 import com.testsigma.model.recorder.TestDataSetDTO;
+import com.testsigma.service.TestDataProfileService;
 import com.testsigma.service.TestDataSetService;
 import com.testsigma.specification.SearchCriteria;
 import com.testsigma.specification.TestDataSetSpecificationBuilder;
@@ -28,19 +31,31 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class TestDataSetsRecorderController {
     private final TestDataMapper testDataMapper;
-    private final TestDataSetService testDataSetService;
+    private final TestDataProfileService testDataProfileService;
     private final TestDataProfileMapper testDataProfileMapper;
 
     @RequestMapping(method = RequestMethod.GET)
-    public Page<TestDataSetDTO> index(TestDataSetSpecificationBuilder builder, @PageableDefault(value = 2000) Pageable pageable){
+    public Page<TestDataSetDTO> index(TestDataSetSpecificationBuilder builder, @PageableDefault(value = 2000) Pageable pageable) throws ResourceNotFoundException {
         Long testDataId = null;
         for (SearchCriteria param : builder.params) {
             if (param.getKey().equals("testDataProfileId")) {
                 testDataId = Long.parseLong(param.getValue().toString());
             }
         }
-        Page<TestDataSet> testDataSets = testDataSetService.findAllByTestDataId(testDataId, pageable);
-        List<TestDataSetDTO> testDataSetDTOS = testDataMapper.mapTestDataSetDTOs(testDataProfileMapper.mapToDtos(testDataSets.getContent()));
-        return new PageImpl<>(testDataSetDTOS, pageable, testDataSets.getTotalElements());
+        TestData testData = testDataProfileService.find(testDataId);
+        List<TestDataSet> testDataSets = mapTestDataSets(testData);
+        List<TestDataSetDTO> testDataSetDTOS = testDataMapper.mapTestDataSetDTOs(testDataProfileMapper.mapToDtos(testDataSets));
+        return new PageImpl<>(testDataSetDTOS, pageable, testDataSets.size());
+    }
+
+    private List<TestDataSet> mapTestDataSets(TestData testData) {
+        List<TestDataSet> testDataSets = testData.getTempTestData();
+        Long index = 0L;
+        for (TestDataSet testDataSet : testDataSets) {
+            testDataSet.setTestDataId(testData.getId());
+            testDataSet.setPosition(index);
+            index++;
+        }
+        return testDataSets;
     }
 }

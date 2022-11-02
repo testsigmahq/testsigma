@@ -17,6 +17,7 @@ import com.testsigma.model.*;
 import com.testsigma.model.recorder.KibbutzTestStepTestData;
 import com.testsigma.model.recorder.TestStepNlpData;
 import com.testsigma.model.recorder.TestStepRecorderDataMap;
+import com.testsigma.model.recorder.TestStepRecorderForLoop;
 import com.testsigma.service.ObjectMapperService;
 import lombok.Data;
 import org.json.JSONObject;
@@ -150,8 +151,21 @@ public class TestStepDTO implements Cloneable, Serializable {
     if(element != null) {
       testStepDataMap.setUiIdentifier(element);
     }
+    if(fromElement != null) {
+      testStepDataMap.setFromUiIdentifier(fromElement);
+    }
+    if(toElement != null) {
+      testStepDataMap.setToUiIdentifier(toElement);
+    }
     if(ifConditionExpectedResults.length > 0) {
       testStepDataMap.setIfConditionExpectedResults(ifConditionExpectedResults);
+    }
+    if(forLoopStartIndex != null || forLoopTestDataId != null || forLoopEndIndex != null) {
+      TestStepRecorderForLoop testStepForLoop= new TestStepRecorderForLoop();
+      testStepForLoop.setTestDataId(forLoopTestDataId);
+      testStepForLoop.setStartIndex(forLoopStartIndex);
+      testStepForLoop.setEndIndex(forLoopEndIndex);
+      testStepDataMap.setForLoop(testStepForLoop);
     }
     return testStepDataMap;
   }

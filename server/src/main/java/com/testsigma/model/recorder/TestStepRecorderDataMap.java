@@ -33,7 +33,7 @@ public class TestStepRecorderDataMap {
     @JsonProperty("attribute")
     private String attribute;
     @JsonProperty("for_loop")
-    private TestStepForLoop forLoop;
+    private TestStepRecorderForLoop forLoop;
     @JsonProperty("while_loop")
     private TestStepWhileLoop whileLoop;
     @JsonProperty("whileCondition")

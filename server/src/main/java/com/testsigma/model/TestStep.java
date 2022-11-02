@@ -14,6 +14,7 @@ import com.testsigma.dto.export.CloudTestDataFunction;
 import com.testsigma.model.recorder.KibbutzTestStepTestData;
 import com.testsigma.model.recorder.TestStepNlpData;
 import com.testsigma.model.recorder.TestStepRecorderDataMap;
+import com.testsigma.model.recorder.TestStepRecorderForLoop;
 import com.testsigma.service.ObjectMapperService;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -243,19 +244,42 @@ public class TestStep {
 
   public TestStepRecorderDataMap getDataMap() {
     ObjectMapperService mapperService = new ObjectMapperService();
+    TestStepRecorderDataMap testStepDataMap;
     try {
-      return mapperService.parseJsonModel(testData, TestStepRecorderDataMap.class);
-    }
-    catch(Exception e) {
-      TestStepRecorderDataMap testStepDataMap = new TestStepRecorderDataMap();
+      testStepDataMap = mapperService.parseJsonModel(testData, TestStepRecorderDataMap.class);
+    } catch (Exception e) {
+      //Map<String, String> map = mapperService.parseJson(testData, Map.class);
+      testStepDataMap = new TestStepRecorderDataMap();
       TestStepNlpData testStepNlpData = new TestStepNlpData();
       testStepNlpData.setValue(testData);
       testStepNlpData.setType(testDataType);
       testStepDataMap.setTestData(new HashMap<>() {{
         put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA, testStepNlpData);
       }});
-      return testStepDataMap;
     }
+    if (testStepDataMap == null) {
+      testStepDataMap = new TestStepRecorderDataMap();
+    }
+    if (element != null) {
+      testStepDataMap.setUiIdentifier(element);
+    }
+    if(fromElement != null) {
+      testStepDataMap.setFromUiIdentifier(fromElement);
+    }
+    if(toElement != null) {
+      testStepDataMap.setToUiIdentifier(toElement);
+    }
+    if (ifConditionExpectedResults.length > 0) {
+      testStepDataMap.setIfConditionExpectedResults(ifConditionExpectedResults);
+    }
+    if (forLoopStartIndex != null || forLoopTestDataId != null || forLoopEndIndex != null) {
+      TestStepRecorderForLoop testStepForLoop= new TestStepRecorderForLoop();
+      testStepForLoop.setTestDataId(forLoopTestDataId);
+      testStepForLoop.setStartIndex(forLoopStartIndex);
+      testStepForLoop.setEndIndex(forLoopEndIndex);
+      testStepDataMap.setForLoop(testStepForLoop);
+    }
+    return testStepDataMap;
   }
 
   /*

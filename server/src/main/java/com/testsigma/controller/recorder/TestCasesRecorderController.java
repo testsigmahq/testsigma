@@ -43,7 +43,7 @@ public class TestCasesRecorderController {
     @RequestMapping(method = RequestMethod.GET)
     public Page<com.testsigma.model.recorder.TestCaseDTO> index(TestCaseSpecificationsBuilder builder,
                                                                 @PageableDefault(value = 25, page = 0) Pageable pageable) {
-        log.debug("GET /test_cases");
+        log.debug("GET /os_recorder/test_cases");
 
         Long workspaceVersionId = null;
         Boolean isStepGroup = null;

@@ -31,7 +31,7 @@ public class EnvironmentsRecorderController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<EnvironmentDTO> index(EnvironmentSpecificationsBuilder builder, Pageable pageable) {
-        log.info("Get Request /environments");
+        log.info("Get Request /os_recorder/environments");
         Specification<Environment> spec = builder.build();
         Page<Environment> environments = environmentService.findAll(spec, pageable);
         List<EnvironmentDTO> environmentDTOS = environmentRecorderMapper.mapDTOs(environmentMapper.map(environments.getContent()));

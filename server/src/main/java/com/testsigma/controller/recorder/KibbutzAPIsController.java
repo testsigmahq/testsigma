@@ -38,7 +38,7 @@ public class KibbutzAPIsController {
 
     @GetMapping(path = "/test_data_functions")
     public Page<KibbutzPluginTestDataFunctionDTO> testDataFunctions(AddonPluginTestDataFunctionSpecificationBuilder builder, @PageableDefault(size = Integer.MAX_VALUE) Pageable pageable) {
-        log.debug("GET /addon/test_data_functions");
+        log.debug("GET /os_recorder/addon/test_data_functions");
         Specification<AddonPluginTestDataFunction> spec = builder.build();
         Page<AddonPluginTestDataFunction> actions = testDataFunctionService.findAll(spec, pageable);
         List<KibbutzPluginTestDataFunctionDTO> dtos = kibbutzPluginNLPMapper.mapPluginTestDataFunctionDTOs(mapper.mapTDFToDTO(actions.getContent()));

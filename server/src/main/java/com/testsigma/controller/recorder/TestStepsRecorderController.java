@@ -85,6 +85,9 @@ public class TestStepsRecorderController {
         TestStep testStep = this.service.find(id);
         TestStepRecorderDTO testStepRecorderDTO;
         TestStepDTO testStepDTO;
+        if(request.getType() == TestStepType.NLP_TEXT) {
+            request.setType(TestStepType.ACTION_TEXT);
+        }
         if(request.getIsStepRecorder() && request.getUiIdentifierRequest() != null){
             log.info("Update Test step from Step recorder");
             UiIdentifierRequest uiIdentifierRequest = request.getUiIdentifierRequest();

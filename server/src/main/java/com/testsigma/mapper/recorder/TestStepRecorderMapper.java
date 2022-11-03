@@ -3,6 +3,7 @@ package com.testsigma.mapper.recorder;
 import com.testsigma.dto.TestStepDTO;
 import com.testsigma.model.ResultConstant;
 import com.testsigma.model.TestStepDataMap;
+import com.testsigma.model.TestStepType;
 import com.testsigma.model.recorder.TestStepRecorderDTO;
 import com.testsigma.model.recorder.TestStepRecorderRequest;
 import com.testsigma.service.ObjectMapperService;
@@ -34,6 +35,7 @@ public interface TestStepRecorderMapper {
     @Mapping(target = "dataMap", expression = "java(testStepDTO.mapTestData())")
     @Mapping(target = "componentTestCaseEntity", ignore = true)
     @Mapping(target = "blockId", ignore = true)
+    @Mapping(target = "type", expression = "java(mapTestStepType(testStepDTO.getType()))")
     TestStepRecorderDTO mapDTO(TestStepDTO testStepDTO);
 
     List<TestStepRecorderDTO> mapDTOs(List<TestStepDTO> testStepDTO);
@@ -99,5 +101,12 @@ public interface TestStepRecorderMapper {
             return testStepRecorderRequest.getDataMap().getUiIdentifier();
         }
         return null;
+    }
+
+    default TestStepType mapTestStepType(TestStepType type) {
+        if(type == TestStepType.ACTION_TEXT) {
+            return TestStepType.NLP_TEXT;
+        }
+        return type;
     }
 }

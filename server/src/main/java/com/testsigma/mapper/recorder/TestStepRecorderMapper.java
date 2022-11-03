@@ -11,6 +11,7 @@ import com.testsigma.web.request.TestStepRequest;
 import org.mapstruct.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,
@@ -44,8 +45,8 @@ public interface TestStepRecorderMapper {
     @Mapping(target = "ifConditionExpectedResults", expression = "java(mapIfConditionExpectedResults(testStepRecorderRequest))")
     @Mapping(target = "toElement", source = "testStepRecorderRequest.dataMap.fromUiIdentifier")
     @Mapping(target = "testDataType", expression = "java(mapTestDataType(testStepRecorderRequest))")
-    @Mapping(target = "testDataFunctionId", ignore = true)
-    @Mapping(target = "testDataFunctionArgs", ignore = true)
+    @Mapping(target = "testDataFunctionId", expression = "java(mapTestDataFunctionId(testStepRecorderRequest))")
+    @Mapping(target = "testDataFunctionArgs", expression = "java(mapTestDataFunctionArgs(testStepRecorderRequest))")
     @Mapping(target = "testData", expression = "java(mapTestDataValue(testStepRecorderRequest))")
     @Mapping(target = "stepGroupId", source = "testComponentId")
     @Mapping(target = "naturalTextActionId", source = "templateId")
@@ -69,6 +70,28 @@ public interface TestStepRecorderMapper {
                 .map(testData -> testData.values())
                 .map(values -> values.stream().findFirst())
                 .map(nlpData -> nlpData.get().getValue());
+        return data.isPresent() ? data.get() : null;
+    }
+
+    default Long mapTestDataFunctionId(TestStepRecorderRequest testStepRecorderRequest) {
+        Optional<Long> data = Optional.ofNullable(testStepRecorderRequest)
+                .map(request -> request.getDataMap())
+                .map(dataMap -> dataMap.getTestData())
+                .map(testData -> testData.values())
+                .map(values -> values.stream().findFirst())
+                .map(nlpData -> nlpData.get().getTestDataFunction())
+                .map(testDataRecorderFunction -> testDataRecorderFunction.getId());
+        return data.isPresent() ? data.get() : null;
+    }
+
+    default Map<String, String> mapTestDataFunctionArgs(TestStepRecorderRequest testStepRecorderRequest) {
+        Optional<Map<String, String>> data = Optional.ofNullable(testStepRecorderRequest)
+                .map(request -> request.getDataMap())
+                .map(dataMap -> dataMap.getTestData())
+                .map(testData -> testData.values())
+                .map(values -> values.stream().findFirst())
+                .map(nlpData -> nlpData.get().getTestDataFunction())
+                .map(testDataFunction -> testDataFunction.getTestDataFunctionArgs());
         return data.isPresent() ? data.get() : null;
     }
 

@@ -24,7 +24,7 @@ import java.util.List;
 @RestController
 @Log4j2
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-@RequestMapping(path = "/os_recorder/default_data_generators")
+@RequestMapping(path = "/os_recorder/custom_functions")
 public class DefaultDataRecorderGeneratorController {
 
     private final DefaultDataGeneratorMapper testDataFunctionMapper;
@@ -33,8 +33,8 @@ public class DefaultDataRecorderGeneratorController {
 
     @GetMapping
     public Page<DefaultDataGeneartorRecorderFunctionDTO> index(DefaultDataGeneratorSpecificationsBuilder builder, Pageable pageable) {
-        Specification<DefaultDataGenerator> specification = builder.build();
-        Page<DefaultDataGenerator> testDataFunctions = defaultDataGeneratorService.findAll(specification, pageable);
+        //Specification<DefaultDataGenerator> specification = builder.build();
+        Page<DefaultDataGenerator> testDataFunctions = defaultDataGeneratorService.findAll(pageable);
         List<DefaultDataGeneratorsDTO> dtos = testDataFunctionMapper.mapToDTO(testDataFunctions.getContent());
         List<DefaultDataGeneartorRecorderFunctionDTO> results = defaultDataGeneratorRecorderMapper.mapDTOs(dtos);
         return new PageImpl<>(results, pageable, testDataFunctions.getTotalElements());

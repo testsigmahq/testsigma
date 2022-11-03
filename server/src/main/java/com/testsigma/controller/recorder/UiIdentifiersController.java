@@ -68,8 +68,10 @@ public class UiIdentifiersController {
         String previousStepElementName = null;
         for (SearchCriteria param : builder.params) {
             if (param.getKey().equals("applicationVersionId") || param.getKey().equals("workspaceVersionId")) {
+                param.setKey("workspaceVersionId");
                 applicationVersion = Long.parseLong(param.getValue().toString());
             } else if (param.getKey().equals("name")) {
+                param.setKey("name");
                 name = param.getValue().toString();
             } else if (param.getKey().equals("screenName")) {
                 screenName = param.getValue().toString();

@@ -120,6 +120,9 @@ public class TestStepsRecorderController {
         log.debug("POST /test_steps with request::" + request);
         TestStepRecorderDTO testStepRecorderDTO;
         TestStepDTO testStepDTO;
+        if(request.getType() == TestStepType.NLP_TEXT) {
+            request.setType(TestStepType.ACTION_TEXT);
+        }
         if(request.getIsStepRecorder() && request.getUiIdentifierRequest() != null){
             log.info("Create Test step from Step recorder");
             UiIdentifierRequest uiIdentifierRequest = request.getUiIdentifierRequest();
@@ -129,9 +132,6 @@ public class TestStepsRecorderController {
             request.getDataMap().setUiIdentifier(element.getName());
 
             TestStepRequest testStepRequest = testStepRecorderMapper.mapRequest(request);
-            if(testStepRequest.getType() == TestStepType.NLP_TEXT) {
-                testStepRequest.setType(TestStepType.ACTION_TEXT);
-            }
             TestStep testStep = mapper.map(testStepRequest);
             testStep.setCreatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
             if (testStep.getParentId() != null)

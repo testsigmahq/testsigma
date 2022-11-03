@@ -171,7 +171,8 @@ export class ChromeRecorderService {
       content: "Get element",
       version_id: this.recorderVersion?.id,
       element_capture: isMultipleElementCapture,
-      serverUrl: window.location.origin
+      serverUrl: window.location.origin,
+      source: 'OS'
     }, "*");
   };
 

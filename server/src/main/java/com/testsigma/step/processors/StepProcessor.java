@@ -262,7 +262,7 @@ public class StepProcessor {
     testDataPropertiesEntity.setTestDataType(testDataType);
 
     switch (com.testsigma.model.TestDataType.getTypeFromName(testDataType)) {
-      case environment:
+      case global:
         if ((environmentParameters == null)) {
           throw new TestsigmaException(ExceptionErrorCodes.ENVIRONMENT_PARAMETERS_NOT_CONFIGURED,
             MessageConstants.getMessage(MessageConstants.MSG_UNKNOWN_ENVIRONMENT_DATA_SET));
@@ -490,7 +490,7 @@ public class StepProcessor {
                 Matcher.quoteReplacement(data));
           }
 
-        } else if (dataMap.get(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA_TYPE).equals(TestDataType.environment.name())) {
+        } else if (dataMap.get(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA_TYPE).equals(TestDataType.global.name())) {
           if (environmentParams != null && StringUtils.isNotEmpty(dataMap.get(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA))) {
             String data = environmentParams.get(dataMap.get(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA));
             if (data != null) {

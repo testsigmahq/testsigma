@@ -207,7 +207,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       if(res.type == 'element' && this.mobileRecorderEventService.currentlyTargetElement) {
         let name = typeof res.data == "string" ? res.data : res.data.name;
         this.assignElement(name, this.mobileRecorderEventService.currentlyTargetElement);
-      }else if(res.type == TestDataType.environment) {
+      }else if(res.type == TestDataType.global) {
         this.environmentAfterClose(res.data)
       } else if(res.type == TestDataType.parameter) {
         this.dataProfileAfterClose(res.data);
@@ -1054,7 +1054,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         this.assignDataValue("!| |")
         this.openSuggestionTestDataFunction()
         break;
-      case TestDataType.environment:
+      case TestDataType.global:
         this.assignDataValue("*| |")
         this.openSuggestionEnvironment()
         break;
@@ -1547,7 +1547,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       case TestDataType.parameter:
         testDataString = "@|" + testDataString + "|";
         break;
-      case TestDataType.environment:
+      case TestDataType.global:
         testDataString = "*|" + testDataString + "|";
         break;
     }
@@ -1785,7 +1785,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
 
   private environmentAfterClose(data) {
     data = data || ' ';
-    this.assignDataValue(this.getDataTypeString(TestDataType.environment, data));
+    this.assignDataValue(this.getDataTypeString(TestDataType.global, data));
     if (data == ' ') {
       this.showTestDataPopup()
     }

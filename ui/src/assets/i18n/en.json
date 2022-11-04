@@ -1454,7 +1454,7 @@
   "action.testDataType.raw": "Plain Text",
   "action.testDataType.parameter": "@|Parameter|",
   "action.testDataType.runtime": "$|Runtime|",
-  "action.testDataType.environment": "*|Environment|",
+  "action.testDataType.global": "*|Environment|",
   "action.testDataType.random": "~|Random|",
   "action.testDataType.function": "!|Data Generator|",
   "action.environment.suggestion.title": "Environment ( {{EnvironmentName}} )",

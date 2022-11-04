@@ -15,7 +15,7 @@ public enum TestDataType {
   raw(1, "raw"),
   parameter(2, "parameter"),
   runtime(3, "runtime"),
-  environment(4, "environment"),
+  global(4, "global"),
   random(5, "random"),
   function(6, "function");
 

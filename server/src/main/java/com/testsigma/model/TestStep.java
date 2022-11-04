@@ -344,7 +344,7 @@ public class TestStep {
   public void setTestDataType(String testDataType) {
     if (testDataType !=null){
       if (testDataType.equals("global"))
-        this.testDataType = TestDataType.environment.getDispName();
+        this.testDataType = TestDataType.global.getDispName();
       else if (testDataType.equals("phone_number") || testDataType.equals("mail_box"))
         this.testDataType = TestDataType.raw.getDispName();
       else this.testDataType = testDataType;

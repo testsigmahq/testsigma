@@ -11,7 +11,7 @@ export enum TestDataType {
   raw = "raw",
   parameter = "parameter",
   runtime = "runtime",
-  environment = "environment",
+  global = "global",
   random = "random",
   function = "function"
 }

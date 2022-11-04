@@ -857,9 +857,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
           return false;
         });
         item.addEventListener('keydown', (event) => {
-          console.log('test data keydown event triggered');
           if (event.key == "Enter" && !this.showDataTypes) {
-            this.validateTestData();
             return this.stopEvent(event);
           }
           this.getAddonTemplateAllowedValues(item.dataset?.reference);

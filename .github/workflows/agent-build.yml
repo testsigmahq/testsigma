@@ -30,6 +30,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: 'us-east-1'
           AWS_DEFAULT_OUTPUT: json
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Building 
         run: |
           if [[ "${{ github.event.inputs.buildType }}" == "Testing" ]]; then
@@ -43,3 +44,4 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: 'us-east-1'
           AWS_DEFAULT_OUTPUT: json
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

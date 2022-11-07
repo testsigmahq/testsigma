@@ -35,6 +35,7 @@ import {ToastrService} from "ngx-toastr";
 import {InfiniteScrollableDataSource} from "../../data-sources/infinite-scrollable-data-source";
 import {LinkedEntitiesModalComponent} from "../../shared/components/webcomponents/linked-entities-modal.component";
 import {PageObject} from "../../shared/models/page-object";
+import {SharedService} from "../../services/shared.service";
 
 @Component({
   selector: 'app-steps-list',
@@ -97,6 +98,7 @@ export class StepsListComponent extends BaseComponent implements OnInit {
     public toastrService: ToastrService,
     private testStepService: TestStepService,
     private AddonActionService: AddonActionService,
+    private sharedService:SharedService,
     ) {
     super(authGuard, notificationsService, translate, toastrService);
   }
@@ -259,7 +261,7 @@ export class StepsListComponent extends BaseComponent implements OnInit {
         let list = new InfiniteScrollableDataSource();
         list.cachedItems=list.cachedItems.concat(res.content);
         list.dataStream.next(list.cachedItems);
-        this.openLinkedTestStepsDialog(list)
+        this.sharedService.openLinkedTestStepsDialog(list);
       }
     })
   }

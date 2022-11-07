@@ -25,6 +25,7 @@ import {MobileStepRecorderComponent} from "../../agents/components/webcomponents
 import {InfiniteScrollableDataSource} from "../../data-sources/infinite-scrollable-data-source";
 import {LinkedEntitiesModalComponent} from "../../shared/components/webcomponents/linked-entities-modal.component";
 import {StepsListComponent} from "../cases/steps-list.component";
+import {SharedService} from "../../services/shared.service";
 
 @Component({
   selector: 'app-test-step-list-item',
@@ -53,6 +54,7 @@ export abstract class TestStepListItemComponent extends BaseComponent implements
   @Output('onSelectedStepType') public onSelectedStepType = new EventEmitter<any>();
   public isCloning: boolean;
 
+
   get mobileStepRecorder():MobileStepRecorderComponent {
     return this.matModal.openDialogs.find(dialog => dialog.componentInstance instanceof MobileStepRecorderComponent)?.componentInstance;
   }
@@ -65,6 +67,7 @@ export abstract class TestStepListItemComponent extends BaseComponent implements
     public testStepService: TestStepService,
     public naturalTestActionService: NaturalTextActionsService,
     public matModal: MatDialog,
+    public sharedService: SharedService,
   ) {
     super(authGuard, notificationsService, translate, toastrService);
   }
@@ -106,7 +109,7 @@ export abstract class TestStepListItemComponent extends BaseComponent implements
         if (testSteps.isEmpty)
           _this.deleteStep(testStep);
         else
-          _this.openLinkedTestStepsDialog(testSteps);
+          _this.sharedService.openLinkedTestStepsDialog(testSteps);
       }
     }
   }

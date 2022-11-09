@@ -223,7 +223,7 @@ export class TestStep extends Base implements PageObject {
               case TestDataType.runtime:
                 value = '$|' + value + '|';
                 break;
-              case TestDataType.environment:
+              case TestDataType.global:
                 value = '*|' + value + '|';
                 break;
               case TestDataType.parameter:
@@ -369,7 +369,7 @@ export class TestStep extends Base implements PageObject {
       case TestDataType.runtime:
         parsedStep = this.replaceTestDataRuntime(parsedStep);
         break;
-      case TestDataType.environment:
+      case TestDataType.global:
         parsedStep = this.replaceTestDataEnvironment(parsedStep);
         break;
       case TestDataType.random:

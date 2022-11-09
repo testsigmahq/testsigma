@@ -8,7 +8,6 @@ CREATE TABLE `test_data`
   `copied_from`    BIGINT(20) default null,
   `passwords`      JSON,
   `imported_id`    BIGINT(20) DEFAULT NULL,
-  `is_migrated`    tinyint(1) DEFAULT 0,
   `created_date`   DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_date`   DATETIME DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),

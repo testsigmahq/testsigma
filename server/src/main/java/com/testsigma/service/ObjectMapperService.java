@@ -90,4 +90,13 @@ public class ObjectMapperService {
       return null;
     }
   }
+
+  public <T> T parseJsonModel(String json, Class<T> classObject) throws Exception {
+    if (StringUtils.isNotBlank(json)) {
+      return new ObjectMapper()
+              .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+              .readValue(json, classObject);
+    }
+    return null;
+  }
 }

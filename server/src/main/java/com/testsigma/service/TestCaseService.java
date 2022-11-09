@@ -79,6 +79,10 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
     return testCaseRepository.findAllByWorkspaceVersionId(workspaceVersionId);
   }
 
+  public Page<TestCase> findAllByWorkspaceVersionIdAndIsStepGroupAndStatus(Long workspaceVersionId, Boolean isStepGroup, TestCaseStatus status, Pageable pageable) {
+    return testCaseRepository.findAllByWorkspaceVersionIdAndIsStepGroupAndStatus(workspaceVersionId, isStepGroup, status, pageable);
+  }
+
   public List<TestCase> findAllBySuiteId(Long suiteId) {
     return this.testCaseRepository.findAllBySuiteId(suiteId);
   }

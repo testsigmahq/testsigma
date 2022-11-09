@@ -8,6 +8,13 @@
 package com.testsigma.model;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.testsigma.constants.NaturalTextActionConstants;
+import com.testsigma.dto.export.CloudTestDataFunction;
+import com.testsigma.model.recorder.KibbutzTestStepTestData;
+import com.testsigma.model.recorder.TestStepNlpData;
+import com.testsigma.model.recorder.TestStepRecorderDataMap;
+import com.testsigma.model.recorder.TestStepRecorderForLoop;
 import com.testsigma.service.ObjectMapperService;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,6 +27,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.Map;
 
 @Entity
@@ -231,6 +239,45 @@ public class TestStep {
     forLoop.setEndIndex(forLoopEndIndex);
     forLoop.setTestDataId(forLoopTestDataId);
     testStepDataMap.setForLoop(forLoop);
+    return testStepDataMap;
+  }
+
+  public TestStepRecorderDataMap getDataMap() {
+    ObjectMapperService mapperService = new ObjectMapperService();
+    TestStepRecorderDataMap testStepDataMap;
+    try {
+      testStepDataMap = mapperService.parseJsonModel(testData, TestStepRecorderDataMap.class);
+    } catch (Exception e) {
+      testStepDataMap = new TestStepRecorderDataMap();
+      TestStepNlpData testStepNlpData = new TestStepNlpData();
+      testStepNlpData.setValue(testData);
+      testStepNlpData.setType(testDataType);
+      testStepDataMap.setTestData(new HashMap<>() {{
+        put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA, testStepNlpData);
+      }});
+    }
+    if (testStepDataMap == null) {
+      testStepDataMap = new TestStepRecorderDataMap();
+    }
+    if (element != null) {
+      testStepDataMap.setUiIdentifier(element);
+    }
+    if(fromElement != null) {
+      testStepDataMap.setFromUiIdentifier(fromElement);
+    }
+    if(toElement != null) {
+      testStepDataMap.setToUiIdentifier(toElement);
+    }
+    if (ifConditionExpectedResults.length > 0) {
+      testStepDataMap.setIfConditionExpectedResults(ifConditionExpectedResults);
+    }
+    if (forLoopStartIndex != null || forLoopTestDataId != null || forLoopEndIndex != null) {
+      TestStepRecorderForLoop testStepForLoop= new TestStepRecorderForLoop();
+      testStepForLoop.setTestDataId(forLoopTestDataId);
+      testStepForLoop.setStartIndex(forLoopStartIndex);
+      testStepForLoop.setEndIndex(forLoopEndIndex);
+      testStepDataMap.setForLoop(testStepForLoop);
+    }
     return testStepDataMap;
   }
 

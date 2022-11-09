@@ -12,6 +12,7 @@ package com.testsigma.repository;
 import com.testsigma.dto.TestCaseStatusBreakUpDTO;
 import com.testsigma.dto.TestCaseTypeBreakUpDTO;
 import com.testsigma.model.TestCase;
+import com.testsigma.model.TestCaseStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -37,6 +38,8 @@ public interface TestCaseRepository extends PagingAndSortingRepository<TestCase,
   List<TestCase> findAllBySuiteId(@Param("suiteId") Long suiteId);
 
   List<TestCase> findAllByWorkspaceVersionId(Long workspaceVersionId);
+
+  Page<TestCase> findAllByWorkspaceVersionIdAndIsStepGroupAndStatus(Long workspaceVersionId, Boolean isStepGroup, TestCaseStatus status, Pageable pageable);
 
   @Query("SELECT testCase FROM TestCase AS testCase " +
     "JOIN FETCH testCase.results AS caseResult " +

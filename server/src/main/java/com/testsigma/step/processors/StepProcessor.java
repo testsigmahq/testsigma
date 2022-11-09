@@ -296,15 +296,15 @@ public class StepProcessor {
     try {
       TestStep testStep = testStepService.find(step.getTestDataProfileStepId());
       TestData testData = testDataProfileService.find(testStep.getForLoopTestDataId());
-      return testData.getData().get(dataSetIndex.get(testStep.getId()));
+      return testData.getTempTestData().get(dataSetIndex.get(testStep.getId()));
     } catch (Exception e) {
       TestStep parentStep = step.getParentId() != null ? testStepService.find(step.getParentId()) : null;
       if (Objects.equals(step.getTestDataProfileStepId(), this.testCaseEntityDTO.getTestDataId())) {
         TestData testData = testDataProfileService.find(step.getTestDataProfileStepId());
-        return testData.getData().get(this.testCaseEntityDTO.getTestDataIndex());
+        return testData.getTempTestData().get(this.testCaseEntityDTO.getTestDataIndex());
       } else if (parentStep != null) {
         TestData testData = testDataProfileService.find(parentStep.getForLoopTestDataId());
-        return testData.getData().get(dataSetIndex.get(parentStep.getId()));
+        return testData.getTempTestData().get(dataSetIndex.get(parentStep.getId()));
       } else
         return null;
     }

@@ -46,7 +46,7 @@ public class ForLoopStepProcessor extends StepProcessor {
     TestData testData = testDataProfileService.find(testDataId);
 
     List<TestCaseStepEntityDTO> entityList = new ArrayList<>();
-    List<TestDataSet> dataBank = testData.getData();
+    List<TestDataSet> dataBank = testData.getTempTestData();
     if ((dataBank != null) && dataBank.size() > 0) {
       start = (start.equals(LOOP_START)) ? 1 : start;
       end = (end.equals(LOOP_END)) ? dataBank.size() : end;

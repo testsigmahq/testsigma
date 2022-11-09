@@ -78,7 +78,7 @@ public class TestDataProfileService extends XMLExportImportService<TestData> {
   }
 
   public TestData create(TestData testData) {
-    List<TestDataSet> dataSets = testData.getData();
+    List<TestDataSet> dataSets = testData.getTempTestData();
     testData.setIsMigrated(true);
     testData = this.testDataProfileRepository.save(testData);
     saveTestDataSets(testData.getId(), dataSets);
@@ -98,7 +98,7 @@ public class TestDataProfileService extends XMLExportImportService<TestData> {
 
   public TestData update(TestData testData) {
     Map<String, String> renamedColumns = testData.getRenamedColumns();
-    List<TestDataSet> dataSets = new ArrayList<>(testData.getData());
+    List<TestDataSet> dataSets = new ArrayList<>(testData.getTempTestData());
     testData.setIsMigrated(true);
     testData = testDataProfileRepository.save(testData);
     testData.setRenamedColumns(renamedColumns);
@@ -175,7 +175,7 @@ public class TestDataProfileService extends XMLExportImportService<TestData> {
   public TestData encryptPasswords(TestData testData){
     if (testData.getPasswords() != null && testData.getPasswords().size() > 0) {
       List<TestDataSet> sets = new ArrayList<>();
-      List<TestDataSet> testDataSets = testData.getData();
+      List<TestDataSet> testDataSets = testData.getTempTestData();
       for (TestDataSet set : testDataSets) {
         encryptPasswordsInTestDataSet(set, testData.getPasswords());
         sets.add(set);
@@ -232,7 +232,7 @@ public class TestDataProfileService extends XMLExportImportService<TestData> {
 
   @Override
   public TestData save(TestData testData) {
-    List<TestDataSet> dataSets = testData.getData();
+    List<TestDataSet> dataSets = testData.getTempTestData();
     if(testData.getTempTestData()==null){
       testData.setTempTestData(dataSets);
     }

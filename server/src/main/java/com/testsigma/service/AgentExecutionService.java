@@ -283,7 +283,7 @@ public class AgentExecutionService {
     TestPlanResult testPlanResult = testPlanResultService.find(testDeviceResult.getTestPlanResultId());
     isDataDrivenRerun = testDeviceResult.getReRunParentId() != null;
     TestData testData = testCase.getTestData();
-    List<TestDataSet> testDataSets = testData.getData();
+    List<TestDataSet> testDataSets = testData.getTempTestData();
     if(isDataDrivenRerun && !parentTestCaseResult.getIsStepGroup()){
       log.info("Creating data driven re run iteration results for test case - " + parentTestCaseResult.getId());
       this.createTestCaseDataDrivenReRunResult(testPlanResult, testDataSets, testCase, testSuite, testDeviceResult,
@@ -339,7 +339,7 @@ public class AgentExecutionService {
     if (!testCase.getIsDataDriven()) {
       TestData testData = testCase.getTestData();
       if (testData != null) {
-        TestDataSet testDataSet = testData.getData().get(testCase.getTestDataStartIndex());
+        TestDataSet testDataSet = testData.getTempTestData().get(testCase.getTestDataStartIndex());
         testCaseResult.setTestDataSetName(testDataSet.getName());
         if (parentTestCaseResult != null) {
           testCaseResult.setIteration(testDataSet.getName());
@@ -383,7 +383,7 @@ public class AgentExecutionService {
     }
     if (!testCase.getIsDataDriven() && testCase.getTestData() != null && parentTestCaseResult != null) {
       TestData testData = testCase.getTestData();
-      TestDataSet testDataSet = testData.getData().get(testCase.getTestDataStartIndex());
+      TestDataSet testDataSet = testData.getTempTestData().get(testCase.getTestDataStartIndex());
       if (getIsReRun() && (testSuiteResult.getReRunParentId() != null)) {
         TestCaseResult reRunParentTestCaseResult = testCaseResultsReRunList.stream().filter(
           er -> er.getTestCaseId().equals(testCase.getId()) && er.getIteration() != null && er.getIteration().equals(testDataSet.getName())).findAny().orElse(null);
@@ -1062,7 +1062,7 @@ public class AgentExecutionService {
     if (testDataId != null) {
       TestData testData = testDataProfileService.find(testCaseEntityDTO.getTestDataId());
       testCaseEntityDTO.setTestDataProfileName(testData.getTestDataName());
-      databank = testData.getData();
+      databank = testData.getTempTestData();
       profileName = testData.getTestDataName();
     }
     if (!testCaseEntityDTO.getIsDataDriven()) {

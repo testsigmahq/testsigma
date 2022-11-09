@@ -95,7 +95,7 @@ public class ParameterTestDataProcessor extends TestDataProcessor{
       this.index = index;
       this.parameter = parameter;
       this.testData = testData;
-      processTestData(testData.getData().get(index), parameter);
+      processTestData(testData.getTempTestData().get(index), parameter);
     } catch (IndexOutOfBoundsException indexOutOfBoundsException) {
       exception = indexOutOfBoundsException;
       setForLoopErrorMessage();
@@ -126,7 +126,7 @@ public class ParameterTestDataProcessor extends TestDataProcessor{
     super.setErrorMessage();
     if (exception instanceof IndexOutOfBoundsException)
       testCaseStepEntityDTO.setFailureMessage(String.format(TEST_DATA_OUT_OF_RANGE,
-        testData.getTestDataName(), testData.getData().size(), index));
+        testData.getTestDataName(), testData.getTempTestData().size(), index));
     else {
       testCaseStepEntityDTO.setFailureMessage(String.format(TEST_DATA_UNKNOWN_ERROR,
         testData.getTestDataName(), index, parameter));

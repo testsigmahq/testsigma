@@ -58,7 +58,7 @@ public interface TestDataProfileMapper {
   default Map<String, TestDataSet> map(TestData testData) {
     Map<String, TestDataSet> testDataSetMap = new HashMap<>();
     if (testData != null) {
-      for (TestDataSet testDataSet : testData.getData()) {
+      for (TestDataSet testDataSet : testData.getTempTestData()) {
         testDataSetMap.put(testDataSet.getName(), testDataSet);
       }
     }

@@ -83,13 +83,13 @@ public class TestStepResultService {
 
   private void setTestDataSet(TestDataSet testDataSet, TestData testData) {
     int index = 0;
-    for (TestDataSet set : testData.getData()) {
+    for (TestDataSet set : testData.getTempTestData()) {
       if (set.getName().equals(testDataSet.getName())) {
         break;
       }
       index++;
     }
-    List<TestDataSet> sets = testData.getData();
+    List<TestDataSet> sets = testData.getTempTestData();
     sets.set(index, testDataSet);
     testData.setData(sets);
     testData.setTempTestData(sets);

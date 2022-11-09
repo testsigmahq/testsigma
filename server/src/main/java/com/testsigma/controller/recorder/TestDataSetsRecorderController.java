@@ -40,7 +40,7 @@ public class TestDataSetsRecorderController {
             }
         }
         TestData testData = testDataProfileService.find(testDataId);
-        List<TestDataSet> testDataSets = testData.getData();
+        List<TestDataSet> testDataSets = testData.getTempTestData();
         List<TestDataSetDTO> testDataSetDTOS = testDataMapper.mapTestDataSetDTOs(testDataProfileMapper.mapToDtos(testDataSets));
         return new PageImpl<>(testDataSetDTOS, pageable, testDataSets.size());
     }

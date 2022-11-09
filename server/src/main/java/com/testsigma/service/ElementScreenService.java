@@ -27,6 +27,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -46,6 +47,10 @@ public class ElementScreenService extends XMLExportImportService<ElementScreenNa
 
   public Page<ElementScreenName> findAll(Specification<ElementScreenName> specification, Pageable page) {
     return elementScreenNameRepository.findAll(specification, page);
+  }
+
+  public Page<ElementScreenName> findAllByWorkspaceVersionId(Long workspaceVersionId, Pageable page) {
+    return elementScreenNameRepository.findAllByWorkspaceVersionId(workspaceVersionId, page);
   }
 
   public ElementScreenName save(ElementScreenNameRequest screenNameKey) {

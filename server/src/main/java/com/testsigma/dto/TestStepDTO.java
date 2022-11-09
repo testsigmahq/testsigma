@@ -10,12 +10,21 @@
 package com.testsigma.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.testsigma.constants.NaturalTextActionConstants;
+import com.testsigma.dto.export.CloudTestDataFunction;
 import com.testsigma.model.*;
+import com.testsigma.model.recorder.KibbutzTestStepTestData;
+import com.testsigma.model.recorder.TestStepNlpData;
+import com.testsigma.model.recorder.TestStepRecorderDataMap;
+import com.testsigma.model.recorder.TestStepRecorderForLoop;
+import com.testsigma.service.ObjectMapperService;
 import lombok.Data;
 import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -117,6 +126,47 @@ public class TestStepDTO implements Cloneable, Serializable {
     forLoop.setEndIndex(forLoopEndIndex);
     forLoop.setTestDataId(forLoopTestDataId);
     testStepDataMap.setForLoop(forLoop);
+    return testStepDataMap;
+  }
+
+  public TestStepRecorderDataMap mapTestData() {
+    ObjectMapperService mapperService = new ObjectMapperService();
+    TestStepRecorderDataMap testStepDataMap;
+    try {
+      testStepDataMap = mapperService.parseJsonModel(testData, TestStepRecorderDataMap.class);
+    }
+    catch(Exception e) {
+      //Map<String, String> map = mapperService.parseJson(testData, Map.class);
+      testStepDataMap = new TestStepRecorderDataMap();
+      TestStepNlpData testStepNlpData = new TestStepNlpData();
+      testStepNlpData.setValue(testData);
+      testStepNlpData.setType(testDataType);
+      testStepDataMap.setTestData(new HashMap<>() {{
+        put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA, testStepNlpData);
+      }});
+    }
+    if(testStepDataMap == null) {
+      testStepDataMap = new TestStepRecorderDataMap();
+    }
+    if(element != null) {
+      testStepDataMap.setUiIdentifier(element);
+    }
+    if(fromElement != null) {
+      testStepDataMap.setFromUiIdentifier(fromElement);
+    }
+    if(toElement != null) {
+      testStepDataMap.setToUiIdentifier(toElement);
+    }
+    if(ifConditionExpectedResults.length > 0) {
+      testStepDataMap.setIfConditionExpectedResults(ifConditionExpectedResults);
+    }
+    if(forLoopStartIndex != null || forLoopTestDataId != null || forLoopEndIndex != null) {
+      TestStepRecorderForLoop testStepForLoop= new TestStepRecorderForLoop();
+      testStepForLoop.setTestDataId(forLoopTestDataId);
+      testStepForLoop.setStartIndex(forLoopStartIndex);
+      testStepForLoop.setEndIndex(forLoopEndIndex);
+      testStepDataMap.setForLoop(testStepForLoop);
+    }
     return testStepDataMap;
   }
 }

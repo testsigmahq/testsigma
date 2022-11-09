@@ -196,7 +196,7 @@
                 <a
                   target="_blank"
                   (click)="showRefreshOption = true"
-                  [routerLink]="['/td', options.version.id, 'suites', 'new']"
+                  [routerLink]="['/td', this.selectedVersion.id, 'suites', 'new']"
                   [translate]="'btn.common.create'"
                   class="theme-btn-primary btn-sm"></a>
                 <button

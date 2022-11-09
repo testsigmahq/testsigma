@@ -65,8 +65,6 @@ public class TestStepService extends XMLExportImportService<TestStep> {
     private final List<Integer> depreciatedIds = DeprecatedActionMapper.getAllDeprecatedActionIds();
 
 
-
-
     public List<TestStep> findAllByTestCaseId(Long testCaseId) {
         return this.repository.findAllByTestCaseIdOrderByPositionAsc(testCaseId);
     }
@@ -627,6 +625,16 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         }
         return testSteps;
     }
+
+    public List<TestStep> findAllByWorkspaceVersionIdAndNaturalTextActionId(Long workspaceVersionId, List<Integer> naturalTextActionIds) {
+        return this.repository.findAllByWorkspaceVersionIdAndNaturalTextActionId(workspaceVersionId, naturalTextActionIds);
+    }
+
+    public List<TestStep> findAllRuntimeDataRestStep(Long workspaceVersionId) {
+        return  this.repository.getAllRestStepWithRuntime(workspaceVersionId);
+    }
+
+
 }
 
 @Data

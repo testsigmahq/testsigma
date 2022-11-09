@@ -15,6 +15,8 @@ import {WorkspaceType} from "../enums/workspace-type.enum";
 import {Element} from "../models/element.model";
 import {ElementMetaData} from "../models/element-meta-data.model";
 import {ElementElementDetails} from "../models/element-locator-details.model";
+import {ElementScreenName} from "../models/element-screen-name.model";
+import {ElementCreateType} from "../enums/element-create-type.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -43,7 +45,7 @@ export class ChromeRecorderService {
   public stepListCallBack;
   public stepListCallBackContext: TestCaseStepsListComponent;
   public isChrome: Boolean = false;
-  public isStepRecording: Boolean = false;
+  public isStepRecorder: Boolean = false;
   public messageEvent: MessageEvent;
   public recorderStepList: Page<TestStep>;
   public recorderTestCase: TestCase;
@@ -75,8 +77,8 @@ export class ChromeRecorderService {
       this.messageEvent = event;
       if (this.isInstalledEvent) {
         this.isInstalled = true;
-      } else if (this.isStoppedRecorder) {
-        this.isStepRecording = false;
+      } else if (this.isStoppedRecorder && this.isStepRecorder) {
+        this.isStepRecorder = false;
         if(!event.data.isUiIdentifierRecorder)
           this.stepListCallBack.apply(this.stepListCallBackContext, [])
         if(this.multiElementCallBack)
@@ -133,9 +135,31 @@ export class ChromeRecorderService {
   };
 
   public processingElement(currentElement) {
+    currentElement.elementDetails = new ElementElementDetails();
+    currentElement.screenNameObj = new ElementScreenName()
+    currentElement.createdType = ElementCreateType.CHROME;
+    if (currentElement?.screenTitle){
+      currentElement.screenNameObj.name = currentElement.screenTitle;
+    }
+    if (this.recorderVersion.workspaceId){
+      currentElement.screenNameObj.workspaceVersionId = this.recorderVersion.id;
+    }
+    if(currentElement?.xPath){
+      currentElement.locatorValue = currentElement.xPath;
+    }
+    if (currentElement?.screenTitle){
+      currentElement.screenName = currentElement.screenTitle
+    }
+    currentElement.isDynamic = currentElement.isDynamicElement
+
+    if (currentElement?.tag){
+      currentElement.elementDetails.tag = currentElement.tag
+    }
+    if (currentElement?.attr){
+      currentElement.elementDetails.attributes = currentElement.attr
+    }
     let element = new Element().deserialize(currentElement);
     element.metadata = new ElementMetaData().deserialize(currentElement.metaData);
-    currentElement.elementDetails.data = currentElement.elementDetails.attributes;
     element.elementDetails = new ElementElementDetails().deserialize(currentElement.elementDetails);
     return element
   }
@@ -147,7 +171,8 @@ export class ChromeRecorderService {
       content: "Get element",
       version_id: this.recorderVersion?.id,
       element_capture: isMultipleElementCapture,
-      serverUrl: window.location.origin
+      serverUrl: window.location.origin,
+      source: 'OS'
     }, "*");
   };
 
@@ -179,7 +204,8 @@ export class ChromeRecorderService {
       baseUrl: this.recorderTestCase.startUrl,
       test_case_id: this.recorderTestCase.id,
       version_id: this.recorderTestCase.workspaceVersionId | this.recorderVersion?.id,
-      project_id: this.recorderVersion.workspace.id,
+      applicationId: this.recorderVersion.workspaceId,
+      source:'OS',
       applicationType: this.recorderVersion.workspace.workspaceType,
       exclude_map: excludeListMap,
       serverUrl: window.location.origin
@@ -210,7 +236,7 @@ export class ChromeRecorderService {
         this.recorderTestCase.startUrl = undefined;
       }
 
-      this.isStepRecording = true;
+      this.isStepRecorder = true;
       this.startRecording()
     });
   }

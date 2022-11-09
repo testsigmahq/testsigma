@@ -93,7 +93,8 @@ export class StepSummaryComponent implements OnInit {
       name: name,
       versionId: this.options?.version?.id,
       testCaseId: this.options?.testCase?.id,
-      isStepRecordView: this.options?.isStepRecordView
+      isStepRecordView: this.options?.isStepRecordView,
+      doRefresh:true,
     }
     if (this.options.isStepRecordView) {
       this.mobileRecorderEventService.suggestionContent.next(Object.assign(sendDetails, {

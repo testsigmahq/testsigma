@@ -16,6 +16,7 @@ import org.json.JSONObject;
 @Data
 public class TestDataSetDTO {
   private String name;
+  private Long testDataId;
   private String description;
   private Boolean expectedToFail;
   @JsonSerialize(using = JSONObjectSerializer.class)

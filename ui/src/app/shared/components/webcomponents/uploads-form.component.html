@@ -107,7 +107,7 @@
               (click)="onCancel()"
               [translate]="'btn.common.cancel'"></button>
       <button *ngIf="inline? (uploadedFileObject && uploadForm) : uploadForm"
-              [disabled]="uploadForm.invalid || !upload.name || maxSizeError"
+              [disabled]=isButtonDisabled
               (click)="(upload.id)? update(): create()"
               class="theme-btn-primary"
               [class.mb-n5]="inline"

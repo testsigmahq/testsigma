@@ -61,6 +61,7 @@
   "message.common.access_denied": "Access Denied",
   "message.common.know_more": "Know more...",
   "message.common.stop": "Stop",
+  "message.common.device_busy":"This Device is busy, please select another device or try again later",
   "message.common.empty_page": "There are no {{categoryType}} created.",
   "message.common.search.not_found": "No results found for this search criteria",
   "message.common.update.success": "{{FieldName}} updated successfully",

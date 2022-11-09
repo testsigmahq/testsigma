@@ -52,6 +52,7 @@
         [formCtrlName]="environmentFormGroup.controls['platformDeviceId']"
         [value]="cloudDevice"
         [items]="cloudDevicePage"
+        [isCloudDeviceDropdown]=true
         (onSearch)="fetchCloudDevices($event)"
         (onValueChange)="setCloudDevice($event)"></app-auto-complete>
       <label class="control-label required" [translate]="'test_plan.environment.device.name' | translate"></label>

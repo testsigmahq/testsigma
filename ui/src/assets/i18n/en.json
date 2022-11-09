@@ -631,6 +631,7 @@
   "element.notification.delete.failure": "Failed to delete the Element",
   "element.notification.bulk_delete.success": "Selected Elements deleted successfully",
   "element.notification.bulk_delete.failure": "Few Elements that you have selected are already in use and cannot be deleted. Please delete the ones which are in use from your Test Steps and try again.",
+  "steps.notification.bulk_delete.failure": "Failed to delete some of the Steps since they are already associated as Prerequisite to some Test Steps.",
   "element.notification.update.success": "Successfully updated the Element",
   "element.notification.update.failure": "Failed to update the Element",
   "element.notification.save.success": "Element saved successfully",
@@ -1034,6 +1035,7 @@
   "elements.not_created": "No Elements have been created",
   "elements.linked_with_cases": "This Test Suite is used in the below Test plans,<br>Please remove the mapping and try again.",
   "elements_linked_with_cases": "This Element is used in the below Test Cases,<br>Please remove the mapping and try again.",
+  "step_is_prerequisite_to_another_step": "This Step is used as Prerequisite in below steps,<br>Please remove the mapping and try again.",
   "test_case_type.linked_with_test_cases": "This Test Case Type is used in the below Test cases,<br>Please remove the mapping and try again.",
   "elements.filter.screen_name.tooltip": "Click to filter by screen name",
   "bulk.update.as_it_is": "Leave as it is",
@@ -2105,5 +2107,6 @@
   "step_result.element": "Element",
   "nlp.element.screen.name.suggestion.placeholder": "Search Using Screen Name",
   "nlp.element.suggestion.placeholder": "Search in Elements by Name",
-  "element.form.create_title": "Create Element"
+  "element.form.create_title": "Create Element",
+  "steps.remove.prerequisites": "please remove following mappings"
 }

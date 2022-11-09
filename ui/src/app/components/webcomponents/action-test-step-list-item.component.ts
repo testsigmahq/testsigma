@@ -23,6 +23,7 @@ import {ActionTestDataEnvironmentSuggestionComponent} from "./action-test-data-e
 import {TestStepMoreActionFormComponent} from "./test-step-more-action-form.component";
 import {ElementFormComponent} from "./element-form.component";
 import {MobileRecorderEventService} from "../../services/mobile-recorder-event.service";
+import {SharedService} from "../../services/shared.service";
 
 
 @Component({
@@ -199,7 +200,7 @@ import {MobileRecorderEventService} from "../../services/mobile-recorder-event.s
                 class="action-icon py-10 fa-pencil-on-paper">
               </a>
               <a
-                (click)="deleteStep(testStep)"
+                (click)="indexTestStepsHavingPrerequisiteSteps(testStep)"
                 href="javascript:void(0);"
                 [matTooltip]="'hint.message.common.delete' | translate"
                 class="action-icon py-10 fa-trash-thin">
@@ -302,10 +303,11 @@ export class ActionTestStepListItemComponent extends TestStepListItemComponent i
     public naturalTestActionsService : NaturalTextActionsService,
     public matModal: MatDialog,
     public testDataService: TestDataService,
+    public sharedService:SharedService,
     @Optional() public renderer?: Renderer2,
     @Optional() public mobileRecorderEventService?: MobileRecorderEventService
   ) {
-    super(authGuard, notificationsService, translate, toastrService, testStepService, naturalTestActionsService, matModal);
+    super(authGuard, notificationsService, translate, toastrService, testStepService, naturalTestActionsService, matModal,sharedService);
   }
 
   ngOnInit(): void {

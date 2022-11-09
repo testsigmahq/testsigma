@@ -25,6 +25,7 @@ import {NaturalTextActions} from "../../models/natural-text-actions.model";
 import {WorkspaceVersion} from "../../models/workspace-version.model";
 import {AddonNaturalTextAction} from "../../models/addon-natural-text-action.model";
 import {NaturalTextActionsService} from "../../services/natural-text-actions.service";
+import {SharedService} from "../../services/shared.service";
 
 
 @Component({
@@ -259,8 +260,9 @@ export class TestStepResultListItemComponent extends TestStepListItemComponent i
     public naturalTestActionService : NaturalTextActionsService,
     private matDialog: MatDialog,
     public router: Router,
+    public sharedService : SharedService,
     public testStepService: TestStepService) {
-    super(authGuard, notificationsService, translate, toastrService, testStepService,naturalTestActionService, matDialog);
+    super(authGuard, notificationsService, translate, toastrService, testStepService,naturalTestActionService, matDialog,sharedService);
   }
 
   ngOnInit() {

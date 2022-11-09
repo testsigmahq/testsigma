@@ -977,3 +977,12 @@ ngx-json-viewer.custom-json-view {
   }
 }
 
+.linked-entities-modal{
+  .mt-2{
+    margin-top: 0.125rem !important;
+  }
+  .mr-10{
+    @extend .mr-10
+  }
+}
+

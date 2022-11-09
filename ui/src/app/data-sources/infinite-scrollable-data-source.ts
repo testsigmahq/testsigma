@@ -15,7 +15,7 @@ import {DataSourceService} from "../shared/services/data-source.service";
 
 export class InfiniteScrollableDataSource extends DataSource<PageObject> {
   public cachedItems = Array.from<PageObject>({length: 0});
-  protected dataStream = new BehaviorSubject<(PageObject)[]>(this.cachedItems);
+  public dataStream = new BehaviorSubject<(PageObject)[]>(this.cachedItems);
   public latestFetchData = new Subject<PageObject[]>();
   protected subscription = new Subscription();
 
@@ -28,7 +28,7 @@ export class InfiniteScrollableDataSource extends DataSource<PageObject> {
   public isEmpty: Boolean = false;
   public totalElements : number = 0;
 
-  constructor(protected dataSourceService: DataSourceService, query?: string, sortBy?: string, pageSize?: number) {
+  constructor(protected dataSourceService?: DataSourceService, query?: string, sortBy?: string, pageSize?: number) {
     super();
     this.query = query;
     this.sortBy = sortBy;
@@ -37,7 +37,9 @@ export class InfiniteScrollableDataSource extends DataSource<PageObject> {
     this.lastPageable.pageNumber = -1;
     this.lastPageable.pageSize = this.pageSize;
     // Start with some data.
-    this._fetchFactPage();
+    if(dataSourceService){
+      this._fetchFactPage();
+    }
   }
 
   connect(collectionViewer: CollectionViewer): Observable<(PageObject)[] | ReadonlyArray<PageObject>> {

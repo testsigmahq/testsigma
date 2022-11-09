@@ -14,7 +14,7 @@ import { MatDialog } from '@angular/material/dialog';
 import {ToastrService} from "ngx-toastr";
 
 @Component({
-  selector: 'app-details-header',
+  selector: ' app-details-header',
   templateUrl: './details-header.component.html',
   styles: []
 })

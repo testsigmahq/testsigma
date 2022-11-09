@@ -1,11 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {TestDataService} from "../../services/test-data.service";
+import {TestDataSetService} from "../../services/test-data-set.service";
 import {TestData} from "../../models/test-data.model";
 import {ActivatedRoute, Router} from '@angular/router';
 import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
 import {NotificationsService, NotificationType} from 'angular2-notifications';
 import {TranslateService} from '@ngx-translate/core';
 import {BaseComponent} from "../../shared/components/base.component";
+import {MatDialog} from "@angular/material/dialog";
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {TestDataSet} from "../../models/test-data-set.model";
 import {ToastrService} from "ngx-toastr";
@@ -30,8 +32,10 @@ export class EditComponent extends BaseComponent implements OnInit {
     public translate: TranslateService,
     public toastrService: ToastrService,
     private testDataService: TestDataService,
+    private testDataSetService: TestDataSetService,
     private route: ActivatedRoute,
     private router: Router,
+    private dialog: MatDialog,
     private formBuilder: FormBuilder) {
     super(authGuard, notificationsService, translate, toastrService);
   }
@@ -43,14 +47,24 @@ export class EditComponent extends BaseComponent implements OnInit {
   }
 
   private fetchTestData() {
-    this.testDataService.show(this.testDataId).subscribe(res => {
-      this.testData = res;
-      this.oldTestDataSet =this.testData.data[0];
-      this.versionId = this.testData.versionId;
-      this.testDataForm = this.formBuilder.group({
-        name: new FormControl(this.testData.name, [Validators.required, Validators.minLength(4),
-          Validators.maxLength(250), this.noWhitespaceValidator])
-      });
+    this.testDataService.show(this.testDataId).subscribe(testData => {
+      if(testData.isMigrated) {
+        this.testDataSetService.findAll("testDataProfileId:" + this.testDataId, 'position').subscribe(res => {
+          testData.data = res.content;
+          this.setTestData(testData);
+        })
+      } else {
+        this.setTestData(testData);
+      }
+    });
+  }
+
+  private setTestData(testData){
+    this.testData = testData;
+    this.oldTestDataSet = testData.data[0];
+    this.versionId = testData.versionId;
+    this.testDataForm = this.formBuilder.group({
+      name: new FormControl(this.testData.name, [Validators.required, Validators.minLength(4), Validators.maxLength(250)])
     });
   }
 

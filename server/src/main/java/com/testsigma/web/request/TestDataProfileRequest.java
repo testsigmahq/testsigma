@@ -8,7 +8,7 @@ import java.util.Map;
 @Data
 public class TestDataProfileRequest {
 
-  Long id;
+  private Long id;
   private String testDataName;
   private String testData;
   private Map<String, String> renamedColumns;

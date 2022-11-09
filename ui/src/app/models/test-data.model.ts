@@ -13,6 +13,8 @@ export class TestData extends Base implements PageObject {
   public data: TestDataSet[];
   @serializable
   public versionId: number;
+  @serializable
+  public isMigrated: Boolean;
   public isSelected: Boolean;
   public parameters?:string[];
   public testDataProfileStepId?:number;
@@ -39,6 +41,8 @@ export class TestData extends Base implements PageObject {
 
     rawValue.dataSets.forEach((dataSet) => {
       let set = new TestDataSet();
+      set.id = dataSet.id;
+      set.testDataProfileId = dataSet.testDataProfileId;
       set.name = dataSet.name;
       set.description = dataSet.description;
       set.expectedToFail = dataSet.expectedToFail;
@@ -47,7 +51,6 @@ export class TestData extends Base implements PageObject {
         set.data[rawValue.parameterNames[index].trim().replaceAll("\"", "\\\"")] = value.replaceAll("\"", "\\\"");
       })
       this.data.push(set);
-
     })
     return this;
   }

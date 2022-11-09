@@ -138,6 +138,8 @@ export class TestDataGridComponent implements OnInit {
     }
 
     let dataGroup = this.formBuilder.group({
+      id: null,
+      testDataProfileId: null,
       selected: [false, Validators.required],
       name: new FormControl('',[Validators.required, this.isNameDuplicate() ]),
       description: '',
@@ -200,6 +202,8 @@ export class TestDataGridComponent implements OnInit {
         dataControls.push(new FormControl(dataSet.data[key], []))
       }
       let dataGroup = this.formBuilder.group({
+        id: dataSet.id,
+        testDataProfileId: dataSet.testDataProfileId,
         selected: [dataSet.selected, Validators.required],
         name: new FormControl(dataSet.name,[Validators.required, this.isNameDuplicate() ]),
         description: dataSet.description,

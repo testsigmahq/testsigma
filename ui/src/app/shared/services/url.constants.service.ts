@@ -47,6 +47,7 @@ export class UrlConstantsService {
   public integrationsUrl = this.apiBase + "/settings/integrations";
   public externalMappingsUrl = this.apiBase + "/external_mappings";
   public dataProfileUrl = this.apiBase + '/test_data';
+  public dataSetsUrl = this.apiBase + '/test_data_sets';
   public elementFilterUrl = this.apiBase + '/element_filters';
   public testCaseFilterUrl = this.apiBase + '/test_case_filters';
   public stepGroupFilterUrl = this.apiBase + '/step_group_filters';

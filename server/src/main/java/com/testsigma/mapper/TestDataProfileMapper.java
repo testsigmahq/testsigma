@@ -42,6 +42,7 @@ public interface TestDataProfileMapper {
 
   List<TestDataSetDTO> mapToDtos(List<TestDataSet> testDataSets);
 
+  @Mapping(target="tempTestData", expression = "java(mapDataSet(request.getData()))")
   TestData map(TestDataProfileRequest request);
 
   @Mapping(target = "data", expression = "java(testDataSetXMLDTO.getData())")
@@ -52,7 +53,7 @@ public interface TestDataProfileMapper {
 
   List<TestDataSet> map(List<TestDataSetXMLDTO> testDataSetXMLDTO);
 
- List<TestDataSet> map2(List<TestDataSetCloudXMLDTO> testDataSetXMLDTO);
+  List<TestDataSet> map2(List<TestDataSetCloudXMLDTO> testDataSetXMLDTO);
 
   default Map<String, TestDataSet> map(TestData testData) {
     Map<String, TestDataSet> testDataSetMap = new HashMap<>();
@@ -72,6 +73,12 @@ public interface TestDataProfileMapper {
 
     TestDataSetDTO testDataSetDTO = new TestDataSetDTO();
 
+    if (testDataSet.getId() != null) {
+      testDataSetDTO.setId(testDataSet.getId());
+    }
+    if (testDataSet.getTestDataProfileId() != null) {
+      testDataSetDTO.setTestDataProfileId(testDataSet.getTestDataProfileId());
+    }
     if (testDataSet.getName() != null) {
       testDataSetDTO.setName(testDataSet.getName());
     }
@@ -102,6 +109,7 @@ public interface TestDataProfileMapper {
       sets = mapDataSet(testDataProfileRequest.getData());
     }
     testData.setData(sets);
+    testData.setTempTestData(sets);
     testData.setRenamedColumns(testDataProfileRequest.getRenamedColumns());
   }
 

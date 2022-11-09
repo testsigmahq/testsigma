@@ -245,7 +245,8 @@ export class ActionElementSuggestionComponent implements OnInit {
       testCaseId: this.option?.testCase?.id,
       isDryRun: this.option?.isDryRun,
       testCaseResultId: this.option.testCaseResultId,
-      isStepRecordView: this.option.isStepRecordView
+      isStepRecordView: this.option.isStepRecordView,
+      doRefresh: true,
     }
     if (this.option.isStepRecordView) {
       this.mobileRecorderEventService.suggestionContent.next(Object.assign(sendDetails, {

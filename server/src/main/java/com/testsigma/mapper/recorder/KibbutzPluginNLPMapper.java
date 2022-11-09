@@ -13,18 +13,6 @@ import org.mapstruct.*;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface KibbutzPluginNLPMapper {
-/*
-    @Mapping(target = "applicationType", source = "workspaceType")
-    @Mapping(target = "grammar", source = "naturalText")
-    @Mapping(target = "parameters", expression = "java(mapPluginNLPParameterDTO(addonNaturalTextActionDTO.getParameters()))")
-    KibbutzPluginNLPDTO mapDTO(AddonNaturalTextActionDTO addonNaturalTextActionDTO);
-
-    List<KibbutzPluginNLPDTO> mapDTOs(List<AddonNaturalTextActionDTO> addonNaturalTextActionDTOs);
-
-
-    KibbutzPluginNLPParameterDTO mapPluginNLPParameterDTO(AddonNaturalTextActionParameterDTO addonNaturalTextActionParameterDTO);
-
-    List<KibbutzPluginNLPParameterDTO> mapPluginNLPParameterDTOs(List<AddonNaturalTextActionParameterDTO> addonNaturalTextActionParameterDTOs);*/
 
     @Mapping(source = "addonId", target = "pluginId")
     KibbutzPluginTestDataFunctionDTO mapPluginTestDataFunctionDTO(AddonPluginTestDataFunctionDTO addonPluginTestDataFunctionDTO);

@@ -248,7 +248,6 @@ public class TestStep {
     try {
       testStepDataMap = mapperService.parseJsonModel(testData, TestStepRecorderDataMap.class);
     } catch (Exception e) {
-      //Map<String, String> map = mapperService.parseJson(testData, Map.class);
       testStepDataMap = new TestStepRecorderDataMap();
       TestStepNlpData testStepNlpData = new TestStepNlpData();
       testStepNlpData.setValue(testData);
@@ -281,65 +280,6 @@ public class TestStep {
     }
     return testStepDataMap;
   }
-
-  /*
-  public TestStepRecorderDataMap getDataMap() {
-    ObjectMapperService mapperService = new ObjectMapperService();
-    try {
-      return mapperService.parseJsonModel(testData, TestStepRecorderDataMap.class);
-    }
-    catch(Exception e) {
-      Map<String, String> map = mapperService.parseJson(testData, Map.class);
-      TestStepRecorderDataMap testStepDataMap = new TestStepRecorderDataMap();
-      log.info("Parsing json to map: " + map);
-      if(map.containsKey("test-data")) {
-        TestStepNlpData testStepNlpData = new TestStepNlpData();
-        testStepNlpData.setValue(map.get("test-data"));
-        testStepNlpData.setType(map.get("test-data-type"));
-        if(map.containsKey("test-data-function")) {
-          testStepNlpData.setTestDataFunction(new ObjectMapper().convertValue(map.get("test-data-function"), CloudTestDataFunction.class));
-        }
-        if(map.containsKey("kibbutz_test_data_function")) {
-          testStepNlpData.setKibbutzTDF(new ObjectMapper().convertValue(map.get("kibbutz_test_data_function"), KibbutzTestStepTestData.class));
-        }
-        testStepDataMap.setTestData(new HashMap<>() {{
-          put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA, testStepNlpData);
-        }});
-      }
-      if(map.containsKey("condition_if")) {
-        testStepDataMap.setIfConditionExpectedResults(map.get("condition_if"));
-      }
-      if(map.containsKey("condition-type")) {
-        testStepDataMap.setIfConditionExpectedResults(map.get("condition-type"));
-      }
-      if(map.containsKey("custom-step")) {
-        testStepDataMap.setCustomStep(new ObjectMapper().convertValue(map.get("custom-step"), TestStepCustomStep.class));
-      }
-      if(map.containsKey("ui-identifier")) {
-        testStepDataMap.setUiIdentifier(map.get("ui-identifier"));
-      }
-      if(map.containsKey("from-ui-identifier")) {
-        testStepDataMap.setFromUiIdentifier(map.get("from-ui-identifier"));
-      }
-      if(map.containsKey("to-ui-identifier")) {
-        testStepDataMap.setToUiIdentifier(map.get("to-ui-identifier"));
-      }
-      if(map.containsKey("attribute")) {
-        testStepDataMap.setAttribute(map.get("attribute"));
-      }
-      if(map.containsKey("for_loop")) {
-        testStepDataMap.setForLoop(new ObjectMapper().convertValue(map.get("for_loop"), TestStepForLoop.class));
-      }
-      if(map.containsKey("while_loop")) {
-        testStepDataMap.setWhileLoop(new ObjectMapper().convertValue(map.get("while_loop"), TestStepWhileLoop.class));
-      }
-      if(map.containsKey("whileCondition")) {
-        testStepDataMap.setWhileCondition(map.get("whileCondition"));
-      }
-      log.info("Parsed json to testStepDataMap: " + testStepDataMap);
-      return testStepDataMap;
-    }
-  }*/
 
   public void setTestDataType(String testDataType) {
     if (testDataType !=null){

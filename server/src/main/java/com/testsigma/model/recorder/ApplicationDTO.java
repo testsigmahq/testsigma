@@ -11,9 +11,7 @@ public class ApplicationDTO {
     private String name;
     private String description;
     private String customFields;
-    //private Long projectId;
     private WorkspaceType applicationType;
-    //private ProjectDTO project;
     private Long createdById;
     private Long updatedById;
     private Timestamp createdDate;

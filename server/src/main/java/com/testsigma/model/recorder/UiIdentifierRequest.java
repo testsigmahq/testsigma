@@ -32,7 +32,6 @@ public class UiIdentifierRequest {
     @NotNull
     private Long applicationVersionId;
     private String comments;
-    //private UiIdentifierStatus status = UiIdentifierStatus.READY;
     private Timestamp reviewSubmittedAt;
     private Timestamp draftAt;
     private Long draftBy;
@@ -54,17 +53,5 @@ public class UiIdentifierRequest {
     private Long shadowParentId;
     private List<UiIdentifierRequest> shadowParentElements = new ArrayList<>();
     private Long shadowOrder;
-
-    /*public boolean isDraft() {
-        return this.status.equals(UiIdentifierStatus.DRAFT);
-    }
-
-    public boolean isInReview() {
-        return this.status.equals(UiIdentifierStatus.IN_REVIEW);
-    }
-
-    public boolean isReady() {
-        return this.status.equals(UiIdentifierStatus.READY);
-    }*/
 }
 

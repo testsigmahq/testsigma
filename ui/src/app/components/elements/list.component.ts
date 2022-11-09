@@ -518,4 +518,23 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
   humanizedDate(date) {
     return moment.duration(moment().diff(date)).humanize() + ' ago';
   }
+
+  search(term?: string) {
+    if (term) {
+      if (!this.query?.includes('workspaceVersionId')) {
+        this.query += ",workspaceVersionId:" + this.versionId;
+      }
+      if (this.query?.includes('name')) {
+        term = encodeURIComponent(term);
+        this.query = this.query.replace(/,name:\*.+(.?)\*/g, ",name:*" + term + "*")
+      } else {
+        this.query += ",name:*" + term + "*";
+      }
+      this.navigateToQueryBasedUrl();
+      this.fetchElements()
+    }
+    else {
+      this.discard();
+    }
+  }
 }

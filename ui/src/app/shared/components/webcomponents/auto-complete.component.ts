@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Optional, Output} from '@angular/core';
 import {Page} from "../../models/page";
 import {PageObject} from "../../models/page-object";
 import {FormControl, FormGroup} from '@angular/forms';
@@ -89,7 +89,7 @@ import {TestPlanLabType} from '../../../enums/test-plan-lab-type.enum';
             style="height: 4px;line-height: 1"
             [matTooltip]="item?.suffixNext ? ('agents.list_view.version_out_of_sync' |
                     translate: {agentVersion: item?.agentVersion, latestVersion:
-                    item?.currentAgentVersion}) : ''">
+                    item?.currentAgentVersion}) : isCloudDeviceDropdown ? ('message.common.device_busy'|translate) : '' ">
             <i
               *ngIf="item?.suffixNext"
               class="fa-exclamation-triangle-solid text-dark pr-6"></i>
@@ -116,6 +116,7 @@ export class AutoCompleteComponent implements OnInit {
   @Input('isDisabled') isDisabled: Boolean;
   @Input('testPlanLabType') testPlanLabType: TestPlanLabType;
   @Input('inline') public inline?: Boolean;
+  @Optional() @Input('isCloudDeviceDropdown') isCloudDeviceDropdown:Boolean;
   @Output('onSearch') onSearch = new EventEmitter<String>();
   @Output('onValueChange') onValueChange = new EventEmitter<Base>();
 

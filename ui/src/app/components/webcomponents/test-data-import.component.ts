@@ -41,6 +41,9 @@ import {TranslateService} from '@ngx-translate/core';
           <span [textContent]="[uploadedFileObject?.name]" class="pr-10 text-truncate"></span>
           <i class="fa-trash-thin pointer ml-auto" (click)="removeUpload()"></i>
         </div>
+        <div class="pt-25" *ngIf="uploadedFileObject?.name && uploadError">
+          <span class="rb-medium text-danger" [textContent]="('test_data_profiles.' + uploadError) | translate: {fileName: uploadedFileObject?.name}"></span>
+        </div>
       </div>
       <div *ngIf="uploadedFileObject?.name" class="pt-20" @collapse>
         <div class="form-group">
@@ -94,7 +97,7 @@ import {TranslateService} from '@ngx-translate/core';
         <button class="btn btn-clear" [translate]="'btn.common.cancel'" mat-dialog-close></button>
         <button class="btn btn-primary"
                 [translate]="'btn.common.import'"
-                [disabled]="uiIdentifierImportForm.invalid || formControl.invalid || hasDuplicateColumns"
+                [disabled]="uiIdentifierImportForm.invalid || formControl.invalid || hasDuplicateColumns || uploadError"
                 (click)="importFile()"></button>
       </div>
     </div>
@@ -128,6 +131,7 @@ export class TestDataImportComponent extends BaseComponent {
   public importing: boolean = false;
   public isReplace: Boolean = true;
   public isSubmited:boolean = false;
+  public uploadError:string;
 
 
   constructor(
@@ -154,6 +158,8 @@ export class TestDataImportComponent extends BaseComponent {
             this.fields.push({name: name, isSelected: false, isDuplicate: this.duplicateColumns.indexOf(name) > -1 });
           }
         });
+      },(error)=>{
+        this.uploadError = error?.code;
       });
   }
 

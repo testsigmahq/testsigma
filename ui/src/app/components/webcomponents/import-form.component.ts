@@ -102,7 +102,7 @@ export class ImportFormComponent extends BaseComponent implements OnInit {
   fetchVersions(term?: string) {
     let query = "";
     query += term ? ",name:*" + term + "*" : '';
-    this.versionService.findAll("workspaceId:" + this.selectedWorkspace.id + query).subscribe(res => {
+    this.versionService.findAll("applicationId:" + this.selectedWorkspace.id + query).subscribe(res => {
       this.versions = res;
       this.selectedVersion = this.versions.content[0];
       console.log(this.userPreference);
@@ -113,7 +113,7 @@ export class ImportFormComponent extends BaseComponent implements OnInit {
     this.selectedWorkspace = null;
     if (application) {
       this.selectedWorkspace = application;
-      console.log("Setting selected workspace as  - ", application);
+      console.log("Setting selected application as  - ", application);
       this.fetchVersions()
     }
   }

@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {TestCaseResultExternalMapping} from "../../models/test-case-result-external-mapping.model";
+import {EntityExternalMapping} from "../../models/entity-external-mapping.model";
 import {TestCaseResultExternalMappingService} from "../../services/test-case-result-external-mapping.service";
 import {JiraIssueField} from "../../models/jira-issue-field.model";
 import {JiraProject} from "../../models/jira-project.model";
@@ -15,8 +15,8 @@ import {Integrations} from "../../shared/models/integrations.model";
 export class JiraIssueDetailsComponent implements OnInit {
   @Input('jiraIssueId') jiraIssueId: Number;
   @Input('application') application: Integrations;
-  @Input('externalMapping') jiraIssueDetails: TestCaseResultExternalMapping;
-  @Output('unLink') unLink = new EventEmitter<TestCaseResultExternalMapping>();
+  @Input('externalMapping') jiraIssueDetails: EntityExternalMapping;
+  @Output('unLink') unLink = new EventEmitter<EntityExternalMapping>();
   public formFieldName: any;
   public formFields: JiraIssueField[] = [];
   public fields: any;
@@ -43,7 +43,7 @@ export class JiraIssueDetailsComponent implements OnInit {
       this.formFieldName = this.fields.names;
       this.project = this.fields.fields.project;
       this.issueType = this.fields.fields.issuetype;
-      this.getFormFields(this.jiraIssueDetails.workspaceId)
+      this.getFormFields(this.jiraIssueDetails.applicationId)
     }
   }
 
@@ -56,7 +56,7 @@ export class JiraIssueDetailsComponent implements OnInit {
     });
   }
 
-  unLinkIssue(jiraIssueDetails: TestCaseResultExternalMapping) {
+  unLinkIssue(jiraIssueDetails: EntityExternalMapping) {
     this.unLink.emit(jiraIssueDetails);
   }
 }

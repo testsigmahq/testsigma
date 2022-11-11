@@ -9,7 +9,7 @@ import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {TestCaseResult} from "../../models/test-case-result.model";
 import {Integrations} from "../../shared/models/integrations.model";
 import {Integration} from "../../shared/enums/integration.enum";
-import {TestCaseResultExternalMapping} from "../../models/test-case-result-external-mapping.model";
+import {EntityExternalMapping} from "../../models/entity-external-mapping.model";
 import {TestCaseResultExternalMappingService} from "../../services/test-case-result-external-mapping.service";
 
 @Component({
@@ -19,8 +19,8 @@ import {TestCaseResultExternalMappingService} from "../../services/test-case-res
 })
 export class ReportBugComponent extends BaseComponent implements OnInit {
   public configs: Integrations[] = [];
-  public externalMapping: TestCaseResultExternalMapping;
-  public externalMappingIssueDetails: TestCaseResultExternalMapping[] = [];
+  public externalMapping: EntityExternalMapping;
+  public externalMappingIssueDetails: EntityExternalMapping[] = [];
   public showExternalApplication: String = 'ADD_NEW';
   public selectedList: String[] = [];
   public unSelectedList: String[] = [];
@@ -101,39 +101,39 @@ export class ReportBugComponent extends BaseComponent implements OnInit {
     if (bugReportingWorkspaceIds.length > 0)
       this.externalMappingService.findByTestCaseResult(this.options.testCaseResult).subscribe((res) => {
         if (res.length) {
-          this.externalMapping = res.find(res => bugReportingWorkspaceIds.includes(res.workspaceId.toString()));
-          this.externalMapping.workspace = this.configs.find(config => config.id == this.externalMapping.workspaceId);
-          if (this.externalMapping.workspace.isJira) {
+          this.externalMapping = res.find(res => bugReportingWorkspaceIds.includes(res.applicationId.toString()));
+          this.externalMapping.application = this.configs.find(config => config.id == this.externalMapping.applicationId);
+          if (this.externalMapping.application.isJira) {
             this.showExternalApplication = "JBR";
           }
-          if (this.externalMapping.workspace.isFreshrelease) {
+          if (this.externalMapping.application.isFreshrelease) {
             this.showExternalApplication = 'FBR';
           }
-          if (this.externalMapping.workspace.isMantis) {
+          if (this.externalMapping.application.isMantis) {
             this.showExternalApplication = 'MBR';
           }
-          if (this.externalMapping.workspace.isAzure) {
+          if (this.externalMapping.application.isAzure) {
             this.showExternalApplication = "ABR";
           }
-          if (this.externalMapping.workspace.isBackLog) {
+          if (this.externalMapping.application.isBackLog) {
             this.showExternalApplication = 'BBR';
           }
-          if (this.externalMapping.workspace.isZepel) {
+          if (this.externalMapping.application.isZepel) {
             this.showExternalApplication = 'ZBR';
           }
-          if (this.externalMapping.workspace.isYoutrack) {
+          if (this.externalMapping.application.isYoutrack) {
             this.showExternalApplication = 'YBR';
           }
-          if (this.externalMapping.workspace.isBugzilla) {
+          if (this.externalMapping.application.isBugzilla) {
             this.showExternalApplication = 'BZBR';
           }
-          if (this.externalMapping.workspace.isTrello) {
+          if (this.externalMapping.application.isTrello) {
             this.showExternalApplication = 'TBR';
           }
-          if (this.externalMapping.workspace.isLinear) {
+          if (this.externalMapping.application.isLinear) {
             this.showExternalApplication = 'LBR';
           }
-          if (this.externalMapping.workspace.isClickUp) {
+          if (this.externalMapping.application.isClickUp) {
             this.showExternalApplication = 'CBR';
           }
           this.fetchIssueDetails();
@@ -154,7 +154,7 @@ export class ReportBugComponent extends BaseComponent implements OnInit {
       this.mappingIssueFindAll();
       this.externalMappingService.show(this.externalMapping.id).subscribe(res => {
         this.externalMapping = res;
-        this.externalMapping.workspace = this.configs.find(config => config.id == this.externalMapping.workspaceId);
+        this.externalMapping.application = this.configs.find(config => config.id == this.externalMapping.applicationId);
       });
     }
   }
@@ -165,7 +165,7 @@ export class ReportBugComponent extends BaseComponent implements OnInit {
     })
   }
 
-  destroy(event: TestCaseResultExternalMapping) {
+  destroy(event: EntityExternalMapping) {
     this.externalMappingService.destroy(event).subscribe(() => {
       this.translate.get("test_case_result.details.report_bug.un_link.success").subscribe(res => {
         this.showNotification(NotificationType.Success, res);
@@ -174,7 +174,7 @@ export class ReportBugComponent extends BaseComponent implements OnInit {
     })
   }
 
-  create(event: TestCaseResultExternalMapping) {
+  create(event: EntityExternalMapping) {
     this.isButtonClicked = true;
     this.externalMappingService.create(event).subscribe(() => {
       this.translate.get("Successfully reported bug on your favorite bug tracking system").subscribe(res => {

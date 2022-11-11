@@ -10,7 +10,7 @@ import {TestCaseResultExternalMappingService} from "../../services/test-case-res
 import {IntegrationsService} from "../../shared/services/integrations.service";
 import {MatDialog} from "@angular/material/dialog";
 import {BaseComponent} from "../../shared/components/base.component";
-import {TestCaseResultExternalMapping} from "../../models/test-case-result-external-mapping.model";
+import {EntityExternalMapping} from "../../models/entity-external-mapping.model";
 import {FreshReleaseIssueType} from "../../models/fresh-release-issue-type.model";
 import { debounceTime, tap, switchMap } from 'rxjs/operators';
 
@@ -22,7 +22,7 @@ import { debounceTime, tap, switchMap } from 'rxjs/operators';
 export class MantisIssueFormComponent extends BaseComponent implements OnInit {
   @Input('application') application: Integrations;
   @Input('testCaseResult') testCaseResult: TestCaseResult;
-  @Output('onCreate') createCallBack = new EventEmitter<TestCaseResultExternalMapping>();
+  @Output('onCreate') createCallBack = new EventEmitter<EntityExternalMapping>();
   public formFR: FormGroup;
   public projects: JSON;
   public issueTypes: JSON;
@@ -85,17 +85,15 @@ export class MantisIssueFormComponent extends BaseComponent implements OnInit {
   }
 
   onSubmit() {
-    let mapping = new TestCaseResultExternalMapping();
+    let mapping = new EntityExternalMapping();
     if (this.selectedIssue) {
       mapping.linkToExisting = true;
       mapping.externalId = this.selectedIssue.id;
       mapping.fields = new Map<String, Object>();
       mapping.fields["project"] = this.selectedProject.name;
-      mapping.workspaceId = <number>this.application.id;
-      mapping.testCaseResultId = this.testCaseResult.id;
+      mapping.applicationId = <number>this.application.id;
     } else {
-      mapping.workspaceId = <number>this.application.id;
-      mapping.testCaseResultId = this.testCaseResult.id;
+      mapping.applicationId = <number>this.application.id;
       mapping.fields = new Map<String, Object>();
       mapping.fields['summary'] = this.summary;
       mapping.fields['description'] = this.description;

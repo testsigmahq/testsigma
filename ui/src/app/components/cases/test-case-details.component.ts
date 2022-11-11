@@ -5,7 +5,6 @@ import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
 import {NotificationsService, NotificationType} from "angular2-notifications";
 import {TranslateService} from "@ngx-translate/core";
 import {TestPlanResultService} from "../../services/test-plan-result.service";
-//
 import {BaseComponent} from "../../shared/components/base.component";
 import {TestCase} from "../../models/test-case.model";
 import {ConfirmationModalComponent} from "../../shared/components/webcomponents/confirmation-modal.component";
@@ -16,7 +15,6 @@ import {LinkedEntitiesModalComponent} from "../../shared/components/webcomponent
 import {TestSuiteService} from "../../services/test-suite.service";
 import {InfiniteScrollableDataSource} from "../../data-sources/infinite-scrollable-data-source";
 import {WorkspaceVersionService} from "../../shared/services/workspace-version.service";
-
 import {WorkspaceVersion} from "../../models/workspace-version.model";
 import {UserPreferenceService} from "../../services/user-preference.service";
 import {UserPreference} from "../../models/user-preference.model";
@@ -24,6 +22,10 @@ import {DryRunFormComponent} from '../webcomponents/dry-run-form.component';
 import {TestStep} from '../../models/test-step.model';
 import {ChromeRecorderService} from "../../services/chrome-recoder.service";
 import {ToastrService} from "ngx-toastr";
+import {EntityExternalMapping} from "../../models/entity-external-mapping.model";
+import {EntityExternalMappingService} from "../../services/entity-external-mapping.service";
+import {EntityType} from "../../enums/entity-type.enum";
+import {XrayKeyWarningComponent} from "../../agents/components/webcomponents/xray-key-warning-component";
 import {TestStepService} from "../../services/test-step.service";
 
 @Component({
@@ -41,6 +43,8 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
   private userPreference: UserPreference;
   public selectedStepsList: TestStep[];
   public stepsLength: number;
+  public entityType: EntityType = EntityType.TEST_CASE;
+  public entityExternalMapping: EntityExternalMapping;
 
   constructor(
     public authGuard: AuthenticationGuard,
@@ -56,7 +60,8 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
     private matModal: MatDialog,
     private router: Router,
     private userPreferenceService: UserPreferenceService,
-    private chromeRecorderService : ChromeRecorderService
+    private chromeRecorderService : ChromeRecorderService,
+    public entityExternalMappingService : EntityExternalMappingService,
   ) {
     super(authGuard, notificationsService, translate,toastrService);
   }
@@ -268,5 +273,64 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
         testCaseId: this.testCase.id
       },
     })
+  }
+
+  linkXrayId(mapping: EntityExternalMapping){
+    this.entityExternalMappingService.findAll("externalId:"+mapping.externalId).subscribe(res =>{
+      if(res.content.length > 0 && res.content[0].entityId!=this.testCaseId){
+        this.showWarning(mapping);
+      } else{
+        this.checkAllTestCasesAreLinked(mapping);
+      }
+    })
+  }
+
+  checkAllTestCasesAreLinked(mapping : EntityExternalMapping){
+    this.testCaseService.show(this.testCaseId).subscribe(res=>{
+      if(res?.preRequisiteCase !=null){
+        this.entityExternalMappingService.findAll("entityId:"+ res?.preRequisiteCase.id).subscribe(res =>{
+          if(res.content.length == 0){
+            this.translate.get("message.common.prerequisite_not_linked").subscribe((res: string) => {
+              this.showNotification(NotificationType.Alert, res);
+            });
+          }
+        })
+      }
+      this.linkXrayWithTestCase(mapping);
+    })
+  }
+
+  showWarning(mapping: EntityExternalMapping){
+    const dialogRef = this.matModal.open(XrayKeyWarningComponent, {
+      width: '450px',
+      panelClass: ['matDialog', 'rds-none'],
+      data: {entityType: this.entityType}
+    });
+    dialogRef.afterClosed().subscribe(res =>{
+      if(res===false){
+        this.checkAllTestCasesAreLinked(mapping);
+      }
+    })
+  }
+
+  linkXrayWithTestCase(mapping: EntityExternalMapping){
+    this.entityExternalMappingService.create(mapping).subscribe(
+      (res) => {
+        this.entityExternalMapping = res;
+        this.translate.get("message.common.xray_link.success", {EntityName: "Test Case" }).subscribe((res: string) => {
+          this.showNotification(NotificationType.Success, res);
+        });
+      },
+      (error) => {
+        console.log("error", error, error.status);
+        if (error.status == "404") {
+          this.showNotification(NotificationType.Error, error.error.error);
+        } else {
+          this.translate.get("message.common.xray_link.failure", {EntityName: "Test Case" }).subscribe((res: string) => {
+            this.showNotification(NotificationType.Error, res);
+          });
+        }
+      }
+    )
   }
 }

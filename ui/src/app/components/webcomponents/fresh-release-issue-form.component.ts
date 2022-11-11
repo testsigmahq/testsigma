@@ -10,7 +10,7 @@ import {TestCaseResultExternalMappingService} from "../../services/test-case-res
 import {IntegrationsService} from "../../shared/services/integrations.service";
 import {MatDialog} from "@angular/material/dialog";
 import {BaseComponent} from "../../shared/components/base.component";
-import {TestCaseResultExternalMapping} from "../../models/test-case-result-external-mapping.model";
+import {EntityExternalMapping} from "../../models/entity-external-mapping.model";
 import {FreshReleaseProject} from "../../models/fresh-release-project.model";
 import {FreshReleaseIssueType} from "../../models/fresh-release-issue-type.model";
 import { fromEvent } from 'rxjs';
@@ -24,7 +24,7 @@ import { filter, debounceTime, distinctUntilChanged, tap } from 'rxjs/operators'
 export class FreshReleaseIssueFormComponent extends BaseComponent implements OnInit {
   @Input('application') application: Integrations;
   @Input('testCaseResult') testCaseResult: TestCaseResult;
-  @Output('onCreate') createCallBack = new EventEmitter<TestCaseResultExternalMapping>();
+  @Output('onCreate') createCallBack = new EventEmitter<EntityExternalMapping>();
   public formFR: FormGroup;
   public projects: FreshReleaseProject[];
   public issueTypes: FreshReleaseIssueType[];
@@ -85,17 +85,15 @@ export class FreshReleaseIssueFormComponent extends BaseComponent implements OnI
 
   onSubmit() {
 
-    let mapping = new TestCaseResultExternalMapping();
+    let mapping = new EntityExternalMapping();
     if (this.selectedIssue) {
       mapping.linkToExisting = true;
       mapping.externalId = this.selectedIssue.key;
       mapping.fields = new Map<String, Object>();
       mapping.fields["project"] = this.selectedProject.key;
-      mapping.workspaceId = <number>this.application.id;
-      mapping.testCaseResultId = this.testCaseResult.id;
+      mapping.applicationId = <number>this.application.id;
     } else {
-      mapping.workspaceId = <number>this.application.id;
-      mapping.testCaseResultId = this.testCaseResult.id;
+      mapping.applicationId = <number>this.application.id;
       mapping.fields = new Map<String, Object>();
       mapping.fields['title'] = this.title;
       mapping.fields['description'] = this.description;

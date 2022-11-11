@@ -58,6 +58,10 @@ export class Integrations extends Base implements PageObject {
     return this.workspace == Integration.TestsigmaLab;
   }
 
+  get isXray(): Boolean {
+    return this.workspace == Integration.XrayCloud;
+  }
+
   get isPrivateLab(): Boolean {
     return this.workspace == Integration.PrivateGrid;
   }

@@ -4,7 +4,7 @@ import {TestCaseResult} from '../../models/test-case-result.model';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {TestCaseResultExternalMappingService} from '../../services/test-case-result-external-mapping.service';
 import {IntegrationsService} from '../../shared/services/integrations.service';
-import {TestCaseResultExternalMapping} from '../../models/test-case-result-external-mapping.model';
+import {EntityExternalMapping} from '../../models/entity-external-mapping.model';
 import { debounceTime, tap } from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 import {ToastrService} from "ngx-toastr";
@@ -20,7 +20,7 @@ import {NotificationsService} from "angular2-notifications";
 export class LinearIssueFormComponent extends BaseComponent implements OnInit {
   @Input('application') application: Integrations;
   @Input('testCaseResult') testCaseResult: TestCaseResult;
-  @Output('onCreate') createCallBack = new EventEmitter<TestCaseResultExternalMapping>();
+  @Output('onCreate') createCallBack = new EventEmitter<EntityExternalMapping>();
   public formFR: FormGroup;
   public projects;
   public teams;
@@ -90,15 +90,13 @@ export class LinearIssueFormComponent extends BaseComponent implements OnInit {
   }
 
   onSubmit() {
-    let mapping = new TestCaseResultExternalMapping();
+    let mapping = new EntityExternalMapping();
     if (this.selectedIssue) {
       mapping.linkToExisting = true;
       mapping.externalId = this.selectedIssue.id;
-      mapping.workspaceId = <number>this.application.id;
-      mapping.testCaseResultId = this.testCaseResult.id;
+      mapping.applicationId = <number>this.application.id;
     } else {
-      mapping.workspaceId = <number>this.application.id;
-      mapping.testCaseResultId = this.testCaseResult.id;
+      mapping.applicationId = <number>this.application.id;
       mapping.fields = new Map<String, Object>();
       mapping.fields['title'] = this.title;
       const des = this.description.split('\n').join('\\n');

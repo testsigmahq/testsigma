@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Integrations} from "../../shared/models/integrations.model";
-import {TestCaseResultExternalMapping} from "../../models/test-case-result-external-mapping.model";
+import {EntityExternalMapping} from "../../models/entity-external-mapping.model";
 
 @Component({
   selector: 'app-youtrack-issue-details',
@@ -10,8 +10,8 @@ import {TestCaseResultExternalMapping} from "../../models/test-case-result-exter
 export class YoutrackIssueDetailsComponent implements OnInit {
   @Input('application') application: Integrations;
   @Input("YTissueId") YTissueId:Number;
-  @Input('externalMapping') externalApplicationDetails: TestCaseResultExternalMapping;
-  @Output('unLink') unLink = new EventEmitter<TestCaseResultExternalMapping>();
+  @Input('externalMapping') externalApplicationDetails: EntityExternalMapping;
+  @Output('unLink') unLink = new EventEmitter<EntityExternalMapping>();
   public issueDetails: any;
   public issueStatus: any;
   public issueTypeDetails: any;
@@ -41,7 +41,7 @@ export class YoutrackIssueDetailsComponent implements OnInit {
     }
   }
 
-  unLinkIssue(externalApplicationDetails: TestCaseResultExternalMapping) {
+  unLinkIssue(externalApplicationDetails: EntityExternalMapping) {
     this.unLink.emit(externalApplicationDetails);
   }
 

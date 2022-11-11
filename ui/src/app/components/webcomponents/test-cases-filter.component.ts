@@ -26,6 +26,8 @@ import {TestCaseTagService} from "../../services/test-case-tag.service";
 import {FilterQuery} from "../../models/filter-query";
 import {FilterOperation} from "../../enums/filter.operation.enum";
 import {FormControl, FormGroup} from "@angular/forms";
+import {IntegrationsService} from "../../shared/services/integrations.service";
+import {Integration} from "../../shared/enums/integration.enum";
 import * as moment from "moment";
 
 
@@ -48,12 +50,15 @@ export class TestCasesFilterComponent implements OnInit {
   public filterWorkspaceVersionId: number;
   public filterDeleted: boolean;
   public filterTagIds: number[];
+  public filterIsXrayIdMapped: string;
   public testCasePrioritiesList: Page<TestCasePriority>;
   public testCaseTypesList: Page<TestCaseType>;
   public tags: TestCaseTag[];
   public customFieldsQueryHash: FilterQuery[] = [];
   public today: Date = new Date();
   public suiteMappingStatus: string[] = ['Yes','No'];
+  public xrayIdMapping: string[] = ['Yes','No'];
+  public isXrayCloudEnabled; boolean = true;
   public createdDateRange = new FormGroup({
     start: new FormControl(),
     end: new FormControl()
@@ -75,7 +80,8 @@ export class TestCasesFilterComponent implements OnInit {
     private testCaseTypeService: TestCaseTypesService,
     private testCasePriorityService: TestCasePrioritiesService,
     private authGuard: AuthenticationGuard,
-    private testCaseTagService: TestCaseTagService) {
+    private testCaseTagService: TestCaseTagService,
+    private integrationsService: IntegrationsService) {
     this.isStepGroup = data.isStepGroup;
   }
   get resultConstant() {
@@ -108,6 +114,7 @@ export class TestCasesFilterComponent implements OnInit {
     this.fetchTestCasePriorities();
     this.fetchTags();
     this.disableSingleSelectedFields();
+    this.fetchXrayApplicationConfig();
   }
 
   disableSingleSelectedFields(){
@@ -125,6 +132,10 @@ export class TestCasesFilterComponent implements OnInit {
       queryString += ",status@" + this.filterStatuses.join("#")
     if (this.filterByResult?.length)
       queryString += ",result@" + this.filterByResult.join("#")
+    if(this.filterIsXrayIdMapped?.length) {
+      if (this.filterIsXrayIdMapped == 'Yes') queryString += ",xrayIdMapped:" + true;
+      else if (this.filterIsXrayIdMapped == 'No') queryString += ",xrayIdMapped:" + false;
+    }
     if(this.filterIsMappedToSuite?.length) {
       if (this.filterIsMappedToSuite == 'Yes') queryString += ",suiteMapping:" + true;
       else if (this.filterIsMappedToSuite == 'No') queryString += ",suiteMapping:" + false;
@@ -234,5 +245,20 @@ export class TestCasesFilterComponent implements OnInit {
     return ((DateRange.controls.start.value || DateRange.controls.start.errors?.matDatepickerParse?.text) ||
             (DateRange.controls.end.value || DateRange.controls.end.errors?.matDatepickerParse?.text) ) &&
             DateRange.invalid;
+  }
+
+  fetchXrayApplicationConfig(){
+    let applicationId = (Object.keys(Integration).indexOf(Integration.XrayCloud) + 1);
+    this.integrationsService.findAll("applicationId:"+ applicationId).subscribe(
+      res => {
+        if(res.length > 0 )
+          this.isXrayCloudEnabled = true;
+        else
+          this.isXrayCloudEnabled = false;
+      },
+      error => {
+        this.isXrayCloudEnabled = false;
+      }
+    );
   }
 }

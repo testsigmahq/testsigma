@@ -5,13 +5,19 @@ import {InfiniteScrollableDataSource} from "../../data-sources/infinite-scrollab
 import {fromEvent, Subscription} from "rxjs";
 import {ResultConstant} from "../../enums/result-constant.enum";
 import {debounceTime, distinctUntilChanged, filter, tap} from "rxjs/operators";
+import {NotificationsService, NotificationType} from 'angular2-notifications';
+import {TranslateService} from '@ngx-translate/core';
+import {EntityExternalMappingService} from "../../services/entity-external-mapping.service";
+import {EntityExternalMapping} from "../../models/entity-external-mapping.model";
+import {EntityType} from "../../enums/entity-type.enum";
+import {BaseComponent} from "../../shared/components/base.component";
 
 @Component({
   selector: 'app-test-suite-results',
   templateUrl: './test-suite-results.component.html',
   styles: []
 })
-export class TestSuiteResultsComponent implements OnInit {
+export class TestSuiteResultsComponent extends BaseComponent implements OnInit {
 
   @Input('testPlanResult') testPlanResult: TestPlanResult;
   @Input('showFilter') showFilter: Boolean;
@@ -27,6 +33,8 @@ export class TestSuiteResultsComponent implements OnInit {
   public isDisabledAutoRefresh: boolean = false;
   public isSearchEnable: boolean = false;
   public isRunSuiteFetchComplete: boolean = false;
+  public entityExternalMapping: EntityExternalMapping;
+  public suiteResultEntityType: EntityType = EntityType.TEST_SUITE_RESULT;
   @ViewChild('searchMachineInput') searchMachineInput: ElementRef;
   inputValue: any;
 
@@ -35,7 +43,10 @@ export class TestSuiteResultsComponent implements OnInit {
   public filterResult: ResultConstant[];
 
 
-  constructor(private testSuiteResultService: TestSuiteResultService) {
+  constructor(private testSuiteResultService: TestSuiteResultService,
+              public translate: TranslateService,
+              public entityExternalMappingService: EntityExternalMappingService) {
+    super();
   }
 
   ngOnInit() {
@@ -142,5 +153,17 @@ export class TestSuiteResultsComponent implements OnInit {
         })
       )
       .subscribe();
+  }
+
+  rePushInitialized(){
+    this.translate.get("Push Results initialized Successfully").subscribe((res: string) => {
+      this.showNotification(NotificationType.Success, res);
+    });
+  }
+
+  rePushFailed(){
+    this.translate.get("Push Results Failed..! please try again").subscribe((res: string) => {
+      this.showNotification(NotificationType.Error, res);
+    });
   }
 }

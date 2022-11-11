@@ -14,6 +14,10 @@ import {TestCaseService} from "../../services/test-case.service";
 import {ToastrService} from "ngx-toastr";
 import {LinkedEntitiesModalComponent} from "../../shared/components/webcomponents/linked-entities-modal.component";
 import {TestPlanService} from "../../services/test-plan.service";
+import {EntityType} from "../../enums/entity-type.enum";
+import {EntityExternalMapping} from "../../models/entity-external-mapping.model";
+import {EntityExternalMappingService} from "../../services/entity-external-mapping.service";
+import {XrayKeyWarningComponent} from "../../agents/components/webcomponents/xray-key-warning-component";
 
 @Component({
   selector: 'app-details',

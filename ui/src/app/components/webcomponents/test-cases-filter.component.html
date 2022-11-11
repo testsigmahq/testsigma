@@ -177,6 +177,20 @@
         </mat-form-field>
         <label class="control-label" [translate]="'testcase.list.tags'"></label>
       </div>
+      <div class="form-group" *ngIf="isXrayCloudEnabled && !isStepGroup">
+        <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill">
+          <mat-select
+            (selectionChange)="constructQueryString()"
+            [placeholder]="'message.common.any' | translate"
+            disableOptionCentering [(value)]="filterIsXrayIdMapped">
+            <mat-option
+              *ngFor="let result of xrayIdMapping"
+              [value]="result"
+              [textContent]="result"></mat-option>
+          </mat-select>
+        </mat-form-field>
+        <label class="control-label" [translate]="'xray.filter.title'"></label>
+      </div>
     </form>
   </div>
   <div class="theme-overlay-footer">

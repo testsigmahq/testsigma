@@ -60,6 +60,7 @@ public class TestCaseStepEntity implements Cloneable {
   private Screenshot screenshot;
   private int noOfRetriesOnStepFailure = 1;
   private String failureMessage;
+  private Long maxIterations;
 
   public TestCaseStepEntity clone() throws CloneNotSupportedException {
     TestCaseStepEntity exeStepEntity = (TestCaseStepEntity) super.clone();

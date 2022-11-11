@@ -7,6 +7,7 @@
 
 package com.testsigma.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.testsigma.constants.NaturalTextActionConstants;
@@ -112,6 +113,9 @@ public class TestStep {
 
   @Column(name = "natural_text_action_id")
   private Integer naturalTextActionId;
+
+  @Column(name = "max_iterations")
+  private Long maxIterations;
 
   @Column(name = "type")
   @Enumerated(EnumType.STRING)

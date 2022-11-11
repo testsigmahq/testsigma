@@ -81,6 +81,8 @@ export class TestStep extends Base implements PageObject {
   @serializable
   public forLoopTestDataId: number;
   @serializable
+  public maxIterations: number;
+  @serializable
   public testDataFunctionId: number;
   @serializable(custom(v => v, v => v))
   public testDataFunctionArgs: JSON;
@@ -444,6 +446,7 @@ export class TestStep extends Base implements PageObject {
       this.disabled = input['disabled'];
       this.ignoreStepResult = input['ignoreStepResult'];
       this.visualEnabled = input['visualEnabled'];
+      this.maxIterations = input['maxIterations'];
       if (input['dataMap'])
         this.conditionIf = input['dataMap']['conditionIf'];
     }

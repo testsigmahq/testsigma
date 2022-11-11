@@ -100,6 +100,7 @@ export class TestStepMoreActionFormComponent implements OnInit {
     this.form.addControl('disabled', new FormControl((Boolean(this.options?.testStep?.parentStep?.disabled)||this.canAllowDisableStep? true :this.options.testStep.disabled), []));
     this.form.addControl("conditionIf", new FormControl(this.options.testStep.conditionIf,[]));
     this.form.addControl('ignoreStepResult', new FormControl(this.options.testStep.ignoreStepResult, []));
+    this.form.addControl('maxIterations', new FormControl(this.options.testStep.maxIterations, [Validators.max(100), Validators.min(1)]));
 
     this.dataMapGroup = new FormGroup({
       conditionIf: new FormControl(this.options.testStep.conditionIf, [])

@@ -66,6 +66,7 @@ public class TestStepDTO implements Cloneable, Serializable {
   private RestStepDTO restStep;
   private Long phoneNumberId;
   private Long addonActionId;
+  private Long maxIterations;
   //  private AddonNaturalTextActionData addonNaturalTextActionData;
   private Map<String, AddonTestStepTestData> addonTestData;
   private Map<String, AddonElementData> addonElements;

@@ -64,6 +64,7 @@ public class TestCaseStepEntityDTO implements Cloneable {
   private Map<String, AddonElementData> addonElements;
   private Map<String, Object> additionalData;
   private Boolean visualEnabled = false;
+  private Long maxIterations;
   private List<TestCaseStepEntityDTO> testCaseSteps = new ArrayList<>();
   private Map<String, String> additionalScreenshotPaths = new HashMap<>();
   private String failureMessage;

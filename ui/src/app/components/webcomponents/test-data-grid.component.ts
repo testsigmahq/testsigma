@@ -12,6 +12,7 @@ import {TestData} from "../../models/test-data.model";
 import {TestDataSet} from "../../models/test-data-set.model";
 import {CdkVirtualScrollViewport} from "@angular/cdk/scrolling";
 import { Router } from '@angular/router';
+import * as moment from 'moment';
 
 
 @Component({
@@ -20,6 +21,8 @@ import { Router } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {'class': 'd-flex ts-col-100 flex-wrap'}
 })
+
+
 export class TestDataGridComponent implements OnInit {
   @Input('testDataForm') testDataForm: FormGroup;
   @Input('testData') testData: TestData;
@@ -33,6 +36,8 @@ export class TestDataGridComponent implements OnInit {
   public activeScrollingElement: ElementRef;
   public hideToolTip: Boolean;
   public isReadOnly: boolean;
+
+  readonly MAX_TEST_DATA_SETS = 200;
 
   get duplicateSetNames(): Boolean{
     let duplicate = this.datasetControls().controls.find((item) => {
@@ -253,6 +258,16 @@ export class TestDataGridComponent implements OnInit {
     this.testDataForm.controls.dataSets.valueChanges.subscribe(() => {
       this.testDataForm.addControl('dataSets', this.formBuilder.array([]));
     })
+  }
+
+  get shouldShowAddIcon() {
+    let isOldTDP = moment(this.testData?.createdAt).unix() < this.insertLimitDate;
+    return isOldTDP || this.datasetControls().length < this.MAX_TEST_DATA_SETS;
+  }
+
+  get insertLimitDate() {
+    // November 10, 2022 12:00:00 AM GMT
+    return 1668038400000;
   }
 
 }

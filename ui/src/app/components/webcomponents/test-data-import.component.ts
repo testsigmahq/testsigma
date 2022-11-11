@@ -188,6 +188,7 @@ export class TestDataImportComponent extends BaseComponent {
 
   removeUpload() {
     this.uploadedFileObject=null;
+    this.uploadError=null;
     this.fields=[]
   }
 

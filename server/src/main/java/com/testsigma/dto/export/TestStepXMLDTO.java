@@ -82,6 +82,8 @@ public class TestStepXMLDTO extends BaseXMLDTO {
   private ResultConstant[] ifConditionExpectedResults;
   @JsonProperty("test-data")
   private String testData;
+  @JsonProperty("MaxIterations")
+  private Integer maxIterations;
   @JsonProperty("test-data-function")
   private DefaultDataGenerator defaultDataGenerator;
   @JsonProperty("custom-step")

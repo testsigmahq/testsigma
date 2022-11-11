@@ -58,6 +58,25 @@
           </mat-select>
         </mat-form-field>
       </div>
+      <div class="form-group" *ngIf="testStep.isConditionalWhileLoop">
+        <div class="p-0 field m-0">
+          <input
+            type="number"
+            id="maxIterations"
+            name="maxIterations"
+            placeholder=" "
+            (focus)="form?.controls['maxIterations'].errors = {}"
+            class="form-control"
+            [formControlName]="['maxIterations']"/>
+          <label
+            [textContent]="('step_result.max_iterations' | translate)"
+            for="maxIterations"></label>
+        </div>
+        <div
+          *ngIf="form?.get('maxIterations')?.hasError('min') || form?.get('maxIterations')?.hasError('max')"
+          class="error" [translate]="'test_step.max_iterations.error'">
+        </div>
+      </div>
       <div
         *ngIf="!testStep.isConditionalType && !conditionalIf"
         class="form-group d-flex align-items-center">

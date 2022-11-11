@@ -3,6 +3,7 @@ package com.testsigma.service;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.model.TestDataSet;
 import com.testsigma.repository.TestDataSetRepository;
+import com.testsigma.web.request.TestDataSetRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Log4j2
 @Service
@@ -26,6 +29,10 @@ public class TestDataSetService {
         return this.testDataSetRepository.save(testDataSet);
     }
 
+    public Optional<TestDataSet> findByProfileIdAndSetName(Long profileId, String setName){
+        return testDataSetRepository.findTestDataSetByTestDataIdAndAndName(
+                profileId, setName);
+    }
 
     public TestDataSet update(TestDataSet testDataSet){
         return this.testDataSetRepository.save(testDataSet);

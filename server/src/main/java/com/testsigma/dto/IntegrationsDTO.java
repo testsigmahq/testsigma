@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 @Data
 public class IntegrationsDTO {
   @JsonProperty("id")
-  private String id;
+  private Long id;
 
   private String name;
 

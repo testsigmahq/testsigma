@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 import com.testsigma.config.ApplicationConfig;
 import com.testsigma.exception.TestsigmaException;
+import com.testsigma.model.EntityExternalMapping;
 import com.testsigma.model.Integrations;
-import com.testsigma.model.TestCaseResultExternalMapping;
 import com.testsigma.util.HttpClient;
 import com.testsigma.util.HttpResponse;
 import com.testsigma.web.request.IntegrationsRequest;
@@ -38,7 +38,7 @@ public class BugZillaService {
   @Setter
   private Integrations integrations;
 
-  public TestCaseResultExternalMapping addIssue(TestCaseResultExternalMapping mapping) throws TestsigmaException {
+  public EntityExternalMapping addIssue(EntityExternalMapping mapping) throws TestsigmaException {
     HashMap<String, String> payload = new HashMap<>();
     payload.put("summary", mapping.getFields().get("summary").toString());
     payload.put("description", mapping.getFields().get("description").toString());
@@ -57,9 +57,9 @@ public class BugZillaService {
     return mapping;
   }
 
-  public TestCaseResultExternalMapping link(TestCaseResultExternalMapping mapping) throws TestsigmaException {
+  public EntityExternalMapping link(EntityExternalMapping mapping) throws TestsigmaException {
     HashMap<String, String> payload = new HashMap<>();
-    payload.put("comment", "Linked to testsigma results [" + config.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResultId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName());
+    payload.put("comment", "Linked to testsigma results [" + config.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResult().getId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName());
     HttpResponse<String> response = httpClient.post(integrations.getUrl() + "/rest/bug/" + mapping.getExternalId() + "/comment?api_key=" + this.integrations.getToken(), getHeaders(), payload, new TypeReference<String>() {
     });
     if (response.getStatusCode() != HttpStatus.SC_CREATED) {
@@ -69,9 +69,9 @@ public class BugZillaService {
     return mapping;
   }
 
-  public TestCaseResultExternalMapping unlink(TestCaseResultExternalMapping mapping) throws TestsigmaException {
+  public EntityExternalMapping unlink(EntityExternalMapping mapping) throws TestsigmaException {
     HashMap<String, String> payload = new HashMap<>();
-    payload.put("comment", "Unlinked from testsigma results [" + config.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResultId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName());
+    payload.put("comment", "Unlinked from testsigma results [" + config.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResult().getId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName());
     HttpResponse<String> response = httpClient.post(integrations.getUrl() + "/rest/bug/" + mapping.getExternalId() + "/comment?api_key=" + this.integrations.getToken(), getHeaders(), payload, new TypeReference<String>() {
     });
     if (response.getStatusCode() != HttpStatus.SC_CREATED) {

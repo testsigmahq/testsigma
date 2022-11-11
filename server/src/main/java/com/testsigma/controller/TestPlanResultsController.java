@@ -14,6 +14,7 @@ import com.testsigma.model.*;
 import com.testsigma.service.AgentExecutionService;
 import com.testsigma.service.TestPlanResultService;
 import com.testsigma.service.TestPlanService;
+import com.testsigma.service.XrayCloudService;
 import com.testsigma.specification.TestPlanResultSpecificationsBuilder;
 import com.testsigma.util.XLSUtil;
 import com.testsigma.web.request.TestPlanResultRequest;

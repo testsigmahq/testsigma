@@ -20,12 +20,9 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.google.common.collect.Lists;
 import com.testsigma.config.ApplicationConfig;
 import com.testsigma.config.StorageServiceFactory;
-import com.testsigma.model.StorageAccessLevel;
+import com.testsigma.model.*;
 import com.testsigma.dto.JiraProjectDTO;
 import com.testsigma.exception.TestsigmaException;
-import com.testsigma.model.Integrations;
-import com.testsigma.model.TestCaseResultExternalMapping;
-import com.testsigma.model.TestStepResult;
 import com.testsigma.util.HttpClient;
 import com.testsigma.util.HttpResponse;
 import com.testsigma.web.request.IntegrationsRequest;
@@ -64,11 +61,11 @@ public class JiraService {
   @Setter
   private Integrations integrations;
 
-  public TestCaseResultExternalMapping addIssue(TestCaseResultExternalMapping mapping) throws TestsigmaException {
+  public EntityExternalMapping addIssue(EntityExternalMapping mapping) throws TestsigmaException {
     JsonNodeFactory jnf = JsonNodeFactory.instance;
     ObjectNode payload = jnf.objectNode();
     payload.putPOJO("fields", mapping.getFields());
-    HttpResponse<String> response = httpClient.post(integrations.getUrl() + "/rest/api/2/issue", getHeaders(), payload, new TypeReference<String>() {
+    HttpResponse<String> response = httpClient.post(integrations.getUrl() + "/rest/api/2/issue", getHeaders(), payload, new TypeReference<>() {
     });
     if (response.getStatusCode() != HttpStatus.SC_CREATED) {
       log.error(response.getResponseText());
@@ -81,11 +78,11 @@ public class JiraService {
     return mapping;
   }
 
-  public void unlink(TestCaseResultExternalMapping mapping) throws TestsigmaException {
+  public void unlink(EntityExternalMapping mapping) throws TestsigmaException {
     JsonNodeFactory jnf = JsonNodeFactory.instance;
     ObjectNode payload = jnf.objectNode();
-    payload.putPOJO("body", "Unlinked from testsigma results [" + applicationConfig.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResultId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName());
-    HttpResponse<String> response = httpClient.post(integrations.getUrl() + "/rest/api/2/issue/" + mapping.getExternalId() + "/comment", getHeaders(), payload, new TypeReference<String>() {
+    payload.putPOJO("body", "Unlinked from testsigma results [" + applicationConfig.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResult().getId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName());
+    HttpResponse<String> response = httpClient.post(integrations.getUrl() + "/rest/api/2/issue/" + mapping.getExternalId() + "/comment", getHeaders(), payload, new TypeReference<>() {
     });
     if (response.getStatusCode() != HttpStatus.SC_CREATED) {
       log.error(response.getResponseText());
@@ -99,7 +96,7 @@ public class JiraService {
       query += "&projectKeys=" + new URLCodec().encode(projectId);
     if (issueType != null)
       query += "&issuetypeNames=" + new URLCodec().encode(issueType);
-    HttpResponse<String> response = httpClient.get(integrations.getUrl() + "/rest/api/3/issue/createmeta" + query, getHeaders(), new TypeReference<String>() {
+    HttpResponse<String> response = httpClient.get(integrations.getUrl() + "/rest/api/3/issue/createmeta" + query, getHeaders(), new TypeReference<>() {
     });
 
     JSONObject createMeta = new JSONObject(response.getResponseText());
@@ -123,7 +120,7 @@ public class JiraService {
     Header authentication = new BasicHeader(HttpHeaders.AUTHORIZATION, "Basic " + authHeader);
     List<Header> headers = Lists.newArrayList(contentType, authentication);
     String query = "?expand=projects.issuetypes.fields";
-    HttpResponse<JsonNode> response = httpClient.get(testAuth.getUrl() + "/rest/api/3/issue/createmeta" + query, headers, new TypeReference<JsonNode>() {
+    HttpResponse<JsonNode> response = httpClient.get(testAuth.getUrl() + "/rest/api/3/issue/createmeta" + query, headers, new TypeReference<>() {
     });
 
     JsonNodeFactory jnf = JsonNodeFactory.instance;
@@ -133,17 +130,17 @@ public class JiraService {
     return status;
   }
 
-  public Map<String, Object> fetchIssue(TestCaseResultExternalMapping mapping) throws TestsigmaException {
-    HttpResponse<Map<String, Object>> response = httpClient.get(integrations.getUrl() + "/rest/api/2/issue/" + mapping.getExternalId() + "?expand=names,renderedFields", getHeaders(), new TypeReference<Map<String, Object>>() {
+  public Map<String, Object> fetchIssue(EntityExternalMapping mapping) throws TestsigmaException {
+    HttpResponse<Map<String, Object>> response = httpClient.get(integrations.getUrl() + "/rest/api/2/issue/" + mapping.getExternalId() + "?expand=names,renderedFields", getHeaders(), new TypeReference<>() {
     });
     return response.getResponseEntity();
   }
 
-  public TestCaseResultExternalMapping link(TestCaseResultExternalMapping mapping) throws TestsigmaException {
+  public EntityExternalMapping link(EntityExternalMapping mapping) throws TestsigmaException {
     JsonNodeFactory jnf = JsonNodeFactory.instance;
     ObjectNode payload = jnf.objectNode();
-    payload.putPOJO("body", "Linked to testsigma results [" + applicationConfig.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResultId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName());
-    HttpResponse<String> response = httpClient.post(integrations.getUrl() + "/rest/api/2/issue/" + mapping.getExternalId() + "/comment", getHeaders(), payload, new TypeReference<String>() {
+    payload.putPOJO("body", "Linked to testsigma results [" + applicationConfig.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResult().getId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName());
+    HttpResponse<String> response = httpClient.post(integrations.getUrl() + "/rest/api/2/issue/" + mapping.getExternalId() + "/comment", getHeaders(), payload, new TypeReference<>() {
     });
     if (response.getStatusCode() != HttpStatus.SC_CREATED) {
       log.error(response.getResponseText());
@@ -173,7 +170,7 @@ public class JiraService {
         fields.add("status");
       }
     }
-    HttpResponse<JsonNode> response = httpClient.post(integrations.getUrl() + "/rest/api/2/search", getHeaders(), payload, new TypeReference<JsonNode>() {
+    HttpResponse<JsonNode> response = httpClient.post(integrations.getUrl() + "/rest/api/2/search", getHeaders(), payload, new TypeReference<>() {
     });
     return response.getResponseEntity();
   }
@@ -192,47 +189,93 @@ public class JiraService {
     return Lists.newArrayList(contentType, authentication);
   }
 
-  private void uploadVideo(TestCaseResultExternalMapping mapping) {
-    (new Thread(new Runnable() {
-      public void run() {
+  public void uploadVideo(EntityExternalMapping mapping) {
+    (new Thread(() -> {
 
-        try {
-          String videoFullPath = "/executions/videos/" + mapping.getTestCaseResult().getEnvironmentResultId() + "/video.mp4";
-          Calendar cal = Calendar.getInstance();
-          cal.add(Calendar.MINUTE, 30);
-          Optional<URL> url = storageServiceFactory.getStorageService().generatePreSignedURLIfExists(videoFullPath, StorageAccessLevel.READ);
-          if (url != null && url.isPresent()) {
-            httpClient.post(integrations.getUrl() + "/rest/api/2/issue/" + mapping.getExternalId() + "/attachments", getUploadHeaders(), "video.mp4", url.get().openStream(), new TypeReference<Map<String, Object>>() {
-            }, null);
-          }
-        } catch (Exception e) {
-          log.error(e.getMessage(), e);
-          log.error("Problem while uploading video as attachment to jira issue::" + mapping.getExternalId());
+      try {
+        String videoFullPath = "/executions/videos/" + mapping.getTestCaseResult().getEnvironmentResultId() + "/video.mp4";
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MINUTE, 30);
+        Optional<URL> url = storageServiceFactory.getStorageService().generatePreSignedURLIfExists(videoFullPath, StorageAccessLevel.READ);
+        if (url != null && url.isPresent()) {
+          httpClient.post(integrations.getUrl() + "/rest/api/2/issue/" + mapping.getExternalId() + "/attachments", getUploadHeaders(), "video.mp4", url.get().openStream(), new TypeReference<Map<String, Object>>() {
+          }, null);
         }
+      } catch (Exception e) {
+        log.error(e.getMessage(), e);
+        log.error("Problem while uploading video as attachment to jira issue::" + mapping.getExternalId());
       }
     })).start();
   }
 
-  private void uploadScreenshots(TestCaseResultExternalMapping mapping) {
-    List<TestStepResult> stepResults = testStepResultService.findAllByTestCaseResultIdAndScreenshotNameIsNotNull(mapping.getTestCaseResultId());
-    (new Thread(new Runnable() {
-      public void run() {
-        try {
-          for (TestStepResult stepResult : stepResults) {
-            String fileFullPath =
-              "/executions/" + mapping.getTestCaseResultId() + "/" + stepResult.getScreenshotName();
-            Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.MINUTE, 30);
-            Optional<URL> url = storageServiceFactory.getStorageService().generatePreSignedURLIfExists(fileFullPath, StorageAccessLevel.READ);
-            if (url != null && url.isPresent()) {
-              httpClient.post(integrations.getUrl() + "/rest/api/2/issue/" + mapping.getExternalId() + "/attachments", getUploadHeaders(), stepResult.getScreenshotName(), url.get().openStream(), new TypeReference<Map<String, Object>>() {
-              }, null);
-            }
-          }
-        } catch (Exception e) {
-          log.error(e.getMessage(), e);
-          log.error("Problem while uploading video as attachment to jira issue::" + mapping.getExternalId());
+  /*public void uploadLogs(EntityExternalMapping mapping, int maxRetries) throws ResourceNotFoundException, IntegrationNotFoundException {
+    Long environmentResultId = null;
+    TestSuiteResult testSuiteResult = null;
+    if(mapping.getEntityType() == EntityType.TEST_SUITE_RESULT){
+      testSuiteResult = testSuiteResultService.find(mapping.getTestSuiteResult().getId());
+      environmentResultId = testSuiteResult.getEnvironmentResultId();
+    }
+    Integrations integrations = integrationsService.findByApplication(Integration.Jira);
+    int retryCount = 0;
+    while(retryCount < maxRetries) {
+      try {
+        uploadLogs(environmentResultId, mapping.getExternalId(), integrations.toString(), testSuiteResult.getId(), ++retryCount);
+        mapping.setAssetsPushFailed(Boolean.FALSE);
+        this.entityExternalMappingService.save(mapping);
+        break;
+      } catch(IOException | TestsigmaDatabaseException exception) {
+        if(retryCount > maxRetries) {
+          log.info("Video upload to Jira failed and exceeded retry count..!");
+          mapping.setAssetsPushFailed(Boolean.TRUE);
+          mapping.setMessage(exception.getMessage());
+          this.entityExternalMappingService.save(mapping);
         }
+      }
+    }
+  }
+
+  public void uploadLogs(Long environmentResultId, String externalId, String mapUrl, Long testSuiteResultId, int retryCount)
+          throws IOException, ResourceNotFoundException, TestsigmaDatabaseException {
+    TestDeviceResult environmentResult = this.environmentResultService.find(environmentResultId);
+    TestDevice environment = this.environmentService.find(environmentResult.getTestDeviceId());
+    Calendar cal = Calendar.getInstance();
+    cal.add(Calendar.HOUR, 3);
+    if(retryCount > 0) {
+      log.info("Log files upload to Jira failed retrying for "+ retryCount +" time for environment result Id: "
+              + environmentResultId);
+    }
+    if (checkIfNoParallel(environmentResult)) {
+      log.info("posting logs when there is not parallel runs");
+      postLogsWhenNoParallel(environmentResult.getId(), mapUrl, externalId);
+    }
+    if (checkIfTestSuitesInParallel(environmentResult)) {
+      log.info("posting logs for test suites when they are in parallel");
+      postLogsWhenSuiteInParallel(environment, mapUrl, externalId, testSuiteResultId);
+    }
+    if (checkIfTestCaseInParallel(environmentResult)) {
+      log.info("Posting logs for test case since test case in parallel");
+      postLogsWhenTestCaseInParallel(testSuiteResultId, externalId, mapUrl, environment);
+    }
+  }*/
+
+  private void uploadScreenshots(EntityExternalMapping mapping) {
+    List<TestStepResult> stepResults = testStepResultService.findAllByTestCaseResultIdAndScreenshotNameIsNotNull(mapping.getTestCaseResult().getId());
+    (new Thread(() -> {
+      try {
+        for (TestStepResult stepResult : stepResults) {
+          String fileFullPath =
+            "/executions/" + mapping.getTestCaseResult().getId() + "/" + stepResult.getScreenshotName();
+          Calendar cal = Calendar.getInstance();
+          cal.add(Calendar.MINUTE, 30);
+          Optional<URL> url = storageServiceFactory.getStorageService().generatePreSignedURLIfExists(fileFullPath, StorageAccessLevel.READ);
+          if (url != null && url.isPresent()) {
+            httpClient.post(integrations.getUrl() + "/rest/api/2/issue/" + mapping.getExternalId() + "/attachments", getUploadHeaders(), stepResult.getScreenshotName(), url.get().openStream(), new TypeReference<Map<String, Object>>() {
+            }, null);
+          }
+        }
+      } catch (Exception e) {
+        log.error(e.getMessage(), e);
+        log.error("Problem while uploading video as attachment to jira issue::" + mapping.getExternalId());
       }
     })).start();
   }

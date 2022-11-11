@@ -10,6 +10,7 @@ package com.testsigma.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.testsigma.exception.IntegrationNotFoundException;
+import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaException;
 import com.testsigma.model.*;
 import com.testsigma.util.HttpClient;

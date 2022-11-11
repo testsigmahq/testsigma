@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 import com.testsigma.config.ApplicationConfig;
 import com.testsigma.exception.TestsigmaException;
+import com.testsigma.model.EntityExternalMapping;
 import com.testsigma.model.Integrations;
-import com.testsigma.model.TestCaseResultExternalMapping;
 import com.testsigma.util.HttpClient;
 import com.testsigma.util.HttpResponse;
 import com.testsigma.web.request.IntegrationsRequest;
@@ -40,7 +40,7 @@ public class LinearService {
   private Integrations integrations;
 
 
-  public TestCaseResultExternalMapping addIssue(TestCaseResultExternalMapping mapping) throws TestsigmaException, URISyntaxException {
+  public EntityExternalMapping addIssue(EntityExternalMapping mapping) throws TestsigmaException, URISyntaxException {
     String query = "mutation IssueCreate { issueCreate(input: {title: \"" + mapping.getFields().get("title").toString() + "\", teamId: \"" + mapping.getFields().get("teamId").toString() + "\", projectId: \"" + mapping.getFields().get("projectId").toString() + "\", description: \"" + mapping.getFields().get("description").toString() + "\", } )  {success issue {id title identifier}} }";
     JsonNodeFactory jnf = JsonNodeFactory.instance;
     ObjectNode payload = jnf.objectNode();
@@ -55,8 +55,8 @@ public class LinearService {
     return mapping;
   }
 
-  public TestCaseResultExternalMapping link(TestCaseResultExternalMapping mapping) throws TestsigmaException {
-    String comment = "Linked to testsigma results [" + applicationConfig.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResultId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName();
+  public EntityExternalMapping link(EntityExternalMapping mapping) throws TestsigmaException {
+    String comment = "Linked to testsigma results [" + applicationConfig.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResult().getId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName();
     String query = "mutation CommentCreate {commentCreate(input: {  body: \"" + comment + "\", issueId: \"" + mapping.getExternalId().replace("\"", "") + "\" } ) {lastSyncId}}";
     JsonNodeFactory jnf = JsonNodeFactory.instance;
     ObjectNode payload = jnf.objectNode();
@@ -70,8 +70,8 @@ public class LinearService {
     return mapping;
   }
 
-  public TestCaseResultExternalMapping unlink(TestCaseResultExternalMapping mapping) throws TestsigmaException {
-    String comment = "UnLinked from testsigma results [" + applicationConfig.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResultId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName();
+  public EntityExternalMapping unlink(EntityExternalMapping mapping) throws TestsigmaException {
+    String comment = "UnLinked from testsigma results [" + applicationConfig.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResult().getId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName();
     String query = "mutation CommentCreate {commentCreate(input: {  body: \"" + comment + "\", issueId: \"" + mapping.getExternalId().replace("\"", "") + "\" } ) {lastSyncId}}";
     JsonNodeFactory jnf = JsonNodeFactory.instance;
     ObjectNode payload = jnf.objectNode();

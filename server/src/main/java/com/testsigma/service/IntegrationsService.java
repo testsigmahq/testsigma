@@ -88,10 +88,10 @@ public class IntegrationsService {
 
   public Integrations findByApplication(Integration application)
     throws IntegrationNotFoundException {
-    return this.findOptionalByWorkspace(application).orElseThrow(() -> new IntegrationNotFoundException(application.name() + " - Integration Not Enabled"));
+    return this.findOptionalByApplication(application).orElseThrow(() -> new IntegrationNotFoundException(application.name() + " - Integration Not Enabled"));
   }
 
-  public Optional<Integrations> findOptionalByWorkspace(Integration application) {
+  public Optional<Integrations> findOptionalByApplication(Integration application) {
     return this.integrationsRepository.findByWorkspaceId(application.getId().longValue());
   }
 

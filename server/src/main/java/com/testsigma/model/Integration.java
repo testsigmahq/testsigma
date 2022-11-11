@@ -22,7 +22,7 @@ public enum Integration {
   TestsigmaLab(14, IntegrationAuthType.AccessKey),
   ClickUp(15,  IntegrationAuthType.AccessKey),
   PrivateGrid(16, IntegrationAuthType.None),
-
+  XrayCloud(17, IntegrationAuthType.AccessKey),
 
   Others(10000, IntegrationAuthType.AccessKey);
 

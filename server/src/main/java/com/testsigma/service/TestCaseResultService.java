@@ -85,6 +85,10 @@ public class TestCaseResultService {
     return this.testCaseResultRepository.findAllBySuiteResultIdAndResultIsNot(testSuiteResultId, result);
   }
 
+  public List<TestCaseResult> findAllBySuiteResultIdAnAndParentIdNull(Long suiteResultId) {
+    return this.testCaseResultRepository.findAllBySuiteResultIdAndParentIdNull(suiteResultId);
+  }
+
   public List<TestCaseResult> findAllBySuiteResultId(Long suiteResultId) {
     return this.testCaseResultRepository.findAllBySuiteResultId(suiteResultId);
   }
@@ -113,6 +117,10 @@ public class TestCaseResultService {
     return testCaseResultRepository.findById(testCaseResultId)
       .orElseThrow(() -> new ResourceNotFoundException(
         "TestCaseResult Resource not found with id:" + testCaseResultId));
+  }
+
+  public List<TestCaseResult> findAllByParentId(Long parentId){
+    return testCaseResultRepository.findAllByParentId(parentId);
   }
 
   public Integer countAllBySuiteResultIdAndStatusIsNot(Long testSuiteResultId, StatusConstant status) {

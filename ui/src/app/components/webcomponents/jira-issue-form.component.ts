@@ -7,7 +7,7 @@ import {JiraProject} from "../../models/jira-project.model";
 import {JiraIssueType} from "../../models/jira-issue-type.model";
 import {EntityExternalMapping} from "../../models/entity-external-mapping.model";
 import {TestCaseResult} from "../../models/test-case-result.model";
-import {TestCaseResultExternalMappingService} from "../../services/test-case-result-external-mapping.service";
+import {EntityExternalMappingService} from "../../services/entity-external-mapping.service";
 import {BaseComponent} from "../../shared/components/base.component";
 import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
 import {NotificationsService} from "angular2-notifications";
@@ -49,7 +49,7 @@ export class JiraIssueFormComponent extends BaseComponent implements OnInit {
     public notificationsService: NotificationsService,
     public translate: TranslateService,
     public toastrService: ToastrService,
-    private mappingService: TestCaseResultExternalMappingService,
+    private mappingService: EntityExternalMappingService,
     private applicationService: IntegrationsService,
     public dialog: MatDialog) {
     super(authGuard, notificationsService, translate, toastrService)

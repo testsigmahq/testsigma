@@ -5,7 +5,7 @@ import {AuthenticationGuard} from '../../shared/guards/authentication.guard';
 import {NotificationsService} from 'angular2-notifications';
 import {TranslateService} from '@ngx-translate/core';
 import {ToastrService} from "ngx-toastr";
-import {TestCaseResultExternalMappingService} from '../../services/test-case-result-external-mapping.service';
+import {EntityExternalMappingService} from '../../services/entity-external-mapping.service';
 import {MatDialog} from '@angular/material/dialog';
 import {BaseComponent} from '../../shared/components/base.component';
 import {EntityExternalMapping} from '../../models/entity-external-mapping.model';
@@ -50,7 +50,7 @@ export class ClickUpIssueFormComponent extends BaseComponent implements OnInit {
     public notificationsService: NotificationsService,
     public translate: TranslateService,
     public toastrService: ToastrService,
-    private mappingService: TestCaseResultExternalMappingService,
+    private mappingService: EntityExternalMappingService,
     private workspaceService: IntegrationsService,
     public dialog: MatDialog) {
     super(authGuard, notificationsService, translate, toastrService)

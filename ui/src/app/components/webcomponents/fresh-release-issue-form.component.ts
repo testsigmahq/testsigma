@@ -6,7 +6,7 @@ import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
 import {NotificationsService} from "angular2-notifications";
 import {TranslateService} from '@ngx-translate/core';
 import {ToastrService} from "ngx-toastr";
-import {TestCaseResultExternalMappingService} from "../../services/test-case-result-external-mapping.service";
+import {EntityExternalMappingService} from "../../services/entity-external-mapping.service";
 import {IntegrationsService} from "../../shared/services/integrations.service";
 import {MatDialog} from "@angular/material/dialog";
 import {BaseComponent} from "../../shared/components/base.component";
@@ -47,7 +47,7 @@ export class FreshReleaseIssueFormComponent extends BaseComponent implements OnI
     public notificationsService: NotificationsService,
     public translate: TranslateService,
     public toastrService: ToastrService,
-    private mappingService: TestCaseResultExternalMappingService,
+    private mappingService: EntityExternalMappingService,
     private applicationService: IntegrationsService,
     public dialog: MatDialog) {
     super(authGuard, notificationsService, translate, toastrService)

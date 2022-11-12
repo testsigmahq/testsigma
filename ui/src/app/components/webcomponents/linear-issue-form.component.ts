@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Integrations} from '../../shared/models/integrations.model';
 import {TestCaseResult} from '../../models/test-case-result.model';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {TestCaseResultExternalMappingService} from '../../services/test-case-result-external-mapping.service';
+import {EntityExternalMappingService} from '../../services/entity-external-mapping.service';
 import {IntegrationsService} from '../../shared/services/integrations.service';
 import {EntityExternalMapping} from '../../models/entity-external-mapping.model';
 import { debounceTime, tap } from 'rxjs/operators';
@@ -42,7 +42,7 @@ export class LinearIssueFormComponent extends BaseComponent implements OnInit {
     public notificationsService: NotificationsService,
     public translate: TranslateService,
     public toastrService: ToastrService,
-    private mappingService: TestCaseResultExternalMappingService,
+    private mappingService: EntityExternalMappingService,
     private applicationService: IntegrationsService) {
     super(authGuard, notificationsService, translate, toastrService)
   }

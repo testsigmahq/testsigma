@@ -1,0 +1,109 @@
+<div class="w-100 h-100">
+  <div class="theme-overlay-container">
+    <div class="theme-overlay-header">
+      <span class="ts-col-75 theme-overlay-title" [translate]="'settings.plugins.xray_integration'" ></span>
+      <span class="ts-col-20" style="text-align: right;">
+        <a class="text-link" target="_blank"
+           style="color: #0070d0;"
+           href="https://docs.getxray.app/display/XRAYCLOUD/Global+Settings%3A+API+Keys">
+           <i class="mr-2 fa-external-link-alt-solid"></i> Get Xray credentials</a>
+      </span>
+      <button class="theme-overlay-close"
+              type="button"
+              [matTooltip]="'hint.message.common.close' | translate"
+              mat-dialog-close>
+      </button>
+    </div>
+
+    <div class="theme-overlay-content">
+      <form class="ts-form pt-30" [formGroup]="updateForm">
+        <div class="form-group ts-form" >
+          <label for="url" class="control-label required">
+            <span [translate]="'xray.filed.account_url'"></span>
+          </label>
+          <input
+            type="text"
+            formControlName="url"
+            id="url" class="form-control">
+          <span *ngIf="!updateForm.get('url').valid && updateForm.get('url').touched" class="help-block"
+                [translate]="'plugins.message.url'">
+          </span>
+        </div>
+        <div class="form-group ts-form" >
+          <label  for="clientId" class="control-label required">
+            <span [translate]="'settings.plugins.client_id'"></span>
+          </label>
+          <input type="text"
+                 formControlName="username"
+                 id="clientId"
+                 class="form-control"  required>
+          <span *ngIf="!updateForm.get('username').valid && updateForm.get('username').touched" class="help-block"
+                [translate]="'plugins.message.client_id'">
+          </span>
+        </div>
+        <div class="form-group ts-form" >
+          <label for="password" class="control-label required">
+            <span [translate]="'settings.plugins.client_secret'"></span>
+          </label>
+          <input type="password"
+                 formControlName="password"
+                 id="password" class="form-control"  required>
+          <span *ngIf="!updateForm.get('password').valid && updateForm.get('password').touched" class="help-block"
+                [translate]="'plugins.message.client_secret'">
+          </span>
+        </div>
+        <div class="form-group ts-form">
+          <mat-checkbox type="checkbox"
+                        (change)="toggleSelection()"
+                        [checked] = "getToggle"
+                        id="logs_toggle">
+            <span [translate]="'message.xray_store_logs.data'"></span>
+            <i class="ml-10 fa fa-question-circle-solid"
+               [matTooltip]="'hint.xray.assets'|translate"></i></mat-checkbox>
+        </div>
+        <div class="d-flex ts-col-100 form-group" *ngIf="this.getToggle">
+          <span class="ts-col-80 ml-5" style="font-weight: bold" [translate]="'settings.plugins.jira_integration'" ></span>
+          <span class="ts-col-20">
+            <a class="text-link" target="_blank"
+               style="color: #0070d0;text-align: end;"
+               href="https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/">
+               <i class="mr-2 fa-external-link-alt-solid"></i> Get Jira credentials</a>
+          </span>
+        </div>
+        <div class="form-group ts-form" *ngIf="this.getToggle">
+          <label for="username" class="control-label required">
+            <span [translate]="'xray.filed.account_username'"></span>
+          </label>
+          <input type="text"
+                 formControlName="jira_username"
+                 id="username" class="form-control " >
+          <span *ngIf="!updateForm.get('jira_username').valid && updateForm.get('jira_username').touched" class="help-block"
+                [translate]="'plugins.message.username'">
+          </span>
+        </div>
+
+        <div class="form-group ts-form" *ngIf="this.getToggle">
+          <label for="accessKey" class="control-label required">
+            <span [translate]="'xray.filed.api_key'"></span>
+          </label>
+          <input type="password"
+                 formControlName="jira_token"
+                 id="accessKey" class="form-control">
+          <span *ngIf="!updateForm.get('jira_token').valid && updateForm.get('jira_token').touched" class="help-block"
+                [translate]="'plugins.message.token'">
+          </span>
+        </div>
+      </form>
+    </div>
+
+    <div class="theme-overlay-footer">
+      <button
+        type="button"
+        mat-dialog-close
+        class="theme-btn-clear-default" [translate]="'btn.common.cancel'">
+      </button>
+      <button type="submit" [disabled]="!updateForm.valid || saving"
+              class="theme-btn-primary" (click)="onSubmit()" [translate]="saving ?  'message.common.saving' : 'btn.common.create'"></button>
+    </div>
+  </div>
+</div>

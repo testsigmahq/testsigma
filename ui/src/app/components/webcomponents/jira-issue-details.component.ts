@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {EntityExternalMapping} from "../../models/entity-external-mapping.model";
-import {TestCaseResultExternalMappingService} from "../../services/test-case-result-external-mapping.service";
+import {EntityExternalMappingService} from "../../services/entity-external-mapping.service";
 import {JiraIssueField} from "../../models/jira-issue-field.model";
 import {JiraProject} from "../../models/jira-project.model";
 import {JiraIssueType} from "../../models/jira-issue-type.model";
@@ -24,7 +24,7 @@ export class JiraIssueDetailsComponent implements OnInit {
   public issueType: JiraIssueType;
 
   constructor(
-    private mappingService: TestCaseResultExternalMappingService,
+    private mappingService: EntityExternalMappingService,
     private applicationService: IntegrationsService
   ) {
   }

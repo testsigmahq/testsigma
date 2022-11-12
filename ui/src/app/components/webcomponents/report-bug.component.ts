@@ -10,7 +10,7 @@ import {TestCaseResult} from "../../models/test-case-result.model";
 import {Integrations} from "../../shared/models/integrations.model";
 import {Integration} from "../../shared/enums/integration.enum";
 import {EntityExternalMapping} from "../../models/entity-external-mapping.model";
-import {TestCaseResultExternalMappingService} from "../../services/test-case-result-external-mapping.service";
+import {EntityExternalMappingService} from "../../services/entity-external-mapping.service";
 
 @Component({
   selector: 'app-report-bug',
@@ -44,7 +44,7 @@ export class ReportBugComponent extends BaseComponent implements OnInit {
               public notificationsService: NotificationsService,
               public translate: TranslateService,
               public toastrService: ToastrService,
-              private externalMappingService: TestCaseResultExternalMappingService,
+              private externalMappingService: EntityExternalMappingService,
               private integrationsService: IntegrationsService,
               private resolver: ComponentFactoryResolver,
               @Inject(MAT_DIALOG_DATA) public options: { testCaseResult: TestCaseResult }) {
@@ -99,9 +99,9 @@ export class ReportBugComponent extends BaseComponent implements OnInit {
         .includes(res.workspace))
       .map(res => res.id.toString());
     if (bugReportingWorkspaceIds.length > 0)
-      this.externalMappingService.findByTestCaseResult(this.options.testCaseResult).subscribe((res) => {
-        if (res.length) {
-          this.externalMapping = res.find(res => bugReportingWorkspaceIds.includes(res.applicationId.toString()));
+      this.externalMappingService.findAll("entityId:"+ this.options.testCaseResult).subscribe((res) => {
+        if (res.content.length) {
+          this.externalMapping = res.content.find(res => bugReportingWorkspaceIds.includes(res.applicationId.toString()));
           this.externalMapping.application = this.configs.find(config => config.id == this.externalMapping.applicationId);
           if (this.externalMapping.application.isJira) {
             this.showExternalApplication = "JBR";
@@ -160,8 +160,8 @@ export class ReportBugComponent extends BaseComponent implements OnInit {
   }
 
   mappingIssueFindAll() {
-    this.externalMappingService.findByTestCaseResult(this.options.testCaseResult).subscribe(res => {
-      this.externalMappingIssueDetails = res;
+    this.externalMappingService.findAll("entityId:"+this.options.testCaseResult).subscribe(res => {
+      this.externalMappingIssueDetails = res.content;
     })
   }
 

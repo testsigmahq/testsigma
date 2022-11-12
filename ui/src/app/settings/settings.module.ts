@@ -46,6 +46,8 @@ import {BackupsComponent} from './components/backups.component';
 import {LogoutPromptComponent} from './components/authentication-config/logout-prompt.component';
 import {CreateComponent} from "./components/plugins/privateGrid/create.component";
 import {DetailsComponent} from "./components/plugins/privateGrid/details.component";
+import {CreateComponent as XrayCreateComponent} from "./components/plugins/xray/create.component";
+import {DetailsComponent as XrayDetailsComponent} from "./components/plugins/xray/details.component";
 
 @NgModule({
   declarations: [
@@ -88,7 +90,9 @@ import {DetailsComponent} from "./components/plugins/privateGrid/details.compone
     BackupsComponent,
     LogoutPromptComponent,
     CreateComponent,
-    DetailsComponent
+    DetailsComponent,
+    XrayCreateComponent,
+    XrayDetailsComponent
   ],
   exports: [
     SigninComponent

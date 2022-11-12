@@ -1200,6 +1200,19 @@
   height: 48px;
 }
 
+.xray-software {
+  background-image: url("~assets/images/xray.png");
+  background-size: contain;
+  background-repeat:   no-repeat;
+  &.bug-list-jira-software{
+    background-size: 50px;
+    background-position: center center;
+  }
+  &.sm-h {
+    height: 35px;
+  }
+}
+
 .resizeable-image{
   background-size: contain;
   background-repeat: no-repeat;

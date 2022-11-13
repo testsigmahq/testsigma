@@ -81,8 +81,4 @@ export class Integrations extends Base implements PageObject {
   get isClickUp(): Boolean {
     return this.workspace == Integration.ClickUp;
   }
-
-  get isXray(): Boolean {
-    return this.workspace == Integration.XrayCloud;
-  }
 }

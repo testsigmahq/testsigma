@@ -4,10 +4,10 @@
 
 @font-face {
   font-family: "font_custom";
-  src: url("~/assets/font_icons/font_custom_dfe3adc8b6910088075e8c0b3b2f6fe0.woff2") format("woff2"),
-       url("~/assets/font_icons/font_custom_dfe3adc8b6910088075e8c0b3b2f6fe0.woff") format("woff"),
-       url("~/assets/font_icons/font_custom_dfe3adc8b6910088075e8c0b3b2f6fe0.ttf") format("truetype"),
-       url("~/assets/font_icons/font_custom_dfe3adc8b6910088075e8c0b3b2f6fe0.svg#font_custom") format("svg");
+  src: url("~/assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.woff2") format("woff2"),
+       url("~/assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.woff") format("woff"),
+       url("~/assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.ttf") format("truetype"),
+       url("~/assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.svg#font_custom") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -15,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: "font_custom";
-    src: url("~/assets/font_icons/font_custom_dfe3adc8b6910088075e8c0b3b2f6fe0.svg#font_custom") format("svg");
+    src: url("~/assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.svg#font_custom") format("svg");
   }
 }
 
@@ -250,6 +250,7 @@
 .fa-lightbulb-solid:before,
 .fa-line_chart_up:before,
 .fa-lined-arrow-right:before,
+.fa-link:before,
 .fa-linux-2:before,
 .fa-list:before,
 .fa-list-alt:before,
@@ -703,6 +704,7 @@
 .fa-lightbulb-solid:before { content: "\f178"; }
 .fa-line_chart_up:before { content: "\f269"; }
 .fa-lined-arrow-right:before { content: "\f179"; }
+.fa-link:before { content: "\f2d3"; }
 .fa-linux-2:before { content: "\f17a"; }
 .fa-list:before { content: "\f17b"; }
 .fa-list-alt:before { content: "\f17c"; }
@@ -1143,6 +1145,7 @@ $font-font_custom-lightbulb-regular: "\f177";
 $font-font_custom-lightbulb-solid: "\f178";
 $font-font_custom-line_chart_up: "\f269";
 $font-font_custom-lined-arrow-right: "\f179";
+$font-font_custom-link: "\f2d3";
 $font-font_custom-linux-2: "\f17a";
 $font-font_custom-list: "\f17b";
 $font-font_custom-list-alt: "\f17c";

@@ -21,7 +21,7 @@ export class CreateComponent extends BaseComponent implements OnInit {
   plugins: Integrations[] = [];
   saving = false;
   constructor(
-    private externalApplicationConfigService: IntegrationsService,
+    private integrationsService: IntegrationsService,
     public authGuard: AuthenticationGuard,
     public notificationsService: NotificationsService,
     public translate: TranslateService,
@@ -47,7 +47,7 @@ export class CreateComponent extends BaseComponent implements OnInit {
 
   getJiraPlug(){
     this.jiraPlug.workspaceId = (Object.keys(Integration).indexOf(Integration.Jira) + 1);
-    this.externalApplicationConfigService.findAll("applicationId:"+this.jiraPlug.workspaceId).subscribe(
+    this.integrationsService.findAll("workspaceId:"+this.jiraPlug.workspaceId).subscribe(
       res => {
         this.plugins = res;
         if(this.plugins.length>0) {
@@ -98,11 +98,11 @@ export class CreateComponent extends BaseComponent implements OnInit {
       this.plug.username = this.updateForm.value.username;
       this.plug.password = this.updateForm.value.password;
       this.plug.url = this.updateForm.value.url;
-      this.externalApplicationConfigService.testIntegration(this.plug).subscribe({
+      this.integrationsService.testIntegration(this.plug).subscribe({
           next: (data) => {
             if (data['status_code'] == 200) {
               this.plug.token = data['api_token'];
-              this.externalApplicationConfigService.create(this.plug).subscribe((element: Integrations) => {
+              this.integrationsService.create(this.plug).subscribe((element: Integrations) => {
                   this.saving = false;
                   this.translate.get('message.common.plugin_integration_configuration.success', {FieldName: this.plug.name}).subscribe((res) => {
                     this.showNotification(NotificationType.Success, res);
@@ -144,10 +144,10 @@ export class CreateComponent extends BaseComponent implements OnInit {
     this.jiraPlug.password=this.updateForm.value.jira_token;
     this.jiraPlug.url=this.updateForm.value.url;
     this.jiraPlug.token=this.updateForm.value.jira_token;
-    this.externalApplicationConfigService.testIntegration(this.jiraPlug).subscribe( {
+    this.integrationsService.testIntegration(this.jiraPlug).subscribe( {
         next: (data) => {
           if (data['status_code'] == 200) {
-            this.externalApplicationConfigService.create(this.jiraPlug).subscribe((jiraPlug: Integrations) => {
+            this.integrationsService.create(this.jiraPlug).subscribe((jiraPlug: Integrations) => {
                 this.jiraPlug = jiraPlug;
                 this.enableXrayCloud();
               }

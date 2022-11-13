@@ -27,9 +27,11 @@ import {XrayKeyWarningComponent} from "../../agents/components/webcomponents/xra
 export class DetailsComponent extends BaseComponent implements OnInit {
   suite = new TestSuite();
   activeTab: string;
-  private testSuiteId: number;
+  public testSuiteId: number;
   public versionId: number;
   public testCases: InfiniteScrollableDataSource;
+  public entityType: EntityType = EntityType.TEST_SUITE;
+  public entityExternalMapping: EntityExternalMapping;
 
   constructor(
     public authGuard: AuthenticationGuard,
@@ -41,7 +43,8 @@ export class DetailsComponent extends BaseComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private testCaseService: TestCaseService,
-    private matDialog: MatDialog) {
+    private matDialog: MatDialog,
+    public entityExternalMappingService : EntityExternalMappingService) {
     super(authGuard, notificationsService, translate,toastrService);
   }
 
@@ -82,6 +85,82 @@ export class DetailsComponent extends BaseComponent implements OnInit {
           if (result)
             this.destroyTestSuite(this.suite.id);
         });
+    })
+  }
+
+  showWarning(mapping: EntityExternalMapping){
+    const dialogRef = this.matDialog.open(XrayKeyWarningComponent, {
+      width: '450px',
+      panelClass: ['matDialog', 'rds-none'],
+      data: {entityType: this.entityType}
+    });
+    dialogRef.afterClosed().subscribe(res =>{
+      if(res===false){
+        this.checkAllTestCasesAreLinked(mapping);
+      }
+    })
+  }
+
+  linkXrayWithTestCase(mapping: EntityExternalMapping){
+    this.entityExternalMappingService.create(mapping).subscribe(
+      (res) => {
+        this.entityExternalMapping = res;
+        this.translate.get("message.common.xray_link.success", {EntityName: "Test Suite" }).subscribe((res: string) => {
+          this.showNotification(NotificationType.Success, res);
+        });
+      },
+      (error) => {
+        if (error.status == "400") {
+          this.showNotification(NotificationType.Error, error.error);
+        } else {
+          this.translate.get("message.common.xray_link.failure", {EntityName: "Test Suite" }).subscribe((res: string) => {
+            this.showNotification(NotificationType.Error, res);
+          });
+        }
+      }
+    )
+  }
+
+  linkXrayId(mapping: EntityExternalMapping){
+    this.entityExternalMappingService.findAll("externalId:"+mapping.externalId).subscribe(res =>{
+      if(res.content.length > 0 && res.content[0].entityId!=this.testSuiteId){
+        this.showWarning(mapping);
+      }else{
+        this.checkAllTestCasesAreLinked(mapping);
+      }
+    })
+  }
+
+  checkAllTestCasesAreLinked(mapping : EntityExternalMapping){
+    let ids: number[] = [];
+    this.testCaseService.findAll("suiteId:" + this.testSuiteId).subscribe(res=>{
+      res.content.forEach((testCase)=> {ids.push(testCase.id)});
+      this.entityExternalMappingService.checkAllEntitiesAreLinked(ids, EntityType.TEST_CASE).subscribe(
+        (res) =>{
+          this.checkPreRequisiteLinkedToXray(mapping);
+        },
+        (err)=>{
+          this.translate.get("message.common.xray_link.pre_failure", {EntityName: "test cases" }).subscribe((res: string) => {
+            this.showNotification(NotificationType.Warn, res);
+            this.checkPreRequisiteLinkedToXray(mapping);
+          });
+        }
+      );
+    })
+  }
+
+  checkPreRequisiteLinkedToXray(mapping: EntityExternalMapping){
+    this.testSuiteService.show(this.testSuiteId).subscribe(res =>{
+      if(res?.preRequisiteSuite){
+        this.entityExternalMappingService.findAll("entityId:"+ res?.preRequisiteSuite.id).subscribe(res =>{
+          if(res.content.length == 0){
+            this.translate.get("message.common.prerequisite_not_linked", {EntityName: "test suite" }).subscribe((res: string) => {
+              this.showNotification(NotificationType.Warn, res);
+            });
+          }
+        })
+      }
+      this.linkXrayWithTestCase(mapping);
     })
   }
 

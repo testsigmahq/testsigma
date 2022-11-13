@@ -249,7 +249,7 @@ export class TestCasesFilterComponent implements OnInit {
 
   fetchXrayApplicationConfig(){
     let applicationId = (Object.keys(Integration).indexOf(Integration.XrayCloud) + 1);
-    this.integrationsService.findAll("applicationId:"+ applicationId).subscribe(
+    this.integrationsService.findAll("workspaceId:"+ applicationId).subscribe(
       res => {
         if(res.length > 0 )
           this.isXrayCloudEnabled = true;

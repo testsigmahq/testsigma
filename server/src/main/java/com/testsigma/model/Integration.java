@@ -82,4 +82,6 @@ public enum Integration {
 
   public Boolean isClickUp(){ return this.equals(Integration.ClickUp); }
 
+  public Boolean isXrayCloud(){ return this.equals(Integration.XrayCloud); }
+
 }

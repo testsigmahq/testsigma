@@ -15,8 +15,16 @@ public class EntityExternalMappingsBuilder extends BaseSpecificationsBuilder {
         if(params.size() == 0){
             return null;
         }
+        /*for(SearchCriteria param : params) {
+            if(param.getKey().equals("integration")) {
+                param.setKey("application.workspace");
+            }
+        }*/
 
         Specification<EntityExternalMapping> result = new EntityExternalMappingsSpecification(params.get(0));
+        for (int i = 1; i < params.size(); i++) {
+            result = Specification.where(result).and(new EntityExternalMappingsSpecification(params.get(i)));
+        }
         return result;
     }
 }

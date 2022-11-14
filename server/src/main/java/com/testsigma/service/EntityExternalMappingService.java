@@ -44,6 +44,7 @@ public class EntityExternalMappingService {
   private final TrelloService trelloService;
   private final LinearService linearService;
   private final ClickUpService clickUpService;
+  private final XrayCloudService xrayCloudService;
 
   public Optional<EntityExternalMapping> findByEntityIdAndEntityType(Long entityId, EntityType entityType, Long applicationId){
     return this.repository.findByEntityIdAndEntityTypeAndApplicationId(entityId, entityType, applicationId);
@@ -65,7 +66,9 @@ public class EntityExternalMappingService {
     throws TestsigmaException, IOException, URISyntaxException {
     Integrations config = this.applicationConfigService.find(mapping.getApplicationId());
     mapping.setApplication(config);
-    mapping.setTestCaseResult(testCaseResultService.find(mapping.getTestCaseResult().getId()));
+    if(mapping.getEntityType() == EntityType.TEST_CASE_RESULT) {
+      mapping.setTestCaseResult(testCaseResultService.find(mapping.getEntityId()));
+    }
     if (config.getWorkspace().isJira()) {
       jiraService.setIntegrations(config);
       mapping = mapping.getLinkToExisting() ? jiraService.link(mapping) : jiraService.addIssue(mapping);
@@ -98,6 +101,8 @@ public class EntityExternalMappingService {
     } else if (config.getWorkspace().isClickUp()) {
       clickUpService.setWorkspaceConfig(config);
       mapping = mapping.getLinkToExisting() ? clickUpService.link(mapping) : clickUpService.addIssue(mapping);
+    } else if(config.getWorkspace().isXrayCloud()){
+      xrayCloudService.link(mapping);
     }
     return this.repository.save(mapping);
   }

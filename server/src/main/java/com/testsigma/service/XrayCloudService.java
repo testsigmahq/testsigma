@@ -12,7 +12,9 @@ import com.testsigma.model.*;
 import com.testsigma.util.HttpClient;
 import com.testsigma.util.HttpResponse;
 import com.testsigma.web.request.*;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
@@ -31,6 +33,7 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor(onConstructor = @__({@Autowired, @Lazy}))
 @Log4j2
 public class XrayCloudService implements XrayService {
+
     private final IntegrationsService externalConfigService;
     private final EntityExternalMappingService entityMappingService;
     private final TestPlanResultService executionResultService;

@@ -103,7 +103,7 @@ public class AgentExecutionService {
   private final WorkspaceVersionService workspaceVersionService;
   private List<TestCaseDataDrivenResult> dataDrivenResultsReRunList;
   private Boolean isDataDrivenRerun;
-  private XrayCloudService xrayCloudService;
+  private final XrayCloudService xrayCloudService;
 
 
   // ################################################  START  ###################################################

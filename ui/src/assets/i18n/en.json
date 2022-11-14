@@ -1567,7 +1567,7 @@
   "settings.plugins.slack_integration": "Slack Details",
   "settings.plugins.zero_plugins": "There are no plugins Here!",
   "settings.plugins.client_id": "Client Id",
-  "settings.plugins.client_secret": " Client Secert",
+  "settings.plugins.client_secret": " Client Secret",
   "settings.plugins.xray_integration": "Xray Details",
   "settings.roles.title": "User Roles",
   "settings.backup.delete_confirm": "Are you sure do you want to delete this backup ?",

@@ -68,12 +68,12 @@ public class TestSuiteSpecification extends BaseSpecification<TestSuite> {
       Join s = root.join("tagUses", JoinType.INNER);
       return s.get("tagId");
     } else if (criteria.getKey().equals("executionId")) {
-      Join s = root.join("environmentSuiteMappings", JoinType.INNER);
-      Join s1 = s.join("executionEnvironment", JoinType.INNER);
-      return s1.get("executionId");
+      Join s = root.join("testDeviceSuites", JoinType.INNER);
+      Join s1 = s.join("testDevice", JoinType.INNER);
+      return s1.get("testPlanId");
     } else if (criteria.getKey().equals("environmentId")) {
-      Join s = root.join("environmentSuiteMappings", JoinType.INNER);
-      return s.get("environmentId");
+      Join s = root.join("testDeviceSuites", JoinType.INNER);
+      return s.get("testDeviceId");
     } else if (criteria.getKey().equals("testCaseId") || criteria.getKey().equals("hasDataDrivenCases")) {
       Join s = root.join("testSuiteMappings", JoinType.INNER);
       if(criteria.getKey().equals("hasDataDrivenCases")) {

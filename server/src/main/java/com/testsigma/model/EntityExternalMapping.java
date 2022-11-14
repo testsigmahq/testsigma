@@ -115,4 +115,10 @@ public class EntityExternalMapping implements Serializable {
     @NotFound(action = NotFoundAction.IGNORE)
     private Integrations application;
 
+    @Transient
+    private Boolean canPushAssets = Boolean.FALSE;
+
+    @Transient
+    private Long suiteResultId;
+
 }

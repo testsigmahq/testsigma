@@ -5,6 +5,7 @@ import {AuthenticationGuard} from "../../../../shared/guards/authentication.guar
 import {NotificationsService, NotificationType} from "angular2-notifications";
 import {TranslateService} from "@ngx-translate/core";
 import {Router} from "@angular/router";
+import {ToastrService} from "ngx-toastr";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {BaseComponent} from "../../../../shared/components/base.component";
 import {ConfirmationModalComponent} from "../../../../shared/components/webcomponents/confirmation-modal.component";
@@ -15,30 +16,31 @@ import {ConfirmationModalComponent} from "../../../../shared/components/webcompo
 })
 export class DetailsComponent extends BaseComponent implements OnInit  {
   plug: Integrations ;
-  applicationId: number;
+  workspaceId: number;
   saving = false;
   sending=false;
 
   constructor(
-    private externalApplicationConfigService: IntegrationsService,
-    private matModal: MatDialog,
+    private integrationsService: IntegrationsService,
     public authGuard: AuthenticationGuard,
     public notificationsService: NotificationsService,
     public translate: TranslateService,
+    public toastrService: ToastrService,
     private router: Router,
     private dialogRef: MatDialogRef<DetailsComponent>,
-    @Inject(MAT_DIALOG_DATA) public options: { applicationId: number},) {
-    super(authGuard, notificationsService, translate);
+    private matModal: MatDialog,
+    @Inject(MAT_DIALOG_DATA) public options: { workspaceId: number},) {
+    super(authGuard, notificationsService, translate, toastrService);
   }
 
   ngOnInit(): void {
-    this.applicationId=this.options.applicationId;
+    this.workspaceId=this.options.workspaceId;
     this.fetchPlugin();
 
   }
 
   fetchPlugin():any{
-    this.externalApplicationConfigService.find(this.applicationId).subscribe(data => {
+    this.integrationsService.find(this.workspaceId).subscribe(data => {
       this.plug=data;
     },error => { console.log(error)})
   }
@@ -62,7 +64,7 @@ export class DetailsComponent extends BaseComponent implements OnInit  {
 
   markAsDeleted(){
     this.saving = true;
-    this.externalApplicationConfigService.delete(this.applicationId).subscribe({
+    this.integrationsService.delete(this.workspaceId).subscribe({
         next: () => {
           this.saving = false;
           this.fetchPlugin();

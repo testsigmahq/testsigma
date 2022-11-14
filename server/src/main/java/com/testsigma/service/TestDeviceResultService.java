@@ -51,6 +51,7 @@ public class TestDeviceResultService {
   private final TestSuiteResultService testSuiteResultService;
   private final TestCaseResultService testCaseResultService;
   private final TestDeviceResultMapper testDeviceResultMapper;
+  private final XrayCloudService xrayCloudService;
 
   public TestDeviceResult find(Long id) throws ResourceNotFoundException {
     return testDeviceResultRepository.findById(id)
@@ -453,6 +454,7 @@ public class TestDeviceResultService {
       Boolean.FALSE);
     sendPendingTestPlans();
     updateResultCounts(testDeviceResult.getId());
+    this.xrayCloudService.exportResultsByEnvironmentResultId(testDeviceResult.getId());
   }
 
   public void updateResultData(TestDeviceResultRequest testDeviceResultRequest) throws ResourceNotFoundException {

@@ -21,6 +21,8 @@ export class Integrations extends Base implements PageObject {
   public url: String;
   @serializable(alias('metadata', optional(object(IntegrationMetaData))))
   public metaData: IntegrationMetaData;
+  @serializable
+  public isAssetsPushEnabled;
 
   deserialize(input: any): this {
     return Object.assign(this, deserialize(Integrations, input));

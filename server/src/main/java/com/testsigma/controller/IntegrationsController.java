@@ -49,6 +49,7 @@ public class IntegrationsController {
   private final IntegrationsMapper mapper;
   private final ClickUpService clickUpService;
   private final PrivateGridService privateGridService;
+  private final XrayCloudService xrayCloudService;
 
   @RequestMapping(method = RequestMethod.POST)
   public IntegrationsDTO create(
@@ -423,6 +424,11 @@ public class IntegrationsController {
   @PostMapping(path = "/test_privategrid_integration")
   public JsonNode testPrivateGridAuth(@RequestBody IntegrationsRequest config) throws TestsigmaException {
     return privateGridService.testIntegration(config);
+  }
+
+  @PostMapping(path = "/test_xraycloud_integration")
+  public JsonNode testXrayIntegration(@RequestBody IntegrationsRequest config) throws TestsigmaException {
+    return xrayCloudService.testIntegration(config);
   }
 
 }

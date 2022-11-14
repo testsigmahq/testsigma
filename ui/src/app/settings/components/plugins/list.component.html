@@ -47,22 +47,19 @@
 <div class="page-content mt-20">
   <div class="d-flex-wrap ts-col-100 pt-4">
 
-    <div class="white-border-container" *ngIf="all">
+    <div class="white-border-container" *ngIf="bugReport || all">
       <div class="item-content">
         <div class="ts-col-100 xray-software sm-h"></div>
-        <div class="item-text">
-          <span [translate]="'plugins.xray.description'"></span>
-          <a class="text-link" href="/" target="_blank"> Read more... </a>
-        </div>
+        <div class="item-text" [translate]="'plugins.xray.description'"></div>
         <div class="item-action">
-          <a class="text-link"
-             *ngIf="!!clickUpApplication"
-             (click)="viewDetails(Integration.ClickUp, clickUpApplication)"
-             [translate]="'message.common.view_details'"></a>
+          <a
+            class="text-link"
+            *ngIf="!!xrayApplication"
+            (click)="viewDetails(Integration.XrayCloud, xrayApplication)" [translate]="'message.common.view_details'"></a>
           <mat-slide-toggle
             class="mat-slide-toggle ml-auto slide-with-text"
-            [checked]="!!clickUpApplication"
-            (change)="toggleApplication($event, Integration.ClickUp, clickUpApplication)">
+            [checked]="!!xrayApplication"
+            (change)="toggleApplication($event, Integration.XrayCloud, xrayApplication)">
           </mat-slide-toggle>
         </div>
       </div>

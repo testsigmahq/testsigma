@@ -9,6 +9,7 @@ import {BaseComponent} from "../../../../shared/components/base.component";
 import {Integrations} from "../../../../shared/models/integrations.model";
 import {IntegrationsService} from "../../../../shared/services/integrations.service";
 import {Integration} from "../../../../shared/enums/integration.enum";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-xray',
@@ -25,14 +26,15 @@ export class CreateComponent extends BaseComponent implements OnInit {
     public authGuard: AuthenticationGuard,
     public notificationsService: NotificationsService,
     public translate: TranslateService,
+    public toastrService: ToastrService,
     private router: Router,
     private dialogRef: MatDialogRef<CreateComponent>,
-    @Inject(MAT_DIALOG_DATA) public options: { applicationId: number, name: string},) {
-    super(authGuard, notificationsService, translate);
+    @Inject(MAT_DIALOG_DATA) public options: { workspaceId: number, name: string},) {
+    super(authGuard, notificationsService, translate, toastrService);
   }
 
   ngOnInit(): void {
-    this.plug.workspaceId= this.options.applicationId;
+    this.plug.workspaceId= this.options.workspaceId;
     this.plug.name=this.options.name;
     this.updateForm = new FormGroup({
       'url' : new FormControl(null, Validators.required),

@@ -211,7 +211,7 @@ export class ListComponent extends BaseComponent implements OnInit {
       case Integration.Jira:
         return JiraCreateComponent;
       case Integration.XrayCloud:
-        return XrayDetailsComponent;
+        return XrayCreateComponent;
       case Integration.Mantis:
       case Integration.BackLog:
       case Integration.Zepel:

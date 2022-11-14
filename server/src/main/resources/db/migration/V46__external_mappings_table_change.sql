@@ -12,4 +12,3 @@ ALTER TABLE `entity_external_mappings` ADD COLUMN `application_id` BIGINT(20) NO
 ALTER TABLE `entity_external_mappings` MODIFY COLUMN `external_id` VARCHAR(255) DEFAULT NULL;
 ALTER TABLE `entity_external_mappings` ADD KEY fk_application_id (`application_id`);
 ALTER TABLE `entity_external_mappings` ADD CONSTRAINT `fk_application_id_to_integrations` FOREIGN KEY (`application_id`) REFERENCES integrations (id) ON DELETE CASCADE ON UPDATE NO ACTION
-ALTER TABLE `entity_external_mappings` DROP INDEX index_on_application_id;

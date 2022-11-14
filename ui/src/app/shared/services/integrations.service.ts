@@ -13,7 +13,6 @@ import {AzureIssueType} from "../../models/azure-issue-type.model";
 import {AzureProject} from "../../models/azure-project.model";
 import {YoutrackProject} from "../../models/youtrack-project.model";
 import {YoutrackIssue} from "../../models/youtrack-issue.model";
-import {Page} from "../models/page";
 
 @Injectable({
   providedIn: 'root'
@@ -46,13 +45,13 @@ export class IntegrationsService {
   }
 
   public findAll(filter?: string, sortBy?: string, pageable?: Pageable): Observable<Integrations[]> {
-    return this.http.get<Page<Integrations>>(this.URLConstants.integrationsUrl, {
+    return this.http.get<Integrations[]>(this.URLConstants.integrationsUrl, {
       headers: this.httpHeaders.contentTypeApplication,
       params: this.httpHeaders.serializeParams(filter, sortBy, pageable)
     }).pipe(
       map(data => {
         let list: Integrations[] = [];
-        data.content.forEach(config => list.push(new Integrations().deserialize(config)))
+        data.forEach(config => list.push(new Integrations().deserialize(config)))
         return list;
       }),
       catchError(() => throwError('Problem while fetching ExternalApplicationConfigs'))

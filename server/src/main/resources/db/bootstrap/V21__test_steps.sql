@@ -23,6 +23,7 @@ CREATE TABLE `test_steps`
   `addon_test_data_function` VARCHAR(250) COLLATE utf8_unicode_ci,
   `test_data_function_id`   BIGINT(20)       DEFAULT NULL,
   `test_data_function_args` JSON             DEFAULT NULL,
+  `max_iterations`          BIGINT(3)        DEFAULT NULL,
   `wait_time`               INT(4)           DEFAULT NULL,
   `condition_type`          VARCHAR(255)     DEFAULT NULL,
   `parent_id`               BIGINT(20)       DEFAULT NULL,

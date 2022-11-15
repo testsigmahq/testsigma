@@ -15,10 +15,16 @@ import com.testsigma.exception.TestsigmaException;
 import com.testsigma.mapper.IntegrationsMapper;
 import com.testsigma.model.Integrations;
 import com.testsigma.service.*;
+import com.testsigma.specification.IntegrationsSpecificationsBuilder;
 import com.testsigma.web.request.IntegrationsRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.EncoderException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -86,9 +92,11 @@ public class IntegrationsController {
   }
 
   @RequestMapping(method = RequestMethod.GET)
-  public List<IntegrationsDTO> index() {
-    List<Integrations> configs = integrationsService.findAll();
-    return mapper.map(configs);
+  public List<IntegrationsDTO> index(IntegrationsSpecificationsBuilder builder, @PageableDefault(value = 100) Pageable pageable) {
+    Specification<Integrations> specification = builder.build();
+    Page<Integrations> configs = integrationsService.findAll(specification, pageable);
+    List<IntegrationsDTO> externalApplicationConfigDTOS = mapper.map(configs.getContent());
+    return externalApplicationConfigDTOS;
   }
 
 

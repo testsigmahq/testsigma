@@ -47,6 +47,8 @@ public class StepDetails {
   private String testDataValue;
   @JsonProperty("ignore_step_result")
   private Boolean ignoreStepResult;
+  @JsonProperty("max_iterations")
+  private Integer maxIterations;
 
   public TestStepConditionType getConditionType() {
     return conditionType != null ? conditionType : null;

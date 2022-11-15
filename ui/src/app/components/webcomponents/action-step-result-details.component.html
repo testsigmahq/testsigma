@@ -271,6 +271,13 @@
               [textContent]="'-'">
             </div>
           </div>
+          <div class="details-items ts-col-100 pr-5" *ngIf="testStepResult?.isConditionalWhileLoop">
+            <label class="details-title" [translate]="'step_result.max_iterations'"></label>
+            <div
+              class="details-info"
+              [textContent]="testStepResult?.stepDetails?.maxIterations || '-'">
+            </div>
+          </div>
           <div class="details-items ts-col-50">
             <label class="details-title" [translate]="'test_step.priority.MAJOR_STOP'"></label>
             <div

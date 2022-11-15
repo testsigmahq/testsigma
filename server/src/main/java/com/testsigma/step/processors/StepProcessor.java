@@ -114,6 +114,7 @@ public class StepProcessor {
     exeTestStepEntity.setVisualEnabled(testStepDTO.getVisualEnabled());
     exeTestStepEntity.setParentId(testStepDTO.getParentId());
     exeTestStepEntity.setIndex(testStepDTO.getIndex());
+    exeTestStepEntity.setMaxIterations(testStepDTO.getMaxIterations());
     exeTestStepEntity.setTestDataIndex(testCaseEntityDTO.getTestDataIndex());
     exeTestStepEntity.setTestDataProfileName(testCaseEntityDTO.getTestDataProfileName());
     populateStepDetails(testStepDTO, exeTestStepEntity);
@@ -361,6 +362,7 @@ public class StepProcessor {
     stepDetails.setTestDataValue(testCaseStepEntityDTO.getTestDataValue());
     stepDetails.setDataMap(testStepMapper.mapDataMap(testStepDTO.getDataMapBean()));
     stepDetails.setIgnoreStepResult(testStepDTO.getIgnoreStepResult());
+    stepDetails.setMaxIterations(testStepDTO.getMaxIterations());
     testCaseStepEntityDTO.setStepDetails(stepDetails);
   }
 

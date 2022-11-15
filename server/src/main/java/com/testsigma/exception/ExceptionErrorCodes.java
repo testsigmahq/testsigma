@@ -17,6 +17,7 @@ public class ExceptionErrorCodes {
   final public static String FIELD_DEFINITION_COLUMN_DUPLICATE_NAME = "field.message.duplicate.name.exist";
   final public static String FIELD_DEFINITION_INVALID_LOCATOR_TYPE = "field.message.invalid.locator.type";
   final public static String FIELD_DEFINITION_VALID_LOCATOR_TYPE = "field.message.valid.locator.type";
+  public static final String MSG_ROWS_TOO_MANY = "field.message.rows.maxexceeded";
   public static Integer UNKNOWN_ERROR = 99;
   public static Integer ERROR_MINS_VALIDATION_FAILURE = 100;
   public static Integer ERROR_ENVIRONMENT_PARAM_FAILURE = 101;

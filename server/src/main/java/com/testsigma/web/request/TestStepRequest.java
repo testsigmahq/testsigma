@@ -37,6 +37,7 @@ public class TestStepRequest {
   private Long forLoopTestDataId;
   private Long testDataFunctionId;
   private Map<String, String> testDataFunctionArgs;
+  private Long maxIterations;
 
   private String exceptedResult;
   private Integer naturalTextActionId;

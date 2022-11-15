@@ -73,6 +73,7 @@ public interface TestStepMapper {
   @Mapping(target = "addonTDF", expression = "java(request.getAddonTDF())")
   @Mapping(target = "testDataFunctionId", expression = "java(request.getTestDataFunctionId())")
   @Mapping(target = "testDataFunctionArgs", expression = "java(request.getTestDataFunctionArgs())")
+  @Mapping(target = "maxIterations", expression = "java(request.getMaxIterations())")
   void merge(TestStepRequest request, @MappingTarget TestStep testStep);
 
   @Mapping(target = "testStep", ignore = true)

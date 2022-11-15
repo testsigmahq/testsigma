@@ -46,7 +46,7 @@ export class TestDataService {
     return this.http.put<any>(this.URLConstants.dataProfileUrl + "/import_field_names", formData)
       .pipe(
         map(data => data),
-        catchError(() => throwError('Problem while importing Test Data Profile field name'))
+        catchError((res) => throwError(res?.error ? res.error :'Problem while importing Test Data Profile field name'))
       )
   }
 

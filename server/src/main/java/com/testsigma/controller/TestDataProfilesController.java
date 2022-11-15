@@ -92,8 +92,7 @@ public class TestDataProfilesController {
   public List<Object> importFromXls(
           @RequestParam(value = "file") MultipartFile file) throws TestsigmaValidationException, IOException {
     Workbook workBook = ReadExcel.getExcelWorkBook(file);
-    Collection<List<Object>> fieldNames = ReadExcel.getExelFieldNames(workBook).values();
-    return fieldNames.iterator().next();
+    return service.importFieldNames(workBook);
   }
 
   @PutMapping(path = "/import", consumes = "multipart/form-data")

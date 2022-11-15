@@ -57,7 +57,7 @@ public class AutomatorMessages {
   public final static String MSG_WHILE_CONDITION_FAILED = "Loop condition failed, exiting from While loop execution.";
   public final static String MSG_WHILE_LOOP_SUCCESS = "While loop executed successfully";
   public final static String MSG_WHILE_LOOP_FAILURE = "While loop execution failed";
-  public final static String MSG_WHILE_LOOP_ITERATIONS_EXHAUSTED = "Max. number of allowed iterations reached before achieving the expected functional behaviour";
+  public final static String MSG_WHILE_LOOP_ITERATIONS_EXHAUSTED = "Set maximum iteration limit %s breached";
   public static String msgParamIdentifier = "\\?";
 
   public static String getMessage(String replaceableMsg, Object... replaceParameters) {

@@ -318,8 +318,9 @@ public abstract class TestcaseStepRunner {
     ResultConstant whileLoopResult = ResultConstant.SUCCESS;
     boolean conditionFailed = false;
     int noOfIterationsCompleted = 0;
+    int maxIterations = (int) (1+ Optional.ofNullable(whileConditionStep.getMaxIterations()).orElse((long) NaturalTextActionConstants.WHILE_LOOP_MAX_LIMIT));
     //Iterations loop, we are limiting max loop count to ActionConstants.WHILE_LOOP_MAX_LIMIT
-    for (int i = 1; i <= NaturalTextActionConstants.WHILE_LOOP_MAX_LIMIT; i++) {
+    for (int i = 1; i <= maxIterations; i++) {
       if (breakLoop) {
         break;
       }
@@ -365,22 +366,27 @@ public abstract class TestcaseStepRunner {
       }
       whileLoopIterationResults.add(whileConditionStepResult);
       whileLoopResult = (whileLoopResult.getId() < whileConditionStepResult.getResult().getId()) ? whileConditionStepResult.getResult() : whileLoopResult;
+      noOfIterationsCompleted = i;
       //If condition step is failed, we should not fail while loop status
       if (conditionFailed) {
-        whileLoopResult = ResultConstant.SUCCESS;
+        whileLoopResult = ResultConstant.FAILURE;
       }
-      noOfIterationsCompleted = i;
+      if(noOfIterationsCompleted == maxIterations){
+        whileConditionStepResult.setResult(ResultConstant.FAILURE);
+        whileConditionStepResult.setMessage(AutomatorMessages.MSG_WHILE_LOOP_ITERATIONS_EXHAUSTED);
+      }
     }
     //Add all iteration results to parent LOOP step
+    whileLoopIterationResults.remove(whileLoopIterationResults.size() - 1);
     whileLoopResultObj.setStepResults(whileLoopIterationResults);
     if (whileLoopResultObj.getResult() == null) {
       whileLoopResultObj.setResult(whileLoopResult);
     }
     ResultConstant status = (currentStatus.getId() < whileLoopResultObj.getResult().getId()) ? whileLoopResultObj.getResult() : currentStatus;
     if ((whileLoopResultObj.getResult() == ResultConstant.SUCCESS)) {
-      if (noOfIterationsCompleted == NaturalTextActionConstants.WHILE_LOOP_MAX_LIMIT) {
-        status = ResultConstant.FAILURE;
-        whileLoopResultObj.setResult(ResultConstant.FAILURE);
+      if (noOfIterationsCompleted == maxIterations) {
+        status = ResultConstant.SUCCESS;
+        whileLoopResultObj.setResult(ResultConstant.SUCCESS);
         whileLoopResultObj.setMessage(AutomatorMessages.MSG_WHILE_LOOP_ITERATIONS_EXHAUSTED);
       } else {
         whileLoopResultObj.setMessage(AutomatorMessages.MSG_WHILE_LOOP_SUCCESS);

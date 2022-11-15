@@ -121,7 +121,14 @@
             [testPlanResult]="suiteResult?.testDeviceResult?.testPlanResult"
             [testDevice]="suiteResult?.testDeviceResult?.testDevice"></app-lab-environment-screen-short-info>
 
-          <div class="details-items mw-30 mt-30">
+          <div class="details-items mw-30">
+            <app-xray-input
+              [entityId] ="suiteResult?.id"
+              [entityType]="this.suiteResultEntityType"
+              [display]="true"
+              (rePushInitialized)="rePushInitialized()"
+              (rePushFailed)="rePushFailed()">
+            </app-xray-input>
             <div class="align-items-center d-flex details-info text-truncate mt-2 pointer"
                  [matTooltip]="suiteResult?.message"
                  [textContent]="suiteResult?.message"></div>

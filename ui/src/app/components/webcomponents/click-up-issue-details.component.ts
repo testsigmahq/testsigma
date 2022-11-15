@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {TestCaseResultExternalMapping} from '../../models/test-case-result-external-mapping.model';
+import {EntityExternalMapping} from '../../models/entity-external-mapping.model';
 import {Integrations} from "../../shared/models/integrations.model";
 
 @Component({
@@ -9,8 +9,8 @@ import {Integrations} from "../../shared/models/integrations.model";
 })
 export class ClickUpIssueDetailsComponent implements OnInit {
   @Input('workspace') application: Integrations;
-  @Input('externalMapping') externalApplicationDetails: TestCaseResultExternalMapping;
-  @Output('unLink') unLink = new EventEmitter<TestCaseResultExternalMapping>();
+  @Input('externalMapping') externalApplicationDetails: EntityExternalMapping;
+  @Output('unLink') unLink = new EventEmitter<EntityExternalMapping>();
   public issueDetails: any;
   public issueStatus: any;
   public issueTypeDetails: any;
@@ -35,7 +35,7 @@ export class ClickUpIssueDetailsComponent implements OnInit {
     }
   }
 
-  unLinkIssue(externalApplicationDetails: TestCaseResultExternalMapping) {
+  unLinkIssue(externalApplicationDetails: EntityExternalMapping) {
     this.unLink.emit(externalApplicationDetails);
   }
 

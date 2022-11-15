@@ -9,6 +9,7 @@ import {TestSuiteResultsComponent} from "../webcomponents/test-suite-results.com
 import {TestMachineResultsComponent} from "../webcomponents/test-machine-results.component";
 import {interval, Subscription} from "rxjs";
 import {TestPlanType} from "../../enums/execution-type.enum";
+import {EntityType} from "../../enums/entity-type.enum";
 
 @Component({
   selector: 'app-run-details',
@@ -29,6 +30,7 @@ export class RunDetailsComponent extends BaseComponent implements OnInit {
   public isDisabledAutoRefresh: boolean = false;
   public isExecutionRunning: boolean = false;
   public isExecutionFetchingCompleted: boolean = false;
+  public planEntityType: EntityType = EntityType.TEST_PLAN;
 
   @ViewChild(TestCaseResultsComponent)
   private testCaseResults: TestCaseResultsComponent;

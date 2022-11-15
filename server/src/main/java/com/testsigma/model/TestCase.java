@@ -135,6 +135,13 @@ public class TestCase {
   @EqualsAndHashCode.Exclude
   @ToString.Exclude
   private Set<SuiteTestCaseMapping> suiteTestCaseMappings;
+
+  @OneToMany(mappedBy = "testCase")
+  @Fetch(value = FetchMode.SELECT)
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  private List<EntityExternalMapping> entityExternalMapping;
+
   @Transient
   private String priorityName;
 

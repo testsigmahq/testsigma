@@ -103,6 +103,7 @@ public class AgentExecutionService {
   private final WorkspaceVersionService workspaceVersionService;
   private List<TestCaseDataDrivenResult> dataDrivenResultsReRunList;
   private Boolean isDataDrivenRerun;
+  private final XrayCloudService xrayCloudService;
 
 
   // ################################################  START  ###################################################
@@ -206,6 +207,7 @@ public class AgentExecutionService {
           this.testSuiteService.updateSuite((TestSuite) testSuite);
         populateTestCaseResults(testSuite, testSuiteResult, testDeviceResult);
       }
+      this.xrayCloudService.exportResultsBySuiteResult(testSuiteResult);
     }
   }
 
@@ -1006,6 +1008,7 @@ public class AgentExecutionService {
       .findAllByTestPlanResultIdAndStatusIsNot(this.testPlanResult.getId(), StatusConstant.STATUS_COMPLETED);
     for (TestDeviceResult testDeviceResult : testDeviceResults) {
       testDeviceResultService.markEnvironmentResultAsStopped(testDeviceResult, errorMessage);
+      this.xrayCloudService.exportResultsByEnvironmentResultId(testDeviceResult.getId());
       testDeviceResultService.updateResultCounts(testDeviceResult.getId());
     }
     Timestamp currentTime = new Timestamp(java.lang.System.currentTimeMillis());

@@ -51,7 +51,7 @@ public class TestsigmaOSConfigService {
   }
 
   private TestsigmaOSConfig populateTestLab(TestsigmaOSConfig testsigmaOSConfig) {
-    Integrations testsigmaLab = integrationsService.findOptionalByWorkspace(Integration.TestsigmaLab).orElse(new Integrations());
+    Integrations testsigmaLab = integrationsService.findOptionalByApplication(Integration.TestsigmaLab).orElse(new Integrations());
     new Integrations();
     testsigmaLab.setName("Testsigma OS Lab");
     testsigmaLab.setPassword(testsigmaOSConfig.getAccessKey());

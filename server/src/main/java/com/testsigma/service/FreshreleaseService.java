@@ -16,8 +16,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 import com.testsigma.config.ApplicationConfig;
 import com.testsigma.exception.TestsigmaException;
+import com.testsigma.model.EntityExternalMapping;
 import com.testsigma.model.Integrations;
-import com.testsigma.model.TestCaseResultExternalMapping;
 import com.testsigma.util.HttpClient;
 import com.testsigma.util.HttpResponse;
 import com.testsigma.web.request.IntegrationsRequest;
@@ -46,7 +46,7 @@ public class FreshreleaseService {
   @Setter
   private Integrations integrations;
 
-  public TestCaseResultExternalMapping addIssue(TestCaseResultExternalMapping mapping) throws TestsigmaException {
+  public EntityExternalMapping addIssue(EntityExternalMapping mapping) throws TestsigmaException {
     JsonNodeFactory jnf = JsonNodeFactory.instance;
     ObjectNode payload = jnf.objectNode();
     payload.put("title", mapping.getFields().get("title").toString());
@@ -63,11 +63,11 @@ public class FreshreleaseService {
     return mapping;
   }
 
-  public void unlink(TestCaseResultExternalMapping mapping) throws TestsigmaException {
+  public void unlink(EntityExternalMapping mapping) throws TestsigmaException {
     String project = mapping.getExternalId().split("-")[0];
     JsonNodeFactory jnf = JsonNodeFactory.instance;
     ObjectNode payload = jnf.objectNode();
-    payload.putPOJO("content", "Unlinked from testsigma results [" + applicationConfig.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResultId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName());
+    payload.putPOJO("content", "Unlinked from testsigma results [" + applicationConfig.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResult().getId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName());
     Map<String, Object> issueDetails = fetchIssue(mapping);
     String link = ((Map<String, Object>) ((Map<String, Object>) issueDetails.get("issue")).get("links")).get("comments").toString();
     HttpResponse<String> response = httpClient.post(integrations.getUrl() + link, getHeaders(), payload, new TypeReference<String>() {
@@ -79,17 +79,17 @@ public class FreshreleaseService {
   }
 
 
-  public Map<String, Object> fetchIssue(TestCaseResultExternalMapping mapping) throws TestsigmaException {
+  public Map<String, Object> fetchIssue(EntityExternalMapping mapping) throws TestsigmaException {
     String project = mapping.getExternalId().split("-")[0];
     HttpResponse<Map<String, Object>> response = httpClient.get(integrations.getUrl() + "/" + project + "/issues/" + mapping.getExternalId() + "?expand=names,renderedFields", getHeaders(), new TypeReference<Map<String, Object>>() {
     });
     return response.getResponseEntity();
   }
 
-  public TestCaseResultExternalMapping link(TestCaseResultExternalMapping mapping) throws TestsigmaException {
+  public EntityExternalMapping link(EntityExternalMapping mapping) throws TestsigmaException {
     JsonNodeFactory jnf = JsonNodeFactory.instance;
     ObjectNode payload = jnf.objectNode();
-    payload.putPOJO("content", "Linked to testsigma results [" + applicationConfig.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResultId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName());
+    payload.putPOJO("content", "Linked to testsigma results [" + applicationConfig.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResult().getId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName());
     Map<String, Object> issueDetails = fetchIssue(mapping);
     String link = ((Map<String, Object>) ((Map<String, Object>) issueDetails.get("issue")).get("links")).get("comments").toString();
     HttpResponse<String> response = httpClient.post(integrations.getUrl() + link, getHeaders(), payload, new TypeReference<String>() {

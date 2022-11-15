@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 import com.testsigma.exception.TestsigmaException;
+import com.testsigma.model.EntityExternalMapping;
 import com.testsigma.model.Integrations;
-import com.testsigma.model.TestCaseResultExternalMapping;
 import com.testsigma.util.HttpClient;
 import com.testsigma.util.HttpResponse;
 import com.testsigma.web.request.IntegrationsRequest;
@@ -42,7 +42,7 @@ public class ClickUpService {
   private UserPreferenceService userPreferenceService;
 
 
-  public TestCaseResultExternalMapping addIssue(TestCaseResultExternalMapping mapping) throws TestsigmaException {
+  public EntityExternalMapping addIssue(EntityExternalMapping mapping) throws TestsigmaException {
     String listId = mapping.getFields().get("listId").toString();
     JsonNodeFactory jnf = JsonNodeFactory.instance;
     ObjectNode payload = jnf.objectNode();
@@ -61,12 +61,11 @@ public class ClickUpService {
     return mapping;
   }
 
-  public TestCaseResultExternalMapping link(TestCaseResultExternalMapping mapping) throws TestsigmaException {
+  public EntityExternalMapping link(EntityExternalMapping mapping) throws TestsigmaException {
     HashMap<String, String> payload = new HashMap<>();
     String taskId = mapping.getExternalId();
     payload.put("notify_all", "true");
-//    payload.put("comment_text","Linked to testsigma results [https://app.testsigma.com/#/td/test_case_results/" + mapping.getTestCaseResultId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName() + " by " + CurrentUserContext.getLoggedInUser().getUsername());
-    payload.put("comment_text","Linked to testsigma results [https://app.testsigma.com/#/td/test_case_results/" + mapping.getTestCaseResultId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName());
+    payload.put("comment_text","Linked to testsigma results [https://app.testsigma.com/#/td/test_case_results/" + mapping.getTestCaseResult().getId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName());
     HttpResponse<JsonNode> response = httpClient.post("https://api.clickup.com/api/v2/task/"+taskId+"/comment", getHeaders(workspaceConfig.getToken()), payload, new TypeReference<JsonNode>() {
     });
     if (response.getStatusCode() != HttpStatus.SC_OK) {
@@ -76,9 +75,8 @@ public class ClickUpService {
     return mapping;
   }
 
-  public TestCaseResultExternalMapping unlink(TestCaseResultExternalMapping mapping) throws TestsigmaException {
-//    String comment = "UnLinked from testsigma results [https://app.testsigma.com/#/td/test_case_results/" + mapping.getTestCaseResultId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName() + " by " + CurrentUserContext.getLoggedInUser().getUsername());
-    String comment = "UnLinked from testsigma results [https://app.testsigma.com/#/td/test_case_results/" + mapping.getTestCaseResultId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName();
+  public EntityExternalMapping unlink(EntityExternalMapping mapping) throws TestsigmaException {
+    String comment = "UnLinked from testsigma results [https://app.testsigma.com/#/td/test_case_results/" + mapping.getTestCaseResult().getId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName();
     HashMap<String, String> payload = new HashMap<>();
     String taskId = mapping.getExternalId();
     payload.put("notify_all", "true");
@@ -173,7 +171,7 @@ public class ClickUpService {
     return status;
   }
 
-  public Map<String, Object> fetchIssue(TestCaseResultExternalMapping mapping) throws TestsigmaException {
+  public Map<String, Object> fetchIssue(EntityExternalMapping mapping) throws TestsigmaException {
 
     HttpResponse<Map<String, Object>> response = httpClient.get("https://api.clickup.com/api/v2/task/"+mapping.getExternalId(),
       getHeaders(workspaceConfig.getToken()), new TypeReference<Map<String, Object>>() {

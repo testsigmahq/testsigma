@@ -195,6 +195,12 @@
             [testDevice]="getTestCaseResult()?.testDeviceResult?.testDevice"
             [testPlanResult]="getTestCaseResult()?.testDeviceResult?.testPlanResult"></app-lab-environment-screen-short-info>
           <div class="details-items mt-30 mw-20 text-nowrap" [ngSwitch]="!testCaseResult?.isExecuting && !testCaseResult?.totalCount && isTestCaseFetchingCompleted">
+            <app-xray-input
+              [entityId]="testCaseResult?.suiteResultId"
+              [testCaseResult] ="testCaseResult"
+              [entityType]="this.runResultEntityType"
+              [display]="true">
+            </app-xray-input>
             <div *ngSwitchCase="true"
                  class="align-items-center d-flex details-info mt-2">
               <span

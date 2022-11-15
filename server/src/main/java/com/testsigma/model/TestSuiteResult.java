@@ -21,6 +21,7 @@ import javax.persistence.Table;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Log4j2
 @Entity
@@ -149,6 +150,12 @@ public class TestSuiteResult implements Serializable {
   @OneToOne(mappedBy = "parentResult")
   @Fetch(value = FetchMode.SELECT)
   private TestSuiteResult childResult;
+
+  @OneToMany(mappedBy = "testSuiteResult")
+  @Fetch(value = FetchMode.SELECT)
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  private List<EntityExternalMapping> entityExternalMapping;
 
   public void setSuiteDetails(TestSuiteResultSuiteDetails suiteDetails) {
     this.suiteDetails = new ObjectMapperService().convertToJson(suiteDetails);

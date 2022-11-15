@@ -7,18 +7,23 @@
  *
  */
 
-package com.testsigma.dto;
+package com.testsigma.web.request;
 
+import com.testsigma.model.EntityType;
 import lombok.Data;
 
 import java.util.Map;
 
 @Data
-public class TestCaseResultExternalMappingDTO {
+public class EntityExternalMappingRequest {
 
   Long id;
-  Long testCaseResultId;
-  Long workspaceId;
-  String externalId;
+  EntityType entityType;
+  Long entityId;
+  Long applicationId;
   Map<String, Object> fields;
+  Boolean linkToExisting;
+  String externalId;
+  String message;
+  Boolean assetsPushFailed;
 }

@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {BaseComponent} from "../../shared/components/base.component";
 import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
-import {NotificationsService} from 'angular2-notifications';
+import {NotificationsService, NotificationType} from 'angular2-notifications';
 import {TranslateService} from '@ngx-translate/core';
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {TestSuiteResultService} from "../../services/test-suite-result.service";
@@ -14,6 +14,7 @@ import {TestSuiteTestCaseResultsComponent} from "../webcomponents/test-suite-tes
 import {TestDeviceResultService} from "../../shared/services/test-device-result.service";
 import {MatDialog} from "@angular/material/dialog";
 import {TestPlanResult} from "../../models/test-plan-result.model";
+import {EntityType} from "../../enums/entity-type.enum";
 import {ToastrService} from "ngx-toastr";
 
 @Component({
@@ -31,6 +32,7 @@ export class SuiteResultDetailsComponent extends BaseComponent implements OnInit
   public isSuiteFetchingCompleted: boolean = false;
   public videoURL: URL;
   public isCaseLevelExecution: boolean = false;
+  public suiteResultEntityType: EntityType = EntityType.TEST_SUITE_RESULT;
 
   @ViewChild(TestSuiteTestCaseResultsComponent)
   private testCaseResults: TestSuiteTestCaseResultsComponent;
@@ -188,5 +190,17 @@ export class SuiteResultDetailsComponent extends BaseComponent implements OnInit
         })
       )
       .subscribe();
+  }
+
+  rePushInitialized(){
+    this.translate.get("Push Results initialized Successfully").subscribe((res: string) => {
+      this.showNotification(NotificationType.Success, res);
+    });
+  }
+
+  rePushFailed(){
+    this.translate.get("Push Results Failed..! please try again").subscribe((res: string) => {
+      this.showNotification(NotificationType.Error, res);
+    });
   }
 }

@@ -43,7 +43,7 @@
               class="page-details-status">
             </div>
           </div>
-          <div class="details-items pl-50 ts-col-40">
+          <div class="details-items pl-50">
             <label [translate]="'test_suites.details.label.prerequisite'"
                    class="details-title"></label>
             <div class="details-info">
@@ -53,6 +53,16 @@
                 class="d-flex text-truncate"
                 [textContent]="suite.preRequisiteSuite?.name || '-'">
               </div>
+            </div>
+          </div>
+          <div class="details-items pl-50">
+            <div class="details-info">
+              <app-xray-input
+                [entityId] ="this.testSuiteId"
+                [entityType]="this.entityType"
+                [entityExternalMapping]="this.entityExternalMapping"
+                (createXrayLink)="linkXrayId($event)">
+              </app-xray-input>
             </div>
           </div>
         </div>

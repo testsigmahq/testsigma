@@ -1,0 +1,44 @@
+<div class="d-flex row" *ngIf="!suiteResult && !runResult">
+  <div class="ml-25" *ngIf="entityExternalMapping?.externalId && !isEdit">
+    <span class="ml-10">{{entityExternalMapping?.externalId}}</span>
+    <i *ngIf="!display" class="fa-pencil-on-paper action-icons action-hover-icon pointer" (click)="editXrayId()"></i>
+    <i *ngIf="!display" class="fa-trash-thin action-icons action-hover-icon pointer" (click)="deleteXrayId()"></i><br/>
+    <a target="_blank" href={{this.urlLink}} [matTooltip]="this.urlLink" [matTooltipPosition]="'right'"
+       class="btn btn-link" [translate]="'Linked ID'"></a>
+  </div>
+  <form *ngIf="xrayFormGroup && !display" class="ts-form ml-10" [formGroup]="xrayFormGroup">
+    <div class="form-group ts-form" >
+      <label  class="control-label required">
+        <span [translate]="'plugins.common.entity_xray_id' | translate: {EntityName: this.entityName}"></span>
+      </label>
+      <input type="text" formControlName="externalId" class="form-control" placeholder="EXAMPLE-100" required>
+      <div class="error left" *ngIf="isSubmitted && xrayFormGroup.controls.externalId.errors?.required"
+           [textContent]="'validation.required.message' | translate: {field:'Xray Id'}"></div>
+      <div class="error left" *ngIf="isSubmitted && xrayFormGroup.controls.externalId.errors?.maxlength"
+           [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Xray Id' , max:'30'}"></div>
+    </div>
+  </form>
+  <button  class="btn icon-btn border-rds-2 ml-14 h-fit-content p-10"
+           *ngIf="xrayFormGroup && !display"
+           [matTooltip]="'Link Xray Id'" (click)="linkXrayId()"><i class="fa-link"></i></button>
+  <button  class="btn icon-btn border-rds-2 ml-5 h-fit-content p-10"
+           *ngIf="xrayFormGroup && !display && this.entityExternalMapping?.id"
+           [matTooltip]="'Close'" (click)="closeForm()"><i class="fa-close-alt"></i></button>
+</div>
+
+<a *ngIf="this.entityExternalMapping?.externalId && suiteResult && this.urlLink && !isPushFailed" style="padding: 0px 0px"
+   (click)="openLink($event, this.urlLink)" [matTooltip]="this.urlLink" [matTooltipPosition]="'right'"
+   class="btn btn-link px-0 pt-0 pb-3 ml-25" style="color:mediumblue" [translate]="'Execution link'"></a>
+
+<a *ngIf="this.entityExternalMapping && isPushFailed" style="padding: 0px 0px; color:#d94634"
+   (click)="pushResults($event)" class="btn btn-link px-0 pt-0 pb-3">Push Failed
+  <i [matTooltip]="'Push the Results to Xray'"  [matTooltipPosition]="'right'" class="fa-uploads-alt"></i></a>
+
+<a *ngIf="this.entityExternalMapping && this.testCaseResultLink && runResult && !isPushFailed" (click)="openLink($event, this.testCaseResultLink)"
+   [matTooltip]="this.testCaseResultLink" [matTooltipPosition]="'right'" class="btn btn-link px-0 pt-0 pb-3" style="color:mediumblue"
+   [translate]="'Test case result link'"></a>
+
+<i *ngIf="isLoading && (runResult || suiteResult)" class="loading-dots"></i>
+
+<div class="mt-0 mb-0" style="color:#d94634" *ngIf="this.entityExternalMapping?.assetsPushFailed==true" (click)="pushResults($event)">
+  Assets push failed <i [matTooltip]="'Push the Assets to Xray'" [matTooltipPosition]="'right'" class="fa-uploads-alt"></i></div>

@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Integrations} from '../../shared/models/integrations.model';
-import {TestCaseResultExternalMapping} from '../../models/test-case-result-external-mapping.model';
+import {EntityExternalMapping} from '../../models/entity-external-mapping.model';
 import {IntegrationsService} from '../../shared/services/integrations.service';
 
 @Component({
@@ -10,8 +10,8 @@ import {IntegrationsService} from '../../shared/services/integrations.service';
 })
 export class BugZillaIssueDetailsComponent implements OnInit {
   @Input('application') application: Integrations;
-  @Input('externalMapping') externalApplicationDetails: TestCaseResultExternalMapping;
-  @Output('unLink') unLink = new EventEmitter<TestCaseResultExternalMapping>();
+  @Input('externalMapping') externalApplicationDetails: EntityExternalMapping;
+  @Output('unLink') unLink = new EventEmitter<EntityExternalMapping>();
   public issueDetails: any;
   public issueTypeDetails: any;
   public issueUserDetails: any;
@@ -27,7 +27,7 @@ export class BugZillaIssueDetailsComponent implements OnInit {
   }
 
   fetchDetails() {
-    this.applicationService.getBugZillaIssue(this.externalApplicationDetails.workspaceId, this.externalApplicationDetails.externalId)
+    this.applicationService.getBugZillaIssue(this.externalApplicationDetails.applicationId, this.externalApplicationDetails.externalId)
       .subscribe(data => {
         this.issueDetails = data['bugs'][0];
         this.issueTypeDetails = this.issueDetails['component']
@@ -35,7 +35,7 @@ export class BugZillaIssueDetailsComponent implements OnInit {
       }, error => console.log(error));
   }
 
-  unLinkIssue(externalApplicationDetails: TestCaseResultExternalMapping) {
+  unLinkIssue(externalApplicationDetails: EntityExternalMapping) {
     this.isButtonClicked = true;
     this.unLink.emit(externalApplicationDetails);
   }

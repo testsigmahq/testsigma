@@ -17,8 +17,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 import com.testsigma.config.ApplicationConfig;
 import com.testsigma.exception.TestsigmaException;
+import com.testsigma.model.EntityExternalMapping;
 import com.testsigma.model.Integrations;
-import com.testsigma.model.TestCaseResultExternalMapping;
 import com.testsigma.util.HttpClient;
 import com.testsigma.util.HttpResponse;
 import com.testsigma.web.request.IntegrationsRequest;
@@ -49,7 +49,7 @@ public class AzureService {
   @Setter
   private Integrations applicationConfig;
 
-  public TestCaseResultExternalMapping addIssue(TestCaseResultExternalMapping mapping) throws TestsigmaException {
+  public EntityExternalMapping addIssue(EntityExternalMapping mapping) throws TestsigmaException {
     JsonNodeFactory jnf = JsonNodeFactory.instance;
     ArrayNode payloads = jnf.arrayNode();
     ObjectNode payload = jnf.objectNode();
@@ -79,19 +79,19 @@ public class AzureService {
     return mapping;
   }
 
-  public void unlink(TestCaseResultExternalMapping mapping) throws TestsigmaException {
+  public void unlink(EntityExternalMapping mapping) throws TestsigmaException {
     JsonNodeFactory jnf = JsonNodeFactory.instance;
     ObjectNode payload = jnf.objectNode();
     ArrayNode payloads = jnf.arrayNode();
     payload.put("op", "add");
     payload.put("path", "/fields/System.History");
-    payload.put("value", "Unlinked from testsigma results [" + config.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResultId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName());
+    payload.put("value", "Unlinked from testsigma results [" + config.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResult().getId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName());
     payloads.add(payload);
     addHistory(mapping, payloads);
   }
 
 
-  public Map<String, Object> fetchIssue(TestCaseResultExternalMapping mapping) throws TestsigmaException {
+  public Map<String, Object> fetchIssue(EntityExternalMapping mapping) throws TestsigmaException {
 
     HttpResponse<Map<String, Object>> response = httpClient.get(applicationConfig.getUrl()
         + "/_apis/wit/workitems?ids=" + mapping.getExternalId() + "&fields=System.Id,System.Title,System.WorkItemType,System.Description,System.CreatedDate,System.AssignedTo,System.State,System.AreaPath,System.ChangedDate",
@@ -101,19 +101,19 @@ public class AzureService {
   }
 
 
-  public TestCaseResultExternalMapping link(TestCaseResultExternalMapping mapping) throws TestsigmaException {
+  public EntityExternalMapping link(EntityExternalMapping mapping) throws TestsigmaException {
     JsonNodeFactory jnf = JsonNodeFactory.instance;
     ObjectNode payload = jnf.objectNode();
     ArrayNode payloads = jnf.arrayNode();
     payload.put("op", "add");
     payload.put("path", "/fields/System.History");
-    payload.put("value", "Linked to testsigma results [" + config.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResultId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName());
+    payload.put("value", "Linked to testsigma results [" + config.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResult().getId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName());
     payloads.add(payload);
     addHistory(mapping, payloads);
     return mapping;
   }
 
-  private void addHistory(TestCaseResultExternalMapping mapping, ArrayNode payloads) throws TestsigmaException {
+  private void addHistory(EntityExternalMapping mapping, ArrayNode payloads) throws TestsigmaException {
     Header add = new BasicHeader("X-HTTP-Method-Override", "PATCH");
     List<Header> override = getHeaders(true);
     override.add(add);

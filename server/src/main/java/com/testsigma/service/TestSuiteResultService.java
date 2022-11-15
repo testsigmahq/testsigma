@@ -117,6 +117,13 @@ public class TestSuiteResultService {
             environmentRunId, resultConstant);
   }
 
+  public TestSuiteResult getFirstParentResult(Long childResultId) throws ResourceNotFoundException {
+    TestSuiteResult childResult = find(childResultId);
+    if (childResult.getReRunParentId() == null)
+      return childResult;
+    return getFirstParentResult(childResult.getReRunParentId());
+  }
+
   public void stopTestSuiteResultsByEnvironmentResult(String message, ResultConstant result, Long environmentRunId) {
     log.info(String.format("Updating test suites with result - %s, status - %s, message - %s with environment result " +
       "id - %s ", result, StatusConstant.STATUS_COMPLETED, message, environmentRunId));

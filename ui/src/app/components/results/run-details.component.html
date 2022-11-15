@@ -49,6 +49,11 @@
           class="details-info pt-2 text-truncate"
              [textContent]="testPlanResult?.message"></div>
       </div>
+      <app-xray-input
+        [entityId] ="this.testPlanResult?.testPlanId"
+        [entityType]="planEntityType"
+        [display]="true">
+      </app-xray-input>
     </div>
   </div>
 </div>

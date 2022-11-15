@@ -11,21 +11,26 @@ package com.testsigma.service;
 
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaException;
+import com.testsigma.model.EntityExternalMapping;
+import com.testsigma.model.EntityType;
 import com.testsigma.model.Integrations;
-import com.testsigma.model.TestCaseResultExternalMapping;
-import com.testsigma.repository.TestCaseResultExternalMappingRepository;
+import com.testsigma.repository.EntityExternalMappingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class TestCaseResultExternalMappingService {
-  private final TestCaseResultExternalMappingRepository repository;
+public class EntityExternalMappingService {
+  private final EntityExternalMappingRepository repository;
   private final IntegrationsService applicationConfigService;
   private final JiraService jiraService;
   private final FreshreleaseService freshreleaseService;
@@ -39,16 +44,31 @@ public class TestCaseResultExternalMappingService {
   private final TrelloService trelloService;
   private final LinearService linearService;
   private final ClickUpService clickUpService;
+  private final XrayCloudService xrayCloudService;
 
-  public List<TestCaseResultExternalMapping> findByResultId(Long resultId) {
-    return this.repository.findByTestCaseResultId(resultId);
+  public Optional<EntityExternalMapping> findByEntityIdAndEntityType(Long entityId, EntityType entityType, Long applicationId){
+    return this.repository.findByEntityIdAndEntityTypeAndApplicationId(entityId, entityType, applicationId);
   }
 
-  public TestCaseResultExternalMapping create(TestCaseResultExternalMapping mapping)
+  public List<EntityExternalMapping> findAllByEntityIdAndEntityType(Long entityId, EntityType entityType){
+    return this.repository.findAllByEntityIdAndEntityType(entityId, entityType);
+  }
+
+  public List<EntityExternalMapping> findByEntityIds(Long[] ids, EntityType entityType, Long applicationId){
+    return this.repository.findByEntityIds(ids, entityType, applicationId);
+  }
+
+  public Page<EntityExternalMapping> findAll(Specification<EntityExternalMapping> specification, Pageable pageable) {
+    return this.repository.findAll(specification, pageable);
+  }
+
+  public EntityExternalMapping create(EntityExternalMapping mapping)
     throws TestsigmaException, IOException, URISyntaxException {
-    Integrations config = this.applicationConfigService.find(mapping.getWorkspaceId());
-    mapping.setWorkspace(config);
-    mapping.setTestCaseResult(testCaseResultService.find(mapping.getTestCaseResultId()));
+    Integrations config = this.applicationConfigService.find(mapping.getApplicationId());
+    mapping.setApplication(config);
+    if(mapping.getEntityType() == EntityType.TEST_CASE_RESULT) {
+      mapping.setTestCaseResult(testCaseResultService.find(mapping.getEntityId()));
+    }
     if (config.getWorkspace().isJira()) {
       jiraService.setIntegrations(config);
       mapping = mapping.getLinkToExisting() ? jiraService.link(mapping) : jiraService.addIssue(mapping);
@@ -81,72 +101,78 @@ public class TestCaseResultExternalMappingService {
     } else if (config.getWorkspace().isClickUp()) {
       clickUpService.setWorkspaceConfig(config);
       mapping = mapping.getLinkToExisting() ? clickUpService.link(mapping) : clickUpService.addIssue(mapping);
+    } else if(config.getWorkspace().isXrayCloud()){
+      xrayCloudService.link(mapping);
     }
     return this.repository.save(mapping);
   }
 
-  public TestCaseResultExternalMapping find(Long id) throws ResourceNotFoundException {
+  public EntityExternalMapping find(Long id) throws ResourceNotFoundException {
     return this.repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Missing with id" + id));
   }
 
-  public void destroy(TestCaseResultExternalMapping mapping) throws TestsigmaException, IOException {
-    if (mapping.getWorkspace().getWorkspace().isJira()) {
-      jiraService.setIntegrations(mapping.getWorkspace());
+  public void destroy(EntityExternalMapping mapping) throws TestsigmaException, IOException {
+    if (mapping.getApplication().getWorkspace().isJira()) {
+      jiraService.setIntegrations(mapping.getApplication());
       jiraService.unlink(mapping);
-    } else if (mapping.getWorkspace().getWorkspace().isFreshrelease()) {
-      freshreleaseService.setIntegrations(mapping.getWorkspace());
+    } else if (mapping.getApplication().getWorkspace().isFreshrelease()) {
+      freshreleaseService.setIntegrations(mapping.getApplication());
       freshreleaseService.unlink(mapping);
-    } else if (mapping.getWorkspace().getWorkspace().isMantis()) {
-      mantisService.setIntegrations(mapping.getWorkspace());
+    } else if (mapping.getApplication().getWorkspace().isMantis()) {
+      mantisService.setIntegrations(mapping.getApplication());
       mantisService.unlink(mapping);
-    } else if (mapping.getWorkspace().getWorkspace().isAzure()) {
-      azureService.setApplicationConfig(mapping.getWorkspace());
+    } else if (mapping.getApplication().getWorkspace().isAzure()) {
+      azureService.setApplicationConfig(mapping.getApplication());
       azureService.unlink(mapping);
-    } else if (mapping.getWorkspace().getWorkspace().isBackLog()) {
-      backLogService.setIntegrations(mapping.getWorkspace());
+    } else if (mapping.getApplication().getWorkspace().isBackLog()) {
+      backLogService.setIntegrations(mapping.getApplication());
       backLogService.unlink(mapping);
-    } else if (mapping.getWorkspace().getWorkspace().isZepel()) {
-      zepelService.setIntegrations(mapping.getWorkspace());
+    } else if (mapping.getApplication().getWorkspace().isZepel()) {
+      zepelService.setIntegrations(mapping.getApplication());
       zepelService.unlink(mapping);
-    } else if (mapping.getWorkspace().getWorkspace().isBugZilla()) {
-      bugZillaService.setIntegrations(mapping.getWorkspace());
+    } else if (mapping.getApplication().getWorkspace().isBugZilla()) {
+      bugZillaService.setIntegrations(mapping.getApplication());
       bugZillaService.unlink(mapping);
-    } else if (mapping.getWorkspace().getWorkspace().isTrello()) {
-      trelloService.setApplicationConfig(mapping.getWorkspace());
+    } else if (mapping.getApplication().getWorkspace().isTrello()) {
+      trelloService.setApplicationConfig(mapping.getApplication());
       trelloService.unlink(mapping);
-    } else if (mapping.getWorkspace().getWorkspace().isLinear()) {
-      linearService.setIntegrations(mapping.getWorkspace());
+    } else if (mapping.getApplication().getWorkspace().isLinear()) {
+      linearService.setIntegrations(mapping.getApplication());
       linearService.unlink(mapping);
-    } else if (mapping.getWorkspace().getWorkspace().isYoutrack()) {
-      youtrackService.setIntegrations(mapping.getWorkspace());
+    } else if (mapping.getApplication().getWorkspace().isYoutrack()) {
+      youtrackService.setIntegrations(mapping.getApplication());
       youtrackService.unlink(mapping);
-    } else if (mapping.getWorkspace().getWorkspace().isClickUp()) {
-      clickUpService.setWorkspaceConfig(mapping.getWorkspace());
+    } else if (mapping.getApplication().getWorkspace().isClickUp()) {
+      clickUpService.setWorkspaceConfig(mapping.getApplication());
       clickUpService.unlink(mapping);
     }
 
     this.repository.delete(mapping);
   }
 
-  public TestCaseResultExternalMapping fetch(Long id) throws TestsigmaException, IOException {
-    TestCaseResultExternalMapping mapping = this.find(id);
-    jiraService.setIntegrations(mapping.getWorkspace());
-    if (mapping.getWorkspace().getWorkspace().isJira())
+  public EntityExternalMapping save(EntityExternalMapping mapping){
+    return this.repository.save(mapping);
+  }
+
+  public EntityExternalMapping fetch(Long id) throws TestsigmaException, IOException {
+    EntityExternalMapping mapping = this.find(id);
+    jiraService.setIntegrations(mapping.getApplication());
+    if (mapping.getApplication().getWorkspace().isJira())
       mapping.setFields(jiraService.fetchIssue(mapping));
-    else if (mapping.getWorkspace().getWorkspace().isFreshrelease()) {
-      freshreleaseService.setIntegrations(mapping.getWorkspace());
+    else if (mapping.getApplication().getWorkspace().isFreshrelease()) {
+      freshreleaseService.setIntegrations(mapping.getApplication());
       mapping.setFields(freshreleaseService.fetchIssue(mapping));
-    } else if (mapping.getWorkspace().getWorkspace().isAzure()) {
-      azureService.setApplicationConfig(mapping.getWorkspace());
+    } else if (mapping.getApplication().getWorkspace().isAzure()) {
+      azureService.setApplicationConfig(mapping.getApplication());
       mapping.setFields(azureService.fetchIssue(mapping));
-    } else if (mapping.getWorkspace().getWorkspace().isZepel()) {
-      zepelService.setIntegrations(mapping.getWorkspace());
+    } else if (mapping.getApplication().getWorkspace().isZepel()) {
+      zepelService.setIntegrations(mapping.getApplication());
       mapping.setFields(zepelService.fetchIssue(mapping));
-    } else if (mapping.getWorkspace().getWorkspace().isYoutrack()) {
-      youtrackService.setIntegrations(mapping.getWorkspace());
+    } else if (mapping.getApplication().getWorkspace().isYoutrack()) {
+      youtrackService.setIntegrations(mapping.getApplication());
       mapping.setFields(youtrackService.fetchIssue(mapping));
-    } else if (mapping.getWorkspace().getWorkspace().isClickUp()) {
-      clickUpService.setWorkspaceConfig(mapping.getWorkspace());
+    } else if (mapping.getApplication().getWorkspace().isClickUp()) {
+      clickUpService.setWorkspaceConfig(mapping.getApplication());
       mapping.setFields(clickUpService.fetchIssue(mapping));
     }
     return mapping;

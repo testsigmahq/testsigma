@@ -30,6 +30,7 @@ import {TestDeviceService} from "../../services/test-device.service";
 import {ToastrService} from "ngx-toastr";
 import {TestPlanService} from "../../services/test-plan.service";
 import {UserPreference} from "../../models/user-preference.model";
+import {EntityType} from "../../enums/entity-type.enum";
 import {LeftNavComponent} from "../webcomponents/left-nav.component";
 import {
   TestsigmaGitHubStarLoveComponent
@@ -64,6 +65,7 @@ export class TestCaseResultDetailsComponent extends BaseComponent implements OnI
   public queueSizeErrorMessage: string;
   public hasSteps: boolean = true;
   public userPreference:UserPreference;
+  public runResultEntityType: EntityType = EntityType.RUN_RESULT;
 
   @ViewChild(RouterOutlet) outlet: RouterOutlet;
 

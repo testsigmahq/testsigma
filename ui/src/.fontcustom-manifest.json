@@ -1,14 +1,14 @@
 {
   "checksum": {
-    "previous": "dfe3adc8b6910088075e8c0b3b2f6fe0ad8d708e9ecd4c966bbe92cd08d0c7be",
-    "current": "dfe3adc8b6910088075e8c0b3b2f6fe0ad8d708e9ecd4c966bbe92cd08d0c7be"
+    "previous": "79e7bdc8f1969a3294a43002952f0f87261025bd0ab8e307bda5d7be149d11ba",
+    "current": "79e7bdc8f1969a3294a43002952f0f87261025bd0ab8e307bda5d7be149d11ba"
   },
   "fonts": [
-    "./assets/font_icons/font_custom_dfe3adc8b6910088075e8c0b3b2f6fe0.ttf",
-    "./assets/font_icons/font_custom_dfe3adc8b6910088075e8c0b3b2f6fe0.svg",
-    "./assets/font_icons/font_custom_dfe3adc8b6910088075e8c0b3b2f6fe0.woff",
-    "./assets/font_icons/font_custom_dfe3adc8b6910088075e8c0b3b2f6fe0.eot",
-    "./assets/font_icons/font_custom_dfe3adc8b6910088075e8c0b3b2f6fe0.woff2"
+    "./assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.ttf",
+    "./assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.svg",
+    "./assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.woff",
+    "./assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.eot",
+    "./assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.woff2"
   ],
   "glyphs": {
     "4-quabs": {
@@ -923,6 +923,10 @@
       "codepoint": 61817,
       "source": "./icons/lined-arrow-right.svg"
     },
+    "link": {
+      "codepoint": 62163,
+      "source": "./icons/link.svg"
+    },
     "linux-2": {
       "codepoint": 61818,
       "source": "./icons/linux-2.svg"
@@ -1774,7 +1778,7 @@
     "copyright": "",
     "css3": false,
     "css_selector": ".fa-{{glyph}}",
-    "debug": false,
+    "debug": true,
     "font_ascent": 448,
     "font_descent": 64,
     "font_design_size": 16,

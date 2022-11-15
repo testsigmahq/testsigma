@@ -38,4 +38,15 @@ public enum ResultConstant {
   public static ResultConstant getResult(Integer id) {
     return map.get(id);
   }
+
+  public static String getXrayStatus(ResultConstant resultConstant){
+    switch (resultConstant){
+      case SUCCESS:
+        return "PASSED";
+      case QUEUED:
+        return "EXECUTING";
+      default:
+        return "FAILED";
+    }
+  }
 }

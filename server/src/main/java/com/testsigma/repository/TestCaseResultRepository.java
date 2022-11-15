@@ -49,6 +49,10 @@ public interface TestCaseResultRepository extends JpaRepository<TestCaseResult, 
 
   List<TestCaseResult> findAllBySuiteResultIdAndResultIsNot(Long suiteResultId, ResultConstant result);
 
+  List<TestCaseResult> findAllBySuiteResultIdAndParentIdNull(Long suiteResultId);
+
+  List<TestCaseResult> findAllByParentId(Long parentId);
+
   Integer countAllByParentIdAndStatusIsNot(Long parentId, StatusConstant status);
 
   @Query("SELECT caseResult FROM  TestCaseResult caseResult " +

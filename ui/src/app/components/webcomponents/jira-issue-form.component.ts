@@ -5,9 +5,9 @@ import {JiraIssueField} from "../../models/jira-issue-field.model";
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {JiraProject} from "../../models/jira-project.model";
 import {JiraIssueType} from "../../models/jira-issue-type.model";
-import {TestCaseResultExternalMapping} from "../../models/test-case-result-external-mapping.model";
+import {EntityExternalMapping} from "../../models/entity-external-mapping.model";
 import {TestCaseResult} from "../../models/test-case-result.model";
-import {TestCaseResultExternalMappingService} from "../../services/test-case-result-external-mapping.service";
+import {EntityExternalMappingService} from "../../services/entity-external-mapping.service";
 import {BaseComponent} from "../../shared/components/base.component";
 import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
 import {NotificationsService} from "angular2-notifications";
@@ -26,7 +26,7 @@ import {ResultConstant} from "../../enums/result-constant.enum";
 export class JiraIssueFormComponent extends BaseComponent implements OnInit {
   @Input('application') application: Integrations;
   @Input('testCaseResult') testCaseResult: TestCaseResult;
-  @Output('onCreate') createCallBack = new EventEmitter<TestCaseResultExternalMapping>();
+  @Output('onCreate') createCallBack = new EventEmitter<EntityExternalMapping>();
   public fields: JiraIssueField[];
   public multiSelectFields: JiraIssueField[];
   form: FormGroup;
@@ -49,7 +49,7 @@ export class JiraIssueFormComponent extends BaseComponent implements OnInit {
     public notificationsService: NotificationsService,
     public translate: TranslateService,
     public toastrService: ToastrService,
-    private mappingService: TestCaseResultExternalMappingService,
+    private mappingService: EntityExternalMappingService,
     private applicationService: IntegrationsService,
     public dialog: MatDialog) {
     super(authGuard, notificationsService, translate, toastrService)
@@ -122,15 +122,13 @@ export class JiraIssueFormComponent extends BaseComponent implements OnInit {
   }
 
   onSubmit() {
-    let mapping = new TestCaseResultExternalMapping();
+    let mapping = new EntityExternalMapping();
     if (this.searchIssuesFormCtrl.value) {
       mapping.linkToExisting = true;
       mapping.externalId = this.searchIssuesFormCtrl.value.key;
-      mapping.workspaceId = <number>this.application.id;
-      mapping.testCaseResultId = this.testCaseResult.id;
+      mapping.applicationId = <number>this.application.id;
     } else {
-      mapping.workspaceId = <number>this.application.id;
-      mapping.testCaseResultId = this.testCaseResult.id;
+      mapping.applicationId = <number>this.application.id;
       mapping.fields = this.form.getRawValue();
       mapping.fields = this.formatMultiSelectFields(mapping.fields);
       mapping.fields["priority"] = {"name": this.selectedPriority.name};

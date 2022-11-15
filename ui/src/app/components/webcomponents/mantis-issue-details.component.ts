@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Integrations} from "../../shared/models/integrations.model";
-import {TestCaseResultExternalMapping} from "../../models/test-case-result-external-mapping.model";
+import {EntityExternalMapping} from "../../models/entity-external-mapping.model";
 import {IntegrationsService} from "../../shared/services/integrations.service";
 
 @Component({
@@ -10,8 +10,8 @@ import {IntegrationsService} from "../../shared/services/integrations.service";
 })
 export class MantisIssueDetailsComponent implements OnInit {
   @Input('application') application: Integrations;
-  @Input('externalMapping') externalApplicationDetails: TestCaseResultExternalMapping;
-  @Output('unLink') unLink = new EventEmitter<TestCaseResultExternalMapping>();
+  @Input('externalMapping') externalApplicationDetails: EntityExternalMapping;
+  @Output('unLink') unLink = new EventEmitter<EntityExternalMapping>();
   public issueDetails: any;
   public issueStatus: any;
   public issueTypeDetails: any;
@@ -28,7 +28,7 @@ export class MantisIssueDetailsComponent implements OnInit {
   }
 
   fetchDetails() {
-    this.applicationService.getMantisIssue(this.externalApplicationDetails.workspaceId, this.externalApplicationDetails.externalId)
+    this.applicationService.getMantisIssue(this.externalApplicationDetails.applicationId, this.externalApplicationDetails.externalId)
       .subscribe(data => {
         this.issueDetails = data["issues"][0];
         this.issueTypeDetails = data['issues'][0]['category'];
@@ -37,7 +37,7 @@ export class MantisIssueDetailsComponent implements OnInit {
       }, error => console.log(error));
   }
 
-  unLinkIssue(externalApplicationDetails: TestCaseResultExternalMapping) {
+  unLinkIssue(externalApplicationDetails: EntityExternalMapping) {
     this.unLink.emit(externalApplicationDetails);
   }
 

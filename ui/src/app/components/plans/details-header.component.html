@@ -83,6 +83,16 @@
               </div>
             </div>
           </div>
+          <div class="details-items pl-50">
+            <div class="details-info">
+              <app-xray-input
+                [entityId] ="this.testPlanId"
+                [entityType]="this.entityType"
+                [entityExternalMapping]="this.entityExternalMapping"
+                (createXrayLink)="linkXrayId($event)">
+              </app-xray-input>
+            </div>
+          </div>
         </div>
       </div>
     </div>

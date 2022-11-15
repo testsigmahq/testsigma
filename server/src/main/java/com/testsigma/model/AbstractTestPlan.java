@@ -111,6 +111,11 @@ public class AbstractTestPlan implements Serializable {
   @ToString.Exclude
   @JsonIgnore
   private List<TestDevice> testDevices;
+  @OneToMany(mappedBy = "execution")
+  @Fetch(value = FetchMode.SELECT)
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  private List<EntityExternalMapping> entityExternalMapping;
   @OneToMany(mappedBy = "testPlan", fetch = FetchType.LAZY)
   @EqualsAndHashCode.Exclude
   @ToString.Exclude

@@ -21,6 +21,8 @@ import {TranslateService} from '@ngx-translate/core';
 import {ToastrService} from "ngx-toastr";
 import {CreateComponent} from "./privateGrid/create.component";
 import {DetailsComponent} from "./privateGrid/details.component";
+import {CreateComponent as XrayCreateComponent} from "./xray/create.component";
+import {DetailsComponent as XrayDetailsComponent} from "./xray/details.component";
 
 @Component({
   selector: 'app-plugins',
@@ -41,6 +43,10 @@ export class ListComponent extends BaseComponent implements OnInit {
     private externalApplicationConfig: IntegrationsService,
     private matModal: MatDialog) {
     super(authGuard, notificationsService, translate, toastrService);
+  }
+
+  get xrayApplication(){
+    return this.plugins.find(plug => plug.isXray);
   }
 
   get bugReport() : boolean{
@@ -179,6 +185,8 @@ export class ListComponent extends BaseComponent implements OnInit {
     switch (integration) {
       case Integration.Jira:
         return JiraDetailsComponent;
+      case Integration.XrayCloud:
+        return XrayDetailsComponent;
       case Integration.Mantis:
       case Integration.BackLog:
       case Integration.Zepel:
@@ -202,6 +210,8 @@ export class ListComponent extends BaseComponent implements OnInit {
     switch (integration) {
       case Integration.Jira:
         return JiraCreateComponent;
+      case Integration.XrayCloud:
+        return XrayCreateComponent;
       case Integration.Mantis:
       case Integration.BackLog:
       case Integration.Zepel:

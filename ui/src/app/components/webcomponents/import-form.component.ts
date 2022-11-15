@@ -113,7 +113,7 @@ export class ImportFormComponent extends BaseComponent implements OnInit {
     this.selectedWorkspace = null;
     if (application) {
       this.selectedWorkspace = application;
-      console.log("Setting selected workspace as  - ", application);
+      console.log("Setting selected application as  - ", application);
       this.fetchVersions()
     }
   }

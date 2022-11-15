@@ -49,6 +49,24 @@
 
     <div class="white-border-container" *ngIf="bugReport || all">
       <div class="item-content">
+        <div class="ts-col-100 xray-software sm-h"></div>
+        <div class="item-text" [translate]="'plugins.xray.description'"></div>
+        <div class="item-action">
+          <a
+            class="text-link"
+            *ngIf="!!xrayApplication"
+            (click)="viewDetails(Integration.XrayCloud, xrayApplication)" [translate]="'message.common.view_details'"></a>
+          <mat-slide-toggle
+            class="mat-slide-toggle ml-auto slide-with-text"
+            [checked]="!!xrayApplication"
+            (change)="toggleApplication($event, Integration.XrayCloud, xrayApplication)">
+          </mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+
+    <div class="white-border-container" *ngIf="bugReport || all">
+      <div class="item-content">
         <div class="ts-col-100 jira-software sm-h"></div>
         <div class="item-text" [translate]="'plugins.jira.description'"></div>
         <div class="item-action">

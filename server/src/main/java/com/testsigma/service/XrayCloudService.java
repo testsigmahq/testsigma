@@ -196,8 +196,8 @@ public class XrayCloudService implements XrayService {
         mapping.setPushFailed(Boolean.FALSE);
         mapping.setMessage("Results Pushed to Xray Successfully");
         this.entityMappingService.save(mapping);
-        this.startAssetsPush(mapping);
     }
+
     private void pushEnvironmentsToXray(XrayResponse response,
                                         Integrations xrayConfig,
                                         EntityExternalMapping mapping) throws TestsigmaException {
@@ -231,7 +231,6 @@ public class XrayCloudService implements XrayService {
         TestDevice environment = this.environmentService.find(environmentResult.getTestDeviceId());
         if(environment.getTestPlanLabType() == TestPlanLabType.Hybrid){
             Platform platform = environment.getPlatform();
-            //Agent agent = this.agentService.findBySystemId(environment.getTargetMachine());
             Agent agent = environment.getAgent();
             environments.add(platform + "(" +platform.getVersionPrefix()+ ")");
             for (AgentBrowser agentBrowser : agent.getBrowserList()) {
@@ -247,19 +246,6 @@ public class XrayCloudService implements XrayService {
             environments.add(platformBrowserVersion.getName() + "("+ platformBrowserVersion.getVersion()+")");
         }
         return environments;
-    }
-
-    private void startAssetsPush(EntityExternalMapping mapping) throws IntegrationNotFoundException {
-        Optional<Integrations> jiraConfig = this.externalConfigService.findOptionalByApplication(Integration.Jira);
-        if (jiraConfig.isPresent() && mapping != null) {
-            log.info("Initializing assets upload to Xray for mapping :" + mapping);
-            this.jiraService.setIntegrations(jiraConfig.get());
-            this.jiraService.uploadVideo(mapping);
-            //this.jiraService.uploadLogs(mapping, 3);
-        }
-        if(jiraConfig.isEmpty()){
-            log.info("Jira not enabled, xray results results not pushed");
-        }
     }
 
     private XrayCloudRequest createResultsPayload(TestSuiteResult testSuiteResult, EntityExternalMapping entityMapping) throws ResourceNotFoundException {

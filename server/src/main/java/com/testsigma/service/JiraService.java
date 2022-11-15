@@ -208,56 +208,6 @@ public class JiraService {
     })).start();
   }
 
-  /*public void uploadLogs(EntityExternalMapping mapping, int maxRetries) throws ResourceNotFoundException, IntegrationNotFoundException {
-    Long environmentResultId = null;
-    TestSuiteResult testSuiteResult = null;
-    if(mapping.getEntityType() == EntityType.TEST_SUITE_RESULT){
-      testSuiteResult = testSuiteResultService.find(mapping.getTestSuiteResult().getId());
-      environmentResultId = testSuiteResult.getEnvironmentResultId();
-    }
-    Integrations integrations = integrationsService.findByApplication(Integration.Jira);
-    int retryCount = 0;
-    while(retryCount < maxRetries) {
-      try {
-        uploadLogs(environmentResultId, mapping.getExternalId(), integrations.toString(), testSuiteResult.getId(), ++retryCount);
-        mapping.setAssetsPushFailed(Boolean.FALSE);
-        this.entityExternalMappingService.save(mapping);
-        break;
-      } catch(IOException | TestsigmaDatabaseException exception) {
-        if(retryCount > maxRetries) {
-          log.info("Video upload to Jira failed and exceeded retry count..!");
-          mapping.setAssetsPushFailed(Boolean.TRUE);
-          mapping.setMessage(exception.getMessage());
-          this.entityExternalMappingService.save(mapping);
-        }
-      }
-    }
-  }
-
-  public void uploadLogs(Long environmentResultId, String externalId, String mapUrl, Long testSuiteResultId, int retryCount)
-          throws IOException, ResourceNotFoundException, TestsigmaDatabaseException {
-    TestDeviceResult environmentResult = this.environmentResultService.find(environmentResultId);
-    TestDevice environment = this.environmentService.find(environmentResult.getTestDeviceId());
-    Calendar cal = Calendar.getInstance();
-    cal.add(Calendar.HOUR, 3);
-    if(retryCount > 0) {
-      log.info("Log files upload to Jira failed retrying for "+ retryCount +" time for environment result Id: "
-              + environmentResultId);
-    }
-    if (checkIfNoParallel(environmentResult)) {
-      log.info("posting logs when there is not parallel runs");
-      postLogsWhenNoParallel(environmentResult.getId(), mapUrl, externalId);
-    }
-    if (checkIfTestSuitesInParallel(environmentResult)) {
-      log.info("posting logs for test suites when they are in parallel");
-      postLogsWhenSuiteInParallel(environment, mapUrl, externalId, testSuiteResultId);
-    }
-    if (checkIfTestCaseInParallel(environmentResult)) {
-      log.info("Posting logs for test case since test case in parallel");
-      postLogsWhenTestCaseInParallel(testSuiteResultId, externalId, mapUrl, environment);
-    }
-  }*/
-
   private void uploadScreenshots(EntityExternalMapping mapping) {
     List<TestStepResult> stepResults = testStepResultService.findAllByTestCaseResultIdAndScreenshotNameIsNotNull(mapping.getTestCaseResult().getId());
     (new Thread(() -> {

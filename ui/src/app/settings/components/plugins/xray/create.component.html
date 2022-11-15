@@ -52,47 +52,6 @@
                 [translate]="'plugins.message.client_secret'">
           </span>
         </div>
-        <div class="form-group ts-form">
-          <mat-checkbox type="checkbox"
-                        (change)="toggleSelection()"
-                        [checked] = "getToggle"
-                        id="logs_toggle">
-            <span [translate]="'message.xray_store_logs.data'"></span>
-            <i class="ml-10 fa fa-question-circle-solid"
-               [matTooltip]="'hint.xray.assets'|translate"></i></mat-checkbox>
-        </div>
-        <div class="d-flex ts-col-100 form-group" *ngIf="this.getToggle">
-          <span class="ts-col-80 ml-5" style="font-weight: bold" [translate]="'settings.plugins.jira_integration'" ></span>
-          <span class="ts-col-20">
-            <a class="text-link" target="_blank"
-               style="color: #0070d0;text-align: end;"
-               href="https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/">
-               <i class="mr-2 fa-external-link-alt-solid"></i> Get Jira credentials</a>
-          </span>
-        </div>
-        <div class="form-group ts-form" *ngIf="this.getToggle">
-          <label for="username" class="control-label required">
-            <span [translate]="'xray.filed.account_username'"></span>
-          </label>
-          <input type="text"
-                 formControlName="jira_username"
-                 id="username" class="form-control " >
-          <span *ngIf="!updateForm.get('jira_username').valid && updateForm.get('jira_username').touched" class="help-block"
-                [translate]="'plugins.message.username'">
-          </span>
-        </div>
-
-        <div class="form-group ts-form" *ngIf="this.getToggle">
-          <label for="accessKey" class="control-label required">
-            <span [translate]="'xray.filed.api_key'"></span>
-          </label>
-          <input type="password"
-                 formControlName="jira_token"
-                 id="accessKey" class="form-control">
-          <span *ngIf="!updateForm.get('jira_token').valid && updateForm.get('jira_token').touched" class="help-block"
-                [translate]="'plugins.message.token'">
-          </span>
-        </div>
       </form>
     </div>
 

@@ -25,7 +25,7 @@ public class VerifyElementAbsenceAction extends ElementAction {
         elementFound = true;
       }
 
-    } catch (AutomatorException | NotFoundException | TimeoutException | InvalidElementStateException e) {
+    } catch (Exception e) {
       log.debug("Expected exception(Verify element not present):", e);
       setSuccessMessage(String.format(SUCCESS_MESSAGE, getFindByType(), getLocatorValue()));
       return;

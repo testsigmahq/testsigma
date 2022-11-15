@@ -22,6 +22,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.List;
 
 @Entity
 @Table(name = "test_case_results")
@@ -163,6 +164,12 @@ public class TestCaseResult implements Serializable {
   @EqualsAndHashCode.Exclude
   @ToString.Exclude
   private TestDeviceResult testDeviceResult;
+
+  @OneToMany(mappedBy = "testCaseResult")
+  @Fetch(value = FetchMode.SELECT)
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  private List<EntityExternalMapping> entityExternalMapping;
 
   @ManyToOne
   @Fetch(value = FetchMode.SELECT)

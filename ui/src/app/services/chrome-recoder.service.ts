@@ -77,7 +77,7 @@ export class ChromeRecorderService {
       this.messageEvent = event;
       if (this.isInstalledEvent) {
         this.isInstalled = true;
-      } else if (this.isStoppedRecorder && this.isStepRecorder) {
+      } else if (this.isStoppedRecorder) {
         this.isStepRecorder = false;
         if(!event.data.isUiIdentifierRecorder)
           this.stepListCallBack.apply(this.stepListCallBackContext, [])

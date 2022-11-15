@@ -350,7 +350,10 @@ public abstract class TestcaseStepRunner {
       mapStepResult.put(whileConditionStep.getId(), whileConditionStepResult);
 
       log.debug("While condition result :::: " + objectMapperService.convertToJson(whileConditionStepResult));
-      executeGroup(whileConditionStep, whileConditionStepResult, mapStepResult, tresult, parentStatus, failedToProcess, screenCaptureUtil);
+      if(noOfIterationsCompleted+1<maxIterations){
+        executeGroup(whileConditionStep, whileConditionStepResult, mapStepResult, tresult, parentStatus, failedToProcess, screenCaptureUtil);
+      }
+
       //Update Iteration result to SUCCESS if break or continue is executed
       if (whileConditionStepResult.getIsBreakLoop() || whileConditionStepResult.getIsContinueLoop()) {
         whileConditionStepResult.setResult(ResultConstant.SUCCESS);
@@ -373,11 +376,10 @@ public abstract class TestcaseStepRunner {
       }
       if(noOfIterationsCompleted == maxIterations){
         whileConditionStepResult.setResult(ResultConstant.FAILURE);
-        whileConditionStepResult.setMessage(AutomatorMessages.MSG_WHILE_LOOP_ITERATIONS_EXHAUSTED);
+        whileConditionStepResult.setMessage(String.format(AutomatorMessages.MSG_WHILE_LOOP_ITERATIONS_EXHAUSTED,maxIterations-1));
       }
     }
     //Add all iteration results to parent LOOP step
-    whileLoopIterationResults.remove(whileLoopIterationResults.size() - 1);
     whileLoopResultObj.setStepResults(whileLoopIterationResults);
     if (whileLoopResultObj.getResult() == null) {
       whileLoopResultObj.setResult(whileLoopResult);

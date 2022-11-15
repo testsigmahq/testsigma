@@ -98,7 +98,7 @@ public class TestDataProfileService extends XMLExportImportService<TestData> {
 
   public TestData update(TestData testData) {
     Map<String, String> renamedColumns = testData.getRenamedColumns();
-    List<TestDataSet> dataSets = new ArrayList<>(testData.getTempTestData());
+    List<TestDataSet> dataSets = new ArrayList<>(testData.getData());
     testData.setIsMigrated(true);
     testData = testDataProfileRepository.save(testData);
     testData.setRenamedColumns(renamedColumns);

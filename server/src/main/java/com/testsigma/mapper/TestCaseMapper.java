@@ -11,11 +11,15 @@ package com.testsigma.mapper;
 
 import com.testsigma.dto.TestCaseDTO;
 import com.testsigma.dto.TestCaseEntityDTO;
+import com.testsigma.dto.TestDataProfileDTO;
+import com.testsigma.dto.TestDataSetDTO;
 import com.testsigma.dto.export.ElementCloudXMLDTO;
 import com.testsigma.dto.export.ElementXMLDTO;
 import com.testsigma.dto.export.TestCaseCloudXMLDTO;
 import com.testsigma.dto.export.TestCaseXMLDTO;
 import com.testsigma.model.TestCase;
+import com.testsigma.model.TestData;
+import com.testsigma.model.TestDataSet;
 import com.testsigma.web.request.TestCaseRequest;
 import org.mapstruct.*;
 
@@ -46,7 +50,7 @@ public interface TestCaseMapper {
   @Mapping(target = "lastRun.testDeviceResult", ignore = true)
   @Mapping(target = "lastRun.parentResult", ignore = true)
   @Mapping(target = "lastRun.testSuite", ignore = true)
-  @Mapping(target = "testData.testData", ignore = true)
+  @Mapping(target = "testData", expression = "java(testDataToTestDataProfileDTO(testCase.getTestData()))")
   TestCaseDTO mapDTO(TestCase testCase);
 
   @Mapping(target = "id", ignore = true)
@@ -83,12 +87,50 @@ public interface TestCaseMapper {
   @Mapping(target = "lastRun.testDeviceResult", ignore = true)
   @Mapping(target = "lastRun.parentResult", ignore = true)
   @Mapping(target = "lastRun.testSuite", ignore = true)
-
   @IterableMapping(qualifiedByName = "mapWithoutData")
   List<TestCaseDTO> mapDTOs(List<TestCase> testCases);
 
   List<TestCase> mapTestCasesXMLList(List<TestCaseXMLDTO> readValue);
 
   List<TestCase> mapTestCasesCloudXMLList(List<TestCaseCloudXMLDTO> readValue);
+
+  List<TestDataSetDTO> testDataSetListToTestDataSetDTOList(List<TestDataSet> dataSets);
+
+  default TestDataProfileDTO testDataToTestDataProfileDTO(TestData testData) {
+    if ( testData == null ) {
+      return null;
+    }
+
+    TestDataProfileDTO testDataProfileDTO = new TestDataProfileDTO();
+
+    if ( testData.getId() != null ) {
+      testDataProfileDTO.setId( testData.getId() );
+    }
+    if ( testData.getTestDataName() != null ) {
+      testDataProfileDTO.setTestDataName( testData.getTestDataName() );
+    }
+    List<TestDataSetDTO> list = testDataSetListToTestDataSetDTOList( testData.getTempTestData() );
+    if ( list != null ) {
+      testDataProfileDTO.setData( list );
+    }
+    if ( testData.getCreatedDate() != null ) {
+      testDataProfileDTO.setCreatedDate( testData.getCreatedDate() );
+    }
+    if ( testData.getUpdatedDate() != null ) {
+      testDataProfileDTO.setUpdatedDate( testData.getUpdatedDate() );
+    }
+    if ( testData.getVersionId() != null ) {
+      testDataProfileDTO.setVersionId( testData.getVersionId() );
+    }
+    if ( testData.getIsMigrated() != null ) {
+      testDataProfileDTO.setIsMigrated( testData.getIsMigrated() );
+    }
+
+    testDataProfileDTO.setTestData( null );
+
+    return testDataProfileDTO;
+  }
+
+
 }
 

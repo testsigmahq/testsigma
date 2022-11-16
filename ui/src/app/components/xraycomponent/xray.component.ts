@@ -20,6 +20,7 @@ export class XrayComponent implements OnInit{
   @Input('entityType') entityType: EntityType;
   @Input('entityExternalMapping') entityExternalMapping: EntityExternalMapping;
   @Input('display') display : boolean = false;
+  @Input('isFromRunResult') isFromRunResult : boolean = false;
   @Input('testCaseResult') testCaseResult : TestCaseResult;
   @Output('createXrayLink') createXrayLink: EventEmitter<EntityExternalMapping> = new EventEmitter<EntityExternalMapping>();
   @Output('rePushInitialized') rePushInitialized : EventEmitter<void> = new EventEmitter<void>();
@@ -79,7 +80,8 @@ export class XrayComponent implements OnInit{
       res => {
         if(res.length > 0){
           this.xrayExternalApplication = res.find(app => app.isXray);
-          this.fetchExternalMappings()
+          if(this.xrayExternalApplication)
+            this.fetchExternalMappings()
         }
       }
     );

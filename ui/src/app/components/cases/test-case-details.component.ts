@@ -8,7 +8,7 @@ import {TestPlanResultService} from "../../services/test-plan-result.service";
 import {BaseComponent} from "../../shared/components/base.component";
 import {TestCase} from "../../models/test-case.model";
 import {ConfirmationModalComponent} from "../../shared/components/webcomponents/confirmation-modal.component";
-import {MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {MatDialog} from "@angular/material/dialog";
 import {TestCaseSummaryComponent} from "../webcomponents/test-case-summary.component";
 import {TestCaseCloneFormComponent} from "../webcomponents/test-case-clone-form.component";
 import {LinkedEntitiesModalComponent} from "../../shared/components/webcomponents/linked-entities-modal.component";
@@ -26,7 +26,6 @@ import {EntityExternalMapping} from "../../models/entity-external-mapping.model"
 import {EntityExternalMappingService} from "../../services/entity-external-mapping.service";
 import {EntityType} from "../../enums/entity-type.enum";
 import {XrayKeyWarningComponent} from "../../agents/components/webcomponents/xray-key-warning-component";
-import {TestStepService} from "../../services/test-step.service";
 
 @Component({
   selector: 'app-test-case-details',
@@ -74,6 +73,7 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
     this.route.params.subscribe((params: Params) => {
       this.pushToParent(this.route, params);
       this.testCaseId = params.testCaseId;
+      this.entityType = EntityType.TEST_CASE;
       this.fetchUserPreference()
       this.fetchTestCase();
     });

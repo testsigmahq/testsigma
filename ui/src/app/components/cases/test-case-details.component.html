@@ -97,7 +97,7 @@
               <span class="text-truncate" (click)="openDetails()" [translate]="'hint.message.common.more'"></span>
             </div>
           </div>
-          <app-xray-input
+          <app-xray-input *ngIf="!testCase?.isStepGroup && testCaseId"
             [entityId] ="this.testCaseId"
             [entityType]="this.entityType"
             [entityExternalMapping]="this.entityExternalMapping"

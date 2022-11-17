@@ -46,6 +46,7 @@ public class XrayCloudService implements XrayService {
     private final HttpClient httpClient;
     private final JiraService jiraService;
     private final PlatformsService platformsService;
+    private final AgentDeviceService agentDeviceService;
     public final static String XRAY_CLOUD_URL = "https://xray.cloud.getxray.app/api/v2/";
     public final static String XRAY_CLOUD_AUTHENTICATE = XRAY_CLOUD_URL + "authenticate";
     public final static String XRAY_CLOUD_IMPORT_EXECUTION = XRAY_CLOUD_URL + "import/execution";
@@ -229,21 +230,37 @@ public class XrayCloudService implements XrayService {
         TestSuiteResult suiteResult = this.testSuiteResultService.find(suiteResultId);
         TestDeviceResult environmentResult = this.environmentResultService.find(suiteResult.getEnvironmentResultId());
         TestDevice environment = this.environmentService.find(environmentResult.getTestDeviceId());
-        if(environment.getTestPlanLabType() == TestPlanLabType.Hybrid){
+        WorkspaceType appType = environment.getWorkspaceVersion().getWorkspace().getWorkspaceType();
+        environments.add(environment.getTestPlanLabType().toString());
+        if(environment.getTestPlanLabType() == TestPlanLabType.Hybrid && !appType.isRest()){
             Platform platform = environment.getPlatform();
             Agent agent = environment.getAgent();
             environments.add(platform + "(" +platform.getVersionPrefix()+ ")");
-            for (AgentBrowser agentBrowser : agent.getBrowserList()) {
-                if (Objects.equals(environment.getBrowser(), agentBrowser.getName().getHybridName())) {
-                    environments.add(agentBrowser.getName() + "("+agentBrowser.getMajorVersion()+")");
-                    break;
+            if(appType.isMobile()){
+                AgentDevice agentDevice = this.agentDeviceService.find(environment.getDeviceId());
+                environments.add(agentDevice.getName().replace(" ", "-"));
+            }
+            if((appType.isMobileWeb() || appType.isWeb())) {
+                for (AgentBrowser agentBrowser : agent.getBrowserList()) {
+                    if (Objects.equals(environment.getBrowser(), agentBrowser.getName().getHybridName())) {
+                        environments.add(agentBrowser.getName() + "(" + agentBrowser.getMajorVersion() + ")");
+                        break;
+                    }
                 }
             }
-        } else {
+        } else if(!appType.isRest()) {
             PlatformOsVersion platformOsVersion = this.platformsService.getPlatformOsVersion(environment.getPlatformOsVersionId(), environment.getTestPlanLabType());
-            PlatformBrowserVersion platformBrowserVersion = this.platformsService.getPlatformBrowserVersion(environment.getPlatformBrowserVersionId(), environment.getTestPlanLabType());
             environments.add(platformOsVersion.getPlatform() + "(" +platformOsVersion.getVersion() + ")");
-            environments.add(platformBrowserVersion.getName() + "("+ platformBrowserVersion.getVersion()+")");
+            if(appType.isWeb()){
+                PlatformBrowserVersion platformBrowserVersion = this.platformsService.getPlatformBrowserVersion(environment.getPlatformBrowserVersionId(), environment.getTestPlanLabType());
+                environments.add(platformBrowserVersion.getName() + "("+ platformBrowserVersion.getVersion()+")");
+            } else if(appType.isMobileWeb()){
+                environments.add(environment.getBrowser());
+            }
+            if(appType.isMobile()){
+                PlatformDevice platformDevice = this.platformsService.getPlatformDevice(environment.getPlatformDeviceId(), environment.getTestPlanLabType());
+                environments.add(platformDevice.getDisplayName().replace(" ", "-"));
+            }
         }
         return environments;
     }

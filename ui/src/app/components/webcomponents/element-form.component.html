@@ -189,7 +189,7 @@
               </div>
               <div
                 *ngIf="formSubmitted && elementForm.get('name').hasError('required')"
-                class="error" [translate]="'form.validation.common.required'">
+                class="error" [translate]="'form.validation.common.required' | translate: {FieldName:'Name'}">
               </div>
               <div *ngIf="formSubmitted && elementForm?.get('name')?.touched && elementForm.controls.name.errors?.pattern "
                    [translate]="'element.message.name.invalid_characters'" class="error">

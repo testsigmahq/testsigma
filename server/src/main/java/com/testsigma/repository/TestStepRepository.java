@@ -67,7 +67,7 @@ public interface TestStepRepository extends JpaRepository<TestStep, Long> {
 
   List<TestStep> findAllByTestCaseIdAndIdInOrderByPosition(Long testCaseId, List<Long> stepIds);
 
-  @Query(value = "update test_steps step set test_data=:newTestDataParameter where test_data_type=\"parameter\" and test_data=:oldTestDataParameter and (condition_type is null or condition_type=0)  and test_case_id in (select id from test_cases where test_data_id=:testDataId) and step.parent_id is null and step.test_data_profile_step_id is null", nativeQuery = true)
+  @Query(value = "update test_steps step set test_data=:newTestDataParameter where test_data_type=\"parameter\" and test_data=:oldTestDataParameter and (condition_type is null or condition_type=0)  and test_case_id in (select id from test_cases where test_data_id=:testDataId) and step.parent_id is null", nativeQuery = true)
   @Modifying
   void updateTopLevelTestDataParameter(@Param("newTestDataParameter") String newTestDataParameter,
                                        @Param("oldTestDataParameter") String oldTestDataParameter,

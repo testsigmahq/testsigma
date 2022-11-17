@@ -265,7 +265,7 @@ public class XrayCloudService implements XrayService {
         info.setTestPlanKey(externalMapping.get().getExternalId());
         TestSuite testSuite = this.testSuiteService.find(testSuiteResult.getSuiteId());
         info.setSummary(testSuite.getName());
-        info.setDescription("Linked to testsigma results [https://app.testsigma.com/ui/td/suite_results/" + testSuiteResult.getId() + "] ");
+        info.setDescription("Linked to testsigma results [https://local.testsigmaos.com/ui/td/suite_results/" + testSuiteResult.getId() + "] ");
 
         List<XrayTestRequest> testRequests = new ArrayList<>();
         List<TestCaseResult> testCaseResults = this.testCaseResultService.findAllBySuiteResultIdAnAndParentIdNull(testSuiteResult.getId());

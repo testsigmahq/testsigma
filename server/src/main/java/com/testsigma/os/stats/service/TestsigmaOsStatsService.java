@@ -137,7 +137,8 @@ public class TestsigmaOsStatsService {
       testPlan = dryTestPlanService.find(testPlanRun.getTestPlanId());
     }
     testPlanRunStatEntity.setTestPlanType(testPlan.getEntityType());
-
+    testPlanRunStatEntity.setApplicationType(testPlan.getTestDevices().get(0).getWorkspaceVersion().getWorkspace().getWorkspaceType());
+    testPlanRunStatEntity.setTestPlanLabType(testPlan.getTestDevices().get(0).getTestPlanLabType());
     httpClient.post(testsigmaOSConfigService.getUrl() +
       UrlConstants.TESTSIGMA_OS_TEST_PLAN_RUN_STATS_URL, getHeaders(), testPlanRunStatEntity, new TypeReference<String>() {
     });

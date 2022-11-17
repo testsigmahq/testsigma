@@ -279,7 +279,7 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
     return this.testCaseRepository.breakUpByType(versionId);
   }
 
-  public TestCase copy(TestCaseCopyRequest testCaseRequest) throws ResourceNotFoundException, SQLException {
+  public TestCase copy(TestCaseCopyRequest testCaseRequest) throws TestsigmaException, SQLException {
     TestCase parentCase = this.find(testCaseRequest.getTestCaseId());
     TestCase testCase = this.testCaseMapper.copy(parentCase);
     testCase.setStatus(parentCase.getStatus());
@@ -335,7 +335,7 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
     return testCase;
   }
 
-  private void createAndReplace(List<TestStep> steps, TestCase testCase, TestCase currentTestCase) throws ResourceNotFoundException, SQLException {
+  private void createAndReplace(List<TestStep> steps, TestCase testCase, TestCase currentTestCase) throws TestsigmaException, SQLException {
     TestStep step = new TestStep();
     step.setPosition(steps.get(0).getPosition());
     step.setTestCaseId(currentTestCase.getId());

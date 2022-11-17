@@ -117,7 +117,7 @@ public class TestStepsController {
 
   @PutMapping(value = "/bulk_update")
   @ResponseStatus(HttpStatus.ACCEPTED)
-  public void bulkUpdate(@RequestBody List<TestStepRequest> testStepRequests) {
+  public void bulkUpdate(@RequestBody List<TestStepRequest> testStepRequests) throws TestsigmaException {
     log.debug("PUT /test_steps/bulk_update with body::" + testStepRequests);
     for (TestStepRequest request : testStepRequests) {
       TestStep step = this.mapper.map(request);

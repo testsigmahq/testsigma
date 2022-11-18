@@ -132,7 +132,7 @@ export class InspectionModalComponent extends BaseComponent implements OnInit {
   }
 
   get disableRecordButton() {
-    return !this.launchAllowed || !this.showUploadDropDown || this.uploading || (this.uploads && this.uploads.content.length == 0)
+    return !this.launchAllowed || !this.showUploadDropDown || this.uploading || (this.uploads && this.uploads.content.length == 0 && this.manuallyInstalledAppForm.invalid )
   }
 
   public uploadSuccess(event) {

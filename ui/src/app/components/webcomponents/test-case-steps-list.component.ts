@@ -312,6 +312,7 @@ export abstract class TestCaseStepsListComponent extends BaseComponent implement
       return !testStep.isConditionalType;
     })
     this.onStepsFetch.emit(tempTestSteps.length);
+    this.emitTestSteps.emit(testSteps.content)
   }
 
   public fetchSteps() {
@@ -323,7 +324,6 @@ export abstract class TestCaseStepsListComponent extends BaseComponent implement
         this.refreshedView = false;
         setTimeout( () => this.refreshedView = true, 200)
       }
-      this.emitTestSteps.emit(res.content)
       this.testSteps = res;
       // this.testSteps.content = this.testSteps?.content.filter(step => step.type != TestStepType.WHILE_LOOP)
       this.EmitTestStepCount(this.testSteps);

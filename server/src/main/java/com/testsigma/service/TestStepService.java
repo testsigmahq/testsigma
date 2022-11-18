@@ -30,6 +30,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -153,7 +154,9 @@ public class TestStepService extends XMLExportImportService<TestStep> {
 
 
     public TestStep create(TestStep testStep) throws TestsigmaException,ResourceNotFoundException{
-        if(testStep.getAction()!=null && testStep.getConditionType()==TestStepConditionType.LOOP_WHILE && testStep.getMaxIterations()>100){
+        if(testStep.getAction()!=null
+                && testStep.getConditionType() == TestStepConditionType.LOOP_WHILE
+                &&(testStep.getMaxIterations() != null && (testStep.getMaxIterations() > 100))){
             throw  new TestsigmaException(String.format("In While Loop, please set Max iterations between 1 to 100"));
         }
         this.repository.incrementPosition(testStep.getPosition(), testStep.getTestCaseId());

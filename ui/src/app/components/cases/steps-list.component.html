@@ -111,6 +111,7 @@
       [addonTemplates]="addonAction"
       [selectedTemplate]="selectedTemplate"
       [isDragEnabled]="canDrag"
+      (emitTestSteps)="setTestSteps($event)"
       (onStepsFetch)="setStepLength($event)"
       (onStepSelection)="selectedSteps($event)"
       (onStepDrag)="onPositionChange($event)"

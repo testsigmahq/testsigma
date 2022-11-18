@@ -50,6 +50,7 @@ export class StepsListComponent extends BaseComponent implements OnInit {
   public stepLength: number;
   public selectedStepsList: TestStep[];
   public draggedSteps: TestStep[];
+  public testSteps: TestStep[];
   @ViewChild('searchInput') searchInput: ElementRef;
   @ViewChild(TestCaseActionStepsComponent)
   private actionStepsComponent: TestCaseActionStepsComponent;
@@ -261,7 +262,7 @@ export class StepsListComponent extends BaseComponent implements OnInit {
         let list = new InfiniteScrollableDataSource();
         list.cachedItems=list.cachedItems.concat(res.content);
         list.dataStream.next(list.cachedItems);
-        this.sharedService.openLinkedTestStepsDialog(list);
+        this.sharedService.openLinkedTestStepsDialog(this.testSteps,res.content,true);
       }
     })
   }
@@ -367,4 +368,7 @@ export class StepsListComponent extends BaseComponent implements OnInit {
     this.selectedTemplate = template
   }
 
+  setTestSteps($event: TestStep[]) {
+    this.testSteps = $event;
+  }
 }

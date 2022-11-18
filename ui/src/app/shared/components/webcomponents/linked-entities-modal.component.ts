@@ -3,6 +3,8 @@ import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {TestPlan} from "../../../models/test-plan.model";
 import {TestSuite} from "../../../models/test-suite.model";
 import {TestStep} from "../../../models/test-step.model";
+import {TestStepType} from "../../../enums/test-step-type.enum";
+import {TestStepConditionType} from "../../../enums/test-step-condition-type.enum";
 
 @Component({
   selector: 'app-linked-entities-modal',
@@ -41,6 +43,38 @@ export class LinkedEntitiesModalComponent implements OnInit {
     return false
   }
   public getTextContent(linkedEntity:any){
-    return this.isTestStep ? linkedEntity.action : linkedEntity.name
+    if(this.isTestStep){
+      if (linkedEntity.action){
+        return linkedEntity.action
+      }
+      else {
+        switch (linkedEntity.type) {
+          case TestStepType.FOR_LOOP:
+            return "For Loop"
+          case TestStepType.STEP_GROUP:
+            return linkedEntity?.stepGroup?.name
+        }
+      }
+    }
+    return linkedEntity.name
+  }
+
+  public stepsIcons(linkedEntity:any){
+    switch (linkedEntity.type) {
+      case TestStepType.REST_STEP:
+        return "fa-rest-new text-warning"
+      case TestStepType.STEP_GROUP:
+        return "fa-plus-square-solid"
+    }
+    switch (linkedEntity.conditionType) {
+      case TestStepConditionType.LOOP_WHILE:
+        return "fa-while-loop text-warning"
+      case TestStepConditionType.LOOP_FOR:
+        return "fa-power-loop text-warning"
+      case TestStepConditionType.CONDITION_IF:
+        return "fa-conditional-if text-warning"
+      case TestStepConditionType.CONDITION_ELSE_IF:
+        return "fa-conditional-if text-warning"
+    }
   }
 }

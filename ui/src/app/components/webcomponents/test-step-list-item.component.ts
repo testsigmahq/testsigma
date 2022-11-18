@@ -97,21 +97,28 @@ export abstract class TestStepListItemComponent extends BaseComponent implements
   }
 
   indexTestStepsHavingPrerequisiteSteps(testStep:TestStep) {
-    let testSteps: InfiniteScrollableDataSource;
-    testSteps = new InfiniteScrollableDataSource(this.testStepService, "preRequisiteStepId:"+this.testStep.id);
-    waitTillRequestResponds();
-    let _this = this;
-
-    function waitTillRequestResponds() {
-      if (testSteps.isFetching)
-        setTimeout(() => waitTillRequestResponds(), 100);
-      else {
-        if (testSteps.isEmpty)
-          _this.deleteStep(testStep);
-        else
-          _this.sharedService.openLinkedTestStepsDialog(testSteps);
+    let testSteps:TestStep[];
+    this.testStepService.findAll("preRequisiteStepId:"+this.testStep.id).subscribe( res => {
+      if(!res.empty){
+        this.sharedService.openLinkedTestStepsDialog(this.testSteps.content,res.content);
+      } else {
+        this.deleteStep(testStep);
       }
-    }
+      }
+    );
+    // waitTillRequestResponds();
+    // let _this = this;
+    //
+    // function waitTillRequestResponds() {
+    //   if (testSteps.isFetching)
+    //     setTimeout(() => waitTillRequestResponds(), 100);
+    //   else {
+    //     if (testSteps.isEmpty)
+    //       _this.deleteStep(testStep);
+    //     else
+    //       _this.sharedService.openLinkedTestStepsDialog(testSteps);
+    //   }
+    // }
   }
   private openLinkedTestStepsDialog(list) {
     this.translate.get("step_is_prerequisite_to_another_step").subscribe((res) => {

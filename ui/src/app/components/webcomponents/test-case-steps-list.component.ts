@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Optional, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {BaseComponent} from "../../shared/components/base.component";
 import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
 import {NotificationsService, NotificationType} from 'angular2-notifications';
@@ -26,6 +26,7 @@ export abstract class TestCaseStepsListComponent extends BaseComponent implement
   @Input('searchTerm') public searchTerm?: string;
   @Input('isDragEnabled') public isDragEnabled: boolean = false;
   @Output('onStepsFetch') public onStepsFetch = new EventEmitter<number>();
+  @Optional() @Output('emitTestSteps') public emitTestSteps = new EventEmitter<TestStep[]>();
   @Output('onStepSelection') public onStepSelection = new EventEmitter<TestStep[]>();
   @Output('onStepDrag') public onStepDrag = new EventEmitter<TestStep[]>();
   @Output('onSelectedStepType') public onSelectedStepType = new EventEmitter<string>();
@@ -322,6 +323,7 @@ export abstract class TestCaseStepsListComponent extends BaseComponent implement
         this.refreshedView = false;
         setTimeout( () => this.refreshedView = true, 200)
       }
+      this.emitTestSteps.emit(res.content)
       this.testSteps = res;
       // this.testSteps.content = this.testSteps?.content.filter(step => step.type != TestStepType.WHILE_LOOP)
       this.EmitTestStepCount(this.testSteps);

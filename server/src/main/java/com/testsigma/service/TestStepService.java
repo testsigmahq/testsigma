@@ -17,6 +17,7 @@ import com.testsigma.dto.export.TestStepXMLDTO;
 import com.testsigma.event.EventType;
 import com.testsigma.event.TestStepEvent;
 import com.testsigma.exception.ResourceNotFoundException;
+import com.testsigma.exception.TestsigmaException;
 import com.testsigma.mapper.RestStepMapper;
 import com.testsigma.mapper.TestStepMapper;
 import com.testsigma.model.*;
@@ -130,14 +131,17 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         return testStep;
     }
 
-    public TestStep update(TestStep testStep) {
+    public TestStep update(TestStep testStep) throws TestsigmaException {
+        if (testStep.getConditionType()==TestStepConditionType.LOOP_WHILE &&testStep.getMaxIterations()>101){
+            throw  new TestsigmaException(String.format("In While Loop, please set Max iterations between 1 to 100"));
+        }
         testStep = updateDetails(testStep);
         this.updateDisablePropertyForChildSteps(testStep);
         publishEvent(testStep, EventType.UPDATE);
         return testStep;
     }
 
-    private void updateDisablePropertyForChildSteps(TestStep testStep) {
+    private void updateDisablePropertyForChildSteps(TestStep testStep) throws TestsigmaException {
         List<TestStep> childSteps = this.repository.findAllByParentIdOrderByPositionAsc(testStep.getId());
         if (childSteps.size() > 0) {
             for (TestStep childStep : childSteps) {
@@ -148,7 +152,10 @@ public class TestStepService extends XMLExportImportService<TestStep> {
     }
 
 
-    public TestStep create(TestStep testStep) throws ResourceNotFoundException {
+    public TestStep create(TestStep testStep) throws TestsigmaException,ResourceNotFoundException{
+        if(testStep.getAction()!=null && testStep.getConditionType()==TestStepConditionType.LOOP_WHILE && testStep.getMaxIterations()>100){
+            throw  new TestsigmaException(String.format("In While Loop, please set Max iterations between 1 to 100"));
+        }
         this.repository.incrementPosition(testStep.getPosition(), testStep.getTestCaseId());
         RestStep restStep = testStep.getRestStep();
         testStep.setRestStep(null);

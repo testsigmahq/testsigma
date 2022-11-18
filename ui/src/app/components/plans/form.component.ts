@@ -107,7 +107,7 @@ export class FormComponent implements OnInit {
       tags: new FormControl(this.testPlan.tags)
     })
 
-    setTimeout(()=> this.isFetchingComplete = true, 100)
+    setTimeout(()=> this.isFetchingComplete = true, 300)
   }
 
   fetchVersion() {

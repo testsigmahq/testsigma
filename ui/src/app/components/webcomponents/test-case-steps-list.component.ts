@@ -312,7 +312,7 @@ export abstract class TestCaseStepsListComponent extends BaseComponent implement
       return !testStep.isConditionalType;
     })
     this.onStepsFetch.emit(tempTestSteps.length);
-    this.emitTestSteps.emit(testSteps.content)
+    this.emitTestSteps.emit(tempTestSteps)
   }
 
   public fetchSteps() {

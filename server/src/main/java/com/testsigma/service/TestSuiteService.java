@@ -304,7 +304,7 @@ public class TestSuiteService extends XMLExportImportService<TestSuite> {
     present.setWorkspaceVersionId(importDTO.getWorkspaceVersionId());
     present.setLastRunId(null);
     Optional<TestSuite> suite = getRecentImportedEntity(importDTO,
-            present.getPreRequisite());
+            present.getImportedId());
     if (suite.isPresent())
       present.setPreRequisite(suite.get().getId());
     return present;

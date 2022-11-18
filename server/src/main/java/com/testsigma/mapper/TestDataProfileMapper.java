@@ -32,7 +32,11 @@ import java.util.Map;
   nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
   nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface TestDataProfileMapper {
+
   List<TestDataXMLDTO> mapTestData(List<TestData> test);
+
+  @Mapping(target = "data", expression = "java(test.getTempTestData())")
+  TestDataXMLDTO mapTestData(TestData test);
 
   List<TestDataSetXMLDTO> mapTestDataSet(List<TestDataSet> test);
 
@@ -116,9 +120,11 @@ public interface TestDataProfileMapper {
   List<TestDataSet> mapDataSet(List<TestDataSetRequest> data);
 
   @Mapping(target = "data", expression = "java(map(testDataXMLDTO.getTestDataSetList()))")
+  @Mapping(target = "tempTestData", expression = "java(map(testDataXMLDTO.getTestDataSetList()))")
   TestData mapTestData(TestDataXMLDTO testDataXMLDTO) throws JsonProcessingException;
 
   @Mapping(target = "data", expression = "java(map2(testDataCloudXMLDTO.getTestDataSetList()))")
+  @Mapping(target = "tempTestData", expression = "java(map2(testDataCloudXMLDTO.getTestDataSetList()))")
   TestData mapTestData2(TestDataCloudXMLDTO testDataCloudXMLDTO) throws JsonProcessingException;
 
     default List<TestData> mapTestDataList(List<TestDataXMLDTO> xmlDTOs) throws JsonProcessingException {

@@ -54,7 +54,7 @@
             <mat-option
               *ngFor="let prerequisite of prerequisiteList; let index = index"
               [value]="prerequisite.id"
-              [textContent]="'Step ' + (prerequisite.position + 1) + ' - ' + (!!prerequisite.action? prerequisite.action : prerequisite?.stepGroup?.name)"></mat-option>
+              [textContent]="getTextContent(prerequisite)"></mat-option>
           </mat-select>
         </mat-form-field>
       </div>

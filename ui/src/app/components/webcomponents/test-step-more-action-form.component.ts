@@ -71,7 +71,7 @@ export class TestStepMoreActionFormComponent implements OnInit {
       this.testStep.ignoreStepResult = true;
     }
 
-    this.prerequisiteList = this.options.steps.filter(step => step.position <  this.testStep.position && !step.disabled);
+    this.prerequisiteList = this.options.steps.filter(step => step.position <  this.testStep.position && !step.disabled && !step.isWhileLoop);
     this.stepUsedAsPreRequisite = Boolean(this.options.steps.find(step => step.preRequisiteStepId == this.testStep.id))
   }
 
@@ -212,5 +212,11 @@ export class TestStepMoreActionFormComponent implements OnInit {
         this.matDialog.close(true);
       }
     })
+  }
+  getTextContent(testStep:TestStep){
+    if(testStep.isForLoop){
+      return 'Step ' + (testStep.position + 1) + ' - For Loop ';
+    }
+    return 'Step ' + (testStep.position + 1) + ' - ' + (!!testStep.action? testStep.action : testStep?.stepGroup?.name)
   }
 }

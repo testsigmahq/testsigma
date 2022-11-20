@@ -29,6 +29,18 @@ export class TestData extends Base implements PageObject {
     }); return jsonObject;}, v=> SKIP)))
   public renamedColumns: Map<String, String>;
 
+  @serializable(custom(v => {
+    if(v)
+      return v;
+    return null;
+  }, v => {
+    if(v)
+      return v;
+    return null;
+  }))
+  //Be cautious while using this field, these values are not present for old data
+  public columns : string[]
+
   deserialize(input: any): this {
     return Object.assign(this, deserialize(TestData, input))
   }

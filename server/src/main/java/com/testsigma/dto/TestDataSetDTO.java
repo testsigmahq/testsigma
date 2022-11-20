@@ -21,6 +21,7 @@ public class TestDataSetDTO {
   private Long testDataId;
   private String description;
   private Boolean expectedToFail;
+  private Long position;
   @JsonSerialize(using = JSONObjectSerializer.class)
   private JSONObject data;
 }

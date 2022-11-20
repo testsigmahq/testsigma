@@ -72,5 +72,6 @@
     [testData]="testData"
     [testDataForm]="testDataForm"
     [formSubmitted]="formSubmitted"
+    (onDeleteSet)="onDeleteSet($event)"
     *ngIf="testData"></app-test-data-grid>
 </div>

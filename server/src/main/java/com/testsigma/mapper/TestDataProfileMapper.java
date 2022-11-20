@@ -92,6 +92,9 @@ public interface TestDataProfileMapper {
     if (testDataSet.getExpectedToFail() != null) {
       testDataSetDTO.setExpectedToFail(testDataSet.getExpectedToFail());
     }
+    if (testDataSet.getPosition() != null) {
+      testDataSetDTO.setPosition(testDataSet.getPosition());
+    }
     if (testDataSet.getData() != null) {
       JSONObject object = testDataSet.getData();
       testDataSetDTO.setData(object);

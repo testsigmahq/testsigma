@@ -2,9 +2,10 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
+  ElementRef, EventEmitter,
   Input,
   OnInit,
+  Output,
   ViewChild
 } from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators, ValidatorFn, AbstractControl} from '@angular/forms';
@@ -13,6 +14,8 @@ import {TestDataSet} from "../../models/test-data-set.model";
 import {CdkVirtualScrollViewport} from "@angular/cdk/scrolling";
 import { Router } from '@angular/router';
 import * as moment from 'moment';
+import {MatDialog} from "@angular/material/dialog";
+import {TranslateService} from "@ngx-translate/core";
 
 
 @Component({
@@ -28,10 +31,13 @@ export class TestDataGridComponent implements OnInit {
   @Input('testData') testData: TestData;
   @Input('formSubmitted') formSubmitted: Boolean;
   public dataWithOrder: string[] = [];
+  public selectedParameters = [];
+  public selectAll: Boolean = false;
   @ViewChild('setNameScrollable') setNameScrollable: CdkVirtualScrollViewport;
   @ViewChild('dataScrollable') dataScrollable: CdkVirtualScrollViewport;
   @ViewChild('actionScrollable') actionScrollable: CdkVirtualScrollViewport;
   @ViewChild('parametersHeader') parametersHeader: ElementRef;
+  @Output('onDeleteSet') onDeleteSet = new EventEmitter<number>();
 
   public activeScrollingElement: ElementRef;
   public hideToolTip: Boolean;
@@ -55,6 +61,8 @@ export class TestDataGridComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
+    private matModal: MatDialog,
+    public translate: TranslateService,
     private router: Router) {
   }
 
@@ -149,15 +157,18 @@ export class TestDataGridComponent implements OnInit {
       name: new FormControl('',[Validators.required, this.isNameDuplicate() ]),
       description: '',
       expectedToFail: false,
+      position : index ? index+1 : this.datasetControls().length,
       data: dataControls
     })
 
     if (index || index == 0) {
       this.datasetControls().controls.splice(index+1, 0, dataGroup);
+      this.handleSelectedListReOrder(index+1);
     } else {
       this.datasetControls().push(dataGroup);
     }
     this.datasetControls().controls = [...this.datasetControls().controls];
+    this.selectAll=false;
   }
 
   parameterControls(): FormArray {
@@ -178,12 +189,18 @@ export class TestDataGridComponent implements OnInit {
     }
   }
 
-  removeDataSet(index: number): void {
+  removeDataSet(index: number, id: number): void {
     this.hideToolTip = true;
+    if(id != null){
+      this.onDeleteSet.emit(id);
+    }
     setTimeout(() => {
       this.datasetControls().controls.splice(index, 1);
       this.datasetControls().controls = [...this.datasetControls().controls];
       this.testDataForm.setControl('dataSets', this.datasetControls());
+      if(this.selectedParameters.indexOf(index)>-1)
+        this.selectedParameters.splice(this.selectedParameters.indexOf(index), 1);
+      this.handleSelectedListReOrderForDelete(index);
       this.hideToolTip = false;
     }, 100);
   }
@@ -203,9 +220,15 @@ export class TestDataGridComponent implements OnInit {
   populateDataSets(): void {
     this.testData.data.forEach((dataSet: TestDataSet) => {
       let dataControls = this.formBuilder.array([]);
-      for (let key in dataSet.data) {
-        dataControls.push(new FormControl(dataSet.data[key], []))
+      if(this.testData?.columns?.length) {
+        this.testData?.columns?.forEach(key => {
+          dataControls.push(new FormControl(dataSet.data[key], []))
+        });
       }
+      else
+        for(let key in dataSet?.data){
+          dataControls.push(new FormControl(dataSet.data[key],[]))
+        }
       let dataGroup = this.formBuilder.group({
         id: dataSet.id,
         testDataProfileId: dataSet.testDataProfileId,
@@ -213,6 +236,7 @@ export class TestDataGridComponent implements OnInit {
         name: new FormControl(dataSet.name,[Validators.required, this.isNameDuplicate() ]),
         description: dataSet.description,
         expectedToFail: dataSet.expectedToFail,
+        position: dataSet.position,
         data: dataControls
       })
       this.datasetControls().push(dataGroup);
@@ -268,6 +292,24 @@ export class TestDataGridComponent implements OnInit {
   get insertLimitDate() {
     // November 10, 2022 12:00:00 AM GMT
     return 1668038400000;
+  }
+
+  handleSelectedListReOrder(newIndex : number){
+    this.selectedParameters = this.selectedParameters.map(index => {
+      if(index>=newIndex)
+        return index+1;
+      else
+        return index;
+    });
+  }
+
+  handleSelectedListReOrderForDelete(newIndex : number){
+    this.selectedParameters = this.selectedParameters.map(index => {
+      if(index>=newIndex)
+        return index-1;
+      else
+        return index;
+    });
   }
 
 }

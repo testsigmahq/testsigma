@@ -13,6 +13,7 @@ import {InfiniteScrollableDataSource} from "../../data-sources/infinite-scrollab
 import {LinkedEntitiesModalComponent} from "../../shared/components/webcomponents/linked-entities-modal.component";
 import {TestCaseService} from "../../services/test-case.service";
 import {ToastrService} from "ngx-toastr";
+import { TestDataSetService } from 'app/services/test-data-set.service';
 
 @Component({
   selector: 'app-test-data-view',
@@ -33,7 +34,8 @@ export class DetailsComponent extends BaseComponent implements OnInit {
     private testCaseService: TestCaseService,
     private route: ActivatedRoute,
     private router: Router,
-    private matDialog: MatDialog) {
+    private matDialog: MatDialog,
+    private testDataSetService: TestDataSetService) {
     super(authGuard, notificationsService, translate, toastrService);
   }
 
@@ -44,10 +46,20 @@ export class DetailsComponent extends BaseComponent implements OnInit {
   }
 
   private fetchTestData() {
-    this.testDataService.show(this.testDataId).subscribe(res => {
-      this.testData = res;
-      this.isFetchCompleted = true;
-      this.versionId = this.testData.versionId;
+    this.testDataService.show(this.testDataId).subscribe(testData1 => {
+      if(testData1.isMigrated) {
+        testData1.data = null;
+        this.testDataSetService.findAll("testDataProfileId:" + this.testDataId,'position').subscribe(res => {
+          testData1.data = res.content;
+          this.testData = testData1;
+          this.isFetchCompleted = true;
+          this.versionId = this.testData.versionId;
+        })
+      } else {
+        this.testData = testData1;
+        this.isFetchCompleted = true;
+        this.versionId = this.testData.versionId;
+      }
     });
   }
 

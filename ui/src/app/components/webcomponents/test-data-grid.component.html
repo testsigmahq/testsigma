@@ -160,7 +160,7 @@
           </div>
           <i class="fa-trash-thin pointer row-hover-action ml-auto position-sticky right-0 top-10 text-t-secondary"
              [matTooltip]="hideToolTip ? '' : ('hint.message.common.remove_row'| translate)"
-             *ngIf="datasetControls().controls.length > 1" (click)="removeDataSet(index)"></i>
+             *ngIf="datasetControls().controls.length > 1" (click)="removeDataSet(index, datasetControl.controls['id']?.value)"></i>
         </div>
         <i
           class="add-row hidden"

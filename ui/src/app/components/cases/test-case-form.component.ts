@@ -11,6 +11,7 @@ import {Page} from "../../shared/models/page";
 import {TestCaseStatus} from "../../enums/test-case-status.enum";
 import {TestCasePriority} from "../../models/test-case-priority.model";
 import {TestCasePrioritiesService} from "../../services/test-case-priorities.service";
+import {TestDataSetService} from "../../services/test-data-set.service";
 import {TestCaseTypesService} from "../../services/test-case-types.service";
 import {TestCaseTagService} from "../../services/test-case-tag.service";
 import {TestCaseType} from "../../models/test-case-type.model";
@@ -85,6 +86,7 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
     private testDataService: TestDataService,
     private testSuiteService: TestSuiteService,
     public userPreferenceService: UserPreferenceService,
+    private testDataSetService : TestDataSetService,
     private dialog: MatDialog,
   ) {
     super(authGuard, notificationsService, translate,toastrService)
@@ -194,8 +196,15 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
         this.testCase.preRequisiteCase = res
       })
     if (testcase.testDataId)
-      this.testDataService.show(testcase.testDataId).subscribe(res => {
-        this.testCase.testData = res;
+      this.testDataService.show(testcase.testDataId).subscribe(testData => {
+        if(testData.isMigrated) {
+          this.testDataSetService.findAll("testDataProfileId:" + testcase.testDataId, 'position').subscribe(res => {
+            testData.data = res.content;
+            this.testCase.testData = testData;
+          })
+        }else{
+          this.testCase.testData = testData;
+        }
       })
   }
 
@@ -298,17 +307,29 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
   }
 
   setStartValue(testData: TestData, startIndex?, endIndex?) {
+    if (testData?.isMigrated) {
+      this.testDataSetService.findAll("testDataProfileId:" + testData.id, 'position').subscribe(res => {
+        testData.data = res.content;
+        this.processForStartValue(testData, startIndex, endIndex);
+      });
+    } else {
+      this.processForStartValue(testData, startIndex, endIndex);
+    }
+  }
+
+  processForStartValue(testData: TestData, startIndex?, endIndex?) {
     if (testData && testData.data) {
       this.testDataSetList = testData.data;
     }
-    if(!this.testCase.isDataDriven) {
+    if (!this.testCase.isDataDriven) {
       this.testCase.testDataStartIndex = 0;
     }
+    this.startArray=[];
     testData.data.forEach((data, i) => this.startArray.push({setName: data.name, index: i}))
     let loopDetails = new TestStepForLoop();
-    loopDetails.startIndex = (startIndex!= null && startIndex >= 0 && (startIndex <= this.startArray.length))? startIndex :
-      (this.testCase.isDataDriven? -1 : 0);
-    loopDetails.endIndex = (endIndex > 0 && (endIndex <= this.startArray.length)) ? endIndex: -1;
+    loopDetails.startIndex = (startIndex != null && startIndex >= -2 && (startIndex <= this.startArray.length)) ? startIndex :
+      (this.testCase.isDataDriven ? -1 : 0);
+    loopDetails.endIndex = (endIndex >= -3 && (endIndex <= this.startArray.length)) ? endIndex : -1;
     this.testCase.testDataStartIndex = loopDetails.startIndex;
     this.testCase.testDataEndIndex = loopDetails.endIndex;
     this.toggleStartIndex(endIndex);

@@ -32,6 +32,8 @@ export class TestDataSet extends Base implements Deserializable, Serializable{
     return "{" + dataStrings.substring(1) + "}";
   }, v => v))
   public data:JSON;
+  @serializable
+  public position: number;
   public selected: Boolean = false;
 
   deserialize(input: any): this {

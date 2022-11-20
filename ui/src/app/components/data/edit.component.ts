@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {TestDataService} from "../../services/test-data.service";
 import {TestDataSetService} from "../../services/test-data-set.service";
 import {TestData} from "../../models/test-data.model";
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, NavigationCancel, NavigationStart, Router} from '@angular/router';
 import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
 import {NotificationsService, NotificationType} from 'angular2-notifications';
 import {TranslateService} from '@ngx-translate/core';
@@ -11,6 +11,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {TestDataSet} from "../../models/test-data-set.model";
 import {ToastrService} from "ngx-toastr";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-test-data-edit',
@@ -23,7 +24,13 @@ export class EditComponent extends BaseComponent implements OnInit {
   public testDataForm: FormGroup;
   public saving = false;
   public formSubmitted = false;
+  public deletedSetIds: number[] = [];
+  private blockRoute: boolean = false;
   public  oldTestDataSet : TestDataSet;
+  @HostListener('window:beforeunload')
+  canDeactivate(): Observable<boolean> | boolean {
+    return !Boolean(this.blockRoute);
+  }
 
 
   constructor(
@@ -68,6 +75,10 @@ export class EditComponent extends BaseComponent implements OnInit {
     });
   }
 
+  onDeleteSet(id: number){
+    this.deletedSetIds.push(id);
+  }
+
   update() {
     this.formSubmitted = true;
     if(this.testDataForm.invalid) return;
@@ -77,18 +88,45 @@ export class EditComponent extends BaseComponent implements OnInit {
     this.testData.setRenamedValues(rawValue, this.oldTestDataSet);
     this.testData.id = <number>this.testDataId;
     this.testData.versionId = this.versionId;
+    if(rawValue?.parameterNames?.length) {
+      let parameterNames = [];
+      rawValue?.parameterNames?.forEach(name => {
+        parameterNames.push(name.trim());
+      });
+      rawValue.parameterNames = parameterNames;
+    }
+    this.testData.columns = rawValue?.parameterNames;
     this.testData['testDataName'] = this.testData.name;
+    if(this.deletedSetIds.length >0){
+      this.testDataSetService.bulkDestroy(this.deletedSetIds).subscribe(
+        ()=>{
+          this.deletedSetIds = [];
+          this.processUpdate();
+        },
+        (err)=>{
+          this.saving = false;
+          this.translate.get('message.common.update.failure', {FieldName: 'Test Data Profile'}).subscribe(
+            msg => this.showAPIError(err, msg, 'Test Data Profile' ))
+        }
+      );
+    }else{
+      this.processUpdate();
+    }
+  }
+
+  processUpdate(){
     this.testDataService.update(this.testData.id, this.testData).subscribe(
-        res => {
+      res => {
         this.saving = false;
         this.translate.get('message.common.update.success', {FieldName: 'Test Data Profile'}).subscribe(
-            res => this.showNotification(NotificationType.Success, res));
+          res => this.showNotification(NotificationType.Success, res));
+        this.blockRoute = false;
         this.router.navigate(['/td', 'data', res.id]);
       },
-        err => {
+      err => {
         this.saving = false;
         this.translate.get('message.common.update.failure', {FieldName: 'Test Data Profile'}).subscribe(
-            msg => this.showAPIError(err, msg ))
+          msg => this.showAPIError(err, msg, 'Test Data Profile' ))
       });
   }
 

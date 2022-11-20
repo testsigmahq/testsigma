@@ -28,15 +28,15 @@
 
 <a *ngIf="this.entityExternalMapping?.externalId && suiteResult && this.urlLink && !isPushFailed" style="padding: 0px 0px"
    (click)="openLink($event, this.urlLink)" [matTooltip]="this.urlLink" [matTooltipPosition]="'right'"
-   class="btn btn-link px-0 pt-0 pb-3" style="color:mediumblue" [translate]="'Result'"></a>
+   class="btn btn-link px-0 pt-0 pb-3" style="color:mediumblue" [translate]="'Execution'"></a>
 
 <a *ngIf="this.entityExternalMapping && isPushFailed" style="padding: 0px 0px; color:#d94634"
    (click)="pushResults($event)" class="btn btn-link px-0 pt-0 pb-3">Push Failed
   <i [matTooltip]="'Push the Results to Xray'"  [matTooltipPosition]="'right'" class="fa-uploads-alt"></i></a>
 
 <a *ngIf="this.entityExternalMapping && this.testCaseResultLink && runResult && !isPushFailed" (click)="openLink($event, this.testCaseResultLink)"
-   [matTooltip]="this.testCaseResultLink" [matTooltipPosition]="'right'" class="btn btn-link px-0 pt-0 pb-3 ml-25" style="color:mediumblue"
-   [translate]="'Result'"></a>
+   [matTooltip]="this.testCaseResultLink" [matTooltipPosition]="'right'" class="btn btn-link px-0 pt-0 pb-3" style="color:mediumblue"
+   [translate]="'Test Result'"></a>
 
 <i *ngIf="isLoading && (runResult || suiteResult)" class="loading-dots"></i>
 

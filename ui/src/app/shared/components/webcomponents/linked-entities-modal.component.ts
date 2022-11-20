@@ -77,4 +77,21 @@ export class LinkedEntitiesModalComponent implements OnInit {
         return "fa-conditional-if text-warning"
     }
   }
+  public conditionText(linkedEntity:any){
+    switch (linkedEntity.conditionType) {
+      case TestStepConditionType.CONDITION_IF:
+        return "IF"
+      case TestStepConditionType.CONDITION_ELSE_IF:
+        return "ELSE IF"
+      case TestStepConditionType.CONDITION_ELSE:
+        return "ELSE"
+    }
+  }
+
+  public conditionType(linkedEntity:any){
+    return linkedEntity.conditionType == TestStepConditionType.CONDITION_IF ||
+      linkedEntity.conditionType == TestStepConditionType.CONDITION_ELSE ||
+      linkedEntity.conditionType == TestStepConditionType.CONDITION_ELSE_IF;
+  }
+
 }

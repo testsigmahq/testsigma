@@ -20,4 +20,6 @@ public interface TestDataSetRepository extends JpaRepository<TestDataSet, Long>,
     List<TestDataSet> findAllByNamesAndTestDataId(List<String> setNames, Long testDataProfileId);
 
     Optional<TestDataSet> findTestDataSetByTestDataIdAndAndName(Long profileId, String name);
+
+    List<TestDataSet> findTestDataSetByTestDataId(Long profileId);
 }

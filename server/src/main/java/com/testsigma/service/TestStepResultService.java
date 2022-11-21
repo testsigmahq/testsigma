@@ -89,7 +89,7 @@ public class TestStepResultService {
       }
       index++;
     }
-    List<TestDataSet> sets = testData.getTempTestData();
+    List<TestDataSet> sets = testData.getData();
     sets.set(index, testDataSet);
     testData.setData(sets);
     testData.setTempTestData(sets);

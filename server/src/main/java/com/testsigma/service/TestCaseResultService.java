@@ -25,6 +25,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
@@ -52,6 +53,7 @@ public class TestCaseResultService {
   private final StorageConfigService storageConfigService;
   private final TestCaseService testCaseService;
   private final StepResultScreenshotComparisonService stepResultScreenshotComparisonService;
+  private final TestDataSetService testDataSetService;
 
   public Page<TestCaseResult> findAll(Specification<TestCaseResult> spec, Pageable pageable) {
     return this.testCaseResultRepository.findAll(spec, pageable);
@@ -195,16 +197,29 @@ public class TestCaseResultService {
   public void updateTestCaseSteps(TestCaseResultRequest testCaseResultRequest) throws TestsigmaDatabaseException,
     UnsupportedEncodingException,
     ResourceNotFoundException {
-    TestDataSet testDataSet = null;
     TestData testData = null;
-    Map<String, TestDataSet> testDataSetList;
-
+    List<TestDataSet> testDataSetList;
+    TestDataSet testDataSet = null;
     if (testCaseResultRequest.getTestDataId() != null) {
       testData = testDataProfileService.find(testCaseResultRequest.getTestDataId());
-      testDataSetList = testDataProfileMapper.map(testData);
-
-      if (!testDataSetList.isEmpty()) {
-        testDataSet = testDataSetList.get(testCaseResultRequest.getTestDataSetName());
+      testDataSetList = testDataSetService.findByProfileId(testCaseResultRequest.getTestDataId());
+      for(TestDataSet testDataSetEntry : testDataSetList) {
+        if(testDataSetEntry.getName().equals(testCaseResultRequest.getTestDataSetName())) {
+          testDataSet = testDataSetEntry;
+          break;
+        }
+      }
+      if (testDataSet == null) {
+        throw new ResourceNotFoundException("TestDataSet not found for testDataProfileId: " + testCaseResultRequest.getTestDataId());
+      }
+      testData.setTempTestData(testDataSetList);
+      testData.setData(testDataSetList);
+    }
+    for(TestStepResultRequest testStepResultRequest : testCaseResultRequest.getTestCaseStepResults()) {
+      if(!testStepResultRequest.getOutputData().isEmpty()) {
+        Map<String, String> dataMap = testStepResultRequest.getOutputData();
+        JSONObject data = new JSONObject(dataMap);
+        testDataSet.setData(data);
       }
     }
 

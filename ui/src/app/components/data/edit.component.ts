@@ -97,6 +97,7 @@ export class EditComponent extends BaseComponent implements OnInit {
     }
     this.testData.columns = rawValue?.parameterNames;
     this.testData['testDataName'] = this.testData.name;
+    this.deletedSetIds = this.deletedSetIds.filter((item, index) => this.deletedSetIds.indexOf(item) === index);
     if(this.deletedSetIds.length >0){
       this.testDataSetService.bulkDestroy(this.deletedSetIds).subscribe(
         ()=>{

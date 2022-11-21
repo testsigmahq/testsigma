@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Log4j2
@@ -32,6 +33,10 @@ public class TestDataSetService {
     public Optional<TestDataSet> findByProfileIdAndSetName(Long profileId, String setName){
         return testDataSetRepository.findTestDataSetByTestDataIdAndAndName(
                 profileId, setName);
+    }
+
+    public List<TestDataSet> findByProfileId(Long profileId){
+        return testDataSetRepository.findTestDataSetByTestDataId(profileId);
     }
 
     public TestDataSet update(TestDataSet testDataSet){

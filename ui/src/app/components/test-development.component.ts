@@ -45,7 +45,7 @@ export class TestDevelopmentComponent extends BaseComponent implements OnInit {
       if (err.status == 404) {
         this.versionService.findAll("isDemo:true").subscribe(versions => {
           this.version = versions.content[0];
-          this.router.navigate(['/td', this.version.id, 'cases']);
+          this.router.navigate(['/td', this.version.id, 'cases'],{replaceUrl:true,skipLocationChange:true});
         });
       };
     });

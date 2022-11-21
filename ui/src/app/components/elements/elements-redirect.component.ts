@@ -29,7 +29,7 @@ export class ElementsRedirectComponent extends BaseComponent implements OnInit {
       this.pushToParent(this.route, params);
       if (this.router.url.endsWith("/elements")) {
         this.elementFilterService.findAll(params.versionId).subscribe(res => {
-          this.router.navigate(['/td', params.versionId, 'elements', 'filter', res.content.find(filter => filter.isDefault).id]);
+          this.router.navigate(['/td', params.versionId, 'elements', 'filter', res.content.find(filter => filter.isDefault).id],{replaceUrl:true});
         });
       }
     })

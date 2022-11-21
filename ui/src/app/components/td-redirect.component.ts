@@ -33,10 +33,10 @@ export class TdRedirectComponent implements OnInit, OnDestroy {
   redirectToVersion() {
     this.userPreferenceService.show().subscribe(res => {
       if (res?.versionId)
-        this.router.navigate(['/td', res.versionId]);
+        this.router.navigate(['/td', res.versionId],{replaceUrl:true});
       else if(res?.projectId){
         this.workspaceVersionService.findAll("projectId:" + res.projectId).subscribe(versions => {
-          this.router.navigate(['/td', versions.content[0].id]);
+          this.router.navigate(['/td', versions.content[0].id],{replaceUrl:true});
         }, ()=>{
           console.log('versions loading has some issues in project ::'+res.projectId+' so switching to default project');
           this.redirectToDemoProject();
@@ -49,7 +49,7 @@ export class TdRedirectComponent implements OnInit, OnDestroy {
 
   redirectToDemoProject() {
     this.workspaceVersionService.findAll("isDemo:true").subscribe(versions => {
-      this.router.navigate(['/td', versions.content[0].id]);
+      this.router.navigate(['/td', versions.content[0].id],{replaceUrl:true,skipLocationChange:true});
     })
   }
 

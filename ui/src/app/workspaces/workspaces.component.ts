@@ -46,7 +46,7 @@ export class WorkspacesComponent extends BaseComponent implements OnInit {
 
   redirectToDemoApplication() {
     this.workspaceService.findAll("isDemo:true,workspaceType:" + WorkspaceType.WebApplication).subscribe(res => {
-      this.router.navigate(['/workspaces', res.content[0].id]);
+      this.router.navigate(['/workspaces', res.content[0].id],{replaceUrl:true});
     })
   }
 
@@ -54,7 +54,7 @@ export class WorkspacesComponent extends BaseComponent implements OnInit {
 
     this.userPreferenceService.show().subscribe(res => {
       if (res.workspaceId)
-        this.router.navigate(['/workspaces', res.workspaceId]);
+        this.router.navigate(['/workspaces', res.workspaceId],{replaceUrl:true});
       else
         this.redirectToDemoApplication();
     });

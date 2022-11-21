@@ -38,11 +38,11 @@ export class TestCasesRedirectComponent extends BaseComponent implements OnInit 
         this.pushToParent(this.route, allParams);
         if (this.router.url.endsWith("/cases")) {
           this.testCaseFilterService.findAll(params.versionId).subscribe(res => {
-            this.router.navigate(['/td', params.versionId, 'cases', 'filter', this.setFilterId(res.content, selectedFilterId)]);
+            this.router.navigate(['/td', params.versionId, 'cases', 'filter', this.setFilterId(res.content, selectedFilterId)],{replaceUrl:true});
           });
         } else if (this.router.url.endsWith("/step_groups")) {
           this.stepGroupFilterService.findAll(params.versionId).subscribe(res => {
-            this.router.navigate(['/td', params.versionId, 'step_groups', 'filter', this.setFilterId(res.content, selectedFilterId)]);
+            this.router.navigate(['/td', params.versionId, 'step_groups', 'filter', this.setFilterId(res.content, selectedFilterId)],{replaceUrl:true});
           });
         }
       })

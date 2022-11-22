@@ -11,10 +11,10 @@ import {IntegrationsService} from "../../shared/services/integrations.service";
 import {MatDialog} from "@angular/material/dialog";
 import {BaseComponent} from "../../shared/components/base.component";
 import {EntityExternalMapping} from "../../models/entity-external-mapping.model";
-import {AzureIssueType} from "../../models/azure-issue-type.model";
 import {fromEvent} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, tap} from 'rxjs/operators';
 import {YoutrackProject} from "../../models/youtrack-project.model";
+import {EntityType} from "../../enums/entity-type.enum";
 
 @Component({
   selector: 'app-youtrack-issue-form',
@@ -94,6 +94,8 @@ export class YoutrackIssueFormComponent extends BaseComponent implements OnInit 
       mapping.fields["project"] = this.selectedProject.name;
       mapping.fields["projectId"] = this.selectedProject.id;
     }
+    mapping.entityType = EntityType.TEST_CASE_RESULT;
+    mapping.entityId = this.testCaseResult.id;
     this.isButtonClicked = true;
     this.createCallBack.emit(mapping);
   }

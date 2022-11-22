@@ -18,9 +18,9 @@ import java.util.Map;
 public class EntityExternalMappingDTO {
 
   Long id;
-  EntityType type;
+  EntityType entityType;
   Long entityId;
-  Long workspaceId;
+  Long applicationId;
   String externalId;
   Map<String, Object> fields;
   Boolean pushFailed;

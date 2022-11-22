@@ -99,7 +99,7 @@ export class ReportBugComponent extends BaseComponent implements OnInit {
         .includes(res.workspace))
       .map(res => res.id.toString());
     if (bugReportingWorkspaceIds.length > 0)
-      this.externalMappingService.findAll("entityId:"+ this.options.testCaseResult).subscribe((res) => {
+      this.externalMappingService.findAll("entityId:"+ this.options.testCaseResult.id).subscribe((res) => {
         if (res.content.length) {
           this.externalMapping = res.content.find(res => bugReportingWorkspaceIds.includes(res.applicationId.toString()));
           this.externalMapping.application = this.configs.find(config => config.id == this.externalMapping.applicationId);
@@ -160,7 +160,7 @@ export class ReportBugComponent extends BaseComponent implements OnInit {
   }
 
   mappingIssueFindAll() {
-    this.externalMappingService.findAll("entityId:"+this.options.testCaseResult).subscribe(res => {
+    this.externalMappingService.findAll("entityId:"+this.options.testCaseResult.id).subscribe(res => {
       this.externalMappingIssueDetails = res.content;
     })
   }

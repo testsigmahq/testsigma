@@ -15,8 +15,9 @@ import {TranslateService} from '@ngx-translate/core';
 import {ToastrService} from "ngx-toastr";
 import {MatDialog} from "@angular/material/dialog";
 import {JiraFieldAllowedValue} from "../../models/jira-field-allowed-value.model";
-import {catchError, debounceTime, map, switchMap, tap} from 'rxjs/operators';
+import {debounceTime, switchMap, tap} from 'rxjs/operators';
 import {ResultConstant} from "../../enums/result-constant.enum";
+import {EntityType} from "../../enums/entity-type.enum";
 
 @Component({
   selector: 'app-jira-issue-form',
@@ -137,8 +138,9 @@ export class JiraIssueFormComponent extends BaseComponent implements OnInit {
       var description="";
       mapping.fields["description"] = this.getJiraDescription(description)+mapping.fields["description"]+", ";
       mapping.fields["summary"] = "[Automated Test Failed]"+this.testCaseResult.testCase.name;
-
     }
+    mapping.entityType = EntityType.TEST_CASE_RESULT;
+    mapping.entityId = this.testCaseResult.id;
     this.createCallBack.emit(mapping);
   }
 

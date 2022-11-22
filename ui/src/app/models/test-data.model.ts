@@ -58,6 +58,7 @@ export class TestData extends Base implements PageObject {
       set.name = dataSet.name;
       set.description = dataSet.description;
       set.expectedToFail = dataSet.expectedToFail;
+      set.position = dataSet.position;
       set.data = JSON.parse("{}");
       dataSet.data.forEach((value, index) => {
         set.data[rawValue.parameterNames[index].trim().replaceAll("\"", "\\\"")] = value.replaceAll("\"", "\\\"");

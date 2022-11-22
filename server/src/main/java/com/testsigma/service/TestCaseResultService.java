@@ -209,15 +209,18 @@ public class TestCaseResultService {
           break;
         }
       }
-      if (testDataSet == null) {
-        throw new ResourceNotFoundException("TestDataSet not found for testDataProfileId: " + testCaseResultRequest.getTestDataId());
-      }
       testData.setTempTestData(testDataSetList);
       testData.setData(testDataSetList);
     }
     for(TestStepResultRequest testStepResultRequest : testCaseResultRequest.getTestCaseStepResults()) {
-      if(!testStepResultRequest.getOutputData().isEmpty()) {
+      if(!testStepResultRequest.getOutputData().isEmpty() && testDataSet != null) {
         Map<String, String> dataMap = testStepResultRequest.getOutputData();
+        Map<String, Object> oldDataMap = testDataSet.getData().toMap();
+        for(String key : oldDataMap.keySet()) {
+          if(!dataMap.containsKey(key)) {
+            dataMap.put(key, oldDataMap.get(key).toString());
+          }
+        }
         JSONObject data = new JSONObject(dataMap);
         testDataSet.setData(data);
       }

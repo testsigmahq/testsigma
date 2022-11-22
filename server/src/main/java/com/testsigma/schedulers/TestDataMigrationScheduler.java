@@ -20,12 +20,12 @@ public class TestDataMigrationScheduler {
     private final TestDataProfileRepository testDataProfileRepository;
     private final TestDataSetService testDataSetService;
 
-    @Scheduled(cron = "* 0/30 * * * *")
+    @Scheduled(cron = "0 0/3 * * * *")
     public void migrateTestData() {
         List<TestData> testDataList = testDataProfileRepository.findAll();
+        log.info("Checking if testdata migration is required...");
         for(TestData testData: testDataList){
             if(testData.getIsMigrated()==null || !testData.getIsMigrated()) {
-                log.info("Migrating testdata of Id : " + testData.getId());
                 List<TestDataSet> testDataSets = testData.getTempTestData();
                 Long index = 0L;
                 for (TestDataSet testDataSet : testDataSets) {
@@ -36,10 +36,8 @@ public class TestDataMigrationScheduler {
                 }
                 testData.setIsMigrated(true);
                 this.testDataProfileRepository.save(testData);
-                log.info("Migration completed testdata of Id : " + testData.getId());
+                log.info("Testdata migrated for id: " + testData.getId());
             }
-            else
-                log.info("TestData already migrated so skipping migration of testdata Id : ", testData.getId());
         }
     }
 }

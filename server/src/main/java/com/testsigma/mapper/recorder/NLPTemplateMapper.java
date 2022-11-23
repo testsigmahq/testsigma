@@ -1,13 +1,12 @@
 package com.testsigma.mapper.recorder;
 
-import com.testsigma.dto.AddonNaturalTextActionDTO;
+import com.testsigma.constants.NaturalTextActionConstants;
 import com.testsigma.dto.NaturalTextActionsDTO;
-import com.testsigma.model.recorder.KibbutzPluginNLPDTO;
 import com.testsigma.model.recorder.NLPTemplateDTO;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.mapstruct.*;
 
@@ -33,7 +32,40 @@ public interface NLPTemplateMapper {
 
     default Map<String, List> mapAllowedValues(List allowedValues) {
         return new HashMap<>() {{
-           put("test-data", allowedValues);
+           put("testData", allowedValues);
+        }};
+    }
+
+    default List<NLPTemplateDTO> changeDataToCamelCase(List<NaturalTextActionsDTO> dtos) {
+        List<NLPTemplateDTO> results = new ArrayList<>();
+        for(NaturalTextActionsDTO dto : dtos) {
+            NLPTemplateDTO result = mapDTO(dto);
+            result.getData().setTestData(mapNLPTemplateTestData());
+            String grammar;
+            if(result.getGrammar().contains("#{ui-identifier}")) {
+                grammar = result.getGrammar().replaceAll("#\\{ui-identifier}", "\\#{uiIdentifier}");
+                result.setGrammar(grammar);
+                result.getData().setUiIdentifier(NaturalTextActionConstants.TEST_STEP_KEY_UI_IDENTIFIER_RECORDER);
+            }
+            Pattern pattern = Pattern.compile("\\$\\{(.*?)}");
+            Matcher matcher = pattern.matcher(result.getGrammar());
+            if (matcher.find())
+            {
+                String allowedValues = matcher.group(1);
+                grammar = result.getGrammar().replaceAll("\\$\\{(.*?)}", "\\${testData}");
+                result.setGrammar(grammar);
+                result.getData().setTestData(new HashMap<>() {{put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA_RECORDER,
+                        allowedValues.equals(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA) ? "testData" : allowedValues);}});
+            }
+            results.add(result);
+        }
+        return results;
+    }
+
+    default LinkedHashMap<String, String> mapNLPTemplateTestData() {
+        return new LinkedHashMap<>() {{
+            put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA_RECORDER,
+                    NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA_RECORDER);
         }};
     }
 

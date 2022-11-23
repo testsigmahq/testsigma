@@ -16,25 +16,25 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TestStepRecorderDataMap {
 
-    @JsonProperty("condition_if")
+    @JsonProperty("conditionIf")
     private Object ifConditionExpectedResults;
-    @JsonProperty("condition-type")
+    @JsonProperty("conditionType")
     private TestStepConditionType conditionType;
-    @JsonProperty("test-data")
+    @JsonProperty("testData")
     private Map<String, TestStepNlpData> testData;
-    @JsonProperty("custom-step")
+    @JsonProperty("customStep")
     private TestStepCustomStep customStep;
-    @JsonProperty("ui-identifier")
+    @JsonProperty("uiIdentifier")
     private String uiIdentifier;
-    @JsonProperty("from-ui-identifier")
+    @JsonProperty("fromUiIdentifier")
     private String fromUiIdentifier;
-    @JsonProperty("to-ui-identifier")
+    @JsonProperty("toUiIdentifier")
     private String toUiIdentifier;
     @JsonProperty("attribute")
     private String attribute;
-    @JsonProperty("for_loop")
+    @JsonProperty("forLoop")
     private TestStepRecorderForLoop forLoop;
-    @JsonProperty("while_loop")
+    @JsonProperty("whileLoop")
     private TestStepWhileLoop whileLoop;
     @JsonProperty("whileCondition")
     private String whileCondition;

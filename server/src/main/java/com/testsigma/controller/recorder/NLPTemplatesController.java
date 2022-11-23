@@ -75,18 +75,25 @@ public class NLPTemplatesController {
         for(NaturalTextActionsDTO dto : dtos) {
             NLPTemplateDTO result = nlpTemplateMapper.mapDTO(dto);
             result.getData().setTestData(mapNLPTemplateTestData());
+            String grammar;
             if(result.getGrammar().contains("#{ui-identifier}")) {
-                result.getData().setUiIdentifier("ui-identifier");
+                grammar = result.getGrammar().replaceAll("#\\{ui-identifier}", "\\#{uiIdentifier}");
+                result.setGrammar(grammar);
+                result.getData().setUiIdentifier(NaturalTextActionConstants.TEST_STEP_KEY_UI_IDENTIFIER_RECORDER);
             }
             Pattern pattern = Pattern.compile("\\$\\{(.*?)}");
             Matcher matcher = pattern.matcher(result.getGrammar());
             if (matcher.find())
             {
                 String allowedValues = matcher.group(1);
-                String grammar = result.getGrammar().replaceAll("\\$\\{(.*?)}", "\\${test-data}");
+                grammar = result.getGrammar().replaceAll("\\$\\{(.*?)}", "\\${testData}");
                 result.setGrammar(grammar);
-                result.getData().setTestData(new HashMap<>() {{put("test-data", allowedValues);}});
+                result.getData().setTestData(new HashMap<>() {{put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA_RECORDER,
+                        allowedValues.equals(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA) ? "testData" : allowedValues);}});
             }
+            result.getAllowedValues().put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA_RECORDER,
+                    result.getAllowedValues().getOrDefault(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA, null));
+            result.getAllowedValues().remove(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA);
             results.add(result);
         }
         return new PageImpl<>(results, pageable, nlActions.getTotalElements());
@@ -94,7 +101,8 @@ public class NLPTemplatesController {
 
     private LinkedHashMap<String, String> mapNLPTemplateTestData() {
         return new LinkedHashMap<>() {{
-            put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA, "test-data");
+            put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA_RECORDER,
+                    NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA_RECORDER);
         }};
     }
 }

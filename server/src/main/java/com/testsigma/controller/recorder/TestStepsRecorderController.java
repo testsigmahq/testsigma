@@ -41,7 +41,7 @@ import java.util.Calendar;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/os_recorder/test_steps", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/os_recorder/v2/test_steps", produces = MediaType.APPLICATION_JSON_VALUE)
 @Log4j2
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TestStepsRecorderController {
@@ -56,13 +56,13 @@ public class TestStepsRecorderController {
 
     @RequestMapping(path = "/fetch_rest_response", method = RequestMethod.POST)
     public RestStepResponseDTO fetchApiResponse(@RequestBody RestStepRequest restStepRequest) {
-        log.debug("GET /os_recorder/test_steps/fetch_rest_response with request" + restStepRequest);
+        log.debug("GET /os_recorder/v2/test_steps/fetch_rest_response with request" + restStepRequest);
         return this.httpClient.execute(restStepRequest);
     }
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<TestStepRecorderDTO> index(TestStepSpecificationsBuilder builder, @PageableDefault(size = Integer.MAX_VALUE) Pageable pageable) {
-        log.debug("GET /os_recorder/test_steps ");
+        log.debug("GET /os_recorder/v2/test_steps ");
         Specification<TestStep> spec = builder.build();
         Page<TestStep> testStep = this.service.findAll(spec, pageable);
         List<TestStepDTO> testDataDTOS =
@@ -74,7 +74,7 @@ public class TestStepsRecorderController {
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void destroy(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
-        log.debug("DELETE /os_recorder/test_steps with id::" + id);
+        log.debug("DELETE /os_recorder/v2/test_steps with id::" + id);
         TestStep testStep = this.service.find(id);
         service.destroy(testStep);
     }

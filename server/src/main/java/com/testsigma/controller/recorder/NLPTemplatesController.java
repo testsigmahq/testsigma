@@ -25,7 +25,7 @@ import java.util.*;
 
 @RestController
 @Log4j2
-@RequestMapping(path = "/os_recorder/nlp_templates", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/os_recorder/v2/nlp_templates", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class NLPTemplatesController {
     private final NaturalTextActionsService naturalTextActionsService;
@@ -34,7 +34,7 @@ public class NLPTemplatesController {
 
     @GetMapping
     public Page<NLPTemplateDTO> index(NaturalTextActionSpecificationsBuilder builder, @PageableDefault(size = Integer.MAX_VALUE) Pageable pageable) {
-        log.info("Request /os_recorder/nlp_templates");
+        log.info("Request /os_recorder/v2/nlp_templates");
         WorkspaceType workspaceType = null;
         String applicationType = null;
         for (SearchCriteria param : builder.params) {

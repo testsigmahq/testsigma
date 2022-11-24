@@ -143,7 +143,7 @@ public class TestStepDTO implements Cloneable, Serializable {
       testStepNlpData.setValue(testData);
       testStepNlpData.setType(testDataType);
       testStepDataMap.setTestData(new HashMap<>() {{
-        put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA, testStepNlpData);
+        put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA_RECORDER, testStepNlpData);
       }});
     }
     if(testStepDataMap == null) {

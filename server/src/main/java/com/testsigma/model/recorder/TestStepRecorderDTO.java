@@ -72,8 +72,17 @@ public class TestStepRecorderDTO implements Cloneable, Serializable {
     }
 
     public Map<String, Object> getDataMapJson() {
-        if (dataMap != null) {
-            return new JSONObject(dataMap).toMap();
+        if (this.dataMap != null) {
+            Map<String, Object> dataMap = new JSONObject(this.dataMap).toMap();
+            if(dataMap.containsKey("testData")) {
+                Map<String, Object> testData = new JSONObject(dataMap.get("testData")).toMap();
+                if(testData.containsKey("test-data")) {
+                    testData.put("testData", testData.containsKey("test-data"));
+                    testData.remove("test-data");
+                }
+                dataMap.replace("testData", testData);
+            }
+            return dataMap;
         } else {
             return null;
         }

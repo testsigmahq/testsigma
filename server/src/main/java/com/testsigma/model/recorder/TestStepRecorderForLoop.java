@@ -10,10 +10,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TestStepRecorderForLoop {
-    @JsonProperty("loop_start")
+    @JsonProperty("loopStart")
     private int startIndex;
-    @JsonProperty("loop_end")
+    @JsonProperty("loopEnd")
     private int endIndex;
-    @JsonProperty("test_data_id")
+    @JsonProperty("testDataId")
     private Long testDataId;
 }

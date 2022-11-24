@@ -1,6 +1,5 @@
 package com.testsigma.controller.recorder;
 
-import com.testsigma.constants.NaturalTextActionConstants;
 import com.testsigma.dto.NaturalTextActionsDTO;
 import com.testsigma.mapper.NaturalTextActionMapper;
 import com.testsigma.mapper.recorder.NLPTemplateMapper;
@@ -8,17 +7,14 @@ import com.testsigma.model.NaturalTextActions;
 import com.testsigma.model.WorkspaceType;
 import com.testsigma.model.recorder.NLPTemplateDTO;
 import com.testsigma.service.NaturalTextActionsService;
-import com.testsigma.service.ObjectMapperService;
 import com.testsigma.specification.NaturalTextActionSpecificationsBuilder;
 import com.testsigma.specification.SearchCriteria;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,8 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @RestController
 @Log4j2
@@ -71,30 +65,7 @@ public class NLPTemplatesController {
         }
         Page<NaturalTextActions> nlActions = naturalTextActionsService.findAllByWorkspaceType(workspaceType, pageable);
         List<NaturalTextActionsDTO> dtos = naturalTextActionMapper.mapDTO(nlActions.getContent());
-        List<NLPTemplateDTO> results = new ArrayList<>();
-        for(NaturalTextActionsDTO dto : dtos) {
-            NLPTemplateDTO result = nlpTemplateMapper.mapDTO(dto);
-            result.getData().setTestData(mapNLPTemplateTestData());
-            if(result.getGrammar().contains("#{ui-identifier}")) {
-                result.getData().setUiIdentifier("ui-identifier");
-            }
-            Pattern pattern = Pattern.compile("\\$\\{(.*?)}");
-            Matcher matcher = pattern.matcher(result.getGrammar());
-            if (matcher.find())
-            {
-                String allowedValues = matcher.group(1);
-                String grammar = result.getGrammar().replaceAll("\\$\\{(.*?)}", "\\${test-data}");
-                result.setGrammar(grammar);
-                result.getData().setTestData(new HashMap<>() {{put("test-data", allowedValues);}});
-            }
-            results.add(result);
-        }
+        List<NLPTemplateDTO> results = nlpTemplateMapper.changeDataToCamelCase(dtos);
         return new PageImpl<>(results, pageable, nlActions.getTotalElements());
-    }
-
-    private LinkedHashMap<String, String> mapNLPTemplateTestData() {
-        return new LinkedHashMap<>() {{
-            put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA, "test-data");
-        }};
     }
 }

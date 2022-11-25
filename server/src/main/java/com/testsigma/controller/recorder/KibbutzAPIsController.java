@@ -6,12 +6,14 @@ import com.testsigma.mapper.AddonMapper;
 import com.testsigma.mapper.recorder.KibbutzPluginNLPMapper;
 import com.testsigma.model.AddonNaturalTextAction;
 import com.testsigma.model.AddonPluginTestDataFunction;
+import com.testsigma.model.WorkspaceType;
 import com.testsigma.model.recorder.KibbutzPluginNLPDTO;
 import com.testsigma.model.recorder.KibbutzPluginTestDataFunctionDTO;
 import com.testsigma.service.AddonNaturalTextActionService;
 import com.testsigma.service.AddonPluginTestDataFunctionService;
 import com.testsigma.specification.AddonNaturalTextActionSpecificationsBuilder;
 import com.testsigma.specification.AddonPluginTestDataFunctionSpecificationBuilder;
+import com.testsigma.specification.SearchCriteria;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,11 +50,37 @@ public class KibbutzAPIsController {
     @GetMapping(path = "/nlps")
     public Page<KibbutzPluginNLPDTO> actions(AddonNaturalTextActionSpecificationsBuilder builder, @PageableDefault(size = Integer.MAX_VALUE) Pageable pageable) {
         log.debug("GET /addon/actions");
-        Specification<AddonNaturalTextAction> spec = builder.build();
-        Page<AddonNaturalTextAction> actions = service.findAll(spec, pageable);
+        WorkspaceType workspaceType = null;
+        String applicationType = null;
+        for (SearchCriteria param : builder.params) {
+            if (param.getKey().equals("applicationType")) {
+                applicationType = param.getValue().toString();
+            }
+        }
+
+        switch(applicationType) {
+            case "MobileWeb":
+                workspaceType = WorkspaceType.MobileWeb;
+                break;
+            case "WebApplication":
+                workspaceType = WorkspaceType.WebApplication;
+                break;
+            case "AndroidNative":
+                workspaceType = WorkspaceType.AndroidNative;
+                break;
+            case "IOSWeb":
+                workspaceType = WorkspaceType.IOSWeb;
+                break;
+            case "IOSNative":
+                workspaceType = WorkspaceType.IOSNative;
+                break;
+            case "Rest":
+                workspaceType = WorkspaceType.Rest;
+                break;
+        }
+        Page<AddonNaturalTextAction> actions = service.findAllByWorkspaceType(workspaceType, pageable);
         List<AddonNaturalTextActionDTO> dtos = mapper.mapToDTO(actions.getContent());
-        //List<KibbutzPluginNLPDTO> results = kibbutzPluginNLPMapper.mapKibbutzPluginNLPDTOs(dtos);
-        List<KibbutzPluginNLPDTO> results = new ArrayList<>();
+        List<KibbutzPluginNLPDTO> results = kibbutzPluginNLPMapper.mapKibbutzPluginNLPDTOs(dtos);
         return new PageImpl<>(results, pageable, actions.getTotalElements());
     }
 }

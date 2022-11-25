@@ -13,6 +13,8 @@ import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.mapper.AddonMapper;
 import com.testsigma.model.AddonNaturalTextAction;
 import com.testsigma.model.AddonNaturalTextActionParameter;
+import com.testsigma.model.NaturalTextActions;
+import com.testsigma.model.WorkspaceType;
 import com.testsigma.repository.AddonNaturalTextActionParameterRepository;
 import com.testsigma.repository.AddonNaturalTextActionRepository;
 import lombok.RequiredArgsConstructor;
@@ -62,6 +64,10 @@ public class AddonNaturalTextActionService {
 
   public AddonNaturalTextAction findById(Long id) throws ResourceNotFoundException {
     return this.repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("AddonNaturalTextAction missing::" + id));
+  }
+
+  public Page<AddonNaturalTextAction> findAllByWorkspaceType(WorkspaceType workspaceType, Pageable pageable) {
+    return this.repository.findAllByWorkspaceType(workspaceType, pageable);
   }
 
   public Page<AddonNaturalTextAction> findAll(Specification<AddonNaturalTextAction> spec, Pageable pageable) {

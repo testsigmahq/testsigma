@@ -158,6 +158,9 @@ public class TestStepDTO implements Cloneable, Serializable {
     if(toElement != null) {
       testStepDataMap.setToUiIdentifier(toElement);
     }
+    if(attribute != null) {
+      testStepDataMap.setAttribute(attribute);
+    }
     if(ifConditionExpectedResults.length > 0) {
       testStepDataMap.setIfConditionExpectedResults(ifConditionExpectedResults);
     }

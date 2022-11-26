@@ -55,7 +55,7 @@ public interface NLPTemplateMapper {
                 grammar = result.getGrammar().replaceAll("\\$\\{(.*?)}", "\\${testData}");
                 result.setGrammar(grammar);
                 result.getData().setTestData(new HashMap<>() {{put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA_RECORDER,
-                        allowedValues.equals(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA) ? "testData" : allowedValues);}});
+                        allowedValues.equals(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA) ? NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA : allowedValues);}});
             }
             results.add(result);
         }
@@ -65,7 +65,7 @@ public interface NLPTemplateMapper {
     default LinkedHashMap<String, String> mapNLPTemplateTestData() {
         return new LinkedHashMap<>() {{
             put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA_RECORDER,
-                    NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA_RECORDER);
+                    NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA);
         }};
     }
 

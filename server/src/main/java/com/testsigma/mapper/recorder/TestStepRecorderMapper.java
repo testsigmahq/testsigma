@@ -55,7 +55,7 @@ public interface TestStepRecorderMapper {
     @Mapping(target = "forLoopStartIndex", source = "testStepRecorderRequest.dataMap.forLoop.startIndex")
     @Mapping(target = "forLoopEndIndex", source = "testStepRecorderRequest.dataMap.forLoop.endIndex")
     @Mapping(target = "element", expression = "java(mapElement(testStepRecorderRequest))")
-    @Mapping(target = "attribute", ignore = true)
+    @Mapping(target = "attribute", source = "testStepRecorderRequest.dataMap.attribute")
     @Mapping(target = "addonTestData", source = "kibbutzPluginNlpData.testData")
     @Mapping(target = "addonTDF", ignore = true)
     @Mapping(target = "addonNaturalTextActionData", ignore = true)

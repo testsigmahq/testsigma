@@ -4,6 +4,7 @@ import {BaseComponent} from "../shared/components/base.component";
 import {ActivatedRoute, Router} from '@angular/router';
 import {WorkspaceVersion} from "../models/workspace-version.model";
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {NavigationService} from "../services/navigation.service";
 
 @Component({
   selector: 'app-test-development',
@@ -18,6 +19,7 @@ export class TestDevelopmentComponent extends BaseComponent implements OnInit {
     public route: ActivatedRoute,
     public router: Router,
     private versionService: WorkspaceVersionService,
+    private navigation:NavigationService,
     @Optional() private dialogRef?: MatDialogRef<TestDevelopmentComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data?: {versionId: number}) {
     super();
@@ -45,7 +47,7 @@ export class TestDevelopmentComponent extends BaseComponent implements OnInit {
       if (err.status == 404) {
         this.versionService.findAll("isDemo:true").subscribe(versions => {
           this.version = versions.content[0];
-          this.router.navigate(['/td', this.version.id, 'cases'],{replaceUrl:true,skipLocationChange:true});
+          this.navigation.replaceUrl(['/td', this.version.id, 'cases'])
         });
       };
     });

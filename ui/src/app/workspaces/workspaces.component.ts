@@ -6,6 +6,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
 import {WorkspaceService} from "../services/workspace.service";
 import {WorkspaceType} from "../enums/workspace-type.enum";
 import {Subscription} from "rxjs";
+import {NavigationService} from "../services/navigation.service";
 
 @Component({
   selector: 'app-projects',
@@ -20,6 +21,7 @@ export class WorkspacesComponent extends BaseComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private userPreferenceService: UserPreferenceService,
+    private navigation:NavigationService,
     private workspaceService: WorkspaceService) {
     super();
 
@@ -46,7 +48,7 @@ export class WorkspacesComponent extends BaseComponent implements OnInit {
 
   redirectToDemoApplication() {
     this.workspaceService.findAll("isDemo:true,workspaceType:" + WorkspaceType.WebApplication).subscribe(res => {
-      this.router.navigate(['/workspaces', res.content[0].id],{replaceUrl:true});
+      this.navigation.replaceUrl(['/workspaces', res.content[0].id])
     })
   }
 
@@ -54,7 +56,7 @@ export class WorkspacesComponent extends BaseComponent implements OnInit {
 
     this.userPreferenceService.show().subscribe(res => {
       if (res.workspaceId)
-        this.router.navigate(['/workspaces', res.workspaceId],{replaceUrl:true});
+        this.navigation.replaceUrl(['/workspaces', res.workspaceId])
       else
         this.redirectToDemoApplication();
     });

@@ -51,6 +51,7 @@ import {AddonTestDataFunctionParameter} from "../../models/addon-test-data-funct
 import {StepActionType} from "../../enums/step-action-type.enum";
 import {ActionTestDataRuntimeVariableSuggestionComponent} from './action-test-data-runtime-variable-suggestion.component';
 import {extractStringByDelimiterByPos} from "../../utils/strings";
+import {contains} from "../../utils/regex";
 
 @Component({
   selector: 'app-action-step-form',
@@ -848,10 +849,8 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
           this.currentDataItemIndex = index;
           this.replacer.nativeElement.contentEditable = false;
           this.resetValidation();
-          if (!this.removeHtmlTags(item?.textContent).trim().length)
-            this.showDataDropdown();
-          else
-            this.showTemplates = false;
+          this.showDataDropdown();
+          this.showTemplates = false;
           event.stopPropagation();
           event.stopImmediatePropagation();
           return false;
@@ -900,14 +899,6 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
           this.getAddonTemplateAllowedValues(item.dataset?.reference);
           this.urlPatternError = false;
           let testDataType = ['@|', '!|', '~|', '$|', '*|'].some(type => item?.textContent.includes(type))
-          if (event.key == "Backspace") {
-            this.selectDataType(item?.textContent, true)
-          }
-          if ((!testDataType && this.removeHtmlTags(item?.textContent).trim().length) || (!(["Escape", "Tab", "Backspace", "ArrowLeft", "ArrowRight", "Enter", "ArrowUp", "ArrowDown", "Shift", "Control", "Meta", "Alt"].includes(event.key)) && item?.textContent)) {
-            this.showDataTypes = false;
-          } else if (!this.removeHtmlTags(item?.textContent).trim().length) {
-            this.showDataTypes = true;
-          }
           if (event.key == "Backspace" && !this.removeHtmlTags(item?.textContent).trim().length) {
             this.showDataDropdown();
           }
@@ -1356,8 +1347,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     for (let i = 0; i < testDataPlaceHolders.length; i++) {
       const content = testDataPlaceHolders[i].innerHTML;
       if ((testDataPlaceHolders[i]?.contentEditable||Boolean(isReplacer)) && ((testDataPlaceHolders[i].getAttribute("data-test-data-type") == null) ||
-        ((testDataPlaceHolders[i].getAttribute("data-test-data-type") != null && (Boolean(isReplacer) ||content == '@| |' || content == '!| |' || content == '*| |'
-          || content == "$| <span class='test_data_place'></span> |" || content == "~| <span class='test_data_place'></span> |" || content == "" || !this.removeHtmlTags(testDataPlaceHolders[i].textContent).trim().length))))) {
+        ((testDataPlaceHolders[i].getAttribute("data-test-data-type") != null)))) {
         testDataPlaceHolders[i].innerHTML = dataName;
         testDataPlaceHolders[i].setAttribute("data-test-data-type", this.currentTestDataType);
         break;

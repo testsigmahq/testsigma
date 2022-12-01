@@ -102,6 +102,7 @@ export class TestSuiteAddCaseFormComponent implements OnInit {
   selectBulk() {
     const checkedAvailableCases = [...this.checkedAvailableCases];
     this.selectedTestCases = this.selectedTestCases.concat(checkedAvailableCases);
+    this.selectedTestCases.forEach(testCase => this.selectPreRequisite(testCase));
     this.checkedAvailableCases = [];
     this.constructQueryString();
   }

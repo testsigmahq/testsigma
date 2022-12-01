@@ -184,7 +184,7 @@ export class TestMachineInfoColumnComponent implements OnInit {
   }
 
   get isHybrid() {
-    return this.testDevice.isHybrid;
+    return this.testDevice?.isHybrid;
   }
 
   /**
@@ -192,7 +192,7 @@ export class TestMachineInfoColumnComponent implements OnInit {
    * @returns boolean
    */
   get isWindows() {
-    return this.testDevice.isWindows
+    return this.testDevice?.isWindows
   }
 
   /**
@@ -200,7 +200,7 @@ export class TestMachineInfoColumnComponent implements OnInit {
    * @returns boolean
    */
   get isMac() {
-    return this.testDevice.isMac
+    return this.testDevice?.isMac
   }
 
   /**
@@ -208,7 +208,7 @@ export class TestMachineInfoColumnComponent implements OnInit {
    * @returns boolean
    */
   get isLinux() {
-    return this.testDevice.isLinux
+    return this.testDevice?.isLinux
   }
 
   get isMobileWeb() {

@@ -45,7 +45,7 @@ import {CdkConnectedOverlay} from "@angular/cdk/overlay";
         <i [class]="appIcon + ' ml-15 text-secondary'" [matTooltip]="appTitle"></i>
         <i *ngIf="isPreReq" class="fa-prerequisite ml-15 text-strongBlue" [matTooltip]="'test_suites.details.label.prerequisite' | translate"></i>
         <!--tooltipIfTruncated-->
-        <span class="suite-name text-truncate ml-15" [matTooltip]="testsuite.name">{{ testsuite.name }}</span>
+        <span class="suite-name text-truncate w-60 ml-15" [matTooltip]="testsuite.name">{{ testsuite.name }}</span>
       </div>
 
       <!-- Test environments -->

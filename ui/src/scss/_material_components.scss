@@ -777,6 +777,8 @@ mat-expansion-panel {
 .form-height{
   .mat-horizontal-content-container{
     overflow: visible;
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 .tab-group-row{

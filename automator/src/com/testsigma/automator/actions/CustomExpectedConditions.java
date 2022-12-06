@@ -105,6 +105,19 @@ public class CustomExpectedConditions {
     };
   }
 
+  public static ExpectedCondition<Boolean> waitForAjaxCallsUsingJS() {
+    return new ExpectedCondition<Boolean>() {
+      public Boolean apply(WebDriver driver) {
+        try {
+          Object jQueryState = ((JavascriptExecutor) driver).executeScript("return jQuery.active");
+          return jQueryState.toString().equalsIgnoreCase("0");
+        } catch (UnreachableBrowserException e) {
+          return false; // return null is changed to return false// TODO::
+        }
+      }
+    };
+  }
+
   public static ExpectedCondition<Boolean> downloadToBeCompletedInChrome(String javaScriptCode) {
     return new ExpectedCondition<Boolean>() {
       public Boolean apply(WebDriver driver) {

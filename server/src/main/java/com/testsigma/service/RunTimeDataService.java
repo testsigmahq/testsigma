@@ -112,7 +112,7 @@ public class RunTimeDataService {
 
     testSteps.addAll(testStepsWithStoreNlp);
     for(TestStep testStep: testSteps){
-      if(testStep.getType() == TestStepType.NLP_TEXT){
+      if(testStep.getType() == TestStepType.ACTION_TEXT){
         runTimeVariableDTOS.addAll(getRunTimeVariableDTOsForNlpStep(testStep));
       }else if(testStep.getType() == TestStepType.REST_STEP){
         runTimeVariableDTOS.addAll(getRunTimeVariableDTOsForRestAPIStep(testStep));

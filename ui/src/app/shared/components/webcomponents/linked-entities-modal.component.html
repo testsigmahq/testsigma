@@ -31,7 +31,7 @@
           <div [textContent]="linkedEntity.stepDisplayNumber"
                *ngIf="isTestStep"
                class="result-status-8 px-5 list-number ng-binding x-sm-size text-white mt-2 mr-10"></div>
-          <span *ngif="isTestStep" class="pr-5 pt-7" [ngClass]="stepsIcons(linkedEntity)"></span>
+          <span class="pr-5 pt-7" [ngClass]="stepsIcons(linkedEntity)"></span>
           <span *ngIf=conditionType(linkedEntity)
             class="text-warning px-5 pt-5" [textContent]="conditionText(linkedEntity)"></span>
           <div [textContent]=getTextContent(linkedEntity)

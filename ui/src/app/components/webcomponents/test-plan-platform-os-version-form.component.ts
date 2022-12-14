@@ -13,6 +13,7 @@ import {AgentService} from "../../agents/services/agent.service";
 import {Page} from "../../shared/models/page";
 import {Pageable} from "../../shared/models/pageable";
 import {Platform as EnumPlatform} from "../../enums/platform.enum";
+import {Browsers} from "../../enums/browsers";
 
 @Component({
   selector: 'app-test-plan-platform-os-version-form',
@@ -156,6 +157,9 @@ export class TestPlanPlatformOsVersionFormComponent implements OnInit {
         if (!this.platformBrowser || setValue) {
           this.platformBrowser = this.browsers[0];
           this.environmentFormGroup?.controls['browser']?.setValue(this.platformBrowser?.id);
+          if(this.version.workspace.isMobileWeb && this.platformBrowser.isChrome){
+            this.environmentFormGroup?.controls['browser']?.setValue(Browsers.CHROME);
+          }
         }
       }
       if (this.isPrivateGrid){
@@ -164,6 +168,7 @@ export class TestPlanPlatformOsVersionFormComponent implements OnInit {
         if (!this.platformBrowser || setValue) {
           this.platformBrowser = this.browsers[0];
           this.environmentFormGroup?.controls['browser']?.setValue(this.platformBrowser?.name);
+
         }
       }
       if (this.platformBrowser)

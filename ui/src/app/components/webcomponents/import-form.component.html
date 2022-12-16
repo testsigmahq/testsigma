@@ -25,7 +25,7 @@
     <div class="ts-form h-100">
       <form class="h-100">
         <div class="d-flex align-items-center h-100">
-          <div *ngIf="!(this.option.filterId>0)" class="ts-col-35 pr-30 pt-30 h-100">
+          <div *ngIf="!(this.option.filterId>0)" class="ts-col-35 pr-30 h-100">
             <div class="d-flex">
               <div class="align-items-baseline d-flex form-group pt-5 pb-0">
                 <label class="mt-20 mb-30 theme-btn-clear-default overflow-x-hidden" *ngIf="!fileName" @fade>
@@ -111,7 +111,7 @@
               </div>
             </div>
           </div>
-          <div class="border-brand-l-1 vh-100" *ngIf="!(this.option.filterId>0)"></div>
+          <div class="border-brand-l-1 h-100" *ngIf="!(this.option.filterId>0)"></div>
           <div class="ts-col-65 pt-30 h-100">
             <div class="d-flex">
               <div class="h-30p pl-30 rb-light">
@@ -174,7 +174,9 @@
   </div>
   <div *ngIf="activeTab==TEST_PROJECT_IMPORT"
        class="theme-overlay-content theme-border-y">
-    <app-test-project-import></app-test-project-import>
+    <app-test-project-import
+    (onImportClick)="changeSavingStatus($event)">
+    </app-test-project-import>
   </div>
   <div class="theme-overlay-footer">
     <button

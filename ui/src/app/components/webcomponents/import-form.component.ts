@@ -137,10 +137,7 @@ export class ImportFormComponent extends BaseComponent implements OnInit {
     this.fileName = this.uploadedFileObject.name;
   }
 
-  import() {
-    if(!this.validateForm() || this.isSaving){
-      return;
-    }
+  importFromTestsigma() {
     let description = this.translate.instant('import.warning.message')
     const dialogRef = this.matModal.open(ImportGuideLinesWarningComponent, {
       width: '568px',
@@ -174,6 +171,24 @@ export class ImportFormComponent extends BaseComponent implements OnInit {
       }
       }
     );
+  }
+
+  importFromTestProject(){
+    this.importService.initiateTestProjectImport.next();
+  }
+
+  import() {
+    if(this.activeTab == this.TEST_PROJECT_IMPORT){
+      this.importFromTestProject();
+      return;
+    }
+    if(!this.validateForm() || this.isSaving){
+      return;
+    }
+    this.importModel.deserialize(this.importForm.getRawValue());
+    this.importModel.skipEntityExists = this.skipEntityExists;
+    this.isSaving = true;
+    this.importFromTestsigma();
   }
 
 
@@ -234,5 +249,9 @@ export class ImportFormComponent extends BaseComponent implements OnInit {
   public removeUpload() {
     this.fileName = null;
     this.uploadedFileObject = null;
+  }
+
+  changeSavingStatus(value: boolean) {
+    this.isSaving = value;
   }
 }

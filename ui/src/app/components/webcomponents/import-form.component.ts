@@ -20,6 +20,7 @@ import {ImportGuideLinesWarningComponent} from "./import-guide-lines-warning.com
 @Component({
   selector: 'import-form-component',
   templateUrl: './import-form.component.html',
+  styleUrls:['./import-form.component.scss']
 })
 export class ImportFormComponent extends BaseComponent implements OnInit {
   public importModel: BackupVersionModel = new BackupVersionModel();
@@ -44,6 +45,12 @@ export class ImportFormComponent extends BaseComponent implements OnInit {
     '"isSuitesEnabled":["isRestStepEnabled", "isTestStepEnabled", "isTestDataEnabled", "isTestCasePriorityEnabled", "isTestCaseTypeEnabled", "isElementEnabled", "isElementScreenNameEnabled", "isTestCaseEnabled", "isTestCaseTypeEnabled"],'+
     '"isTestDeviceEnabled":["isSuitesEnabled", "isAgentEnabled", "isUploadsEnabled", "isTestCaseEnabled", "isTestStepEnabled", "isRestStepEnabled", "isTestDataEnabled", "isTestCasePriorityEnabled", "isTestCaseTypeEnabled", "isElementEnabled", "isElementScreenNameEnabled"],' +
     '"isElementEnabled":["isElementScreenNameEnabled"]}';
+
+  public  TESTSIGMA_IMPORT = 'testsigmaImport';
+  public  TEST_PROJECT_IMPORT = 'testProject'
+
+  public activeTab: string = this.TESTSIGMA_IMPORT ;
+
 
   constructor(
     private router: Router,

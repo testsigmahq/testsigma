@@ -95,6 +95,8 @@ import {SortDirective} from "./directives/sort.directive";
 import {UploadVersion} from "./models/upload-version.model";
 import {UploadVersionService} from "./services/upload-version.service";
 import {TestsigmaGitHubStarLoveComponent} from "./components/webcomponents/testsigma-github-star-love.component";
+import {DragDirective} from "./directives/dragDrop.directive";
+import {UploadDragAndDropComponent} from "./components/webcomponents/upload-drag-and-drop.component";
 
 @NgModule({
     declarations: [
@@ -144,7 +146,9 @@ import {TestsigmaGitHubStarLoveComponent} from "./components/webcomponents/tests
       RestFormRequestDetailsComponent,
       RestFormResponseDetailsComponent,
       RestFormStoreDetailsComponent,
-      RestStepHeadersComponent
+      RestStepHeadersComponent,
+      DragDirective,
+      UploadDragAndDropComponent,
     ],
   providers: [
     TestsigmaOsConfigService,
@@ -220,6 +224,7 @@ import {TestsigmaGitHubStarLoveComponent} from "./components/webcomponents/tests
     HighchartsChartModule,
     TestMachineInfoColumnComponent,
     SearchPipe,
+    DragDirective,
     PaginationComponent,
     MatProgressSpinnerModule,
     ScrollingModule,
@@ -261,7 +266,8 @@ import {TestsigmaGitHubStarLoveComponent} from "./components/webcomponents/tests
     ActionTestStepListItemComponent,
     TestStepFormContainerComponent,
     MatDividerModule,
-    ToastrModule
+    ToastrModule,
+    UploadDragAndDropComponent
   ]
 })
 export class SharedModule {

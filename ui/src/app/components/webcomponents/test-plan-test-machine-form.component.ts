@@ -34,6 +34,7 @@ export class TestPlanTestMachineFormComponent extends TestPlanPlatformOsVersionF
     }
     if(this.isHybrid)
       this.setTargetMachines();
+    this.fetchPlatForms();
   }
 
   postOsVersionFetch(setValue?: Boolean) {

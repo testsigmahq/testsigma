@@ -1,0 +1,64 @@
+<!--Header-->
+<div class="theme-overlay-container sm-pm-content-px-0 add-test-suite">
+  <div class ="h-100">
+    <div class="ts-form h-100 d-flex justify-content-center pt-20">
+      <form class="h-100 d-flex w-100 flex-column">
+        <!--Import Type Radio buttons-->
+        <div class="d-flex w-100">
+          <div class="d-flex ts-col-10">
+            <span [translate]="'Import Type: '"></span>
+          </div>
+          <div class="ts-col-70">
+            <mat-radio-group [formControl]="formGroup?.controls['importType']">
+              <mat-radio-button [value]="'YAML'">
+                <span [translate]="'From YAML / Zip'"></span> </mat-radio-button>
+              <mat-radio-button [value] = "'GIT'">
+                <span [translate]="'From Github'"></span>
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+        <!--File Input-->
+        <div class="d-flex w-100 h-100 align-items-center" *ngIf = "!isGitImport">
+          <app-upload-drag-and-drop
+            class="h-100 w-100 py-20"
+            [canShowMaxSizeErrorMessage] = "false"
+            [acceptedFileTypes] = "'.zip,.yaml'"
+            (onFileUploadEvent) = "setUploadFileObject($event)"
+            (onFileRemoveEvent) = "setUploadFileObject(null)"
+          ></app-upload-drag-and-drop>
+        </div>
+        <!--Git Form fields-->
+        <div class="d-flex w-100 flex-column-reverse mt-20" *ngIf="isGitImport">
+          <div class="p-0 field mb-0">
+            <input
+              type="text"
+              id="url"
+              name="url"
+              placeholder=" "
+              class="form-control"
+              [formControl]="this.formGroup?.controls['gitRepoUrl']"/>
+            <label
+              [translate]="'Repository URL'"
+              for="url" class="required"></label>
+          </div>
+        </div>
+        <div class="d-flex flex-column-reverse w-100 mt-20" *ngIf="isGitImport">
+          <div class="p-0 field mb-0">
+            <input
+              type="text"
+              id="token"
+              name="token"
+              placeholder=" "
+              class="form-control"
+              [formControl]="this.formGroup?.controls['gitToken']"/>
+            <label
+              [translate]="'Access Token'"
+              for="token" class="required"></label>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>

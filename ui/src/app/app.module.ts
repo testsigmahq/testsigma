@@ -284,6 +284,7 @@ import { FilterFormComponent as ResultFilterFormComponent} from './components/re
 import { FilterFormComponent as PlanFilterComponet} from './components/plans/filter-form.component';
 import {XrayKeyWarningComponent} from './agents/components/webcomponents/xray-key-warning-component';
 import {XrayComponent} from './components/xraycomponent/xray.component';
+import {TestProjectImportComponent} from "./components/webcomponents/test-project-import.component";
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -548,7 +549,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     ResultFilterFormComponent,
     PlanFilterComponet,
     XrayKeyWarningComponent,
-    XrayComponent
+    XrayComponent,
+    TestProjectImportComponent,
   ],
   imports: [
     BrowserModule,

@@ -26,7 +26,7 @@ jobs:
       - name: Get Issue Body and store as environment variable
         id: get_issue
         run: |
-          issue_body=$(node ./index.js --url=${{ env.URL }})
+          issue_body=$(node ./action.js --url=${{ env.URL }})
           echo "BODY=$issue_body" >> $GITHUB_ENV
 
       - name: Create Bug in Jira

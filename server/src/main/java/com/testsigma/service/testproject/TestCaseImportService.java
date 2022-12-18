@@ -58,15 +58,15 @@ public class TestCaseImportService extends BaseImportService<TestProjectTestCase
         Optional<TestCase> optionalTestCase = testCaseService.findByNameAndWorkspaceVersionId(testCaseRequest.getName(), this.workspaceVersion.getId());
         if(optionalTestCase.isEmpty()){
             TestCase testCase = createTestCase(testCaseRequest, isStepGroup);
-            createEntityExternalMappingIfNotExists(testCaseRequest.getName(), EntityType.TEST_CASE, this.workspaceVersion.getId(), this.integration);
+            createEntityExternalMappingIfNotExists(testCaseRequest.getName(), EntityType.TEST_CASE, testCase.getId(), this.integration);
             return testCase;
         }
         return optionalTestCase.get();
     }
 
     private TestCase createTestCase(TestProjectTestCaseRequest testCaseRequest, Boolean isStepGroup) {
-        TestCasePriority testCasePriority = testCasePriorityService.findByWorkspaceId(this.workspaceVersion.getWorkspace().getId()).get(0);
-        TestCaseType testCaseType = testCaseTypeService.findByWorkspaceId(this.workspaceVersion.getWorkspace().getId()).get(0);
+        TestCasePriority testCasePriority = testCasePriorityService.findByWorkspaceId(this.workspaceVersion.getWorkspaceId()).get(0);
+        TestCaseType testCaseType = testCaseTypeService.findByWorkspaceId(this.workspaceVersion.getWorkspaceId()).get(0);
         TestCase testCase = new TestCase();
         testCase.setIsStepGroup(isStepGroup);
         testCase.setWorkspaceVersionId(this.workspaceVersion.getId());

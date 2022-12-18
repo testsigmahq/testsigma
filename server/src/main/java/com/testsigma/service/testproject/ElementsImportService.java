@@ -25,20 +25,22 @@ public class ElementsImportService extends BaseImportService<TestProjectElementR
     private final ElementService elementService;
     private final ElementScreenService elementScreenService;
 
-    Element checkAndCreateElement(TestProjectElementRequest elementRequest, Long applicationVersionId, Integrations integration) throws ResourceNotFoundException {
-        List<EntityExternalMapping> entityExternalMapping = entityExternalMappingService.findByExternalIdAndEntityTypeAndApplicationId(elementRequest.getName(), EntityType.ELEMENT, integration.getId());
+    Element checkAndCreateElement(TestProjectElementRequest elementRequest, Long workspaceVersionId, Integrations integration) throws ResourceNotFoundException {
+        Optional<Element> optionalElement = elementService.findByNameAndWorkspaceVersionId(elementRequest.getName(), workspaceVersionId);
         Element element;
-        if(!entityExternalMapping.isEmpty()) {
-            element = elementService.find(entityExternalMapping.get(0).getEntityId());
-        }
-        else {
+        if(optionalElement.isEmpty()) {
             element = new Element();
             element.setName(elementRequest.getName());
-            element.setWorkspaceVersionId(applicationVersionId);
+            element.setWorkspaceVersionId(workspaceVersionId);
             element.setLocatorType(elementRequest.getLocators().get(0).getLocatorType());
             element.setLocatorValue(elementRequest.getLocators().get(0).getValue());
-            element.setScreenNameId(findOrCreateScreenName(applicationVersionId).getId());
+            element.setScreenNameId(findOrCreateScreenName(workspaceVersionId).getId());
             element = elementService.create(element);
+        } else {
+            element = optionalElement.get();
+        }
+        List<EntityExternalMapping> entityExternalMapping = entityExternalMappingService.findByExternalIdAndEntityTypeAndApplicationId(elementRequest.getName(), EntityType.ELEMENT, integration.getId());
+        if(entityExternalMapping.isEmpty()) {
             createEntityExternalMappingIfNotExists(element.getName(), EntityType.ELEMENT, element.getId(), integration);
         }
         return element;

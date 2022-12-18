@@ -17,6 +17,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -28,4 +29,6 @@ public interface TestCasePriorityRepository extends PagingAndSortingRepository<T
     Optional<TestCasePriority> findAllByWorkspaceIdAndName(Long id, String name);
 
     Optional<TestCasePriority> findAllByWorkspaceIdAndImportedId(Long projectId, Long id);
+
+    List<TestCasePriority> findByWorkspaceId(Long workspaceId);
 }

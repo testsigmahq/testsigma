@@ -50,6 +50,14 @@ public class EntityExternalMappingService {
     return this.repository.findByEntityIdAndEntityTypeAndApplicationId(entityId, entityType, applicationId);
   }
 
+  public List<EntityExternalMapping> findByExternalIdAndEntityTypeAndApplicationId(String externalId, EntityType entityType, Long applicationId){
+    return this.repository.findByExternalIdAndEntityTypeAndApplicationId(externalId, entityType, applicationId);
+  }
+
+  public Optional<EntityExternalMapping> findByEntityIdAndEntityType(String entityId, EntityType entityType){
+    return this.repository.findByEntityIdAndEntityType(entityId, entityType);
+  }
+
   public List<EntityExternalMapping> findAllByEntityIdAndEntityType(Long entityId, EntityType entityType){
     return this.repository.findAllByEntityIdAndEntityType(entityId, entityType);
   }

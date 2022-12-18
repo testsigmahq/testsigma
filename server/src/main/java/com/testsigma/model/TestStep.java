@@ -29,6 +29,7 @@ import javax.persistence.Table;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Entity
@@ -178,6 +179,12 @@ public class TestStep {
   @EqualsAndHashCode.Exclude
   @ToString.Exclude
   private AddonNaturalTextAction addonNaturalTextAction;
+
+  @OneToMany(mappedBy = "testStep")
+  @Fetch(value = FetchMode.SELECT)
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  private List<EntityExternalMapping> entityExternalMapping;
 
   @ManyToOne
   @Fetch(value = FetchMode.SELECT)

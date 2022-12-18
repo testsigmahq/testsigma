@@ -9,11 +9,14 @@ package com.testsigma.controller;
 
 import com.testsigma.dto.BackupDetailDTO;
 import com.testsigma.exception.ResourceNotFoundException;
+import com.testsigma.exception.TestProjectImportException;
 import com.testsigma.exception.TestsigmaException;
 import com.testsigma.mapper.BackupDetailMapper;
 import com.testsigma.model.BackupDetail;
 import com.testsigma.service.BackupDetailService;
+import com.testsigma.service.testproject.TestProjectImportService;
 import com.testsigma.web.request.BackupRequest;
+import com.testsigma.web.request.ExternalImportRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +43,7 @@ public class BackupDetailsController {
 
   private final BackupDetailMapper mapper;
   private final BackupDetailService service;
+  private final TestProjectImportService testProjectImportService;
 
   @GetMapping(path = "/{id}/download")
   @ResponseStatus(HttpStatus.PERMANENT_REDIRECT)
@@ -50,6 +54,14 @@ public class BackupDetailsController {
       throw new ResourceNotFoundException("Backup file is missing in storage");
     }
     response.sendRedirect(s3Url.get().toString());
+  }
+
+  @RequestMapping(method = RequestMethod.POST, value = "/test_project", consumes = {"multipart/form-data"})
+  public void createTestProjectImport(@RequestPart ExternalImportRequest request,
+                                      @RequestPart(name = "file", required = false) MultipartFile file) throws IOException, ResourceNotFoundException, TestProjectImportException {
+    if(request.isYamlImport())
+      testProjectImportService.yamlImport(file);
+
   }
 
   @GetMapping(path = "/{id}/download_testcases")

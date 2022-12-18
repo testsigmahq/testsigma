@@ -20,4 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface WorkspaceRepository extends JpaRepository<Workspace, Long>, JpaSpecificationExecutor<Workspace>, PagingAndSortingRepository<Workspace, Long> {
 
   Workspace findFirstByIsDemoAndWorkspaceType(Boolean isDemo, WorkspaceType workspaceType);
+
+  Workspace findByWorkspaceTypeAndIsDemo(WorkspaceType workspaceType, Boolean isDemo);
 }

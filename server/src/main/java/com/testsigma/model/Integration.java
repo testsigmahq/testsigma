@@ -23,6 +23,7 @@ public enum Integration {
   ClickUp(15,  IntegrationAuthType.AccessKey),
   PrivateGrid(16, IntegrationAuthType.None),
   XrayCloud(17, IntegrationAuthType.AccessKey),
+  TestProjectImport(18, IntegrationAuthType.None),
 
   Others(10000, IntegrationAuthType.AccessKey);
 

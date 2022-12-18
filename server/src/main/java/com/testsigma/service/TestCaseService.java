@@ -75,6 +75,10 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
     return testCaseRepository.findAll(specification, pageable);
   }
 
+  public Optional<TestCase> findByNameAndWorkspaceVersionId(String name, Long workspaceVersionId) {
+    return testCaseRepository.findByNameAndWorkspaceVersionId(name, workspaceVersionId);
+  }
+
   public List<TestCase> findAllByWorkspaceVersionId(Long workspaceVersionId) {
     return testCaseRepository.findAllByWorkspaceVersionId(workspaceVersionId);
   }

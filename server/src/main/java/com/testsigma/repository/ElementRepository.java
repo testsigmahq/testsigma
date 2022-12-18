@@ -65,6 +65,7 @@ public interface ElementRepository extends BaseRepository<Element, Long> {
   @Query(value = "SELECT element.name FROM  Element element " +
           "where element.workspaceVersionId = :applicationVersionId AND element.name like :fieldName%")
   List<String> findByVersionIdAndFieldNameLike(@Param("fieldName") String fieldName, @Param("applicationVersionId") Long applicationVersionId);
+
 }
 
 

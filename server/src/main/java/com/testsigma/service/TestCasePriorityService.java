@@ -48,6 +48,10 @@ public class TestCasePriorityService extends XMLExportImportService<TestCasePrio
     return this.testCasePriorityRepository.findAll(spec, pageable);
   }
 
+  public List<TestCasePriority> findByWorkspaceId(Long workspaceId) {
+    return this.testCasePriorityRepository.findByWorkspaceId(workspaceId);
+  }
+
   public List<TestCasePriority> findAll() {
     return this.testCasePriorityRepository.findAll();
   }

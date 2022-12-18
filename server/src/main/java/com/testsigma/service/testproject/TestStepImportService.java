@@ -110,7 +110,15 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
             }
         }
         for(TestProjectGlobalParametersRequest globalParams : projectRequest.getProjectParameters()){
-            action = action.replace("[[" + globalParams.getName() + "]]", ObjectUtils.defaultIfNull(globalParams.getValue(),""));
+            String value = globalParams.getValue();
+            if(globalParams.getValue().startsWith("[[")) {
+                value = globalParams.getValue().substring(2, globalParams.getValue().length() - 2);
+                if (this.globalParams.containsKey(value)) {
+                    action = action.replace("[[" + globalParams.getName() + "]]", this.globalParams.get(value));
+                }
+            } else {
+                action = action.replace("[[" + globalParams.getName() + "]]", ObjectUtils.defaultIfNull(value,""));
+            }
         }
         if(stepRequest.getElementId() != null){
             List<EntityExternalMapping> entityExternalMapping = entityExternalMappingService.findByExternalIdAndEntityTypeAndApplicationId(testStep.getElement(), EntityType.ELEMENT, integration.getId());
@@ -148,15 +156,12 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
         testStep.setTestDataType(TestDataType.raw.name());
         if(!stepRequest.getParameterMaps().isEmpty()) {
             String stepTestData = stepRequest.getParameterMaps().get(0).getValue();
-            if(stepTestData.startsWith("{{")){
+            if(stepTestData.startsWith("{{") || stepTestData.startsWith("[[")){
                 stepTestData = stepTestData.substring(2,stepTestData.length()-2);
                 if(this.globalParams.containsKey(stepTestData)) {
                     stepTestData = this.globalParams.get(stepTestData);
                 }
                 testStep.setTestDataType(TestDataType.raw.name());
-            } else if(stepTestData.startsWith("[[")){
-                stepTestData = stepTestData.substring(2,stepTestData.length()-2);
-                testStep.setTestDataType(TestDataType.global.name());
             }
             testStep.setTestData(stepTestData);
         }

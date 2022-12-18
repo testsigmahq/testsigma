@@ -29,7 +29,9 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
     private TestProjectTestCaseRequest testCaseRequest;
     private WorkspaceVersion workspaceVersion;
     private Integrations integration;
+    private Map<String, String> globalParams;
 
+    //TODO: Revisit this when we have multiple test data support
     public void importSteps(TestProjectYamlRequest projectRequest,
                             TestCase testCase,
                             TestProjectTestCaseRequest testCaseRequest,
@@ -39,43 +41,12 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
         this.testCaseRequest = testCaseRequest;
         this.workspaceVersion = workspaceVersion;
         this.integration = integration;
+        this.globalParams = new HashMap<>();
         int stepPosition = 0;
-        for(TestProjectStepParameter parameter : testCaseRequest.getParameters()){
-            if(parameter.getValue() != null && !parameter.getValue().isBlank())
-                createTestParamAsStoreSteps(parameter, testCase, stepPosition++);
-        }
         for(TestProjectTestStepRequest stepRequest : testCaseRequest.getSteps()){
             importStepIntoTestCase(stepRequest, testCase, stepPosition++);
         }
     }
-
-    private void createTestParamAsStoreSteps(TestProjectStepParameter parameter, TestCase testCase, int stepPosition) throws ResourceNotFoundException {
-        TestStep testStep = new TestStep();
-        //testStep.setNaturalTextActionId(getStoreNlpTemplateIdByApplicationType(this.workspaceVersion.getWorkspace().getWorkspaceType()));
-        testStep.setTestCaseId(testCase.getId());
-        testStep.setWaitTime(30);
-        testStep.setType(TestStepType.ACTION_TEXT);
-        testStep.setPriority(TestStepPriority.MAJOR);
-        testStep.setPosition(stepPosition);
-        testStep.setDisabled(true);
-        testStep.setTestDataType(TestDataType.raw.name());
-        testStep.setTestData(parameter.getValue());
-        testStepService.save(testStep);
-    }
-
-    //TODO: Revisit this when we have multiple test data support
-    /*private Integer getStoreNlpTemplateIdByApplicationType(WorkspaceType workspaceType){
-        switch (workspaceType){
-            case WebApplication:
-                return 30161;
-            case AndroidNative:
-                return 40060;
-            case IOSNative:
-                return 40061;
-            default:
-                return 0;
-        }
-    }*/
 
     private void importStepIntoTestCase(TestProjectTestStepRequest stepRequest,
                                         TestCase testCase, Integer initialStepId) throws TestProjectImportException, ResourceNotFoundException {
@@ -88,6 +59,7 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
                                 TestCase testCase, Integer position) throws TestProjectImportException, ResourceNotFoundException {
         TestStep testStep = new TestStep();
         TestProjectNLP testProjectNLPs = new TestProjectNLP();
+        populateParams();
         boolean nlpMappingNotFound = false;
         if(getTemplateId(stepRequest) != null)
             testStep.setNaturalTextActionId(getTemplateId(stepRequest));
@@ -115,10 +87,27 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
         testStepService.save(testStep);
     }
 
+    private void populateParams() {
+        for(TestProjectGlobalParametersRequest parameter : this.projectRequest.getProjectParameters()) {
+            this.globalParams.put(parameter.getName(), parameter.getValue());
+        }
+        this.projectRequest.getTests().forEach(test -> test.getParameters().forEach(stepParam -> {{
+            this.globalParams.put(stepParam.getName(), stepParam.getValue());
+        }}));
+    }
+
     private String replaceActionWithParams(String action, TestProjectTestStepRequest stepRequest, TestStep testStep) throws ResourceNotFoundException, TestProjectImportException {
         List<TestProjectStepParameter> parameters = stepRequest.getParameterMaps();
         for(TestProjectStepParameter parameter : parameters){
-            action = action.replace("{{" + parameter.getName() + "}}", parameter.getValue());
+            String value = parameter.getValue();
+            if(parameter.getValue().startsWith("{{")) {
+                value = parameter.getValue().substring(2, parameter.getValue().length() - 2);
+                if (this.globalParams.containsKey(value)) {
+                    action = action.replace("{{" + parameter.getName() + "}}", this.globalParams.get(value));
+                }
+            } else {
+                action = action.replace("{{" + parameter.getName() + "}}", value);
+            }
         }
         for(TestProjectGlobalParametersRequest globalParams : projectRequest.getProjectParameters()){
             action = action.replace("[[" + globalParams.getName() + "]]", ObjectUtils.defaultIfNull(globalParams.getValue(),""));
@@ -161,7 +150,10 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
             String stepTestData = stepRequest.getParameterMaps().get(0).getValue();
             if(stepTestData.startsWith("{{")){
                 stepTestData = stepTestData.substring(2,stepTestData.length()-2);
-                testStep.setTestDataType(TestDataType.runtime.name());
+                if(this.globalParams.containsKey(stepTestData)) {
+                    stepTestData = this.globalParams.get(stepTestData);
+                }
+                testStep.setTestDataType(TestDataType.raw.name());
             } else if(stepTestData.startsWith("[[")){
                 stepTestData = stepTestData.substring(2,stepTestData.length()-2);
                 testStep.setTestDataType(TestDataType.global.name());

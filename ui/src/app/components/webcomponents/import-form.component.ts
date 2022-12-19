@@ -267,8 +267,4 @@ export class ImportFormComponent extends BaseComponent implements OnInit {
   get hasTestProject(){
     return this.integration.find((data)=>data.isTestProject)
   }
-
-  get hasTestProject(){
-    return this.integration.find((data)=>data.isTestProject)
-  }
 }

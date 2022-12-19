@@ -24,9 +24,11 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
     private final EntityExternalMappingService entityExternalMappingService;
     private final ExternalImportNlpMappingService externalNlpMappingService;
     private final ElementService elementService;
+    private final WorkspaceService workspaceService;
 
     private TestProjectYamlRequest projectRequest;
     private TestProjectTestCaseRequest testCaseRequest;
+    private Workspace workspace;
     private WorkspaceVersion workspaceVersion;
     private Integrations integration;
     private Map<String, String> parametersMap;
@@ -42,6 +44,7 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
         this.workspaceVersion = workspaceVersion;
         this.integration = integration;
         this.parametersMap = new HashMap<>();
+        this.workspace = this.workspaceService.find(this.workspaceVersion.getWorkspaceId());
         int stepPosition = 0;
         for(TestProjectTestStepRequest stepRequest : testCaseRequest.getSteps()){
             importStepIntoTestCase(stepRequest, testCase, stepPosition++);
@@ -76,7 +79,7 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
         testStep.setPosition(position);
         if(stepRequest.getStepType() == TestStepType.ACTION_TEXT){
             if(stepRequest.getAction() != null){
-                String action = testProjectNLPs.getNlpByIdAndType(stepRequest.getAction().getId(), this.workspaceVersion.getWorkspace().getWorkspaceType()).getDescription();
+                String action = testProjectNLPs.getNlpByIdAndType(stepRequest.getAction().getId(), this.workspace.getWorkspaceType()).getDescription();
                 String replacedAction = replaceActionWithParams(action, stepRequest, testStep);
                 testStep.setAction(replacedAction);
             }
@@ -143,15 +146,11 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
         if(stepRequest.getAction() == null || stepRequest.getAction().getId() == null)
             return null;
         String actionId = stepRequest.getAction().getId();
-        try {
-            Optional<ExternalImportNlpMapping> nlpMapping =
-                    externalNlpMappingService.findByExternalIdAndExternalImportTypeAndWorkspaceType(actionId,
-                            ExternalImportType.TEST_PROJECT, workspaceVersion.getWorkspace().getWorkspaceType());
-            if (nlpMapping.isPresent()) {
-                return nlpMapping.get().getTestsigmaNlpId();
-            }
-        } catch (Exception e) {
-            log.error("Non-unique result: " + actionId);
+        Optional<ExternalImportNlpMapping> nlpMapping =
+                externalNlpMappingService.findByExternalIdAndExternalImportTypeAndWorkspaceType(actionId,
+                            ExternalImportType.TEST_PROJECT, this.workspace.getWorkspaceType());
+        if (nlpMapping.isPresent()) {
+            return nlpMapping.get().getTestsigmaNlpId();
         }
         return 0;
     }

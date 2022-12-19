@@ -40,9 +40,9 @@ public class TestCaseImportService extends BaseImportService<TestProjectTestCase
             throws TestProjectImportException, ResourceNotFoundException {
         List<TestProjectTestCaseRequest> testCaseRequests = projectRequest.getTests();
         List<TestProjectTestCaseRequest> stepGroupRequests = projectRequest.getAuxTests();
-        testCaseRequests.addAll(stepGroupRequests);
-        for (TestProjectTestCaseRequest testCaseRequest : testCaseRequests) {
-            Boolean isStepGroup = stepGroupRequests.contains(testCaseRequest);
+        stepGroupRequests.addAll(testCaseRequests);
+        for (TestProjectTestCaseRequest testCaseRequest : stepGroupRequests) {
+            Boolean isStepGroup = !testCaseRequests.contains(testCaseRequest);
             TestCase testCase = importTestCase(testCaseRequest,isStepGroup);
             testStepImportService.importSteps(projectRequest, testCase, testCaseRequest, this.workspaceVersion, this.integration);
         }
@@ -58,7 +58,7 @@ public class TestCaseImportService extends BaseImportService<TestProjectTestCase
         Optional<TestCase> optionalTestCase = testCaseService.findByNameAndWorkspaceVersionId(testCaseRequest.getName(), this.workspaceVersion.getId());
         if(optionalTestCase.isEmpty()){
             TestCase testCase = createTestCase(testCaseRequest, isStepGroup);
-            createEntityExternalMappingIfNotExists(testCaseRequest.getName(), EntityType.TEST_CASE, testCase.getId(), this.integration);
+            createEntityExternalMappingIfNotExists(testCaseRequest.getId(), EntityType.TEST_CASE, testCase.getId(), this.integration);
             return testCase;
         }
         return optionalTestCase.get();

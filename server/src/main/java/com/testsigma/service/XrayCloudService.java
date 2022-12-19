@@ -12,9 +12,7 @@ import com.testsigma.model.*;
 import com.testsigma.util.HttpClient;
 import com.testsigma.util.HttpResponse;
 import com.testsigma.web.request.*;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
@@ -137,7 +135,7 @@ public class XrayCloudService implements XrayService {
             try {
                 TestSuiteResult testSuiteResult = this.testSuiteResultService.find(suiteResultId);
                 TestSuiteResult parentResult = this.testSuiteResultService.getFirstParentResult(suiteResultId);
-                Optional<EntityExternalMapping> mappingOptional = this.entityMappingService.findByEntityIdAndEntityType(parentResult.getId(),
+                Optional<EntityExternalMapping> mappingOptional = this.entityMappingService.findByEntityIdAndEntityTypeAndApplicationId(parentResult.getId(),
                         EntityType.TEST_SUITE_RESULT, xrayConfig.get().getId());
 
                 EntityExternalMapping mapping = new EntityExternalMapping();
@@ -273,7 +271,7 @@ public class XrayCloudService implements XrayService {
             cloudRequest.setTestExecutionKey(entityMapping.getExternalId());
         }
 
-        Optional<EntityExternalMapping> externalMapping = this.entityMappingService.findByEntityIdAndEntityType(executionResult.getTestPlanId(),
+        Optional<EntityExternalMapping> externalMapping = this.entityMappingService.findByEntityIdAndEntityTypeAndApplicationId(executionResult.getTestPlanId(),
                 EntityType.TEST_PLAN, entityMapping.getApplicationId());
 
         if (externalMapping.isEmpty()) {
@@ -288,7 +286,7 @@ public class XrayCloudService implements XrayService {
         List<TestCaseResult> testCaseResults = this.testCaseResultService.findAllBySuiteResultIdAnAndParentIdNull(testSuiteResult.getId());
         for (TestCaseResult testCaseResult : testCaseResults) {
             XrayTestRequest testRequest = new XrayTestRequest();
-            externalMapping = this.entityMappingService.findByEntityIdAndEntityType(testCaseResult.getTestCaseId(), EntityType.TEST_CASE,
+            externalMapping = this.entityMappingService.findByEntityIdAndEntityTypeAndApplicationId(testCaseResult.getTestCaseId(), EntityType.TEST_CASE,
                     entityMapping.getApplicationId());
             if (externalMapping.isPresent()) {
                 testRequest.setTestKey(externalMapping.get().getExternalId());

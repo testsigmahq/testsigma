@@ -152,7 +152,7 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
         if (nlpMapping.isPresent()) {
             return nlpMapping.get().getTestsigmaNlpId();
         }
-        return 0;
+        return null;
     }
 
     private void setTestDataIfExists(TestProjectTestStepRequest stepRequest, TestStep testStep){

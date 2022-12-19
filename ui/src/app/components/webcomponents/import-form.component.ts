@@ -16,6 +16,8 @@ import {WorkspaceService} from "../../services/workspace.service";
 import {WorkspaceVersionService} from "../../shared/services/workspace-version.service";
 import {ToastrService} from "ngx-toastr";
 import {ImportGuideLinesWarningComponent} from "./import-guide-lines-warning.component";
+import {IntegrationsService} from "../../shared/services/integrations.service";
+import {Integrations} from "../../shared/models/integrations.model";
 
 @Component({
   selector: 'import-form-component',
@@ -50,6 +52,7 @@ export class ImportFormComponent extends BaseComponent implements OnInit {
   public  TEST_PROJECT_IMPORT = 'testProject'
 
   public activeTab: string = this.TESTSIGMA_IMPORT ;
+  public integration:Integrations[];
 
 
   constructor(
@@ -62,6 +65,7 @@ export class ImportFormComponent extends BaseComponent implements OnInit {
     public notificationsService: NotificationsService,
     public translate: TranslateService,
     public toastrService: ToastrService,
+    public integrationsService : IntegrationsService,
     @Inject(MAT_DIALOG_DATA) public option: { filterId: Number, workspaceVersionId: Number },
     public dialogRef: MatDialogRef<ImportFormComponent>) {
     super(authGuard, notificationsService, translate, toastrService);
@@ -70,6 +74,9 @@ export class ImportFormComponent extends BaseComponent implements OnInit {
   ngOnInit() {
     this.fetchApplications();
     this.addControllers()
+    this.integrationsService.findAll().subscribe((res)=>{
+      this.integration = res;
+    })
   }
 
   addControllers() {
@@ -251,7 +258,13 @@ export class ImportFormComponent extends BaseComponent implements OnInit {
     this.uploadedFileObject = null;
   }
 
-  changeSavingStatus(value: boolean) {
-    this.isSaving = value;
+  changeSavingStatus(value: any) {
+    this.isSaving = value['button'];
+    if(value['closeDialog'])
+      this.dialogRef.close();
+  }
+
+  get hasTestProject(){
+    return this.integration.find((data)=>data.isTestProject)
   }
 }

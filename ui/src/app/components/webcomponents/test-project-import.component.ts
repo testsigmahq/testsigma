@@ -5,6 +5,7 @@ import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
 import {NotificationsService, NotificationType} from "angular2-notifications";
 import {TranslateService} from "@ngx-translate/core";
 import {BackupService} from "../../settings/services/backup.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-test-project-import',
@@ -15,7 +16,7 @@ import {BackupService} from "../../settings/services/backup.service";
 })
 export class TestProjectImportComponent extends BaseComponent implements OnInit {
 
-  @Output() onImportClick : EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() onImportClick : EventEmitter<any > = new EventEmitter<any>();
   public formGroup: FormGroup;
   public uploadedFileObject : any;
   public importType : string = "YAML";
@@ -23,9 +24,10 @@ export class TestProjectImportComponent extends BaseComponent implements OnInit 
     public authGuard : AuthenticationGuard,
     public notificationsService : NotificationsService,
     public translate : TranslateService,
-    private backupService : BackupService
+    private backupService : BackupService,
+    public toastService :ToastrService,
   ) {
-    super(authGuard, notificationsService, translate)
+    super(authGuard, notificationsService, translate, toastService)
   }
 
   ngOnInit(): void {
@@ -69,12 +71,12 @@ export class TestProjectImportComponent extends BaseComponent implements OnInit 
   }
 
   postData(formData : FormData){
-    this.onImportClick.emit(true);
+    this.onImportClick.emit({button: true});
     this.backupService.importFromTestProject(formData).subscribe(() => {
-      this.onImportClick.emit(false);
+      this.onImportClick.emit({button:false, closeDialog : true});
       this.showNotification(NotificationType.Success, 'Imported Successfully, Please check Projects Section')
     }, error => {
-      this.onImportClick.emit(false);
+      this.onImportClick.emit({button: false});
       this.showNotification(NotificationType.Error, 'Error while importing from Test Project, Please contact Support')
       console.log("Error while Sending Request to Import from Test Project");
     })

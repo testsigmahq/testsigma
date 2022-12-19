@@ -1191,6 +1191,8 @@
   "plugins.private_lab.description": "Connect to your Private Selenium Grid Lab / Appium Grid account as your test lab on cloud.",
   "plugins.jenkins": "Jenkins",
   "plugins.code_ship": "CodeShip CI",
+  "plugins.test_project": "TestProject",
+  "plugins.test_project_report": "Import project from TestProject",
   "step.action.label": "Natural Language",
   "step.group.label": "Step Group",
   "step.rest.label": "RESTful API",

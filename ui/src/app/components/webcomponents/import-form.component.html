@@ -7,7 +7,7 @@
         [ngClass]="activeTab== TESTSIGMA_IMPORT ? 'border-active-b-4' : 'border-white-b-4' "
         [translate]="'import.form.title'">
       </div>
-      <div
+      <div *ngIf="hasTestProject"
         class="theme-overlay-title px-16 h-100 d-flex align-items-center"
         (click)="activeTab = TEST_PROJECT_IMPORT"
         [ngClass]="activeTab== TEST_PROJECT_IMPORT ? 'border-active-b-4' : 'border-white-b-4' "
@@ -186,8 +186,8 @@
       (click)="import()"
       [disabled]="isSaving"
       class="theme-btn-primary"
-      type="button"
-      [translate]="isSaving ? 'Please wait...' : 'btn.common.import'">
+      type="button">
+      {{isSaving ? 'Please wait...' : 'Import'}}
     </button>
   </div>
 </div>

@@ -40,7 +40,7 @@ export class ListComponent extends BaseComponent implements OnInit {
     public translate: TranslateService,
     public toastrService: ToastrService,
     public router: Router,
-    private externalApplicationConfig: IntegrationsService,
+    private integrationsService: IntegrationsService,
     private matModal: MatDialog) {
     super(authGuard, notificationsService, translate, toastrService);
   }
@@ -117,13 +117,17 @@ export class ListComponent extends BaseComponent implements OnInit {
     return this.plugins.find(plug => plug.isPrivateLab);
   }
 
+  get testProject(){
+    return this.plugins.find(plug => plug.isTestProject);
+  }
+
   ngOnInit(): void {
     this.fetchPlugins();
     this.pushToParent(this.route, this.route.params);
   }
 
   fetchPlugins() {
-    this.externalApplicationConfig.findAll().subscribe(data => {
+    this.integrationsService.findAll().subscribe(data => {
       this.plugins = data;
     }, error => console.log(error));
   }
@@ -131,6 +135,21 @@ export class ListComponent extends BaseComponent implements OnInit {
   toggleApplication(event, integration: Integration, app?: Integrations) {
     if(integration == Integration.TestsigmaLab) {
       this.router.navigate(['/settings', 'testsigma']);
+      return;
+    }
+    if(integration == Integration.TestProjectImport) {
+      let integrations:Integrations = new Integrations();
+      integrations.name = integration
+      integrations.workspaceId = (Object.keys(Integration).indexOf(integration) + 1);
+      integrations.url = integration;
+      integrations.username = integration;
+      integrations.password = integration;
+      if(event.checked){
+        this.integrationsService.create(integrations).subscribe(res => console.log(res))
+        console.log(event)
+      } else {
+        this.integrationsService.delete(integrations.workspaceId).subscribe();
+      }
       return;
     }
     if (event.source.checked)

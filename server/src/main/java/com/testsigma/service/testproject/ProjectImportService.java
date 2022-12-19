@@ -1,7 +1,9 @@
 package com.testsigma.service.testproject;
 
+import com.testsigma.constants.MessageConstants;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestProjectImportException;
+import com.testsigma.exception.TestsigmaException;
 import com.testsigma.model.*;
 import com.testsigma.service.*;
 import com.testsigma.web.request.testproject.TestProjectApplicationRequest;
@@ -9,10 +11,14 @@ import com.testsigma.web.request.testproject.TestProjectGlobalParametersRequest;
 import com.testsigma.web.request.testproject.TestProjectYamlRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 @Log4j2
@@ -26,11 +32,29 @@ public class ProjectImportService extends BaseImportService<TestProjectYamlReque
     private final EnvironmentService environmentService;
     private final IntegrationsService integrationService;
     private final WorkspaceService workspaceService;
+    private final BackupDetailService backupDetailService;
 
     private WorkspaceVersion workspaceVersion;
     private Integrations integration;
 
     private static final String DEFAULT_TESTPROJECT_DESCRIPTION = "Created from TestProject import";
+
+    public BackupDetail createBackupDetailEntry(MultipartFile file) throws IOException, TestsigmaException {
+        BackupDetail backupDetail = new BackupDetail();
+        backupDetail.setWorkspaceVersion(this.workspaceVersion);
+        backupDetail.setWorkspaceVersionId(this.workspaceVersion.getId());
+        backupDetail.setActionType(BackupActionType.IMPORT);
+        String fileName = FilenameUtils.getBaseName(file.getOriginalFilename()) + "_" + System.currentTimeMillis() + "."
+                + FilenameUtils.getExtension(file.getOriginalFilename());
+        backupDetail.setName(fileName);
+        if(!file.getOriginalFilename().endsWith(".zip")) {
+            File uploadedFile = backupDetailService.copyZipFileToTemp(file);
+            backupDetailService.uploadImportFileToStorage(uploadedFile, backupDetail);
+        }
+        backupDetail.setStatus(BackupStatus.SUCCESS);
+        backupDetail.setMessage(MessageConstants.IMPORT_IS_SUCCESS);
+        return backupDetailService.save(backupDetail);
+    }
 
     public void importFromRequest(TestProjectYamlRequest projectRequest) throws ResourceNotFoundException, TestProjectImportException {
         if(projectRequest.getProjectName() == null || projectRequest.getTests() == null) {

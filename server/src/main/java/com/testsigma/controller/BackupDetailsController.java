@@ -7,13 +7,16 @@
 
 package com.testsigma.controller;
 
+import com.testsigma.constants.MessageConstants;
 import com.testsigma.dto.BackupDetailDTO;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestProjectImportException;
 import com.testsigma.exception.TestsigmaException;
 import com.testsigma.mapper.BackupDetailMapper;
 import com.testsigma.model.BackupDetail;
+import com.testsigma.model.BackupStatus;
 import com.testsigma.service.BackupDetailService;
+import com.testsigma.service.testproject.ProjectImportService;
 import com.testsigma.service.testproject.TestProjectImportService;
 import com.testsigma.web.request.BackupRequest;
 import com.testsigma.web.request.ExternalImportRequest;
@@ -44,6 +47,7 @@ public class BackupDetailsController {
   private final BackupDetailMapper mapper;
   private final BackupDetailService service;
   private final TestProjectImportService testProjectImportService;
+  private final ProjectImportService projectImportService;
 
   @GetMapping(path = "/{id}/download")
   @ResponseStatus(HttpStatus.PERMANENT_REDIRECT)
@@ -58,10 +62,10 @@ public class BackupDetailsController {
 
   @RequestMapping(method = RequestMethod.POST, value = "/test_project", consumes = {"multipart/form-data"})
   public void createTestProjectImport(@RequestPart ExternalImportRequest request,
-                                      @RequestPart(name = "file", required = false) MultipartFile file) throws IOException, ResourceNotFoundException, TestProjectImportException {
+                                      @RequestPart(name = "file", required = false) MultipartFile file) throws IOException, TestsigmaException {
     if(request.isYamlImport())
       testProjectImportService.yamlImport(file);
-
+    projectImportService.createBackupDetailEntry(file);
   }
 
   @GetMapping(path = "/{id}/download_testcases")

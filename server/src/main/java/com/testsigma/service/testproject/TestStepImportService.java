@@ -29,7 +29,7 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
     private TestProjectTestCaseRequest testCaseRequest;
     private WorkspaceVersion workspaceVersion;
     private Integrations integration;
-    private Map<String, String> globalParams;
+    private Map<String, String> parametersMap;
 
     //TODO: Revisit this when we have multiple test data support
     public void importSteps(TestProjectYamlRequest projectRequest,
@@ -41,7 +41,7 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
         this.testCaseRequest = testCaseRequest;
         this.workspaceVersion = workspaceVersion;
         this.integration = integration;
-        this.globalParams = new HashMap<>();
+        this.parametersMap = new HashMap<>();
         int stepPosition = 0;
         for(TestProjectTestStepRequest stepRequest : testCaseRequest.getSteps()){
             importStepIntoTestCase(stepRequest, testCase, stepPosition++);
@@ -89,10 +89,10 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
 
     private void populateParams() {
         for(TestProjectGlobalParametersRequest parameter : this.projectRequest.getProjectParameters()) {
-            this.globalParams.put(parameter.getName(), parameter.getValue());
+            this.parametersMap.put(parameter.getName(), parameter.getValue());
         }
         this.projectRequest.getTests().forEach(test -> test.getParameters().forEach(stepParam -> {{
-            this.globalParams.put(stepParam.getName(), stepParam.getValue());
+            this.parametersMap.put(stepParam.getName(), stepParam.getValue());
         }}));
     }
 
@@ -102,8 +102,8 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
             String value = parameter.getValue();
             if(parameter.getValue().startsWith("{{")) {
                 value = parameter.getValue().substring(2, parameter.getValue().length() - 2);
-                if (this.globalParams.containsKey(value)) {
-                    action = action.replace("{{" + parameter.getName() + "}}", this.globalParams.get(value));
+                if (this.parametersMap.containsKey(value)) {
+                    action = action.replace("{{" + parameter.getName() + "}}", this.parametersMap.get(value));
                 }
             } else {
                 action = action.replace("{{" + parameter.getName() + "}}", value);
@@ -111,10 +111,10 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
         }
         for(TestProjectGlobalParametersRequest globalParams : projectRequest.getProjectParameters()){
             String value = globalParams.getValue();
-            if(globalParams.getValue().startsWith("[[")) {
-                value = globalParams.getValue().substring(2, globalParams.getValue().length() - 2);
-                if (this.globalParams.containsKey(value)) {
-                    action = action.replace("[[" + globalParams.getName() + "]]", this.globalParams.get(value));
+            if(value != null && value.startsWith("[[")) {
+                value = value.substring(2, globalParams.getValue().length() - 2);
+                if (this.parametersMap.containsKey(value)) {
+                    action = action.replace("[[" + globalParams.getName() + "]]", this.parametersMap.get(value));
                 }
             } else {
                 action = action.replace("[[" + globalParams.getName() + "]]", ObjectUtils.defaultIfNull(value,""));
@@ -143,11 +143,15 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
         if(stepRequest.getAction() == null || stepRequest.getAction().getId() == null)
             return null;
         String actionId = stepRequest.getAction().getId();
-        Optional<ExternalImportNlpMapping> nlpMapping =
-                externalNlpMappingService.findByExternalIdAndExternalImportTypeAndWorkspaceType(actionId,
-                        ExternalImportType.TEST_PROJECT, workspaceVersion.getWorkspace().getWorkspaceType());
-        if (nlpMapping.isPresent()) {
-            return nlpMapping.get().getTestsigmaNlpId();
+        try {
+            Optional<ExternalImportNlpMapping> nlpMapping =
+                    externalNlpMappingService.findByExternalIdAndExternalImportTypeAndWorkspaceType(actionId,
+                            ExternalImportType.TEST_PROJECT, workspaceVersion.getWorkspace().getWorkspaceType());
+            if (nlpMapping.isPresent()) {
+                return nlpMapping.get().getTestsigmaNlpId();
+            }
+        } catch (Exception e) {
+            log.error("Non-unique result: " + actionId);
         }
         return 0;
     }
@@ -158,8 +162,8 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
             String stepTestData = stepRequest.getParameterMaps().get(0).getValue();
             if(stepTestData.startsWith("{{") || stepTestData.startsWith("[[")){
                 stepTestData = stepTestData.substring(2,stepTestData.length()-2);
-                if(this.globalParams.containsKey(stepTestData)) {
-                    stepTestData = this.globalParams.get(stepTestData);
+                if(this.parametersMap.containsKey(stepTestData)) {
+                    stepTestData = this.parametersMap.get(stepTestData);
                 }
                 testStep.setTestDataType(TestDataType.raw.name());
             }

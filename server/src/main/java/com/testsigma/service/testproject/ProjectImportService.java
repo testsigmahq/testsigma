@@ -33,6 +33,9 @@ public class ProjectImportService extends BaseImportService<TestProjectYamlReque
     private static final String DEFAULT_TESTPROJECT_DESCRIPTION = "Created from TestProject import";
 
     public void importFromRequest(TestProjectYamlRequest projectRequest) throws ResourceNotFoundException, TestProjectImportException {
+        if(projectRequest.getProjectName() == null || projectRequest.getTests() == null) {
+            return;
+        }
         Optional<Integrations> integrations = integrationService.findOptionalByApplication(Integration.TestProjectImport);
         if(integrations.isEmpty()) {
             return;

@@ -33,7 +33,6 @@ INSERT INTO external_import_nlp_mappings VALUES(20,'WebApplication',22,'vGrq7Sjs
 INSERT INTO external_import_nlp_mappings VALUES(21,'WebApplication',107,'22Nw5UqP7EGqvQhuHT2kqg','TEST_PROJECT');
 INSERT INTO external_import_nlp_mappings VALUES(22,'WebApplication',96,'tIBQPQAbckKIWaM_kAvBKQ','TEST_PROJECT');
 INSERT INTO external_import_nlp_mappings VALUES(23,'WebApplication',54,'VntlNLO-d0SB_HeXkSiy3g','TEST_PROJECT');
-INSERT INTO external_import_nlp_mappings VALUES(24,'WebApplication',110,'511ddb4e-210f-4f3f-9fb9-b766bb23ee6a','TEST_PROJECT');
 INSERT INTO external_import_nlp_mappings VALUES(25,'WebApplication',1023,'c7OPWafS8kaFJUBVwrhoRw','TEST_PROJECT');
 INSERT INTO external_import_nlp_mappings VALUES(26,'WebApplication',79,'W88GyL29kkWzE23nWOZc7Q','TEST_PROJECT');
 INSERT INTO external_import_nlp_mappings VALUES(27,'WebApplication',102,'6cc71ddb-1aaf-433c-aa94-56d944aac433','TEST_PROJECT');

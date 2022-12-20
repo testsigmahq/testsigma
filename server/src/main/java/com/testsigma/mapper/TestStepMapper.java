@@ -49,6 +49,7 @@ public interface TestStepMapper {
   @Mapping(target = "addonTestData", expression = "java(testStep.getAddonTestData())")
   @Mapping(target = "addonElements", expression = "java(testStep.getAddonElements())")
   @Mapping(target = "addonTDF", expression = "java(testStep.getAddonTDF())")
+  @Mapping(target = "entityExternalMapping", ignore = true)
   TestStep copy(TestStep testStep);
 
   List<TestStepDTO> mapDTOs(List<TestStep> testSteps);

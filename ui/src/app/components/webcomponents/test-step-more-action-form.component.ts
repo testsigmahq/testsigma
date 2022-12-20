@@ -214,9 +214,22 @@ export class TestStepMoreActionFormComponent implements OnInit {
     })
   }
   getTextContent(testStep:TestStep){
-    if(testStep.isForLoop){
-      return 'Step ' + (testStep.position + 1) + ' - For Loop ';
+    let stepText = `Step ${testStep.position + 1} - `
+    if(testStep.isForLoop) {
+      return stepText + 'For Loop ';
+    } else if (testStep.isStepGroup) {
+      return stepText+ '(Stepgroup) '+(testStep?.stepGroup?.name)
+    } else if (testStep.isRestStep) {
+      return stepText+ '(RestStep) '+(testStep?.action)
+    } else if (testStep.isConditionalWhileLoop) {
+      return stepText + '(WhileLoop) '+(testStep?.action)
+    } else if (testStep.isConditionalIf) {
+      return stepText + '( If ) '+(testStep?.action)
+    } else if (testStep.isConditionalElseIf) {
+      return stepText + '(Else If) '+(testStep?.action)
+    } else if (testStep.isConditionalElse) {
+      return stepText + '(else) '+(testStep?.action)
     }
-    return 'Step ' + (testStep.position + 1) + ' - ' + (!!testStep.action? testStep.action : testStep?.stepGroup?.name)
+    return stepText + (!!testStep.action? testStep.action : testStep?.stepGroup?.name)
   }
 }

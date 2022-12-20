@@ -69,12 +69,26 @@
             [class.mouse-over]="testCaseResult?.testCase?.preRequisite">
             <button
               [disabled]="startSync"
-              *ngIf="(testCaseResult.iteration && !testCaseResult.parentResult?.isExecuting||!testCaseResult.iteration) && !testCaseResult?.isExecuting && isDry"
+              *ngIf="(testCaseResult.iteration && !testCaseResult.parentResult?.isExecuting||!testCaseResult.iteration) && !testCaseResult?.isExecuting && isDry && activeTab=='steps'"
               (click)=" startExecution(getTestCaseResult()?.testDeviceResult?.testPlanResult?.dryTestPlan)"
               class="theme-btn-primary py-6">
               <i class="fa-filled-circled-play pr-4"></i>
               <span [translate]="startSync ? 'btn.common.please_wait' :'dry.testcase.btn.re_run'"></span>
             </button>
+          </div>
+          <button
+            *ngIf="(testCaseResult.iteration && !testCaseResult.parentResult?.isExecuting||!testCaseResult.iteration) && !testCaseResult?.isExecuting && isDry && activeTab =='steps_current'"
+            class="theme-btn-primary py-6"
+            (click)="openDryRun()"
+          >
+            <i class="fa-filled-circled-play pr-7"></i>
+            <span
+              [translate]="'test_plan.btn.run'"></span>
+          </button>
+          <div
+            *ngIf="(testCaseResult.iteration && !testCaseResult.parentResult?.isExecuting||!testCaseResult.iteration) && !testCaseResult?.isExecuting && isDry && activeTab =='steps_current' && version?.workspace?.isWebMobile"
+          >
+            <app-chrome-record-button></app-chrome-record-button>
           </div>
           <button
             *ngIf="testCaseResult?.isExecuting && isDry"
@@ -83,6 +97,14 @@
             <i class="fa-stop-circle-solid pr-4"></i>
             <span [translate]="'hint.message.common.stop'"></span>
           </button>
+          <div *ngIf="version?.workspace?.isMobileNative && !testCase?.deleted && activeTab=='steps_current' && (testCaseResult.iteration && !testCaseResult.parentResult?.isExecuting||!testCaseResult.iteration) && !testCaseResult?.isExecuting && isDry">
+            <button
+              *ngIf="hasInspectorFeature()"
+              [routerLink]="['/td', 'record', testCase.workspaceVersionId]"
+              [queryParams]="{isRecord: true, isStepRecord: true, testCaseId:testCase.id}"
+              class="theme-btn-clear-default  ml-14"
+              [translate]="'elements.btn.record'"></button>
+          </div>
           <button
             *ngIf="!isDry"
             [disabled]="testCaseResult?.isExecuting"

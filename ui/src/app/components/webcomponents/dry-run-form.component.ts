@@ -181,7 +181,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
       this.testCaseResultService.findAll("testPlanResultId:"+res.id+",iteration:null", "id,desc").subscribe((res: Page<TestCaseResult>) => {
         this.saving = false;
         this.dialogRef.close();
-        this.router.navigate(['/td', 'test_case_results', res?.content[0]?.id]);
+        this.navigateToResults(res)
       });
     }, error => {
       this.saving = false;
@@ -407,5 +407,13 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
 
   closeDialogTab(){
     this.dialogRef.close();
+  }
+
+  navigateToResults(res){
+    if(this.router.url.includes('test_case_results')) {
+      window.location.href = window.location.origin + `/ui/td/test_case_results/${res?.content[0]?.id}`;
+    } else {
+      this.router.navigate(['/td', 'test_case_results', res?.content[0]?.id]);
+    }
   }
 }

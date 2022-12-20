@@ -77,6 +77,7 @@ public class TestCaseImportService extends BaseImportService<TestProjectTestCase
         testCase.setPriority(testCasePriority.getId());
         testCase.setType(testCaseType.getId());
         testCase.setDeleted(false);
+        testCase.setTestDataStartIndex(0);
         return testCaseService.save(testCase);
     }
 

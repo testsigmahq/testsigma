@@ -30,15 +30,17 @@ public class ElementsImportService extends BaseImportService<TestProjectElementR
         Element element;
         if(optionalElement.isEmpty()) {
             element = new Element();
-            element.setName(elementRequest.getName());
-            element.setWorkspaceVersionId(workspaceVersionId);
-            element.setLocatorType(elementRequest.getLocators().get(0).getLocatorType());
-            element.setLocatorValue(elementRequest.getLocators().get(0).getValue());
-            element.setScreenNameId(findOrCreateScreenName(workspaceVersionId).getId());
-            element = elementService.create(element);
         } else {
             element = optionalElement.get();
         }
+        element.setName(elementRequest.getName());
+        element.setWorkspaceVersionId(workspaceVersionId);
+        element.setLocatorType(elementRequest.getLocators().get(0).getLocatorType());
+        element.setLocatorValue(elementRequest.getLocators().get(0).getValue());
+        element.setScreenNameId(findOrCreateScreenName(workspaceVersionId).getId());
+        element.setCreatedType(ElementCreateType.MANUAL);
+        element.setIsDynamic(false);
+        element = elementService.create(element);
         List<EntityExternalMapping> entityExternalMapping = entityExternalMappingService.findByExternalIdAndEntityTypeAndApplicationId(elementRequest.getName(), EntityType.ELEMENT, integration.getId());
         if(entityExternalMapping.isEmpty()) {
             createEntityExternalMappingIfNotExists(element.getName(), EntityType.ELEMENT, element.getId(), integration);

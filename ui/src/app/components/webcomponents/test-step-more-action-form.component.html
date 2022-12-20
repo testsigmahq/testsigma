@@ -54,6 +54,7 @@
             <mat-option
               *ngFor="let prerequisite of prerequisiteList; let index = index"
               [value]="prerequisite.id"
+              [matTooltip]="getTextContent(prerequisite)"
               [textContent]="getTextContent(prerequisite)"></mat-option>
           </mat-select>
         </mat-form-field>

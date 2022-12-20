@@ -12,7 +12,7 @@
             <mat-radio-group [formControl]="formGroup?.controls['importType']">
               <mat-radio-button [value]="'YAML'">
                 <span [translate]="'From YAML / Zip'"></span> </mat-radio-button>
-              <mat-radio-button [value] = "'GIT'">
+              <mat-radio-button [value] = "'GIT'" *ngIf="false">
                 <span [translate]="'From Github'"></span>
               </mat-radio-button>
             </mat-radio-group>

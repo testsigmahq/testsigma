@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Optional;
 
 @Log4j2
 @Service
@@ -54,15 +55,18 @@ public class TestProjectImportService {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        Optional<TestProjectYamlRequest> testProjectYamlRequest = Optional.empty();
         try {
-            TestProjectYamlRequest testProjectYamlRequest = mapper.readValue(yamlFile, TestProjectYamlRequest.class);
-            projectImportService.importFromRequest(testProjectYamlRequest);
+            testProjectYamlRequest = Optional.of(mapper.readValue(yamlFile, TestProjectYamlRequest.class));
         } catch (NoSuchMethodError e) {
-            log.error("Could not parse value from yaml file: " + yamlFile + " to TestProjectYamlRequest");
+            log.error("Could not parse value from yaml file: " + yamlFile.getName() + " to TestProjectYamlRequest");
+        }
+        if(testProjectYamlRequest.isPresent()) {
+            projectImportService.importFromRequest(testProjectYamlRequest.get());
         }
     }
 
-    public void importFromZip(File zipFile) throws TestProjectImportException {
+    public void importFromZip(File zipFile) {
         try {
             File tempFolder = Files.createTempDirectory("test_project").toFile();
             File extractedFolder = zipFileService.unZipFile(zipFile, tempFolder);
@@ -75,8 +79,7 @@ public class TestProjectImportService {
             }
 
         } catch (IOException | ResourceNotFoundException e) {
-            log.error(e.getMessage(), e);
-            throw new TestProjectImportException("Error while importing from Zip File - " + e.getMessage());
+            log.error("Error while importing from Zip File - " + e.getMessage(), e);
         } catch (TestProjectImportException e) {
             e.printStackTrace();
         }

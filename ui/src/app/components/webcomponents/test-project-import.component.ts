@@ -74,7 +74,7 @@ export class TestProjectImportComponent extends BaseComponent implements OnInit 
     this.onImportClick.emit({button: true});
     this.backupService.importFromTestProject(formData).subscribe(() => {
       this.onImportClick.emit({button:false, closeDialog : true});
-      this.showNotification(NotificationType.Success, 'Imported Successfully, Please check Projects Section')
+      this.showNotification(NotificationType.Success, 'Imported Successfully, Please check Workspace versions')
     }, error => {
       this.onImportClick.emit({button: false});
       this.showNotification(NotificationType.Error, 'Error while importing from Test Project, Please contact Support')

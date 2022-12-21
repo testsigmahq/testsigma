@@ -16,6 +16,7 @@ import com.testsigma.service.ZipFileService;
 import com.testsigma.web.request.testproject.TestProjectYamlRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +29,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Iterator;
 import java.util.Optional;
 
 @Log4j2
@@ -66,25 +68,21 @@ public class TestProjectImportService {
         }
     }
 
-    public void importFromZip(File zipFile) {
+    public void importFromZip(File zipFile) throws TestProjectImportException {
         try {
             File tempFolder = Files.createTempDirectory("test_project").toFile();
             File extractedFolder = zipFileService.unZipFile(zipFile, tempFolder);
-            FileFilter fileFilter = new WildcardFileFilter("*.yaml");
-            File[] files = extractedFolder.listFiles(fileFilter);
-            if(files != null) {
-                for (File file : files) {
-                    String extension = FilenameUtils.getExtension(file.getName());
-                    if(extension.endsWith("yaml")) {
-                        importFromYamlFile(file);
-                    }
+            Iterator<File> files = FileUtils.iterateFiles(extractedFolder, null,true);
+            while(files.hasNext()){
+                File file = files.next();
+                String extension = FilenameUtils.getExtension(file.getName());
+                if(extension.isBlank() || extension.contains("yaml")){
+                    importFromYamlFile(file);
                 }
             }
-
-        } catch (IOException | ResourceNotFoundException e) {
-            log.error("Error while importing from Zip File - " + e.getMessage(), e);
-        } catch (TestProjectImportException e) {
-            e.printStackTrace();
+        } catch (IOException | ResourceNotFoundException | TestProjectImportException e) {
+            log.error(e.getMessage(), e);
+            throw new TestProjectImportException("Error while importing from Zip File - " + e.getMessage());
         }
     }
 

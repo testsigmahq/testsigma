@@ -74,7 +74,10 @@ public class TestProjectImportService {
             File[] files = extractedFolder.listFiles(fileFilter);
             if(files != null) {
                 for (File file : files) {
-                    importFromYamlFile(file);
+                    String extension = FilenameUtils.getExtension(file.getName());
+                    if(extension.endsWith("yaml")) {
+                        importFromYamlFile(file);
+                    }
                 }
             }
 

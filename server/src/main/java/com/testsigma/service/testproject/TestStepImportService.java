@@ -70,6 +70,7 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
             checkAndAddStepGroup(stepRequest, testStep);
         else
             nlpMappingNotFound = true;
+        setDisabled(stepRequest, testStep, nlpMappingNotFound);
         testStep.setTestCaseId(testCase.getId());
         setStepTimeOut(stepRequest, testStep);
         setIgnoreAndStepPriority(stepRequest, testStep);
@@ -86,7 +87,6 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
             else
                 log.info("Action not found for step id - " + stepRequest.getId());
         }
-        setDisabled(stepRequest, testStep, nlpMappingNotFound);
         testStepService.save(testStep);
     }
 
@@ -102,25 +102,12 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
     private String replaceActionWithParams(String action, TestProjectTestStepRequest stepRequest, TestStep testStep) throws ResourceNotFoundException, TestProjectImportException {
         List<TestProjectStepParameter> parameters = stepRequest.getParameterMaps();
         for(TestProjectStepParameter parameter : parameters){
-            String value = parameter.getValue();
-            if(parameter.getValue().startsWith("{{")) {
-                value = parameter.getValue().substring(2, parameter.getValue().length() - 2);
-                if (this.parametersMap.containsKey(value)) {
-                    action = action.replace("{{" + parameter.getName() + "}}", this.parametersMap.get(value));
-                }
-            } else {
-                action = action.replace("{{" + parameter.getName() + "}}", value);
-            }
+            action = action.replace("{{" + parameter.getName() + "}}", parameter.getValue());
         }
         for(TestProjectGlobalParametersRequest globalParams : projectRequest.getProjectParameters()){
-            String value = globalParams.getValue();
-            if(value != null && value.startsWith("[[")) {
-                value = value.substring(2, globalParams.getValue().length() - 2);
-                if (this.parametersMap.containsKey(value)) {
-                    action = action.replace("[[" + globalParams.getName() + "]]", this.parametersMap.get(value));
-                }
-            } else {
-                action = action.replace("[[" + globalParams.getName() + "]]", ObjectUtils.defaultIfNull(value,""));
+            if(action.contains("[[" + globalParams.getName() + "]]")) {
+                action = action.replace("[[" + globalParams.getName() + "]]", ObjectUtils.defaultIfNull(globalParams.getValue(), ""));
+                testStep.setDisabled(this.parametersMap.get(globalParams.getName()) == null || Boolean.TRUE.equals(testStep.getDisabled()));
             }
         }
         if(stepRequest.getElementId() != null){

@@ -8,9 +8,6 @@ CREATE TABLE `external_import_nlp_mappings` (
     UNIQUE KEY `fk_workspace_type_external_nlp_id_external_import_type` (`workspace_type`,`external_nlp_id`,`external_import_type`)
 ) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8;
 
-
-
-
 INSERT INTO external_import_nlp_mappings VALUES(1,'WebApplication',1044,'49c5d8d8-4ba8-42f0-823d-702e6acfb23a','TEST_PROJECT');
 INSERT INTO external_import_nlp_mappings VALUES(2,'WebApplication',109,'02d572b2-d610-4700-9ad3-40076ddb9807','TEST_PROJECT');
 INSERT INTO external_import_nlp_mappings VALUES(3,'WebApplication',971,'6f94fdaa-0041-4265-b73b-ecfcbe702d66','TEST_PROJECT');
@@ -50,9 +47,6 @@ insert into external_import_nlp_mappings values(42,'WebApplication',106,'jKZWH8k
 insert into external_import_nlp_mappings values(43,'WebApplication',105,'gQHQKiS0_U6zY5hU9_gPrA','TEST_PROJECT');
 insert into external_import_nlp_mappings values(44,'WebApplication',105,'qet0Zuas4ECchcyjdpjigw','TEST_PROJECT');
 insert into external_import_nlp_mappings values(45,'WebApplication',105,'rKsgg3od_0Odmue_1he9kA','TEST_PROJECT');
-
-
-
 insert into external_import_nlp_mappings values(46,'AndroidNative',20016,'6f94fdaa-0041-4265-b73b-ecfcbe702d66','TEST_PROJECT');
 insert into external_import_nlp_mappings values(47,'AndroidNative',20016,'05d1x6Qh-EagtIPJtBxpEw','TEST_PROJECT');
 insert into external_import_nlp_mappings values(48,'AndroidNative',20016,'ibLGpWMVl0WpymA3IuLd9A','TEST_PROJECT');
@@ -82,11 +76,6 @@ insert into external_import_nlp_mappings values(71,'AndroidNative',20073,'e052df
 insert into external_import_nlp_mappings values(72,'AndroidNative',20073,'B1f8dWByJUa9qc6dlmO6SQ','TEST_PROJECT');
 insert into external_import_nlp_mappings values(73,'AndroidNative',20009,'bVPNecqYzECTdrY_0UW7YA','TEST_PROJECT');
 insert into external_import_nlp_mappings values(74,'AndroidNative',20126,'s2gkuXjy8EmdFRRHE0Bwnw','TEST_PROJECT');
-
-
-
-
-
 insert into external_import_nlp_mappings values(75,'IOSNative',30016,'6f94fdaa-0041-4265-b73b-ecfcbe702d66','TEST_PROJECT');
 insert into external_import_nlp_mappings values(76,'IOSNative',30016,'05d1x6Qh-EagtIPJtBxpEw','TEST_PROJECT');
 insert into external_import_nlp_mappings values(77,'IOSNative',30016,'ibLGpWMVl0WpymA3IuLd9A','TEST_PROJECT');

@@ -1,7 +1,6 @@
 package com.testsigma.service.testproject;
 
 import com.testsigma.exception.ResourceNotFoundException;
-import com.testsigma.mapper.ElementMapper;
 import com.testsigma.model.*;
 import com.testsigma.service.ElementScreenService;
 import com.testsigma.service.ElementService;
@@ -25,7 +24,7 @@ public class ElementsImportService extends BaseImportService<TestProjectElementR
     private final ElementService elementService;
     private final ElementScreenService elementScreenService;
 
-    Element checkAndCreateElement(TestProjectElementRequest elementRequest, Long workspaceVersionId, Integrations integration) throws ResourceNotFoundException {
+    Element createElementObject(TestProjectElementRequest elementRequest, Long workspaceVersionId, Integrations integration) throws ResourceNotFoundException {
         Optional<Element> optionalElement = elementService.findByNameAndWorkspaceVersionId(elementRequest.getName(), workspaceVersionId);
         Element element;
         if(optionalElement.isEmpty()) {
@@ -40,11 +39,6 @@ public class ElementsImportService extends BaseImportService<TestProjectElementR
         element.setScreenNameId(findOrCreateScreenName(workspaceVersionId).getId());
         element.setCreatedType(ElementCreateType.MANUAL);
         element.setIsDynamic(false);
-        element = elementService.create(element);
-        List<EntityExternalMapping> entityExternalMapping = entityExternalMappingService.findByExternalIdAndEntityTypeAndApplicationId(elementRequest.getName(), EntityType.ELEMENT, integration.getId());
-        if(entityExternalMapping.isEmpty()) {
-            createEntityExternalMappingIfNotExists(element.getName(), EntityType.ELEMENT, element.getId(), integration);
-        }
         return element;
     }
 

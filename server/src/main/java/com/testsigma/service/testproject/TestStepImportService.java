@@ -31,7 +31,8 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
     private Workspace workspace;
     private WorkspaceVersion workspaceVersion;
     private Integrations integration;
-    private Map<String, String> parametersMap;
+    private Map<String, String> projectParametersMap;
+    private Map<String, String> testCaseParametersMap;
 
     //TODO: Revisit this when we have multiple test data support
     public void importSteps(TestProjectYamlRequest projectRequest,
@@ -43,7 +44,8 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
         this.testCaseRequest = testCaseRequest;
         this.workspaceVersion = workspaceVersion;
         this.integration = integration;
-        this.parametersMap = new HashMap<>();
+        this.projectParametersMap = new HashMap<>();
+        this.testCaseParametersMap = new HashMap<>();
         this.workspace = this.workspaceService.find(this.workspaceVersion.getWorkspaceId());
         int stepPosition = 0;
         for(TestProjectTestStepRequest stepRequest : testCaseRequest.getSteps()){
@@ -76,7 +78,7 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
         setIgnoreAndStepPriority(stepRequest, testStep);
         testStep.setType(stepRequest.getStepType());
         setTestDataIfExists(stepRequest, testStep);
-        setElementIfExists(stepRequest,testCase.getWorkspaceVersionId(), testStep);
+        createElementIfPresent(stepRequest,testCase.getWorkspaceVersionId(), testStep);
         testStep.setPosition(position);
         if(stepRequest.getStepType() == TestStepType.ACTION_TEXT){
             if(stepRequest.getAction() != null){
@@ -92,25 +94,18 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
 
     private void populateParams() {
         for(TestProjectGlobalParametersRequest parameter : this.projectRequest.getProjectParameters()) {
-            this.parametersMap.put(parameter.getName(), parameter.getValue());
+            this.projectParametersMap.put(parameter.getName(), parameter.getValue());
         }
-        this.projectRequest.getTests().forEach(test -> test.getParameters().forEach(stepParam -> {{
-            this.parametersMap.put(stepParam.getName(), stepParam.getValue());
+        this.projectRequest.getTests().forEach(test -> test.getParameters().forEach(testCaseParam -> {{
+            this.testCaseParametersMap.put(testCaseParam.getName(), testCaseParam.getValue());
         }}));
     }
 
     private String replaceActionWithParams(String action, TestProjectTestStepRequest stepRequest, TestStep testStep) throws ResourceNotFoundException, TestProjectImportException {
-        List<TestProjectStepParameter> parameters = stepRequest.getParameterMaps();
-        for(TestProjectStepParameter parameter : parameters){
-            action = action.replace("{{" + parameter.getName() + "}}", parameter.getValue());
-        }
-        for(TestProjectGlobalParametersRequest globalParams : projectRequest.getProjectParameters()){
-            if(action.contains("[[" + globalParams.getName() + "]]")) {
-                action = action.replace("[[" + globalParams.getName() + "]]", ObjectUtils.defaultIfNull(globalParams.getValue(), ""));
-                testStep.setDisabled(this.parametersMap.get(globalParams.getName()) == null || Boolean.TRUE.equals(testStep.getDisabled()));
-            }
-        }
-        if(stepRequest.getElementId() != null){
+        action = replaceLocalParameters(action, stepRequest, testStep);
+        action = replaceTestCaseParameters(action, stepRequest, testStep);
+        action = replaceGlobalParameters(action, testStep);
+        if(stepRequest.getElementId() != null) {
             List<EntityExternalMapping> entityExternalMapping = entityExternalMappingService.findByExternalIdAndEntityTypeAndApplicationId(testStep.getElement(), EntityType.ELEMENT, integration.getId());
             Element element = elementService.find(entityExternalMapping.get(0).getEntityId());
             String elementName = element.getName();
@@ -146,24 +141,71 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
         testStep.setTestDataType(TestDataType.raw.name());
         if(!stepRequest.getParameterMaps().isEmpty()) {
             String stepTestData = stepRequest.getParameterMaps().get(0).getValue();
-            if(stepTestData.startsWith("{{") || stepTestData.startsWith("[[")){
+            if(stepTestData.startsWith("[[")){
                 stepTestData = stepTestData.substring(2,stepTestData.length()-2);
-                if(this.parametersMap.containsKey(stepTestData)) {
-                    stepTestData = this.parametersMap.get(stepTestData);
+                if(this.projectParametersMap.containsKey(stepTestData)) {
+                    stepTestData = this.projectParametersMap.get(stepTestData);
+                }
+                testStep.setTestDataType(TestDataType.raw.name());
+            } else if(stepTestData.startsWith("{{")) {
+                stepTestData = stepTestData.substring(2,stepTestData.length()-2);
+                if(this.testCaseParametersMap.containsKey(stepTestData)) {
+                    stepTestData = this.testCaseParametersMap.get(stepTestData);
                 }
                 testStep.setTestDataType(TestDataType.raw.name());
             }
+
             testStep.setTestData(stepTestData);
         }
     }
 
-    private void setElementIfExists(TestProjectTestStepRequest stepRequest, Long applicationVersionId,  TestStep testStep) throws ResourceNotFoundException {
+    private void createElementIfPresent(TestProjectTestStepRequest stepRequest, Long applicationVersionId, TestStep testStep) throws ResourceNotFoundException {
         String elementId = stepRequest.getElementId();
         if(elementId != null){
             TestProjectElementRequest elementRequest = findElementByIdInProject(elementId);
-            Element element = elementsImportService.checkAndCreateElement(elementRequest, applicationVersionId, this.integration);
+            Element element = elementsImportService.createElementObject(elementRequest, applicationVersionId, this.integration);
+            String locatorValue = replaceLocalParameters(element.getLocatorValue(), stepRequest, testStep);
+            locatorValue = replaceTestCaseParameters(locatorValue, stepRequest, testStep);
+            locatorValue = replaceGlobalParameters(locatorValue, testStep);
+            element.setLocatorValue(locatorValue);
+            element = elementService.create(element);
+            List<EntityExternalMapping> entityExternalMapping = entityExternalMappingService.findByExternalIdAndEntityTypeAndApplicationId(elementRequest.getName(), EntityType.ELEMENT, integration.getId());
+            if(entityExternalMapping.isEmpty()) {
+                createEntityExternalMappingIfNotExists(element.getName(), EntityType.ELEMENT, element.getId(), integration);
+            }
             testStep.setElement(element.getName());
         }
+    }
+
+    private String replaceLocalParameters(String str, TestProjectTestStepRequest stepRequest, TestStep testStep) {
+        List<TestProjectStepParameter> parameters = stepRequest.getParameterMaps();
+        for(TestProjectStepParameter parameter : parameters){
+            if(str.contains("{{" + parameter.getName() + "}}")) {
+                str = str.replace("{{" + parameter.getName() + "}}", parameter.getValue());
+                testStep.setDisabled(parameter.getValue() == null || Boolean.TRUE.equals(testStep.getDisabled()));
+            }
+        }
+        return str;
+    }
+
+    private String replaceTestCaseParameters(String str, TestProjectTestStepRequest stepRequest, TestStep testStep) {
+        for(String key : this.testCaseParametersMap.keySet()) {
+            if(str.contains("{{" + key + "}}")) {
+                str = str.replace("{{" + key + "}}", this.testCaseParametersMap.get(key));
+                testStep.setDisabled(this.testCaseParametersMap.get(key) == null || Boolean.TRUE.equals(testStep.getDisabled()));
+            }
+        }
+        return str;
+    }
+
+    private String replaceGlobalParameters(String str, TestStep testStep) {
+        for(TestProjectGlobalParametersRequest globalParams : projectRequest.getProjectParameters()){
+            if(str.contains("[[" + globalParams.getName() + "]]")) {
+                str = str.replace("[[" + globalParams.getName() + "]]", ObjectUtils.defaultIfNull(globalParams.getValue(), ""));
+                testStep.setDisabled(globalParams.getValue() == null || Boolean.TRUE.equals(testStep.getDisabled()));
+            }
+        }
+        return str;
     }
 
 

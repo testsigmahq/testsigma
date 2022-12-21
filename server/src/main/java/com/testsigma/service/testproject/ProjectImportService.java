@@ -72,7 +72,7 @@ public class ProjectImportService extends BaseImportService<TestProjectYamlReque
         } else {
             this.workspaceVersion = optionalEntityExternalMapping.get(0).getWorkspaceVersion();
         }
-
+        log.info("Importing testcase in testproject request for workspace version id: " + this.workspaceVersion.getId());
         createOrAppendEnvironmentParams(projectRequest);
         testCaseImportService.importFromRequest(projectRequest, this.workspaceVersion, this.integration);
     }
@@ -101,11 +101,13 @@ public class ProjectImportService extends BaseImportService<TestProjectYamlReque
     }
 
     private WorkspaceVersion createWorkspaceVersion(TestProjectYamlRequest projectRequest){
+        log.info("Checking if workspace exists for test project import for platform: " + projectRequest.getTests().get(0).getApplication().getPlatform());
         Workspace workspace = workspaceService.findByTypeAndIsDemo(projectRequest.getTests().get(0).getApplication().getPlatform(), false);
         Optional<WorkspaceVersion> optionalWorkspaceVersion = workspaceVersionService.findByWorkspaceIdAndVersionName(workspace.getId(), projectRequest.getProjectName());
         if(optionalWorkspaceVersion.isPresent()) {
             return optionalWorkspaceVersion.get();
         }
+        log.info("Creating new workspace version for testproject import");
         WorkspaceVersion workspaceVersion = new WorkspaceVersion();
         workspaceVersion.setWorkspaceId(workspace.getId());
         workspaceVersion.setVersionName(projectRequest.getProjectName());

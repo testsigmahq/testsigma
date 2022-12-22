@@ -53,14 +53,14 @@ public class TestProjectImportService {
         }
     }
 
-    private void importFromYamlFile(File yamlFile) throws ResourceNotFoundException, TestProjectImportException, IOException {
+    private void importFromYamlFile(File yamlFile) throws TestProjectImportException, IOException, ResourceNotFoundException {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         Optional<TestProjectYamlRequest> testProjectYamlRequest = Optional.empty();
         try {
+            mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
+                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             testProjectYamlRequest = Optional.of(mapper.readValue(yamlFile, TestProjectYamlRequest.class));
-        } catch (NoSuchMethodError e) {
+        } catch (Throwable e) {
             log.error("Could not parse value from yaml file: " + yamlFile.getName() + " to TestProjectYamlRequest");
         }
         if(testProjectYamlRequest.isPresent()) {
@@ -77,6 +77,7 @@ public class TestProjectImportService {
                 File file = files.next();
                 String extension = FilenameUtils.getExtension(file.getName());
                 if(extension.isBlank() || extension.contains("yaml")){
+                    log.info("Trying to import testproject yaml file: " + file.getName());
                     importFromYamlFile(file);
                 }
             }

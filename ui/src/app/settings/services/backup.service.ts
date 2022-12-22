@@ -10,6 +10,7 @@ import {HttpHeadersService} from "../../shared/services/http-headers.service";
 import {UrlConstantsService} from "../../shared/services/url.constants.service";
 import {BackupVersionModel} from "../models/backup.version.model";
 import {Backup} from "../models/backup.model";
+import {Subject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -56,5 +57,14 @@ export class BackupService {
         catchError((exception) => throwError(exception))
       )
   }
+
+  public importFromTestProject(formData: FormData) : Observable<BackupVersionModel>{
+    return this.http.post<BackupVersionModel>(this.URLConstants.testProjectImportURL, formData, {}).pipe(
+      map(data => new BackupVersionModel().deserialize(data)),
+      catchError((exception) => throwError(exception))
+    );
+  }
+
+  public initiateTestProjectImport: Subject<any> = new Subject<any>();
 
 }

@@ -44,6 +44,7 @@ import java.util.Optional;
 public class ElementScreenService extends XMLExportImportService<ElementScreenName> {
   private final ElementScreenNameRepository elementScreenNameRepository;
   private final ElementScreenNameMapper elementScreenNameMapper;
+  public final String DEFAULT_SCREEN_NAME ="DEFAULT_SCREEN_NAME";
 
   public Page<ElementScreenName> findAll(Specification<ElementScreenName> specification, Pageable page) {
     return elementScreenNameRepository.findAll(specification, page);
@@ -51,6 +52,10 @@ public class ElementScreenService extends XMLExportImportService<ElementScreenNa
 
   public Page<ElementScreenName> findAllByWorkspaceVersionId(Long workspaceVersionId, Pageable page) {
     return elementScreenNameRepository.findAllByWorkspaceVersionId(workspaceVersionId, page);
+  }
+
+  public List<ElementScreenName> findAllByWorkspaceVersionId(Long workspaceVersionId) {
+    return elementScreenNameRepository.findAllByWorkspaceVersionId(workspaceVersionId);
   }
 
   public ElementScreenName save(ElementScreenNameRequest screenNameKey) {

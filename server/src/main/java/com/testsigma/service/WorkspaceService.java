@@ -45,6 +45,10 @@ public class WorkspaceService extends XMLExportImportService<Workspace> {
     return this.workspaceRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Workspace missing with id" + id));
   }
 
+  public Workspace findByTypeAndIsDemo(WorkspaceType workspaceType, Boolean isDemo) {
+    return this.workspaceRepository.findByWorkspaceTypeAndIsDemo(workspaceType, isDemo);
+  }
+
   @Override
   List<Workspace> readEntityListFromXmlData(String xmlData, XmlMapper xmlMapper, BackupDTO importDTO) throws JsonProcessingException, ResourceNotFoundException {
     return null;

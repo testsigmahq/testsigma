@@ -644,6 +644,10 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         return  this.repository.getAllRestStepWithRuntime(workspaceVersionId);
     }
 
+    public void deleteStepsByTestCaseId(Long testCaseId){
+        repository.deleteStepsByTestCaseId(testCaseId);
+    }
+
 
 }
 

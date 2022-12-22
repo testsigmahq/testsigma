@@ -14,14 +14,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Set;
 
 
@@ -89,6 +89,12 @@ public class Element implements Serializable {
   @EqualsAndHashCode.Exclude
   @ToString.Exclude
   private Set<TagEntityMapping> tagUses;
+
+  @OneToMany(mappedBy = "element")
+  @Fetch(value = FetchMode.SELECT)
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  private List<EntityExternalMapping> entityExternalMapping;
 
   @ManyToOne
   @JoinColumn(name = "screen_name_id", referencedColumnName = "id", insertable = false, updatable = false)

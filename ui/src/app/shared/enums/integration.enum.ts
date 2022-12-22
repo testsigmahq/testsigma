@@ -15,5 +15,6 @@ export enum Integration {
   TestsigmaLab = "TestsigmaLab",
   ClickUp = 'ClickUp',
   PrivateGrid = 'PrivateGrid',
-  XrayCloud = "XrayCloud"
+  XrayCloud = "XrayCloud",
+  TestProjectImport = "TestProjectImport",
 }

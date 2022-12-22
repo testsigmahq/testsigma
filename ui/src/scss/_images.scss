@@ -1243,3 +1243,9 @@
   @extend .resizeable-image;
   background-image: url("~assets/images/google_cloud.svg");
 }
+
+.test-project{
+  @extend .resizeable-image;
+  background-image: url("~assets/images/test_project.png");
+}
+

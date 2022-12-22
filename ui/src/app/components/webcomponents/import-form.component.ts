@@ -16,10 +16,13 @@ import {WorkspaceService} from "../../services/workspace.service";
 import {WorkspaceVersionService} from "../../shared/services/workspace-version.service";
 import {ToastrService} from "ngx-toastr";
 import {ImportGuideLinesWarningComponent} from "./import-guide-lines-warning.component";
+import {IntegrationsService} from "../../shared/services/integrations.service";
+import {Integrations} from "../../shared/models/integrations.model";
 
 @Component({
   selector: 'import-form-component',
   templateUrl: './import-form.component.html',
+  styleUrls:['./import-form.component.scss']
 })
 export class ImportFormComponent extends BaseComponent implements OnInit {
   public importModel: BackupVersionModel = new BackupVersionModel();
@@ -45,6 +48,13 @@ export class ImportFormComponent extends BaseComponent implements OnInit {
     '"isTestDeviceEnabled":["isSuitesEnabled", "isAgentEnabled", "isUploadsEnabled", "isTestCaseEnabled", "isTestStepEnabled", "isRestStepEnabled", "isTestDataEnabled", "isTestCasePriorityEnabled", "isTestCaseTypeEnabled", "isElementEnabled", "isElementScreenNameEnabled"],' +
     '"isElementEnabled":["isElementScreenNameEnabled"]}';
 
+  public  TESTSIGMA_IMPORT = 'testsigmaImport';
+  public  TEST_PROJECT_IMPORT = 'testProject'
+
+  public activeTab: string = this.TESTSIGMA_IMPORT ;
+  public integration:Integrations[];
+
+
   constructor(
     private router: Router,
     private workspaceService: WorkspaceService,
@@ -55,6 +65,7 @@ export class ImportFormComponent extends BaseComponent implements OnInit {
     public notificationsService: NotificationsService,
     public translate: TranslateService,
     public toastrService: ToastrService,
+    public integrationsService : IntegrationsService,
     @Inject(MAT_DIALOG_DATA) public option: { filterId: Number, workspaceVersionId: Number },
     public dialogRef: MatDialogRef<ImportFormComponent>) {
     super(authGuard, notificationsService, translate, toastrService);
@@ -63,6 +74,9 @@ export class ImportFormComponent extends BaseComponent implements OnInit {
   ngOnInit() {
     this.fetchApplications();
     this.addControllers()
+    this.integrationsService.findAll().subscribe((res)=>{
+      this.integration = res;
+    })
   }
 
   addControllers() {
@@ -130,10 +144,7 @@ export class ImportFormComponent extends BaseComponent implements OnInit {
     this.fileName = this.uploadedFileObject.name;
   }
 
-  import() {
-    if(!this.validateForm() || this.isSaving){
-      return;
-    }
+  importFromTestsigma() {
     let description = this.translate.instant('import.warning.message')
     const dialogRef = this.matModal.open(ImportGuideLinesWarningComponent, {
       width: '568px',
@@ -167,6 +178,24 @@ export class ImportFormComponent extends BaseComponent implements OnInit {
       }
       }
     );
+  }
+
+  importFromTestProject(){
+    this.importService.initiateTestProjectImport.next();
+  }
+
+  import() {
+    if(this.activeTab == this.TEST_PROJECT_IMPORT){
+      this.importFromTestProject();
+      return;
+    }
+    if(!this.validateForm() || this.isSaving){
+      return;
+    }
+    this.importModel.deserialize(this.importForm.getRawValue());
+    this.importModel.skipEntityExists = this.skipEntityExists;
+    this.isSaving = true;
+    this.importFromTestsigma();
   }
 
 
@@ -227,5 +256,15 @@ export class ImportFormComponent extends BaseComponent implements OnInit {
   public removeUpload() {
     this.fileName = null;
     this.uploadedFileObject = null;
+  }
+
+  changeSavingStatus(value: any) {
+    this.isSaving = value['button'];
+    if(value['closeDialog'])
+      this.dialogRef.close();
+  }
+
+  get hasTestProject(){
+    return this.integration.find((data)=>data.isTestProject)
   }
 }

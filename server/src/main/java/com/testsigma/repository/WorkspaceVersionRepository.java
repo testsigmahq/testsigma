@@ -21,6 +21,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Repository
 @Transactional
 public interface WorkspaceVersionRepository extends JpaSpecificationExecutor<WorkspaceVersion>, PagingAndSortingRepository<WorkspaceVersion, Long>, JpaRepository<WorkspaceVersion, Long> {
@@ -131,5 +133,8 @@ public interface WorkspaceVersionRepository extends JpaSpecificationExecutor<Wor
 
   WorkspaceVersion findFirstByWorkspaceId(@Param("workspaceId") Long workspaceId);
 
+  Optional<WorkspaceVersion> findByWorkspaceIdAndVersionName(Long workspaceId, String versionName);
+
   Page<WorkspaceVersion> findByWorkspaceId(@Param("workspaceId") Long workspaceId, Pageable page);
+
 }

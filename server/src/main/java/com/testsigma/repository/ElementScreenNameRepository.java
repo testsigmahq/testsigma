@@ -22,5 +22,6 @@ public interface ElementScreenNameRepository extends BaseRepository<ElementScree
   Optional<ElementScreenName> findByNameAndWorkspaceVersionId(String name, Long workspaceVersionId);
   Optional<ElementScreenName> findAllByWorkspaceVersionIdAndImportedId(Long applicationVersionId, Long id);
   Page<ElementScreenName> findAllByWorkspaceVersionId(Long workspaceVersionId, Pageable page);
+  List<ElementScreenName> findAllByWorkspaceVersionId(Long workspaceVersionId);
 }
 

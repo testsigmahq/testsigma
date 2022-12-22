@@ -37,6 +37,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
@@ -175,7 +176,7 @@ public class TestCasesController {
   }
 
   @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-  public void destroy(@PathVariable("id") Long id) throws ResourceNotFoundException {
+  public void destroy(@PathVariable("id") Long id) throws TestsigmaException, IOException {
     testCaseService.destroy(id);
   }
 

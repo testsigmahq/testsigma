@@ -73,7 +73,7 @@ public class IntegrationsService {
    * @return
    */
   public void destroy(Long id) throws IntegrationNotFoundException {
-    Optional<Integrations> config = integrationsRepository.findById(id);
+    Optional<Integrations> config = integrationsRepository.findByWorkspaceId(id);
     if (!config.isPresent()) {
       throw new IntegrationNotFoundException("EXTERNAL APPLICATION CONFIG NOT FOUND");
     }

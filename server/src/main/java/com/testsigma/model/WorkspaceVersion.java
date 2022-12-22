@@ -20,6 +20,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,10 +41,8 @@ public class WorkspaceVersion {
   @Column(name = "description", length = 250)
   private String description;
 
-
   @Column(name = "version_name", length = 250)
   private String versionName;
-
 
   @Column(name = "created_date")
   @CreationTimestamp
@@ -64,7 +63,11 @@ public class WorkspaceVersion {
   @ToString.Exclude
   private Workspace workspace;
 
-
+  @OneToMany(mappedBy = "workspaceVersion")
+  @Fetch(value = FetchMode.SELECT)
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  private List<EntityExternalMapping> entityExternalMapping;
 
   @OneToMany(mappedBy = "workspaceVersion", fetch = FetchType.LAZY)
   @EqualsAndHashCode.Exclude

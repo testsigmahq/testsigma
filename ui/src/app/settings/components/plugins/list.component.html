@@ -382,5 +382,22 @@
         <div class="item-text" [translate]="'plugins.description.code_ship'"></div>
       </div>
     </div>
+
+    <div class="white-border-container" *ngIf="testLab || all">
+      <div class="item-content">
+        <div class="d-flex align-items-center">
+          <div class="ts-col-20 test-project sm-h"></div>
+          <div class="item-title-text" [translate]="'plugins.test_project'"></div>
+        </div>
+        <div class="item-text" [translate]="'plugins.test_project_report'"></div>
+        <div class="item-action">
+          <mat-slide-toggle
+            class="mat-slide-toggle ml-auto slide-with-text"
+            [checked]="!!testProject"
+            (change)="toggleApplication($event, Integration.TestProjectImport, testProject)">
+          </mat-slide-toggle>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

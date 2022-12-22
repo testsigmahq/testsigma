@@ -21,6 +21,7 @@ import com.testsigma.model.TestCase;
 import com.testsigma.model.TestData;
 import com.testsigma.model.TestDataSet;
 import com.testsigma.web.request.TestCaseRequest;
+import com.testsigma.web.request.testproject.TestProjectTestCaseRequest;
 import org.mapstruct.*;
 
 import java.util.List;
@@ -60,6 +61,7 @@ public interface TestCaseMapper {
   @Mapping(target = "suiteTestCaseMappings", ignore = true)
   TestCase copy(TestCase testCase);
 
+  TestCase map(TestProjectTestCaseRequest testCaseRequest);
 
   @Mapping(target = "isDataDriven", expression = "java(testcase.getIsDataDriven()!=null && testcase.getIsDataDriven())")
   @Mapping(target = "isStepGroup", expression = "java(testcase.getIsStepGroup()!=null && testcase.getIsStepGroup())")

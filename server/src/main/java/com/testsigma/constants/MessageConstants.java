@@ -19,6 +19,7 @@ public class MessageConstants {
   public static final String UPDATE_TEST_STEP_RESULT = "Result updated from parent Step group status";
   public static final String TESTCASE_NOT_READY = "Test Case currently not in Ready state. Please change to Ready state before executing";
   public static final String STEP_GROUP_NOT_READY = "Step group ?1 currently not in Ready state. Please change to Ready state before executing";
+  public static final String EXCEPTION_INVALID_TESTDATA = "No data available for runtime test data variable ?1. Refer previous Test Steps in this Test Case or Test Steps in other Test Cases to know the variable names saved by using store(naturalText) action Test Steps. Go to <a href=\"https://testsigma.com/docs/test-data/types/runtime/\" target=\"_blank\">https://testsigma.com/docs/test-data/types/runtime/</a> to know more about runtime test data.";
   public static final String DRAFT_PLUGIN_ALLOWED_IN_HYBRID_ONLY = "Addon in draft mode is allowed to run only in local " +
     "test machine. Please publish your addon before running in cloud machines.";
   public static final String INVALID_TEST_DATA_SET_SPECIAL_CHARACTER = "This data set(row) contains an invalid special character (a line break, carriage return e.t.c) at position %s in parameter(column) with name: ";

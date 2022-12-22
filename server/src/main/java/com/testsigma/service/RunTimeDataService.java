@@ -7,6 +7,7 @@
 
 package com.testsigma.service;
 
+import com.testsigma.constants.AutomatorMessages;
 import com.testsigma.constants.MessageConstants;
 import com.testsigma.constants.NaturalTextActionConstants;
 import com.testsigma.exception.ResourceNotFoundException;
@@ -69,11 +70,10 @@ public class RunTimeDataService {
       return runTimeData.getData().getString(variableName);
     } catch (JSONException | ResourceNotFoundException exception) {
       ResourceNotFoundException resourceNotFoundException = new ResourceNotFoundException(exception.getMessage());
-      String errorMessage = MessageConstants.getMessage(MessageConstants.RUNTIME_DATA_VARIABLE_NOT_FOUND);
       resourceNotFoundException.setErrorCode(MessageConstants.RUNTIME_DATA_VARIABLE_NOT_FOUND);
-      resourceNotFoundException.setMessage(errorMessage);
+      resourceNotFoundException.setMessage(MessageConstants.getMessage(MessageConstants.EXCEPTION_INVALID_TESTDATA, variableName));
       log.error(exception.getMessage(), exception);
-      throw exception;
+      throw resourceNotFoundException;
     }
   }
 

@@ -103,7 +103,7 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
 
     private String replaceActionWithParams(String action, TestProjectTestStepRequest stepRequest, TestStep testStep) throws ResourceNotFoundException, TestProjectImportException {
         action = replaceLocalParameters(action, stepRequest, testStep);
-        action = replaceTestCaseParameters(action, stepRequest, testStep);
+        action = replaceTestCaseParameters(action, testStep);
         action = replaceGlobalParameters(action, testStep);
         if(stepRequest.getElementId() != null) {
             List<EntityExternalMapping> entityExternalMapping = entityExternalMappingService.findByExternalIdAndEntityTypeAndApplicationId(testStep.getElement(), EntityType.ELEMENT, integration.getId());
@@ -165,7 +165,7 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
             TestProjectElementRequest elementRequest = findElementByIdInProject(elementId);
             Element element = elementsImportService.createElementObject(elementRequest, applicationVersionId, this.integration);
             String locatorValue = replaceLocalParameters(element.getLocatorValue(), stepRequest, testStep);
-            locatorValue = replaceTestCaseParameters(locatorValue, stepRequest, testStep);
+            locatorValue = replaceTestCaseParameters(locatorValue, testStep);
             locatorValue = replaceGlobalParameters(locatorValue, testStep);
             element.setLocatorValue(locatorValue);
             element = elementService.create(element);
@@ -188,7 +188,7 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
         return str;
     }
 
-    private String replaceTestCaseParameters(String str, TestProjectTestStepRequest stepRequest, TestStep testStep) {
+    private String replaceTestCaseParameters(String str, TestStep testStep) {
         for(String key : this.testCaseParametersMap.keySet()) {
             if(str.contains("{{" + key + "}}")) {
                 str = str.replace("{{" + key + "}}", this.testCaseParametersMap.get(key));

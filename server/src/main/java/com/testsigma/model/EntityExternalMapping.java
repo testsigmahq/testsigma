@@ -68,6 +68,15 @@ public class EntityExternalMapping implements Serializable {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @NotFound(action = NotFoundAction.IGNORE)
+    @WhereJoinTable(clause = "type ='TEST_STEP'")
+    private TestStep testStep;
+
+    @ManyToOne
+    @Fetch(value = FetchMode.SELECT)
+    @JoinColumn(name = "entity_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @NotFound(action = NotFoundAction.IGNORE)
     @WhereJoinTable(clause = "type ='TEST_CASE'")
     private TestCase testCase;
 
@@ -97,6 +106,24 @@ public class EntityExternalMapping implements Serializable {
     @NotFound(action = NotFoundAction.IGNORE)
     @WhereJoinTable(clause = "type ='TEST_CASE_RESULT'")
     private TestCaseResult testCaseResult;
+
+    @ManyToOne
+    @Fetch(value = FetchMode.SELECT)
+    @JoinColumn(name = "entity_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @NotFound(action = NotFoundAction.IGNORE)
+    @WhereJoinTable(clause = "type ='ELEMENT'")
+    private Element element;
+
+    @ManyToOne
+    @Fetch(value = FetchMode.SELECT)
+    @JoinColumn(name = "entity_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @NotFound(action = NotFoundAction.IGNORE)
+    @WhereJoinTable(clause = "type ='WORKSPACE_VERSION'")
+    private WorkspaceVersion workspaceVersion;
 
     @ManyToOne
     @Fetch(value = FetchMode.SELECT)

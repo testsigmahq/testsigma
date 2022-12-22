@@ -83,4 +83,8 @@ export class Integrations extends Base implements PageObject {
   get isClickUp(): Boolean {
     return this.workspace == Integration.ClickUp;
   }
+
+  get isTestProject():Boolean {
+    return this.workspace == Integration.TestProjectImport;
+  }
 }

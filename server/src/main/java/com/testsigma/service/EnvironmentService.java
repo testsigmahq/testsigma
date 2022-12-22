@@ -21,6 +21,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @Log4j2
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -32,6 +34,10 @@ public class EnvironmentService {
   public Environment find(Long id) throws ResourceNotFoundException {
     return environmentRepository.findById(id)
       .orElseThrow(() -> new ResourceNotFoundException("Test Data Not Found with id: " + id));
+  }
+
+  public Optional<Environment> findByName(String name) {
+    return environmentRepository.findByName(name);
   }
 
   public Environment update(Environment environment) {

@@ -123,4 +123,8 @@ public interface TestStepRepository extends JpaRepository<TestStep, Long> {
           "WHERE  testStep.naturalTextActionId IN (:naturalTextActionIds)")
   List<TestStep> findAllByWorkspaceVersionIdAndNaturalTextActionId(@Param(value = "workspaceVersionId") Long workspaceVersionId,
                                                                    @Param(value = "naturalTextActionIds") List<Integer> naturalTextActionIds);
+
+  @Modifying
+  @Query("DELETE FROM TestStep step WHERE step.testCaseId = :testCaseId")
+  void deleteStepsByTestCaseId(@Param("testCaseId") Long testCaseId);
 }

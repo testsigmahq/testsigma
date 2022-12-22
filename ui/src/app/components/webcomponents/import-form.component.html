@@ -1,21 +1,31 @@
-<div class="theme-overlay-container sm-pm-content-px-0 add-test-suite">
+<div class="import-form-component theme-overlay-container sm-pm-content-px-0 add-test-suite">
   <div class="theme-overlay-header">
-    <div
-      class="theme-overlay-title"
-      [translate]="'import.form.title'">
+    <div class="d-flex h-100 align-items-center">
+      <div
+        class="theme-overlay-title px-16 h-100 d-flex align-items-center"
+        (click)="activeTab = TESTSIGMA_IMPORT"
+        [ngClass]="activeTab== TESTSIGMA_IMPORT ? 'border-active-b-4' : 'border-white-b-4' "
+        [translate]="'import.form.title'">
+      </div>
+      <div *ngIf="hasTestProject"
+        class="theme-overlay-title px-16 h-100 d-flex align-items-center"
+        (click)="activeTab = TEST_PROJECT_IMPORT"
+        [ngClass]="activeTab== TEST_PROJECT_IMPORT ? 'border-active-b-4' : 'border-white-b-4' "
+        [translate]="'import.test_project.form.title'"
+      ></div>
     </div>
     <button
-      class="theme-overlay-close"
+      class="theme-overlay-close mr-16"
       type="button"
       [matTooltip]="'hint.message.common.close' | translate"
       mat-dialog-close>
     </button>
   </div>
-  <div class="theme-overlay-content theme-border-y">
+  <div *ngIf="activeTab== TESTSIGMA_IMPORT" class="theme-overlay-content theme-border-y">
     <div class="ts-form h-100">
       <form class="h-100">
         <div class="d-flex align-items-center h-100">
-          <div *ngIf="!(this.option.filterId>0)" class="ts-col-35 pr-30 pt-30 h-100">
+          <div *ngIf="!(this.option.filterId>0)" class="ts-col-35 pr-30 h-100">
             <div class="d-flex">
               <div class="align-items-baseline d-flex form-group pt-5 pb-0">
                 <label class="mt-20 mb-30 theme-btn-clear-default overflow-x-hidden" *ngIf="!fileName" @fade>
@@ -101,7 +111,7 @@
               </div>
             </div>
           </div>
-          <div class="border-brand-l-1 vh-100" *ngIf="!(this.option.filterId>0)"></div>
+          <div class="border-brand-l-1 h-100" *ngIf="!(this.option.filterId>0)"></div>
           <div class="ts-col-65 pt-30 h-100">
             <div class="d-flex">
               <div class="h-30p pl-30 rb-light">
@@ -123,11 +133,6 @@
                     <span [translate]="'backup.model.elements'" class="rb-medium"></span>
                   </mat-checkbox>
                 </div>
-               <!-- <div class="py-5">
-                  <mat-checkbox [formControlName]="['isTestDeviceEnabled']" class="mat-checkbox"
-                                (change)="checkDependencies($event, 'isTestDeviceEnabled')">
-                    <span [translate]="'backup.model.test_device'" class="rb-medium"></span></mat-checkbox>
-                </div>-->
                 <div class="py-5">
                   <mat-checkbox [formControlName]="['isUploadsEnabled']" class="mat-checkbox"
                                 (change)="checkDependencies($event, 'isUploadsEnabled')">
@@ -160,22 +165,18 @@
                                 (change)="checkDependencies($event, 'isSuitesEnabled')">
                     <span [translate]="'backup.model.test_suites'" class="rb-medium"></span></mat-checkbox>
                 </div>
-               <!-- <div class="py-5">
-                  <mat-checkbox [formControlName]="['isTestPlanEnabled']" class="mat-checkbox"
-                                (change)="checkDependencies($event, 'isTestPlanEnabled')">
-                    <span [translate]="'backup.model.test_plans'" class="rb-medium"></span></mat-checkbox>
-                </div>-->
-                <!--<div class="py-5">
-                  <mat-checkbox [formControlName]="['isLabelEnabled']" class="mat-checkbox"
-                                (change)="checkDependencies($event, 'isLabelEnabled')">
-                    <span [translate]="'backup.model.label'" class="rb-medium"></span></mat-checkbox>
-                </div>-->
               </div>
             </div>
           </div>
         </div>
       </form>
     </div>
+  </div>
+  <div *ngIf="activeTab==TEST_PROJECT_IMPORT"
+       class="theme-overlay-content theme-border-y">
+    <app-test-project-import
+    (onImportClick)="changeSavingStatus($event)">
+    </app-test-project-import>
   </div>
   <div class="theme-overlay-footer">
     <button
@@ -185,8 +186,8 @@
       (click)="import()"
       [disabled]="isSaving"
       class="theme-btn-primary"
-      type="button"
-      [translate]="isSaving ? 'Please wait...' : 'btn.common.import'">
+      type="button">
+      {{isSaving ? 'Please wait...' : 'Import'}}
     </button>
   </div>
 </div>

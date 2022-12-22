@@ -139,6 +139,10 @@ public class WorkspaceVersionService extends XMLExportImportService<WorkspaceVer
     return this.workspaceVersionRepository.findFirstByWorkspaceId(workspaceId);
   }
 
+  public Optional<WorkspaceVersion> findByWorkspaceIdAndVersionName(Long workspaceId, String versionName) {
+    return this.workspaceVersionRepository.findByWorkspaceIdAndVersionName(workspaceId, versionName);
+  }
+
   public WorkspaceVersion copy(WorkspaceVersion version, Long versionId) throws ResourceNotFoundException, TestsigmaDatabaseException {
     WorkspaceVersion originalVersion = find(versionId);
     WorkspaceVersion copiedVersion = workspaceVersionMapper.copy(originalVersion);

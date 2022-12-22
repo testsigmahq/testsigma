@@ -54,6 +54,10 @@ public class TestCaseTypeService extends XMLExportImportService<TestCaseType> {
     return this.testCaseTypeRepository.findAll();
   }
 
+  public List<TestCaseType> findByWorkspaceId(Long workspaceId) {
+    return this.testCaseTypeRepository.findByWorkspaceId(workspaceId);
+  }
+
   public TestCaseType find(Long id) throws ResourceNotFoundException {
     return this.testCaseTypeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("TestCaseType missing"));
   }

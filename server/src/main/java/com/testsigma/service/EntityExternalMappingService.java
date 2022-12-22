@@ -46,12 +46,12 @@ public class EntityExternalMappingService {
   private final ClickUpService clickUpService;
   private final XrayCloudService xrayCloudService;
 
-  public Optional<EntityExternalMapping> findByEntityIdAndEntityType(Long entityId, EntityType entityType, Long applicationId){
+  public Optional<EntityExternalMapping> findByEntityIdAndEntityTypeAndApplicationId(Long entityId, EntityType entityType, Long applicationId){
     return this.repository.findByEntityIdAndEntityTypeAndApplicationId(entityId, entityType, applicationId);
   }
 
-  public List<EntityExternalMapping> findAllByEntityIdAndEntityType(Long entityId, EntityType entityType){
-    return this.repository.findAllByEntityIdAndEntityType(entityId, entityType);
+  public List<EntityExternalMapping> findByExternalIdAndEntityTypeAndApplicationId(String externalId, EntityType entityType, Long applicationId){
+    return this.repository.findByExternalIdAndEntityTypeAndApplicationId(externalId, entityType, applicationId);
   }
 
   public List<EntityExternalMapping> findByEntityIds(Long[] ids, EntityType entityType, Long applicationId){

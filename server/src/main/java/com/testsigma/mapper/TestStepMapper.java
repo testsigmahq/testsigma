@@ -14,6 +14,7 @@ import com.testsigma.dto.*;
 import com.testsigma.dto.export.TestStepXMLDTO;
 import com.testsigma.model.*;
 import com.testsigma.web.request.TestStepRequest;
+import com.testsigma.web.request.testproject.TestProjectTestStepRequest;
 import org.mapstruct.*;
 
 import java.util.List;
@@ -48,6 +49,7 @@ public interface TestStepMapper {
   @Mapping(target = "addonTestData", expression = "java(testStep.getAddonTestData())")
   @Mapping(target = "addonElements", expression = "java(testStep.getAddonElements())")
   @Mapping(target = "addonTDF", expression = "java(testStep.getAddonTDF())")
+  @Mapping(target = "entityExternalMapping", ignore = true)
   TestStep copy(TestStep testStep);
 
   List<TestStepDTO> mapDTOs(List<TestStep> testSteps);

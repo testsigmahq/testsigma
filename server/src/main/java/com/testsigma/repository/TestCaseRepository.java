@@ -39,6 +39,8 @@ public interface TestCaseRepository extends PagingAndSortingRepository<TestCase,
 
   List<TestCase> findAllByWorkspaceVersionId(Long workspaceVersionId);
 
+  Optional<TestCase> findByNameAndWorkspaceVersionId(String name, Long workspaceVersionId);
+
   Page<TestCase> findAllByWorkspaceVersionIdAndIsStepGroupAndStatus(Long workspaceVersionId, Boolean isStepGroup, TestCaseStatus status, Pageable pageable);
 
   @Query("SELECT testCase FROM TestCase AS testCase " +

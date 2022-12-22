@@ -13,8 +13,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.testsigma.dto.*;
-import com.testsigma.dto.export.ElementCloudXMLDTO;
-import com.testsigma.dto.export.ElementXMLDTO;
 import com.testsigma.dto.export.TestCaseCloudXMLDTO;
 import com.testsigma.dto.export.TestCaseXMLDTO;
 import com.testsigma.event.EventType;
@@ -45,7 +43,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__({@Autowired, @Lazy}))
@@ -70,9 +67,15 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
   private final TestCasePriorityService testCasePriorityService;
   private final TestCaseTypeService testCaseTypeService;
   private final TestDataProfileService testDataService;
+  private final EntityExternalMappingService entityExternalMappingService;
+  private final IntegrationsService integrationsService;
 
   public Page<TestCase> findAll(Specification<TestCase> specification, Pageable pageable) {
     return testCaseRepository.findAll(specification, pageable);
+  }
+
+  public Optional<TestCase> findByNameAndWorkspaceVersionId(String name, Long workspaceVersionId) {
+    return testCaseRepository.findByNameAndWorkspaceVersionId(name, workspaceVersionId);
   }
 
   public List<TestCase> findAllByWorkspaceVersionId(Long workspaceVersionId) {
@@ -253,9 +256,17 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
     testCaseRepository.markAsRestored(id);
   }
 
-  public void destroy(Long id) throws ResourceNotFoundException {
+  public void destroy(Long id) throws TestsigmaException, IOException {
     TestCase testcase = this.find(id);
     testCaseRepository.delete(testcase);
+    Optional<Integrations> testProjectIntegration = integrationsService.findOptionalByApplication(Integration.TestProjectImport);
+    if(testProjectIntegration.isPresent()) {
+      Optional<EntityExternalMapping> entityExternalMapping =
+              entityExternalMappingService.findByEntityIdAndEntityTypeAndApplicationId(testcase.getId(), EntityType.TEST_CASE, testProjectIntegration.get().getId());
+      if (entityExternalMapping.isPresent()) {
+        entityExternalMappingService.destroy(entityExternalMapping.get());
+      }
+    }
     publishEvent(testcase, EventType.DELETE);
   }
 

@@ -66,6 +66,10 @@ public class ElementService extends XMLExportImportService<Element> {
       versionId);
   }
 
+  public Optional<Element> findByNameAndWorkspaceVersionId(String name, Long workspaceVersionId) {
+    return elementRepository.findByNameAndWorkspaceVersionId(name, workspaceVersionId);
+  }
+
   public Element find(Long id) throws ResourceNotFoundException {
     return elementRepository.findById(id)
       .orElseThrow(() -> new ResourceNotFoundException("Element is not found with id: " + id));

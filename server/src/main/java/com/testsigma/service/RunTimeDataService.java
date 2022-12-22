@@ -138,9 +138,9 @@ public class RunTimeDataService {
     String runTimeVariableName = null;
     log.info("Fetching runtime variable name from testStep:"+testStep.getId());
     List<RunTimeVariableDTO> runTimeVariableDTOS = new ArrayList<>();
-    if(testStep.getAction().indexOf("Store current") != -1){
+    if(testStep.getAction().indexOf("Store current") != -1 && testStep.getDataMap() != null){
       runTimeVariableName = testStep.getDataMap().getAttribute();
-    }else{
+    } else if(testStep.getDataMap() != null) {
       TestStepNlpData testStepNlpData = testStep.getDataMap().getTestData().getOrDefault(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA,null);
       runTimeVariableName = (testStepNlpData != null)?testStepNlpData.getValue():runTimeVariableName;
     }

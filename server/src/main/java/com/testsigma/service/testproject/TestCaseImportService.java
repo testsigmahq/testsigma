@@ -44,7 +44,7 @@ public class TestCaseImportService extends BaseImportService<TestProjectTestCase
         for (TestProjectTestCaseRequest testCaseRequest : stepGroupRequests) {
             Boolean isStepGroup = !testCaseRequests.contains(testCaseRequest);
             TestCase testCase = importTestCase(testCaseRequest,isStepGroup);
-            testStepImportService.importSteps(projectRequest, testCase, testCaseRequest, this.workspaceVersion, this.integration);
+            testStepImportService.importSteps(projectRequest, testCase, testCaseRequest, this.workspaceVersion, this.integration, isStepGroup);
         }
     }
 

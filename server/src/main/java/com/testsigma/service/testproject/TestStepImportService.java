@@ -39,7 +39,8 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
                             TestCase testCase,
                             TestProjectTestCaseRequest testCaseRequest,
                             WorkspaceVersion workspaceVersion,
-                            Integrations integration) throws ResourceNotFoundException, TestProjectImportException {
+                            Integrations integration,
+                            Boolean isStepGroup) throws ResourceNotFoundException, TestProjectImportException {
         this.projectRequest = projectRequest;
         this.testCaseRequest = testCaseRequest;
         this.workspaceVersion = workspaceVersion;
@@ -49,19 +50,21 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
         this.workspace = this.workspaceService.find(this.workspaceVersion.getWorkspaceId());
         int stepPosition = 0;
         for(TestProjectTestStepRequest stepRequest : testCaseRequest.getSteps()){
-            importStepIntoTestCase(stepRequest, testCase, stepPosition++);
+            importStepIntoTestCase(stepRequest, testCase, stepPosition++, isStepGroup);
         }
     }
 
     private void importStepIntoTestCase(TestProjectTestStepRequest stepRequest,
-                                        TestCase testCase, Integer initialStepId) throws TestProjectImportException, ResourceNotFoundException {
-        createTestStep(stepRequest, testCase, initialStepId);
+                                        TestCase testCase, Integer initialStepId,
+                                        Boolean isStepGroup) throws TestProjectImportException, ResourceNotFoundException {
+        createTestStep(stepRequest, testCase, initialStepId, isStepGroup);
     }
 
 
 
     private void createTestStep(TestProjectTestStepRequest stepRequest,
-                                TestCase testCase, Integer position) throws TestProjectImportException, ResourceNotFoundException {
+                                TestCase testCase, Integer position,
+                                Boolean isStepGroup) throws TestProjectImportException, ResourceNotFoundException {
         TestStep testStep = new TestStep();
         TestProjectNLP testProjectNLPs = new TestProjectNLP();
         populateParams();
@@ -77,13 +80,13 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
         setStepTimeOut(stepRequest, testStep);
         setIgnoreAndStepPriority(stepRequest, testStep);
         testStep.setType(stepRequest.getStepType());
-        setTestDataIfExists(stepRequest, testStep);
+        setTestDataIfExists(stepRequest, testStep, isStepGroup);
         createElementIfPresent(stepRequest,testCase.getWorkspaceVersionId(), testStep);
         testStep.setPosition(position);
         if(stepRequest.getStepType() == TestStepType.ACTION_TEXT){
             if(stepRequest.getAction() != null){
                 String action = testProjectNLPs.getNlpByIdAndType(stepRequest.getAction().getId(), this.workspace.getWorkspaceType()).getDescription();
-                String replacedAction = replaceActionWithParams(action, stepRequest, testStep);
+                String replacedAction = replaceActionWithParams(action, stepRequest, testStep, isStepGroup);
                 testStep.setAction(replacedAction);
             }
             else
@@ -101,9 +104,20 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
         }}));
     }
 
-    private String replaceActionWithParams(String action, TestProjectTestStepRequest stepRequest, TestStep testStep) throws ResourceNotFoundException, TestProjectImportException {
+    private String replaceActionWithParams(String action, TestProjectTestStepRequest stepRequest,
+                                           TestStep testStep,
+                                           Boolean isStepGroup) throws ResourceNotFoundException, TestProjectImportException {
         action = replaceLocalParameters(action, stepRequest, testStep);
-        action = replaceTestCaseParameters(action, testStep);
+        if(isStepGroup) {
+            for(TestProjectStepParameter parameter : this.testCaseRequest.getParameters()) {
+                if(action.contains("{{" + parameter.getName() + "}}")) {
+                    action = action.replace("{{" + parameter.getName() + "}}", parameter.getValue());
+                    testStep.setDisabled(parameter.getValue() == null || Boolean.TRUE.equals(testStep.getDisabled()));
+                }
+            }
+        } else {
+            action = replaceTestCaseParameters(action, testStep);
+        }
         action = replaceGlobalParameters(action, testStep);
         if(stepRequest.getElementId() != null) {
             List<EntityExternalMapping> entityExternalMapping = entityExternalMappingService.findByExternalIdAndEntityTypeAndApplicationId(testStep.getElement(), EntityType.ELEMENT, integration.getId());
@@ -137,7 +151,7 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
         return null;
     }
 
-    private void setTestDataIfExists(TestProjectTestStepRequest stepRequest, TestStep testStep){
+    private void setTestDataIfExists(TestProjectTestStepRequest stepRequest, TestStep testStep, Boolean isStepGroup){
         testStep.setTestDataType(TestDataType.raw.name());
         if(!stepRequest.getParameterMaps().isEmpty()) {
             String stepTestData = stepRequest.getParameterMaps().get(0).getValue();
@@ -147,14 +161,21 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
                     stepTestData = this.projectParametersMap.get(stepTestData);
                 }
                 testStep.setTestDataType(TestDataType.raw.name());
-            } else if(stepTestData.startsWith("{{")) {
+            } else if(stepTestData.startsWith("{{") && isStepGroup) {
+                stepTestData = stepTestData.substring(2,stepTestData.length()-2);
+                for(TestProjectStepParameter parameter : this.testCaseRequest.getParameters()) {
+                    if(parameter.getName().equals(stepTestData)) {
+                        stepTestData = parameter.getValue();
+                    }
+                }
+            }
+            else if(stepTestData.startsWith("{{") && !isStepGroup) {
                 stepTestData = stepTestData.substring(2,stepTestData.length()-2);
                 if(this.testCaseParametersMap.containsKey(stepTestData)) {
                     stepTestData = this.testCaseParametersMap.get(stepTestData);
                 }
                 testStep.setTestDataType(TestDataType.raw.name());
             }
-
             testStep.setTestData(stepTestData);
         }
     }

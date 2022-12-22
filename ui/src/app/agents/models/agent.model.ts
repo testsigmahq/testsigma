@@ -54,6 +54,15 @@ export class Agent extends Base implements PageObject {
   };
 
   isOutOfSync(): boolean {
+    if(this.currentAgentVersion.startsWith("v") && this.currentAgentVersion.endsWith("-m1")) {
+      return ("v" + this.agentVersion + "-m1" != this.currentAgentVersion);
+    }
+    if(this.currentAgentVersion.startsWith("v")) {
+      return ("v" + this.agentVersion != this.currentAgentVersion);
+    }
+    if(this.currentAgentVersion.endsWith("-m1")) {
+      return (this.agentVersion + "-m1" != this.currentAgentVersion);
+    }
     return (this.agentVersion != this.currentAgentVersion);
   };
 

@@ -144,7 +144,11 @@ public abstract class TestcaseStepRunner {
         log.debug("Found execution environment / test case as stopped...skipping test case step execution");
         status = ResultConstant.STOPPED;
         testCaseStepResult.setMessage(AutomatorMessages.MSG_USER_ABORTED_EXECUTION);
-      } else if (testCaseStepResult.getSkipExe()) {
+      } else if(testCaseStepEntity.getFailureMessage() != null){
+        testCaseStepResult.setResult(ResultConstant.FAILURE);
+        status = ResultConstant.FAILURE;
+        testCaseStepResult.setMessage(testCaseStepEntity.getFailureMessage());
+      } if (testCaseStepResult.getSkipExe()) {
         log.debug("Found execution skip flag to be set...setting appropriate message");
         status = ResultConstant.NOT_EXECUTED;
         testCaseStepResult.setMessage(testCaseStepResult.getSkipMessage());
@@ -179,7 +183,7 @@ public abstract class TestcaseStepRunner {
         log.debug("Step type is Step Group. Executing Test Component with ID - " + testCaseStepEntity.getStepGroupId());
         status = executeStepGroup(testCaseStepEntity, testCaseStepResult, testCaseStepResultMap, testCaseResult, parentStatus,
           failedToProcess, screenCaptureUtil, status);
-      } else if (isRunning && !testCaseStepResult.getSkipExe() && !preReqFailed) {
+      } else if (isRunning && !testCaseStepResult.getSkipExe() && !preReqFailed && StringUtils.isEmpty(testCaseStepEntity.getFailureMessage())) {
         setTestDataValue(testCaseStepEntity, envDetails, testCaseResult, testCaseStepResult);
         testCaseStepResult.setElementDetails(testCaseStepEntity.getElementsMap());
         testCaseStepResult.setTestDataDetails(testCaseStepEntity.getTestDataMap());
@@ -216,7 +220,7 @@ public abstract class TestcaseStepRunner {
 
       boolean majorFailure = (status != ResultConstant.SUCCESS && status != ResultConstant.ABORTED) &&
         (testCaseStepEntity.getPriority() == TestStepPriority.MAJOR &&
-          testPlanRunSettingEntity.getRecoveryAction() == RecoverAction.Run_Next_Testcase);
+          testPlanRunSettingEntity.getRecoveryAction() == RecoverAction.Run_Next_Testcase && testPlanRunSettingEntity.getOnStepPreRequisiteFail() !=RecoverAction.Run_Next_Step);
       boolean hasToAbortTestcase = (majorFailure && !isGroupStep && !isStepGroup);
 
       if (!testCaseStepResult.getSkipExe() && hasToAbortTestcase) {
@@ -314,8 +318,9 @@ public abstract class TestcaseStepRunner {
     ResultConstant whileLoopResult = ResultConstant.SUCCESS;
     boolean conditionFailed = false;
     int noOfIterationsCompleted = 0;
+    int maxIterations = (int) (1+ Optional.ofNullable(whileConditionStep.getMaxIterations()).orElse((long) NaturalTextActionConstants.WHILE_LOOP_MAX_LIMIT));
     //Iterations loop, we are limiting max loop count to ActionConstants.WHILE_LOOP_MAX_LIMIT
-    for (int i = 1; i <= NaturalTextActionConstants.WHILE_LOOP_MAX_LIMIT; i++) {
+    for (int i = 1; i <= maxIterations; i++) {
       if (breakLoop) {
         break;
       }
@@ -345,7 +350,10 @@ public abstract class TestcaseStepRunner {
       mapStepResult.put(whileConditionStep.getId(), whileConditionStepResult);
 
       log.debug("While condition result :::: " + objectMapperService.convertToJson(whileConditionStepResult));
-      executeGroup(whileConditionStep, whileConditionStepResult, mapStepResult, tresult, parentStatus, failedToProcess, screenCaptureUtil);
+      if(noOfIterationsCompleted+1<maxIterations){
+        executeGroup(whileConditionStep, whileConditionStepResult, mapStepResult, tresult, parentStatus, failedToProcess, screenCaptureUtil);
+      }
+
       //Update Iteration result to SUCCESS if break or continue is executed
       if (whileConditionStepResult.getIsBreakLoop() || whileConditionStepResult.getIsContinueLoop()) {
         whileConditionStepResult.setResult(ResultConstant.SUCCESS);
@@ -361,11 +369,15 @@ public abstract class TestcaseStepRunner {
       }
       whileLoopIterationResults.add(whileConditionStepResult);
       whileLoopResult = (whileLoopResult.getId() < whileConditionStepResult.getResult().getId()) ? whileConditionStepResult.getResult() : whileLoopResult;
+      noOfIterationsCompleted = i;
       //If condition step is failed, we should not fail while loop status
       if (conditionFailed) {
-        whileLoopResult = ResultConstant.SUCCESS;
+        whileLoopResult = ResultConstant.FAILURE;
       }
-      noOfIterationsCompleted = i;
+      if(noOfIterationsCompleted == maxIterations){
+        whileConditionStepResult.setResult(ResultConstant.FAILURE);
+        whileConditionStepResult.setMessage(String.format(AutomatorMessages.MSG_WHILE_LOOP_ITERATIONS_EXHAUSTED,maxIterations-1));
+      }
     }
     //Add all iteration results to parent LOOP step
     whileLoopResultObj.setStepResults(whileLoopIterationResults);
@@ -374,9 +386,9 @@ public abstract class TestcaseStepRunner {
     }
     ResultConstant status = (currentStatus.getId() < whileLoopResultObj.getResult().getId()) ? whileLoopResultObj.getResult() : currentStatus;
     if ((whileLoopResultObj.getResult() == ResultConstant.SUCCESS)) {
-      if (noOfIterationsCompleted == NaturalTextActionConstants.WHILE_LOOP_MAX_LIMIT) {
-        status = ResultConstant.FAILURE;
-        whileLoopResultObj.setResult(ResultConstant.FAILURE);
+      if (noOfIterationsCompleted == maxIterations) {
+        status = ResultConstant.SUCCESS;
+        whileLoopResultObj.setResult(ResultConstant.SUCCESS);
         whileLoopResultObj.setMessage(AutomatorMessages.MSG_WHILE_LOOP_ITERATIONS_EXHAUSTED);
       } else {
         whileLoopResultObj.setMessage(AutomatorMessages.MSG_WHILE_LOOP_SUCCESS);
@@ -431,6 +443,7 @@ public abstract class TestcaseStepRunner {
       TestCaseStepResult parentResult = parentStatus.get(childStep.getParentId());
       childStepResult.setParentResultId(parentResult != null ? parentResult.getId() : null);
       childStepResult.setTestCaseStepType(childStep.getType());
+      childStepResult.setVisualEnabled(childStep.getVisualEnabled());
 
       childStepResult.setStepDetails(childStep.getStepDetails());
       RunnerUtil util = new RunnerUtil();

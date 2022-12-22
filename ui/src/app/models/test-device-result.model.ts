@@ -5,11 +5,14 @@ import {TestPlanResult} from "./test-plan-result.model";
 import {StatusConstant} from "../enums/status-constant.enum";
 import {TestDeviceSettings} from "./test-device-settings.model";
 import {ResultBase} from "./result-base.model";
+import {ReRunType} from "../enums/re-run-type.enum";
 
 export class TestDeviceResult extends ResultBase implements PageObject {
 
   @serializable
   public id: number;
+  @serializable
+  public testPlanLabType: string;
   @serializable
   public environmentId: number;
   @serializable(object(TestDevice))
@@ -51,12 +54,26 @@ export class TestDeviceResult extends ResultBase implements PageObject {
   public isVisuallyPassed: boolean;
   @serializable(custom(v => SKIP, v => v))
   public appUploadVersionId: Number;
+  public lastChildResult: TestDeviceResult;
+  @serializable
+  public reRunType: ReRunType;
+
 
   deserialize(input: any): this {
     return Object.assign(this, deserialize(TestDeviceResult, input));
   }
 
   get lastRun(){
-    return null;
+    if(this.lastChildResult == null)
+      this.lastChildResult = this.getLastChildResult(this);
+    return this.lastChildResult;
   }
+
+  getLastChildResult(environmentResult: TestDeviceResult){
+    if(environmentResult.childResult == null)
+      return environmentResult
+    return this.getLastChildResult(environmentResult.childResult);
+  }
+
+
 }

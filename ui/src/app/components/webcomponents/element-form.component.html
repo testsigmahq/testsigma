@@ -1,13 +1,24 @@
-<div class="theme-overlay-container">
+<div class="theme-overlay-container"
+     module="element-recorder-popup">
   <div
     [class.theme-border-b]="!formDetails"
-    class="theme-overlay-header">
+    *ngIf="!isFullScreen"
+    class="theme-overlay-header flex-auto justify-content-between">
     <div
       class="theme-overlay-title"
       [translate]="elementId ? 'elements.form.edit_title' : 'elements.form.create_title'">
     </div>
+    <div>
+      <button
+        (click)="stopCapture(true)"
+        class="close"
+        type="button"
+        [matTooltip]="'hint.message.common.close' | translate">
+      </button>
+    </div>
   </div>
-  <div class="theme-overlay-content pt-40">
+  <div class="theme-overlay-content p-20"
+  [ngClass]="{'h-100vh-110px': isFullScreen}">
     <form
       class="ts-form" id="elementForm"
       (keydown.enter)="false"
@@ -18,6 +29,8 @@
       <div [ngSwitch]="element.createdType">
         <div *ngIf="!options?.isStepRecordView"
           class="form-group ts-col-100 d-flex">
+          <div *ngIf="workspaceVersion?.workspace.isMobileNative"
+          class="d-flex">
           <label
             class="rb-medium pr-20"
             [translate]="'elements.form.selection.title'"></label>
@@ -36,42 +49,43 @@
               class="pl-5 pointer"
               [translate]="'elements.form.label.manually'"></label>
           </div>
-
-          <div
-            *ngIf="workspaceVersion?.workspace.isMobileNative"
-            class="d-flex align-items-center pl-25">
-            <input
-              type="radio"
-              id="element_inspect"
-              [value]="elementCreateType.MOBILE_INSPECTOR"
-              name="created_type"
-              [disabled]="!hasInspectorFeature()"
-              [ngModelOptions]="{standalone: true}"
-              [(ngModel)]="element.createdType"/>
-            <label
-              for="element_inspect"
-              class="pl-5 pointer"
-              [translate]="'elements.form.label.element_inspect'"></label>
-            <i
-              *ngIf="!hasInspectorFeature()"
-              [matTooltip]="'hint.message.common.upgrade' | translate"
-              class="fa-bolt-solid fz-10 result-status-text-4 ml-5"></i>
+            <div
+              class="d-flex align-items-center pl-25">
+              <input
+                type="radio"
+                id="element_inspect"
+                [value]="elementCreateType.MOBILE_INSPECTOR"
+                name="created_type"
+                [disabled]="!hasInspectorFeature()"
+                [ngModelOptions]="{standalone: true}"
+                [(ngModel)]="element.createdType"/>
+              <label
+                for="element_inspect"
+                class="pl-5 pointer"
+                [translate]="'elements.form.label.element_inspect'"></label>
+              <i
+                *ngIf="!hasInspectorFeature()"
+                [matTooltip]="'hint.message.common.upgrade' | translate"
+                class="fa-bolt-solid fz-10 result-status-text-4 ml-5"></i>
+            </div>
           </div>
           <div
             *ngIf="workspaceVersion?.workspace.isWeb || workspaceVersion?.workspace?.isMobileWeb"
-            class="d-flex align-items-center pl-25">
-            <input
-              type="radio"
-              id="chrome_extension"
-              [value]="elementCreateType.CHROME"
-              name="created_type"
-              [ngModelOptions]="{standalone: true}"
-              (ngModelChange)="startCapture()"
-              [(ngModel)]="element.createdType"/>
-            <label
-              for="chrome_extension"
-              class="pl-5 pointer"
-              [translate]="'elements.form.label.chrome_extension'"></label>
+            class="d-flex align-items-center">
+            <div *ngIf="!isRecording"
+                 class="record-btn text-nowrap fz-16 pointer d-inline-block align-items-center d-flex justify-content-center" (click)="element.createdType = elementCreateType.CHROME; startCapture();">
+              <div class="fa-play-circle btn mr-5 p-4 my-2 fz-24"></div> <span [translate]="'agents.mobile.inspection.record_title'"></span>
+            </div>
+            <div *ngIf="isRecording"
+                 class="stop-btn text-nowrap fz-16 pointer d-inline-block align-items-center d-flex justify-content-center" (click)="element.createdType = elementCreateType.MANUAL; stopCapture();">
+              <div class="fa-stop-circle-solid btn mr-5 p-4 my-2 fz-24"></div> <span  class="text-dark" [translate]="'Stop Recording'"></span>
+            </div>
+            <div class="flex-grow-1 ml-10 d-flex align-items-center">
+              <div class="d-flex">
+                <span class="fa-info fz-14 mb-10 text-secondary"></span>
+                <div class="fz-12 ml-10" [innerHTML]="'chrome.recorder.use' | translate"></div>
+              </div>
+            </div>
           </div>
         </div>
         <div *ngSwitchCase="elementCreateType.CHROME"
@@ -80,44 +94,44 @@
                [ngSwitch]="chromeRecorderService.isInstalled"
                class="ts-col-100">
             <div *ngSwitchCase="true" class="ts-col-100">
-              <div class="theme-info-light text-info p-10 border-rds-4 d-flex align-items-center justify-content-center">
-                <i class="fa-info fz-20 pr-8"></i>
-                <span
-                  class="mr-40"
-                  [translate]="'elements.form.chrome_extension.info'"></span>
-                <a *ngIf="isWeb"
-                  target="_blank"
-                  class="theme-text border-softBlue-l-1 py-7 text-nowrap"
-                  href="https://s3.amazonaws.com/assets.testsigma.com/videos/elements/web/create-element.mp4">
-                  <i class="fa-youtube text-desaturatedBlue mx-20"></i>
-                  <span class="text-strongBlue" [translate]="'elements.form.chrome_extension.watch_demo'"></span>
-                </a>
-                <a *ngIf="isMobileWeb"
-                   target="_blank"
-                   class="theme-text border-softBlue-l-1 py-7 text-nowrap"
-                   href="https://s3.amazonaws.com/assets.testsigma.com/videos/elements/mobile-web/create-element.mp4">
-                  <i class="fa-youtube text-desaturatedBlue mx-20"></i>
-                  <span class="text-strongBlue" [translate]="'elements.form.chrome_extension.watch_demo'"></span>
-                </a>
-                <a *ngIf="isAndroidNative"
-                   target="_blank"
-                   class="theme-text border-softBlue-l-1 py-7 text-nowrap"
-                   href="https://s3.amazonaws.com/assets.testsigma.com/videos/elements/android/create-element.mp4">
-                  <i class="fa-youtube text-desaturatedBlue mx-20"></i>
-                  <span class="text-strongBlue" [translate]="'elements.form.chrome_extension.watch_demo'"></span>
-                </a>
-                <a *ngIf="isIosNative"
-                   target="_blank"
-                   class="theme-text border-softBlue-l-1 py-7 text-nowrap"
-                   href="https://s3.amazonaws.com/assets.testsigma.com/videos/elements/ios/create-element.mp4">
-                  <i class="fa-youtube text-desaturatedBlue mx-20"></i>
-                  <span class="text-strongBlue" [translate]="'elements.form.chrome_extension.watch_demo'"></span>
-                </a>
-              </div>
-              <div class="theme-hint border-rds-4 px-10 py-5 fz-12 text-hint mt-2 mb-40 text-center">
+<!--              <div class="theme-info-light text-info p-10 border-rds-4 d-flex align-items-center justify-content-center">-->
+<!--                <i class="fa-info fz-20 pr-8"></i>-->
+<!--                <span-->
+<!--                  class="mr-40"-->
+<!--                  [translate]="'elements.form.chrome_extension.info'"></span>-->
+<!--                <a *ngIf="isWeb"-->
+<!--                  target="_blank"-->
+<!--                  class="theme-text border-softBlue-l-1 py-7 text-nowrap"-->
+<!--                  href="https://s3.amazonaws.com/assets.testsigma.com/videos/elements/web/create-element.mp4">-->
+<!--                  <i class="fa-youtube text-desaturatedBlue mx-20"></i>-->
+<!--                  <span class="text-strongBlue" [translate]="'elements.form.chrome_extension.watch_demo'"></span>-->
+<!--                </a>-->
+<!--                <a *ngIf="isMobileWeb"-->
+<!--                   target="_blank"-->
+<!--                   class="theme-text border-softBlue-l-1 py-7 text-nowrap"-->
+<!--                   href="https://s3.amazonaws.com/assets.testsigma.com/videos/elements/mobile-web/create-element.mp4">-->
+<!--                  <i class="fa-youtube text-desaturatedBlue mx-20"></i>-->
+<!--                  <span class="text-strongBlue" [translate]="'elements.form.chrome_extension.watch_demo'"></span>-->
+<!--                </a>-->
+<!--                <a *ngIf="isAndroidNative"-->
+<!--                   target="_blank"-->
+<!--                   class="theme-text border-softBlue-l-1 py-7 text-nowrap"-->
+<!--                   href="https://s3.amazonaws.com/assets.testsigma.com/videos/elements/android/create-element.mp4">-->
+<!--                  <i class="fa-youtube text-desaturatedBlue mx-20"></i>-->
+<!--                  <span class="text-strongBlue" [translate]="'elements.form.chrome_extension.watch_demo'"></span>-->
+<!--                </a>-->
+<!--                <a *ngIf="isIosNative"-->
+<!--                   target="_blank"-->
+<!--                   class="theme-text border-softBlue-l-1 py-7 text-nowrap"-->
+<!--                   href="https://s3.amazonaws.com/assets.testsigma.com/videos/elements/ios/create-element.mp4">-->
+<!--                  <i class="fa-youtube text-desaturatedBlue mx-20"></i>-->
+<!--                  <span class="text-strongBlue" [translate]="'elements.form.chrome_extension.watch_demo'"></span>-->
+<!--                </a>-->
+<!--              </div>-->
+              <div class="theme-hint border-rds-4 p-12 fz-12 text-hint mt-2 mb-25 text-center border-dark-separator-1">
                 <div class="mx-auto w-fit-content d-flex align-items-center">
                   <i class="fa-warning fz-20 pr-8"></i>
-                  <span [translate]="'elements.form.chrome_extension.note'"></span>
+                  <span [translate]="'elements.form.chrome_extension.note'" class="text-left"></span>
                 </div>
               </div>
             </div>
@@ -128,6 +142,7 @@
                   <a
                     target="_blank"
                     class="theme-text d-flex"
+                    rel="noreferrer nofollow"
                     href="https://testsigma.com/docs/faqs/why-chrome-extension/">
                     <span [translate]="'elements.form.learn_more'" class="text-link"></span></a>
                 </div>
@@ -155,8 +170,9 @@
                   [innerHTML]="'elements.form.chrome_extension.not_Chrome' | translate"></span>
           </div>
         </div>
-        <div class="d-flex flex-wrap justify-content-between" *ngIf="isManualOrHasMandatoryPrerequisites()">
-          <div class="d-flex flex-wrap justify-content-between ts-col-100">
+        <div class="d-flex flex-wrap justify-content-between theme-border-t ">
+          <div class="d-flex flex-wrap justify-content-between ts-col-100 mt-25"
+               *ngIf="elementCreateType.MOBILE_INSPECTOR != element.createdType">
             <div class="form-group ts-col-50 pr-20">
               <div class="p-0 field mb-0">
                 <input
@@ -173,22 +189,22 @@
               </div>
               <div
                 *ngIf="formSubmitted && elementForm.get('name').hasError('required')"
-                class="error" [translate]="'element.message.title.required'">
+                class="error" [translate]="'form.validation.common.required' | translate: {FieldName:'Name'}">
               </div>
-              <div *ngIf="elementForm.controls.name.errors?.pattern && elementForm?.get('name')?.touched"
+              <div *ngIf="formSubmitted && elementForm?.get('name')?.touched && elementForm.controls.name.errors?.pattern "
                    [translate]="'element.message.name.invalid_characters'" class="error">
               </div>
               <div
-                *ngIf="elementForm.controls.name.errors?.minlength && !elementForm.controls.name.errors?.pattern
+                *ngIf="formSubmitted && elementForm.controls.name.errors?.minlength && !elementForm.controls.name.errors?.pattern
                 && elementForm?.get('name')?.touched && !elementForm.controls.name.hasError('whitespace')"
                 [translate]="'element.message.name.minlength'" class="error">
               </div>
               <div
-                *ngIf="elementForm.controls.name.errors?.maxlength && !elementForm.controls.name.errors?.pattern && elementForm?.get('name')?.touched "
+                *ngIf="formSubmitted && elementForm.controls.name.errors?.maxlength && !elementForm.controls.name.errors?.pattern && elementForm?.get('name')?.touched "
                 class="error" [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'250'}">
               </div>
               <div class="error"
-                   *ngIf="elementForm?.touched  && elementForm.controls.name.hasError('whitespace')"
+                   *ngIf="formSubmitted && elementForm?.touched  && elementForm.controls.name.hasError('whitespace') && !elementForm.get('name').hasError('required')"
                    [textContent]="'form.validation.cannot_have_white_spaces'| translate: {FieldName:'Name'}"></div>
             </div>
             <div class="form-group ts-col-50 pl-20" matAutocompleteOrigin #origin="matAutocompleteOrigin">
@@ -207,20 +223,20 @@
                   class="error" [translate]="'agents.message.title.required'">
                 </div>
                 <div
-                  *ngIf="elementForm.controls.screen_name.errors?.minlength"
+                  *ngIf="formSubmitted && elementForm.controls.screen_name.errors?.minlength"
                   [translate]="'agents.mobile.inspection.screen_name.minlength'" class="error"></div>
                 <div
-                  *ngIf="elementForm.controls.screen_name.errors?.maxlength && formSubmitted "
+                  *ngIf="formSubmitted && elementForm.controls.screen_name.errors?.maxlength && formSubmitted "
                   class="error" [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Screen Name' , max:'250'}">
                 </div>
               </div>
 
             </div>
           </div>
-          <div class="ts-col-100 d-flex justify-content-between"
+          <div class="ts-col-100 flex-wrap d-flex justify-content-between"
                *ngIf="elementCreateType.MOBILE_INSPECTOR != element.createdType">
             <div
-              class="form-group ts-col-50 pr-20">
+              class="form-group" [ngClass]="{'ts-col-100': isNewUI ,'pr-20 ts-col-50': !isNewUI}">
               <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill">
                 <mat-select
                   disableOptionCentering panelClass="single"
@@ -237,7 +253,8 @@
               <label class="control-label" [translate]="'elements.form.label.locator_type'"></label>
             </div>
             <div
-              class="form-group ts-col-50 pl-20">
+              class="form-group"
+              [ngClass]="{'ts-col-100': isNewUI,'pl-20 ts-col-50': !isNewUI}">
               <div class="p-0 field mb-0">
                 <input
                   type="text"
@@ -264,13 +281,13 @@
       </div>
     </form>
   </div>
-  <div class="theme-overlay-footer">
+  <div class="theme-overlay-footer shadow-all2-b4">
     <button
       (click) = "stopCapture(true)"
       class="theme-btn-clear-default"
       [translate]="'btn.common.cancel'"></button>
     <button
-      [disabled]="!elementForm?.valid || this.isInProgress"
+      [disabled]="saving || this.isInProgress"
       (click)="saveOrUpdate()"
       appAsyncBtn
       [isLoading]="saving"

@@ -131,6 +131,12 @@
 .line-height-large{
   line-height: 1.5;
 }
+.line-height-28{
+  line-height: 28px;
+}
+.line-height-45{
+  line-height: 45px;
+}
 .go-back-icon {
   @extend .fa-back-arrow, .pr-14, .pointer, .text-decoration-none, .fz-16, .theme-text;
 }
@@ -1541,6 +1547,12 @@
 }
 .w-384{
   width: 384px;
+}
+.w-488{
+  width: 488px;
+}
+.w-285{
+  width:285px;
 }
 .country-flag{
   background-size: 20px!important;

@@ -14,14 +14,14 @@ import com.testsigma.constants.AutomatorMessages;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaException;
 import com.testsigma.mapper.TestSuiteResultMapper;
-import com.testsigma.model.ResultConstant;
-import com.testsigma.model.StatusConstant;
-import com.testsigma.model.TestDeviceResult;
-import com.testsigma.model.TestSuiteResult;
+import com.testsigma.model.*;
 import com.testsigma.repository.TestSuiteResultRepository;
+import com.testsigma.util.XLSUtil;
 import com.testsigma.web.request.TestSuiteResultRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
@@ -105,6 +105,23 @@ public class TestSuiteResultService {
 
     testSuiteResultRepository.updateTestSuiteResult(result, message, status, duration, startTime, endTime,
       environmentRunId, statusConstant);
+  }
+
+  public void updateResultByResult(ResultConstant result, StatusConstant status, String message, Long duration,
+                           Timestamp startTime, Timestamp endTime, Long environmentRunId,
+                           ResultConstant resultConstant) {
+    log.info(String.format("Updating test suites with result - %s, status - %s, message - %s with environment result " +
+            "id - %s and result is %s ", result, status, message, environmentRunId, resultConstant));
+
+    testSuiteResultRepository.updateTestSuiteResultByResultCheck(result, message, status, duration, startTime, endTime,
+            environmentRunId, resultConstant);
+  }
+
+  public TestSuiteResult getFirstParentResult(Long childResultId) throws ResourceNotFoundException {
+    TestSuiteResult childResult = find(childResultId);
+    if (childResult.getReRunParentId() == null)
+      return childResult;
+    return getFirstParentResult(childResult.getReRunParentId());
   }
 
   public void stopTestSuiteResultsByEnvironmentResult(String message, ResultConstant result, Long environmentRunId) {
@@ -244,5 +261,86 @@ public class TestSuiteResultService {
     TestSuiteResult testCaseGroupResult = find(testCaseGroupResultRequest.getId());
     testSuiteResultMapper.merge(testCaseGroupResultRequest, testCaseGroupResult);
     update(testCaseGroupResult);
+  }
+  public void export(TestSuiteResult testSuiteResult, XLSUtil wrapper) throws ResourceNotFoundException {
+    wrapper.getWorkbook().setSheetName(wrapper.getWorkbook().getSheetIndex(wrapper.getSheet()),
+            "Run result summary");
+    setResultDetails(testSuiteResult, wrapper);
+    setTestCasesSummary(testSuiteResult, wrapper);
+    setDetailedTestCaseList(testSuiteResult, wrapper);
+  }
+
+  private void setResultDetails(TestSuiteResult testSuiteResult, XLSUtil wrapper)
+          throws ResourceNotFoundException {
+    setHeading(wrapper, "TestPlan Details");
+    setDetailsKeyValue("Test Plan Name", testSuiteResult.getTestPlanResult().getTestPlan().getName(), wrapper);
+    setDetailsKeyValue("Test Machine Name", testSuiteResult.getTestDeviceResult().getTestDevice().getTitle(), wrapper);
+    setDetailsKeyValue("Test Suite Name", testSuiteResult.getTestSuite().getName(), wrapper);
+    if (testSuiteResult.getTestSuite().getDescription() != null)
+      setDetailsKeyValue("Description", testSuiteResult.getTestSuite().getDescription().replaceAll("\\&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-fA-F]{1,6});|\\<.*?\\>", ""), wrapper);
+    setDetailsKeyValue("RunId", testSuiteResult.getId().toString(), wrapper);
+    setDetailsKeyValue("Build No", testSuiteResult.getTestPlanResult().getBuildNo(), wrapper);
+//    setDetailsKeyValue("Triggered By", userService.find(testSuiteResult.getTestPlanResult().getExecutedBy()).getUserName(), wrapper);
+    setDetailsKeyValue("TestPlan Start Time", testSuiteResult.getTestPlanResult().getStartTime().toString(), wrapper);
+    setDetailsKeyValue("TestPlan End Time", testSuiteResult.getEndTime() != null ? testSuiteResult.getEndTime().toString() : "-", wrapper);
+    setDetailsKeyValue("TestPlan Result",
+            testSuiteResult.getTestPlanResult().getResult().getName(), wrapper);
+    setDetailsKeyValue("TestPlan Message", testSuiteResult.getTestPlanResult().getMessage(), wrapper);
+  }
+
+  private void setDetailedTestCaseList(TestSuiteResult testSuiteResult, XLSUtil wrapper) {
+    setHeading(wrapper, "Test Cases List");
+    String[] keys = {"Test Case", "Test Machine", "Result", "Start Time", "End Time", "Visual Test Results"};
+    setCellsHorizontally(wrapper, keys, true);
+    List<TestCaseResult> testCaseResults = testCaseResultService.findAllBySuiteResultId(testSuiteResult.getId());
+    for (TestCaseResult testCaseResult : testCaseResults) {
+      Object[] values = {testCaseResult.getTestCase().getName(),
+              testCaseResult.getTestDeviceResult().getTestDevice().getTitle(),
+              testCaseResult.getResult().getName(), testCaseResult.getStartTime(),
+              testCaseResult.getEndTime(), testCaseResult.getIsVisuallyPassed() == null ? "N/A" : testCaseResult.getIsVisuallyPassed() ? "PASS" : "FAIL"};
+      setCellsHorizontally(wrapper, values, false);
+    }
+  }
+
+  private void setTestCasesSummary(TestSuiteResult testSuiteResult, XLSUtil wrapper) {
+    setHeading(wrapper, "Summary");
+    Object[] keys = {"Total Test Cases", "Queued", "Passed", "Failed", "Aborted", "Not Executed", "Stopped"};
+    Object[] counts = {testSuiteResult.getTotalCount(), testSuiteResult.getQueuedCount(),
+            testSuiteResult.getPassedCount(), testSuiteResult.getFailedCount(), testSuiteResult.getAbortedCount(),
+            testSuiteResult.getNotExecutedCount(),
+            //testSuiteResult.getPreRequisiteFailedCount(),
+            testSuiteResult.getStoppedCount()};
+    setCellsHorizontally(wrapper, keys, true);
+    setCellsHorizontally(wrapper, counts, false);
+  }
+  private void setCellsHorizontally(XLSUtil wrapper, Object[] keys, boolean isBold) {
+    Integer count = -1;
+    Row row = wrapper.getDataRow(wrapper, wrapper.getNewRow());
+    for (Object key : keys) {
+      row.createCell(++count).setCellValue(key.toString());
+    }
+    if (isBold) {
+      count = -1;
+      for (Object key : keys) {
+        row.getCell(++count).setCellStyle(XLSUtil.getSecondAlignStyle(wrapper));
+      }
+    }
+  }
+
+  private void setHeading(XLSUtil wrapper, String key) {
+    wrapper.getDataRow(wrapper, wrapper.getNewRow());
+    Row row = wrapper.getDataRow(wrapper, wrapper.getNewRow());
+    CellStyle header = XLSUtil.getTableHeaderStyle(wrapper);
+    row.setRowStyle(header);
+    row.createCell(1).setCellValue(key);
+    row.getCell(1).setCellStyle(header);
+  }
+
+  private void setDetailsKeyValue(String key, String value, XLSUtil wrapper) {
+    Integer count = 0;
+    Row row = wrapper.getDataRow(wrapper, wrapper.getNewRow());
+    row.createCell(count).setCellValue(key);
+    row.getCell(count).setCellStyle(XLSUtil.getSecondAlignStyle(wrapper));
+    row.createCell(++count).setCellValue(value);
   }
 }

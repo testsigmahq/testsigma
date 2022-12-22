@@ -4,7 +4,7 @@ import {UrlConstantsService} from "../shared/services/url.constants.service";
 import {Pageable} from "../shared/models/pageable";
 import {Page} from "../shared/models/page";
 import {TestCase} from "../models/test-case.model";
-import {Observable, throwError} from 'rxjs';
+import {Observable, Subject, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {FilterableDataSourceService} from "../shared/services/filterable-data-source.service";
@@ -16,13 +16,14 @@ import {ByTypeCount} from "../models/by-type-count.model";
   providedIn: 'root'
 })
 export class TestCaseService implements FilterableDataSourceService {
+  public refeshTestCaseAfterSaveOrUpdate:Subject<boolean> = new Subject<boolean>();
 
   constructor(
     private http: HttpClient,
     private httpHeaders: HttpHeadersService,
     private URLConstants: UrlConstantsService) {
   }
-
+  public refresh: Subject<number|null> = new Subject<number|null>();
   public stepsFetch: EventEmitter<any> = new EventEmitter();
   public emitStepLength(preferenceName: any) {
     this.stepsFetch.emit(preferenceName);
@@ -120,7 +121,7 @@ export class TestCaseService implements FilterableDataSourceService {
     );
   }
 
-  copy(copyRequest: { name: string; stepIds?: number[]; testCaseId: number,  isStepGroup: boolean}) : Observable<TestCase>{
+  copy(copyRequest: { name: string; stepIds?: number[]; testCaseId: number,  isStepGroup: boolean, isReplace: boolean}) : Observable<TestCase>{
     return this.http.post<TestCase>(this.URLConstants.testCasesUrl+"/copy", copyRequest, {
       headers: this.httpHeaders.contentTypeApplication
     }).pipe(

@@ -1,6 +1,7 @@
 package com.testsigma.constants;
 
 public class MessageConstants {
+  public static final String MSG_REPORT_GENERATION_FAILED_EXECUTION_IN_PROGRESS = "Report generation failed, Test plan execution is not completed";
   public static final String MSG_UNKNOWN_TEST_DATA_DATA = "No Test data profile is mapped to Test case  ?1";
   public static final String REPORT_GENERATION_FAILED_TEST_PLAN_RUN_IS_NOT_COMPLETED = "Report generation failed, Test plan run is not completed";
   public static final String ELEMENT_WITH_THE_NAME_IS_NOT_AVAILABLE = "Element with the name \"?1\" is not available";
@@ -20,12 +21,16 @@ public class MessageConstants {
   public static final String STEP_GROUP_NOT_READY = "Step group ?1 currently not in Ready state. Please change to Ready state before executing";
   public static final String DRAFT_PLUGIN_ALLOWED_IN_HYBRID_ONLY = "Addon in draft mode is allowed to run only in local " +
     "test machine. Please publish your addon before running in cloud machines.";
+  public static final String INVALID_TEST_DATA_SET_SPECIAL_CHARACTER = "This data set(row) contains an invalid special character (a line break, carriage return e.t.c) at position %s in parameter(column) with name: ";
+  public static final String INVALID_TEST_DATA_PARAMETER_SPECIAL_CHARACTER = "An invalid special character (a line break, carriage return e.t.c) is found at position %s in the parameter name(column header): ";
+  public static final String INVALID_TEST_DATA_SET_TRY_AGAIN = "Please rectify that and try importing again.";
   public static final String BACKUP_IS_IN_PROGRESS = "Backup is in progress";
   public static final String BACKUP_IS_SUCCESS = "Backup is completed";
   public static final String IMPORT_IS_IN_PROGRESS = "Import is in progress";
   public static final String IMPORT_IS_SUCCESS = "Import is completed";
   public static String TEST_PLAN_COMPLETED = "Test plan execution completed";
   public static String TEST_PLAN_FAILURE = "Test plan execution failed";
+  public static String TEST_DATA_NOT_FOUND = "Test Step is Failed Because TestData parameter is not found %s with in selected step id Test data profile.";
 
   public static String getMessage(String replaceableMsg, Object... replaceParameters) {
     replaceableMsg = replaceableMsg + " ";

@@ -120,11 +120,7 @@ public class TestsigmaOsStatsService {
     testPlanStatEntity.setServerUuid(server.getServerUuid());
     testPlanStatEntity.setEventType(eventType);
     testPlanStatEntity.setTestPlanId(testPlan.getId());
-    testPlanStatEntity.setTestPlanLabType(testPlan.getTestPlanLabType());
     testPlanStatEntity.setEntityType(testPlan.getEntityType());
-    WorkspaceVersion applicationVersion = workspaceVersionService.find(testPlan.getWorkspaceVersionId());
-    Workspace workspace = workspaceService.find(applicationVersion.getWorkspaceId());
-    testPlanStatEntity.setApplicationType(workspace.getWorkspaceType());
     httpClient.post(testsigmaOSConfigService.getUrl() +
       UrlConstants.TESTSIGMA_OS_TEST_PLAN_STATS_URL, getHeaders(), testPlanStatEntity, new TypeReference<String>() {
     });
@@ -140,12 +136,9 @@ public class TestsigmaOsStatsService {
     if (testPlan == null) {
       testPlan = dryTestPlanService.find(testPlanRun.getTestPlanId());
     }
-    WorkspaceVersion applicationVersion = workspaceVersionService.find(testPlan.getWorkspaceVersionId());
-    Workspace workspace = workspaceService.find(applicationVersion.getWorkspaceId());
-    testPlanRunStatEntity.setTestPlanLabType(testPlan.getTestPlanLabType());
-    testPlanRunStatEntity.setApplicationType(workspace.getWorkspaceType());
     testPlanRunStatEntity.setTestPlanType(testPlan.getEntityType());
-
+    testPlanRunStatEntity.setApplicationType(testPlan.getTestDevices().get(0).getWorkspaceVersion().getWorkspace().getWorkspaceType());
+    testPlanRunStatEntity.setTestPlanLabType(testPlan.getTestDevices().get(0).getTestPlanLabType());
     httpClient.post(testsigmaOSConfigService.getUrl() +
       UrlConstants.TESTSIGMA_OS_TEST_PLAN_RUN_STATS_URL, getHeaders(), testPlanRunStatEntity, new TypeReference<String>() {
     });

@@ -13,13 +13,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.testsigma.dto.BackupDTO;
+import com.testsigma.dto.ElementDTO;
 import com.testsigma.dto.export.ElementCloudXMLDTO;
 import com.testsigma.dto.export.ElementXMLDTO;
 import com.testsigma.event.ElementEvent;
 import com.testsigma.event.EventType;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.mapper.ElementMapper;
+import com.testsigma.mapper.recorder.UiIdentifierMapper;
 import com.testsigma.model.*;
+import com.testsigma.model.recorder.UiIdentifierRequest;
 import com.testsigma.repository.ElementRepository;
 import com.testsigma.specification.ElementSpecificationsBuilder;
 import com.testsigma.specification.SearchCriteria;
@@ -29,6 +32,7 @@ import com.testsigma.web.request.ElementRequest;
 import com.testsigma.web.request.ElementScreenNameRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.checkerframework.checker.index.qual.PolyUpperBound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -70,12 +74,75 @@ public class ElementService extends XMLExportImportService<Element> {
   public Page<Element> findAll(Specification<Element> specification, Pageable pageable) {
     return elementRepository.findAll(specification, pageable);
   }
+  public Page<Element> findAllSortedByPreviousStepElement(Pageable pageable, Long applicationVersionId,
+                                                               String name, String screenName, String previousStepElementName) {
+    Element previousElement = elementRepository.findFirstElementByNameAndWorkspaceVersionId(previousStepElementName, applicationVersionId);
+    Long screenNameId = null;
+    if(previousElement != null) {
+      screenNameId = previousElement.getScreenNameId();
+    }
+    return elementRepository.findWithOrderByPreviousStepElementID(pageable, applicationVersionId, name, screenName, screenNameId);
+  }
+
+  public Element createUiIdentifierFromRecorder(Element element) throws ResourceNotFoundException {
+    log.info("Creating/Updating element:" + element);
+    String currentElementName = element.getName();
+    List<Element> existingElementsWithScreenNameAndLocators = findByApplicationBVersionAndScreenNameIdAndLocatorTypeAndLocatorValueAndNameLikeAndCreatedType(
+            element.getWorkspaceVersionId(), element.getScreenNameId(), element.getLocatorType(), element.getLocatorValue(),
+            element.getName(), ElementCreateType.CHROME);
+
+    if (existingElementsWithScreenNameAndLocators != null && existingElementsWithScreenNameAndLocators.size() > 0) {
+      log.info("UiIdentifier with same Xpath and same screen name exists, we will update the existing element");
+      return updateExistingUiIdentifier(existingElementsWithScreenNameAndLocators, element);
+    }
+    if (existsElementByNameAndWorkspaceVersionId(currentElementName, element.getWorkspaceVersionId())) {
+      log.info(String.format("UiIdentifier with name %s already exists", currentElementName));
+      List<String> fieldNames = findFieldNamesByVersionIdAndFieldNameLike(currentElementName, element.getWorkspaceVersionId());
+      String newName = constructNewElementName(fieldNames, currentElementName);
+      element.setName(newName);
+    }
+    return create(element);
+  }
 
   public Element create(Element element) {
     element = this.save(element);
     this.markAsDuplicated(element);
     publishEvent(element, EventType.CREATE);
     return element;
+  }
+
+  private List<Element> findByApplicationBVersionAndScreenNameIdAndLocatorTypeAndLocatorValueAndNameLikeAndCreatedType(Long workspaceVersionId, Long screenNameId, LocatorType locatorType, String locatorValue, String name, ElementCreateType createdType) {
+    return elementRepository.findAllByWorkspaceVersionIdAndScreenNameIdAndLocatorTypeAndLocatorValueAndNameLikeAndCreatedType(workspaceVersionId,screenNameId,locatorType,locatorValue,name,createdType);
+  }
+
+  public boolean existsElementByNameAndWorkspaceVersionId(String name, Long workspaceVersionId) {
+    return elementRepository.existsElementByNameAndWorkspaceVersionId(name, workspaceVersionId);
+  }
+
+  public List<String> findFieldNamesByVersionIdAndFieldNameLike(String fieldName, Long applicationVersionId) {
+    return elementRepository.findByVersionIdAndFieldNameLike(fieldName, applicationVersionId);
+  }
+
+  private String constructNewElementName(List<String> names,String currentElementName) {
+    log.info("Existing element names:"+names);
+    int increment = 0;
+    for(String name: names){
+      String tempName = name.substring(currentElementName.length());
+      try{
+        int currentIndex = Integer.parseInt(tempName);
+        increment = (currentIndex > increment)?currentIndex : increment;
+      }catch(Exception e){
+        log.info("Ignoring exception while extracting integer from:"+tempName);
+      }
+    }
+    return currentElementName+(increment+1);
+  }
+
+  private Element updateExistingUiIdentifier(List<Element> existingElementsWithScreenNameAndLocators, Element newUiIdentifier) {
+    Element existingUiIdentifier =  existingElementsWithScreenNameAndLocators.get(0);
+    log.info(String.format("Updating existing element: %s with data from element request:%s",existingUiIdentifier.getName(),newUiIdentifier.getName()));
+    existingUiIdentifier.setMetadata(newUiIdentifier.getMetadata());
+    return save(existingUiIdentifier);
   }
 
   public Element update(Element element, String oldName, String previousLocatorValue, LocatorType previousLocatorType, Long previousScreenNameId)
@@ -268,8 +335,7 @@ public class ElementService extends XMLExportImportService<Element> {
       present.setId(null);
     }
     Optional<ElementScreenName> uiIdentifierScreenName = screenNameService.getRecentImportedEntity(importDTO, present.getScreenNameId());
-    if(uiIdentifierScreenName.isPresent())
-      present.setScreenNameId(uiIdentifierScreenName.get().getId());
+    uiIdentifierScreenName.ifPresent(elementScreenName -> present.setScreenNameId(elementScreenName.getId()));
     present.setWorkspaceVersionId(importDTO.getWorkspaceVersionId());
     return present;
   }

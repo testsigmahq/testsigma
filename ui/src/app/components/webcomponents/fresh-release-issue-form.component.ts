@@ -6,11 +6,11 @@ import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
 import {NotificationsService} from "angular2-notifications";
 import {TranslateService} from '@ngx-translate/core';
 import {ToastrService} from "ngx-toastr";
-import {TestCaseResultExternalMappingService} from "../../services/test-case-result-external-mapping.service";
+import {EntityExternalMappingService} from "../../services/entity-external-mapping.service";
 import {IntegrationsService} from "../../shared/services/integrations.service";
 import {MatDialog} from "@angular/material/dialog";
 import {BaseComponent} from "../../shared/components/base.component";
-import {TestCaseResultExternalMapping} from "../../models/test-case-result-external-mapping.model";
+import {EntityExternalMapping} from "../../models/entity-external-mapping.model";
 import {FreshReleaseProject} from "../../models/fresh-release-project.model";
 import {FreshReleaseIssueType} from "../../models/fresh-release-issue-type.model";
 import { fromEvent } from 'rxjs';
@@ -24,7 +24,7 @@ import { filter, debounceTime, distinctUntilChanged, tap } from 'rxjs/operators'
 export class FreshReleaseIssueFormComponent extends BaseComponent implements OnInit {
   @Input('application') application: Integrations;
   @Input('testCaseResult') testCaseResult: TestCaseResult;
-  @Output('onCreate') createCallBack = new EventEmitter<TestCaseResultExternalMapping>();
+  @Output('onCreate') createCallBack = new EventEmitter<EntityExternalMapping>();
   public formFR: FormGroup;
   public projects: FreshReleaseProject[];
   public issueTypes: FreshReleaseIssueType[];
@@ -47,7 +47,7 @@ export class FreshReleaseIssueFormComponent extends BaseComponent implements OnI
     public notificationsService: NotificationsService,
     public translate: TranslateService,
     public toastrService: ToastrService,
-    private mappingService: TestCaseResultExternalMappingService,
+    private mappingService: EntityExternalMappingService,
     private applicationService: IntegrationsService,
     public dialog: MatDialog) {
     super(authGuard, notificationsService, translate, toastrService)
@@ -85,17 +85,15 @@ export class FreshReleaseIssueFormComponent extends BaseComponent implements OnI
 
   onSubmit() {
 
-    let mapping = new TestCaseResultExternalMapping();
+    let mapping = new EntityExternalMapping();
     if (this.selectedIssue) {
       mapping.linkToExisting = true;
       mapping.externalId = this.selectedIssue.key;
       mapping.fields = new Map<String, Object>();
       mapping.fields["project"] = this.selectedProject.key;
-      mapping.workspaceId = <number>this.application.id;
-      mapping.testCaseResultId = this.testCaseResult.id;
+      mapping.applicationId = <number>this.application.id;
     } else {
-      mapping.workspaceId = <number>this.application.id;
-      mapping.testCaseResultId = this.testCaseResult.id;
+      mapping.applicationId = <number>this.application.id;
       mapping.fields = new Map<String, Object>();
       mapping.fields['title'] = this.title;
       mapping.fields['description'] = this.description;

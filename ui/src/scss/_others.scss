@@ -284,3 +284,13 @@ app-test-plan-device-form.column{
     @extend .ml-30;
   }
 }
+.test-plan-prerequisite{
+  .execution-list-item{
+    min-height: auto;
+    min-width: 13rem;
+  }
+  i.fa-close-alt,
+  .align-items-baseline {
+    display: none !important;
+  }
+}

@@ -7,6 +7,7 @@ import com.testsigma.model.TestPlanLabType;
 import com.testsigma.model.Integrations;
 import com.testsigma.model.TestDevice;
 import com.testsigma.model.WebDriverCapability;
+import com.testsigma.sdk.ApplicationType;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
@@ -53,7 +54,7 @@ public abstract class Capabilities {
         setTestsigmaLabCapabilities(testDevice, integrations, capabilities);
         break;
       case Hybrid:
-        setHybridCapabilities(testDevice, integrations, capabilities);
+        setHybridCapabilities(testDevice, integrations, capabilities, testPlanLabType);
         break;
       default:
         log.error("Unsupported execution lab type - " + testPlanLabType);
@@ -62,7 +63,8 @@ public abstract class Capabilities {
 
   public abstract void setHybridCapabilities(TestDevice testDevice,
                                              Integrations integrations,
-                                             List<WebDriverCapability> capabilities)
+                                             List<WebDriverCapability> capabilities,
+                                             TestPlanLabType testPlanLabType)
     throws TestsigmaException;
 
   public abstract void setTestsigmaLabCapabilities(TestDevice testDevice,

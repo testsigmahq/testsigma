@@ -15,51 +15,97 @@ import {Platform} from "../../../enums/platform.enum";
 @Component({
   selector: 'app-test-machine-info-column',
   template: `
-    <span>
-        <a
-          (click)="eventPrevent($event)"
-          class="text-link"
-           [routerLink]="['/agents', agent.id]"
-          [matTooltip]="agent.title.length > 15 ? agent.title: ''"
-          [textContent]="agent.title.length > 15 ? agent.title.slice(0, 15)+ '...': agent.title" *ngIf="isHybrid && agent"></a>
+    <span
+      #labsTooltip="matTooltip"
+      class="d-inline-block mr-10 no-bg-transparent"
+      style="height: 14px!important;min-width: 14px;min-height: unset"
+      *ngIf="testDevice?.testPlanLabType && !(isHybrid && agent)"
+      [class.testsigma-lab-logo]="testDevice.isTestsigmaLab"
+      [class.testsigma-local-devices-logo]="testDevice.isHybrid"
+      [matTooltip]="('execution.lab_type.'+ testDevice.testPlanLabType) | translate"></span>
+    <a
+      #labsTooltip="matTooltip"
+      (click)="eventPrevent($event)"
+      [routerLink]="['/agents', agent.id]"
+      [matTooltip]="agent.title"
+      *ngIf="isHybrid && agent"
+    >
+      <span
+        class="d-inline-block mr-10 no-bg-transparent"
+        style="height: 14px!important;min-width: 14px;min-height: unset"
+        [class.testsigma-local-devices-logo]="testDevice.isHybrid"
+      >
+      </span>
+    </a>
+    <span class="text-truncate">
         <span
-          class="pl-5 sm fa-mobile-alt-solid mw-30 text-truncate-d-block"
+          #mobileAgentTooltip="matTooltip"
+          class="fa-mobile-alt-solid"
           *ngIf="agentDevice"
-          [textContent]="agentDevice.name"
-          appTooltipOnEllipsis></span>
-        <span class="text-nowrap">
-          <i
-            *ngIf="!isHybrid"
-            [class.fa-windows-brands]="testDevice?.isWindows"
-            [class.fa-apple]="testDevice?.isMac || testDevice?.isIOS"
-            [class.fa-linux-2]="testDevice?.isLinux"
-            [class.fa-android-solid]="testDevice?.isAndroid"></i>
-        <span class="pl-5 text-nowrap"
-              [textContent]="isHybrid && agentDevice ? 'V. ' +agentDevice.osVersion : testDevice?.formattedOsVersion"></span>
-        </span>
+          [matTooltip]="agentDevice.name"
+        ></span>
+        <i
+          #osTooltip="matTooltip"
+          *ngIf="isHybrid && !agentDevice"
+          [class.fa-windows-brands]="isWindows"
+          [class.fa-apple]="isMac"
+          [class.fa-linux-2]="isLinux"
+          [matTooltip]="isHybrid && agentDevice ? 'V. ' +agentDevice.osVersion : ( 'agents.list_view.os' | translate) +' : '+ testDevice?.platform+' '+testDevice?.formattedOsVersion"
+        ></i>
+        <i
+          #osTooltip="matTooltip"
+          *ngIf="!isHybrid && !agentDevice"
+          [class.fa-windows-brands]="testDevice?.isWindows"
+          [class.fa-apple]="testDevice?.isMac || testDevice?.isIOS"
+          [class.fa-linux-2]="testDevice?.isLinux"
+          [class.fa-android-solid]="testDevice?.isAndroid"
+          [matTooltip]="isHybrid && agentDevice ? 'V. ' +agentDevice.osVersion : ( 'agents.list_view.os' | translate) +' : '+ testDevice?.platform+' '+testDevice?.formattedOsVersion"></i>
       </span>
     <div
-      *ngIf="!isHybrid"
-      class="px-10 text-nowrap text-left">
-          <i [class.fa-mobile-alt-solid]="testDevice?.deviceName
-          && (testDevice?.isIOS || testDevice?.isAndroid)"></i>
+      *ngIf="isHybrid"
+      class="px-10 mw-70 d-flex"
+    >
+      <!--[appTooltipOnEllipsis]="testDevice?.formattedBrowserVersion"-->
+      <div class="text-truncate"
+      >
         <i
-           [class.fa-chrome]="testDevice?.isChrome"
-           [class.fa-firefox-brands]="testDevice?.isFirefox"
-           [class.fa-safari-brands]="testDevice?.isSafari"
-           [class.fa-edge]="testDevice?.isEdge"></i>
-        <span class="pl-5"
-              *ngIf="testDevice?.formattedBrowserVersion"
-              [textContent]="testDevice?.formattedBrowserVersion"></span>
-        <span class="pl-5 text-truncate-d-block mw-50"
-              *ngIf="testDevice?.deviceName && (testDevice?.isIOS || testDevice?.isAndroid)"
-              [textContent]="testDevice?.deviceName"></span>
-      <i class="pl-5"
-         *ngIf="isHybrid && (testDevice?.isIOS || testDevice?.isAndroid)"
-         [class.fa-chrome]="testDevice?.isChrome"
-         [class.fa-firefox-brands]="testDevice?.isFirefox"
-         [class.fa-safari-brands]="testDevice?.isSafari"
-         [class.fa-edge]="testDevice?.isEdge"></i>
+          #browserTooltip="matTooltip"
+          class="pl-0"
+          [class.fa-chrome]="testDevice?.isChrome"
+          [class.fa-firefox-brands]="testDevice?.isFirefox"
+          [class.fa-safari-brands]="testDevice?.isSafari"
+          [class.fa-edge]="testDevice?.isEdge"
+          [matTooltip]="(testDevice?.formattedBrowserVersion || testDevice.browserNameI18nKey) ? ('test_plan.environment.browser'|translate)+' : '+( testDevice?.browserNameI18nKey | translate) +' '+ (testDevice?.formattedBrowserVersion||'') : ''"
+        ></i>
+      </div>
+    </div>
+    <div
+      *ngIf="!isHybrid"
+      class="px-10 mw-70 d-flex">
+      <!--[appTooltipOnEllipsis]="testDevice?.deviceName"-->
+      <div class="mw-100 text-truncate"
+           *ngIf="testDevice?.deviceName && (testDevice?.isIOS || testDevice?.isAndroid)"
+      >
+        <i
+          #mobileTooltip="matTooltip"
+          [class.fa-mobile-alt-solid]="testDevice?.deviceName && (testDevice?.isIOS || testDevice?.isAndroid)"
+          [matTooltip]="testDevice?.deviceName"
+        ></i>
+      </div>
+      <!--[appTooltipOnEllipsis]="testDevice?.formattedBrowserVersion"-->
+      <div class="mw-100 text-truncate"
+      >
+        <i
+          #nativeLabBrowserTooltip="matTooltip"
+          class="pl-0"
+          [class.fa-chrome]="testDevice?.isChrome"
+          [class.fa-firefox-brands]="testDevice?.isFirefox"
+          [class.fa-safari-brands]="testDevice?.isSafari"
+          [class.fa-edge]="testDevice?.isEdge"
+          *ngIf="!testDevice?.deviceName && !(testDevice?.isIOS || testDevice?.isAndroid)"
+          [matTooltip]="(testDevice?.formattedBrowserVersion|| testDevice?.browserNameI18nKey) ? ('test_plan.environment.browser'|translate)+' : '+( testDevice?.browserNameI18nKey | translate) +' '+ (testDevice?.formattedBrowserVersion||'') : ''"
+        ></i>
+      </div>
     </div>
   `,
   styles: [],
@@ -138,7 +184,31 @@ export class TestMachineInfoColumnComponent implements OnInit {
   }
 
   get isHybrid() {
-    return this.testPlanResult?.testPlan?.isHybrid || this.testPlan?.isHybrid;
+    return this.testDevice?.isHybrid;
+  }
+
+  /**
+   * Returns a boolean value true when the execution environment is Windows
+   * @returns boolean
+   */
+  get isWindows() {
+    return this.testDevice?.isWindows
+  }
+
+  /**
+   * Returns a boolean value true when the execution environment is Mac OS
+   * @returns boolean
+   */
+  get isMac() {
+    return this.testDevice?.isMac
+  }
+
+  /**
+   * Returns a boolean value true when the execution environment is Linux
+   * @returns boolean
+   */
+  get isLinux() {
+    return this.testDevice?.isLinux
   }
 
   get isMobileWeb() {

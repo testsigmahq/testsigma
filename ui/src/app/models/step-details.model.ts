@@ -30,6 +30,8 @@ export class StepDetails extends Base implements Deserializable {
   @serializable
   public testDataParameterValue: String;
   @serializable
+  public maxIterations: number;
+  @serializable
   public preRequisite: Number;
   @serializable(alias('wait_time'))
   public waitTime: Number;

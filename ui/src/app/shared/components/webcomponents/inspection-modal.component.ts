@@ -132,7 +132,7 @@ export class InspectionModalComponent extends BaseComponent implements OnInit {
   }
 
   get disableRecordButton() {
-    return !this.launchAllowed || !this.showUploadDropDown || this.uploading || (this.uploads && this.uploads.content.length == 0)
+    return !this.launchAllowed || !this.showUploadDropDown || this.uploading || (this.uploads && this.uploads.content.length == 0 && this.manuallyInstalledAppForm.invalid )
   }
 
   public uploadSuccess(event) {
@@ -244,35 +244,43 @@ export class InspectionModalComponent extends BaseComponent implements OnInit {
     this.data.uiId = this.uiId;
     this.data.agent = this.agent;
     this.data.uploadId = this.uploadSelectionForm.getRawValue().app_upload_id;
-    this.uploadService.find(this.data.uploadId).subscribe((upload) => {
-      this.data.uploadVersionId = this.uploadSelectionForm.getRawValue().upload_version_id || upload.latestVersionId;
-      this.data.os_version = this.platformOsVersion;
-      this.data.isManually = this.isManually;
-      this.data.capabilities = this.capabilitiesForm.getRawValue().capabilities;
-      this.data.testsigmaAgentEnabled = <boolean>this.isPhysicalDevice || this.testsigmaAgentEnabled;
-      console.log("testsigma agent enabled: " + this.data.testsigmaAgentEnabled);
-      this.formSubmitted = true;
-      this.appSubmitted = true
-      if (this.isPhysicalDevice && this.physicalDeviceForm.invalid) {
-        return false;
-      }
-      if (!this.isManually && this.uploadSelectionForm.invalid) {
-        return false
-      }
-      if (this.isManually && this.manuallyInstalledAppForm.invalid) {
-        return false
-      }
-      if (!this.isPhysicalDevice) {
-        this.data.device = null;
-      }
-      this.data.testPlanLabType = this.testPlanLabType;
-      this.dialogRef.close(this.data);
-      if (this.elementInspection) {
-        this.launchRecording();
-      }
-    })
+    this.data.os_version = this.platformOsVersion;
+    this.data.isManually = this.isManually;
+    this.data.capabilities = this.capabilitiesForm.getRawValue().capabilities;
+    this.data.testsigmaAgentEnabled = <boolean>this.isPhysicalDevice || this.testsigmaAgentEnabled;
+    console.log("testsigma agent enabled: " + this.data.testsigmaAgentEnabled);
+    if(this.data.uploadId && this.data.uploadId != -1) {
+      this.uploadService.find(this.data.uploadId).subscribe((upload) => {
+        this.data.uploadVersionId = this.uploadSelectionForm.getRawValue().upload_version_id || upload.latestVersionId;
+        this.validateAndLaunch();
+      })
+    } else {
+      this.data.uploadVersionId = this.uploadSelectionForm?.getRawValue()?.upload_version_id;
+      this.validateAndLaunch();
+    }
   }
 
+  validateAndLaunch(){
+    this.formSubmitted = true;
+    this.appSubmitted = true
+    if (this.isPhysicalDevice && this.physicalDeviceForm.invalid) {
+      return false;
+    }
+    if (!this.isManually && this.uploadSelectionForm.invalid) {
+      return false
+    }
+    if (this.isManually && this.manuallyInstalledAppForm.invalid) {
+      return false
+    }
+    if (!this.isPhysicalDevice) {
+      this.data.device = null;
+    }
+    this.data.testPlanLabType = this.testPlanLabType;
+    this.dialogRef.close(this.data);
+    if (this.elementInspection) {
+      this.launchRecording();
+    }
+  }
   launchRecording() {
     this.matDialog.open(MobileInspectionComponent, {
       data: this.data,

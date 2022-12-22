@@ -5,9 +5,11 @@ import com.testsigma.model.StorageAccessLevel;
 import com.testsigma.constants.TSCapabilityType;
 import com.testsigma.exception.TestsigmaException;
 import com.testsigma.model.*;
+import com.testsigma.sdk.ApplicationType;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -42,7 +44,8 @@ public class IosCapabilities extends MobileCapabilities {
   @Override
   public void setHybridCapabilities(TestDevice testDevice,
                                     Integrations integrations,
-                                    List<WebDriverCapability> capabilities)
+                                    List<WebDriverCapability> capabilities,
+                                    TestPlanLabType testPlanLabType)
     throws TestsigmaException {
     capabilities.add(new WebDriverCapability(TSCapabilityType.AUTOMATION_NAME, TSCapabilityType.XCUI_TEST));
     capabilities.add(new WebDriverCapability(TSCapabilityType.WDA_URL, TSCapabilityType.WDA_URL_VALUE));
@@ -55,8 +58,12 @@ public class IosCapabilities extends MobileCapabilities {
     Upload upload = uploadService.find(Long.valueOf(testDevice.getAppUploadId()));
     UploadVersion uploadVersion = testDevice.getAppUploadVersionId() == null ? upload.getLatestVersion() : uploadVersionService.find(testDevice.getAppUploadVersionId());
 
-    ProvisioningProfileUpload profileUpload = provisioningProfileUploadService
+    Optional<ProvisioningProfileUpload> optionalProfileUpload = provisioningProfileUploadService
       .findByDeviceIdAndUploadId(testDevice.getDeviceId(), upload.getId());
+    if(optionalProfileUpload.isEmpty()) {
+      return uploadVersion.getPreSignedURL();
+    }
+    ProvisioningProfileUpload profileUpload = optionalProfileUpload.get();
     ProvisioningProfile provisioningProfile = provisioningProfileService.find(profileUpload.getProvisioningProfileId());
     return storageServiceFactory.getStorageService().generatePreSignedURL(uploadVersion.getResignedAppS3PathSuffix(provisioningProfile.getId()),
       StorageAccessLevel.READ, 300).toString();

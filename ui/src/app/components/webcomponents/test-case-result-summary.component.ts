@@ -4,7 +4,7 @@ import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {TestCasePrioritiesService} from "../../services/test-case-priorities.service";
 import {TestCaseTypesService} from "../../services/test-case-types.service";
 import {TestDataService} from "../../services/test-data.service";
-
+import {TestDataSetService} from "../../services/test-data-set.service";
 
 @Component({
   selector: 'app-test-case-result-summary',
@@ -18,7 +18,8 @@ export class TestCaseResultSummaryComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public options: { testcaseResult: TestCaseResult },
     private testCasePriorityService: TestCasePrioritiesService,
     private testCaseTypeService: TestCaseTypesService,
-    private testDataService: TestDataService) {
+    private testDataService: TestDataService,
+    private testDataSetService : TestDataSetService) {
     this.testcaseResult = options.testcaseResult;
   }
 
@@ -31,8 +32,15 @@ export class TestCaseResultSummaryComponent implements OnInit {
     })
     // this.userService.show(this.testcaseResult.testDeviceResult.testPlanResult.executedById).subscribe(user => this.testcaseResult.testDeviceResult.testPlanResult.executedBy = user);
     if (this.testcaseResult.testDataId)
-      this.testDataService.show(this.testcaseResult.testDataId).subscribe(res => {
-        this.testcaseResult.testDataProfile = res;
+      this.testDataService.show(this.testcaseResult.testDataId).subscribe(testData => {
+        if(testData.isMigrated) {
+          this.testDataSetService.findAll("testDataProfileId:" + this.testcaseResult.testDataId, 'position').subscribe(res => {
+            testData.data = res.content;
+            this.testcaseResult.testDataProfile = testData;
+          })
+        }else{
+          this.testcaseResult.testDataProfile = testData;
+        }
       })
   }
 

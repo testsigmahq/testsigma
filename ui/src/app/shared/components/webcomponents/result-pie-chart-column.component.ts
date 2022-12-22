@@ -97,6 +97,7 @@ export class ResultPieChartColumnComponent implements OnInit {
   @Input('width') width: number = 36;
   @Input('height') height: number = 36;
   @Input('resultEntity') resultEntity: ResultBase;
+  @Input('totalCount') totalCount: number;
 
   public Highcharts: typeof Highcharts = Highcharts;
   public chartOptions: Highcharts.Options;
@@ -106,6 +107,9 @@ export class ResultPieChartColumnComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(!this.totalCount){
+      this.totalCount = this.resultEntity?.totalCount;
+    }
     this.translate.get([
       'execution.result.SUCCESS', 'execution.result.FAILURE', 'execution.result.ABORTED',
       'execution.result.NOT_EXECUTED','execution.result.QUEUED',
@@ -121,6 +125,10 @@ export class ResultPieChartColumnComponent implements OnInit {
       'execution.result.STOPPED']).subscribe((keys) => {
       this.populateChartOptions(keys);
     });
+  }
+
+  get isRunning(){
+    return this.resultEntity?.isRunning && (this.resultEntity?.totalCount == 0 || this.resultEntity?.totalCount == this.resultEntity?.queuedCount)
   }
 
   populateChartOptions(keys) {
@@ -141,9 +149,9 @@ export class ResultPieChartColumnComponent implements OnInit {
       y: this.resultEntity.notExecutedCount,
       color: '#7A68BC'
     }, {
-      name: keys['execution.result.QUEUED'],
-      y: this.resultEntity.totalCount == 0 && this.resultEntity.isQueued ? 1 : this.resultEntity.queuedCount,
-      color: '#3C8FE2'
+      name: this.isRunning ? keys['execution.result.running'] : keys['execution.result.QUEUED'],
+      y: this.isRunning || (this.resultEntity?.totalCount == 0 && this.resultEntity?.isQueued && !this.resultEntity?.isRunning) ? 1 : this.resultEntity?.queuedCount, // Need to revamp the running count
+      color: this.isRunning ? '#038061' : '#3C8FE2'
     }, {
       name: keys['execution.result.STOPPED'],
       y: this.resultEntity.totalCount == 0 && !this.resultEntity.isQueued ? 1 : this.resultEntity.stoppedCount,

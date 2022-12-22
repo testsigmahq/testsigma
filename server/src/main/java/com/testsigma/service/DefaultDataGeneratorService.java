@@ -37,6 +37,10 @@ public class DefaultDataGeneratorService {
     return this.defaultDataGeneratorRepository.findAll(specification, pageable);
   }
 
+  public Page<DefaultDataGenerator> findAll(Pageable pageable) {
+    return this.defaultDataGeneratorRepository.findAll(pageable);
+  }
+
   public DefaultDataGenerator find(Long id) {
     return defaultDataGeneratorRepository.findById(id).get();
   }

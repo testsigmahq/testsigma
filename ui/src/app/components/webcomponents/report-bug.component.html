@@ -23,11 +23,26 @@
     class="ts-col-15 bug-report-tab pt-4">
     <div [class]="this.classList[app]"></div>
   </div>
-  <div *ngFor="let app of this.unSelectedList"
-       (click)="toggleView(app)"
-       [class.active]="this.showList(app)"
-       class="ts-col-15 bug-report-tab pt-4">
-    <div [class]="this.classList[app]"></div>
+  <div
+    (click)="toggleView('ADD_NEW')"
+    [class.active]="this.showList('ADD_NEW')"
+    [class.text-brand]="this.showList('ADD_NEW')"
+    class="bug-report-tab pt-4 ts-col-20 fz-16 text-center">
+    + {{'common.add_new'|translate}}
+  </div>
+</div>
+
+<div *ngIf="showAddPlugIn" class="list-container overflow-y-auto rb-regular d-flex align-items-center justify-content-around" [ngStyle]="{height: options && showWarning ? 'calc(100% - 141px)': 'calc(100% - 105px)' }">
+  <div class="d-flex flex-column align-items-center w-fit-content">
+    <div class="d-flex align-items-center justify-content-around bg-selected-light-green-color rounded-circle" style="width: 96px;height: 96px;">
+      <i class="fa-plug fz-48 text-brand ml-10"></i>
+    </div>
+    <div class="mt-16 fz-16 text-t-secondary text-center" [innerHTML]="( !this.selectedList?.length ? 'plan_result.report_bug.no_plugin_enabled.label' : 'plan_result.report_bug.enable_plugin.label')|translate"></div>
+    <a
+      #navigateToPluginButton
+      (mouseout)="navigateToPluginButton.blur()"
+      target="_blank"
+      [routerLink]="['/settings', 'plugs','bug_report']" class="text-decoration-none text-white border-rds-bottom-4 border-rds-top-4 btn-primary fz-18 px-30 py-10 mt-16">{{'plan_result.report_bug.btn_go_plugins'|translate}}<i class="fa-external-link-alt-solid ml-10"></i></a>
   </div>
 </div>
 
@@ -43,11 +58,11 @@
   </div>
 
   <div
-    *ngIf="jiraApplication && externalMappingIssueDetails.length && !externalMapping?.workspace?.isJira"
+    *ngIf="jiraApplication && externalMappingIssueDetails.length && !externalMapping?.application?.isJira"
     class="no-content">
     <span
       class="fz-14 text-t-secondary d-block note"
-      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.workspace?.name}"></span>
+      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.application?.name}"></span>
   </div>
   <div
     class="h-100"
@@ -65,7 +80,7 @@
       [application]="jiraApplication"
       [jiraIssueId]="externalMappingIssueDetails[0].id"
       (unLink)="destroy($event)"
-      *ngIf="externalMappingIssueDetails.length && externalMapping?.workspace?.isJira"></app-jira-issue-details>
+      *ngIf="externalMappingIssueDetails.length && externalMapping?.application?.isJira"></app-jira-issue-details>
   </div>
 </div>
 
@@ -81,11 +96,11 @@
   </div>
 
   <div
-    *ngIf="youtrackApplication && externalMappingIssueDetails.length && !externalMapping?.workspace?.isYoutrack"
+    *ngIf="youtrackApplication && externalMappingIssueDetails.length && !externalMapping?.application?.isYoutrack"
     class="no-content">
     <span
       class="fz-14 text-t-secondary d-block note"
-      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.workspace?.name}"></span>
+      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.application?.name}"></span>
   </div>
   <div
     class="h-100"
@@ -102,7 +117,7 @@
       [YTissueId]="externalMappingIssueDetails[0].id"
       [application]="youtrackApplication"
       (unLink)="destroy($event)"
-      *ngIf="externalMappingIssueDetails.length && externalMapping?.workspace?.isYoutrack"></app-youtrack-issue-details>
+      *ngIf="externalMappingIssueDetails.length && externalMapping?.application?.isYoutrack"></app-youtrack-issue-details>
   </div>
 </div>
 
@@ -118,11 +133,11 @@
       [translate]="'test_case_result.details.report_bug.external_application_not_enabled_info' | translate: {externalApplication: 'FreshRelease'}"></span>
   </div>
   <div
-    *ngIf="freshreleaseApplication && externalMappingIssueDetails.length && !externalMapping?.workspace?.isFreshrelease"
+    *ngIf="freshreleaseApplication && externalMappingIssueDetails.length && !externalMapping?.application?.isFreshrelease"
     class="no-content">
     <span
       class="fz-14 text-t-secondary d-block note"
-      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.workspace?.name}"></span>
+      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.application?.name}"></span>
   </div>
   <div
     class="h-100"
@@ -139,7 +154,7 @@
       [application]="freshreleaseApplication"
       [freshReleaseIssueId]="externalMappingIssueDetails[0].id"
       (unLink)="destroy($event)"
-      *ngIf="externalMappingIssueDetails.length && externalMapping?.workspace?.isFreshrelease"></app-fresh-release-issue-details>
+      *ngIf="externalMappingIssueDetails.length && externalMapping?.application?.isFreshrelease"></app-fresh-release-issue-details>
   </div>
 </div>
 <div
@@ -153,11 +168,11 @@
       [translate]="'test_case_result.details.report_bug.external_application_not_enabled_info' | translate: {externalApplication: 'Mantis'}"></span>
   </div>
   <div
-    *ngIf="mantisApplication && externalMappingIssueDetails.length && !externalMapping?.workspace?.isMantis"
+    *ngIf="mantisApplication && externalMappingIssueDetails.length && !externalMapping?.application?.isMantis"
     class="no-content">
     <span
       class="fz-14 text-t-secondary d-block note"
-      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.workspace?.name}"></span>
+      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.application?.name}"></span>
   </div>
   <div
     class="h-100"
@@ -173,7 +188,7 @@
       [externalMapping]="externalMapping"
       [application]="mantisApplication"
       (unLink)="destroy($event)"
-      *ngIf="externalMappingIssueDetails.length && externalMapping?.workspace?.isMantis"></app-mantis-issue-details>
+      *ngIf="externalMappingIssueDetails.length && externalMapping?.application?.isMantis"></app-mantis-issue-details>
   </div>
 </div>
 <div
@@ -187,11 +202,11 @@
       [translate]="'test_case_result.details.report_bug.external_application_not_enabled_info' | translate: {externalApplication: 'Azure'}"></span>
   </div>
   <div
-    *ngIf="azureApplication && externalMappingIssueDetails.length && !externalMapping?.workspace?.isAzure"
+    *ngIf="azureApplication && externalMappingIssueDetails.length && !externalMapping?.application?.isAzure"
     class="no-content">
     <span
       class="fz-14 text-t-secondary d-block note"
-      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.workspace?.name}"></span>
+      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.application?.name}"></span>
   </div>
   <div
     class="h-100"
@@ -207,7 +222,7 @@
       [application]="azureApplication"
       [azureIssueId]="externalMappingIssueDetails[0].id"
       (unLink)="destroy($event)"
-      *ngIf="externalMappingIssueDetails.length && externalMapping?.workspace?.isAzure">
+      *ngIf="externalMappingIssueDetails.length && externalMapping?.application?.isAzure">
 
     </app-azure-issue-details>
   </div>
@@ -224,11 +239,11 @@
       [translate]="'test_case_result.details.report_bug.external_application_not_enabled_info' | translate: {externalApplication: 'BackLog'}"></span>
   </div>
   <div
-    *ngIf="backLogApplication && externalMappingIssueDetails.length && !externalMapping?.workspace?.isBackLog"
+    *ngIf="backLogApplication && externalMappingIssueDetails.length && !externalMapping?.application?.isBackLog"
     class="no-content">
     <span
       class="fz-14 text-t-secondary d-block note"
-      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.workspace?.name}"></span>
+      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.application?.name}"></span>
   </div>
   <div
     class="h-100"
@@ -244,7 +259,7 @@
       [externalMapping]="externalMapping"
       [application]="backLogApplication"
       (unLink)="destroy($event)"
-      *ngIf="externalMappingIssueDetails.length && externalMapping?.workspace?.isBackLog"></app-backlog-issue-details>
+      *ngIf="externalMappingIssueDetails.length && externalMapping?.application?.isBackLog"></app-backlog-issue-details>
   </div>
 </div>
 
@@ -259,11 +274,11 @@
       [translate]="'test_case_result.details.report_bug.external_application_not_enabled_info' | translate: {externalApplication: 'Zepel'}"></span>
   </div>
   <div
-    *ngIf="zepelApplication && externalMappingIssueDetails.length && !externalMapping?.workspace?.isZepel"
+    *ngIf="zepelApplication && externalMappingIssueDetails.length && !externalMapping?.application?.isZepel"
     class="no-content">
     <span
       class="fz-14 text-t-secondary d-block note"
-      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.workspace?.name}"></span>
+      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.application?.name}"></span>
   </div>
   <div
     class="h-100"
@@ -279,7 +294,7 @@
       [externalMapping]="externalMapping"
       [application]="zepelApplication"
       (unLink)="destroy($event)"
-      *ngIf="externalMappingIssueDetails.length && externalMapping?.workspace?.isZepel"></app-zepel-issue-details>
+      *ngIf="externalMappingIssueDetails.length && externalMapping?.application?.isZepel"></app-zepel-issue-details>
   </div>
 </div>
 
@@ -294,11 +309,11 @@
       [translate]="'test_case_result.details.report_bug.external_application_not_enabled_info' | translate: {externalApplication: 'ClickUp'}"></span>
   </div>
   <div
-    *ngIf="clickUpApplication && externalMappingIssueDetails.length && !externalMapping?.workspace?.isClickUp"
+    *ngIf="clickUpApplication && externalMappingIssueDetails.length && !externalMapping?.application?.isClickUp"
     class="no-content">
     <span
       class="fz-14 text-t-secondary d-block note"
-      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.workspace?.name}"></span>
+      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.application?.name}"></span>
   </div>
   <div
     class="h-100"
@@ -314,7 +329,7 @@
       [externalMapping]="externalMapping"
       [workspace]="clickUpApplication"
       (unLink)="destroy($event)"
-      *ngIf="externalMappingIssueDetails.length && externalMapping?.workspace?.isClickUp"></app-click-up-issue-details>
+      *ngIf="externalMappingIssueDetails.length && externalMapping?.application?.isClickUp"></app-click-up-issue-details>
   </div>
 </div>
 
@@ -329,11 +344,11 @@
       [translate]="'test_case_result.details.report_bug.external_application_not_enabled_info' | translate: {externalApplication: 'BugZilla'}"></span>
   </div>
   <div
-    *ngIf="bugZillaApplication && externalMappingIssueDetails.length && !externalMapping?.workspace?.isBugzilla"
+    *ngIf="bugZillaApplication && externalMappingIssueDetails.length && !externalMapping?.application?.isBugzilla"
     class="no-content">
     <span
       class="fz-14 text-t-secondary d-block note"
-      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.workspace?.name}"></span>
+      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.application?.name}"></span>
   </div>
   <div
     class="h-100"
@@ -349,7 +364,7 @@
       [externalMapping]="externalMapping"
       [application]="bugZillaApplication"
       (unLink)="destroy($event)"
-      *ngIf="externalMappingIssueDetails.length && externalMapping?.workspace?.isBugzilla"></app-bugzilla-issue-details>
+      *ngIf="externalMappingIssueDetails.length && externalMapping?.application?.isBugzilla"></app-bugzilla-issue-details>
   </div>
 </div>
 
@@ -364,11 +379,11 @@
       [translate]="'test_case_result.details.report_bug.external_application_not_enabled_info' | translate: {externalApplication: 'Trello'}"></span>
   </div>
   <div
-    *ngIf="trelloApplication && externalMappingIssueDetails.length && !externalMapping?.workspace?.isTrello"
+    *ngIf="trelloApplication && externalMappingIssueDetails.length && !externalMapping?.application?.isTrello"
     class="no-content">
     <span
       class="fz-14 text-t-secondary d-block note"
-      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.workspace?.name}"></span>
+      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.application?.name}"></span>
   </div>
   <div
     class="h-100"
@@ -384,7 +399,7 @@
       [externalMapping]="externalMapping"
       [application]="trelloApplication"
       (unLink)="destroy($event)"
-      *ngIf="externalMappingIssueDetails.length && externalMapping?.workspace?.isTrello"></app-trello-issue-details>
+      *ngIf="externalMappingIssueDetails.length && externalMapping?.application?.isTrello"></app-trello-issue-details>
   </div>
 </div>
 
@@ -399,11 +414,11 @@
       [translate]="'test_case_result.details.report_bug.external_application_not_enabled_info' | translate: {externalApplication: 'Linear'}"></span>
   </div>
   <div
-    *ngIf="linearApplication && externalMappingIssueDetails.length && !externalMapping?.workspace?.isLinear"
+    *ngIf="linearApplication && externalMappingIssueDetails.length && !externalMapping?.application?.isLinear"
     class="no-content">
     <span
       class="fz-14 text-t-secondary d-block note"
-      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.workspace?.name}"></span>
+      [translate]="'test_case_result.details.report_bug.external_workspace_already_linked' | translate: {externalApplication: externalMapping?.application?.name}"></span>
   </div>
   <div
     class="h-100"
@@ -419,6 +434,6 @@
       [externalMapping]="externalMapping"
       [application]="linearApplication"
       (unLink)="destroy($event)"
-      *ngIf="externalMappingIssueDetails.length && externalMapping?.workspace?.isLinear"></app-linear-issue-details>
+      *ngIf="externalMappingIssueDetails.length && externalMapping?.application?.isLinear"></app-linear-issue-details>
   </div>
 </div>

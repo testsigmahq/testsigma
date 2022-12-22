@@ -13,6 +13,7 @@ import {NotificationsService, NotificationType} from 'angular2-notifications';
 import {WorkspaceVersion} from "../../../models/workspace-version.model";
 import {UploadVersion} from "../../models/upload-version.model";
 import {UploadVersionService} from "../../services/upload-version.service";
+import {SupportedDeviceType} from "../../../agents/enums/supported-device-type";
 
 @Component({
   selector: 'app-uploads-form',
@@ -32,6 +33,7 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
   public attachmentTypes = ".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf,.mp4,.3gp";
   public apkTypes = ".apk";
   public ipaTypes = ".ipa";
+  public SupportedDeviceType = SupportedDeviceType;
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { version: WorkspaceVersion, upload: Upload, isInspection: boolean  },
     public dialogRef: MatDialogRef<UploadsFormComponent>,
@@ -58,8 +60,9 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
 
   private initiateForm(): void {
     this.uploadForm = new FormGroup({
-      name: new FormControl(this.upload.name, [Validators.required, Validators.minLength(4), this.noWhitespaceValidator]),
-      version: new FormControl(undefined, [Validators.required])    });
+      name: new FormControl(this.upload.name, [Validators.required, Validators.minLength(4), Validators.maxLength(256)]),
+      version: new FormControl(undefined, [Validators.required, Validators.minLength(4), Validators.maxLength(256)])
+    });
   }
 
   private get formData(): FormData {
@@ -71,6 +74,8 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
     formData.append("workspaceId", this.data.version.workspace.id.toString());
     formData.append("version", rawData.version);
     formData.append("uploadType", version.workspace.isAndroidNative ? UploadType.APK : version.workspace.isIosNative ? UploadType.IPA : UploadType.Attachment);
+    if(version.workspace.isIosNative)
+    formData.append("supportedDeviceType",  this.upload.supportedDeviceType);
     return formData;
   }
 
@@ -174,5 +179,8 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
     let version = this.version || this.data.version;
     return version?.workspace?.isAndroidNative ? this.apkTypes : version?.workspace?.isIosNative ? this.ipaTypes : this.attachmentTypes;
   }
-
+  get isButtonDisabled() {
+    return (this.upload.id ? (!this.getRawValue()?.name || this.uploadForm.controls?.name?.errors ||
+    this.uploadedFileObject?.name ? this.uploadForm.invalid : false) : this.uploadForm.invalid) || !this.upload.name || this.maxSizeError;
+  }
 }

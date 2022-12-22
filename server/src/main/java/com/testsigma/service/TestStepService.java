@@ -11,13 +11,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.testsigma.dto.BackupDTO;
-import com.testsigma.dto.export.TestCaseTypeCloudXMLDTO;
-import com.testsigma.dto.export.TestCaseTypeXMLDTO;
+import com.testsigma.dto.TestStepDTO;
 import com.testsigma.dto.export.TestStepCloudXMLDTO;
 import com.testsigma.dto.export.TestStepXMLDTO;
 import com.testsigma.event.EventType;
 import com.testsigma.event.TestStepEvent;
 import com.testsigma.exception.ResourceNotFoundException;
+import com.testsigma.exception.TestsigmaException;
 import com.testsigma.mapper.RestStepMapper;
 import com.testsigma.mapper.TestStepMapper;
 import com.testsigma.model.*;
@@ -25,11 +25,13 @@ import com.testsigma.repository.TestStepRepository;
 import com.testsigma.specification.SearchCriteria;
 import com.testsigma.specification.SearchOperation;
 import com.testsigma.specification.TestStepSpecificationsBuilder;
-import io.grpc.MethodDescriptor;
+import com.testsigma.util.DeprecatedActionMapper;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -61,6 +63,9 @@ public class TestStepService extends XMLExportImportService<TestStep> {
     private final DefaultDataGeneratorService defaultDataGeneratorService;
     private final ImportAffectedTestCaseXLSExportService affectedTestCaseXLSExportService;
 
+    private final List<ActionTestDataMap> actionTestDataMap = getMapsList();
+    private final List<Integer> depreciatedIds = DeprecatedActionMapper.getAllDeprecatedActionIds();
+
 
     public List<TestStep> findAllByTestCaseId(Long testCaseId) {
         return this.repository.findAllByTestCaseIdOrderByPositionAsc(testCaseId);
@@ -88,9 +93,10 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         List<TestStep> testSteps = repository.findAllByTestCaseIdInAndAddonActionIdIsNotNull(testCaseIds);
         for (TestStep step : testSteps) {
             Map<String, AddonElementData> addonElementData = step.getAddonElements();
-
-            for (AddonElementData elementData : addonElementData.values()) {
-                elementsNames.add(elementData.getName());
+            if (step.getAddonElements() != null) {
+                for (AddonElementData elementData : addonElementData.values()) {
+                    elementsNames.add(elementData.getName());
+                }
             }
         }
         return elementsNames;
@@ -126,14 +132,17 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         return testStep;
     }
 
-    public TestStep update(TestStep testStep) {
+    public TestStep update(TestStep testStep) throws TestsigmaException {
+        if (testStep.getConditionType()==TestStepConditionType.LOOP_WHILE &&testStep.getMaxIterations()>101){
+            throw  new TestsigmaException(String.format("In While Loop, please set Max iterations between 1 to 100"));
+        }
         testStep = updateDetails(testStep);
         this.updateDisablePropertyForChildSteps(testStep);
         publishEvent(testStep, EventType.UPDATE);
         return testStep;
     }
 
-    private void updateDisablePropertyForChildSteps(TestStep testStep) {
+    private void updateDisablePropertyForChildSteps(TestStep testStep) throws TestsigmaException {
         List<TestStep> childSteps = this.repository.findAllByParentIdOrderByPositionAsc(testStep.getId());
         if (childSteps.size() > 0) {
             for (TestStep childStep : childSteps) {
@@ -144,7 +153,12 @@ public class TestStepService extends XMLExportImportService<TestStep> {
     }
 
 
-    public TestStep create(TestStep testStep) throws ResourceNotFoundException {
+    public TestStep create(TestStep testStep) throws TestsigmaException,ResourceNotFoundException{
+        if(testStep.getAction()!=null
+                && testStep.getConditionType() == TestStepConditionType.LOOP_WHILE
+                &&(testStep.getMaxIterations() != null && (testStep.getMaxIterations() > 100))){
+            throw  new TestsigmaException(String.format("In While Loop, please set Max iterations between 1 to 100"));
+        }
         this.repository.incrementPosition(testStep.getPosition(), testStep.getTestCaseId());
         RestStep restStep = testStep.getRestStep();
         testStep.setRestStep(null);
@@ -212,6 +226,7 @@ public class TestStepService extends XMLExportImportService<TestStep> {
 
     private void updateChildLoops(Long parentId, String parameter, String newParameterName) {
         this.repository.updateChildStepsTestDataParameter(newParameterName, parameter, parentId);
+        this.repository.updateChildStepsTestDataParameterUsingTestDataProfileId(newParameterName, parameter, parentId);
         List<TestStep> conditionalSteps = this.repository.getChildConditionalStepsExceptLoop(parentId);
         for (TestStep step : conditionalSteps) {
             updateChildLoops(step.getId(), parameter, newParameterName);
@@ -311,11 +326,27 @@ public class TestStepService extends XMLExportImportService<TestStep> {
                         addonNaturalTextActionService.findById(step.getAddonActionId());
                     }
                     if (step.getNaturalTextActionId() != null && step.getNaturalTextActionId() > 0) {
+                        if (step.getNaturalTextActionId()==574){   //// TODO: need to changes on Cloud side [Siva Nagaraju]
+                            step.setNaturalTextActionId(1038);
+                            continue;
+                        }
                         message = "Deprecated Action!";
+                        try {
                         naturalTextActionsService.findById(Long.valueOf(step.getNaturalTextActionId()));
+                        }
+                        catch (Exception e){
+                            if (this.depreciatedIds.contains(step.getNaturalTextActionId()))
+                                this.mapDeprecatedActionsWithUpdatesOnes(step);
+                            else {
+                                log.error(e.getMessage() + " and Not able to Map this Action Id with the Mapper");
+                                step.setDisabled(true);
+                                step.setAddonActionId(null);
+                                stepsMap.put(step, message);
+                            }
+                        }
                     }
-                    if (Objects.equals(step.getTestDataType(), TestDataType.function.getDispName()) && step.getType() != TestStepType.CUSTOM_FUNCTION ) {
-                        message = "Deprecated Custom Function / Custom Function not found!";
+                    if (Objects.equals(step.getTestDataType(), TestDataType.function.getDispName()) && step.getType() != TestStepType.CUSTOM_FUNCTION) {
+                        message = "Deprecated Data Generator / Data Generator not found!";
                         defaultDataGeneratorService.find(step.getTestDataFunctionId());
                     }
                 } catch (Exception e) {
@@ -327,7 +358,7 @@ public class TestStepService extends XMLExportImportService<TestStep> {
                 }
                 if (step.getType() == TestStepType.CUSTOM_FUNCTION) {
                     step.setDisabled(true);
-                    stepsMap.put(step,"Custom Functions not supported in OS");
+                    stepsMap.put(step, "Custom Functions not supported in OS");
                     log.info("disabling Custom function test step to avoid further issues, since CSFs are deprecated");
                 }
                 if (step.getType() == TestStepType.FOR_LOOP) {
@@ -338,8 +369,29 @@ public class TestStepService extends XMLExportImportService<TestStep> {
             }
             return steps;
         } else {
-            return mapper.mapTestStepsList(xmlMapper.readValue(xmlData, new TypeReference<List<TestStepXMLDTO>>() {
+            List<TestStep> steps = mapper.mapTestStepsList(xmlMapper.readValue(xmlData, new TypeReference<List<TestStepXMLDTO>>() {
             }));
+            for (TestStep step : steps) {
+                if (step.getTestDataProfileStepId() != null) {
+                    Optional<TestData> testData = testDataService.getRecentImportedEntity(importDTO, step.getTestDataProfileStepId());
+                    testData.ifPresent(data -> step.setTestDataProfileStepId(data.getId()));
+                }
+                if (step.getType() == TestStepType.FOR_LOOP) {
+                    Optional<TestData> testData = testDataService.getRecentImportedEntity(importDTO, step.getForLoopTestDataId());
+                    testData.ifPresent(data -> step.setForLoopTestDataId(data.getId()));
+                }
+            }
+            return steps;
+        }
+    }
+
+
+    private void mapDeprecatedActionsWithUpdatesOnes(TestStep step) {
+        ActionTestDataMap filteredMap = this.actionTestDataMap.stream().filter(dataMap -> dataMap.getTestDataHash().containsKey(step.getNaturalTextActionId())).findFirst().orElse(null);
+        if (filteredMap != null) {
+            step.setTestData(filteredMap.getTestDataHash().get(step.getNaturalTextActionId()));
+            step.setNaturalTextActionId(filteredMap.getOptimizedActionId());
+            step.setTestDataType(TestDataType.raw.getDispName());
         }
     }
 
@@ -488,4 +540,117 @@ public class TestStepService extends XMLExportImportService<TestStep> {
     public List<TestStep> findAllByTestCaseIdIn(List<Long> testCaseIds) {
         return this.repository.findAllByTestCaseIdInOrderByPositionAsc(testCaseIds);
     }
+
+    private List<ActionTestDataMap> getMapsList(){
+        List<ActionTestDataMap> actionsMap = new ArrayList<>();
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.WebApplication, 1080, DeprecatedActionMapper.getWebWaitMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.MobileWeb, 10192, DeprecatedActionMapper.getMobileWebWaitMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.AndroidNative, 20153, DeprecatedActionMapper.getAndroidWaitMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.IOSNative, 30147, DeprecatedActionMapper.getIOSWaitMap()));
+
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.WebApplication, 1079, DeprecatedActionMapper.getWebVerifyMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.MobileWeb, 10191, DeprecatedActionMapper.getMobileWebVerifyMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.AndroidNative, 20152, DeprecatedActionMapper.getAndroidVerifyMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.IOSNative, 30146, DeprecatedActionMapper.getIOSVerifyMap()));
+
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.MobileWeb, 10196, DeprecatedActionMapper.getMobileWebTapOnAlertMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.AndroidNative, 20156, DeprecatedActionMapper.getAndroidTapOnAlertMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.IOSNative, 30151, DeprecatedActionMapper.getIOSTapOnAlertMap()));
+
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.MobileWeb, 10190, DeprecatedActionMapper.getMobileWebSwipeMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.AndroidNative, 20150, DeprecatedActionMapper.getAndroidSwipeFromMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.IOSNative, 30144, DeprecatedActionMapper.getIOSSwipeFromMap()));
+
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.AndroidNative, 20151, DeprecatedActionMapper.getAndroidSwipeToMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.IOSNative, 30145, DeprecatedActionMapper.getIOSSwipeToMap()));
+
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.AndroidNative, 20154, DeprecatedActionMapper.getAndroidEnableSwitchMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.IOSNative, 30148, DeprecatedActionMapper.getIOSEnableSwitchMap()));
+
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.MobileWeb, 10195, DeprecatedActionMapper.getMobileWebTapOnKeyMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.AndroidNative, 20155, DeprecatedActionMapper.getAndroidTapOnKeyMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.IOSNative, 30150, DeprecatedActionMapper.getIOSTapOnKeyMap()));
+
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.WebApplication, 1082, DeprecatedActionMapper.getMobileWebScrollInsideElementMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.MobileWeb, 10194, DeprecatedActionMapper.getMobileWebScrollInsideElementMap()));
+
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.WebApplication, 1081, DeprecatedActionMapper.getWebScrollToElementMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.MobileWeb, 10193, DeprecatedActionMapper.getMobileWebScrollToElementMap()));
+
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.WebApplication, 1083, DeprecatedActionMapper.getWebClickOnButtonMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.MobileWeb, 10197, DeprecatedActionMapper.getMobileWebTapOnButtonMap()));
+        actionsMap.add(new ActionTestDataMap(WorkspaceType.IOSNative, 30149, DeprecatedActionMapper.getIOSWIFISwitchMap()));
+
+        return actionsMap;
+    }
+    public void bulkDelete(Long[] testStepIds) throws ResourceNotFoundException {
+        for (Long id:testStepIds){
+              this.destroy(this.find(id));
+            }
+    }
+
+    /**
+     * Returns a boolean value true whether testStepList.id is a subset of testStepsIds
+     * @param testStepsIds
+     * @param testStepList
+     * @return {boolean}
+     */
+    private Boolean isTestStepsSubsetOfIds(List<Long> testStepsIds, List<TestStep> testStepList){
+        for (TestStep testStep:testStepList){
+            if(!testStepsIds.contains(testStep.getId())){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Returns a List of TestStepsDTO which having Prerequisite steps and the linked testSteps <br/>
+     * <ol>
+     *     <li>Iterating over the testStepsIds to know wether they are having any associated steps</li>
+     *     <li>If there are any testSteps that are having prerequiste as Current iterating Step Id then the <b>isTestStepsSubsetOfIds</b> method will check wether all the testSteps are going to be deleted or not</li>
+     *     <li>Then the main step <b>i.e</b> Step that have been selected as prerequiste step to other steps , All these steps will be added to a list in an order</li>
+     *     <li>Order of adding steps to list is <i>Add the main step followed by the associated steps</i></li>
+     * </ol>
+     * @param testStepsIds An array of Ids of the teststeps which are the part of the bultTestStepsDelete Operation
+     * @return {List<TestStepDTO>}
+     * @throws ResourceNotFoundException
+     */
+    public List<TestStepDTO> indexTestStepsHavingPrerequisiteSteps(Long[] testStepsIds) throws ResourceNotFoundException {
+        Long testCaseId = this.find(testStepsIds[0]).getTestCaseId();
+        List<TestStepDTO> testSteps = new ArrayList<>();
+        List<Long> idsList=Arrays.asList(testStepsIds);
+        int index=0;
+        for(Long id: testStepsIds) {
+            List<TestStep> testStepList= this.repository.findAllByTestCaseIdAndPreRequisiteStepId(testCaseId,id);
+            if(!testStepList.isEmpty() && !isTestStepsSubsetOfIds(idsList,testStepList)) {
+                TestStep mainStep = this.find(id);
+                TestStepDTO testStepDTO = this.exportTestStepMapper.mapDTO(mainStep);
+                testStepDTO.setPreRequisiteStepId(null);
+                testSteps.add(index++,testStepDTO);
+                for(TestStep testStep:testStepList){
+                    testSteps.add(index++,this.exportTestStepMapper.mapDTO(testStep));
+                }
+            }
+        }
+        return testSteps;
+    }
+
+    public List<TestStep> findAllByWorkspaceVersionIdAndNaturalTextActionId(Long workspaceVersionId, List<Integer> naturalTextActionIds) {
+        return this.repository.findAllByWorkspaceVersionIdAndNaturalTextActionId(workspaceVersionId, naturalTextActionIds);
+    }
+
+    public List<TestStep> findAllRuntimeDataRestStep(Long workspaceVersionId) {
+        return  this.repository.getAllRestStepWithRuntime(workspaceVersionId);
+    }
+
+
+}
+
+@Data
+@AllArgsConstructor
+class ActionTestDataMap {
+    WorkspaceType workspaceType;
+    Integer optimizedActionId;
+    HashMap<Integer, String> testDataHash;
 }

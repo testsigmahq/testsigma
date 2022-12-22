@@ -11,7 +11,6 @@ package com.testsigma.service;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.testsigma.automator.actions.constants.ErrorCodes;
 import com.testsigma.automator.entity.TestDeviceEntity;
 import com.testsigma.config.ApplicationConfig;
 import com.testsigma.config.StorageServiceFactory;
@@ -25,10 +24,8 @@ import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaException;
 import com.testsigma.mapper.*;
 import com.testsigma.model.*;
-import com.testsigma.step.processors.ForLoopStepProcessor;
-import com.testsigma.step.processors.RestStepProcessor;
-import com.testsigma.step.processors.StepProcessor;
-import com.testsigma.step.processors.WhileLoopStepProcessor;
+import com.testsigma.model.TestDataSet;
+import com.testsigma.step.processors.*;
 import com.testsigma.tasks.TestPlanRunTask;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +34,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -45,6 +43,8 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 
 @Data
@@ -92,22 +92,18 @@ public class AgentExecutionService {
   public AbstractTestPlan testPlan;
   private JSONObject runTimeData;
   private TestPlanResult testPlanResult;
-
   private Boolean isReRun = Boolean.FALSE;
-
   private ReRunType reRunType = ReRunType.NONE;
-
   private Long parentTestPlanResultId;
-
   private List<TestDeviceResult> testDeviceResultsReRunList;
-
   private List<TestSuiteResult> testSuiteResultsReRunList;
-
   private List<TestCaseResult> testCaseResultsReRunList;
-
   private Long scheduleId;
-
   private ExecutionTriggeredType triggeredType = ExecutionTriggeredType.MANUAL;
+  private final WorkspaceVersionService workspaceVersionService;
+  private List<TestCaseDataDrivenResult> dataDrivenResultsReRunList;
+  private Boolean isDataDrivenRerun;
+  private final XrayCloudService xrayCloudService;
 
 
   // ################################################  START  ###################################################
@@ -196,6 +192,7 @@ public class AgentExecutionService {
         populateTestSuiteResults(testDeviceResult, testDevice);
       }
     }
+    populatePreRequisiteEnvironmentResultIds(testPlanResult);
   }
 
   private void populateTestSuiteResults(TestDeviceResult testDeviceResult, TestDevice testDevice)
@@ -210,17 +207,21 @@ public class AgentExecutionService {
           this.testSuiteService.updateSuite((TestSuite) testSuite);
         populateTestCaseResults(testSuite, testSuiteResult, testDeviceResult);
       }
+      this.xrayCloudService.exportResultsBySuiteResult(testSuiteResult);
     }
   }
 
   private void populateTestCaseResults(AbstractTestSuite testSuite, TestSuiteResult testSuiteResult,
                                        TestDeviceResult testDeviceResult) throws TestsigmaException {
     List<TestCase> testCases = this.testCaseService.findAllBySuiteId(testSuiteResult.getSuiteId());
+    int testDataStartIndex;
     for (TestCase testCase : testCases) {
+      testDataStartIndex = testCase.getTestDataStartIndex();
       TestCaseResult testCaseResult = createTestCaseResult(testSuite, testCase, testDeviceResult, testSuiteResult,
         null);
       if (testCaseResult != null && testPlan instanceof TestPlan) {
         testCase.setLastRunId(testCaseResult.getId());
+        testCase.setTestDataStartIndex(testDataStartIndex);
         testCaseService.update(testCase);
       }
     }
@@ -280,28 +281,30 @@ public class AgentExecutionService {
                                                  TestDeviceResult testDeviceResult,
                                                  TestSuiteResult testSuiteResult,
                                                  TestCaseResult parentTestCaseResult) throws TestsigmaException {
-    log.info("Creating DatadrivenTestcaseResult for testcase:" + testCase.getName());
+    log.info("Creating Data driven TestcaseResult for testcase:" + testCase.getName());
+    TestPlanResult testPlanResult = testPlanResultService.find(testDeviceResult.getTestPlanResultId());
+    isDataDrivenRerun = testDeviceResult.getReRunParentId() != null;
     TestData testData = testCase.getTestData();
-    List<TestDataSet> testDataSets = testData.getData();
-    int start = testCase.getTestDataStartIndex() != null ? testCase.getTestDataStartIndex() : 0;
-    int end = testCase.getTestDataEndIndex() != null ? testCase.getTestDataEndIndex() : testDataSets.size() - 1;
-    for (int i = start; i <= end && i < testDataSets.size(); i++) {
-      testCase.setIsDataDriven(false);
-      TestDataSet testDataSet = testDataSets.get(i);
-      testCase.setIsDataDriven(false);
-      testCase.setTestDataStartIndex(testDataSets.indexOf(testDataSet));
-      TestCaseResult testCaseResult = createTestCaseResult(testSuite, testCase, testDeviceResult, testSuiteResult,
-        parentTestCaseResult);
-      if (testCaseResult != null) {
-        createTestCaseDataDrivenResult(testDataSet, testCaseResult);
+    List<TestDataSet> testDataSets = testData.getTempTestData();
+    if(isDataDrivenRerun && !parentTestCaseResult.getIsStepGroup()){
+      log.info("Creating data driven re run iteration results for test case - " + parentTestCaseResult.getId());
+      this.createTestCaseDataDrivenReRunResult(testPlanResult, testDataSets, testCase, testSuite, testDeviceResult,
+              testSuiteResult, parentTestCaseResult);
+    } else {
+      int start = testCase.getTestDataStart();
+      int end = testCase.getTestDataEnd(testDataSets.size());
+      for (int i = start; i <= end && i < testDataSets.size(); i++) {
+        TestDataSet testDataSet = testDataSets.get(i);
+        this.createTestCaseIterationResult(testDataSets, testDataSet, testCase, testSuite, testDeviceResult,
+                testSuiteResult, parentTestCaseResult);
       }
+      testCase.setTestDataStartIndex(start);
     }
     testCase.setIsDataDriven(true);
-    testCase.setTestDataStartIndex(start);
   }
 
   private TestCaseDataDrivenResult createTestCaseDataDrivenResult(TestDataSet testDataSet, TestCaseResult testCaseResult) {
-    TestCaseDataDrivenResult testCaseDataDrivenResult = new TestCaseDataDrivenResult();
+      TestCaseDataDrivenResult testCaseDataDrivenResult = new TestCaseDataDrivenResult();
     testCaseDataDrivenResult.setEnvRunId(testCaseResult.getEnvironmentResultId());
     testCaseDataDrivenResult.setTestData(new ObjectMapperService().convertToJson(testDataSet));
     testCaseDataDrivenResult.setTestDataName(testDataSet.getName());
@@ -321,7 +324,7 @@ public class AgentExecutionService {
     TestCaseResult testCaseResult = new TestCaseResult();
     testCaseResult = setReRunParentId(testSuiteResult, testCase, testCaseResult, parentTestCaseResult);
     if (testCaseResult == null)
-      return null;
+        return null;
 
     testCaseResult.setEnvironmentResultId(testDeviceResult.getId());
     testCaseResult.setTestPlanResultId(testDeviceResult.getTestPlanResultId());
@@ -338,7 +341,7 @@ public class AgentExecutionService {
     if (!testCase.getIsDataDriven()) {
       TestData testData = testCase.getTestData();
       if (testData != null) {
-        TestDataSet testDataSet = testData.getData().get(testCase.getTestDataStartIndex());
+        TestDataSet testDataSet = testData.getTempTestData().get(testCase.getTestDataStartIndex());
         testCaseResult.setTestDataSetName(testDataSet.getName());
         if (parentTestCaseResult != null) {
           testCaseResult.setIteration(testDataSet.getName());
@@ -382,7 +385,7 @@ public class AgentExecutionService {
     }
     if (!testCase.getIsDataDriven() && testCase.getTestData() != null && parentTestCaseResult != null) {
       TestData testData = testCase.getTestData();
-      TestDataSet testDataSet = testData.getData().get(testCase.getTestDataStartIndex());
+      TestDataSet testDataSet = testData.getTempTestData().get(testCase.getTestDataStartIndex());
       if (getIsReRun() && (testSuiteResult.getReRunParentId() != null)) {
         TestCaseResult reRunParentTestCaseResult = testCaseResultsReRunList.stream().filter(
           er -> er.getTestCaseId().equals(testCase.getId()) && er.getIteration() != null && er.getIteration().equals(testDataSet.getName())).findAny().orElse(null);
@@ -463,6 +466,8 @@ public class AgentExecutionService {
     testDeviceResult.setTestDeviceId(testDevice.getId());
     testDeviceResult.setAppUploadVersionId(getUploadVersionId(testDevice));
     testDeviceResult.setTestDeviceSettings(getExecutionTestDeviceSettings(testDevice));
+    testDeviceResult.setTestPlanLabType(testDevice.getTestPlanLabType());
+    testDeviceResult.setWorkspaceVersionId(testDevice.getWorkspaceVersionId());
     testDeviceResult = testDeviceResultService.create(testDeviceResult);
     testDeviceResult.setTestDevice(testDevice);
     return testDeviceResult;
@@ -549,9 +554,9 @@ public class AgentExecutionService {
 
   private TestDeviceSettings getExecutionTestDeviceSettings(TestDevice testDevice) throws TestsigmaException {
     TestDeviceSettings settings = new TestDeviceSettings();
-    TestPlanLabType exeLabType = this.getTestPlan().getTestPlanLabType();
+    TestPlanLabType exeLabType = testDevice.getTestPlanLabType();
 
-    if (testDevice.getPlatformDeviceId() != null) {
+    if (!(testDevice.getTestPlanLabType().isHybrid() && testDevice.getWorkspaceVersion().getWorkspace().getWorkspaceType().isMobile()) && testDevice.getPlatformDeviceId() != null) {
       settings.setDeviceName(platformsService.getPlatformDevice(testDevice.getPlatformDeviceId(), exeLabType).getName());
     }
     if (testDevice.getPlatformBrowserVersionId() != null) {
@@ -565,7 +570,7 @@ public class AgentExecutionService {
     if (testDevice.getPlatformOsVersionId() != null) {
       PlatformOsVersion platformOsVersion = platformsService.getPlatformOsVersion(testDevice.getPlatformOsVersionId(), exeLabType);
       settings.setPlatform(platformOsVersion.getPlatform());
-      settings.setOsVersion(platformOsVersion.getPlatformVersion());
+      settings.setOsVersion(platformOsVersion.getVersion());
     }
     if (exeLabType == TestPlanLabType.Hybrid || exeLabType == TestPlanLabType.PrivateGrid) {
       settings.setBrowser(testDevice.getBrowser());
@@ -589,65 +594,72 @@ public class AgentExecutionService {
   // ############################################ RESULT ENTRIES PROCESSING ###########################################
 
   private void processResultEntries() throws Exception {
-    if (canPushToLabAgent()) {
-      processResultEntriesForLabAgent();
-    } else if (canPushToHybridAgent()) {
-      processResultEntriesForHybridAgent();
+    List<TestDeviceResult> testDeviceResults = testDeviceResultService.findAllByTestPlanResultId(
+            this.testPlanResult.getId());
+    for(TestDeviceResult testDeviceResult : testDeviceResults) {
+      if (canPushToLabAgent(testDeviceResult)) {
+        processResultEntriesForLabAgent(testDeviceResult);
+      } else if (canPushToHybridAgent(testDeviceResult)) {
+        processResultEntriesForHybridAgent(testDeviceResult);
+      }
     }
   }
 
-  private Boolean canPushToLabAgent() throws IntegrationNotFoundException {
-    return !this.testPlan.getTestPlanLabType().equals(TestPlanLabType.Hybrid) && this.integrationsService.findByApplication(Integration.TestsigmaLab) != null;
+
+  private Boolean canPushToLabAgent(TestDeviceResult testDeviceResult) throws IntegrationNotFoundException {
+    return !testDeviceResult.getTestPlanLabType().equals(TestPlanLabType.Hybrid) && this.integrationsService.findByApplication(Integration.TestsigmaLab) != null;
   }
 
-  private Boolean canPushToHybridAgent() {
-    return this.testPlan.getTestPlanLabType().equals(TestPlanLabType.Hybrid);
+  private Boolean canPushToHybridAgent(TestDeviceResult testDeviceResult) {
+    return testDeviceResult.getTestPlanLabType().equals(TestPlanLabType.Hybrid);
   }
 
-  private void processResultEntriesForLabAgent() throws Exception {
-    List<TestDeviceResult> testDeviceResults = testDeviceResultService.findAllByTestPlanResultId(
-      this.testPlanResult.getId());
-    processResultEntries(testDeviceResults, StatusConstant.STATUS_CREATED);
+  private void processResultEntriesForLabAgent(TestDeviceResult testDeviceResult) throws Exception {
+    processResultEntries(testDeviceResult, StatusConstant.STATUS_CREATED);
   }
 
-  private void processResultEntriesForHybridAgent() throws Exception {
-    List<TestDeviceResult> testDeviceResults = testDeviceResultService.findAllByTestPlanResultId(
-      this.testPlanResult.getId());
-    processResultEntries(testDeviceResults, StatusConstant.STATUS_CREATED);
+  private void processResultEntriesForHybridAgent(TestDeviceResult testDeviceResult) throws Exception {
+    processResultEntries(testDeviceResult, StatusConstant.STATUS_CREATED);
   }
 
-  public void processResultEntries(List<TestDeviceResult> testDeviceResults, StatusConstant inStatus)
+  public void processResultEntries(TestDeviceResult testDeviceResult, StatusConstant inStatus)
     throws Exception {
-    for (TestDeviceResult testDeviceResult : testDeviceResults) {
-      if (testDeviceResult.getTestDevice().getAgent() == null && this.getTestPlan().getTestPlanLabType().isHybrid()) {
-        testDeviceResultService.markEnvironmentResultAsFailed(testDeviceResult, AutomatorMessages.AGENT_HAS_BEEN_REMOVED, StatusConstant.STATUS_CREATED);
-      } else if (this.getTestPlan().getTestPlanLabType().isHybrid() && !agentService.isAgentActive(testDeviceResult.getTestDevice().getAgentId())) {
-          testDeviceResultService.markEnvironmentResultAsFailed(testDeviceResult,
-            AutomatorMessages.AGENT_INACTIVE, StatusConstant.STATUS_CREATED);
-      } else if(this.getTestPlan().getTestPlanLabType().isHybrid() && testDeviceResult.getTestDevice().getDeviceId()!=null &&
-        agentService.isAgentActive(testDeviceResult.getTestDevice().getAgentId()) && !agentDeviceService.isDeviceOnline(testDeviceResult.getTestDevice().getDeviceId())){
-        testDeviceResultService.markEnvironmentResultAsFailed(testDeviceResult,
-          agentDeviceService.find(testDeviceResult.getTestDevice().getDeviceId()).getName()+ " "+AutomatorMessages.DEVICE_NOT_ONLINE, StatusConstant.STATUS_CREATED);
-      }
-      else {
-          processEnvironmentResult(testDeviceResult, inStatus);
-      }
+    if (testDeviceResult.getTestDevice().getAgent() == null && testDeviceResult.getTestPlanLabType().isHybrid()) {
+      testDeviceResultService.markEnvironmentResultAsFailed(testDeviceResult, AutomatorMessages.AGENT_HAS_BEEN_REMOVED, StatusConstant.STATUS_CREATED);
+    } else if (testDeviceResult.getTestPlanLabType().isHybrid() && !agentService.isAgentActive(testDeviceResult.getTestDevice().getAgentId())) {
+      testDeviceResultService.markEnvironmentResultAsFailed(testDeviceResult, AutomatorMessages.AGENT_INACTIVE, StatusConstant.STATUS_CREATED);
+    } else if(testDeviceResult.getTestPlanLabType().isHybrid() && testDeviceResult.getTestDevice().getDeviceId()!=null && agentService.isAgentActive(testDeviceResult.getTestDevice().getAgentId()) && !agentDeviceService.isDeviceOnline(testDeviceResult.getTestDevice().getDeviceId())){
+      testDeviceResultService.markEnvironmentResultAsFailed(testDeviceResult, agentDeviceService.find(testDeviceResult.getTestDevice().getDeviceId()).getName()+ " "+AutomatorMessages.DEVICE_NOT_ONLINE, StatusConstant.STATUS_CREATED);
+    } else {
+      processEnvironmentResultOnSuccessfulChecks(testDeviceResult, inStatus);
     }
     testDeviceResultService.updateExecutionConsolidatedResults(this.testPlanResult.getId(),
       Boolean.TRUE);
   }
 
-  public void processEnvironmentResult(TestDeviceResult testDeviceResult, StatusConstant inStatus) throws Exception {
+  public void processEnvironmentResultOnSuccessfulChecks(TestDeviceResult testDeviceResult, StatusConstant inStatus) throws Exception {
+    if (!isWaitingOnEnvironmentPrerequisite(testDeviceResult)) {
+      if (testDeviceResult.getPrerequisiteTestDeviceResultId() == null || isEnvironmentPrerequisiteResultSuccessful(testDeviceResult)) {
+        processEnvironmentResult(testDeviceResult, inStatus);
+      } else {
+        testDeviceResultService.markEnvironmentResultAsFailed(testDeviceResult, AutomatorMessages.MSG_EXECUTION_NOT_EXECUTED, StatusConstant.STATUS_QUEUED);
+      }
+    } else {
+      testDeviceResultService.markEnvironmentResultAsQueued(testDeviceResult, inStatus, true);
+    }
+  }
+
+  private void processEnvironmentResult(TestDeviceResult testDeviceResult, StatusConstant inStatus) throws Exception {
     testDeviceResultService.markEnvironmentResultAsInPreFlight(testDeviceResult, inStatus);
-    if (!this.getTestPlan().getTestPlanLabType().isHybrid()) {
+    if (!testDeviceResult.getTestPlanLabType().isHybrid()) {
       EnvironmentEntityDTO environmentEntityDTO = loadEnvironment(testDeviceResult,
-        StatusConstant.STATUS_PRE_FLIGHT);
+              StatusConstant.STATUS_PRE_FLIGHT);
       try {
         pushEnvironmentToLab(testDeviceResult, environmentEntityDTO);
       } catch (Exception e) {
         log.error(e.getMessage(), e);
         testDeviceResultService.markEnvironmentResultAsFailed(testDeviceResult, e.getMessage(),
-          StatusConstant.STATUS_PRE_FLIGHT);
+                StatusConstant.STATUS_PRE_FLIGHT);
       }
     }
   }
@@ -657,20 +669,22 @@ public class AgentExecutionService {
       testDeviceResult, inStatus);
     testDeviceResult.setSuiteResults(testSuiteResults);
     for (TestSuiteResult testSuiteResult : testSuiteResults) {
-      testSuiteResultService.markTestSuiteResultAsInFlight(testSuiteResult, inStatus);
-      if (!this.getTestPlan().getTestPlanLabType().isHybrid()) {
-        TestSuiteEntityDTO testSuiteEntity = this.testSuiteResultMapper.map(testSuiteResult);
-        testSuiteEntity.setTestCases(loadTestCases(testSuiteResult, StatusConstant.STATUS_PRE_FLIGHT));
-        List<TestSuiteEntityDTO> testSuiteEntityDTOS = new ArrayList<>();
-        testSuiteEntityDTOS.add(testSuiteEntity);
-        EnvironmentEntityDTO environmentEntityDTO = loadEnvironmentDetails(testDeviceResult);
-        environmentEntityDTO.setTestSuites(testSuiteEntityDTOS);
-        try {
-          pushEnvironmentToLab(testDeviceResult, environmentEntityDTO);
-        } catch (Exception e) {
-          log.error(e.getMessage(), e);
-          testSuiteResultService.markTestSuiteResultAsFailed(testSuiteResult, e.getMessage(),
-            StatusConstant.STATUS_PRE_FLIGHT);
+      if(!isWaitingOnEnvironmentPrerequisite(testDeviceResult)) {
+        testSuiteResultService.markTestSuiteResultAsInFlight(testSuiteResult, inStatus);
+        if (!testDeviceResult.getTestPlanLabType().isHybrid()) {
+          TestSuiteEntityDTO testSuiteEntity = this.testSuiteResultMapper.map(testSuiteResult);
+          testSuiteEntity.setTestCases(loadTestCases(testSuiteResult, StatusConstant.STATUS_PRE_FLIGHT));
+          List<TestSuiteEntityDTO> testSuiteEntityDTOS = new ArrayList<>();
+          testSuiteEntityDTOS.add(testSuiteEntity);
+          EnvironmentEntityDTO environmentEntityDTO = loadEnvironmentDetails(testDeviceResult);
+          environmentEntityDTO.setTestSuites(testSuiteEntityDTOS);
+          try {
+            pushEnvironmentToLab(testDeviceResult, environmentEntityDTO);
+          } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            testSuiteResultService.markTestSuiteResultAsFailed(testSuiteResult, e.getMessage(),
+                    StatusConstant.STATUS_PRE_FLIGHT);
+          }
         }
       }
     }
@@ -694,7 +708,9 @@ public class AgentExecutionService {
       environmentEntityDTO.setAgentDeviceUuid(agentDevice.getUniqueId());
     }
     environmentEntityDTO.setStorageType(storageServiceFactory.getStorageService().getStorageType());
-    environmentEntityDTO.setWorkspaceType(this.getAppType());
+    testDevice.setWorkspaceVersion(workspaceVersionService.find(testDevice.getWorkspaceVersionId()));
+    environmentEntityDTO.setWorkspaceType(testDevice.getWorkspaceVersion().getWorkspace().getWorkspaceType());
+    environmentEntityDTO.setExecutionLabType(testDevice.getTestPlanLabType());
     environmentEntityDTO.setTestPlanSettings(testPlanSettingEntityDTO);
     environmentEntityDTO.setMatchBrowserVersion(testDevice.getMatchBrowserVersion());
     environmentEntityDTO.setCreateSessionAtCaseLevel(testDevice.getCreateSessionAtCaseLevel());
@@ -801,7 +817,7 @@ public class AgentExecutionService {
     testDeviceResultsReRunList = new ArrayList<>();
     if (getReRunType() == ReRunType.ALL_TESTS) {
       testDeviceResultsReRunList = testDeviceResultService.findAllByTestPlanResultId(this.getParentTestPlanResultId());
-    } else if (getReRunType() == ReRunType.ONLY_FAILED_TESTS) {
+    } else if (ReRunType.runFailedTestCases(getReRunType())) {
       testDeviceResultsReRunList = testDeviceResultService.findAllByTestPlanResultIdAndResultIsNot
         (this.getParentTestPlanResultId(), ResultConstant.SUCCESS);
     }
@@ -815,7 +831,7 @@ public class AgentExecutionService {
       if (parentTestDeviceResult != null) {
         if (getReRunType() == ReRunType.ALL_TESTS) {
           testSuiteResultsReRunList = testSuiteResultService.findAllByEnvironmentResultId(parentTestDeviceResult.getId());
-        } else if (getReRunType() == ReRunType.ONLY_FAILED_TESTS) {
+        } else if (ReRunType.runFailedTestCases(getReRunType())) {
           failedTestSuites = testSuiteResultService.findAllByEnvironmentResultIdAndResultIsNot
             (parentTestDeviceResult.getId(), ResultConstant.SUCCESS);
           if (failedTestSuites.size() > 0) {
@@ -861,13 +877,29 @@ public class AgentExecutionService {
     testCaseResultsReRunList = new ArrayList<>();
     try {
       TestSuiteResult parentTestSuiteResult = testSuiteResultService.find(parentTestSuiteResultId);
-      List<TestCaseResult> failedTestCases;
+      List<TestCaseResult> failedTestCases = new ArrayList<>();
       if (parentTestSuiteResult != null) {
         if (getReRunType() == ReRunType.ALL_TESTS || isTestSuiteAPrerequisite(parentTestSuiteResult)) {
           testCaseResultsReRunList = testCaseResultService.findAllBySuiteResultId(parentTestSuiteResult.getId());
-        } else if (getReRunType() == ReRunType.ONLY_FAILED_TESTS) {
-          failedTestCases = testCaseResultService.findAllBySuiteResultIdAndResultIsNot
-            (parentTestSuiteResult.getId(), ResultConstant.SUCCESS);
+        } else if (ReRunType.runFailedTestCases(getReRunType())) {
+          if(getReRunType() == ReRunType.ALL_ITERATIONS) {
+            log.info("Fetching all iterations in failed data driven test case results for suite result id - " + parentTestSuiteResult.getId());
+            List<TestCaseResult> failedTestCaseResults = testCaseResultService.findAllBySuiteResultIdAndIsDataDrivenTrueAndResultIsNot(parentTestSuiteResult.getId(), ResultConstant.SUCCESS);
+            for (TestCaseResult testCaseResult : failedTestCaseResults) {
+              failedTestCases.addAll(testCaseResultService.findAllBySuiteResultIdAndTestCaseId(parentTestSuiteResult.getId(), testCaseResult.getTestCaseId()));
+            }
+          }
+          else if(getReRunType() == ReRunType.ONLY_FAILED_ITERATIONS_IN_FAILED_TESTS) {
+            log.info("Fetching all failed data driven test case results re run list for suite result id - " + parentTestSuiteResult.getId());
+            List<TestCaseResult> failedTestCaseResults = testCaseResultService.findAllBySuiteResultIdAndIsDataDrivenTrueAndResultIsNot(parentTestSuiteResult.getId(), ResultConstant.SUCCESS);
+            for (TestCaseResult testCaseResult : failedTestCaseResults) {
+              failedTestCases.addAll(testCaseResultService.findAllBySuiteResultIdAndTestCaseIdAndResultIsNot(parentTestSuiteResult.getId(), testCaseResult.getTestCaseId(), ResultConstant.SUCCESS));
+            }
+          }
+          else {
+            log.info("Fetching all failed test case results re run list for suite result id - " + parentTestSuiteResult.getId());
+            failedTestCases = testCaseResultService.findAllBySuiteResultIdAndResultIsNot(parentTestSuiteResult.getId(), ResultConstant.SUCCESS);
+          }
           if (failedTestCases.size() > 0) {
             for (TestCaseResult testCaseResult : failedTestCases) {
               List<Long> testCasePreRequisiteIds = findTestCasePreRequisiteIds(testCaseResult, new ArrayList<>(), 0);
@@ -976,6 +1008,7 @@ public class AgentExecutionService {
       .findAllByTestPlanResultIdAndStatusIsNot(this.testPlanResult.getId(), StatusConstant.STATUS_COMPLETED);
     for (TestDeviceResult testDeviceResult : testDeviceResults) {
       testDeviceResultService.markEnvironmentResultAsStopped(testDeviceResult, errorMessage);
+      this.xrayCloudService.exportResultsByEnvironmentResultId(testDeviceResult.getId());
       testDeviceResultService.updateResultCounts(testDeviceResult.getId());
     }
     Timestamp currentTime = new Timestamp(java.lang.System.currentTimeMillis());
@@ -1002,13 +1035,13 @@ public class AgentExecutionService {
 
   protected void setTestLabDetails(TestDevice testDevice, TestDeviceSettings settings,EnvironmentEntityDTO environmentEntityDTO)
     throws Exception {
-    if (this.testPlan.getWorkspaceVersion().getWorkspace().getWorkspaceType().isRest())
+    if (testDevice.getWorkspaceVersion().getWorkspace().getWorkspaceType().isRest())
       return;
-    TestPlanLabType exeLabType = this.getTestPlan().getTestPlanLabType();
+    TestPlanLabType exeLabType = testDevice.getTestPlanLabType();
     setPlatformDetails(testDevice, settings, exeLabType, testDevice.getAgent(), environmentEntityDTO);
   }
 
-  public void loadTestCase(String testDataSetName, TestCaseEntityDTO testCaseEntityDTO, AbstractTestPlan testPlan,
+  public void loadTestCase(String testDataSetName, TestCaseEntityDTO testCaseEntityDTO, AbstractTestPlan testPlan, TestDevice testDevice,
                            Workspace workspace) throws Exception {
 
     String profileName = null;
@@ -1032,8 +1065,30 @@ public class AgentExecutionService {
     if (testDataId != null) {
       TestData testData = testDataProfileService.find(testCaseEntityDTO.getTestDataId());
       testCaseEntityDTO.setTestDataProfileName(testData.getTestDataName());
-      databank = testData.getData();
+      databank = testData.getTempTestData();
       profileName = testData.getTestDataName();
+    }
+    if (!testCaseEntityDTO.getIsDataDriven()) {
+      if (!databank.isEmpty()) {
+        log.info("Test case is not data driven. but has associated test data id");
+        int currentIndex = testCaseEntityDTO.getTestDataStartIndex();
+        dataSet = databank.get(currentIndex);
+        testCaseEntityDTO.setTestDataSetName(dataSet.getName());
+        testCaseEntityDTO.setTestDataIndex(currentIndex);
+      }
+    } else {
+      log.info("Test case is data driven...Matching data set with - " + testDataSetName);
+      for (int i = 0; i < databank.size(); i++) {
+        TestDataSet data = databank.get(i);
+        if (data.getName().equals(testDataSetName)) {
+          dataSet = data;
+          testCaseEntityDTO.setTestDataIndex(i);
+          break;
+        }
+      }
+
+      testCaseEntityDTO.setTestDataSetName(dataSet.getName());
+      testCaseEntityDTO.setExpectedToFail(dataSet.getExpectedToFail());
     }
 
     List<Long> testCaseIds = new ArrayList<>();
@@ -1050,7 +1105,7 @@ public class AgentExecutionService {
         testCaseIds.add(testStepDTO.getStepGroupId());
       }
       if (testStepDTO.getAddonActionId() != null) {
-        if (!this.getTestPlan().getTestPlanLabType().isHybrid()) {
+        if (!testDevice.getTestPlanLabType().isHybrid()) {
           AddonNaturalTextAction addonNaturalTextAction = addonNaturalTextActionService.findById(testStepDTO.getAddonActionId());
           Addon addon = addonService.findById(addonNaturalTextAction.getAddonId());
           if (addon.getStatus() == AddonStatus.DRAFT) {
@@ -1065,7 +1120,7 @@ public class AgentExecutionService {
     elementNames.addAll(testStepService.findAddonActionElementsByTestCaseIds(testCaseIds));
 
     List<Element> elementList = elementService.findByNameInAndWorkspaceVersionId(elementNames,
-      testPlan.getWorkspaceVersionId());
+      testDevice.getWorkspaceVersionId());
     Map<String, Element> elements = new HashMap<>();
     for (Element element : elementList) {
       elements.put(element.getName().toLowerCase(), element);
@@ -1091,13 +1146,22 @@ public class AgentExecutionService {
       workspace.getWorkspaceType(), testStepDTOS,
       elements, dataSet, testPlan.getId(),
       environmentParameters, testCaseEntityDTO, environmentProfileName,
-      profileName);
-    appendPreSignedURLs(executableList, testCaseEntityDTO, false, null, null);
+      profileName,getStepGroupParentForLoopStepIdIndexes(testCaseEntityDTO));
+    appendPreSignedURLs(executableList, testCaseEntityDTO, testDevice,false, null, null);
 
     testCaseEntityDTO.setTestSteps(executableList);
 
     TestCaseResult testCaseResult = testCaseResultService.find(testCaseEntityDTO.getTestCaseResultId());
     testCaseResultService.markTestCaseResultAsInProgress(testCaseResult);
+  }
+
+  private Map<Long, Integer> getStepGroupParentForLoopStepIdIndexes(TestCaseEntityDTO testCaseEntityDTO){
+    Map<Long, Integer> dataIndex = testCaseEntityDTO.getStepGroupParentForLoopStepIdIndexes();
+    if(!testCaseEntityDTO.getIsStepGroup()){
+      dataIndex.put(ParameterTestDataProcessor.OVERRIDE_STEP_GROUP_STEP_WITH_TEST_CASE_PROFILE_ID,
+              testCaseEntityDTO.getTestDataIndex() == null ? 0 : testCaseEntityDTO.getTestDataIndex());
+    }
+    return dataIndex;
   }
 
   private boolean isStepInsideForLoop(TestCaseStepEntityDTO testCaseStepEntity) throws ResourceNotFoundException {
@@ -1109,35 +1173,41 @@ public class AgentExecutionService {
   }
 
   protected void appendPreSignedURLs(List<TestCaseStepEntityDTO> executableList, TestCaseEntityDTO testCaseEntity,
-                                       boolean isWhileLoop, Long stepGroupStepID, TestCaseStepEntityDTO parentGroupEntity)
-    throws ResourceNotFoundException {
+                                       TestDevice testDevice, boolean isWhileLoop, Long stepGroupStepID, TestCaseStepEntityDTO parentGroupEntity)
+          throws ResourceNotFoundException, MalformedURLException {
     Calendar cal = Calendar.getInstance();
     cal.add(Calendar.HOUR, 10);
     stepGroupStepID = (stepGroupStepID == null) ? 0 : stepGroupStepID;
+
     StorageService storageService = this.storageServiceFactory.getStorageService();
     for (TestCaseStepEntityDTO testCaseStepEntity : executableList) {
       Integer index;
+      Long parentId = testCaseStepEntity.getParentId();
+      if(parentId == null)
+        parentId = 0L;
+      int rand =0;
       if (parentGroupEntity != null && !isStepInsideForLoop(testCaseStepEntity)) {
         index = (parentGroupEntity.getIndex() == null) ? 0 : parentGroupEntity.getIndex();
       } else {
+        rand = new Random().ints(1, 100).findFirst().getAsInt();
         index = (testCaseStepEntity.getIndex() == null) ? 0 : testCaseStepEntity.getIndex();
       }
-      String screenShotPath = String.format("/executions/%s/%s_%s_%s_%s.%s", testCaseEntity.getTestCaseResultId(),
-        testCaseStepEntity.getId(), stepGroupStepID, testCaseStepEntity.getPosition(), index, "jpeg");
+      String screenShotPath = String.format("/executions/%s/%s_%s_%s_%s_%s_%s.%s", testCaseEntity.getTestCaseResultId(),
+        testCaseStepEntity.getId(), stepGroupStepID, parentId, testCaseStepEntity.getPosition(), index, rand ,"jpeg");
 
       URL presignedURL = storageService.generatePreSignedURL(screenShotPath, StorageAccessLevel.WRITE, 600);
       testCaseStepEntity.setScreenshotPath(presignedURL.toString());
-      handleUploadActionStep(testCaseStepEntity,storageService);
-      handleInstallApp(testCaseStepEntity,storageService);
+      handleUploadActionStep(testCaseStepEntity,storageService, testDevice);
+      handleInstallApp(testCaseStepEntity,storageService, testDevice);
       if ((testCaseStepEntity.getTestCaseSteps() != null) && !testCaseStepEntity.getTestCaseSteps().isEmpty()) {
         if (testCaseStepEntity.getConditionType() == TestStepConditionType.LOOP_WHILE) {
           addScreenshotPresignedURLsForWhileLoop(testCaseStepEntity, testCaseEntity, stepGroupStepID, parentGroupEntity,storageService);
-          appendPreSignedURLs(testCaseStepEntity.getTestCaseSteps(), testCaseEntity, true, stepGroupStepID, parentGroupEntity);
+          appendPreSignedURLs(testCaseStepEntity.getTestCaseSteps(), testCaseEntity, testDevice,true, stepGroupStepID, parentGroupEntity);
         } else if (testCaseStepEntity.getType() == TestStepType.STEP_GROUP) {
           Long parentGroupStepId = (stepGroupStepID != 0) ? stepGroupStepID : testCaseStepEntity.getId();
-          appendPreSignedURLs(testCaseStepEntity.getTestCaseSteps(), testCaseEntity, isWhileLoop, parentGroupStepId, testCaseStepEntity);
+          appendPreSignedURLs(testCaseStepEntity.getTestCaseSteps(), testCaseEntity, testDevice, isWhileLoop, parentGroupStepId, testCaseStepEntity);
         } else {
-          appendPreSignedURLs(testCaseStepEntity.getTestCaseSteps(), testCaseEntity, isWhileLoop, stepGroupStepID, parentGroupEntity);
+          appendPreSignedURLs(testCaseStepEntity.getTestCaseSteps(), testCaseEntity, testDevice, isWhileLoop, stepGroupStepID, parentGroupEntity);
         }
       }
       if (isWhileLoop && !(testCaseStepEntity.getType() == TestStepType.STEP_GROUP)) {
@@ -1168,28 +1238,33 @@ public class AgentExecutionService {
     testCaseStep.setAdditionalScreenshotPaths(additionalScreenshotPaths);
   }
 
-  private void handleUploadActionStep(TestCaseStepEntityDTO testCaseStepEntity, StorageService storageService) {
+  private void handleUploadActionStep(TestCaseStepEntityDTO testCaseStepEntity, StorageService storageService, TestDevice testDevice) throws MalformedURLException {
     if (testCaseStepEntity.getAction() != null && testCaseStepEntity.getAction().toLowerCase().contains("upload")
       && testCaseStepEntity.getNaturalTextActionId() != null && (testCaseStepEntity.getNaturalTextActionId().equals(969)
       || testCaseStepEntity.getNaturalTextActionId().equals(10150))) {
-      handleFileActionStep(testCaseStepEntity,storageService);
+      handleFileActionStep(testCaseStepEntity,storageService, testDevice);
     }
   }
 
-  private void handleInstallApp(TestCaseStepEntityDTO testCaseStepEntity, StorageService storageService) {
+  private void handleInstallApp(TestCaseStepEntityDTO testCaseStepEntity, StorageService storageService, TestDevice testDevice) throws MalformedURLException {
     if (testCaseStepEntity.getAction() != null && testCaseStepEntity.getAction()
       .toLowerCase().contains("installApp".toLowerCase()) && (testCaseStepEntity.getNaturalTextActionId() != null)
       && (testCaseStepEntity.getNaturalTextActionId().equals(20003) || testCaseStepEntity.getNaturalTextActionId().equals(30003))) {
-      handleFileActionStep(testCaseStepEntity,storageService);
+      handleFileActionStep(testCaseStepEntity,storageService, testDevice);
     }
   }
 
-  private void handleFileActionStep(TestCaseStepEntityDTO testCaseStepEntity, StorageService storageService) {
+  private void handleFileActionStep(TestCaseStepEntityDTO testCaseStepEntity, StorageService storageService, TestDevice testDevice) throws MalformedURLException {
     com.testsigma.automator.entity.TestDataPropertiesEntity testDataPropertiesEntity = testCaseStepEntity.getTestDataMap().get(
       testCaseStepEntity.getTestDataMap().keySet().stream().findFirst().get());
-    String fileUrl = testDataPropertiesEntity.getTestDataValue().replace("testsigma-storage://", "");
-    URL newUrl = storageService.generatePreSignedURL(fileUrl, StorageAccessLevel.READ, 180);
-    if(TestPlanLabType.TestsigmaLab == this.getTestPlan().getTestPlanLabType()) {
+    URL newUrl;
+    if(testDataPropertiesEntity.getTestDataValue().startsWith("http")) {
+      newUrl = new URL(testDataPropertiesEntity.getTestDataValue());
+    } else {
+      String fileUrl = testDataPropertiesEntity.getTestDataValue().replace("testsigma-storage:/", "");
+      newUrl = storageService.generatePreSignedURL(fileUrl, StorageAccessLevel.READ, 180);
+    }
+    if(TestPlanLabType.TestsigmaLab == testDevice.getTestPlanLabType()) {
       try {
         newUrl = new URL(newUrl.toString().replace(applicationConfig.getServerUrl(), applicationConfig.getServerLocalUrl()));
       } catch (MalformedURLException ignore) {}
@@ -1202,7 +1277,7 @@ public class AgentExecutionService {
 
     populatePlatformOsDetails(testDevice, settings, testPlanLabType, agent);
 
-    if (this.getAppType().isWeb()) {
+    if (testDevice.getWorkspaceVersion().getWorkspace().getWorkspaceType().isWeb()) {
       populatePlatformBrowserDetails(testDevice, settings, testPlanLabType, agent,environmentEntityDTO);
     }
   }
@@ -1215,15 +1290,15 @@ public class AgentExecutionService {
     if (testPlanLabType == TestPlanLabType.Hybrid) {
       Platform platform = null;
       String osVersion = null;
-      if ((this.getAppType().isWeb()) && agent != null) {
+      if ((testDevice.getWorkspaceVersion().getWorkspace().getWorkspaceType().isWeb()) && agent != null) {
         platform = agent.getOsType().getPlatform();
         osVersion = agent.getPlatformOsVersion(agent.getOsType().getPlatform());
-      } else if (this.getAppType().isMobile() && testDevice.getDeviceId() != null) {
+      } else if (testDevice.getWorkspaceVersion().getWorkspace().getWorkspaceType().isMobile() && testDevice.getDeviceId() != null) {
         AgentDevice agentDevice = this.agentDeviceService.find(testDevice.getDeviceId());
         osVersion = agentDevice.getPlatformOsVersion();
         platform = agentDevice.getOsName().getPlatform();
       }
-      platformOsVersion = platformsService.getPlatformOsVersion(platform, osVersion, this.getAppType(), testPlanLabType);
+      platformOsVersion = platformsService.getPlatformOsVersion(platform, osVersion, testDevice.getWorkspaceVersion().getWorkspace().getWorkspaceType(), testPlanLabType);
     }
     else {
       platformOsVersion = platformsService.getPlatformOsVersion(testDevice.getPlatformOsVersionId(), testPlanLabType);
@@ -1297,35 +1372,41 @@ public class AgentExecutionService {
                                                             com.testsigma.model.TestDataSet testDataSet,
                                                             Long testPlanId, Map<String, String> environmentParams,
                                                             TestCaseEntityDTO testCaseEntityDTO, String environmentParamSetName,
-                                                            String dataProfile) throws Exception {
+                                                            String dataProfile, Map<Long, Integer> dataSetIndex) throws Exception {
 
     List<Long> loopIds = new ArrayList<>();
+    List<Long> skipIds = new ArrayList<>();
     List<TestCaseStepEntityDTO> toReturn = new ArrayList<>();
     for (TestStepDTO testStepDTO : testStepDTOS) {
 
       if (loopIds.contains(testStepDTO.getParentId())) {
+        skipIds.add(testStepDTO.getId());
+        continue;
+      } else if (skipIds.contains(testStepDTO.getParentId())) {
+        skipIds.add(testStepDTO.getId());
         continue;
       }
+
 
       if (testStepDTO.getType() == TestStepType.FOR_LOOP) {
         loopIds.add(testStepDTO.getId());
         new ForLoopStepProcessor(webApplicationContext, toReturn, workspaceType, elementMap, testStepDTO,
-          testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile).processLoop(testStepDTOS, loopIds);
+          testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile, dataSetIndex).processLoop(testStepDTOS, loopIds);
         continue;
       } else if (testStepDTO.getType() == TestStepType.WHILE_LOOP) {
         loopIds.add(testStepDTO.getId());
         new WhileLoopStepProcessor(webApplicationContext, toReturn, workspaceType, elementMap, testStepDTO,
-          testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile).processWhileLoop(testStepDTOS, loopIds);
+          testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile, dataSetIndex).processWhileLoop(testStepDTOS, loopIds);
         continue;
       } else if (testStepDTO.getType() == TestStepType.REST_STEP) {
         new RestStepProcessor(webApplicationContext, toReturn, workspaceType, elementMap, testStepDTO,
-          testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile).process();
+          testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile, dataSetIndex).process();
         continue;
       }
 
       TestCaseStepEntityDTO stepEntity = new StepProcessor(webApplicationContext, toReturn, workspaceType,
         elementMap, testStepDTO, testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName,
-        dataProfile).processStep();
+        dataProfile, dataSetIndex).processStep();
 
       stepEntity.setStepGroupId(testStepDTO.getStepGroupId());
       stepEntity.setParentId(testStepDTO.getParentId());
@@ -1338,35 +1419,38 @@ public class AgentExecutionService {
           if (stepEntity.getTestCaseSteps() == null) {
             stepEntity.setTestCaseSteps(new ArrayList<>());
           }
-          //TODO: check logic for test step key Generation and recursive logic for step group generation
           if (loopIds.contains(subTestStepDTO.getParentId())) {
+            skipIds.add(subTestStepDTO.getId());
+            continue;
+          } else if (skipIds.contains(subTestStepDTO.getParentId())) {
+            skipIds.add(subTestStepDTO.getId());
             continue;
           }
 
           if (subTestStepDTO.getType() == TestStepType.FOR_LOOP) {
             loopIds.add(subTestStepDTO.getId());
             new ForLoopStepProcessor(webApplicationContext, stepGroupSpecialSteps, workspaceType, elementMap, subTestStepDTO,
-              testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile)
+              testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile, dataSetIndex)
               .processLoop(testStepDTO.getTestStepDTOS(), loopIds);
             stepEntity.getTestCaseSteps().addAll(stepGroupSpecialSteps);
             continue;
           } else if (subTestStepDTO.getType() == TestStepType.WHILE_LOOP) {
             loopIds.add(subTestStepDTO.getId());
             new WhileLoopStepProcessor(webApplicationContext, stepGroupSpecialSteps, workspaceType, elementMap,
-              subTestStepDTO, testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile)
-              .processWhileLoop(testStepDTO.getTestStepDTOS(), loopIds);
+              subTestStepDTO, testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName,
+                    dataProfile, dataSetIndex).processWhileLoop(testStepDTO.getTestStepDTOS(), loopIds);
             stepEntity.getTestCaseSteps().addAll(stepGroupSpecialSteps);
             continue;
           } else if (subTestStepDTO.getType() == TestStepType.REST_STEP) {
             new RestStepProcessor(webApplicationContext, stepGroupSpecialSteps, workspaceType, elementMap, subTestStepDTO,
-              testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile).process();
+              testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile, dataSetIndex).process();
             stepEntity.getTestCaseSteps().addAll(stepGroupSpecialSteps);
             continue;
           }
 
           TestCaseStepEntityDTO cstepEntity = new StepProcessor(webApplicationContext, toReturn, workspaceType,
             elementMap, subTestStepDTO, testPlanId, testDataSet, environmentParams, testCaseEntityDTO,
-            environmentParamSetName, dataProfile).processStep();
+            environmentParamSetName, dataProfile, dataSetIndex).processStep();
 
           cstepEntity.setParentId(subTestStepDTO.getParentId());
           cstepEntity.setConditionType(subTestStepDTO.getConditionType());
@@ -1383,4 +1467,90 @@ public class AgentExecutionService {
     return this.testPlan.getWorkspaceVersion().getWorkspace().getWorkspaceType();
   }
 
+  protected void populatePreRequisiteEnvironmentResultIds(TestPlanResult executionResult){
+    List<TestDeviceResult> environmentResults = testDeviceResultService.findAllByTestPlanResultId(executionResult.getId());
+    for(TestDeviceResult environmentResult: environmentResults){
+      Long executionEnvironmentPreRequisiteId = environmentResult.getTestDevice().getPrerequisiteTestDevicesId();
+      if(executionEnvironmentPreRequisiteId != null){
+        TestDeviceResult preRequisiteEnvironmentResult = testDeviceResultService.findByTestPlanResultIdAndTestDeviceId(executionResult.getId(),executionEnvironmentPreRequisiteId);
+        environmentResult.setPrerequisiteTestDeviceResultId(preRequisiteEnvironmentResult.getId());
+        testDeviceResultService.update(environmentResult);
+      }
+    }
+  }
+  protected boolean isWaitingOnEnvironmentPrerequisite(TestDeviceResult environmentResult) throws ResourceNotFoundException {
+    Long preRequisiteEnvironmentResultId = environmentResult.getPrerequisiteTestDeviceResultId();
+    if(preRequisiteEnvironmentResultId != null){
+      TestDeviceResult preRequisiteEnvironmentResult = testDeviceResultService.find(preRequisiteEnvironmentResultId);
+      if(preRequisiteEnvironmentResult.getStatus() != StatusConstant.STATUS_COMPLETED){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  protected boolean isEnvironmentPrerequisiteResultSuccessful(TestDeviceResult environmentResult) throws ResourceNotFoundException {
+    Long preRequisiteEnvironmentResultId = environmentResult.getPrerequisiteTestDeviceResultId();
+    if(preRequisiteEnvironmentResultId != null){
+      TestDeviceResult preRequisiteEnvironmentResult = testDeviceResultService.find(preRequisiteEnvironmentResultId);
+      if(preRequisiteEnvironmentResult.getResult() == ResultConstant.SUCCESS){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private void createTestCaseDataDrivenReRunResult(TestPlanResult result, List<TestDataSet> testDataSets,
+                                                   TestCase testCase, AbstractTestSuite testSuite,
+                                                   TestDeviceResult environmentResult, TestSuiteResult testSuiteResult,
+                                                   TestCaseResult parentTestCaseResult) throws DataIntegrityViolationException, TestsigmaException {
+    if(ReRunType.runAllIterations(result.getReRunType())){
+      log.info("Fetching all iteration re run list of test case result id - " + parentTestCaseResult.getReRunParentId());
+      dataDrivenResultsReRunList = this.testCaseDataDrivenResultService.findAllByTestCaseResultId(parentTestCaseResult.getReRunParentId());
+    }
+    else if(ReRunType.runFailedIterations(result.getReRunType())) {
+      log.info("Fetching all failed iteration re run list of test case result id - " + parentTestCaseResult.getReRunParentId());
+      dataDrivenResultsReRunList = this.testCaseDataDrivenResultService.findByTestCaseResultIdAndResultNot(parentTestCaseResult.getReRunParentId(),
+              ResultConstant.SUCCESS);
+    }
+    Set<String> setNames = dataDrivenResultsReRunList.stream().map(TestCaseDataDrivenResult::getTestDataName).collect(Collectors.toSet());
+    for(TestDataSet testDataSet : testDataSets) {
+      if(setNames.contains(testDataSet.getName())) {
+        this.createTestCaseIterationResult(testDataSets, testDataSet, testCase, testSuite, environmentResult,
+                testSuiteResult, parentTestCaseResult);
+      }
+    }
+  }
+
+  private void createTestCaseIterationResult(List<TestDataSet> testDataSets, TestDataSet testDataSet,
+                                             TestCase testCase, AbstractTestSuite testSuite,
+                                             TestDeviceResult environmentResult, TestSuiteResult testSuiteResult,
+                                             TestCaseResult parentTestCaseResult) throws DataIntegrityViolationException, TestsigmaException {
+    testCase.setIsDataDriven(false);
+    testCase.setTestDataStartIndex(testDataSets.indexOf(testDataSet));
+    log.info("Populating DataDrivenTestcaseResult for test data set - " + testDataSet);
+    TestCaseResult testCaseResult = createTestCaseResult(testSuite, testCase, environmentResult, testSuiteResult,
+            parentTestCaseResult);
+    if (testCaseResult != null)
+      createTestCaseDataDrivenResult(testDataSet, testCaseResult);
+    if(isDataDrivenRerun && !parentTestCaseResult.getIsStepGroup())
+      setReRunParentId(testCaseResult, testDataSet, parentTestCaseResult.getReRunParentId());
+  }
+
+  private void setReRunParentId(TestCaseResult testCaseResult, TestDataSet testDataSet, Long parentResultId ){
+    if(testCaseResult != null && testDataSet != null) {
+      log.info("Populating re-run parentId for the data driven iteration result -" + testCaseResult.getId());
+      TestCaseDataDrivenResult result = this.getTestCaseDataDrivenResult(testDataSet.getName(), parentResultId);
+      testCaseResult.setReRunParentId(result.getIterationResultId());
+      this.testCaseResultService.create(testCaseResult);
+    }
+  }
+
+  private TestCaseDataDrivenResult getTestCaseDataDrivenResult(String setName, Long parentTestCaseId){
+    Predicate<TestCaseDataDrivenResult> name = dResult -> Objects.equals(dResult.getTestDataName(), setName);
+    Predicate<TestCaseDataDrivenResult> parent = dResult -> Objects.equals(dResult.getTestCaseResultId(), parentTestCaseId);
+    Predicate<TestCaseDataDrivenResult> resultPredicate = name.and(parent);
+    List<TestCaseDataDrivenResult> testCaseDataDrivenResult = dataDrivenResultsReRunList.stream().filter(resultPredicate).collect(Collectors.toList());
+    return testCaseDataDrivenResult.get(0);
+  }
 }

@@ -1,41 +1,59 @@
-<div class="td-create-container h-100 overflow-y-auto form-height">
-  <div class="create-form-full-view test-plan-creation">
-    <div
-      class="ts-col-100 theme-details-header px-25 mw-100">
-      <a
-        class="form-title"
-        [translate]="testPlan?.id ? 'test_plans.form.edit.title' :'test_plans.form.create.title'"></a>
-      <i
-        class="ml-auto fa-close-alt pointer ml-50"
-        [routerLink]="!testPlan?.id ? ['/td', version?.id , 'plans'] : ['/td' , 'plans', testPlan.id]"
-        [matTooltip]="'hint.message.common.cancel' | translate"></i>
+<div class="d-flex flex-column h-100">
+  <plans-form-header
+    [headerBtns]="headerBtnsMap[stepper?.selectedIndex]"
+    [isNewUI]="leapUISwitchForm.value"
+    [version]="version"
+    [isEdit]="!!testPlan?.id"
+    (onSwitchUI)="updateLeapUIPref($event)"
+  ></plans-form-header>
+  <div class="td-create-container overflow-y-auto form-height flex-grow-1">
+    <div class="create-form-full-view test-plan-creation">
+      <mat-horizontal-stepper linear="false" #stepper class="h-90 ts-col-100 custom-stepper pt-30" *ngIf="testPlanForm">
+    <mat-step [label]="'test_plans.form.create.title' | translate" [stepControl]="testPlanForm">
+      <app-test-plan-form
+        [tabPosition]="0"
+        (updateHeaderBtns)="updateHeaderBtns($event)"
+        [isNewUI]="leapUISwitchForm.value"
+        [formSubmitted]="formSubmitted"
+        *ngIf="isFetchingComplete && testPlanForm && version"
+        [testPlan]="testPlan"
+        [version]="version" [stepper]="stepper"
+        [formGroup]="testPlanForm"></app-test-plan-form>
+    </mat-step>
+    <mat-step #suitesStep [label]="'test_plans.form.suites.title' | translate" [stepControl]="testPlanForm">
+      <app-test-plan-suite-machine-selection
+        [tabPosition]="1"
+        (updateHeaderBtns)="updateHeaderBtns($event)"
+        (hasTestSuitesWithoutMachine)="hasTestSuitesWithoutMachine=$event"
+        *ngIf="version && testPlanForm && isFetchingComplete && !leapUISwitchForm?.value"
+        [version]="version"
+        [stepper]="stepper"
+        [formGroup]="testPlanForm"
+        [formSubmitted]="formSubmitted"
+        [execution]="testPlan" ></app-test-plan-suite-machine-selection>
+      <app-test-plan-suite-selection
+        *ngIf="version && testPlanForm && isFetchingComplete && leapUISwitchForm?.value"
+        [tabPosition]="1"
+        (updateHeaderBtns)="updateHeaderBtns($event)"
+        [version]="version"
+        [stepper]="stepper"
+        [formGroup]="testPlanForm"
+        [formSubmitted]="formSubmitted"
+        [testPlan]="testPlan" ></app-test-plan-suite-selection>
+    </mat-step>
+    <mat-step #settingsStep [label]="'test_plans.form.settings.title' | translate" [stepControl]="testPlanForm" >
+      <app-test-plan-settings-form
+        [tabPosition]="2"
+        (updateHeaderBtns)="updateHeaderBtns($event)"
+        *ngIf="version && isFetchingComplete && testPlanForm"
+        [version]="version"
+        [stepper]="stepper"
+        [formGroup]="testPlanForm"
+        (formSubmitted)="formSubmitted = true"
+        [testPlan]="testPlan"
+        [hasTestSuitesWithoutMachine]="hasTestSuitesWithoutMachine"></app-test-plan-settings-form>
+    </mat-step>
+  </mat-horizontal-stepper>
     </div>
-    <mat-horizontal-stepper linear="false" #stepper class="h-90 ts-col-100 custom-stepper pt-30" *ngIf="testPlanForm">
-      <mat-step [label]="'test_plans.form.create.title' | translate" [stepControl]="testPlanForm">
-        <app-test-plan-form
-          *ngIf="isFetchingComplete && testPlanForm && version"
-          [testPlan]="testPlan"
-          [version]="version" [stepper]="stepper"
-          [formGroup]="testPlanForm"></app-test-plan-form>
-      </mat-step>
-      <mat-step #suitesStep [label]="'test_plans.form.suites.title' | translate" [stepControl]="testPlanForm">
-        <app-test-plan-suite-selection
-          *ngIf="version && testPlanForm && isFetchingComplete"
-          [version]="version"
-          [stepper]="stepper"
-          [formGroup]="testPlanForm"
-          [formSubmitted]="formSubmitted"
-          [testPlan]="testPlan" ></app-test-plan-suite-selection>
-      </mat-step>
-      <mat-step #settingsStep [label]="'test_plans.form.settings.title' | translate" [stepControl]="testPlanForm" >
-        <app-test-plan-settings-form
-          *ngIf="version && isFetchingComplete && testPlanForm"
-          [version]="version"
-          [stepper]="stepper"
-          [formGroup]="testPlanForm"
-          (formSubmitted)="formSubmitted = true"
-          [testPlan]="testPlan" ></app-test-plan-settings-form>
-      </mat-step>
-    </mat-horizontal-stepper>
   </div>
 </div>

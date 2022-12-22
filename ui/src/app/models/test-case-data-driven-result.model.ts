@@ -13,7 +13,7 @@ import {custom, deserialize, object, serializable, SKIP} from 'serializr';
 import {TestCaseResult} from "./test-case-result.model";
 import {TestDataSet} from "./test-data-set.model";
 
-export class TestCaseDataDrivenResult extends Base implements PageObject {
+export class  TestCaseDataDrivenResult extends Base implements PageObject {
   @serializable
   public testCaseId: number;
   @serializable

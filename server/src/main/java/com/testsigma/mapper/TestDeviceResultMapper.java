@@ -35,8 +35,6 @@ public interface TestDeviceResultMapper {
   @Mapping(target = "environmentResultId", source = "id")
   @Mapping(target = "testPlanId", expression = "java(testDeviceResult.getTestPlanResult().getTestPlan().getId())")
   @Mapping(target = "name", expression = "java(testDeviceResult.getTestPlanResult().getTestPlan().getName())")
-  @Mapping(target = "executionLabType", expression = "java(testDeviceResult.getTestPlanResult().getTestPlan()" +
-    ".getTestPlanLabType())")
   @Mapping(target = "executionRunId", source = "testPlanResultId")
   EnvironmentEntityDTO map(TestDeviceResult testDeviceResult);
 

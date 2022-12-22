@@ -393,8 +393,10 @@ ngx-json-viewer.custom-json-view {
 .cdk-overlay-pane .mat-menu-panel {
   max-width: 600px !important;
   height: 50vh !important;
+  &.switcher-dropdown, &.switcher-dropdown-version {
+    height: auto !important;
+  }
   max-height: 50vh;
-
   .mat-menu-content {
     @extend .h-100;
   }
@@ -961,6 +963,26 @@ ngx-json-viewer.custom-json-view {
 .is_icon{
   .mat-option-text{
     @extend .d-flex;
+  }
+}
+
+.delete-dialog{
+  .mat-dialog-actions{
+    @extend .pr-0
+  }
+}
+.ui-identifier-tab{
+  .mat-tab-header{
+    @extend .px-20;
+  }
+}
+
+.linked-entities-modal{
+  .mt-2{
+    margin-top: 0.125rem !important;
+  }
+  .mr-10{
+    @extend .mr-10
   }
 }
 

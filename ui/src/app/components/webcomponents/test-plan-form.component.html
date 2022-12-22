@@ -20,7 +20,7 @@
            [textContent]="'form.validation.common.min_length' | translate: {FieldName:'Name' , min:'4'}"></div>
       <div class="error left w-fit-content" style="left: 193px"
            *ngIf="testPlanForm.controls.name.errors?.maxlength"
-           [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'120'}"></div>
+           [textContent]="'form.validation.common.max_length' | translate: {FieldName:'Name' , max:'250'}"></div>
       <div class="error left w-fit-content" style="left: 193px"
            *ngIf="testPlanForm.controls.name.hasError('whitespace')"
            [textContent]="'form.validation.cannot_have_white_spaces' | translate: {FieldName:'Name'}"></div>
@@ -29,28 +29,21 @@
   <div class="ts-col-100 form-group">
     <span
       [translate]="'message.common.description_optional'"
-      [class.text-underline]="!showDescription"
-      class="text-dark pointer" (click)="showDescription=!showDescription"></span>
+      class="text-dark pointer"></span>
     <div
-      @fade *ngIf="showDescription" class="mt-15">
+      class="mt-15">
       <app-description class="without-label" [formCtrlName]="testPlanForm.controls.description"></app-description>
     </div>
   </div>
-  <app-select-test-lab
-    *ngIf="testPlan && testPlanForm"
-    [testPlan]="testPlan"
-    [version]="version"
-    [formGroup]="testPlanForm"
-    [isDry]="false"></app-select-test-lab>
-  <div class="theme-border-t ts-col-100 text-right bottom-0 position-sticky bg-white pb-15">
-    <a [translate]="'btn.common.cancel'"
-       class="theme-btn-clear-default mt-15 mr-25"
-       [routerLink]="['/td', version?.id, 'plans']"></a>
-    <button
-      (click)="isInValid ? formSubmitted = true :next()"
-      class="theme-btn-primary mt-15">
-      <span [translate]="'pagination.next'"></span>
-      <i class="fa-right-arrow-thin ml-4 fz-11"></i>
-    </button>
+
+  <div class="form-group p-0">
+    <app-tags-chip-list
+      [autofocus]="false"
+      [entityId]="testPlan.id"
+      [service]="tagService"
+      (onValueChange)="setTags($event)"
+    ></app-tags-chip-list>
+    <label class="control-label" [translate]="'testcase.list.tags'"></label>
   </div>
 </form>
+

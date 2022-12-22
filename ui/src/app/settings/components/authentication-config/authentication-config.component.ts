@@ -148,8 +148,8 @@ export class AuthenticationConfigComponent extends BaseComponent implements OnIn
 
   openRestartConfirmComponent() {
     const dialogRef = this.matModal.open<ConfirmComponent>(ConfirmComponent, {
-      height: '30vh',
-      width: '50%',
+      height: '25vh',
+      width: '540px',
       disableClose:true,
       panelClass: ['mat-dialog', 'rds-none']
     });

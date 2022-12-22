@@ -9,7 +9,9 @@
       [(ngModel)]="inputValue"
       class="form-control d-inline-block"
       [placeholder]="'agents.mobile.inspection.search_element' | translate" aria-invalid="false">
-    <i [ngClass]= "{'visibility-visible' : inputValue}"  style="margin-left: 1px;padding-left: 1px" [matTooltip]="'hint.message.common.clear' | translate"
-       class="fa-close-alt text-t-secondary fz-12 pt-2 mr-5 pointer visibility-hidden" (click)="clearSearch()"></i>
+    <i [ngClass]= "{'visibility-visible' : hasClose || inputValue}"  style="margin-left: 1px;padding-left: 1px"
+       [matTooltip]="(hasClose? 'btn.common.close' : 'hint.message.common.clear') | translate"
+       class="fa-close-alt text-t-secondary fz-12 pt-2 mr-5 pointer visibility-hidden"
+       (click)="hasClose? toggleSearch() : clearSearch()"></i>
   </div>
 </div>

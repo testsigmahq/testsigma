@@ -153,7 +153,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
         this.formBuilder.group({
           agentId : new FormControl(this.testPlan.testDevices[0].agentId, [this.requiredIfValidator(() => this.isHybrid)]),
           deviceId: new FormControl(this.testPlan.testDevices[0]?.deviceId, [this.requiredIfValidator(() => this.isHybrid && this.version?.workspace.isMobile)]),
-          platformOsVersionId :new FormControl(this.testPlan.testDevices[0].platformOsVersionId,  [this.requiredIfValidator(() => !this.isRest && !this.isHybrid && !this.isPrivateGrid)]),
+          platformOsVersionId :new FormControl(this.testPlan.testDevices[0].platformOsVersionId,  [this.requiredIfValidator(() => !this.isRest && this.isHybrid && !this.isPrivateGrid)]),
           platformScreenResolutionId : new FormControl(this.testPlan.testDevices[0].platformScreenResolutionId, [this.requiredIfValidator(() => this.version?.workspace.isWeb && !this.isHybrid && !this.isPrivateGrid)]),
           platformBrowserVersionId :new FormControl(this.testPlan.testDevices[0].platformBrowserVersionId, [this.requiredIfValidator(() => !this.version?.workspace.isMobile && !this.isRest && !this.isHybrid && !this.isPrivateGrid)]),
           platformDeviceId : new FormControl(this.testPlan.testDevices[0].platformDeviceId,  [this.requiredIfValidator(() => !this.version?.workspace.isWeb && !this.isRest && !this.isHybrid && !this.isPrivateGrid)]),
@@ -269,19 +269,17 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
     testDevice.agentId = configuration.agentId;
     testDevice.deviceId = configuration.deviceId;
     testDevice.settings = new TestDeviceSettings();
+    testDevice.testPlanLabType = this.testPlan.testPlanLabType;
     this.testPlan.testDevices = [testDevice];
     this.environment = configuration.environment;
-    console.log("Execution Environment", this.testPlan, this.environment);
     this.dryExecutionForm = undefined;
     this.addFormControls();
   }
 
   openSavedConfigs() {
     this.configuration = new AdhocRunConfiguration().deserializeDryRunForm(this.dryExecutionForm.getRawValue());
-    console.log(this.dryExecutionForm.getRawValue());
     this.configuration.workspaceType = this.version.workspace.workspaceType;
     let environment = this.dryExecutionForm.getRawValue().testDevices[0];
-    console.log(environment);
     if(this.isHybrid){
       this.agentService.findAll("id:"+ this.dryExecutionForm.getRawValue().testDevices[0].agentId).subscribe(res => {
         this.configuration.name = this.configuration.formattedHybridName(res.content[0].name, environment);
@@ -329,12 +327,12 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
   }
 
   private normalizeFormValue() {
-    console.log(this.dryExecutionForm.getRawValue());
     const environment = new DryTestDevice().deserialize(this.dryExecutionForm.getRawValue()['testDevices'][0]);
     this.testPlan = new DryTestPlan().deserialize(this.dryExecutionForm.getRawValue());
     this.testPlan.workspaceVersionId = this.version.id;
     this.testPlan.testCaseId = this.testCase.id;
     environment.matchBrowserVersion = this.testPlan.matchBrowserVersion;
+    environment.testPlanLabType = this.testPlan.testPlanLabType;
     this.testPlan.testDevices = [environment];
     if(!environment.isAppUploadType) {
       environment.appUploadId = null;
@@ -350,9 +348,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
     if (this.testPlan.isHybrid){
       environment.platformBrowserVersionId=null;
       environment.platformDeviceId = null;
-      environment.platformOsVersionId= null;
       environment.platformScreenResolutionId = null;
-      environment.platform=null;
     }
     if (!this.testPlan.isHybrid && !this.testPlan.isPrivateLab) {
       environment.agentId = null;

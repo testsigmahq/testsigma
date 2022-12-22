@@ -8,6 +8,7 @@ import {TestCaseFilterService} from "../../services/test-case-filter.service";
 import {StepGroupFilterService} from "../../services/step-group-filter.service";
 import {UserPreferenceService} from "../../services/user-preference.service";
 import {ToastrService} from "ngx-toastr";
+import {NavigationService} from "../../services/navigation.service";
 
 @Component({
   selector: 'app-td-redirect',
@@ -25,6 +26,7 @@ export class TestCasesRedirectComponent extends BaseComponent implements OnInit 
     public toastrService: ToastrService,
     private route: ActivatedRoute,
     private testCaseFilterService: TestCaseFilterService,
+    private navigation:NavigationService,
     private stepGroupFilterService: StepGroupFilterService,
     private userPreferenceService: UserPreferenceService) {
     super(authGuard, notificationsService, translate,toastrService);
@@ -38,11 +40,11 @@ export class TestCasesRedirectComponent extends BaseComponent implements OnInit 
         this.pushToParent(this.route, allParams);
         if (this.router.url.endsWith("/cases")) {
           this.testCaseFilterService.findAll(params.versionId).subscribe(res => {
-            this.router.navigate(['/td', params.versionId, 'cases', 'filter', this.setFilterId(res.content, selectedFilterId)]);
+            this.navigation.replaceUrl(['/td', params.versionId, 'cases', 'filter', this.setFilterId(res.content, selectedFilterId)])
           });
         } else if (this.router.url.endsWith("/step_groups")) {
           this.stepGroupFilterService.findAll(params.versionId).subscribe(res => {
-            this.router.navigate(['/td', params.versionId, 'step_groups', 'filter', this.setFilterId(res.content, selectedFilterId)]);
+            this.navigation.replaceUrl(['/td', params.versionId, 'step_groups', 'filter', this.setFilterId(res.content, selectedFilterId)])
           });
         }
       })

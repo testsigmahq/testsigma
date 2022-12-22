@@ -132,8 +132,10 @@ import {TestStepResult} from "../../models/test-step-result.model";
                 <span [translate]="'suggestion.engine.btn.talk_to_expert'"></span>
               </a>
               <a
+                rel="noreferrer nofollow"
                 href="https://support.testsigma.com/a/tickets/new"
                 target="_blank"
+                rel="noreferrer nofollow"
                 class="btn btn-purple-blue large py-10 border-rds-2 ml-0 px-20 d-inline-flex align-items-center">
                 <i class="fa fa-email-box pr-7 line-height-none mb-n4"></i>
                 <span

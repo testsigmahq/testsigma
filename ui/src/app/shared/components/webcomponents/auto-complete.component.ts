@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Optional, Output} from '@angular/core';
 import {Page} from "../../models/page";
 import {PageObject} from "../../models/page-object";
 import {FormControl, FormGroup} from '@angular/forms';
@@ -17,18 +17,20 @@ import {TestPlanLabType} from '../../../enums/test-plan-lab-type.enum';
       [class.sm]="inline"
       [formGroup]="formGroup"
       [appearance]="inline ? 'fill': 'outline'" (click)="groupTrigger.openPanel();focusOnMatSelectSearch()">
-      <div>
+      <div class="d-flex align-items-center">
       <i
         [class.icon-top]="isNativeIcons"
         class="switcher-icon fa-{{this.projectIcon}}"  *ngIf="hasProjectIcon"></i>
       <i
         [class.icon-top]="isNativeIcons"
-        class="switcher-icon fa-{{this.applicationIcon}}" *ngIf="hasApplicationIcon"></i>
+        class="switcher-icon z-in-10 left-n5 fa-{{this.applicationIcon}}" *ngIf="hasApplicationIcon"
+      [ngClass]="this.applicationIcon=='project-website' ? 'top-n1':'top-n4'">
+      </i>
       <input
         type="text" readonly [class.pl-20]="hasProjectIcon || hasApplicationIcon"
              [value]="noneValue ? 'None' : value?.name"
-             class="autocomplete-placeholder">
-      <i class="fa-down-arrow-filled" [class.fz-12]="inline"></i>
+             class="autocomplete-placeholder text-truncate z-in-2 py-10 my-n10 pl-10 ml-n8">
+      <i class="fa-down-arrow-filled z-in-2 px-14 mx-n14 py-15 my-n15" [class.fz-12]="inline"></i>
       </div>
       <input
         type="text" matInput
@@ -87,7 +89,7 @@ import {TestPlanLabType} from '../../../enums/test-plan-lab-type.enum';
             style="height: 4px;line-height: 1"
             [matTooltip]="item?.suffixNext ? ('agents.list_view.version_out_of_sync' |
                     translate: {agentVersion: item?.agentVersion, latestVersion:
-                    item?.currentAgentVersion}) : ''">
+                    item?.currentAgentVersion}) : isCloudDeviceDropdown ? ('message.common.device_busy'|translate) : '' ">
             <i
               *ngIf="item?.suffixNext"
               class="fa-exclamation-triangle-solid text-dark pr-6"></i>
@@ -114,6 +116,7 @@ export class AutoCompleteComponent implements OnInit {
   @Input('isDisabled') isDisabled: Boolean;
   @Input('testPlanLabType') testPlanLabType: TestPlanLabType;
   @Input('inline') public inline?: Boolean;
+  @Optional() @Input('isCloudDeviceDropdown') isCloudDeviceDropdown:Boolean;
   @Output('onSearch') onSearch = new EventEmitter<String>();
   @Output('onValueChange') onValueChange = new EventEmitter<Base>();
 
@@ -183,7 +186,7 @@ export class AutoCompleteComponent implements OnInit {
     if(this.hasProjectIcon){
       this.projectIcon = this.setProjectIcon(this.value);
     } else if(this.hasApplicationIcon){
-      this.applicationIcon = this.setIcons(this.value['workspaceType']);
+      this.applicationIcon =this.setIcons(this.value['workspaceType']);
     }
   }
 

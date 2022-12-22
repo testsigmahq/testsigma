@@ -144,7 +144,7 @@
       [translate]="'btn.common.cancel'" mat-dialog-close>
     </button>
     <button
-      [disabled]="disableRunButton()"
+      [disabled]="false && disableRunButton()"
       (click)="save()"
       class="theme-btn-primary"
       [isLoading]="saving"

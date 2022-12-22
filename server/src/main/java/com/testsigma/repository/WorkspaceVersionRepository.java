@@ -10,6 +10,8 @@
 package com.testsigma.repository;
 
 import com.testsigma.model.WorkspaceVersion;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -28,7 +30,15 @@ public interface WorkspaceVersionRepository extends JpaSpecificationExecutor<Wor
   void copyTestCaseDetails(@Param("newVersionId") Long newVersionId, @Param("versionId") Long versionId);
 
   @Modifying
-  @Query(value = "insert into test_steps ( created_date, action, pre_requisite, priority, step_id, test_case_id, step_group_id, natural_text_action_id, type, condition_type, parent_id, wait_time, copied_from, condition_if, test_data, test_data_type, element, attribute, for_loop_start_index, for_loop_end_index, for_loop_test_data_id, test_data_function_id, test_data_function_args, disabled, ignore_step_result ) select now(), step.action, step.pre_requisite, step.priority, step.step_id, tcase.id, step.step_group_id, step.natural_text_action_id, step.type, step.condition_type, step.parent_id, step.wait_time, step.id, step.condition_if, step.test_data, step.test_data_type, step.element, step.attribute, step.for_loop_start_index, step.for_loop_end_index, step.for_loop_test_data_id, step.test_data_function_id, step.test_data_function_args, step.disabled, step.ignore_step_result from test_steps step join test_cases tcase on tcase.copied_from = step.test_case_id where tcase.id in ( select id from test_cases where workspace_version_id = :newVersionId )", nativeQuery = true)
+  @Query(value = "insert into test_steps ( created_date, action, pre_requisite, priority, step_id, test_case_id, " +
+          "step_group_id, natural_text_action_id, type, condition_type, parent_id, wait_time, copied_from, condition_if," +
+          " test_data, test_data_type, element, attribute, for_loop_start_index, for_loop_end_index, for_loop_test_data_id," +
+          " test_data_function_id, test_data_function_args, disabled, ignore_step_result,max_iterations ) select now(), step.action, " +
+          "step.pre_requisite, step.priority, step.step_id, tcase.id, step.step_group_id, step.natural_text_action_id," +
+          " step.type, step.condition_type, step.parent_id, step.wait_time, step.id, step.condition_if, step.test_data," +
+          " step.test_data_type, step.element, step.attribute, step.for_loop_start_index, step.for_loop_end_index, " +
+          "step.for_loop_test_data_id, step.test_data_function_id, step.test_data_function_args, step.disabled, " +
+          "step.ignore_step_result,step.max_iterations from test_steps step join test_cases tcase on tcase.copied_from = step.test_case_id where tcase.id in ( select id from test_cases where workspace_version_id = :newVersionId )", nativeQuery = true)
   void copyTestStepDetails(@Param("newVersionId") Long newVersionId);
 
   @Modifying
@@ -120,4 +130,6 @@ public interface WorkspaceVersionRepository extends JpaSpecificationExecutor<Wor
   void copyTestPlanLabels(@Param("newVersionId") Long newVersionId);
 
   WorkspaceVersion findFirstByWorkspaceId(@Param("workspaceId") Long workspaceId);
+
+  Page<WorkspaceVersion> findByWorkspaceId(@Param("workspaceId") Long workspaceId, Pageable page);
 }

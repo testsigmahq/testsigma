@@ -61,7 +61,8 @@ export class TestStepResult extends ResultBase implements PageObject {
 
   @serializable
   public addonActionLogs: String;
-
+  @serializable
+  public naturalTextActionId: Number;
 
   @serializable(custom(v => {
     if (!v)
@@ -188,7 +189,7 @@ export class TestStepResult extends ResultBase implements PageObject {
       case TestDataType.runtime:
         value = '$|' + value + '|';
         break;
-      case TestDataType.environment:
+      case TestDataType.global:
         value = '*|' + value + '|';
         break;
       case TestDataType.parameter:
@@ -269,7 +270,7 @@ export class TestStepResult extends ResultBase implements PageObject {
       case TestDataType.runtime:
         parsedStep = this.replaceTestDataRuntime(parsedStep);
         break;
-      case TestDataType.environment:
+      case TestDataType.global:
         parsedStep = this.replaceTestDataEnvironment(parsedStep);
         break;
       case TestDataType.random:
@@ -314,7 +315,7 @@ export class TestStepResult extends ResultBase implements PageObject {
   private replaceTestDataRaw(parsedStep: String): String {
     let testData = this.stepDetail && this.stepDetail.dataMap ? this.stepDetail.dataMap.testData : '';
     let span_class= this.template.allowedValues?'action-selected-data':'action-test-data';
-    return parsedStep.replace(new RegExp("\\${.*?}"), "<span class="+span_class+">" + testData + "</span>");
+    return parsedStep.replace(new RegExp("\\${.*?}"), "<span class="+span_class+">" + this.getTestData(testData)+ "</span>");
   }
 
   private replaceElement(parsedStep: String): String {
@@ -406,6 +407,18 @@ export class TestStepResult extends ResultBase implements PageObject {
     } else {
       return this.parentResult?.stepDisplayNumber + 1;
     }
+  }
+  get isCoordinateStep() {
+    let template_ids = [1060, 10164, 20091, 20139, 20164, 30090, 30128, 30162];
+    return template_ids.includes(this.testStep?.naturalTextActionId as number);
+  }
+
+  formatCoordinates(coordinates: string) {
+    if(!this.isCoordinateStep) return (coordinates || '');
+    return (coordinates || '').split(/\s*,\s*/).map(num=> parseFloat(num).toFixed(2)).join(', ');
+  }
+  private getTestData(value: any) {
+    return this.isCoordinateStep? this.formatCoordinates(value):value;
   }
 
 }

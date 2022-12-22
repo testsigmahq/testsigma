@@ -41,6 +41,7 @@ import {ElementTagService} from "../../services/element-tag.service";
   ]
 })
 export class TagsChipListComponent implements OnInit {
+  @Input('autofocus') autofocus: boolean = true;
   @Input('entityId') entityId: number;
   @Input('service') tagService: TestCaseTagService | ElementTagService;
   @Output('onValueChange') onValueChange = new EventEmitter<String[]>();
@@ -80,7 +81,7 @@ export class TagsChipListComponent implements OnInit {
         });
     });
     setTimeout(() => {
-      this.searchTag.nativeElement.focus();
+      if(this.autofocus) this.searchTag.nativeElement.focus();
     }, 100);
   }
 

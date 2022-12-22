@@ -25,6 +25,7 @@ import {NaturalTextActions} from "../../models/natural-text-actions.model";
 import {WorkspaceVersion} from "../../models/workspace-version.model";
 import {AddonNaturalTextAction} from "../../models/addon-natural-text-action.model";
 import {NaturalTextActionsService} from "../../services/natural-text-actions.service";
+import {SharedService} from "../../services/shared.service";
 
 
 @Component({
@@ -104,7 +105,7 @@ import {NaturalTextActionsService} from "../../services/natural-text-actions.ser
             </span>
           </div>
 
-          <div class="hide-on-hover text-wrap d-flex ml-auto">
+          <div class="text-wrap d-flex ml-auto">
             <span
               class="pr-10 btn icon-btn rounded-pill mr-4"
               *ngIf="testStepResult?.stepDetails?.ignoreStepResult && testStepResult?.canShowIgnoreStepResultLabel" [translate]="'test_step.details.ignore_step_result_label'" >
@@ -161,19 +162,19 @@ import {NaturalTextActionsService} from "../../services/natural-text-actions.ser
               <a class="action-icon fa-external-link-alt-solid" *ngIf="testStepResult.isStepGroup"
                  (click)="gotoStepGroup($event)"
                  [matTooltip]="'test_step.step_group.view_details' | translate"></a>
-              <a
-                *ngIf="!isStepGroupChild && !testStepResult?.testStep?.isConditionalElse && !testStepResult?.testStep.isWhileLoop && testStepResult?.isBreakContinueLoopStep"
-                (click)="editStepByResult(testStepResult)"
-                [matTooltip]="'hint.message.common.edit' | translate"
-                class="action-icon py-5 fa-pencil-on-paper">
-              </a>
-              <a
-                *ngIf="!isStepGroupChild"
-                (click)="deleteStepByResult(testStepResult)"
-                href="javascript:void(0);"
-                [matTooltip]="'hint.message.common.delete' | translate"
-                class="action-icon py-5 fa-trash-thin ml-5">
-              </a>
+<!--              <a-->
+<!--                *ngIf="!isStepGroupChild && !testStepResult?.testStep?.isConditionalElse && !testStepResult?.testStep.isWhileLoop && testStepResult?.isBreakContinueLoopStep"-->
+<!--                (click)="editStepByResult(testStepResult)"-->
+<!--                [matTooltip]="'hint.message.common.edit' | translate"-->
+<!--                class="action-icon py-5 fa-pencil-on-paper">-->
+<!--              </a>-->
+<!--              <a-->
+<!--                *ngIf="!isStepGroupChild"-->
+<!--                (click)="deleteStepByResult(testStepResult)"-->
+<!--                href="javascript:void(0);"-->
+<!--                [matTooltip]="'hint.message.common.delete' | translate"-->
+<!--                class="action-icon py-5 fa-trash-thin ml-5">-->
+<!--              </a>-->
               <a
                 *ngIf="testStepResult.stepResultScreenshotComparison"
                 [matTooltip]="(testStepResult.isVisualFailed ? 'visual_test.hint.differences' : 'visual_test.hint.no_differences') | translate"
@@ -259,8 +260,9 @@ export class TestStepResultListItemComponent extends TestStepListItemComponent i
     public naturalTestActionService : NaturalTextActionsService,
     private matDialog: MatDialog,
     public router: Router,
+    public sharedService : SharedService,
     public testStepService: TestStepService) {
-    super(authGuard, notificationsService, translate, toastrService, testStepService,naturalTestActionService, matDialog);
+    super(authGuard, notificationsService, translate, toastrService, testStepService,naturalTestActionService, matDialog,sharedService);
   }
 
   ngOnInit() {

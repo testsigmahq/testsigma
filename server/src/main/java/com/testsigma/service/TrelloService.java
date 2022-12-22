@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 import com.testsigma.config.ApplicationConfig;
 import com.testsigma.exception.TestsigmaException;
+import com.testsigma.model.EntityExternalMapping;
 import com.testsigma.model.Integrations;
-import com.testsigma.model.TestCaseResultExternalMapping;
 import com.testsigma.util.HttpClient;
 import com.testsigma.util.HttpResponse;
 import com.testsigma.web.request.IntegrationsRequest;
@@ -37,7 +37,7 @@ public class TrelloService {
   @Setter
   private Integrations applicationConfig;
 
-  public TestCaseResultExternalMapping addIssue(TestCaseResultExternalMapping mapping) throws TestsigmaException {
+  public EntityExternalMapping addIssue(EntityExternalMapping mapping) throws TestsigmaException {
     HashMap<String, String> payload = new HashMap<>();
     payload.put("name", mapping.getFields().get("name").toString());
     payload.put("desc", mapping.getFields().get("description").toString());
@@ -52,9 +52,9 @@ public class TrelloService {
     return mapping;
   }
 
-  public TestCaseResultExternalMapping link(TestCaseResultExternalMapping mapping) throws TestsigmaException {
+  public EntityExternalMapping link(EntityExternalMapping mapping) throws TestsigmaException {
     HashMap<String, String> payload = new HashMap<>();
-    payload.put("text", "Linked to testsigma results [" + config.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResultId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName());
+    payload.put("text", "Linked to testsigma results [" + config.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResult().getId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName());
     HttpResponse<JsonNode> response = httpClient.post("https://api.trello.com/1/cards/" + mapping.getExternalId() + "/actions/comments?key=" + applicationConfig.getPassword() + "&token=" + applicationConfig.getToken(), getHeaders(), payload, new TypeReference<JsonNode>() {
     });
     if (response.getStatusCode() != HttpStatus.SC_OK) {
@@ -64,9 +64,9 @@ public class TrelloService {
     return mapping;
   }
 
-  public TestCaseResultExternalMapping unlink(TestCaseResultExternalMapping mapping) throws TestsigmaException {
+  public EntityExternalMapping unlink(EntityExternalMapping mapping) throws TestsigmaException {
     HashMap<String, String> payload = new HashMap<>();
-    payload.put("text", "Unlinked from testsigma results [" + config.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResultId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName());
+    payload.put("text", "Unlinked from testsigma results [" + config.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResult().getId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName());
     HttpResponse<JsonNode> response = httpClient.post("https://api.trello.com/1/cards/" + mapping.getExternalId() + "/actions/comments?key=" + applicationConfig.getPassword() + "&token=" + applicationConfig.getToken(), getHeaders(), payload, new TypeReference<JsonNode>() {
     });
     if (response.getStatusCode() != HttpStatus.SC_OK) {

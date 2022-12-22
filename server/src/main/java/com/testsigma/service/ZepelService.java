@@ -11,8 +11,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 import com.testsigma.config.ApplicationConfig;
 import com.testsigma.exception.TestsigmaException;
+import com.testsigma.model.EntityExternalMapping;
 import com.testsigma.model.Integrations;
-import com.testsigma.model.TestCaseResultExternalMapping;
 import com.testsigma.util.HttpClient;
 import com.testsigma.util.HttpResponse;
 import com.testsigma.web.request.IntegrationsRequest;
@@ -45,7 +45,7 @@ public class ZepelService {
   @Setter
   private Integrations integrations;
 
-  public TestCaseResultExternalMapping addIssue(TestCaseResultExternalMapping mapping) throws TestsigmaException {
+  public EntityExternalMapping addIssue(EntityExternalMapping mapping) throws TestsigmaException {
     String squadId = mapping.getFields().get("projectId").toString();
     String listId = mapping.getFields().get("issueTypeId").toString();
     JsonNodeFactory jnf = JsonNodeFactory.instance;
@@ -64,13 +64,13 @@ public class ZepelService {
     return mapping;
   }
 
-  public TestCaseResultExternalMapping link(TestCaseResultExternalMapping mapping) throws TestsigmaException, IOException {
+  public EntityExternalMapping link(EntityExternalMapping mapping) throws TestsigmaException, IOException {
     String squadId = mapping.getFields().get("projectId").toString();
     String listId = mapping.getFields().get("issueTypeId").toString();
     String itemId = mapping.getExternalId();
     JsonNodeFactory jnf = JsonNodeFactory.instance;
     ObjectNode payload = jnf.objectNode();
-    payload.putPOJO("description", "Linked to testsigma results [" + applicationConfig.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResultId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName());
+    payload.putPOJO("description", "Linked to testsigma results [" + applicationConfig.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResult().getId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName());
     HttpResponse<JsonNode> response = httpClient.post(integrations.getUrl() + "/api/v2/squads/" + squadId + "/lists/" + listId + "/items/" + itemId + "/comments", getHeaders(), payload, new TypeReference<JsonNode>() {
     });
     if (response.getStatusCode() != HttpStatus.SC_OK) {
@@ -81,7 +81,7 @@ public class ZepelService {
     return mapping;
   }
 
-  public TestCaseResultExternalMapping unlink(TestCaseResultExternalMapping mapping) throws TestsigmaException, IOException {
+  public EntityExternalMapping unlink(EntityExternalMapping mapping) throws TestsigmaException, IOException {
     JsonFactory factory = om.getFactory();
     JsonParser parser = factory.createParser(mapping.getMisc());
     JsonNode miscObj = om.readTree(parser);
@@ -89,7 +89,7 @@ public class ZepelService {
     String listId = String.valueOf(miscObj.get("list_id")).replace("\"", "");
     JsonNodeFactory jnf = JsonNodeFactory.instance;
     ObjectNode payload = jnf.objectNode();
-    payload.putPOJO("description", "unlinked from testsigma results [" + applicationConfig.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResultId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName());
+    payload.putPOJO("description", "unlinked from testsigma results [" + applicationConfig.getServerUrl() + "/ui/td/test_case_results/" + mapping.getTestCaseResult().getId() + "]  :: " + mapping.getTestCaseResult().getTestCase().getName());
     HttpResponse<String> response = httpClient.post(integrations.getUrl() + "/api/v2/squads/" + squadId + "/lists/" + listId + "/items/" + mapping.getExternalId() + "/comments", getHeaders(), payload, new TypeReference<String>() {
     });
     if (response.getStatusCode() != HttpStatus.SC_OK) {
@@ -100,7 +100,7 @@ public class ZepelService {
   }
 
   //item
-  public Map<String, Object> fetchIssue(TestCaseResultExternalMapping mapping) throws TestsigmaException, IOException {
+  public Map<String, Object> fetchIssue(EntityExternalMapping mapping) throws TestsigmaException, IOException {
     JsonFactory factory = om.getFactory();
     JsonParser parser = factory.createParser(mapping.getMisc());
     JsonNode miscObj = om.readTree(parser);

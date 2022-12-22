@@ -1,0 +1,94 @@
+<div
+  class="project-info flex-column bg-default-grey-light"
+  [ngClass]="customClass"
+  #menuTrigger="matMenuTrigger"
+  (click)="toggle()" [matMenuTriggerFor]="menu"
+  *ngIf="version">
+  <div
+    class="project-switch-container"
+    [class.active]="show">
+    <div class="w-90">
+      <div class="application-info d-flex flex-column">
+        <div
+          class="application-title ts-col-100"
+          [matTooltip]="version?.workspace?.name">
+            <span
+              class="mr-5"
+              [class.mb-n4]="version?.workspace?.isWeb"
+              [class.fa-project-website]="version?.workspace?.isWeb"
+              [class.fa-project-ios]="version?.workspace?.isIosNative"
+              [class.fa-project-andriod]="version?.workspace?.isAndroidNative"
+              [class.fa-project-mobile]="version?.workspace?.isMobileWeb"
+              [class.fa-project-api]="version?.workspace?.isRest">
+            </span>
+          <span [textContent]="version?.workspace?.name"></span>
+        </div>
+        <div
+          class="version-label mr-5 ts-col-100">
+          <span [textContent]="version?.versionName" [matTooltip]="version?.versionName"></span>
+          <span
+            class="save_as_active"
+            *ngIf="userPreference?.versionId != version?.id"
+            [matTooltip]="'project_switcher.save_as_active' | translate">*</span>
+        </div>
+      </div>
+    </div>
+    <span class="w-10 text-right">
+          <i class="fa-arrow-down"></i>
+      </span>
+  </div>
+</div>
+
+
+<mat-menu #menu="matMenu" class="switcher-dropdown px-12">
+  <ng-container *ngTemplateOutlet="E2ESwitcherRef"></ng-container>
+</mat-menu>
+<ng-template #E2ESwitcherRef>
+  <div class="w-100">
+    <div class="pt-10 overflow-x-hidden">
+      <div (click)="enableModalClick($event)">
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-select [value]="workSpaceType">
+            <mat-option [value]="WorkSpaceType.WebApplication"
+                        (click)="workSpaceType = WorkSpaceType.WebApplication">
+              {{'work_space.switcher.web_app.title' | translate}}
+            </mat-option>
+            <mat-option [value]="WorkSpaceType.MobileWeb"
+                        (click)="workSpaceType = WorkSpaceType.MobileWeb">
+              {{'work_space.switcher.mobile_web.title' | translate}}
+            </mat-option>
+            <mat-option [value]="WorkSpaceType.IOSNative"
+                        (click)="workSpaceType = WorkSpaceType.IOSNative">
+              {{'work_space.switcher.ios.title' | translate}}
+            </mat-option>
+            <mat-option [value]="WorkSpaceType.AndroidNative"
+                        (click)="workSpaceType = WorkSpaceType.AndroidNative">
+              {{'work_space.switcher.android.title' | translate}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div class="d-flex flex-column justify-content-around e2e_switcher pt-10">
+          <div class="live_btn live_dropdown_container mx-auto version_selector_dropdown" #versionTrigger="matMenuTrigger" [matMenuTriggerFor]="version">
+            <span [translate]="'work_space.switcher.live'"></span> <i class="ml-20 fa-arrow-right"></i>
+          </div>
+          <mat-menu #version="matMenu" class="switcher-dropdown-version p-0">
+              <div class="inner-menu">
+                <div class="item theme-border-b rb-medium header"
+                     [translate]="'work_space.switcher.select_version'"></div>
+                <div class="item-max-height">
+                  <div class="item" *ngFor="let version of liveVersions" (click)="go(version);menuTrigger?.closeMenu()">
+                    <span [textContent]="version.name"></span>
+                    <i class="fa-arrow-right ml-20"></i>
+                  </div>
+                </div>
+              </div>
+          </mat-menu>
+          <button class="bg-grey-light border-0 btn btn-clear-default py-10 rb-medium mb-10 text-green w-100 mx-auto"
+                  (click)="go();menuTrigger?.closeMenu()">
+            <span [translate]="'work_space.switcher.sample'"></span> <i class="ml-30 fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

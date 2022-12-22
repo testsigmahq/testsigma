@@ -1,4 +1,4 @@
-import {deserialize, object, serializable, SKIP, custom, alias} from 'serializr';
+import {custom, deserialize, object, optional, serializable} from 'serializr';
 import {Base} from "../shared/models/base.model";
 import {PageObject} from "../shared/models/page-object";
 import {TestDeviceSettings} from "./test-device-settings.model";
@@ -7,6 +7,9 @@ import {TestSuite} from "./test-suite.model";
 import {ApplicationPathType} from "../enums/application-path-type.enum";
 import {Capability} from "../shared/models/capability.model";
 import {Platform} from "../enums/platform.enum";
+import {WorkspaceVersion} from "./workspace-version.model";
+import {TestPlanLabType} from "../enums/test-plan-lab-type.enum";
+import {WorkspaceType} from "../enums/workspace-type.enum";
 
 export class TestDevice extends Base implements PageObject {
   @serializable
@@ -129,10 +132,22 @@ export class TestDevice extends Base implements PageObject {
 
   get formattedOsVersion() {
     if (isNaN(parseInt(this.osVersion + ''))) {
-      return this.osVersion;
+      return this.osVersion? this.osVersion : '';
     } else {
       return 'V. ' + this.osVersion;
     }
+  }
+
+  get isHybrid() {
+    return this.testPlanLabType === TestPlanLabType.Hybrid;
+  }
+
+  get isTestsigmaLab(){
+    return this.testPlanLabType === TestPlanLabType.TestsigmaLab;
+  }
+
+  get isPrivateGrid(){
+    return this.testPlanLabType === TestPlanLabType.PrivateGrid;
   }
 
   get isWindows() {
@@ -183,4 +198,48 @@ export class TestDevice extends Base implements PageObject {
     return this.appPathType == ApplicationPathType.USE_PATH;
   }
 
+  get isMobileNative(){
+    return this.workspaceType == WorkspaceType.AndroidNative || this.workspaceType == WorkspaceType.IOSNative;
+  }
+
+  get isAndroidNative() {
+    return this.workspaceType == WorkspaceType.AndroidNative;
+  }
+
+  @serializable
+  public prerequisiteTestDevicesId: number;
+  @serializable
+  public prerequisiteTestDevicesIdIndex: number;
+
+  public version: WorkspaceVersion;
+  @serializable(optional())
+  public workspaceType: WorkspaceType;
+  @serializable
+  public testPlanLabType: TestPlanLabType;
+  @serializable
+  public workspaceVersionId: number;
+
+  get browserNameI18nKey() {
+    if (this.isChrome) {
+      return 'browser.name.GOOGLECHROME';
+    } else if (this.isFirefox) {
+      return 'browser.name.FIREFOX';
+    } else if (this.isSafari) {
+      return 'browser.name.SAFARI';
+    } else if (this.isEdge) {
+      return 'browser.name.EDGE';
+    }
+  }
+
+  removeRedundantProps() {
+    if (this.isHybrid) {
+      if (!this.isMobileNative)
+        this.platform = null;
+      else {
+        this.platform = this.isAndroidNative ? Platform.Android : Platform.iOS;
+        this.browser = null;
+        this.browserVersion = null;
+      }
+    }
+  }
 }

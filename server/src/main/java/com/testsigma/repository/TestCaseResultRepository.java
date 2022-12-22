@@ -35,15 +35,23 @@ public interface TestCaseResultRepository extends JpaRepository<TestCaseResult, 
 
   List<TestCaseResult> findAllByEnvironmentResultId(Long environmentResultId);
 
+  List<TestCaseResult> findAllBySuiteResultIdAndIsDataDrivenTrueAndResultIsNot(Long parentTestCaseId, ResultConstant result);
+
   List<TestCaseResult> findAllBySuiteResultIdAndIsVisuallyPassedIsNull(Long id);
 
   List<TestCaseResult> findAllBySuiteResultIdAndIsVisuallyPassed(Long suiteResultId, boolean visualResult);
+
+  List<TestCaseResult> findAllBySuiteResultIdAndTestCaseIdAndResultIsNot(Long suiteResultId, Long preRequisite, ResultConstant result);
 
   List<TestCaseResult> findAllBySuiteResultIdAndTestCaseId(Long suiteResultId, Long preRequisite);
 
   List<TestCaseResult> findAllByParentIdAndStatus(Long parentId, StatusConstant status);
 
   List<TestCaseResult> findAllBySuiteResultIdAndResultIsNot(Long suiteResultId, ResultConstant result);
+
+  List<TestCaseResult> findAllBySuiteResultIdAndParentIdNull(Long suiteResultId);
+
+  List<TestCaseResult> findAllByParentId(Long parentId);
 
   Integer countAllByParentIdAndStatusIsNot(Long parentId, StatusConstant status);
 
@@ -121,6 +129,17 @@ public interface TestCaseResultRepository extends JpaRepository<TestCaseResult, 
                                            @Param("endTime") Timestamp endTime,
                                            @Param("environmentResultId") Long environmentResultId,
                                            @Param("statusConstant") StatusConstant statusConstant);
+
+  @Modifying
+  @Query("UPDATE TestCaseResult tcr SET tcr.result = :result, tcr.status = :status,  tcr.message = :message, " +
+          "tcr.duration = :duration, tcr.startTime = :startTime, tcr.endTime = :endTime " +
+          "WHERE tcr.environmentResultId = :environmentResultId and tcr.result =:resultConstant ")
+  void updateTestCaseResultByEnvironmentIdAndResult(@Param("result") ResultConstant result,
+                                           @Param("status") StatusConstant status, @Param("message") String message,
+                                           @Param("duration") Long duration, @Param("startTime") Timestamp startTime,
+                                           @Param("endTime") Timestamp endTime,
+                                           @Param("environmentResultId") Long environmentResultId,
+                                           @Param("resultConstant") ResultConstant resultConstant);
 
   @Modifying
   @Query("UPDATE TestCaseResult tcr SET tcr.result = :result, tcr.status = :status,  tcr.message = :message, " +
@@ -299,4 +318,6 @@ public interface TestCaseResultRepository extends JpaRepository<TestCaseResult, 
     "AND parent_id = :id GROUP BY parent_id) AS tsr ON tsr.parent_id = tcr.id " +
     "SET tcr.stopped_count = COALESCE(stoppedCount, 0) WHERE tcr.id = :id", nativeQuery = true)
   void updateIterationStoppedTestCaseResultsCount(@Param("id") Long id);
+
+    List<TestCaseResult> findAllByTestPlanResultIdAndResultIsNot(Long testPlanResultId, ResultConstant resultConstant);
 }

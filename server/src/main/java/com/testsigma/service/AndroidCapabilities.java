@@ -3,6 +3,7 @@ package com.testsigma.service;
 import com.testsigma.constants.TSCapabilityType;
 import com.testsigma.exception.TestsigmaException;
 import com.testsigma.model.*;
+import com.testsigma.sdk.ApplicationType;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
@@ -49,7 +50,8 @@ public class AndroidCapabilities extends MobileCapabilities {
   @Override
   public void setHybridCapabilities(TestDevice testDevice,
                                     Integrations integrations,
-                                    List<WebDriverCapability> capabilities)
+                                    List<WebDriverCapability> capabilities,
+                                    TestPlanLabType testPlanLabType)
     throws TestsigmaException {
     capabilities.add(new WebDriverCapability(TSCapabilityType.PLATFORM_NAME, Platform.Android.name()));
     capabilities.add(new WebDriverCapability("automationName", "UiAutomator2"));

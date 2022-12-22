@@ -12,6 +12,7 @@ import {Shape} from "../../models/shape.model";
 import {Page} from "../../shared/models/page";
 import {TestStepResult} from "../../models/test-step-result.model";
 import {TestStepScreenshotService} from "../../services/test-step-screenshot.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-visual-testing',
@@ -25,6 +26,7 @@ export class VisualTestingComponent extends BaseComponent implements OnInit {
 
   public baseImageCanvas: fabric.Canvas;
   public currentImageCanvas: fabric.Canvas;
+  public diffRegions: fabric.Group = new fabric.Group([],{data : 'DiffRegionGroup', selectable: false});
   public canvasWidth: number;
   public canvasHeight: number;
   public scalingFactor: number;
@@ -32,10 +34,18 @@ export class VisualTestingComponent extends BaseComponent implements OnInit {
   public isCombinedView: boolean;
   public ignoreRegionStartPoint: any;
   public ignoreRegionEndPoint: any;
+  public hasIgnoredRegions: boolean;
   public isIgnoreRegion: boolean;
   public beforeModifiedObject: any;
   public isShowConfirm: boolean;
+  public visualDifferenceForAllSteps: boolean;
   isApproveBaseImage: any;
+  public canUpdateIgnoreRegion: boolean;
+
+  private screenshotComparison$: Subscription;
+  private subscriptions: Subscription[] = [];
+  private baseImageContainerWidth;
+  private baseImageContainerHeight;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public options: { screenshotComparisonId: Number, filteredTestStepResult: Page<TestStepResult> },
@@ -53,25 +63,46 @@ export class VisualTestingComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getBaseImageContainerDimention();
     this.fetchScreenshot();
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+  }
+
+  getBaseImageContainerDimention(){
+    const baseImageContainer = document.getElementById("base_image_container");
+    this.baseImageContainerWidth = baseImageContainer?.offsetWidth;
+    this.baseImageContainerHeight = baseImageContainer?.offsetHeight;
+  }
+
   fetchScreenshot(): void {
-    this.screenshotComparisonService.show(this.screenshotComparisonId).subscribe((res: StepResultScreenshotComparision) => {
-      this.screenshotComparison = res;
-      this._renderBaseImage();
-      this._renderCurrentImage();
-    });
+    this.screenshotComparison$ = this.screenshotComparisonService.show(this.screenshotComparisonId).subscribe(
+      (res: StepResultScreenshotComparision) => {
+        this.screenshotComparison = res;
+        this.hasIgnoredRegions = false;
+        this._renderBaseImage();
+        this._renderCurrentImage();
+        this.hasIgnoredRegions = !!this.screenshotComparison?.testStepScreenshot?.ignoredCoordinates?.length;
+      },
+      error => console.error('Failed to get screenshotComparison: '+error)
+    );
+    this.subscriptions.push(this.screenshotComparison$);
   }
 
   _renderBaseImage(): void {
     this.canvasWidth = document.getElementById('base_image_container').clientWidth;
     this.canvasHeight = document.getElementById('base_image_container').clientHeight;
-    this.baseImageCanvas = new fabric.Canvas('base_image_canvas', {
-      hoverCursor: 'pointer',
-      width: this.canvasWidth,
-      height: this.canvasHeight
-    });
+    if(this.baseImageCanvas){
+      this.baseImageCanvas.clear();
+    }else{
+      this.baseImageCanvas = new fabric.Canvas('base_image_canvas', {
+        hoverCursor: 'pointer',
+        width: this.canvasWidth,
+        height: this.canvasHeight
+      });
+    }
     let img = new Image();
     img.onload = () => this._onBaseImageLoad(img);
     img.src = this.screenshotComparison.testStepScreenshot.screenShotURL + '';
@@ -79,50 +110,61 @@ export class VisualTestingComponent extends BaseComponent implements OnInit {
 
   _onBaseImageLoad(img: HTMLImageElement): void {
     let oImg = new fabric.Image(img);
-    this.scalingFactor = this.canvasWidth / oImg.width;
-    this.canvasHeight = oImg.height * this.scalingFactor
-    oImg.scale(this.scalingFactor);
+    const canvasDimention = this.calculateAspectRatioFit(oImg.width,oImg.height,this.baseImageContainerWidth,this.baseImageContainerHeight);
+    this.canvasWidth = canvasDimention.width;
+    this.canvasHeight = canvasDimention.height;
+    oImg.scale(canvasDimention.ratio);
     oImg.set('selectable', false);
     this.baseImageCanvas.setWidth(this.canvasWidth);
     this.baseImageCanvas.setHeight(this.canvasHeight);
-    this.baseImageCanvas.clear();
     this.baseImageCanvas.add(oImg);
+    setTimeout(() => {
+      this._drawIgnoreRegionsOnCanvas();
+      this._drawDifferenceRegionsOnCanvas(true);
+      this.baseImageCanvas.renderAll();
+    },100);
   }
 
   _renderCurrentImage(): void {
-    this.currentImageCanvas = new fabric.Canvas('current_image_canvas', {
-      hoverCursor: 'pointer',
-      width: this.canvasWidth,
-      height: this.canvasHeight
-    });
+    if(this.currentImageCanvas){
+      this.currentImageCanvas.clear();
+    }else{
+      this.currentImageCanvas = new fabric.Canvas('current_image_canvas', {
+        hoverCursor: 'pointer',
+        width: this.canvasWidth,
+        height: this.canvasHeight
+      });
+    }
     let img = new Image();
     img.onload = () => this._onCurrentImageLoad(img);
     img.src = this.screenshotComparison.screenShotURL + '';
   }
 
+  calculateAspectRatioFit(srcWidth, srcHeight, maxWidth, maxHeight){
+    const ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight)
+    return { width: srcWidth*ratio, height: srcHeight*ratio , ratio };
+  }
+
   _onCurrentImageLoad(img: HTMLImageElement): void {
     let oImg = new fabric.Image(img);
-    this.scalingFactor = this.canvasWidth / oImg.width;
-    this.canvasHeight = oImg.height * this.scalingFactor
-    oImg.scale(this.scalingFactor);
+    const canvasDimention = this.calculateAspectRatioFit(oImg.width,oImg.height,this.baseImageContainerWidth,this.baseImageContainerHeight);
+    this.canvasWidth = canvasDimention.width;
+    this.canvasHeight = canvasDimention.height;
+    oImg.scale(canvasDimention.ratio);
     oImg.set('selectable', false);
     this.currentImageCanvas.setWidth(this.canvasWidth);
     this.currentImageCanvas.setHeight(this.canvasHeight);
-    this.currentImageCanvas.clear();
     this.currentImageCanvas.add(oImg);
     setTimeout(() => {
-      this._addDifferences();
-      this._drawIgnoreCoOrdinates();
-      this.showDifferences = true;
-      this.baseImageCanvas.renderAll();
+      this._drawDifferenceRegionsOnCanvas(null,true);
       this.currentImageCanvas.renderAll();
-    }, 100);
+    }, 250);
   }
 
-  _addDifferences(): void {
+  _drawDifferenceRegionsOnCanvas(addOnlyToBaseImage?: boolean, addOnlyToCurrentImage?: boolean): void {
     let scaleX = this?._coOrdinatesScaling()[0];
     let scaleY = this._coOrdinatesScaling()[1];
-    this.screenshotComparison.diffCoordinates.forEach((shape: Shape) => {
+    this.screenshotComparison.diffCoordinates.forEach((shape, index) => {
       let rect = new fabric.Rect({
         left: <number>shape.x * scaleX,
         top: <number>shape.y * scaleY,
@@ -130,32 +172,49 @@ export class VisualTestingComponent extends BaseComponent implements OnInit {
         width: <number>shape.w * scaleX,
         fill: "rgba(255, 0, 0)",
         opacity: 0.4,
-        selectable: false
+        selectable: false,
+        data: 'diffRegion'+index,
+        lockMovementX: true,
+        lockMovementY: true,
+        lockRotation: true,
+        lockUniScaling: true,
+        lockScalingX: true,
+        lockScalingY: true,
+        lockSkewingX: true,
+        lockSkewingY: true,
+        lockScalingFlip: true
       });
-      this.currentImageCanvas.add(rect);
-      this.baseImageCanvas.add(rect);
+      if(addOnlyToBaseImage){
+        this.baseImageCanvas.add(rect);
+      } else if(addOnlyToCurrentImage){
+        this.currentImageCanvas.add(rect);
+      } else if(!addOnlyToBaseImage && !addOnlyToCurrentImage){
+        this.baseImageCanvas.add(rect);
+        this.currentImageCanvas.add(rect);
+      }
+      this.showDifferences = true;
     });
   }
 
-  _removeDifferences(): void {
-    this.currentImageCanvas.getObjects().forEach(elm => {
-      if (elm instanceof fabric.Rect) {
-        this.currentImageCanvas.remove(elm);
+  _removeDifferenceRegionsFromCanvas(): void {
+    this.currentImageCanvas.getObjects().forEach(element => {
+      if (element?.data?.includes('diffRegion')) {
+        this.currentImageCanvas.remove(element);
       }
     });
-    this.baseImageCanvas.getObjects().forEach(elm => {
-      if (elm instanceof fabric.Rect) {
-        this.baseImageCanvas.remove(elm);
+    this.baseImageCanvas.getObjects().forEach(element => {
+      if (element?.data?.includes('diffRegion')) {
+        this.baseImageCanvas.remove(element);
       }
     });
   }
 
   toggleDifferences(): void {
     this.showDifferences = !this.showDifferences;
-    if (this.showDifferences)
-      this._addDifferences();
-    else
-      this._removeDifferences();
+    if (this.showDifferences) {
+      this._drawDifferenceRegionsOnCanvas();
+    }
+    else this._removeDifferenceRegionsFromCanvas();
   }
 
   highlightDifferences(): void {
@@ -214,16 +273,17 @@ export class VisualTestingComponent extends BaseComponent implements OnInit {
 
   _coOrdinatesScaling(): number[] {
     return [
-      this.canvasWidth / <number>this?.screenshotComparison?.imageShape[1],
-      this.canvasHeight / <number>this?.screenshotComparison?.imageShape[0],
+      this.canvasWidth / <number>this?.screenshotComparison?.imageShape?.[1],
+      this.canvasHeight / <number>this?.screenshotComparison?.imageShape?.[0],
     ]
   }
 
-  _drawIgnoreCoOrdinates(): void {
-    if (this.screenshotComparison.testStepScreenshot.ignoredCoordinates && this.screenshotComparison.testStepScreenshot.ignoredCoordinates.length) {
+  _drawIgnoreRegionsOnCanvas(): void {
+    if (this.screenshotComparison.testStepScreenshot.ignoredCoordinates
+      && this.screenshotComparison.testStepScreenshot.ignoredCoordinates.length) {
       let scaleX = this._coOrdinatesScaling()[0];
       let scaleY = this._coOrdinatesScaling()[1];
-      this.screenshotComparison.testStepScreenshot.ignoredCoordinates.forEach((shape: Shape) => {
+      this.screenshotComparison.testStepScreenshot.ignoredCoordinates.forEach((shape: Shape,index) => {
         let rect = new fabric.Rect({
           left: <number>shape.x * scaleX,
           top: <number>shape.y * scaleY,
@@ -231,56 +291,84 @@ export class VisualTestingComponent extends BaseComponent implements OnInit {
           width: <number>shape.w * scaleX,
           fill: "rgb(255 204 156)",
           opacity: 0.8,
-          selectable: true
+          data: 'ignoreRegion'+index
         });
+        rect.set('selectable',false);
         this.baseImageCanvas.add(rect);
       });
     }
   }
 
-  addIgnoreCoOrdinates(): void {
+  toggleIgnoreRegionAdditionListener(): void {
     this.isIgnoreRegion = !this.isIgnoreRegion
     if (this.isIgnoreRegion) {
-      this._addLister();
+      this._addIgnoreRegionAdditionListener();
     } else {
-      this._removeLister();
+      this._removeIgnoreRegionAdditionListener();
     }
+  }
+
+  toggleIgnoreRegionUpdateListener(){
+    this.canUpdateIgnoreRegion = !this.canUpdateIgnoreRegion;
+    if (this.canUpdateIgnoreRegion) {
+      this._addIgnoreRegionUpdateListener();
+    } else {
+      this._removeIgnoreRegionUpdateListener();
+    }
+  }
+
+  private _addIgnoreRegionUpdateListener() {
+    this.baseImageCanvas.forEachObject((element => {
+      if( element?.data?.includes('ignoreRegion')) {
+        element.set('lockMovementX', false);
+        element.set('lockMovementY', false);
+        element.set('lockRotation', false);
+        element.set('lockUniScaling', false);
+        element.set('lockScalingX', false);
+        element.set('lockScalingY', false);
+        element.set('lockSkewingX', false);
+        element.set('lockSkewingY', false);
+        element.set('lockScalingFlip', false);
+        element.set('selectable', true);
+      }
+    }));
+    this.baseImageCanvas.on('object:modified', (event) => {
+      this.saveCurrentIgnoreRegion(event);
+    });
+  }
+
+  private _removeIgnoreRegionUpdateListener() {
+    this.baseImageCanvas.forEachObject((element => {
+      if(element?.data?.indexOf('ignoreRegion')) {
+        element.set('selectable',false);
+      }
+    }));
+    this.baseImageCanvas.off('object:modified');
   }
 
   viewCombined(): void {
     this.isCombinedView = !this.isCombinedView;
   }
 
-  _addLister(): void {
+  _addIgnoreRegionAdditionListener(): void {
     this.baseImageCanvas.on('mouse:down', (event) => {
-      if (event.target['_element'])
-        this._setStartPosition(event);
-      else {
-        this.beforeModifiedObject = {
-          width: event.target.width, height: event.target.height, top: event.target.top, left: event.target.left
-        };
-        this.isShowConfirm = true;
-        this.addIgnoreCoOrdinates();
-      }
+      this._setIgnoreRegionStartPoint(event);
     });
     this.baseImageCanvas.on('mouse:up', (event) => {
-      if (event.target['_element']) {
-        this._setEndPosition(event);
-        this._drawIgnoreRegion();
-        this.addIgnoreCoOrdinates();
-      }
+      this._setIgnoreRegionEndPoint(event);
+      this._drawIgnoreRegion();
     });
   }
 
-  _setStartPosition(event): void {
+  _setIgnoreRegionStartPoint(event): void {
     let currentPosition = this.baseImageCanvas.getPointer(event);
-    console.log('start position:', currentPosition);
+    console.debug('start coords:', currentPosition);
     this.ignoreRegionStartPoint = {'x': currentPosition.x, 'y': currentPosition.y};
   }
 
-  _setEndPosition(event): void {
+  _setIgnoreRegionEndPoint(event): void {
     let currentPosition = this.baseImageCanvas.getPointer(event);
-    console.log('start position:', currentPosition);
+    console.debug('end coords:', currentPosition);
     this.ignoreRegionEndPoint = {'x': currentPosition.x, 'y': currentPosition.y};
   }
 
@@ -291,49 +379,105 @@ export class VisualTestingComponent extends BaseComponent implements OnInit {
       height: <number>(this.ignoreRegionEndPoint.y - this.ignoreRegionStartPoint.y),
       width: <number>(this.ignoreRegionEndPoint.x - this.ignoreRegionStartPoint.x),
       fill: "rgb(255 204 156)",
-      opacity: 0.8
+      opacity: 0.8,
+      data: 'newIgnoreRegion'
     });
     this.baseImageCanvas.add(rect);
     this.baseImageCanvas.setActiveObject(rect);
     this.isShowConfirm = true;
   }
 
-  saveIgnoreRegion() {
+  saveCurrentIgnoreRegion(updateExistingIgnoreRegionEvent) {
+    this.hasIgnoredRegions = true;
     let scaleX = this._coOrdinatesScaling()[0];
     let scaleY = this._coOrdinatesScaling()[1];
-    let obj = this.baseImageCanvas.getActiveObject();
-    let ignoreCoOrdinate = new Shape();
-    ignoreCoOrdinate.x = obj.left / scaleX;
-    ignoreCoOrdinate.y = obj.top / scaleY;
-    ignoreCoOrdinate.w = obj.width / scaleX;
-    ignoreCoOrdinate.h = obj.height / scaleY;
-    let ignored = this.screenshotComparison.testStepScreenshot.ignoredCoordinates || [];
-    ignored.push(ignoreCoOrdinate);
-    this.screenshotComparison.testStepScreenshot.ignoredCoordinates = ignored;
-
+    let currentlySelectedObject = this.baseImageCanvas.getActiveObject();
+    let tempIgnoredRegionArray = [];
+    if(updateExistingIgnoreRegionEvent){
+      if(updateExistingIgnoreRegionEvent.transform.action == "drag") {
+        this._updateCurrentIgnoreRegionPosition(updateExistingIgnoreRegionEvent, tempIgnoredRegionArray, currentlySelectedObject);
+      } else if(updateExistingIgnoreRegionEvent.transform.action == "scale") {
+        this._updateCurrentIgnoreRegionSize(updateExistingIgnoreRegionEvent, tempIgnoredRegionArray, currentlySelectedObject);
+      }
+    } else {
+      tempIgnoredRegionArray = this.screenshotComparison.testStepScreenshot.ignoredCoordinates || [];
+      this.baseImageCanvas.getObjects().filter(object => object['data'] == 'newIgnoreRegion').forEach(object =>{
+        let selectedObject = object;
+        let newIgnoreRegion = new Shape();
+        newIgnoreRegion.x = selectedObject.left / scaleX;
+        newIgnoreRegion.y = selectedObject.top / scaleY;
+        newIgnoreRegion.w = selectedObject.width / scaleX;
+        newIgnoreRegion.h = selectedObject.height / scaleY;
+        tempIgnoredRegionArray.push(newIgnoreRegion);
+      })
+    }
     this.testStepScreenshotService.update(this.screenshotComparison.testStepScreenshot).subscribe(() => {
       this.translate.get("message.common.saved.success", {FieldName: 'Ignore region'}).subscribe((res: string) => {
         this.showNotification(NotificationType.Success, res);
-        this.baseImageCanvas.renderAll();
         this.isShowConfirm = false;
+        this.toggleIgnoreRegionUpdateListener();
       })
-    })
+    });
   }
 
-  removeIgnoreRegion() {
-    this.baseImageCanvas.remove(this.baseImageCanvas.getActiveObject());
-    this.screenshotComparisonService.update(this.screenshotComparison).subscribe(() => {
-      this.translate.get("message.common.saved.success", {FieldName: 'Ignore region'}).subscribe((res: string) => {
+  private _updateCurrentIgnoreRegionPosition(updateExistingIgnoreRegionEvent, tempIgnoredRegionArray: any[], currentlySelectedObject: any) {
+    let scaleX = this._coOrdinatesScaling()[0];
+    let scaleY = this._coOrdinatesScaling()[1];
+    let updatedIgnoreRegion = new Shape();
+    this.screenshotComparison.testStepScreenshot.ignoredCoordinates.forEach((ignoreRegion, index) => {
+      if (ignoreRegion.x == updateExistingIgnoreRegionEvent.transform.original.left / scaleX
+        && ignoreRegion.y == updateExistingIgnoreRegionEvent.transform.original.top / scaleY) {
+        console.debug('Skipping from adding to temp ignore region array');
+      } else {
+        tempIgnoredRegionArray.push(ignoreRegion);
+      }
+    });
+    updatedIgnoreRegion.x = currentlySelectedObject.left / scaleX;
+    updatedIgnoreRegion.y = currentlySelectedObject.top / scaleY;
+    updatedIgnoreRegion.w = currentlySelectedObject.width / scaleX;
+    updatedIgnoreRegion.h = currentlySelectedObject.height / scaleY;
+    tempIgnoredRegionArray.push(updatedIgnoreRegion);
+  }
+
+  private _updateCurrentIgnoreRegionSize(updateExistingIgnoreRegionEvent: any, tempIgnoredRegionArray: any[], currentlySelectedObject: any) {
+    let scaleX = this._coOrdinatesScaling()[0];
+    let scaleY = this._coOrdinatesScaling()[1];
+    let updatedIgnoreRegion = new Shape();
+    this.screenshotComparison.testStepScreenshot.ignoredCoordinates.forEach((ignoreRegion, index) => {
+      if (ignoreRegion.x == updateExistingIgnoreRegionEvent.transform.original.left / scaleX
+        && ignoreRegion.y == updateExistingIgnoreRegionEvent.transform.original.top / scaleY) {
+        console.debug('Skipping from adding to temp ignore region array');
+      } else {
+        tempIgnoredRegionArray.push(ignoreRegion);
+      }
+    });
+    updatedIgnoreRegion.x = currentlySelectedObject.left / scaleX;
+    updatedIgnoreRegion.y = currentlySelectedObject.top / scaleY;
+    updatedIgnoreRegion.w = (currentlySelectedObject.width / scaleX) * currentlySelectedObject.scaleX;
+    updatedIgnoreRegion.h = (currentlySelectedObject.height / scaleY) * currentlySelectedObject.scaleY;
+    tempIgnoredRegionArray.push(updatedIgnoreRegion);
+  }
+
+  //Currently clearing all the ignore regions.
+  //TODO-renju Add an option to specifically select an already ignored region and remove it
+  removeAllIgnoreRegions() {
+    this.screenshotComparison.testStepScreenshot.ignoredCoordinates = [];
+    this.testStepScreenshotService.update(this.screenshotComparison.testStepScreenshot).subscribe(() => {
+      this.translate.get("message.common.deleted.success", {FieldName: 'Ignore region'}).subscribe((res: string) => {
         this.showNotification(NotificationType.Success, res);
         this.baseImageCanvas.renderAll();
-        this.isShowConfirm = false;
+        //TODO Comment and check if this is required
+        // this.isShowConfirm = false;
       })
-    })
+    });
+    this.hasIgnoredRegions = false;
+    this._renderBaseImage();
+    this._renderCurrentImage();
   }
 
-  resetIgnoreRegion() {
+  cancelCurrentIgnoreRegion() {
     let obj = this.baseImageCanvas.getActiveObject();
-    console.log(this.beforeModifiedObject);
+    console.debug(this.beforeModifiedObject);
     this.baseImageCanvas.remove(obj);
     if (this.beforeModifiedObject) {
       let rect = new fabric.Rect({
@@ -351,20 +495,22 @@ export class VisualTestingComponent extends BaseComponent implements OnInit {
     this.isShowConfirm = false;
   }
 
-  _removeLister() {
+  _removeIgnoreRegionAdditionListener() {
     this.baseImageCanvas.off('mouse:down');
     this.baseImageCanvas.off('mouse:up');
     this.baseImageCanvas.off('object:modified');
     this.baseImageCanvas.off('selection:created');
   }
 
-  screenComparisonSelection(event) {
-    let screenshotComparisonId = event.id;
+  onScreenComparisonSelectionChange(event) {
+    this.screenshotComparisonId = event.id;
     this.filteredTestStepResult = event.stepResultList;
-    this.screenshotComparisonService.show(screenshotComparisonId).subscribe((res: StepResultScreenshotComparision) => {
+    this.screenshotComparisonService.show(this.screenshotComparisonId).subscribe((res: StepResultScreenshotComparision) => {
       this.screenshotComparison = res;
+      this.hasIgnoredRegions = false;
       this._renderBaseImage();
       this._renderCurrentImage();
+      this.hasIgnoredRegions = !!this.screenshotComparison?.testStepScreenshot?.ignoredCoordinates?.length;
     });
   }
 

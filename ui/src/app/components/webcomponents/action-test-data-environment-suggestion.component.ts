@@ -116,7 +116,7 @@ export class ActionTestDataEnvironmentSuggestionComponent implements OnInit {
 
   selectedSuggestion(suggestion?: any) {
     suggestion = suggestion || this.filteredSuggestion[this.currentFocusedIndex];
-    this.testDataEnvironment ? this.mobileRecorderEventService.returnData.next({type: TestDataType.environment, data: suggestion}) : this.dialogRef.close(suggestion);
+    this.testDataEnvironment ? this.mobileRecorderEventService.returnData.next({type: TestDataType.global, data: suggestion}) : this.dialogRef.close(suggestion);
   }
 
   scrollUpEnvParamFocus() {

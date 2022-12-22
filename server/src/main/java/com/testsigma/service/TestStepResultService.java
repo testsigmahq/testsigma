@@ -83,7 +83,7 @@ public class TestStepResultService {
 
   private void setTestDataSet(TestDataSet testDataSet, TestData testData) {
     int index = 0;
-    for (TestDataSet set : testData.getData()) {
+    for (TestDataSet set : testData.getTempTestData()) {
       if (set.getName().equals(testDataSet.getName())) {
         break;
       }
@@ -92,6 +92,7 @@ public class TestStepResultService {
     List<TestDataSet> sets = testData.getData();
     sets.set(index, testDataSet);
     testData.setData(sets);
+    testData.setTempTestData(sets);
   }
 
   public boolean createTestCaseSteps(List<TestStepResultRequest> testCaseStepResultList, TestDataSet testDataSet,

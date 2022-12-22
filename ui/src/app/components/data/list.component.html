@@ -25,6 +25,12 @@
       class="theme-btn-primary ml-14 "
       [translate]="'btn.common.create'">
     </button>
+    <button
+      (click)="importPopup()"
+      [matTooltip]="'hint.message.common.import' | translate"
+      class="btn icon-btn border-rds-2 ml-14">
+      <i class="fa-download-thin"></i>
+    </button>
     <app-sort-by-button
       class="pr-15" *ngIf="dataProfiles?.totalElements"
       [sortByColumns]="sortByColumns"
@@ -81,7 +87,7 @@
           [routerLink]="['/td', 'data', dataProfile.id, 'edit']"
           class="fa-pencil-on-paper action-icon"></a>
         <a
-          data-placement="bottom" (click)="fetchLinkedCases(dataProfile.id)"
+          data-placement="bottom" (click)="fetchLinkedCases(dataProfile)"
           [matTooltip]="'pagination.delete' | translate"
           class="fa-trash-thin action-icon"></a>
       </div>
@@ -100,6 +106,12 @@
           +
           <span [translate]="'btn.common.create'"></span>
         </button>
+        <a (click)="importPopup()"
+           [matTooltip]="'hint.message.common.import' | translate"
+           class="theme-btn-clear-default ml-14">
+          <i class="fa-download-thin"></i>
+          <span [translate]="'btn.common.import'"></span>
+        </a>
       </div>
     </div>
   </div>

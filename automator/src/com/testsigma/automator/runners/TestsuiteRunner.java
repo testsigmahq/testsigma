@@ -453,6 +453,11 @@ public abstract class TestsuiteRunner {
       testCaseResult.setMessage(AutomatorMessages.MSG_CASE_PRE_REQUISITE_FAILED);
       testCaseResult.setEndTime(new Timestamp(System.currentTimeMillis()));
       testCasePrerequisiteFailed = true;
+
+      // In Test plan => RecoveryActions => { OnTestcase Prerequisite failure -> Abort Testplan }
+//      if (testPlanRunSettingEntity.getOnTestcasePreRequisiteFail() == PreRequisiteAction.Abort){
+//        skipExecution = true;
+//      }
       resultFailureMessage = AutomatorMessages.MSG_CASE_PRE_REQUISITE_FAILED;
     }
     return testCasePrerequisiteFailed;

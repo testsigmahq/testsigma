@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 @Log4j2
 public class StepProcessor {
   protected static Integer LOOP_END = -1;
+  protected static Integer LOOP_START = -1;
   protected Long testPlanId;
   protected List<TestCaseStepEntityDTO> testCaseStepEntityDTOS;
   protected WorkspaceType workspaceType;
@@ -41,14 +42,16 @@ public class StepProcessor {
   protected RestStepService restStepService;
   protected TestStepMapper testStepMapper;
   protected ProxyAddonService addonService;
+  protected TestStepService testStepService;
   protected DefaultDataGeneratorService defaultDataGeneratorService;
+  protected Map<Long, Integer> dataSetIndex;
   WebApplicationContext webApplicationContext;
 
   public StepProcessor(WebApplicationContext webApplicationContext, List<TestCaseStepEntityDTO> testCaseStepEntityDTOS,
                        WorkspaceType workspaceType, Map<String, Element> elementMap,
                        TestStepDTO testStepDTO, Long testPlanId, TestDataSet testDataSet,
                        Map<String, String> environmentParameters, TestCaseEntityDTO testCaseEntityDTO, String environmentParamSetName,
-                       String dataProfile) {
+                       String dataProfile, Map<Long, Integer> dataSetIndex) {
     this.webApplicationContext = webApplicationContext;
     this.testCaseStepEntityDTOS = testCaseStepEntityDTOS;
     this.workspaceType = workspaceType;
@@ -60,7 +63,9 @@ public class StepProcessor {
     this.testCaseEntityDTO = testCaseEntityDTO;
     this.environmentParamSetName = environmentParamSetName;
     this.dataProfile = dataProfile;
+    this.dataSetIndex = dataSetIndex;
     this.testDataProfileService = (TestDataProfileService) webApplicationContext.getBean("testDataProfileService");
+    this.testStepService = (TestStepService) webApplicationContext.getBean("testStepService");
     this.elementMapper = (ElementMapper) webApplicationContext.getBean("elementMapperImpl");
     this.testStepMapper = (TestStepMapper) webApplicationContext.getBean("testStepMapperImpl");
     this.naturalTextActionsService = (NaturalTextActionsService) webApplicationContext.getBean("naturalTextActionsService");
@@ -80,9 +85,11 @@ public class StepProcessor {
     exeTestStepEntity.setPriority(testStepDTO.getPriority());
     exeTestStepEntity.setPreRequisite(testStepDTO.getPreRequisiteStepId());
     exeTestStepEntity.setPosition(testStepDTO.getPosition());
+    exeTestStepEntity.setVisualEnabled(testStepDTO.getVisualEnabled());
     exeTestStepEntity.setIfConditionExpectedResults(testStepDTO.getIfConditionExpectedResults());
     exeTestStepEntity.setAdditionalData(testStepDTO.getDataMapJson());
     exeTestStepEntity.setAddonTestData(testStepDTO.getAddonTestData());
+    exeTestStepEntity.setTestDataProfileStepId(testStepDTO.getTestDataProfileStepId());
     populateStepDetails(testStepDTO, exeTestStepEntity);
   }
 
@@ -104,7 +111,15 @@ public class StepProcessor {
     exeTestStepEntity.setTestDataProfileStepId(testStepDTO.getTestDataProfileStepId());
     exeTestStepEntity.setTestDataIndex(testCaseEntityDTO.getTestDataIndex());
     exeTestStepEntity.setTestDataProfileName(testCaseEntityDTO.getTestDataProfileName());
+    exeTestStepEntity.setVisualEnabled(testStepDTO.getVisualEnabled());
+    exeTestStepEntity.setParentId(testStepDTO.getParentId());
+    exeTestStepEntity.setIndex(testStepDTO.getIndex());
+    exeTestStepEntity.setMaxIterations(testStepDTO.getMaxIterations());
+    exeTestStepEntity.setTestDataIndex(testCaseEntityDTO.getTestDataIndex());
+    exeTestStepEntity.setTestDataProfileName(testCaseEntityDTO.getTestDataProfileName());
     populateStepDetails(testStepDTO, exeTestStepEntity);
+    //attachTestDataProfileStepId(testCaseStepEntityDTOS);
+
 
     if ((testStepDTO.getType() != null &&
       (testStepDTO.getType() == com.testsigma.model.TestStepType.STEP_GROUP)
@@ -131,6 +146,15 @@ public class StepProcessor {
     exeTestStepEntity.getStepDetails().setTestDataValue(exeTestStepEntity.getTestDataValue());
     setAddonPluginStepDetails(exeTestStepEntity);
     return exeTestStepEntity;
+  }
+
+  private void attachTestDataProfileStepId(List<TestCaseStepEntityDTO> testCaseStepEntityDTOS) {
+    for (TestCaseStepEntityDTO testStepEntity : testCaseStepEntityDTOS){
+      if (testStepEntity.getTestDataProfileStepId()!=null){
+        Optional<TestCaseStepEntityDTO> TDPStepEntity = testCaseStepEntityDTOS.stream().filter(step -> Objects.equals(step.getStepDetails().getDataMap().getForLoop().getTestDataId(), testStepEntity.getTestDataProfileStepId())).findFirst();
+        testStepEntity.setTestDataProfileStepId(TDPStepEntity.get().getId());
+      }
+    }
   }
 
   public void setElementMap(TestCaseStepEntityDTO exeTestStepEntity) throws TestsigmaException {
@@ -239,7 +263,7 @@ public class StepProcessor {
     testDataPropertiesEntity.setTestDataType(testDataType);
 
     switch (com.testsigma.model.TestDataType.getTypeFromName(testDataType)) {
-      case environment:
+      case global:
         if ((environmentParameters == null)) {
           throw new TestsigmaException(ExceptionErrorCodes.ENVIRONMENT_PARAMETERS_NOT_CONFIGURED,
             MessageConstants.getMessage(MessageConstants.MSG_UNKNOWN_ENVIRONMENT_DATA_SET));
@@ -252,19 +276,8 @@ public class StepProcessor {
         testDataValue = environmentParameters.get(testDataValue);
         break;
       case parameter:
-        if ((testDataSet == null) || (testDataSet.getData() == null)) {
-          throw new TestsigmaException(ExceptionErrorCodes.TEST_DATA_SET_NOT_FOUND,
-            com.testsigma.constants.MessageConstants.getMessage(MessageConstants.MSG_UNKNOWN_TEST_DATA_SET));
-        }
-        String originalTestDataValue = testDataValue;
-        testDataValue = testDataSet.getData().has(testDataValue) ? (String) testDataSet.getData().get(testDataValue) :
-          null;
-        if (testDataValue == null) {
-          throw new TestsigmaException(ExceptionErrorCodes.TEST_DATA_NOT_FOUND,
-            MessageConstants.getMessage(MessageConstants.MSG_UNKNOWN_TEST_DATA_PARAMETER_IN_TEST_STEP,
-                    originalTestDataValue, testCaseEntityDTO.getTestCaseName(), dataProfile));
-        }
-
+        testDataName = testDataValue;
+        testDataValue = populateTestDataParameter(testDataSet, testCaseStepEntityDTO, testDataValue, testDataPropertiesEntity);
         break;
       case random:
       case runtime:
@@ -277,6 +290,60 @@ public class StepProcessor {
     testDataPropertiesEntity.setTestDataName(testDataName);
     testDataPropertiesEntity.setTestDataValue(testDataValue);
     return testDataPropertiesEntity;
+  }
+
+
+  public TestDataSet getTestDataIdFromStep(TestCaseStepEntityDTO step) throws ResourceNotFoundException {
+    try {
+      TestStep testStep = testStepService.find(step.getTestDataProfileStepId());
+      TestData testData = testDataProfileService.find(testStep.getForLoopTestDataId());
+      return testData.getTempTestData().get(dataSetIndex.get(testStep.getId()));
+    } catch (Exception e) {
+      TestStep parentStep = step.getParentId() != null ? testStepService.find(step.getParentId()) : null;
+      if (Objects.equals(step.getTestDataProfileStepId(), this.testCaseEntityDTO.getTestDataId())) {
+        TestData testData = testDataProfileService.find(step.getTestDataProfileStepId());
+        return testData.getTempTestData().get(this.testCaseEntityDTO.getTestDataIndex());
+      } else if (parentStep != null) {
+        TestData testData = testDataProfileService.find(parentStep.getForLoopTestDataId());
+        return testData.getTempTestData().get(dataSetIndex.get(parentStep.getId()));
+      } else
+        return null;
+    }
+  }
+
+  public String populateTestDataParameter(TestDataSet testDataSet, TestCaseStepEntityDTO exeTestStepEntity,
+                                          String testDataValue, com.testsigma.automator.entity.TestDataPropertiesEntity testDataPropertiesEntity) throws ResourceNotFoundException {
+    boolean isParentStepExists = false;
+    try{
+      if(exeTestStepEntity.getTestDataProfileStepId() != null){
+        testDataSet = getTestDataIdFromStep( exeTestStepEntity);
+        if (exeTestStepEntity.getParentId() != null && testDataSet != null && !(Objects.equals(exeTestStepEntity.getTestDataProfileStepId(), this.testCaseEntityDTO.getTestDataId())))
+          isParentStepExists = true;
+      }
+    }catch(Exception exception){
+      log.error(exception,exception);
+    }
+
+    if (((testDataSet == null) || (testDataSet.getData() == null))) {
+      if(!isParentStepExists)
+        throw new ResourceNotFoundException(com.testsigma.constants.MessageConstants.getMessage(MessageConstants.MSG_UNKNOWN_TEST_DATA_SET));
+      else{
+        exeTestStepEntity.setFailureMessage(String.format(MessageConstants.TEST_DATA_NOT_FOUND, testDataValue));
+      }
+    }
+
+    String originalTestDataValue = testDataValue;
+    testDataValue = testDataSet.getData().has(testDataValue) ? (String) testDataSet.getData().get(testDataValue) : null;
+
+    if (testDataValue == null) {
+      if(!isParentStepExists){
+        throw new ResourceNotFoundException(MessageConstants.getMessage(MessageConstants.MSG_UNKNOWN_TEST_DATA_PARAMETER_IN_TEST_STEP ,
+                originalTestDataValue , testCaseEntityDTO.getTestCaseName() ,  dataProfile));
+      }else{
+        exeTestStepEntity.setFailureMessage(String.format(MessageConstants.TEST_DATA_NOT_FOUND, testDataValue));
+      }
+    }
+    return testDataValue;
   }
 
   public void populateStepDetails(TestStepDTO testStepDTO, TestCaseStepEntityDTO testCaseStepEntityDTO) {
@@ -295,6 +362,7 @@ public class StepProcessor {
     stepDetails.setTestDataValue(testCaseStepEntityDTO.getTestDataValue());
     stepDetails.setDataMap(testStepMapper.mapDataMap(testStepDTO.getDataMapBean()));
     stepDetails.setIgnoreStepResult(testStepDTO.getIgnoreStepResult());
+    stepDetails.setMaxIterations(testStepDTO.getMaxIterations());
     testCaseStepEntityDTO.setStepDetails(stepDetails);
   }
 
@@ -305,29 +373,25 @@ public class StepProcessor {
     }
   }
 
-  public void loadLoop(TestStepDTO stepDTOEntity, List<TestStepDTO> stepDTOEntities,
-                       List<Long> loopIds) {
-    List<TestStepDTO> loopSteps = new ArrayList<>();
-
-    TestStepDTO childTestStepDTO;
-    List<Long> childConditions = new ArrayList<>();
-    for (int index = 0; index < stepDTOEntities.size(); index++) {
-      childTestStepDTO = stepDTOEntities.get(index);
-      if ((childTestStepDTO.getParentId() != null && childTestStepDTO.getParentId() > 0 && stepDTOEntity.getId() != null
-        && (childTestStepDTO.getParentId().equals(stepDTOEntity.getId()) ||
-        (childConditions.indexOf(childTestStepDTO.getParentId()) > -1)))) {
+  public void loadLoop(TestStepDTO stepDTOEntity, List<TestStepDTO> stepDTOEntities) {
+    List<TestStepDTO> loopSubSteps = new ArrayList<>();
+    List<Long> childConditionalStepIds = new ArrayList<>();
+    for (TestStepDTO childTestStepDTO : stepDTOEntities) {
+      if ((childTestStepDTO.getParentId() != null && childTestStepDTO.getParentId() > 0)
+              && ((childTestStepDTO.getParentId().equals(stepDTOEntity.getId()))
+              || (childConditionalStepIds.contains(childTestStepDTO.getParentId())))) {
         if (childTestStepDTO.getType() != null &&
-          (com.testsigma.model.TestStepType.FOR_LOOP.equals(childTestStepDTO.getType())
-            || TestStepConditionType.LOOP_WHILE.equals(childTestStepDTO.getConditionType()))) {
-          loadLoop(childTestStepDTO, stepDTOEntities, loopIds);
+                (TestStepType.FOR_LOOP.equals(childTestStepDTO.getType())
+                        || TestStepConditionType.LOOP_WHILE.equals(childTestStepDTO.getConditionType()))) {
+          loadLoop(childTestStepDTO, stepDTOEntities);
         } else {
-          childConditions.add(childTestStepDTO.getId());
+          childConditionalStepIds.add(childTestStepDTO.getId());
         }
-        loopIds.add(childTestStepDTO.getId());
-        loopSteps.add(childTestStepDTO);
+        childTestStepDTO.setProcessedAsSubStep(Boolean.TRUE);
+        loopSubSteps.add(childTestStepDTO);
       }
     }
-    stepDTOEntity.setTestStepDTOS(loopSteps);
+    stepDTOEntity.setTestStepDTOS(loopSubSteps);
   }
 
   private void populateDefaultDataGeneratorsEntity(com.testsigma.automator.entity.TestDataPropertiesEntity testDataPropertiesEntity,
@@ -428,7 +492,7 @@ public class StepProcessor {
                 Matcher.quoteReplacement(data));
           }
 
-        } else if (dataMap.get(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA_TYPE).equals(TestDataType.environment.name())) {
+        } else if (dataMap.get(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA_TYPE).equals(TestDataType.global.name())) {
           if (environmentParams != null && StringUtils.isNotEmpty(dataMap.get(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA))) {
             String data = environmentParams.get(dataMap.get(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA));
             if (data != null) {

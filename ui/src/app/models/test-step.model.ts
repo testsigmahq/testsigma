@@ -81,6 +81,8 @@ export class TestStep extends Base implements PageObject {
   @serializable
   public forLoopTestDataId: number;
   @serializable
+  public maxIterations: number;
+  @serializable
   public testDataFunctionId: number;
   @serializable(custom(v => v, v => v))
   public testDataFunctionArgs: JSON;
@@ -90,6 +92,8 @@ export class TestStep extends Base implements PageObject {
   public exceptedResult: String;
   @serializable(optional(object(RestStepEntity)))
   public restStep: RestStepEntity;
+  @serializable
+  public testDataProfileStepId: Number;
 
   @serializable(custom(v => {
     if (!v)
@@ -221,7 +225,7 @@ export class TestStep extends Base implements PageObject {
               case TestDataType.runtime:
                 value = '$|' + value + '|';
                 break;
-              case TestDataType.environment:
+              case TestDataType.global:
                 value = '*|' + value + '|';
                 break;
               case TestDataType.parameter:
@@ -231,7 +235,7 @@ export class TestStep extends Base implements PageObject {
                 value = '!|' + value + '|';
                 break;
             }
-            parsedStep = parsedStep.replace(referenceName, '<TSTESTDAT ref="' + parameter.reference + '">' + value + '</TSTESTDAT>')
+            parsedStep = parsedStep.replace(referenceName, '<TSTESTDAT ref="' + parameter.reference + '">' + this.getTestData(value) + '</TSTESTDAT>')
           } else if (parameter.isElement) {
             parsedStep = parsedStep.replace(referenceName, '<TSELEMENT ref="' + parameter.reference + '">' + this.addonElements[parameter.reference]?.name + '</TSELEMENT>')
           }
@@ -367,7 +371,7 @@ export class TestStep extends Base implements PageObject {
       case TestDataType.runtime:
         parsedStep = this.replaceTestDataRuntime(parsedStep);
         break;
-      case TestDataType.environment:
+      case TestDataType.global:
         parsedStep = this.replaceTestDataEnvironment(parsedStep);
         break;
       case TestDataType.random:
@@ -411,7 +415,7 @@ export class TestStep extends Base implements PageObject {
   private replaceTestDataRaw(parsedStep: String): String {
     let testData = this.testDataVal ? this.testDataVal : '';
     let span_class= this.template.allowedValues?'action-selected-data':'action-test-data';
-    return parsedStep.replace(new RegExp("\\${.*?}"), "<span class="+span_class+">"+testData+"</span>")
+    return parsedStep.replace(new RegExp("\\${.*?}"), "<span class="+span_class+">"+this.getTestData(testData)+"</span>")
   }
 
   private replaceElement(parsedStep: String): String {
@@ -442,6 +446,7 @@ export class TestStep extends Base implements PageObject {
       this.disabled = input['disabled'];
       this.ignoreStepResult = input['ignoreStepResult'];
       this.visualEnabled = input['visualEnabled'];
+      this.maxIterations = input['maxIterations'];
       if (input['dataMap'])
         this.conditionIf = input['dataMap']['conditionIf'];
     }
@@ -462,6 +467,37 @@ export class TestStep extends Base implements PageObject {
       return testCase?.testDataId;
     }
   }
+
+  getAllParentLoopTDPIds( testStep,testCase,testSteps,tdpDatas:any[]=[],isImmediateLoop:boolean=true ){
+    if( testStep.parentStep || ( testStep.parentId && testSteps ) ){
+      this.setStepDisplayNumber(testSteps.content);
+      const parentStep = testStep.parentStep || testSteps.content.find((_testStep)=> _testStep.id===testStep.parentId );
+      if( parentStep.isForLoop ){
+        tdpDatas.push({ tdpId : parentStep.forLoopTestDataId , stepDisplayNumber : `${parentStep.stepDisplayNumber}`, startIndex : parentStep?.forLoopStartIndex , endIndex : parentStep?.forLoopEndIndex , id:isImmediateLoop?null:parentStep.id , })
+        isImmediateLoop=false;
+      };
+      return this.getAllParentLoopTDPIds(parentStep,testCase,testSteps,tdpDatas,isImmediateLoop);
+    }else {
+      if(testCase?.testDataId){
+        tdpDatas.push({ tdpId : testCase?.testDataId , id: !isImmediateLoop ? -1 : null });
+      }
+      return tdpDatas;
+    };
+  }
+
+  getAllParentLoopDataIds(testStep,datas:any[]=[]){
+    if(testStep.parentStep){
+      if(testStep.parentStep.isForLoop){
+        if( !datas.some((data)=> data.testDataId === testStep.parentStep.forLoopTestDataId ) ){
+          datas.push({ testDataId : testStep.parentStep.forLoopTestDataId , stepDisplayNumber : `${testStep.parentStep.stepDisplayNumber}`, startIndex : testStep?.parentStep?.forLoopStartIndex , endIndex : testStep?.parentStep?.forLoopEndIndex , id:testStep.parentStep.id });
+        }
+      }
+      return this.getAllParentLoopDataIds(testStep.parentStep,datas);
+    }else{
+      return datas;
+    }
+  }
+
 
   getParentLoopId(testStep) {
     if (testStep.parentStep) {
@@ -491,26 +527,25 @@ export class TestStep extends Base implements PageObject {
     }
   }
 
-  setStepDisplayNumber(testSteps: TestStep[]) {
-    console.log(testSteps);
-    let nestedIndex = 0;
-    testSteps.forEach((step: TestStep, index) => {
-      step.stepDisplayNumber = (index + 1);
-      if (step.parentId) {
+  setStepDisplayNumber(testSteps: TestStep[], stepPrefix?:number) {
+    let nestedIndex=0;
+    testSteps.forEach((step:TestStep, index) => {
+      step.stepDisplayNumber = (index+1);
+      if(step.parentId) {
         step.parentStep = testSteps.find(res => step.parentId == res.id);
       }
-      if ((step.isConditionalElseIf || step.isConditionalElse || step.isConditionalIf || step.isForLoop || step.isWhileLoop || step.isConditionalWhileLoop)) {
+      if((step.isConditionalElseIf || step.isConditionalElse || step.isConditionalIf || step.isForLoop || step.isWhileLoop || step.isConditionalWhileLoop)) {
         step.childIndex = 0;
       }
       let _parentStep = this.getConditionalParentStep(step);
-      if (step.parentStep && (!(step.isConditionalElseIf || step.isConditionalElse) || _parentStep)) {
-        if (_parentStep && (step.isConditionalElseIf || step.isConditionalElse)) {
-          _parentStep.childIndex = _parentStep.childIndex + 1;
+      if(step.parentStep && (!(step.isConditionalElseIf || step.isConditionalElse) || _parentStep)){
+        if(_parentStep && (step.isConditionalElseIf || step.isConditionalElse)) {
+          _parentStep.childIndex = _parentStep.childIndex +1;
         } else {
-          step.parentStep.childIndex = step.parentStep.childIndex + 1;
+          step.parentStep.childIndex = step.parentStep.childIndex +1;
         }
       }
-      if (step.parentStep && !(step.isConditionalElseIf || step.isConditionalElse)) {
+      if(step.parentStep && !(step.isConditionalElseIf || step.isConditionalElse)) {
 
         if(step.isConditionalWhileLoop) {
           step.stepDisplayNumber = step.parentStep?.stepDisplayNumber;
@@ -518,15 +553,18 @@ export class TestStep extends Base implements PageObject {
           step.stepDisplayNumber = step.parentStep?.stepDisplayNumber + "." + step.parentStep.childIndex;
         }
         ++nestedIndex;
-      } else if (step.isConditionalElseIf || step.isConditionalElse) {
+      } else if(step.isConditionalElseIf || step.isConditionalElse) {
         step.stepDisplayNumber = step.incrementParentStepDisplayNumberLastDigit();
-        if (step?.parentStep && this.getConditionalParentStep(step))
+        if(step?.parentStep && this.getConditionalParentStep(step))
           ++nestedIndex;
       } else {
-        step.stepDisplayNumber = (index + 1 - nestedIndex);
+        const tempStepNum = ( index + 1 - nestedIndex );
+        step.stepDisplayNumber = stepPrefix ? ( stepPrefix + "." + tempStepNum ) : tempStepNum ;
+        //step.stepDisplayNumber = (index+1-nestedIndex);
+
         // if(!step.parentStep && (step.isConditionalWhileLoop || step.isConditionalIf || step.isForLoop))
         //   ++nestedIndex;
-        }
+      }
     })
   }
 
@@ -557,4 +595,18 @@ export class TestStep extends Base implements PageObject {
     return this.priority == TestStepPriority.MAJOR;
   };
 
+  get isCoordinateStep() {
+    let template_ids = [1060, 10164, 20091, 20139, 20164, 30090, 30128, 30162];
+    return template_ids.includes(this.naturalTextActionId as number);
+  }
+
+  formatCoordinates(coordinates: string) {
+    if(!this.isCoordinateStep) return (coordinates || '');
+    return (coordinates || '').split(/\s*,\s*/).map(num=> parseFloat(num).toFixed(2)).join(', ');
+  }
+  public runTimeDataList: any[];
+
+  private getTestData(value: any) {
+    return this.isCoordinateStep? this.formatCoordinates(value):value;
+  }
 }

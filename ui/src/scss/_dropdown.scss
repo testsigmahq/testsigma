@@ -378,6 +378,9 @@
 .z-in-2 {
   z-index: 2;
 }
+.z-in-10{
+  z-index: 10 !important;
+}
 
 .schedule-demo-list{
   @extend .w-fit-content, .py-25, .pr-50, .pl-60, .mx-auto;

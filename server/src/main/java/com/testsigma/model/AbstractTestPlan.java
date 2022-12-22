@@ -28,6 +28,8 @@ import java.util.Set;
 public class AbstractTestPlan implements Serializable {
   @Transient
   Set<Long> orphanTestDeviceIds;
+  @Transient
+  private List<String> tags;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -41,9 +43,10 @@ public class AbstractTestPlan implements Serializable {
   private String description;
   @Column(name = "entity_type", insertable = false, updatable = false)
   private String entityType;
-  @Column(name = "test_lab_type")
-  @Enumerated(EnumType.STRING)
-  private TestPlanLabType testPlanLabType;
+  @OneToMany(mappedBy = "testPlan", fetch = FetchType.LAZY)
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  private Set<TagEntityMapping> tagUses;
   @Column(name = "test_plan_type")
   @Enumerated(EnumType.STRING)
   private TestPlanType testPlanType;
@@ -108,6 +111,11 @@ public class AbstractTestPlan implements Serializable {
   @ToString.Exclude
   @JsonIgnore
   private List<TestDevice> testDevices;
+  @OneToMany(mappedBy = "execution")
+  @Fetch(value = FetchMode.SELECT)
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  private List<EntityExternalMapping> entityExternalMapping;
   @OneToMany(mappedBy = "testPlan", fetch = FetchType.LAZY)
   @EqualsAndHashCode.Exclude
   @ToString.Exclude

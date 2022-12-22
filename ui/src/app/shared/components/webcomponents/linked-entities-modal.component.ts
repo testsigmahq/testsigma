@@ -2,6 +2,9 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {TestPlan} from "../../../models/test-plan.model";
 import {TestSuite} from "../../../models/test-suite.model";
+import {TestStep} from "../../../models/test-step.model";
+import {TestStepType} from "../../../enums/test-step-type.enum";
+import {TestStepConditionType} from "../../../enums/test-step-condition-type.enum";
 
 @Component({
   selector: 'app-linked-entities-modal',
@@ -28,4 +31,67 @@ export class LinkedEntitiesModalComponent implements OnInit {
       entityUrl = "/ui/td/cases/" + id + "/steps";
     window.open(window.location.origin + entityUrl, "_blank");
   }
+
+  /**
+   * Returns a boolean value true when linkedentiry list is an instance of Teststeps
+   * @returns boolean
+   */
+  get isTestStep(){
+    if (this.modalData.linkedEntityList['cachedItems'][0] instanceof TestStep){
+      return true
+    }
+    return false
+  }
+  public getTextContent(linkedEntity:any){
+    if(this.isTestStep){
+      if (linkedEntity.action){
+        return linkedEntity.action
+      }
+      else {
+        switch (linkedEntity.type) {
+          case TestStepType.FOR_LOOP:
+            return "For Loop"
+          case TestStepType.STEP_GROUP:
+            return linkedEntity?.stepGroup?.name
+        }
+      }
+    }
+    return linkedEntity.name
+  }
+
+  public stepsIcons(linkedEntity:any){
+    switch (linkedEntity.type) {
+      case TestStepType.REST_STEP:
+        return "fa-rest-new text-warning"
+      case TestStepType.STEP_GROUP:
+        return "fa-plus-square-solid"
+    }
+    switch (linkedEntity.conditionType) {
+      case TestStepConditionType.LOOP_WHILE:
+        return "fa-while-loop text-warning"
+      case TestStepConditionType.LOOP_FOR:
+        return "fa-power-loop text-warning"
+      case TestStepConditionType.CONDITION_IF:
+        return "fa-conditional-if text-warning"
+      case TestStepConditionType.CONDITION_ELSE_IF:
+        return "fa-conditional-if text-warning"
+    }
+  }
+  public conditionText(linkedEntity:any){
+    switch (linkedEntity.conditionType) {
+      case TestStepConditionType.CONDITION_IF:
+        return "IF"
+      case TestStepConditionType.CONDITION_ELSE_IF:
+        return "ELSE IF"
+      case TestStepConditionType.CONDITION_ELSE:
+        return "ELSE"
+    }
+  }
+
+  public conditionType(linkedEntity:any){
+    return linkedEntity.conditionType == TestStepConditionType.CONDITION_IF ||
+      linkedEntity.conditionType == TestStepConditionType.CONDITION_ELSE ||
+      linkedEntity.conditionType == TestStepConditionType.CONDITION_ELSE_IF;
+  }
+
 }

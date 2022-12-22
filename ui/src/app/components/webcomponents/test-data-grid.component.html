@@ -90,7 +90,7 @@
           *cdkVirtualFor="let datasetControl of datasetControls()?.controls; let index = index; let isLast=last;"
           [class.row-hovering]="datasetControl['ishover']"
           class="column-container">
-          <i *ngIf="!isLast"
+          <i *ngIf="!isLast && shouldShowAddIcon"
              class="add-icon row-hover-action position-absolute"
              [matTooltip]="'hint.message.common.add_row'| translate"
              (click)="addDataSet(index)"></i>
@@ -115,8 +115,9 @@
         </div>
         <i
           class="add-row"
+          *ngIf="shouldShowAddIcon"
           [matTooltip]="'hint.message.common.add_row'| translate"
-          (click)="addDataSet()"></i>
+            (click)="addDataSet()"></i>
       </cdk-virtual-scroll-viewport>
     </div>
     <div class="overflow-x-auto overflow-y-auto h-100 ts-col-65">
@@ -159,7 +160,7 @@
           </div>
           <i class="fa-trash-thin pointer row-hover-action ml-auto position-sticky right-0 top-10 text-t-secondary"
              [matTooltip]="hideToolTip ? '' : ('hint.message.common.remove_row'| translate)"
-             *ngIf="datasetControls().controls.length > 1" (click)="removeDataSet(index)"></i>
+             *ngIf="datasetControls().controls.length > 1" (click)="removeDataSet(index, datasetControl.controls['id']?.value)"></i>
         </div>
         <i
           class="add-row hidden"

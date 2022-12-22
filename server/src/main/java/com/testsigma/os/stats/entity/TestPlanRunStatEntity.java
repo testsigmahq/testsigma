@@ -1,7 +1,7 @@
 package com.testsigma.os.stats.entity;
 
-import com.testsigma.model.WorkspaceType;
 import com.testsigma.model.TestPlanLabType;
+import com.testsigma.model.WorkspaceType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 @Data
 public class TestPlanRunStatEntity extends BaseStatEntity {
   private Long testPlanRunId;
-  private TestPlanLabType testPlanLabType;
-  private WorkspaceType applicationType;
   private String testPlanType;
+  private WorkspaceType applicationType;
+  private TestPlanLabType testPlanLabType;
 }

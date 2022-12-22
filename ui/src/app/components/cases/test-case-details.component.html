@@ -97,11 +97,23 @@
               <span class="text-truncate" (click)="openDetails()" [translate]="'hint.message.common.more'"></span>
             </div>
           </div>
+          <app-xray-input *ngIf="!testCase?.isStepGroup && testCaseId"
+            [entityId] ="this.testCaseId"
+            [entityType]="this.entityType"
+            [entityExternalMapping]="this.entityExternalMapping"
+            (createXrayLink)="linkXrayId($event)">
+          </app-xray-input>
         </div>
+      </div>
+      <div
+        *ngIf="testCase?.isStepGroup"
+        class="py-5 pl-10 pr-10 theme-yellow w-fit-content border-rds-3">
+        <i class="fa-warning text-danger"></i>
+        <span [translate]="'testcase.details.step_group.edit_step.warning'" class="pl-10"></span>
       </div>
     </div>
   </div>
 </div>
-<div class="theme-details-scroll sm-h">
+<div class="theme-details-scroll sm-h mt-10">
   <router-outlet></router-outlet>
 </div>

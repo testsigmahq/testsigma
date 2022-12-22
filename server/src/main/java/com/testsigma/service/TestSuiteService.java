@@ -33,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -49,7 +50,7 @@ import java.util.stream.Collectors;
 @Log4j2
 @Service
 @Data
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor(onConstructor = @__({@Autowired, @Lazy}))
 public class TestSuiteService extends XMLExportImportService<TestSuite> {
 
   private final TestSuiteRepository repository;
@@ -75,6 +76,11 @@ public class TestSuiteService extends XMLExportImportService<TestSuite> {
   public List<TestSuite> findByPrerequisiteId(Long prerequisite) {
     return this.repository.findAllByPreRequisite(prerequisite);
   }
+
+  public List<TestSuite> findAllByVersionId(Long applicationVersionId) {
+    return this.repository.findAllByWorkspaceVersionId(applicationVersionId);
+  }
+
 
   public TestSuite find(Long id) throws ResourceNotFoundException {
     return this.repository.findById(id)
@@ -298,7 +304,7 @@ public class TestSuiteService extends XMLExportImportService<TestSuite> {
     present.setWorkspaceVersionId(importDTO.getWorkspaceVersionId());
     present.setLastRunId(null);
     Optional<TestSuite> suite = getRecentImportedEntity(importDTO,
-            present.getPreRequisite());
+            present.getImportedId());
     if (suite.isPresent())
       present.setPreRequisite(suite.get().getId());
     return present;
@@ -318,7 +324,7 @@ public class TestSuiteService extends XMLExportImportService<TestSuite> {
   @Override
   public Optional<TestSuite> getRecentImportedEntity(BackupDTO importDTO, Long... ids) {
     Long importedId = ids[0];
-    return repository.findAllByWorkspaceVersionIdAndImportedId(importDTO.getWorkspaceId(), importedId);
+    return repository.findAllByWorkspaceVersionIdAndImportedId(importDTO.getWorkspaceVersionId(), importedId);
   }
 
   @Override

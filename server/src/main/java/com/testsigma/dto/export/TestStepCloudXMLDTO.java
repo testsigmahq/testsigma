@@ -8,6 +8,7 @@
 package com.testsigma.dto.export;
 
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.testsigma.annotation.JsonListRootName;
 import com.testsigma.model.*;
 import com.testsigma.service.ObjectMapperService;
@@ -44,7 +45,8 @@ public class TestStepCloudXMLDTO extends BaseXMLDTO {
   @JsonProperty("CustomFields")
   private String customFields;
   @JsonProperty("DataMap")
-  private String dataMap;
+  @JsonDeserialize(using = TestStepDataMapDeserializer.class)
+  private TestStepCloudDataMap dataMap;
   @JsonProperty("ExceptedResult")
   private String exceptedResult;
   @JsonProperty("TemplateId")
@@ -83,14 +85,16 @@ public class TestStepCloudXMLDTO extends BaseXMLDTO {
   private Boolean ignoreStepResult;
   @JsonIgnore
   private String typeName;
+  @JsonProperty("VisualEnabled")
+  private Boolean visualEnabled = false;
 
 
-  public TestStepCloudDataMap getDataMap() {
+ /* public TestStepCloudDataMap getDataMap() {
     return new ObjectMapperService().parseJson(dataMap, TestStepCloudDataMap.class);
   }
 
   public void setDataMap(TestStepCloudDataMap testStepDataMap) {
     this.dataMap = new ObjectMapperService().convertToJson(testStepDataMap);
   }
-
+*/
 }

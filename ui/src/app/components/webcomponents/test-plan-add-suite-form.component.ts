@@ -37,14 +37,19 @@ export class TestPlanAddSuiteFormComponent implements OnInit {
   public filterCheckAllSelectedSuites: TestSuite[] = [new TestSuite()]
   public isSearched = false;
   public filteredSuites = [];
+  public isE2ESelectionOpted = false;
+  public selectedVersion: WorkspaceVersion;
+  public showRefreshOption: boolean = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public options: {
       testDevice: TestDevice,
       version: WorkspaceVersion,
-      execution: TestPlan
+      execution: TestPlan,
+      isE2E: boolean,
+      returnTestSuites: boolean
     },
-    private dialogRef: MatDialogRef<TestPlanAddSuiteFormComponent>,
+    public dialogRef: MatDialogRef<TestPlanAddSuiteFormComponent>,
     private testSuiteTagService: TestSuiteTagService,
     private testSuiteService: TestSuiteService) {
   }
@@ -79,13 +84,15 @@ export class TestPlanAddSuiteFormComponent implements OnInit {
   fetchSuites(term?: string) {
     this.checkAllAvailable = false;
     this.isNameFilter = false;
-    let query = "workspaceVersionId:" + this.options.version.id;
+    let query = "workspaceVersionId:" + this.currentApplicationVersion?.id;
     if (term) {
       query += ",name:*" + term + "*";
       this.isNameFilter = true
     }
     if (this.filterTagIds.length > 0)
       query += ",tagId@" + this.filterTagIds.join("#");
+    if(this.selectedSuites?.length > 0)
+      query += ",id;"+this.selectedSuites.map(suite => suite.id).join("#");
     this.availableSuites = new InfiniteScrollableDataSource(this.testSuiteService, query, "name", 500);
   }
 
@@ -109,6 +116,7 @@ export class TestPlanAddSuiteFormComponent implements OnInit {
     this.selectedSuites = this.selectedSuites.filter(suite => this.checkedSelectedSuites.indexOf(suite) == -1);
     this.checkedSelectedSuites = [];
     this.filterCheckAllSelectedSuites = [...this.selectedSuites];
+    this.fetchSuites();
     this.checkEmptyAvailable()
   }
 
@@ -150,7 +158,8 @@ export class TestPlanAddSuiteFormComponent implements OnInit {
     this.selectedSuites.splice(index, 1);
     this.selectedSuites = [...this.selectedSuites];
     this.filterCheckAllSelectedSuites = [...this.selectedSuites];
-    this.checkEmptyAvailable()
+    this.fetchSuites();
+    this.checkEmptyAvailable();
   }
 
   toggleCheck(suite: TestSuite, array: TestSuite[]) {
@@ -174,8 +183,14 @@ export class TestPlanAddSuiteFormComponent implements OnInit {
   save() {
     this.submitted = true;
     if (this.selectedSuites.length == 0) return;
-    this.options.testDevice.testSuites = this.selectedSuites;
-    this.dialogRef.close(true);
+
+    if(this.options.returnTestSuites) {
+      this.dialogRef.close(this.selectedSuites);
+    }
+    else if(this.options.testDevice) {
+      this.options.testDevice.testSuites = this.selectedSuites;
+      this.dialogRef.close(true);
+    }
   }
 
   toggleCheckAll(checkAll, array: TestSuite[]) {
@@ -199,6 +214,8 @@ export class TestPlanAddSuiteFormComponent implements OnInit {
       this.filterCheckAllSelectedSuites = [...this.selectedSuites];
       this.isSearched = false;
     }
+    this.checkedSelectedSuites =[];
+    this.checkAllSelected = false;
   }
 
   testSuitesNotCreated() {
@@ -209,4 +226,25 @@ export class TestPlanAddSuiteFormComponent implements OnInit {
     return this.filteredSuites?.length == 0;
   }
 
+  get hasMixedAppVersion() {
+    return [...new Set(this.selectedSuites.map(item=> item.workspaceVersionId))].length > 1;
+  }
+
+  get e2eEnabled() {
+    return this.isE2ESelectionOpted || this.hasMixedAppVersion;
+  }
+
+  handleE2ESwitch(event) {
+    this.isE2ESelectionOpted = event.checked;
+  }
+  setCurrentVersion(version: WorkspaceVersion) {
+    this.selectedVersion = version;
+
+    this.fetchTags();
+    this.fetchSuites();
+  }
+
+  get currentApplicationVersion() {
+    return this.selectedVersion || this.options?.version;
+  }
 }

@@ -27,4 +27,16 @@ export class AddonNaturalTextActionParameter extends Base implements Deserializa
   get isTestData() {
     return this.type == AddonParameterType.TEST_DATA
   }
+
+  get isTestDataProfile(){
+    return this.type == AddonParameterType.TEST_DATA_PROFILE;
+  }
+
+  get isEnvironmentData(){
+    return this.type == AddonParameterType.ENVIRONMENT_DATA;
+  }
+
+  get isTestDataSet(){
+    return this.type == AddonParameterType.TEST_DATA_SET;
+  }
 }

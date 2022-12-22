@@ -22,6 +22,9 @@ CREATE TABLE `test_devices`
   `platform_screen_resolution_id` BIGINT(20)            DEFAULT NULL,
   `platform_browser_version_id`   BIGINT(20)            DEFAULT NULL,
   `platform_os_version_id`        BIGINT(20)            DEFAULT NULL,
+  `prerequisite_test_devices_id`  BIGINT(20)            DEFAULT NULL,
+  `workspace_version_id`          BIGINT(20)            DEFAULT NULL,
+  `test_lab_type`                 VARCHAR(255)          DEFAULT NULL,
   `disabled`                      BIT(1)       NOT NULL DEFAULT false,
   `match_browser_version`         TINYINT(1)            DEFAULT 0,
   `copied_from`                   BIGINT(20)            DEFAULT null,
@@ -31,10 +34,9 @@ CREATE TABLE `test_devices`
   `updated_date`                  DATETIME              DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `index_test_devices_on_test_plan_id` (`test_plan_id`),
-  KEY `index_test_devices_on_app_upload_id` (`app_upload_id`),
   KEY `index_test_devices_on_agent_id` (`agent_id`),
   CONSTRAINT `fk_test_plan_id_in_test_devices_to_test_plans` FOREIGN KEY (`test_plan_id`) REFERENCES `test_plans` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `fk_app_upload_id_in_test_devices_to_uploads` FOREIGN KEY (`app_upload_id`) REFERENCES `uploads` (`id`) ON DELETE RESTRICT ON UPDATE NO ACTION,
+  CONSTRAINT `fk_workspace_version_id_in_test_devices_to_workspace_versions` FOREIGN KEY (`workspace_version_id`) REFERENCES `workspace_versions` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `fk_agent_id_in_test_devices_to_uploads` FOREIGN KEY (`agent_id`) REFERENCES `agents` (`id`) ON DELETE RESTRICT ON UPDATE NO ACTION
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 59

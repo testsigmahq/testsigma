@@ -16,12 +16,12 @@ import {TestStepMoreActionFormComponent} from "./test-step-more-action-form.comp
 import {MobileStepRecorderComponent} from "../../agents/components/webcomponents/mobile-step-recorder.component";
 import {WorkspaceType} from "../../enums/workspace-type.enum";
 import {MobileRecorderEventService} from "../../services/mobile-recorder-event.service";
+import {CdkConnectedOverlay} from "@angular/cdk/overlay";
 
 @Component({
   selector: 'app-action-element-suggestion',
   templateUrl: './action-element-suggestion.component.html',
-  styles: [
-  ]
+  styleUrls: ['action-element-suggestion.component.scss']
 })
 export class ActionElementSuggestionComponent implements OnInit {
   @Optional() @Input('elementSuggestion') elementSuggestion;
@@ -30,8 +30,13 @@ export class ActionElementSuggestionComponent implements OnInit {
   public filteredElements: Element[];
   public isNew: Boolean = false;
   public searchText: string;
+  public isScreenSearch = false;
+  public isSearchOptionsOpen = false;
   @ViewChild('searchInput') searchInput: ElementRef;
   @ViewChild('searchScreenInput') searchScreenInput: ElementRef;
+
+  @ViewChild('searchOptionsDialog') searchOptionsDialog: CdkConnectedOverlay;
+  @ViewChild('searchOptionsTrigger') searchOptionsTrigger;
   public currentFocusedIndex: number;
   private elementForm: MatDialogRef<ElementFormComponent>;
   public showVideo: Boolean = false;
@@ -42,7 +47,18 @@ export class ActionElementSuggestionComponent implements OnInit {
     private elementService: ElementService,
     private matModal: MatDialog,
     private mobileRecorderEventService: MobileRecorderEventService,
-    @Inject(MAT_DIALOG_DATA) public option: { version: WorkspaceVersion, testCase: TestCase, testCaseResultId?:number, isDryRun: boolean, isStepRecordView: boolean},
+
+    @Inject(MAT_DIALOG_DATA) public option: { version: WorkspaceVersion,
+      testCase: TestCase,
+      testCaseResultId?:number,
+      isDryRun: boolean,
+      isStepRecordView: boolean,
+      previousStepElementName?:string,
+      currentStepElementName?:string,
+      isNewUI:boolean
+      versionId:number;
+    },
+
   ) {
     this.workspaceVersion = this.option?.version;
   }
@@ -68,8 +84,12 @@ export class ActionElementSuggestionComponent implements OnInit {
       this.isQueryBased = false
     }
 
+    if(this.option.previousStepElementName || this.option.currentStepElementName ){
+      searchName += ",previousStepElementName:" + (this.option.currentStepElementName || this.option.previousStepElementName);
+    }
+
     this.elements = new InfiniteScrollableDataSource(this.elementService, "workspaceVersionId:"+this.option.version.id+searchName, undefined, 50);
-    this.setNewElement(term)
+    this.setNewElement(term);
     // this.elementService.findAll("workspaceVersionId:"+this.option.version.id+searchName, undefined, pageable).subscribe(res => {
     //   this.filteredElements = res.content;
     // })
@@ -85,7 +105,9 @@ export class ActionElementSuggestionComponent implements OnInit {
     } else {
       this.isQueryBased = false
     }
-
+    if(this.option.previousStepElementName) {
+      searchName += ",previousStepElementName:" + this.option.previousStepElementName;
+    }
     this.elements = new InfiniteScrollableDataSource(this.elementService, "workspaceVersionId:"+this.option.version.id+searchName, undefined, 50);
     this.setNewElement(term);
   }
@@ -93,11 +115,24 @@ export class ActionElementSuggestionComponent implements OnInit {
   setNewElement(term?:string) {
     if(!this.elements.isFetching){
       this.isNew = this.checkElementIsMatchedOrNot(term)? true : false;
+      this.putCurrentElementOnTop();
     } else if(this.elements.isFetching) {
       setTimeout(()=> this.setNewElement(term), 200)
     }
   }
-
+  putCurrentElementOnTop(){
+    if(!this.elements.isEmpty){
+      const reOrderedElements:Element[] = [];
+      this.elements?.cachedItems?.forEach((element :Element ,ind)=>{
+        if( this.option?.currentStepElementName === element?.name ){
+          reOrderedElements.unshift(element);
+        }else{
+          reOrderedElements.push(element);
+        }
+      });
+      this.elements.cachedItems = reOrderedElements;
+    }
+  }
   checkElementIsMatchedOrNot(term?:string) {
       let isNotMatched = false
     if(this.elements.isEmpty) {
@@ -210,7 +245,8 @@ export class ActionElementSuggestionComponent implements OnInit {
       testCaseId: this.option?.testCase?.id,
       isDryRun: this.option?.isDryRun,
       testCaseResultId: this.option.testCaseResultId,
-      isStepRecordView: this.option.isStepRecordView
+      isStepRecordView: this.option.isStepRecordView,
+      doRefresh: true,
     }
     if (this.option.isStepRecordView) {
       this.mobileRecorderEventService.suggestionContent.next(Object.assign(sendDetails, {
@@ -218,9 +254,10 @@ export class ActionElementSuggestionComponent implements OnInit {
       }));
       return
     }
+    let isNewUI=this.isWeb||this.isMobileWeb
     this.elementForm = this.matModal.open(ElementFormComponent, {
       height: "100vh",
-      width: '60%',
+      width: isNewUI ? "540px" : "60%",
       position: {top: '0px', right: '0px'},
       data: sendDetails,
       panelClass: ['mat-dialog', 'rds-none'],
@@ -305,5 +342,21 @@ export class ActionElementSuggestionComponent implements OnInit {
 
   closeSuggestion() {
     this.elementSuggestion ? this.mobileRecorderEventService.setEmptyAction() : this.dialogRef.close();
+  }
+
+  openSearchOptions() {
+    this.isSearchOptionsOpen = true;
+    setTimeout(() => {
+      this.searchOptionsDialog.overlayRef._outsidePointerEvents.subscribe(res => this.closeSearchOptions());
+    }, 200);
+  }
+
+  closeSearchOptions() {
+    this.searchOptionsDialog.overlayRef.detach();
+    this.isSearchOptionsOpen = false;
+  }
+
+  get isNewUI(){
+    return this.option.isNewUI;
   }
 }

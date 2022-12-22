@@ -37,6 +37,7 @@
           </div>
         </div>
         <div class="d-flex align-items-baseline pl-40 ml-auto">
+
           <app-test-suite-result-details-pagination
             [suiteResult]="suiteResult"></app-test-suite-result-details-pagination>
           <a
@@ -52,6 +53,35 @@
             class="btn icon-btn border-rds-2 ml-14">
             <i class="fa-refresh-thick"></i>
           </button>
+          <div
+            class="dropdown section-title mouse-over d-inline-block">
+            <div class="btn-group">
+              <button
+                class="btn icon-btn border-rds-2 ml-14">
+                <i class="fa-export-thin"></i>
+              </button>
+            </div>
+            <div
+              class="dropdown-menu drop-down-transparent min-w left-md">
+              <ul
+                class="bg-white border-rds-4 ng-scope p-15 shadow-all2-b4">
+                <li
+                  class="border-rds-10 btn rb-medium grey-on-hover text-dark">
+                  <a
+                    [href]="'/test_suite_results/export/'+ suiteResult?.id"
+                    class="text-dark text-decoration-none"
+                    target="_blank" [translate]="'runs.details.export_as_xls'"></a>
+                </li>
+                <li
+                  class="border-rds-10 btn rb-medium grey-on-hover text-dark ml-0">
+                  <a
+                    [href]="'/reports/junit/'+suiteResult?.testDeviceResult?.testPlanResult?.id"
+                    class="text-dark text-decoration-none"
+                    target="_blank" [translate]="'runs.details.export_as_junit'"></a>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
       <div class="ts-col-100 position-relative d-flex pt-18">
@@ -91,7 +121,14 @@
             [testPlanResult]="suiteResult?.testDeviceResult?.testPlanResult"
             [testDevice]="suiteResult?.testDeviceResult?.testDevice"></app-lab-environment-screen-short-info>
 
-          <div class="details-items mw-30 mt-30">
+          <div class="details-items mw-30">
+            <app-xray-input
+              [entityId] ="suiteResult?.id"
+              [entityType]="this.suiteResultEntityType"
+              [display]="true"
+              (rePushInitialized)="rePushInitialized()"
+              (rePushFailed)="rePushFailed()">
+            </app-xray-input>
             <div class="align-items-center d-flex details-info text-truncate mt-2 pointer"
                  [matTooltip]="suiteResult?.message"
                  [textContent]="suiteResult?.message"></div>

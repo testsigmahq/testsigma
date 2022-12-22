@@ -5,6 +5,10 @@
 package com.testsigma.repository;
 
 import com.testsigma.model.AddonNaturalTextAction;
+import com.testsigma.model.NaturalTextActions;
+import com.testsigma.model.WorkspaceType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,4 +21,6 @@ public interface AddonNaturalTextActionRepository extends BaseRepository<AddonNa
   Optional<AddonNaturalTextAction> findByAddonIdAndFullyQualifiedName(Long addonId, String fullyQualifiedName);
 
   List<AddonNaturalTextAction> findAllByAddonId(Long addonId);
+
+  Page<AddonNaturalTextAction> findAllByWorkspaceType(WorkspaceType workspaceType, Pageable pageable);
 }

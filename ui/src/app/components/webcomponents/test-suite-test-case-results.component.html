@@ -20,6 +20,14 @@
         <div
           class="ts-col-100 list-title text-break"
           [textContent]="testCaseResult?.testCase?.name"></div>
+        <div class="d-flex ts-col-10 right-0">
+          <app-xray-input
+            [entityId]="testCaseResult?.suiteResultId"
+            [testCaseResult] ="testCaseResult"
+            [entityType]="this.runResultEntityType"
+            [display]="true">
+          </app-xray-input>
+        </div>
         <div class="ts-col-100 pt-4 text-t-secondary fz-12 d-flex align-items-center">
           <div
             class="theme-breadcrumb ts-col-40">

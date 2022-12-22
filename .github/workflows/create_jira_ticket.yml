@@ -1,0 +1,121 @@
+name: Create ticket in Jira
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  Jira:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Store Github Issue url as environment variable
+        run: |
+          echo "URL=${{ github.event.issue.url }}" >> $GITHUB_ENV
+
+      - name: Get Issue Body and store as environment variable
+        id: get_issue
+        run: |
+          issue_body=$(node ./action.js --url=${{ env.URL }})
+          echo "BODY=$issue_body" >> $GITHUB_ENV
+
+      - name: Create Bug in Jira
+        if: ${{github.event.label.name == 'bug'}}
+        env:
+          JIRA_PROJECT_ID: ${{ secrets.JIRA_PROJECT_ID }}
+          JIRA_ISSUE_ID: ${{ secrets.JIRA_ISSUE_ID }}
+          JIRA_REPORTER_ID: ${{ secrets.JIRA_REPORTER_ID }}
+        run: >
+          curl
+          -u ${{ secrets.JIRA_USER_EMAIL }}:${{ secrets.JIRA_API_TOKEN }}
+          -X POST  ${{ secrets.JIRA_BASE_URL }}/rest/api/3/issue/
+          -H 'Content-Type: application/json'
+          -d '{
+            "fields": {
+              "project":
+              {
+                "id": "${{env.JIRA_PROJECT_ID}}"
+              },
+              "summary": "${{ github.event.issue.title }}",
+              "issuetype": {
+                "id": "${{env.JIRA_ISSUE_ID}}"
+              },
+              "reporter": {
+                "id": "${{env.JIRA_REPORTER_ID}}"
+              },
+               "labels": [
+                  "github_issues"
+               ],
+              "description": {
+                    "type": "doc",
+                    "version": 1,
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text":  ${{env.BODY}}
+                          }
+                        ]
+                      }
+                    ]
+                  }
+            }
+          }'
+
+      - name: Create Enhancement in Jira
+        if: ${{github.event.label.name == 'enhancement'}}
+        env:
+          JIRA_PROJECT_ID: ${{ secrets.JIRA_PROJECT_ID }}
+          JIRA_REPORTER_ID: ${{ secrets.JIRA_REPORTER_ID }}
+          JIRA_ENHANCEMENT_ID: ${{ secrets.JIRA_ENHANCEMENT_ID }}
+        run: >
+          curl
+          -u ${{ secrets.JIRA_USER_EMAIL }}:${{ secrets.JIRA_API_TOKEN }}
+          -X POST  ${{ secrets.JIRA_BASE_URL }}/rest/api/3/issue/
+          -H 'Content-Type: application/json'
+          -d '{
+            "fields": {
+              "project":
+              {
+                "id": "${{env.JIRA_PROJECT_ID}}"
+              },
+              "summary": "${{ github.event.issue.title }}",
+              "issuetype": {
+                "id": "${{env.JIRA_ENHANCEMENT_ID}}"
+              },
+              "reporter": {
+                "id": "${{env.JIRA_REPORTER_ID}}"
+              },
+               "labels": [
+                  "github_issues"
+               ],
+              "description": {
+                    "type": "doc",
+                    "version": 1,
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": ${{env.BODY}}
+                          }
+                        ]
+                      }
+                    ]
+                  }
+            }
+          }'
+

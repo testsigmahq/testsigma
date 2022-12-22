@@ -47,4 +47,6 @@ public class UserPreference {
   @Column(name = "showed_github_star")
   private boolean showedGitHubStar;
 
+  @Column(name = "clicked_skip_for_now")
+  private Long clickedSkipForNow;
 }

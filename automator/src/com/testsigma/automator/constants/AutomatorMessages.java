@@ -42,6 +42,7 @@ public class AutomatorMessages {
   public static final String MSG_REST_ERROR_PATH = "Content for path ?1 doesn't match with the expected value";
   public static final String MSG_REST_ERROR_BODY_EMPTY = "No Test body provided to validate response";
   public static final String MSG_REST_SCHEMA_ERROR_EMPTY = "No schema provided to validate response";
+  public static final String MSG_INCOMPATIBLE_DEVICE_AND_APP = "Incompatible app and device architecture";
   // Used in ActionConstants check for dependencies.
 
   public static final String KEYWORD_GO_TO = "Navigate to";
@@ -56,7 +57,7 @@ public class AutomatorMessages {
   public final static String MSG_WHILE_CONDITION_FAILED = "Loop condition failed, exiting from While loop execution.";
   public final static String MSG_WHILE_LOOP_SUCCESS = "While loop executed successfully";
   public final static String MSG_WHILE_LOOP_FAILURE = "While loop execution failed";
-  public final static String MSG_WHILE_LOOP_ITERATIONS_EXHAUSTED = "Max. number of allowed iterations reached before achieving the expected functional behaviour";
+  public final static String MSG_WHILE_LOOP_ITERATIONS_EXHAUSTED = "Set maximum iteration limit %s breached";
   public static String msgParamIdentifier = "\\?";
 
   public static String getMessage(String replaceableMsg, Object... replaceParameters) {

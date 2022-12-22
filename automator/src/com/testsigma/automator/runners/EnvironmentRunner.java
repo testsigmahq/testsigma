@@ -103,7 +103,9 @@ public abstract class EnvironmentRunner {
     checkForEmptyEnvironment();
     new ScreenCaptureUtil().createScreenshotsFolder();
     new ErrorUtil().checkError(testDeviceEntity.getErrorCode(), null);
-    new DriversUpdateService().syncBrowserDriver(testDeviceEntity);
+    if (testDeviceEntity.getWorkspaceType()==WorkspaceType.WebApplication){
+      new DriversUpdateService().syncBrowserDriver(testDeviceEntity);
+    }
   }
 
   public EnvironmentRunResult run() {

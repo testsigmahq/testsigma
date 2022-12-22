@@ -10,6 +10,7 @@ import { NotificationsService } from 'angular2-notifications';
 import {TranslateService} from '@ngx-translate/core';
 import {ToastrService} from "ngx-toastr";
 import {BaseComponent} from "../../shared/components/base.component";
+import {EntityType} from "../../enums/entity-type.enum";
 
 @Component({
   selector: 'app-test-case-results',
@@ -35,6 +36,7 @@ export class TestCaseResultsComponent extends BaseComponent implements OnInit {
   public isDisabledAutoRefresh: boolean = false;
   public isSearchEnable: boolean = false;
   public isRunTestcaseFetchComplete: boolean = false;
+  public runResultEntityType: EntityType = EntityType.RUN_RESULT;
   @ViewChild('searchMachineInput') searchMachineInput: ElementRef;
   inputValue: any;
 

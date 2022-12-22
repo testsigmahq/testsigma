@@ -3,7 +3,8 @@
   [formGroup]="actionForm">
   <div class="step-container-section">
     <div
-      class="d-flex flex-wrap pt-14 px-10 ts-col-90 pb-6">
+      class="d-flex flex-wrap pt-14 px-10 ts-col-90 pb-6"
+    [style]="'padding-left: calc('+ indentation*3 +'px + 15px) !important' ">
       <!--      <input-->
       <!--        #searchInput-->
       <!--        [class.placeholder-animate]="animatedPlaceholder"-->
@@ -119,14 +120,14 @@
       <div class="p-0 field">
         <input
           [type]="inputType(argumentList[displayName.key])"
-          [placeholder]="argumentList[displayName.key]"
+          [placeholder]="extractStringByKey(argumentList[displayName.key])"
           class="form-control"
           [class.autofocus]="first"
           [id]="displayName.key"
           [name]="displayName.key"
           [formControlName]="[''+displayName.key]"/>
         <label
-          [translate]="displayName.value+' ('+argumentList[displayName.key]+')'"
+          [translate]="displayName.value+' ('+extractStringByKey(argumentList[displayName.key])+')'"
           [for]="displayName.key"></label>
       </div>
     </div>
@@ -246,6 +247,7 @@
       <i class="fa-help text-t-secondary pr-7"></i>
       <a
         class=" text-t-secondary"
+        rel="noreferrer nofollow"
         [href]="stepArticleUrl"
         target="_blank"
         [translate]="'step.create.help.note'"></a>

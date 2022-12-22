@@ -4,12 +4,10 @@
 
 @font-face {
   font-family: "font_custom";
-  src: url("~/assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.eot");
-  src: url("~/assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.eot?#iefix") format("embedded-opentype"),
-       url("~/assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.woff2") format("woff2"),
-       url("~/assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.woff") format("woff"),
-       url("~/assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.ttf") format("truetype"),
-       url("~/assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.svg#font_custom") format("svg");
+  src: url("~/assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.woff2") format("woff2"),
+       url("~/assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.woff") format("woff"),
+       url("~/assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.ttf") format("truetype"),
+       url("~/assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.svg#font_custom") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -17,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: "font_custom";
-    src: url("~/assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.svg#font_custom") format("svg");
+    src: url("~/assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.svg#font_custom") format("svg");
   }
 }
 
@@ -29,6 +27,7 @@
 .fa-add:before,
 .fa-add-next:before,
 .fa-add-previous:before,
+.fa-add-to-queue:before,
 .fa-addon:before,
 .fa-addons:before,
 .fa-alert:before,
@@ -251,6 +250,7 @@
 .fa-lightbulb-solid:before,
 .fa-line_chart_up:before,
 .fa-lined-arrow-right:before,
+.fa-link:before,
 .fa-linux-2:before,
 .fa-list:before,
 .fa-list-alt:before,
@@ -311,6 +311,7 @@
 .fa-power-bulb:before,
 .fa-power-flash:before,
 .fa-power-loop:before,
+.fa-prerequisite:before,
 .fa-productivity:before,
 .fa-profile:before,
 .fa-project-andriod:before,
@@ -363,6 +364,7 @@
 .fa-schedule:before,
 .fa-schedule-demo:before,
 .fa-schedule-with-tick:before,
+.fa-screen-resolution:before,
 .fa-screen-rotation:before,
 .fa-scroll:before,
 .fa-search:before,
@@ -479,6 +481,7 @@
 .fa-add:before { content: "\f2b1"; }
 .fa-add-next:before { content: "\f102"; }
 .fa-add-previous:before { content: "\f103"; }
+.fa-add-to-queue:before { content: "\f2d0"; }
 .fa-addon:before { content: "\f291"; }
 .fa-addons:before { content: "\f2c8"; }
 .fa-alert:before { content: "\f104"; }
@@ -701,6 +704,7 @@
 .fa-lightbulb-solid:before { content: "\f178"; }
 .fa-line_chart_up:before { content: "\f269"; }
 .fa-lined-arrow-right:before { content: "\f179"; }
+.fa-link:before { content: "\f2d3"; }
 .fa-linux-2:before { content: "\f17a"; }
 .fa-list:before { content: "\f17b"; }
 .fa-list-alt:before { content: "\f17c"; }
@@ -761,6 +765,7 @@
 .fa-power-bulb:before { content: "\f198"; }
 .fa-power-flash:before { content: "\f220"; }
 .fa-power-loop:before { content: "\f199"; }
+.fa-prerequisite:before { content: "\f2d2"; }
 .fa-productivity:before { content: "\f26a"; }
 .fa-profile:before { content: "\f19a"; }
 .fa-project-andriod:before { content: "\f28c"; }
@@ -813,6 +818,7 @@
 .fa-schedule:before { content: "\f1fe"; }
 .fa-schedule-demo:before { content: "\f274"; }
 .fa-schedule-with-tick:before { content: "\f247"; }
+.fa-screen-resolution:before { content: "\f2d1"; }
 .fa-screen-rotation:before { content: "\f289"; }
 .fa-scroll:before { content: "\f1b5"; }
 .fa-search:before { content: "\f1b6"; }
@@ -916,6 +922,7 @@ $font-font_custom-action-text: "\f2cb";
 $font-font_custom-add: "\f2b1";
 $font-font_custom-add-next: "\f102";
 $font-font_custom-add-previous: "\f103";
+$font-font_custom-add-to-queue: "\f2d0";
 $font-font_custom-addon: "\f291";
 $font-font_custom-addons: "\f2c8";
 $font-font_custom-alert: "\f104";
@@ -1138,6 +1145,7 @@ $font-font_custom-lightbulb-regular: "\f177";
 $font-font_custom-lightbulb-solid: "\f178";
 $font-font_custom-line_chart_up: "\f269";
 $font-font_custom-lined-arrow-right: "\f179";
+$font-font_custom-link: "\f2d3";
 $font-font_custom-linux-2: "\f17a";
 $font-font_custom-list: "\f17b";
 $font-font_custom-list-alt: "\f17c";
@@ -1198,6 +1206,7 @@ $font-font_custom-power: "\f197";
 $font-font_custom-power-bulb: "\f198";
 $font-font_custom-power-flash: "\f220";
 $font-font_custom-power-loop: "\f199";
+$font-font_custom-prerequisite: "\f2d2";
 $font-font_custom-productivity: "\f26a";
 $font-font_custom-profile: "\f19a";
 $font-font_custom-project-andriod: "\f28c";
@@ -1250,6 +1259,7 @@ $font-font_custom-save-regular: "\f1b4";
 $font-font_custom-schedule: "\f1fe";
 $font-font_custom-schedule-demo: "\f274";
 $font-font_custom-schedule-with-tick: "\f247";
+$font-font_custom-screen-resolution: "\f2d1";
 $font-font_custom-screen-rotation: "\f289";
 $font-font_custom-scroll: "\f1b5";
 $font-font_custom-search: "\f1b6";

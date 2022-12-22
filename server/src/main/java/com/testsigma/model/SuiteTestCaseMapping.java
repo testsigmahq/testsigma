@@ -40,6 +40,8 @@ public class SuiteTestCaseMapping {
   @UpdateTimestamp
   private Timestamp updatedDate;
 
+  @Column(name = "imported_id")
+  private Long importedId;
 
   @ManyToOne
   @Fetch(value = FetchMode.SELECT)

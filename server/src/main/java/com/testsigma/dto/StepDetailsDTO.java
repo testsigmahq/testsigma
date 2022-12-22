@@ -39,4 +39,5 @@ public class StepDetailsDTO {
   private String testDataName;
   private String testDataValue;
   private Boolean ignoreStepResult;
+  private Long maxIterations;
 }

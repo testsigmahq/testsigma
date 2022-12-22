@@ -10,9 +10,7 @@ import com.testsigma.model.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Log4j2
 public class ForLoopStepProcessor extends StepProcessor {
@@ -20,15 +18,25 @@ public class ForLoopStepProcessor extends StepProcessor {
                               WorkspaceType workspaceType, Map<String, Element> elementMap,
                               TestStepDTO testStepDTO, Long testPlanId, TestDataSet testDataSet,
                               Map<String, String> environmentParams, TestCaseEntityDTO testCaseEntityDTO,
-                              String environmentParamSetName, String dataProfile) {
+                              String environmentParamSetName, String dataProfile, Map<Long, Integer> dataSetIndex) {
     super(webApplicationContext, testCaseStepEntityDTOS, workspaceType, elementMap, testStepDTO, testPlanId, testDataSet,
-      environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile);
+      environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile, dataSetIndex);
+  }
+
+  private void attachTestDataProfileStepId(List<TestStepDTO> testCaseStepEntityDTOS) {
+    for (TestStepDTO testStepEntity : testCaseStepEntityDTOS){
+      if (testStepEntity.getTestDataProfileStepId()!=null){
+        Optional<TestStepDTO> TDPStepEntity = testCaseStepEntityDTOS.stream().filter(step -> Objects.equals(step.getForLoopTestDataId(), testStepEntity.getTestDataProfileStepId())).findFirst();
+        TDPStepEntity.ifPresent(stepDTO -> testStepEntity.setTestDataProfileStepId(stepDTO.getId()));
+      }
+    }
   }
 
   public void processLoop(List<TestStepDTO> testStepDTOS, List<Long> loopIds)
     throws TestsigmaException, CloneNotSupportedException {
     if (testStepDTOS != null) {
-      loadLoop(testStepDTO, testStepDTOS, loopIds);
+      loadLoop(testStepDTO, testStepDTOS);
+      this.attachTestDataProfileStepId(testStepDTOS);
     }
 
     Long testDataId = testStepDTO.getForLoopTestDataId();
@@ -38,56 +46,58 @@ public class ForLoopStepProcessor extends StepProcessor {
     TestData testData = testDataProfileService.find(testDataId);
 
     List<TestCaseStepEntityDTO> entityList = new ArrayList<>();
-    List<TestDataSet> dataBank = testData.getData();
+    List<TestDataSet> dataBank = testData.getTempTestData();
     if ((dataBank != null) && dataBank.size() > 0) {
-
+      start = (start.equals(LOOP_START)) ? 1 : start;
       end = (end.equals(LOOP_END)) ? dataBank.size() : end;
 
       if (testStepDTO.getTestStepDTOS() != null && testStepDTO.getTestStepDTOS().size() > 0) {
         for (int i = start - 1; i < end && i < dataBank.size(); i++) {
-          TestStepDTO entity = testStepDTO.clone();
+          TestStepDTO parentEntity = testStepDTO.clone();
           TestDataSet dataSet = dataBank.get(i);
-          TestCaseStepEntityDTO iteEntity = new TestCaseStepEntityDTO();
-          iteEntity.setId(entity.getId());
+          TestCaseStepEntityDTO iteEntity = new TestCaseStepEntityDTO(); //iterableEntity -- Iteration
+          iteEntity.setId(parentEntity.getId());
+          dataSetIndex.put(testStepDTO.getId(), i);
+          for (int lcount = 0; lcount < parentEntity.getTestStepDTOS().size(); lcount++) {
+            TestStepDTO loopChildEntity = parentEntity.getTestStepDTOS().get(lcount);
 
-          for (int lcount = 0; lcount < entity.getTestStepDTOS().size(); lcount++) {
-            TestStepDTO loopentity = entity.getTestStepDTOS().get(lcount);
-
-            if (loopentity.getType() == com.testsigma.model.TestStepType.REST_STEP) {
+            if (loopChildEntity.getType() == com.testsigma.model.TestStepType.REST_STEP) {
               new RestStepProcessor(webApplicationContext, iteEntity.getTestCaseSteps(), workspaceType,
-                elementMap, loopentity, testPlanId, dataSet, environmentParameters, testCaseEntityDTO,
-                      environmentParamSetName, dataProfile).process();
+                elementMap, loopChildEntity, testPlanId, dataSet, environmentParameters, testCaseEntityDTO,
+                      environmentParamSetName, dataProfile, dataSetIndex).process();
               continue;
             }
 
+            TestCaseStepEntityDTO processedChildEntity = new StepProcessor(webApplicationContext, testCaseStepEntityDTOS,
+                    workspaceType, elementMap, loopChildEntity, testPlanId, dataSet, environmentParameters,
+              testCaseEntityDTO, environmentParamSetName, testData.getTestDataName(),dataSetIndex).processStep();
 
-            TestCaseStepEntityDTO exeEntity = new StepProcessor(webApplicationContext, testCaseStepEntityDTOS,
-                    workspaceType, elementMap, loopentity, testPlanId, dataSet, environmentParameters,
-              testCaseEntityDTO, environmentParamSetName, testData.getTestDataName()).processStep();
-            if (loopentity.getType() == TestStepType.FOR_LOOP) {
-              loopIds.add(loopentity.getId());
+            if (loopChildEntity.getType() == TestStepType.FOR_LOOP) {
+              loopIds.add(loopChildEntity.getId());
               new ForLoopStepProcessor(webApplicationContext, iteEntity.getTestCaseSteps(), workspaceType,
-                elementMap, loopentity, testPlanId, dataSet, environmentParameters, testCaseEntityDTO,
-                      environmentParamSetName, dataProfile)
-                .processLoop(entity.getTestStepDTOS(), loopIds);
+                elementMap, loopChildEntity, testPlanId, dataSet, environmentParameters, testCaseEntityDTO,
+                      environmentParamSetName, dataProfile,dataSetIndex)
+                .processLoop(testStepDTOS, loopIds);
               continue;
             }
 
-            exeEntity.setParentId(loopentity.getParentId());
-            exeEntity.setTestCaseId(loopentity.getTestCaseId());
-            exeEntity.setConditionType(loopentity.getConditionType());
-            exeEntity.setPriority(loopentity.getPriority());
-            exeEntity.setPreRequisite(loopentity.getPreRequisiteStepId());
-            exeEntity.setType(loopentity.getType());
-            exeEntity.setStepGroupId(loopentity.getStepGroupId());
-            exeEntity.setPosition(loopentity.getPosition());
-            exeEntity.setTestDataProfileName(testData.getTestDataName());
-            exeEntity.setIndex(i + 1);
-            entity.setTestDataId(testDataId);
-            entity.setTestDataIndex(i);
-            entity.setSetName(dataSet.getName());
+            processedChildEntity.setParentId(loopChildEntity.getParentId());
+            processedChildEntity.setTestCaseId(loopChildEntity.getTestCaseId());
+            processedChildEntity.setConditionType(loopChildEntity.getConditionType());
+            processedChildEntity.setPriority(loopChildEntity.getPriority());
+            processedChildEntity.setPreRequisite(loopChildEntity.getPreRequisiteStepId());
+            processedChildEntity.setType(loopChildEntity.getType());
+            processedChildEntity.setStepGroupId(loopChildEntity.getStepGroupId());
+            processedChildEntity.setPosition(loopChildEntity.getPosition());
+            processedChildEntity.setTestDataProfileName(testData.getTestDataName());
+            processedChildEntity.setVisualEnabled(loopChildEntity.getVisualEnabled());
+            processedChildEntity.setIndex(i + 1);
+            processedChildEntity.setTestDataIndex(i);
+            parentEntity.setTestDataId(testDataId);
+            parentEntity.setTestDataIndex(i);
+            parentEntity.setSetName(dataSet.getName());
 
-            for (TestStepDTO centity : loopentity.getTestStepDTOS()) {
+            for (TestStepDTO centity : loopChildEntity.getTestStepDTOS()) {
               List<TestCaseStepEntityDTO> stepGroupSpecialSteps = new ArrayList<>();
 
               //TODO: check logic for test step key Generation and recursive logic for step group generation
@@ -98,8 +108,8 @@ public class ForLoopStepProcessor extends StepProcessor {
               if (centity.getType() == TestStepType.REST_STEP) {
                 new RestStepProcessor(webApplicationContext, stepGroupSpecialSteps, workspaceType,
                   elementMap, centity, testPlanId, dataSet, environmentParameters, testCaseEntityDTO,
-                        environmentParamSetName, dataProfile).process();
-                exeEntity.getTestCaseSteps().addAll(stepGroupSpecialSteps);
+                        environmentParamSetName, dataProfile ,dataSetIndex).process();
+                processedChildEntity.getTestCaseSteps().addAll(stepGroupSpecialSteps);
                 continue;
               }
 
@@ -107,43 +117,44 @@ public class ForLoopStepProcessor extends StepProcessor {
                 loopIds.add(centity.getId());
                 new ForLoopStepProcessor(webApplicationContext, stepGroupSpecialSteps, workspaceType,
                   elementMap, centity, testPlanId, dataSet, environmentParameters, testCaseEntityDTO,
-                        environmentParamSetName, dataProfile)
-                  .processLoop(loopentity.getTestStepDTOS(), loopIds);
-                exeEntity.getTestCaseSteps().addAll(stepGroupSpecialSteps);
+                        environmentParamSetName, dataProfile,dataSetIndex)
+                  .processLoop(loopChildEntity.getTestStepDTOS(), loopIds);
+                processedChildEntity.getTestCaseSteps().addAll(stepGroupSpecialSteps);
                 continue;
               }
 
-              TestCaseStepEntityDTO cstepEntity = new StepProcessor(webApplicationContext, testCaseStepEntityDTOS,
+              TestCaseStepEntityDTO processedSubChildStepEntity = new StepProcessor(webApplicationContext, testCaseStepEntityDTOS,
                       workspaceType, elementMap, centity, testPlanId, dataSet, environmentParameters,
-                testCaseEntityDTO, environmentParamSetName, testData.getTestDataName()).processStep();
+                testCaseEntityDTO, environmentParamSetName, testData.getTestDataName(),dataSetIndex).processStep();
 
-              cstepEntity.setParentId(centity.getParentId());
-              cstepEntity.setTestCaseId(centity.getTestCaseId());
-              cstepEntity.setConditionType(centity.getConditionType());
-              cstepEntity.setPriority(centity.getPriority());
-              cstepEntity.setPreRequisite(centity.getPreRequisiteStepId());
-              cstepEntity.setType(centity.getType());
-              cstepEntity.setStepGroupId(centity.getStepGroupId());
-              exeEntity.getTestCaseSteps().add(cstepEntity);
-              exeEntity.setTestDataProfileName(testData.getTestDataName());
+              processedSubChildStepEntity.setParentId(centity.getParentId());
+              processedSubChildStepEntity.setTestCaseId(centity.getTestCaseId());
+              processedSubChildStepEntity.setConditionType(centity.getConditionType());
+              processedSubChildStepEntity.setPriority(centity.getPriority());
+              processedSubChildStepEntity.setPreRequisite(centity.getPreRequisiteStepId());
+              processedSubChildStepEntity.setType(centity.getType());
+              processedSubChildStepEntity.setStepGroupId(centity.getStepGroupId());
+              processedChildEntity.getTestCaseSteps().add(processedSubChildStepEntity);
+              processedChildEntity.setTestDataProfileName(testData.getTestDataName());
             }
-            iteEntity.getTestCaseSteps().add(exeEntity);
+            iteEntity.getTestCaseSteps().add(processedChildEntity);
           }
 
-          iteEntity.setParentId(entity.getParentId());
-          iteEntity.setTestCaseId(entity.getTestCaseId());
-          iteEntity.setConditionType(entity.getConditionType());
-          iteEntity.setPriority(entity.getPriority());
-          iteEntity.setPreRequisite(entity.getPreRequisiteStepId());
-          iteEntity.setPosition(entity.getId().intValue());
-          iteEntity.setWaitTime(entity.getWaitTime() == null ? 0 : entity.getWaitTime());
+          iteEntity.setParentId(parentEntity.getParentId());
+          iteEntity.setTestCaseId(parentEntity.getTestCaseId());
+          iteEntity.setConditionType(parentEntity.getConditionType());
+          iteEntity.setPriority(parentEntity.getPriority());
+          iteEntity.setPreRequisite(parentEntity.getPreRequisiteStepId());
+          iteEntity.setPosition(parentEntity.getId().intValue());
+          iteEntity.setWaitTime(parentEntity.getWaitTime() == null ? 0 : parentEntity.getWaitTime());
           iteEntity.setIndex(i + 1);
           iteEntity.setIteration(dataSet.getName());
           iteEntity.setTestDataProfileName(testData.getTestDataName());
-          iteEntity.setType(entity.getType());
-          iteEntity.setNaturalTextActionId(entity.getNaturalTextActionId());
+          iteEntity.setType(parentEntity.getType());
+          iteEntity.setNaturalTextActionId(parentEntity.getNaturalTextActionId());
           populateStepDetails(testStepDTO, iteEntity);
-          iteEntity.setAction(entity.getAction());
+          iteEntity.setAction(parentEntity.getAction());
+          iteEntity.setVisualEnabled(parentEntity.getVisualEnabled());
           entityList.add(iteEntity);
         }
       }

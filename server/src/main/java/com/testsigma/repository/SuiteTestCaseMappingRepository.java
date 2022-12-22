@@ -12,6 +12,9 @@ package com.testsigma.repository;
 import com.testsigma.model.AbstractTestSuite;
 import com.testsigma.model.SuiteTestCaseMapping;
 import com.testsigma.model.TestCase;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -36,4 +39,8 @@ public interface SuiteTestCaseMappingRepository extends JpaRepository<SuiteTestC
 
   @Query("SELECT suiteTestCaseMapping.testCaseId FROM SuiteTestCaseMapping suiteTestCaseMapping WHERE suiteTestCaseMapping.suiteId = :id ORDER BY suiteTestCaseMapping.position")
   List<Long> findTestCaseIdsByTestSuiteId(Long id);
+
+    Page<SuiteTestCaseMapping> findAll(Specification specification, Pageable pageRequest);
+
+    Optional<SuiteTestCaseMapping> findAllBySuiteIdInAndImportedId(List<Long> ids, Long id);
 }

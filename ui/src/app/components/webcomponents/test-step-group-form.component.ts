@@ -22,6 +22,7 @@ import {group} from "@angular/animations";
 })
 export class TestStepGroupFormComponent extends BaseComponent implements OnInit {
   @Input('testStep') testStep: TestStep;
+  @Input('indentation') indentation:number;
   @Input('version') version: WorkspaceVersion;
   @Input('stepForm') stepGroupForm: FormGroup;
   @Output('onCancel') onCancel = new EventEmitter<void>();
@@ -129,6 +130,11 @@ export class TestStepGroupFormComponent extends BaseComponent implements OnInit 
     this.stepGroupForm.addControl(
       'stepGroupId', new FormControl(this.testStep.stepGroupId, [])
     );
+  }
+  get stepGroupDescriptionText(){
+    const tempDescElem = document.createElement('div');
+    tempDescElem.innerHTML = ( this.testStep?.stepGroup?.description || '' ) as string;
+    return tempDescElem?.textContent;
   }
 
   private createStep() {

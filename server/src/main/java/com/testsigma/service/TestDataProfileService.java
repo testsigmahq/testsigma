@@ -19,8 +19,8 @@ import com.testsigma.event.EventType;
 import com.testsigma.event.TestDataEvent;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.mapper.TestDataProfileMapper;
-import com.testsigma.model.Element;
 import com.testsigma.model.TestData;
+import com.testsigma.model.TestDataSet;
 import com.testsigma.repository.TestDataProfileRepository;
 import com.testsigma.specification.SearchCriteria;
 import com.testsigma.specification.SearchOperation;
@@ -28,6 +28,7 @@ import com.testsigma.specification.TestDataProfileSpecificationsBuilder;
 import com.testsigma.web.request.TestDataSetRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -49,11 +50,18 @@ import java.util.Optional;
 public class TestDataProfileService extends XMLExportImportService<TestData> {
   private final TestDataProfileRepository testDataProfileRepository;
   private final ApplicationEventPublisher applicationEventPublisher;
+  private final TestDataSetService testDataSetService;
   private final TestDataProfileMapper mapper;
 
   public TestData find(Long id) throws ResourceNotFoundException {
     return testDataProfileRepository.findById(id)
       .orElseThrow(() -> new ResourceNotFoundException("Test Data Not Found with id: " + id));
+  }
+
+  public TestData findByTestDataNameAndVersionId(String testDataName, Long versionId) throws ResourceNotFoundException {
+    return testDataProfileRepository.findByTestDataNameAndVersionId(testDataName, versionId)
+            .orElseThrow(() -> new ResourceNotFoundException(
+                    "Test Data Not Found with profileName: " + testDataName + " in version Id:" + versionId));
   }
 
   public TestData findTestDataByTestCaseId(Long testCaseId) throws ResourceNotFoundException {
@@ -70,15 +78,31 @@ public class TestDataProfileService extends XMLExportImportService<TestData> {
   }
 
   public TestData create(TestData testData) {
+    List<TestDataSet> dataSets = testData.getTempTestData();
+    testData.setIsMigrated(true);
     testData = this.testDataProfileRepository.save(testData);
+    saveTestDataSets(testData.getId(), dataSets);
     publishEvent(testData, EventType.CREATE);
     return testData;
   }
 
+  private void saveTestDataSets(Long testDataId, List<TestDataSet> dataSets){
+    Long position = 0L;
+    for(TestDataSet dataSet: dataSets){
+      dataSet.setTestDataProfileId(testDataId);
+      dataSet.setPosition(position);
+      this.testDataSetService.create(dataSet);
+      position++;
+    }
+  }
+
   public TestData update(TestData testData) {
     Map<String, String> renamedColumns = testData.getRenamedColumns();
+    List<TestDataSet> dataSets = new ArrayList<>(testData.getData());
+    testData.setIsMigrated(true);
     testData = testDataProfileRepository.save(testData);
     testData.setRenamedColumns(renamedColumns);
+    saveTestDataSets(testData.getId(), dataSets);
     publishEvent(testData, EventType.UPDATE);
     return testData;
   }
@@ -148,6 +172,29 @@ public class TestDataProfileService extends XMLExportImportService<TestData> {
     log.debug("import process for Test Data completed");
   }
 
+  public TestData encryptPasswords(TestData testData){
+    if (testData.getPasswords() != null && testData.getPasswords().size() > 0) {
+      List<TestDataSet> sets = new ArrayList<>();
+      List<TestDataSet> testDataSets = testData.getTempTestData();
+      for (TestDataSet set : testDataSets) {
+        encryptPasswordsInTestDataSet(set, testData.getPasswords());
+        sets.add(set);
+      }
+      testData.setTempTestData(sets);
+    }
+    return testData;
+  }
+
+  private void encryptPasswordsInTestDataSet(TestDataSet set, List<String> passwords) {
+    for (String password : passwords) {
+      JSONObject data = set.getData();
+      if (data.has(password)) {
+        data.put(password, data.getString(password));
+      }
+      set.setData(data);
+    }
+  }
+
   @Override
   public List<TestData> readEntityListFromXmlData(String xmlData, XmlMapper xmlMapper, BackupDTO importDTO) throws JsonProcessingException {
     if (importDTO.getIsCloudImport()) {
@@ -185,7 +232,14 @@ public class TestDataProfileService extends XMLExportImportService<TestData> {
 
   @Override
   public TestData save(TestData testData) {
-    return testDataProfileRepository.save(testData);
+    List<TestDataSet> dataSets = testData.getTempTestData();
+    if(testData.getTempTestData()==null){
+      testData.setTempTestData(dataSets);
+    }
+    testData.setIsMigrated(true);
+    testData = testDataProfileRepository.save(testData);
+    saveTestDataSets(testData.getId(), dataSets);
+    return testData;
   }
 
   @Override

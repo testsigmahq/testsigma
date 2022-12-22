@@ -50,6 +50,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -150,7 +151,7 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
       for (UploadVersion version : versions) {
         if (version.getUploadType() == UploadType.IPA) {
           ProvisioningProfileUpload profileUpload = profileUploadService.findByDeviceIdAndUploadId(deviceId,
-            version.getUploadId());
+            version.getUploadId()).get();
           version.setSigned((profileUpload != null));
         }
       }
@@ -169,16 +170,15 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
     File uploadedFile = copyUploadToTempFile(uploadedMultipartFile);
     uploadVersion.setFileSize(uploadedMultipartFile.getSize());
     uploadVersion.setFileName(ObjectUtils.defaultIfNull(uploadedMultipartFile.getOriginalFilename(), "tmp")
-      .replaceAll("\\s+", "_"));
+      .replaceAll("\\+", "_"));
     uploadVersion = this.uploadVersionRepository.save(uploadVersion);
     uploadFile(uploadedFile, uploadVersion);
-    this.uploadVersionRepository.save(uploadVersion);
     return uploadVersion;
   }
 
   private File copyUploadToTempFile(MultipartFile uploadedFile) throws TestsigmaException {
     try {
-      String fileName = uploadedFile.getOriginalFilename().replaceAll("\\s+", "_");
+      String fileName = uploadedFile.getOriginalFilename().replaceAll("\\+", "_");
       String fileBaseName = FilenameUtils.getBaseName(fileName);
       String extension = FilenameUtils.getExtension(fileName);
       if (StringUtils.isNotBlank(extension)) {
@@ -224,7 +224,9 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
 
   public Specification<UploadVersion> getExportXmlSpecification(BackupDTO backupDTO) throws ResourceNotFoundException {
     WorkspaceVersion applicationVersion = workspaceVersionService.find(backupDTO.getWorkspaceVersionId());
-    SearchCriteria criteria = new SearchCriteria("workspaceId", SearchOperation.EQUALITY, applicationVersion.getWorkspaceId());
+    List<Long> uploads =
+            uploadService.findAllByApplicationId(applicationVersion.getWorkspaceId()).stream().map(upload -> upload.getId()).collect(Collectors.toList());
+    SearchCriteria criteria = new SearchCriteria("uploadId", SearchOperation.IN, uploads);
     List<SearchCriteria> params = new ArrayList<>();
     params.add(criteria);
     UploadVersionSpecificationsBuilder uploadSpecificationsBuilder = new UploadVersionSpecificationsBuilder();
@@ -284,11 +286,12 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
   UploadVersion processAfterSave(Optional<UploadVersion> previous, UploadVersion present, UploadVersion toImport, BackupDTO importDTO) {
     try {
       String originalFileName = ObjectUtils.defaultIfNull(present.getFileName(), "tmp")
-              .replaceAll("\\s+", "_");
+              .replaceAll("\\+", "_");
       String downloadPath = Files.createTempDirectory(present.getFileName()).toFile().getAbsolutePath() + "/" + originalFileName;
-      client.downloadRedirectFile(present.getDownloadURL(), downloadPath, new HashMap<>());
-      uploadFile(new File(downloadPath), present);
+      client.downloadRedirectFile(toImport.getDownloadURL(), downloadPath, new HashMap<>());
       this.updateUploadWithLatestUploadVersion(present, present.getUploadId());
+      uploadFile(new File(downloadPath), present);
+      this.uploadVersionRepository.save(present);
     } catch (IOException | TestsigmaException e) {
       log.error("Failed to upload file", e.getMessage(), e);
     }
@@ -308,9 +311,9 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
     } else {
       present.setId(null);
     }
-    Upload importedUpload = uploadService.findByImportedIdAndWorkspaceId(present.getUploadId(),importDTO.getWorkspaceId());
-    present.setUploadId(importedUpload.getId());
-    present.setUpload(importedUpload);
+    Optional<Upload> importedUpload = uploadService.findByImportedIdAndWorkspaceId(present.getUploadId(),importDTO.getWorkspaceId());
+    present.setUploadId(importedUpload.get().getId());
+    present.setUpload(importedUpload.get());
     return present;
   }
 
@@ -336,7 +339,10 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
 
   @Override
   public Optional<UploadVersion> findImportedEntityHavingSameName(Optional<UploadVersion> previous, UploadVersion current, BackupDTO importDTO) throws ResourceNotFoundException {
-    return uploadVersionRepository.findByNameAndUploadId(current.getName(), current.getImportedId());
+   Optional<Upload> upload= uploadService.findByImportedIdAndWorkspaceId(current.getUploadId(), importDTO.getWorkspaceId());
+   if (upload.isPresent())
+    return uploadVersionRepository.findByNameAndUploadId(current.getName(), upload.get().getId());
+   else return Optional.empty();
   }
 
   @Override

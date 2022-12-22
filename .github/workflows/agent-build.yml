@@ -1,0 +1,47 @@
+name: 'Agent Zip Build'
+on:
+  workflow_dispatch:
+    inputs:
+      buildType:
+        type: choice
+        description: 'Build Type'
+        required: true
+        options: 
+          - Testing
+          - Release
+      buildVersion:
+        description: 'Build Version'
+        required: true
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+      - name: Downloading Packages
+        run: |
+          mkdir $HOME/.testsigma_os
+          aws s3 cp s3://hybrid-staging.testsigma.com/testsigma_os $HOME/.testsigma_os --recursive
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: 'us-east-1'
+          AWS_DEFAULT_OUTPUT: json
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Building 
+        run: |
+          if [[ "${{ github.event.inputs.buildType }}" == "Testing" ]]; then
+            bash agent/scripts/build.sh --VERSION=v${{ github.event.inputs.buildVersion }} --PUBLISH_TO_GIT=false
+          fi
+          if [[ "${{ github.event.inputs.buildType }}" == "Release" ]]; then
+            bash agent/scripts/build.sh --VERSION=v${{ github.event.inputs.buildVersion }} --PUBLISH_TO_GIT=true
+          fi
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: 'us-east-1'
+          AWS_DEFAULT_OUTPUT: json
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

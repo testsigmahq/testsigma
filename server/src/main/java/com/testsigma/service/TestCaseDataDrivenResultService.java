@@ -10,6 +10,7 @@
 package com.testsigma.service;
 
 import com.testsigma.mapper.TestCaseDataDrivenResultMapper;
+import com.testsigma.model.ResultConstant;
 import com.testsigma.model.TestCaseDataDrivenResult;
 import com.testsigma.model.TestDataSet;
 import com.testsigma.repository.TestCaseDataDrivenResultRepository;
@@ -22,6 +23,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Log4j2
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -32,6 +35,14 @@ public class TestCaseDataDrivenResultService {
 
   public TestCaseDataDrivenResult find(Long id) {
     return testCaseDataDrivenResultRepository.findById(id).orElse(null);
+  }
+
+  public List<TestCaseDataDrivenResult> findByTestCaseResultIdAndResultNot(Long testCaseResultId, ResultConstant result){
+    return testCaseDataDrivenResultRepository.findByTestCaseResultIdAndResultNot(testCaseResultId, result);
+  }
+
+  public List<TestCaseDataDrivenResult> findAllByTestCaseResultId(Long testCaseResultId){
+    return testCaseDataDrivenResultRepository.findAllByTestCaseResultId(testCaseResultId);
   }
 
   public void deleteByIterationResultId(Long deleteByTestCaseResultId) {

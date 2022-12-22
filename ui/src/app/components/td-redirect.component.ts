@@ -7,6 +7,7 @@ import {NotificationsService} from "angular2-notifications";
 import {TranslateService} from "@ngx-translate/core";
 import {Subscription} from 'rxjs';
 import {WorkspaceVersionService} from "../shared/services/workspace-version.service";
+import {NavigationService} from "../services/navigation.service";
 
 @Component({
   selector: 'app-td-redirect',
@@ -20,6 +21,7 @@ export class TdRedirectComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private navigation:NavigationService,
     private workspaceVersionService: WorkspaceVersionService,
     private userPreferenceService: UserPreferenceService) {
     this.routerSub = this.router.events.subscribe((val) => {
@@ -33,10 +35,10 @@ export class TdRedirectComponent implements OnInit, OnDestroy {
   redirectToVersion() {
     this.userPreferenceService.show().subscribe(res => {
       if (res?.versionId)
-        this.router.navigate(['/td', res.versionId]);
+        this.navigation.replaceUrl(['/td', res.versionId]);
       else if(res?.projectId){
         this.workspaceVersionService.findAll("projectId:" + res.projectId).subscribe(versions => {
-          this.router.navigate(['/td', versions.content[0].id]);
+          this.navigation.replaceUrl(['/td', versions.content[0].id])
         }, ()=>{
           console.log('versions loading has some issues in project ::'+res.projectId+' so switching to default project');
           this.redirectToDemoProject();
@@ -49,7 +51,7 @@ export class TdRedirectComponent implements OnInit, OnDestroy {
 
   redirectToDemoProject() {
     this.workspaceVersionService.findAll("isDemo:true").subscribe(versions => {
-      this.router.navigate(['/td', versions.content[0].id]);
+      this.navigation.replaceUrl(['/td', versions.content[0].id])
     })
   }
 

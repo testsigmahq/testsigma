@@ -63,7 +63,7 @@ public class TestPlanResultSpecification extends BaseSpecification<TestPlanResul
         }
         return ExecutionTriggeredType.valueOf(value.toString());
       default:
-        return value;
+        return super.getEnumValueIfEnum(key, value, op);
     }
   }
 

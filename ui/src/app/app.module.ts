@@ -111,6 +111,7 @@ import 'codemirror/addon/fold/foldcode';
 import 'codemirror/addon/fold/foldgutter';
 import 'codemirror/addon/fold/brace-fold';
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {TestDataImportComponent} from "./components/webcomponents/test-data-import.component";
 import {CreateComponent as TestDataCreateComponent} from './components/data/create.component';
 import {DetailsComponent as TestDataDetailsComponent} from './components/data/details.component';
 import {EditComponent as TestDataEditComponent} from './components/data/edit.component';
@@ -262,6 +263,27 @@ import {SaveWorkWarningComponent} from "./agents/components/webcomponents/save-w
 import {AppSourceContainerComponent} from "./agents/components/webcomponents/app-source-container.component";
 import {MobileStepRecorderComponent} from "./agents/components/webcomponents/mobile-step-recorder.component";
 import {MobileInspectionComponent} from "./agents/components/webcomponents/mobile-inspection.component";
+import { TestPlanLabTypeDropdownComponent } from './components/webcomponents/test-plan-lab-type-dropdown.component';
+import {VersionSelectionComponent} from "./components/webcomponents/version-selection.component.component";
+import { TestPlanSuiteMachineSelectionComponent } from './components/plans/test-plan-editor/test-plan-suite-machine-selection.component';
+import { CreateMachineButtonComponent } from './components/plans/test-plan-editor/create-machine-button.component';
+import { MapTestMachineFormComponent } from './components/plans/test-plan-editor/map-test-machine-form.component';
+import { TestPlanEnvTagsComponent } from './components/plans/test-plan-editor/test-plan-env-tags.component';
+import { TestPlanMachineInfoComponent } from './components/plans/test-plan-editor/test-plan-machine-info.component';
+import { TestPlanMachineSelectionFormComponent } from './components/plans/test-plan-editor/test-plan-machine-selection-form.component';
+import { TestPlanMachinesListItemComponent } from './components/plans/test-plan-editor/test-plan-machines-list-item.component';
+import { TestPlanSuiteFilterComponent } from './components/plans/test-plan-editor/test-plan-suite-filter.component';
+import { TestSuiteListItemComponent } from './components/plans/test-plan-editor/test-suite-list-item.component';
+import { FormHeaderComponent } from './components/plans/form-header.component';
+import {ActionTestDataRuntimeVariableSuggestionComponent} from './components/webcomponents/action-test-data-runtime-variable-suggestion.component';
+import {ReRunPopupComponent} from "./agents/components/webcomponents/re-run-popup.component";
+import {ReRunFormComponent} from "./agents/components/webcomponents/re-run-form.component";
+import {TestCaseMultiSelectComponent} from "./components/webcomponents/test-case-multi-select.component";
+import { FilterFormComponent } from './components/suites/filter-form.component';
+import { FilterFormComponent as ResultFilterFormComponent} from './components/results/filter-form.component';
+import { FilterFormComponent as PlanFilterComponet} from './components/plans/filter-form.component';
+import {XrayKeyWarningComponent} from './agents/components/webcomponents/xray-key-warning-component';
+import {XrayComponent} from './components/xraycomponent/xray.component';
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -363,6 +385,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     TestStepHelpSamplesComponent,
     ElementAddTagComponent,
     TestDataProfilesListComponent,
+    TestDataImportComponent,
     DryRunFormComponent,
     TestDataCreateComponent,
     TestDataDetailsComponent,
@@ -503,7 +526,29 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     TestSuitePrerequisiteChangeComponent,
     TestCasePrerequisiteChangeComponent,
     ImportFormComponent,
-    ImportGuideLinesWarningComponent
+    ImportGuideLinesWarningComponent,
+    TestPlanLabTypeDropdownComponent,
+    SelectTestLabComponent,
+    VersionSelectionComponent,
+    TestPlanSuiteMachineSelectionComponent,
+    CreateMachineButtonComponent,
+    MapTestMachineFormComponent,
+    TestPlanEnvTagsComponent,
+    TestPlanMachineInfoComponent,
+    TestPlanMachineSelectionFormComponent,
+    TestPlanMachinesListItemComponent,
+    TestPlanSuiteFilterComponent,
+    TestSuiteListItemComponent,
+    FormHeaderComponent,
+    ActionTestDataRuntimeVariableSuggestionComponent,
+    ReRunPopupComponent,
+    ReRunFormComponent,
+    TestCaseMultiSelectComponent,
+    FilterFormComponent,
+    ResultFilterFormComponent,
+    PlanFilterComponet,
+    XrayKeyWarningComponent,
+    XrayComponent
   ],
   imports: [
     BrowserModule,

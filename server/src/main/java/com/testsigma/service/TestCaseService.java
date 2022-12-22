@@ -79,6 +79,10 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
     return testCaseRepository.findAllByWorkspaceVersionId(workspaceVersionId);
   }
 
+  public Page<TestCase> findAllByWorkspaceVersionIdAndIsStepGroupAndStatus(Long workspaceVersionId, Boolean isStepGroup, TestCaseStatus status, Pageable pageable) {
+    return testCaseRepository.findAllByWorkspaceVersionIdAndIsStepGroupAndStatus(workspaceVersionId, isStepGroup, status, pageable);
+  }
+
   public List<TestCase> findAllBySuiteId(Long suiteId) {
     return this.testCaseRepository.findAllBySuiteId(suiteId);
   }
@@ -119,7 +123,7 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
       agentExecutionService.setTestPlan(testPlan);
       agentExecutionService.checkTestCaseIsInReadyState(testCase);
       agentExecutionService
-        .loadTestCase(testDataSetName, testCaseEntityDTO, testPlan, workspace);
+        .loadTestCase(testDataSetName, testCaseEntityDTO, testPlan, testDevice, workspace);
     } catch (TestsigmaNoMinsAvailableException e) {
       log.debug("======= Testcase Error=========");
       log.error(e.getMessage(), e);
@@ -275,7 +279,7 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
     return this.testCaseRepository.breakUpByType(versionId);
   }
 
-  public TestCase copy(TestCaseCopyRequest testCaseRequest) throws ResourceNotFoundException, SQLException {
+  public TestCase copy(TestCaseCopyRequest testCaseRequest) throws TestsigmaException, SQLException {
     TestCase parentCase = this.find(testCaseRequest.getTestCaseId());
     TestCase testCase = this.testCaseMapper.copy(parentCase);
     testCase.setStatus(parentCase.getStatus());
@@ -315,14 +319,41 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
         TestStep prerequiste = parentStepIds.get(parentStep != null ? parent.getPreRequisiteStepId() : null);
         step.setPreRequisiteStepId(prerequiste != null ? prerequiste.getId() : null);
         step.setId(null);
+        TestStep testDataProfileStep = parentStepIds.get(parentStep != null ? step.getTestDataProfileStepId() : null);
+        if(testDataProfileStep != null)
+          step.setTestDataProfileStepId(testDataProfileStep.getId());
         step.setParentStep(parentStep);
         step = this.testStepService.create(step);
         parentStepIds.put(parent.getId(), step);
         newSteps.add(step);
         position++;
       }
+      if(testCaseRequest.getIsReplace() != null && testCaseRequest.getIsReplace().booleanValue()) {
+        createAndReplace(steps, testCase, parentCase);
+      }
     }
     return testCase;
+  }
+
+  private void createAndReplace(List<TestStep> steps, TestCase testCase, TestCase currentTestCase) throws TestsigmaException, SQLException {
+    TestStep step = new TestStep();
+    step.setPosition(steps.get(0).getPosition());
+    step.setTestCaseId(currentTestCase.getId());
+    step.setDisabled(false);
+    step.setPriority(TestStepPriority.MAJOR);
+    step.setParentId(steps.get(0).getParentId() != null ? steps.get(0).getParentId() : null);
+    step.setType(TestStepType.STEP_GROUP);
+    step.setStepGroupId(testCase.getId());
+    step.setId(null);
+    if (step.getConditionType() != null && TestStepConditionType.CONDITION_ELSE_IF.equals(step.getConditionType())
+            && step.getParentId() == null) {
+      step.setConditionType(TestStepConditionType.CONDITION_IF);
+    }
+    this.testStepService.create(step);
+    for (TestStep parent : steps) {
+      TestStep destroyStep = this.testStepService.find(parent.getId());
+      this.testStepService.destroy(destroyStep);
+    }
   }
 
   private List<TestStep> fetchTestSteps(TestCase testCase, List<Long> stepIds) {

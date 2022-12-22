@@ -83,6 +83,13 @@ public class AbstractTestSuite implements Serializable {
   @EqualsAndHashCode.Exclude
   @ToString.Exclude
   private TestSuiteResult lastRun;
+
+  @OneToMany(mappedBy = "testSuite")
+  @Fetch(value = FetchMode.SELECT)
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  private List<EntityExternalMapping> entityExternalMapping;
+
   @Transient
   private List<String> tags;
 

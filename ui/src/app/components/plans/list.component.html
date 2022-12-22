@@ -20,7 +20,7 @@
     </li>
   </ul>
   <div
-    *ngIf="testPlans?.content?.length || searchQuery.length"
+    *ngIf="testPlans?.content?.length || searchQuery.length || query?.length"
     class="align-items-center ml-auto d-flex flex-row">
     <app-toggle-search-button
       (searchAction)="search($event)"></app-toggle-search-button>
@@ -34,6 +34,19 @@
       [routerLink]="['/td', versionId, 'plans','new']"
       class="theme-btn-primary ml-14"
       [textContent]="'+ '+('test_plan.title'| translate)">
+    </button>
+    <app-sort-by-button
+      class="pr-15 mt-n2" *ngIf="testPlans?.totalElements"
+      [sortByColumns]="sortByColumns"
+      [sortedBy]="sortedBy"
+      [direction]="direction"
+      [translatePreFix]="'test_suites.list.sort_by.'"
+      (sortAction)="sortBy($event.sortBy, $event.direction)"></app-sort-by-button>
+    <button
+      (click)="openFilter()"
+      [matTooltip]="'hint.message.common.filter' | translate"
+      class="btn icon-btn border-rds-2 filter-icon-with-reset mr-15 ml-14">
+      <i class="filter-icon" [class.filtered]="!!this.query"></i>
     </button>
     <div class="pl-15 theme-border-l">
       <app-pagination
@@ -61,8 +74,11 @@
       </span>
     </div>
     <div
-      class="ts-col-25 px-10"
-      [translate]="'test_plan.lab_type'">
+      class="ts-col-25 px-10">
+    <app-inline-sort
+      [ascending]="sortedBy!='testPlanType'? undefined : direction == ',asc'"
+      [heading]="'test_plan.lab_type'"
+      (click)="sortBy('testPlanType', ((sortedBy!='testPlanType' || direction == ',desc')?',asc':',desc'))"></app-inline-sort>
     </div>
     <div
       class="ts-col-20 d-flex">

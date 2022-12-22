@@ -14,7 +14,9 @@ import com.testsigma.model.*;
 import com.testsigma.service.AgentExecutionService;
 import com.testsigma.service.TestPlanResultService;
 import com.testsigma.service.TestPlanService;
+import com.testsigma.service.XrayCloudService;
 import com.testsigma.specification.TestPlanResultSpecificationsBuilder;
+import com.testsigma.util.XLSUtil;
 import com.testsigma.web.request.TestPlanResultRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -30,6 +32,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,9 +81,9 @@ public class TestPlanResultsController {
     agentExecutionService.setRunTimeData(runTimeData);
     if (testPlanResultRequest.getReRunType() != null
       && testPlanResultRequest.getReRunType() != ReRunType.NONE
-      && testPlanResultRequest.getParenttestPlanResultId() != null) {
+      && testPlanResultRequest.getReRunParentId() != null) {
       agentExecutionService.setReRunType(testPlanResultRequest.getReRunType());
-      agentExecutionService.setParentTestPlanResultId(testPlanResultRequest.getParenttestPlanResultId());
+      agentExecutionService.setParentTestPlanResultId(testPlanResultRequest.getReRunParentId());
 
     }
     agentExecutionService.start();
@@ -165,6 +169,19 @@ public class TestPlanResultsController {
     TestPlanResult childExecutionResult = testPlanResultService.find(executionId);
     TestPlanResult firstParentResult = testPlanResultService.getFirstParentResult(childExecutionResult);
     return testPlanResultMapper.mapTo(firstParentResult);
+  }
+
+  @GetMapping(value = "/export/{testPlanId}/runs/{runId}")
+  @PreAuthorize("hasPermission('RESULTS','READ')")
+  public void exportRunResults(
+          HttpServletRequest request,
+          @PathVariable(value = "testPlanId") Long testPlanId,
+          @PathVariable(value = "runId") Long runId,
+          HttpServletResponse response) throws ResourceNotFoundException {
+    TestPlanResult testPlanResult = testPlanResultService.findByIdAndtestPlanId(runId, testPlanId);
+    XLSUtil wrapper = new XLSUtil();
+    testPlanResultService.export(testPlanResult, wrapper, false);
+    wrapper.writeToStream(request, response, testPlanResult.getTestPlan().getName());
   }
 
 }

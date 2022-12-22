@@ -38,6 +38,7 @@ export class UrlConstantsService {
   public workspacesUrl = this.apiBase + '/workspaces';
   public testCaseTagsUrl = this.apiBase + '/testcase_tags';
   public testSuiteTagsUrl = this.apiBase + '/testsuite_tags';
+  public testPlanTagsUrl = this.apiBase + '/test_plan_tags';
   public elementTagsUrl = this.apiBase + "/element_tags"
   public screenshotComparisonsUrl = this.apiBase + '/screenshot_comparisons';
   public testStepScreenshotsUrl = this.apiBase + '/test_step_screenshots';
@@ -46,11 +47,13 @@ export class UrlConstantsService {
   public integrationsUrl = this.apiBase + "/settings/integrations";
   public externalMappingsUrl = this.apiBase + "/external_mappings";
   public dataProfileUrl = this.apiBase + '/test_data';
+  public dataSetsUrl = this.apiBase + '/test_data_sets';
   public elementFilterUrl = this.apiBase + '/element_filters';
   public testCaseFilterUrl = this.apiBase + '/test_case_filters';
   public stepGroupFilterUrl = this.apiBase + '/step_group_filters';
   public scheduledPlanUrl = this.apiBase + '/schedule_test_plans';
   public testStepsUlr = this.apiBase + '/test_steps';
+  public linkedTestSteps = this.testStepsUlr +'/linked_test_steps';
   public suggestionEngineUrl = this.apiBase + "/suggestion_results";
   public testDataFunctionsUrl = this.apiBase + "/default_data_generators";
   public testSuitesUrl= this.apiBase+"/test_suites";

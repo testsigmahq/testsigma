@@ -36,7 +36,6 @@ public class TestPlanRequest {
   @JsonProperty("onTestCasePreRequisiteFail")
   PreRequisiteAction onTestcasePreRequisiteFail;
   RecoverAction onStepPreRequisiteFail;
-  TestPlanLabType testPlanLabType;
   TestPlanType testPlanType;
   Timestamp createdDate;
   Timestamp updatedDate;
@@ -45,4 +44,5 @@ public class TestPlanRequest {
   ReRunType reRunType;
   Boolean retrySessionCreation = false;
   Integer retrySessionCreationTimeout;
+  List<String> tags;
 }

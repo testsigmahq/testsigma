@@ -9,6 +9,7 @@
 
 package com.testsigma.web.request;
 
+import com.testsigma.model.SupportedDeviceType;
 import com.testsigma.model.UploadType;
 import lombok.Data;
 import javax.validation.constraints.NotEmpty;
@@ -23,5 +24,6 @@ public class UploadRequest {
   @NotNull UploadType uploadType;
   @Nullable MultipartFile fileContent;
   @NotNull Long workspaceId;
+  SupportedDeviceType supportedDeviceType;
   String version;
 }

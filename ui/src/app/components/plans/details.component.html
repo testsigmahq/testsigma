@@ -75,11 +75,18 @@
 <!--          [translate]="'execution.recover_actions.re_run_on_failure.'+(testPlan?.reRunType ? testPlan?.reRunType : 'NONE')"></div>-->
 <!--      </div>-->
 <!--    </div>-->
-    <div class="details-items ts-col-100 h-40">
+    <div class="details-items ts-col-20 pr-20">
       <label class="details-title" [translate]="'test_plans.details.description'"></label>
       <div class="details-info">
         <div class="d-flex" [innerHTML]="testPlan?.description || '-'"></div>
       </div>
+    </div>
+    <div class="details-items ts-col-80 h-40" *ngIf="testPlan?.id">
+      <label class="details-title" [translate]="'testcase.summary.labels'"></label>
+      <app-list-tags
+        [editable]="true"
+        [entityId]="testPlan?.id"
+        [service]="testPlanTagService"></app-list-tags>
     </div>
   </div>
 </div>

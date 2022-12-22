@@ -10,16 +10,19 @@
 package com.testsigma.dto.export;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.testsigma.annotation.JsonListRootName;
 import com.testsigma.model.AppPathType;
+import com.testsigma.model.TestPlanLabType;
 import lombok.Data;
 
 import java.sql.Timestamp;
 import java.util.List;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonListRootName(name = "test-devices")
 @JsonRootName(value = "test-devices")
 public class TestDeviceXMLDTO extends BaseXMLDTO {
@@ -59,6 +62,8 @@ public class TestDeviceXMLDTO extends BaseXMLDTO {
   private AppPathType appPathType;
   @JsonProperty("capabilities")
   private String capabilities;
+  @JsonProperty("execution-lab-type")
+  private TestPlanLabType testPlanLabType;
   @JsonProperty("disable")
   private Boolean disable = false;
   @JsonProperty("created-date")

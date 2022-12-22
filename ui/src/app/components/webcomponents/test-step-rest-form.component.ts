@@ -23,6 +23,7 @@ import {TestDataService} from "../../services/test-data.service";
 export class TestStepRestFormComponent extends BaseComponent implements OnInit {
   @Input('testStep') testStep: TestStep;
   @Input('stepForm') restStepForm: FormGroup;
+  @Input('indentation') indentation:number;
   @Output('onCancel') onCancel = new EventEmitter<void>();
   @Output('onSave') onSave = new EventEmitter<TestStep>();
   @Output('onSubmitted') onSubmitted = new EventEmitter<void>();

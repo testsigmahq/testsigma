@@ -76,8 +76,29 @@ public class ElementsController {
 
   @RequestMapping(method = RequestMethod.GET)
   public Page<ElementDTO> index(ElementSpecificationsBuilder builder, Pageable pageable) {
-    Specification<Element> spec = builder.build();
-    Page<Element> elements = elementService.findAll(spec, pageable);
+    Long applicationVersion = null;
+    String name = "";
+    String screenName = "";
+    String previousStepElementName = null;
+    for(SearchCriteria param : builder.params) {
+      if(param.getKey().equals("workspaceVersionId")) {
+        applicationVersion = Long.parseLong(param.getValue().toString());
+      } else if(param.getKey().equals("name")) {
+        name =  param.getValue().toString();
+      } else if(param.getKey().equals("screenName")) {
+        screenName =  param.getValue().toString();
+      } else if(param.getKey().equals("previousStepElementName")) {
+        previousStepElementName = param.getValue().toString();
+      }
+    }
+
+    Page<Element> elements;
+    if(previousStepElementName != null) {
+      elements = elementService.findAllSortedByPreviousStepElement(pageable, applicationVersion, name, screenName, previousStepElementName);
+    } else {
+      Specification<Element> spec = builder.build();
+      elements = elementService.findAll(spec, pageable);
+    }
     List<ElementDTO> elementDTOS = elementMapper.map(elements.getContent());
     return new PageImpl<>(elementDTOS, pageable, elements.getTotalElements());
   }
@@ -201,6 +222,7 @@ public class ElementsController {
     if (names.indexOf("element") > -1) {
       params.remove(new SearchCriteria("name", SearchOperation.IN, names));
       params.remove(new SearchCriteria("locatorValue", SearchOperation.IN, elements));
+      params.add(new SearchCriteria("name", SearchOperation.EQUALITY, "ui identifier"));
       params.add(new SearchCriteria("name", SearchOperation.EQUALITY, "element"));
       builder.setParams(params);
       spec = builder.build();
@@ -208,6 +230,19 @@ public class ElementsController {
       if (placeholderElement.size() == 0 || (placeholderElement.size() > 0 && placeholderElement.get(0).getName().isEmpty())) {
         ElementDTO placeholderDTO = new ElementDTO();
         placeholderDTO.setName("element");
+        dtos.add(placeholderDTO);
+      }
+    }
+    if (names.indexOf("ui identifier") > -1) {
+      params.remove(new SearchCriteria("name", SearchOperation.IN, names));
+      params.remove(new SearchCriteria("locatorValue", SearchOperation.IN, elements));
+      params.add(new SearchCriteria("name", SearchOperation.EQUALITY, "ui identifier"));
+      builder.setParams(params);
+      spec = builder.build();
+      List<Element> placeholderElement = elementService.findAll(spec, Pageable.unpaged()).getContent();
+      if (placeholderElement.size() == 0 || (placeholderElement.size() > 0 && placeholderElement.get(0).getName().isEmpty())) {
+        ElementDTO placeholderDTO = new ElementDTO();
+        placeholderDTO.setName("ui identifier");
         dtos.add(placeholderDTO);
       }
     }

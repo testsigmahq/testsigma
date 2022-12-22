@@ -72,6 +72,11 @@ public interface TestStepRepository extends JpaRepository<TestStep, Long> {
   void updateTopLevelTestDataParameter(@Param("newTestDataParameter") String newTestDataParameter,
                                        @Param("oldTestDataParameter") String oldTestDataParameter,
                                        @Param("testDataId") Long testDataId);
+  @Query(value = "update test_steps step set test_data=:newTestDataParameter where test_data_type=\"parameter\" and test_data=:oldTestDataParameter and for_loop_test_data_id is null  and step.test_data_profile_step_id=:testDataProfileStepId", nativeQuery = true)
+  @Modifying
+  void updateChildStepsTestDataParameterUsingTestDataProfileId(@Param("newTestDataParameter") String newTestDataParameter,
+                                                               @Param("oldTestDataParameter") String oldTestDataParameter,
+                                                               @Param("testDataProfileStepId") Long testDataProfileStepId);
 
   @Query(value = "update  test_steps step set element=:newName where step.element=:oldName", nativeQuery = true)
   @Modifying
@@ -101,9 +106,21 @@ public interface TestStepRepository extends JpaRepository<TestStep, Long> {
 
   List<TestStep> findAllByTestCaseIdAndDisabledIsNotAndStepGroupIdIsNotNullOrderByPositionAsc(Long testCaseId, boolean notDisabled);
 
-    Optional<TestStep> findByTestCaseIdInAndImportedId(List<Long> id, Long id1);
+  Optional<TestStep> findByTestCaseIdInAndImportedId(List<Long> id, Long id1);
 
     List<TestStep> findAllByTestCaseIdInOrderByPositionAsc(List<Long> testCaseIds);
+    List<TestStep> findAllByTestCaseIdAndPreRequisiteStepId(Long testCaseId,Long prerequisiteId);
+    List<TestStep> findAllByTestCaseIdAndPreRequisiteStepIdNotNull(Long testCaseId);
+
 
   Optional<TestStep> findAllByTestCaseIdAndImportedId(Long workspaceVersionId, Long importedId);
+
+  @Query(value = "SELECT testStep from TestStep testStep JOIN TestCase tcase on tcase.id = testStep.testCaseId JOIN RestStep rstep on rstep.stepId = testStep.id  where tcase.workspaceVersionId = :versionId and (rstep.headerRuntimeData IS NOT NULL OR rstep.bodyRuntimeData IS NOT NULL)")
+  List<TestStep> getAllRestStepWithRuntime(@Param("versionId") Long versionId);
+
+  @Query(value = "SELECT testStep from TestStep testStep JOIN testStep.testCase AS testCase " +
+          "ON  testStep.testCaseId = testCase.id AND testCase.workspaceVersionId = :workspaceVersionId " +
+          "WHERE  testStep.naturalTextActionId IN (:naturalTextActionIds)")
+  List<TestStep> findAllByWorkspaceVersionIdAndNaturalTextActionId(@Param(value = "workspaceVersionId") Long workspaceVersionId,
+                                                                   @Param(value = "naturalTextActionIds") List<Integer> naturalTextActionIds);
 }

@@ -5,6 +5,7 @@ import {TranslateService} from "@ngx-translate/core";
 import {ElementFilterService} from "../../services/element-filter.service";
 import {BaseComponent} from "../../shared/components/base.component";
 import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
+import {NavigationService} from "../../services/navigation.service";
 
 @Component({
   selector: 'app-td-redirect',
@@ -20,6 +21,7 @@ export class ElementsRedirectComponent extends BaseComponent implements OnInit {
     public notificationsService: NotificationsService,
     public translate: TranslateService,
     private route: ActivatedRoute,
+    private navigation:NavigationService,
     private elementFilterService: ElementFilterService) {
     super(authGuard, notificationsService, translate);
   }
@@ -29,7 +31,7 @@ export class ElementsRedirectComponent extends BaseComponent implements OnInit {
       this.pushToParent(this.route, params);
       if (this.router.url.endsWith("/elements")) {
         this.elementFilterService.findAll(params.versionId).subscribe(res => {
-          this.router.navigate(['/td', params.versionId, 'elements', 'filter', res.content.find(filter => filter.isDefault).id]);
+          this.navigation.replaceUrl(['/td', params.versionId, 'elements', 'filter', res.content.find(filter => filter.isDefault).id])
         });
       }
     })

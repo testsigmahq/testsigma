@@ -21,7 +21,7 @@ import {TestCaseService} from "../../services/test-case.service";
 })
 export class TestCasePrioritiesComponent extends BaseComponent implements OnInit {
   public testCasePriorities: InfiniteScrollableDataSource;
-  public rowNameControl = new FormControl('', [Validators.required]);
+  public rowNameControl = new FormControl('', [Validators.required, this.noWhitespaceValidator,Validators.maxLength(250),Validators.minLength(4)]);
   public editMode = false;
   public submitted = false;
   public newRow = false;
@@ -123,7 +123,21 @@ export class TestCasePrioritiesComponent extends BaseComponent implements OnInit
 
   updateTestCasePriority(testCasePriority: TestCasePriority) {
     this.submitted = true;
-    if (this.rowNameControl.invalid) return;
+    if (this.rowNameControl.errors?.required){
+      this.translate.get('form.validation.cannot_have_white_spaces', {FieldName: "Test Case Priority"})
+        .subscribe(res => this.showNotification(NotificationType.Error, res));
+      return;
+    }
+    else if (this.rowNameControl.errors?.minlength) {
+      this.translate.get('form.validation.common.min_length', {FieldName: "Test Case Priority",min:4})
+        .subscribe(res => this.showNotification(NotificationType.Error, res));
+      return;
+    }
+    else if(this.rowNameControl.errors?.maxlength) {
+      this.translate.get('form.validation.common.max_length', {FieldName: "Test Case Priority", max: 250})
+        .subscribe(res => this.showNotification(NotificationType.Error, res));
+      return;
+    }
     this.editMode = false;
     this.submitted = false;
     testCasePriority.name = this.rowNameControl.value;
@@ -142,7 +156,21 @@ export class TestCasePrioritiesComponent extends BaseComponent implements OnInit
 
   createTestCasePriority() {
     this.submitted = true;
-    if (this.rowNameControl.invalid) return;
+    if (this.rowNameControl.errors?.required){
+      this.translate.get('form.validation.cannot_have_white_spaces', {FieldName: "Test Case Priority"})
+        .subscribe(res => this.showNotification(NotificationType.Error, res));
+      return;
+    }
+    else if (this.rowNameControl.errors?.minlength) {
+      this.translate.get('form.validation.common.min_length', {FieldName: "Test Case Priority",min:4})
+        .subscribe(res => this.showNotification(NotificationType.Error, res));
+      return;
+    }
+    else if(this.rowNameControl.errors?.maxlength) {
+      this.translate.get('form.validation.common.max_length', {FieldName: "Test Case Priority", max: 250})
+        .subscribe(res => this.showNotification(NotificationType.Error, res));
+      return;
+    }
     this.submitted = false;
     this.newRow = false;
     let newTestCasePriority = new TestCasePriority();

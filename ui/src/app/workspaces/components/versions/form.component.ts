@@ -52,7 +52,7 @@ export class FormComponent extends BaseComponent implements OnInit {
   setForm() {
     this.versionForm = this.formBuilder.group({
       workspaceId: new FormControl(this.version.workspaceId, []),
-      versionName: new FormControl(this.version.versionName, [Validators.required, this.noWhitespaceValidator]),
+      versionName: new FormControl(this.version.versionName, [Validators.required, this.noWhitespaceValidator, Validators.maxLength(250)]),
       description: new FormControl(this.version.description, [])
     });
   }

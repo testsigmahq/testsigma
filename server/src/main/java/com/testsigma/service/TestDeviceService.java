@@ -79,8 +79,10 @@ public class TestDeviceService extends XMLExportImportService<TestDevice> {
   }
 
   public TestDevice create(TestDevice testDevice) {
+    Long prerequisiteTestDevicesIdIndex = testDevice.getPrerequisiteTestDevicesIdIndex();
     testDevice.setCreatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
     testDevice = this.testDeviceRepository.save(testDevice);
+    testDevice.setPrerequisiteTestDevicesIdIndex(prerequisiteTestDevicesIdIndex);
     this.handleEnvironmentSuiteMappings(testDevice);
     return testDevice;
   }

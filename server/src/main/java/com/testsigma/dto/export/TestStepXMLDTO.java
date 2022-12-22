@@ -7,22 +7,20 @@
 
 package com.testsigma.dto.export;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.annotation.*;
 import com.testsigma.annotation.JsonListRootName;
-import com.testsigma.model.TestStepConditionType;
-import com.testsigma.model.TestStepPriority;
-import com.testsigma.model.TestStepType;
+import com.testsigma.model.*;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Data
 @JsonListRootName(name = "test-steps")
 @JsonRootName(value = "test-step")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TestStepXMLDTO extends BaseXMLDTO {
   @JsonProperty("name")
   private Long id;
@@ -44,8 +42,6 @@ public class TestStepXMLDTO extends BaseXMLDTO {
   private Long stepGroupId;
   @JsonProperty("custom-fields")
   private String customFields;
-  @JsonProperty("data-map")
-  private String dataMap;
   @JsonProperty("excepted-result")
   private String exceptedResult;
   @JsonProperty("natural-text-action-id")
@@ -82,4 +78,42 @@ public class TestStepXMLDTO extends BaseXMLDTO {
   private Boolean disabled;
   @JsonProperty("VisualEnabled")
   private Boolean visualEnabled = false;
+  @JsonProperty("condition_if")
+  private ResultConstant[] ifConditionExpectedResults;
+  @JsonProperty("test-data")
+  private String testData;
+  @JsonProperty("MaxIterations")
+  private Integer maxIterations;
+  @JsonProperty("test-data-function")
+  private DefaultDataGenerator defaultDataGenerator;
+  @JsonProperty("custom-step")
+  private TestStepCustomStep customStep;
+  @JsonProperty("test-data-type")
+  private String testDataType;
+  @JsonProperty("element")
+  private String element;
+  @JsonProperty("from-element")
+  private String fromElement;
+  @JsonProperty("to-element")
+  private String toElement;
+  @JsonProperty("attribute")
+  private String attribute;
+  @JsonProperty("for-loop-start-index")
+  private Integer forLoopStartIndex;
+  @JsonProperty("for-loop-end-index")
+  private Integer forLoopEndIndex;
+  @JsonProperty("for-loop-test-data-id")
+  private Long forLoopTestDataId;
+  @JsonProperty("test-data-function-id")
+  private Long testDataFunctionId;
+  @JsonProperty("addon-test-data-function")
+  private AddonTestStepTestData addonTDF;
+  @JsonProperty("test-data-profile-step-id")
+  private Long testDataProfileStepId;
+  @JsonProperty("addon-test-data")
+  private Map<String, AddonTestStepTestData> addonTestData;
+  @JsonProperty("addon-elements")
+  private Map<String, AddonElementData> addonElements = new HashMap<>();
+  @JsonProperty("test_data_function_args")
+  private Map<String, String> testDataFunctionArgs;
 }

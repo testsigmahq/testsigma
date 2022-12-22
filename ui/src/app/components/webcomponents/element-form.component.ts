@@ -30,32 +30,37 @@ import {MobileRecorderEventService} from "../../services/mobile-recorder-event.s
 @Component({
   selector: 'app-element-form',
   templateUrl: './element-form.component.html',
+  styleUrls:['./element-form.component.scss']
 })
 
 export class ElementFormComponent extends BaseComponent implements OnInit {
   @ViewChild('submitReviewButton') public submitReviewButton: ElementRef;
   @Optional() @Input('formDetails') formDetails;
+  @Optional() @Input('isFullScreen') isFullScreen:boolean;
+  @Optional() @Input('doRefresh') doRefresh: boolean;
   public control = new FormControl();
   public workspaceVersion: WorkspaceVersion;
   public element: Element;
   public elementForm: FormGroup;
+  public saving:boolean=false;
   public agentInstalled: Boolean;
   public formSubmitted: Boolean = false;
   public showDetails: Boolean = false;
   public versionId: number;
   public testCaseId: number;
   public elementId: number;
+  public isRecording:boolean = false;
   public elementCreateType = ElementCreateType;
   public defaultScreenName = "Default Screen";
   private userPreference: UserPreference;
   public canNotShowLaunch: boolean = false;
-  public saving = false;
   public testCaseResultId: number;
   public reviewSubmittedElement: Element;
   public screenNameOptions: Observable<Set<ElementScreenName>>;
   public screenNames: Set<ElementScreenName>;
   public isInProgress: Boolean;
   public isElementsChanged:Boolean;
+
 
   constructor(
     public authGuard: AuthenticationGuard,
@@ -72,9 +77,11 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
     private sanitizer: DomSanitizer,
     @Inject(MAT_DIALOG_DATA) public options: {
       isStepRecordView: boolean;
+      isNewUI:boolean;
       elementId?: number, versionId?: number,
       name?: string, isNew?: boolean, isDryRun?: boolean,
-      testCaseId: number, testCaseResultId: number
+      testCaseId: number, testCaseResultId: number,
+      doRefresh: boolean,
     },
     private userPreferenceService: UserPreferenceService,
     public chromeRecorderService: ChromeRecorderService,
@@ -115,6 +122,9 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
       this.testCaseId = this.options?.testCaseId;
       this.testCaseResultId= this.options?.testCaseResultId;
     }
+    if(this.doRefresh){
+      this.options.doRefresh = this.doRefresh;
+    }
     this.canNotShowLaunch = !this.router.url.includes('/step')
     this.userPreferenceService.show().subscribe(res => {
       this.userPreference = res
@@ -136,8 +146,8 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
       this.createElement();
       this.element.name = this.options?.name || '';
       this.addValidations();
-      if (this.element.createdType == ElementCreateType.CHROME && this.chromeRecorderService?.isChrome)
-        this.startCapture();
+      // if (this.element.createdType == ElementCreateType.CHROME && this.chromeRecorderService?.isChrome)
+      //   this.startCapture();
     } else {
       setTimeout(() => this.setElement(), 300);
     }
@@ -175,8 +185,8 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
     this.elementService.show(this.elementId).subscribe((res: Element) => {
       this.element = res;
       this.element.screenName = res.screenNameObj.name;
-      if (this.element.createdType == ElementCreateType.CHROME)
-        this.startCapture();
+      // if (this.element.createdType == ElementCreateType.CHROME)
+      //   this.startCapture();
       this.addValidations();
     });
   }
@@ -303,6 +313,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
   }
 
   startCapture() {
+    this.isRecording=true;
     this.chromeRecorderService.recorderVersion = this.workspaceVersion;
     this.setLocatorTypeToXpath();
     this.chromeRecorderService.pingRecorder();
@@ -318,13 +329,32 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
   // }
 
   stopCapture(isClose?:Boolean) {
+    this.isRecording=false;
     this.chromeRecorderService.elementCallBackContext = undefined;
     this.chromeRecorderService.elementCallBack = undefined;
-    this.chromeRecorderService.stopSpying();
+    if(!this.options.doRefresh){
+      this.chromeRecorderService.stopSpying();
+    }
     this.formDetails ? this.mobileRecorderEventService.setEmptyAction() : ( isClose? this.dialogRef.close(this.reviewSubmittedElement): null );
+    if(isClose && this.options.isStepRecordView){
+      let version=new WorkspaceVersion();
+      version.id=this.versionId;
+      let sendDetails = {
+        version:version,
+        isNew: true,
+        testCaseId: this.testCaseId,
+        testCaseResultId: this.options.testCaseResultId,
+        isStepRecordView: this.options.isStepRecordView
+      }
+      this.mobileRecorderEventService.suggestionContent.next(
+        {...sendDetails,content: this.mobileRecorderEventService.suggestionElement})
+    }
   }
 
   private chromeExtensionElementCallback(chromeRecorderElement: Element) {
+    if(chromeRecorderElement){
+      this.isRecording=false;
+    }
     this.element = chromeRecorderElement
   }
 
@@ -337,8 +367,8 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
       }
       this.element = res.content[0];
       this.elementId = this.element.id;
-      if (this.element.createdType == ElementCreateType.CHROME)
-        this.startCapture();
+      // if (this.element.createdType == ElementCreateType.CHROME)
+      //   this.startCapture();
       this.addValidations();
     })
   }
@@ -398,7 +428,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
     } else {
       let screenNameBean: ElementScreenName = new ElementScreenName();
       screenNameBean.name = screenName.name;
-      screenNameBean.workspaceVersionId = this.element.workspaceVersionId;
+      screenNameBean.workspaceVersionId = this.versionId;
       this.elementScreenNameService.create(screenNameBean).subscribe(screenNameBean => {
         this.element.screenNameObj.name = screenNameBean.name;
         this.element.screenNameId = screenNameBean.id;
@@ -502,6 +532,10 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
           this.showAPIError(error, res)
         })
       });
+  }
+
+  get isNewUI(){
+    return this.workspaceVersion?.workspace?.isWeb || this.workspaceVersion?.workspace?.isMobileWeb;
   }
 
 }

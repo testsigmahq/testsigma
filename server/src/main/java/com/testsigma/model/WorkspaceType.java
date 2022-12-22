@@ -26,6 +26,10 @@ public enum WorkspaceType {
     return (this == MobileWeb) || (this == AndroidNative) || (this == IOSNative);
   }
 
+  public boolean isMobileWeb() {
+    return this == MobileWeb;
+  }
+
   public boolean isWeb() {
     return this == WebApplication;
   }

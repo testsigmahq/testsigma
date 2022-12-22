@@ -26,12 +26,12 @@ public enum TestDataType {
         return parameter;
       case "runtime":
         return runtime;
-      case "environment":
-        return environment;
       case "random":
         return random;
       case "function":
         return function;
+      case "global":
+        return global;
     }
     return raw;
   }

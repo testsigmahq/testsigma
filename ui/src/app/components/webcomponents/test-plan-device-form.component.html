@@ -52,6 +52,7 @@
         [formCtrlName]="environmentFormGroup.controls['platformDeviceId']"
         [value]="cloudDevice"
         [items]="cloudDevicePage"
+        [isCloudDeviceDropdown]=true
         (onSearch)="fetchCloudDevices($event)"
         (onValueChange)="setCloudDevice($event)"></app-auto-complete>
       <label class="control-label required" [translate]="'test_plan.environment.device.name' | translate"></label>
@@ -93,7 +94,7 @@
       [class.d-none]="agentsEmpty"
       class="ts-col-25 pr-5 ml-18">
       <app-agent-devices-auto-complete
-        *ngIf="version"
+        *ngIf="version && this.platformOsVersions"
         (onAgentDeviceChange)="setAgentDevice($event)"
         [agentId]="agentId"
         [mobileOsType]="mobileOsType"

@@ -42,8 +42,10 @@ public class AppParserService {
           e.printStackTrace();
         }
       }
-      return new UploadVersionAppInfo(null, null,
-        rootDict.objectForKey(BUNDLE_VERSION).toString(), rootDict.objectForKey(BUNDLE_IDENTIFIER).toString());
+      if (rootDict!=null) {
+        return new UploadVersionAppInfo(null, null,
+                rootDict.objectForKey(BUNDLE_VERSION).toString(), rootDict.objectForKey(BUNDLE_IDENTIFIER).toString());
+      }
     }else if(checkIsItApkFile(file)){
       return parseApkFile(file);
     }
@@ -53,10 +55,10 @@ public class AppParserService {
   private boolean checkIsItApkFile(File file) {
     String filePath = file.getAbsolutePath();
     int lastIndex = filePath.lastIndexOf(DOT);
-    boolean isApkFile = filePath.substring(lastIndex+1).equalsIgnoreCase(".apk") ||
-            filePath.substring(lastIndex+1).equalsIgnoreCase(".xapk") ||
-            filePath.substring(lastIndex+1).equalsIgnoreCase(".apks") ||
-            filePath.substring(lastIndex+1).equalsIgnoreCase(".apkm");
+    boolean isApkFile = filePath.substring(lastIndex+1).equalsIgnoreCase("apk") ||
+            filePath.substring(lastIndex+1).equalsIgnoreCase("xapk") ||
+            filePath.substring(lastIndex+1).equalsIgnoreCase("apks") ||
+            filePath.substring(lastIndex+1).equalsIgnoreCase("apkm");
     return isApkFile;
   }
 

@@ -34,6 +34,7 @@
           <app-element-form
             *ngIf="isEditElement"
             [formDetails]="suggestionContentData"
+            [doRefresh]=true
           ></app-element-form>
           <app-action-element-suggestion
             *ngIf="isElementsSuggestion"
@@ -49,12 +50,18 @@
           ></app-action-test-data-environment-suggestion>
           <app-action-test-data-parameter-suggestion
             *ngIf="isDataProfile"
-            [testDataProfileDetails]="suggestionContentData"
+            [mobileDataProfileDetails]="suggestionContentData"
           ></app-action-test-data-parameter-suggestion>
-            <app-test-step-more-action-form
-              *ngIf="isMoreAction"
-              [moreDetails]="suggestionContentData"
-            ></app-test-step-more-action-form>
+          <app-test-step-more-action-form
+            *ngIf="isMoreAction"
+            [isFullScreenMode]="fullScreenMode"
+            [moreDetails]="suggestionContentData"
+          ></app-test-step-more-action-form>
+          <app-action-test-data-runtime-variable-suggestion
+            *ngIf="isRuntimeVariable"
+            [isFullScreenMode]="fullScreenMode"
+            [testDataRuntimeVariable]="suggestionContentData"
+          ></app-action-test-data-runtime-variable-suggestion>
         </div>
         <div *ngIf="!mirroring && fullScreenMode"
              class="inspection-details-section w-100">

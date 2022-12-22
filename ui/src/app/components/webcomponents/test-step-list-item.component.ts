@@ -22,6 +22,10 @@ import {NaturalTextActionsService} from "../../services/natural-text-actions.ser
 import {WorkspaceType} from "../../enums/workspace-type.enum";
 import {AddonNaturalTextAction} from "../../models/addon-natural-text-action.model";
 import {MobileStepRecorderComponent} from "../../agents/components/webcomponents/mobile-step-recorder.component";
+import {InfiniteScrollableDataSource} from "../../data-sources/infinite-scrollable-data-source";
+import {LinkedEntitiesModalComponent} from "../../shared/components/webcomponents/linked-entities-modal.component";
+import {StepsListComponent} from "../cases/steps-list.component";
+import {SharedService} from "../../services/shared.service";
 
 @Component({
   selector: 'app-test-step-list-item',
@@ -50,6 +54,7 @@ export abstract class TestStepListItemComponent extends BaseComponent implements
   @Output('onSelectedStepType') public onSelectedStepType = new EventEmitter<any>();
   public isCloning: boolean;
 
+
   get mobileStepRecorder():MobileStepRecorderComponent {
     return this.matModal.openDialogs.find(dialog => dialog.componentInstance instanceof MobileStepRecorderComponent)?.componentInstance;
   }
@@ -61,7 +66,8 @@ export abstract class TestStepListItemComponent extends BaseComponent implements
     public toastrService: ToastrService,
     public testStepService: TestStepService,
     public naturalTestActionService: NaturalTextActionsService,
-    public matModal: MatDialog
+    public matModal: MatDialog,
+    public sharedService: SharedService,
   ) {
     super(authGuard, notificationsService, translate, toastrService);
   }
@@ -90,6 +96,44 @@ export abstract class TestStepListItemComponent extends BaseComponent implements
     })
   }
 
+  indexTestStepsHavingPrerequisiteSteps(testStep:TestStep) {
+    let testSteps:TestStep[];
+    this.testStepService.findAll("preRequisiteStepId:"+this.testStep.id).subscribe( res => {
+      if(!res.empty){
+        this.sharedService.openLinkedTestStepsDialog(this.testSteps.content,res.content);
+      } else {
+        this.deleteStep(testStep);
+      }
+      }
+    );
+    // waitTillRequestResponds();
+    // let _this = this;
+    //
+    // function waitTillRequestResponds() {
+    //   if (testSteps.isFetching)
+    //     setTimeout(() => waitTillRequestResponds(), 100);
+    //   else {
+    //     if (testSteps.isEmpty)
+    //       _this.deleteStep(testStep);
+    //     else
+    //       _this.sharedService.openLinkedTestStepsDialog(testSteps);
+    //   }
+    // }
+  }
+  private openLinkedTestStepsDialog(list) {
+    this.translate.get("step_is_prerequisite_to_another_step").subscribe((res) => {
+      this.matModal.open(LinkedEntitiesModalComponent, {
+        width: '568px',
+        height: 'auto',
+        data: {
+          description: res,
+          linkedEntityList: list,
+        },
+        panelClass: ['mat-dialog', 'rds-none']
+      });
+    });
+  }
+
   destroyStep(testStep: TestStep) {
     this.testStepService.destroy(testStep.id).subscribe(() => {
       this.stepDestroyEvent.emit(testStep);
@@ -108,6 +152,7 @@ export abstract class TestStepListItemComponent extends BaseComponent implements
     step.isStepsExpanded = true;
     //this.activeStepGroupAction.emit(step);
     this.testStepService.findAll("testCaseId:" + step.stepGroupId, 'position').subscribe(steps => {
+      steps.content[0].setStepDisplayNumber(steps.content, step.stepDisplayNumber);
       this.assignTemplateForSteps(steps, step)
       step.stepGroupSteps = steps;
       this.postStepFetchProcessing(steps);

@@ -85,6 +85,7 @@
           </button>
           <button
             *ngIf="!isDry"
+            [disabled]="testCaseResult?.isExecuting"
             (click)="reportBug()"
             [matTooltip]="'result.hint.report.bug' | translate"
             class="btn icon-btn border-rds-2 ml-14">
@@ -96,6 +97,36 @@
             [translate]="'testcase.status.update.btn'"
             class="btn icon-btn border-rds-2 ml-14">
           </button>
+          <div
+            *ngIf="!isDry"
+            class="dropdown section-title mouse-over d-inline-block">
+            <div class="btn-group">
+              <button
+                class="btn icon-btn border-rds-2 ml-14 mt-n2">
+                <i class="fa-export-thin"></i>
+              </button>
+            </div>
+            <div
+              class="dropdown-menu drop-down-transparent min-w left-md">
+              <ul
+                class="bg-white border-rds-4 ng-scope p-15 shadow-all2-b4">
+                <li
+                  class="border-rds-10 btn rb-medium grey-on-hover text-dark">
+                  <a
+                    [href]="( isDry? '/dry_test_case_results':'/test_case_results')+ '/export/'+ testCaseResult?.id"
+                    class="text-dark text-decoration-none"
+                    target="_blank" [translate]="'runs.details.export_as_xls'"></a>
+                </li>
+                <li
+                  class="border-rds-10 btn rb-medium grey-on-hover text-dark ml-0">
+                  <a
+                    [href]="'/reports/junit/'+testCaseResult?.testDeviceResult?.testPlanResult?.id"
+                    class="text-dark text-decoration-none"
+                    target="_blank" [translate]="'runs.details.export_as_junit'"></a>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
       <div class="ts-col-100 position-relative d-flex pt-18" [class.pt-30]="isDry">
@@ -165,6 +196,12 @@
             [testDevice]="getTestCaseResult()?.testDeviceResult?.testDevice"
             [testPlanResult]="getTestCaseResult()?.testDeviceResult?.testPlanResult"></app-lab-environment-screen-short-info>
           <div class="details-items mt-30 mw-20 text-nowrap" [ngSwitch]="!testCaseResult?.isExecuting && !testCaseResult?.totalCount && isTestCaseFetchingCompleted">
+            <app-xray-input
+              [entityId]="testCaseResult?.suiteResultId"
+              [testCaseResult] ="testCaseResult"
+              [entityType]="this.runResultEntityType"
+              [display]="true">
+            </app-xray-input>
             <div *ngSwitchCase="true"
                  class="align-items-center d-flex details-info mt-2">
               <span
@@ -213,7 +250,17 @@
             [class.md-height-border]="testCaseResult?.parentId"
             class="normal-text">
             <i class="fa-list"></i>
-            <span [translate]="'result.test_step'"></span>
+            <span [translate]="'result.test_step.executed'"></span>
+          </a>
+        </li>
+        <li class="nav-items" role="presentation">
+          <a
+            (click)="activeTab = 'steps_current'"
+            [class.active]="activeTab == 'steps_current'"
+            [class.md-height-border]="testCaseResult?.parentId"
+            class="normal-text">
+            <i class="fa-list"></i>
+            <span [translate]="'result.test_step.current'"></span>
           </a>
         </li>
         <li class="nav-items" role="presentation">
@@ -239,6 +286,13 @@
       </div>
     </div>
     <div class="d-flex-wrap ts-col-100 theme-details-scroll h-100">
+      <div class="ts-col-100 h-100 bg-default" *ngIf="activeTab == 'steps_current'">
+        <app-steps-list
+          class="h-100"
+          [testCaseId]="testCaseResult?.testCase?.id"
+          [headerTabListhidden]="true"
+        ></app-steps-list>
+      </div>
       <div *ngIf="activeTab == 'steps' && !testCaseResult?.isExecuting && !hasSteps && isTestCaseFetchingCompleted"
            class="empty-full-container w-100">
         <div class="empty-run-md" *ngIf="!testCaseResult.message"></div>

@@ -15,7 +15,7 @@ public class StoreCurrentTestDatasetIndexNlpSnippet extends ElementAction {
       throw new AutomatorException(String.format(ERROR_TEST_CASE_MESSAGE));
     }
     if(testDataIndex == null ||  testDataIndex <0){
-      throw new AutomatorException(String.format(ERROR_MESSAGE, testDataIndex!= null ? testDataIndex+1 : testDataIndex));
+      throw new AutomatorException(String.format(ERROR_MESSAGE, testDataIndex!= null ? testDataIndex+1 : null));
     }
     testDataIndex = testDataIndex+1;
     runtimeDataProvider.storeRuntimeVariable(getAttribute(), testDataIndex.toString());

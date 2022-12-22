@@ -1,0 +1,10 @@
+mutation($issueId: String!, $environments: [String]!) {
+    addTestEnvironmentsToTestExecution(
+        issueId: $issueId,
+        testEnvironments: $environments
+    ) {
+        associatedTestEnvironments
+        createdTestEnvironments
+        warning
+    }
+}

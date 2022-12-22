@@ -3,6 +3,7 @@ import {TestCaseResultService} from "../../services/test-case-result.service";
 import {TestSuiteResult} from "../../models/test-suite-result.model";
 import {InfiniteScrollableDataSource} from "../../data-sources/infinite-scrollable-data-source";
 import {ResultConstant} from "../../enums/result-constant.enum";
+import {EntityType} from "../../enums/entity-type.enum";
 
 @Component({
   selector: 'app-test-suite-test-case-results',
@@ -15,6 +16,7 @@ export class TestSuiteTestCaseResultsComponent implements OnInit {
   public testCaseResults: InfiniteScrollableDataSource;
   public isFilterApplied: boolean = false;
   public isSuiteCaseFetchComplete: boolean = false;
+  public runResultEntityType: EntityType = EntityType.RUN_RESULT;
 
   constructor(private testCaseResultService: TestCaseResultService) {
   }

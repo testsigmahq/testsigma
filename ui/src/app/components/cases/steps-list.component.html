@@ -1,7 +1,7 @@
   <div
-  class="page-details-navigation-md">
+  class="page-details-navigation-md min-h-45"  >
   <ul class="tab-nav" role="tablist" *ngIf="!canDrag">
-    <li class="nav-items" role="presentation">
+    <li class="nav-items" *ngIf="!headerTabListhidden" role="presentation">
       <a
         [routerLink]="['/td', 'cases', testCase?.id, 'steps']"
         [routerLinkActive]="'active'"
@@ -11,7 +11,7 @@
       </a>
     </li>
     <li
-      *ngIf="testCase?.isStepGroup"
+      *ngIf="testCase?.isStepGroup && !headerTabListhidden"
       class="nav-items" role="presentation">
       <a
         [routerLink]="['/td', 'cases', testCase?.id, 'dependents']"
@@ -22,7 +22,7 @@
       </a>
     </li>
     <li
-      *ngIf="canShowRunResult && stepLength"
+      *ngIf="canShowRunResult && stepLength && !headerTabListhidden"
       class="nav-items" role="presentation">
       <a
         [routerLink]="['/td', 'cases', testCase?.id, 'dry_runs']"
@@ -95,7 +95,7 @@
           [translate]="'testcase.details.step_create_group' | translate:{Name: 'Create'}"></span>
       </button>
       <button
-        (click)="bulkDeleteConfirm()"
+        (click)="indexTestStepsHavingPrerequisiteSteps()"
         [matTooltip]="'hint.message.common.delete' | translate"
         class="theme-btn-clear-default fa-trash-thin">
       </button>
@@ -111,6 +111,7 @@
       [addonTemplates]="addonAction"
       [selectedTemplate]="selectedTemplate"
       [isDragEnabled]="canDrag"
+      (emitTestSteps)="setTestSteps($event)"
       (onStepsFetch)="setStepLength($event)"
       (onStepSelection)="selectedSteps($event)"
       (onStepDrag)="onPositionChange($event)"
@@ -136,6 +137,7 @@
           class="align-items-center d-flex fa-library justify-content-center p-5 rounded-circle theme-border"></div>
         <a
           class="pl-10 pr-20 text-t-secondary"
+          rel="noreferrer nofollow"
           [href]="stepArticleUrl"
           target="_blank"
           [translate]="'common.knowledge_base'"></a>

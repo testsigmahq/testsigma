@@ -1,0 +1,151 @@
+<div class="theme-overlay-container">
+
+  <!-- Modal header. Hidden in mobile recorder full screen mode (Tablet)-->
+  <div
+    *ngIf="!isFullScreenMode"
+    class="theme-overlay-header with-br-bottom"
+  >
+    <div
+      class="theme-overlay-title" [translate]="'suggestion.runtime_vars.name'"></div>
+    <!--    [class.pb-30]="!testDataProfileDetails"-->
+    <!--    [class.pb-15]="testDataProfileDetails"-->
+    <div
+      class="d-flex text-t-secondary ml-auto ts-col-40">
+      <div
+        class="w-85 d-flex align-items-center" *ngIf="testSteps?.length">
+        <i
+          [matTooltip]="'hint.message.common.search' | translate"
+          class="fa-search fz-13 mr-5"></i>
+        <div
+          class="form-control border-0 w-85 data-placeholder-content d-inline-block p-0"
+          #searchInput
+          contenteditable="true"
+          [attr.data-placeholder]="'common.place_holder.search_field' | translate: {fieldName: 'Runtime Variable'}"></div>
+      </div>
+    </div>
+    <button
+      class="theme-overlay-close"
+      type="button"
+      [matTooltip]="'hint.message.common.close' | translate"
+      (click)="closeSuggestion()">
+    </button>
+  </div>
+
+  <div class="px-35 pt-20 d-flex align-items-center justify-content-end">
+    <!-- Info Banner -->
+    <div class="flex-grow-1 mt-15">
+      <div class="note-info p-10 mr-20"
+           *ngIf="!(!testSteps?.length && !isStepFetching && !isNlpTemplatesFetching)">
+        <i class="fa-idea pr-2 result-status-text-2 fz-16"></i>
+        <span class="ml-5" [translate]="'suggestion.runtime_vars.note'"></span>
+      </div>
+    </div>
+    <div class="d-inline-block">
+      <div class="fz-14 mb-5 rb-medium" [translate]="'suggestion.runtime_vars.project'"></div>
+      <app-version-selection
+        class="position-relative" [customClass]="'runtime-project-skin'"
+        (onVersionSelect)="setVersion($event)"
+        [version]="selectedVersion?.value"></app-version-selection>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div
+    *ngIf="(!testSteps?.length && !isStepFetching && !isNlpTemplatesFetching)"
+    class="p-50 d-flex align-items-center justify-content-center h-100 flex-column">
+    <div
+      class="text-t-secondary pt-30 pb-18"
+      [translate]="'suggestion.runtime_vars.empty'"></div>
+  </div>
+
+  <div
+    class="list-content overflow-x-hidden theme-only-items-scroll sm-h px-35 pb-20 h-100"
+    [ngClass]="{'pt-10': isFullScreenMode, 'pt-30': !isFullScreenMode}"
+    *ngIf="!(!testSteps?.length && !isStepFetching && !isNlpTemplatesFetching)"
+  >
+    <!-- List Header-->
+    <div class="list-header">
+      <div class="ts-col-30" [translate]="'suggestion.runtime_vars.var_name'"></div>
+      <div class="ts-col-55" [translate]="'suggestion.runtime_vars.testcase'"></div>
+      <div class="ts-col-15" [translate]="'suggestion.runtime_vars.step'"></div>
+    </div>
+
+    <!-- List Items-->
+    <div class="list-container "
+    [ngClass]="isStepRecorderView ? 'h-30' : 'h-75'">
+      <cdk-virtual-scroll-viewport
+        class="list-container virtual-scroll-viewport h-100"
+        [itemSize]="46">
+        <div
+          [class.list-view]="!item?.runTimeDataList?.length"
+          [class.lg-pm]="!item?.runTimeDataList?.length"
+          [class.green-highlight]="!item?.runTimeDataList?.length"
+          *ngFor="let item of filteredSuggestion">
+          <div
+            class="ts-col-100 d-flex-wrap"
+            *ngIf="item?.runTimeDataList?.length">
+            <div
+              class="list-view lg-pm green-highlight ts-col-100">
+              <div
+                class="ts-col-30 d-flex pointer"
+                (click)="selectSuggestion(item, item.attribute)"
+                [matTooltip]="'suggestion.runtime_vars.click_here.tooltip' | translate">
+                {{item.attribute}}
+              </div>
+
+              <div class="text-dark ts-col-55 pl-5 loader-section mb-0">
+
+                <!-- Skeleton loader shown while testcase is being fetched -->
+                <div class="text-line-loader w-80 border-rds-10 m-0" *ngIf="!testCaseMap[item?.testCaseId]"></div>
+
+                <a *ngIf="testCaseMap[item?.testCaseId] || fetchTestcase(item?.testCaseId)" class="text-link"
+                   [href]="getTestCaseURI(item)" target="_blank">
+                  {{ testCaseMap[item?.testCaseId]?.name }} <i class="ml-5 fa-external-link-alt-solid"></i>
+                </a>
+              </div>
+              <div class="ts-col-15 d-flex pl-10 loader-section mb-0">
+                <!-- Skeleton loader shown while testcase is being fetched -->
+                <div *ngIf="!testCaseStepsMap[item?.testCaseId]" class="text-line-loader w-80 border-rds-10 m-0"></div>
+                <div
+                  *ngIf="getTestCaseSteps(item)">{{ getTestStepDisplayNumber(item?.testCaseId, item?.id) }}</div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="ts-col-100 d-flex-wrap"
+            *ngIf="!item?.runTimeDataList?.length">
+            <div
+              class="ts-col-30 d-flex pointer" (click)="selectSuggestion(item)"
+              [matTooltip]="'suggestion.runtime_vars.click_here.tooltip' | translate">
+               {{item.testDataVal}}
+            </div>
+            <div class="text-dark ts-col-55 pl-5 loader-section mb-0">
+
+              <!-- Skeleton loader shown while testcase is being fetched -->
+              <div class="text-line-loader w-80 border-rds-10 m-0" *ngIf="!testCaseMap[item?.testCaseId]"></div>
+
+              <a *ngIf="testCaseMap[item?.testCaseId] || fetchTestcase(item?.testCaseId)" class="text-link"
+                 [href]="getTestCaseURI(item)" target="_blank">
+                {{ testCaseMap[item?.testCaseId]?.name }} <i class="ml-5 fa-external-link-alt-solid"></i>
+              </a>
+            </div>
+            <div class="ts-col-15 d-flex pl-10 loader-section mb-0">
+              <!-- Skeleton loader shown while testcase is being fetched -->
+              <div *ngIf="!testCaseStepsMap[item?.testCaseId]" class="text-line-loader w-80 border-rds-10 m-0"></div>
+              <div
+                *ngIf="getTestCaseSteps(item)">{{ getTestStepDisplayNumber(item?.testCaseId, item?.id) }}</div>
+            </div>
+          </div>
+        </div>
+        <div
+          *ngIf="!filteredSuggestion?.length"
+          class="p-50 d-flex align-items-center justify-content-center h-100 flex-column">
+          <div
+            class="text-t-secondary pt-30 pb-18"
+            [translate]="'message.common.search.not_found'"></div>
+        </div>
+      </cdk-virtual-scroll-viewport>
+    </div>
+
+  </div>
+</div>

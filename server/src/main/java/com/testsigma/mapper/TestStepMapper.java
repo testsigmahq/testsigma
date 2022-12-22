@@ -23,6 +23,9 @@ import java.util.List;
   nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface TestStepMapper {
   List<TestStepXMLDTO> mapTestSteps(List<TestStep> testSteps);
+  List<TestStepDTO> mapTestStepsToDTO(List<TestStep> testSteps);
+  TestStep map(TestStepDTO testStepDTO);
+
 
   @Mapping(target = "addonTestData", expression = "java(testStep.getAddonTestData())")
   @Mapping(target = "addonElements", expression = "java(testStep.getAddonElements())")
@@ -38,7 +41,6 @@ public interface TestStepMapper {
 
 
   TestStepDTO mapDTO(TestStep testStep);
-
   @Mapping(target = "status", source = "expectedResponseStatus")
   RestStepDTO map(RestStep restStep);
 
@@ -51,6 +53,7 @@ public interface TestStepMapper {
   List<TestStepDTO> mapDTOs(List<TestStep> testSteps);
 
   @Mapping(target = "preRequisiteStepId", expression = "java(testStepRequest.getPreRequisiteStepId())")
+  @Mapping(target = "testDataProfileStepId", expression = "java(testStepRequest.getTestDataProfileStepId())")
   @Mapping(target = "addonTestData", expression = "java(testStepRequest.getAddonTestData())")
   @Mapping(target = "addonElements", expression = "java(testStepRequest.getAddonElements())")
   TestStep map(TestStepRequest testStepRequest);
@@ -70,6 +73,7 @@ public interface TestStepMapper {
   @Mapping(target = "addonTDF", expression = "java(request.getAddonTDF())")
   @Mapping(target = "testDataFunctionId", expression = "java(request.getTestDataFunctionId())")
   @Mapping(target = "testDataFunctionArgs", expression = "java(request.getTestDataFunctionArgs())")
+  @Mapping(target = "maxIterations", expression = "java(request.getMaxIterations())")
   void merge(TestStepRequest request, @MappingTarget TestStep testStep);
 
   @Mapping(target = "testStep", ignore = true)

@@ -19,11 +19,13 @@ public class AutomatorMessages {
   public static final String MSG_EXECUTION_IN_PROGRESS = "Test Plan in Progress";
   public static final String MSG_EXECUTION_PRE_FLIGHT = "Test plan is moved to pre flight status";
   public static final String MSG_EXECUTION_QUEUED = "Test plan is queued";
+  public static final String MSG_EXECUTION_NOT_EXECUTED = "Prerequisite test device execution failed";
   public static final String MSG_EXECUTION_CREATED = "Test Plan execution is initiated and waiting to be queued";
   public static final String MSG_ENVIRONMENT_COMPLETED = "Execution Environment Finished Running";
   public static final String MSG_ENVIRONMENT_FAILURE = "Failed While Running Execution Environment";
   public static final String MSG_EXECUTION_COMPLETED = "Test plan execution completed";
   public static final String MSG_EXECUTION_FAILURE = "Test plan execution failed";
+  public static final String MSG_INCOMPATIBLE_DEVICE_AND_APP = "Incompatible app and device architecture";
 
   final public static String EXECUTION_ALREADY_RUNNING = "The specified Test Plan is currently running. Please wait until the current Test Plan is complete. You may also use Testsigma Test Plan Status Check API to wait for the current Test Plan to complete. More details - https://testsigma.com/docs/continuous-integration/rest-api/";
 

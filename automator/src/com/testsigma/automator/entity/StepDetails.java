@@ -34,4 +34,5 @@ public class StepDetails {
   private String testDataName;
   private String testDataValue;
   private Boolean ignoreStepResult;
+  private Long maxIterations;
 }

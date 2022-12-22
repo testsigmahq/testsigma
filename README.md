@@ -169,6 +169,13 @@ We love our contributors! If you'd like to contribute anything from a bug fix to
 - 👾 Explore some [good first issues](https://github.com/testsigmahq/testsigma/issues)
 - 📕 Read our [Code of Conduct](CODE_OF_CONDUCT.md)
 
+## **Launching Testsigma Rewards**
+ Contributed to Testsigma? Here is a big thank you from our community to you.
+ Claim your badge and showcase them with pride.
+ Let us inspire more folks !
+
+ ![Testsigma Badges](https://aviyel.com/assets/uploads/rewards/share/project/50/512/share.png)
+ ### **[Claim Now!](https://aviyel.com/projects/50/testsigmahq/rewards)**
 
 ## **License**
 

@@ -1,0 +1,24 @@
+<div class="w-100 h-100">
+  <div class="theme-overlay-container sm-pm">
+    <div class="theme-overlay-header">
+      <span class='fz-15 rb-medium' [translate]="'message.common.confirmation.warning'"></span>
+      <button class="theme-overlay-close"
+              type="button"
+              [matTooltip]="'hint.message.common.close' | translate"
+              mat-dialog-close>
+      </button>
+    </div>
+    <div class="theme-overlay-content">
+      <div class="pb-15"
+           [innerHTML]="'message.common.xray_link.duplicate' |translate:{EntityName:this.testName}"></div>
+    </div>
+    <div class="theme-overlay-footer">
+      <button class="theme-btn-primary"
+              [mat-dialog-close]="false"
+              [translate]="'xray.button.continue_linking'"></button>
+      <button class="border-0 p-8 pl-12 pr-12 btn btn-delete text-white theme-btn-clear-default"
+              [translate]="'xray.button.abandon'"
+              [mat-dialog-close]="true"></button>
+    </div>
+  </div>
+</div>

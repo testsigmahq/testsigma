@@ -93,7 +93,8 @@ export class StepSummaryComponent implements OnInit {
       name: name,
       versionId: this.options?.version?.id,
       testCaseId: this.options?.testCase?.id,
-      isStepRecordView: this.options?.isStepRecordView
+      isStepRecordView: this.options?.isStepRecordView,
+      doRefresh:true,
     }
     if (this.options.isStepRecordView) {
       this.mobileRecorderEventService.suggestionContent.next(Object.assign(sendDetails, {
@@ -102,9 +103,10 @@ export class StepSummaryComponent implements OnInit {
       return
     }
     this.editedElement = name;
+    let isNewUI=this.options?.version?.workspace?.isWeb || this.options?.version?.workspace?.isMobileWeb
     const dialogRef = this.matDialog.open(ElementFormComponent, {
       height: "100vh",
-      width: '60%',
+      width: isNewUI ? '540px' : "60%",
       position: {top: '0px', right: '0px'},
       data: sendDetails,
       panelClass: ['mat-dialog', 'rds-none'],

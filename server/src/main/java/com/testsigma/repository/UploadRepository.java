@@ -25,5 +25,5 @@ public interface UploadRepository extends BaseRepository<Upload, Long> {
 
     List<Upload> findAllByWorkspaceId(Long applicationVersionId);
 
-    Upload findByImportedIdAndWorkspaceId(Long importedId, Long applicationId);
+    Optional<Upload> findByImportedIdAndWorkspaceId(Long importedId, Long applicationId);
 }

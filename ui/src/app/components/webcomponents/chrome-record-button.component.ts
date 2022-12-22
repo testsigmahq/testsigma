@@ -8,23 +8,23 @@ import {FirstChromeInstallComponent} from "./first-chrome-install.component";
   template: `
     <button
       *ngIf="chromeRecorderService?.isChrome"
-      (click)="chromeRecorderService?.isStepRecording? stopRecoding() : openRecorderPopup()"
+      (click)="chromeRecorderService?.isStepRecorder? stopRecoding() : openRecorderPopup()"
       class="theme-btn-clear-default nlp-record-default-button ml-14 position-relative py-6 text-nowrap">
       <span class="recorder-beta-btn" [translate]="'message.common.beta_tag'"></span>
       <div
         class="rounded-circle btn mr-5 p-4 my-2"
-        [class.result-status-1]="chromeRecorderService?.isStepRecording"
-        [class.result-status-0]="!chromeRecorderService?.isStepRecording"></div>
+        [class.result-status-1]="chromeRecorderService?.isStepRecorder"
+        [class.result-status-0]="!chromeRecorderService?.isStepRecorder"></div>
       <span
-        [translate]="(!chromeRecorderService?.isStepRecording)?'btn.common.record':'message.common.stop'"></span>
+        [translate]="(!chromeRecorderService?.isStepRecorder)?'btn.common.record':'message.common.stop'"></span>
     </button>
     <div class="d-none nlp-record-button">
       <button
         *ngIf="chromeRecorderService?.isChrome"
-        (click)="chromeRecorderService?.isStepRecording? stopRecoding() : openRecorderPopup()"
+        (click)="chromeRecorderService?.isStepRecorder? stopRecoding() : openRecorderPopup()"
         class="theme-btn-primary ml-14 position-relative py-8 text-nowrap border-rds-26 pl-15">
         <span
-          [translate]="(!chromeRecorderService?.isStepRecording)?'btn.common.start_record':'message.common.stop'"></span>
+          [translate]="(!chromeRecorderService?.isStepRecorder)?'btn.common.start_record':'message.common.stop'"></span>
         <i class="fa-arrow-right text-white pl-15"></i>
       </button>
     </div>
@@ -43,7 +43,7 @@ export class ChromeRecordButtonComponent implements OnInit {
 
   stopRecoding() {
     this.chromeRecorderService.stopSpying();
-    this.chromeRecorderService.isStepRecording = false;
+    this.chromeRecorderService.isStepRecorder = false;
   }
 
   openRecorderPopup() {
@@ -63,7 +63,7 @@ export class ChromeRecordButtonComponent implements OnInit {
   }
 
   private startRecording() {
-    this.chromeRecorderService.isStepRecording = true;
+    this.chromeRecorderService.isStepRecorder = true;
     this.chromeRecorderService.startRecording()
   }
 

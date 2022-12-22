@@ -68,7 +68,7 @@ public abstract class StorageService {
     return FileUtils.readFileToByteArray(new File(preSignedURL));
   }
 
-  protected String downloadFromRemoteUrl(String appRemoteUrl) throws TestsigmaException {
+  public String downloadFromRemoteUrl(String appRemoteUrl) throws TestsigmaException {
     InputStream appInputStream = null;
     FileOutputStream appOutputStream = null;
     try {

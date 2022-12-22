@@ -52,7 +52,14 @@ public class TestData {
 
 
   @Column(name = "test_data")
-  private String data;
+  private String tempTestData;
+
+  @OneToMany(mappedBy = "testData", fetch = FetchType.LAZY)
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  @Getter
+  @Setter
+  private List<TestDataSet> data;
 
   @Column(name = "imported_id")
   @Getter
@@ -63,6 +70,16 @@ public class TestData {
   @Getter
   @Setter
   private Long copiedFrom;
+
+  @Column(name = "passwords")
+  @Getter
+  @Setter
+  private String passwords;
+
+  @Column(name = "is_migrated")
+  @Getter
+  @Setter
+  private Boolean isMigrated;
 
   @Column(name = "created_date")
   @CreationTimestamp
@@ -90,12 +107,30 @@ public class TestData {
 
 
   public List<TestDataSet> getData() {
-    return new TestDataSetConverter().convertToEntityAttribute(this.data);
+    if(this.getIsMigrated()==null || this.getIsMigrated()){
+      return this.data;
+    }
+    else{
+      return this.getTempTestData();
+    }
   }
 
-  public void setData(List<TestDataSet> dataSets) {
-    this.data = new TestDataSetConverter().convertToDatabaseColumn(dataSets);
+  public List<String> getPasswords() {
+    return new StringSetConverter().convertToEntityAttribute(this.passwords);
   }
 
+  public void setPasswords(List<String> passwordList) {
+    if (passwordList != null) {
+      this.passwords = new StringSetConverter().convertToDatabaseColumn(passwordList);
+    }
+  }
 
+  //Can remove after the test_data column removal
+  public List<TestDataSet> getTempTestData() {
+    return new TestDataSetConverter().convertToEntityAttribute(this.tempTestData);
+  }
+
+  public void setTempTestData(List<TestDataSet> dataSets) {
+    this.tempTestData = new TestDataSetConverter().convertToDatabaseColumn(dataSets);
+  }
 }

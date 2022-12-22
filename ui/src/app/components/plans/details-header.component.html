@@ -58,22 +58,7 @@
       <div class="details-page-sub-details">
         <div class="details-page-sub-description">
           <div
-            class="details-items">
-            <label
-              class="details-title"
-              [translate]="'test_plans.details.test_lab'"></label>
-            <div class="details-info">
-              <div class="d-flex">
-                <span class="mr-5 h-18p"
-                  [class.testsigma-lab-logo]="testPlan?.isTestsigmaLab || testPlan?.isHybrid"
-                  [class.grid]="testPlan?.isPrivateLab">
-                </span>
-                <span [translate]="'execution.lab_type.'+ testPlan?.testPlanLabType"></span>
-              </div>
-            </div>
-          </div>
-          <div
-            class="details-items pl-50 text-truncate mw-35">
+            class="details-items text-truncate mw-35">
             <label
               class="details-title"
               [translate]="'test_plan.type'"></label>
@@ -96,6 +81,16 @@
                   [matTooltip]="(testPlan?.environment?.name?.length>151) ? testPlan?.environment?.name : ''"
                   [textContent]="testPlan?.environment?.name || '-'"></div>
               </div>
+            </div>
+          </div>
+          <div class="details-items pl-50">
+            <div class="details-info">
+              <app-xray-input
+                [entityId] ="this.testPlanId"
+                [entityType]="this.entityType"
+                [entityExternalMapping]="this.entityExternalMapping"
+                (createXrayLink)="linkXrayId($event)">
+              </app-xray-input>
             </div>
           </div>
         </div>

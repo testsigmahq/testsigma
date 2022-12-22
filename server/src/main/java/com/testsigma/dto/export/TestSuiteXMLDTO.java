@@ -8,6 +8,7 @@
 package com.testsigma.dto.export;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.testsigma.annotation.JsonListRootName;
@@ -19,6 +20,7 @@ import java.util.List;
 @Data
 @JsonListRootName(name = "test-suites")
 @JsonRootName(value = "test-suite")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TestSuiteXMLDTO extends BaseXMLDTO {
   @JsonProperty("id")
   private Long id;

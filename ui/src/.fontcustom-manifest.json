@@ -1,14 +1,14 @@
 {
   "checksum": {
-    "previous": "cc56d6d170c505986bb6ae74475e4aecb1b70a3dde648a9c52b3ebe1e1e1b1a3",
-    "current": "cc56d6d170c505986bb6ae74475e4aecb1b70a3dde648a9c52b3ebe1e1e1b1a3"
+    "previous": "79e7bdc8f1969a3294a43002952f0f87261025bd0ab8e307bda5d7be149d11ba",
+    "current": "79e7bdc8f1969a3294a43002952f0f87261025bd0ab8e307bda5d7be149d11ba"
   },
   "fonts": [
-    "./assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.ttf",
-    "./assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.svg",
-    "./assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.woff",
-    "./assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.eot",
-    "./assets/font_icons/font_custom_cc56d6d170c505986bb6ae74475e4aec.woff2"
+    "./assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.ttf",
+    "./assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.svg",
+    "./assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.woff",
+    "./assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.eot",
+    "./assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.woff2"
   ],
   "glyphs": {
     "4-quabs": {
@@ -30,6 +30,10 @@
     "add-previous": {
       "codepoint": 61699,
       "source": "./icons/add-previous.svg"
+    },
+    "add-to-queue": {
+      "codepoint": 62160,
+      "source": "./icons/add-to-queue.svg"
     },
     "addon": {
       "codepoint": 62097,
@@ -919,6 +923,10 @@
       "codepoint": 61817,
       "source": "./icons/lined-arrow-right.svg"
     },
+    "link": {
+      "codepoint": 62163,
+      "source": "./icons/link.svg"
+    },
     "linux-2": {
       "codepoint": 61818,
       "source": "./icons/linux-2.svg"
@@ -1159,6 +1167,10 @@
       "codepoint": 61849,
       "source": "./icons/power-loop.svg"
     },
+    "prerequisite": {
+      "codepoint": 62162,
+      "source": "./icons/prerequisite.svg"
+    },
     "productivity": {
       "codepoint": 62058,
       "source": "./icons/productivity.svg"
@@ -1366,6 +1378,10 @@
     "schedule-with-tick": {
       "codepoint": 62023,
       "source": "./icons/schedule-with-tick.svg"
+    },
+    "screen-resolution": {
+      "codepoint": 62161,
+      "source": "./icons/screen-resolution.svg"
     },
     "screen-rotation": {
       "codepoint": 62089,
@@ -1762,7 +1778,7 @@
     "copyright": "",
     "css3": false,
     "css_selector": ".fa-{{glyph}}",
-    "debug": false,
+    "debug": true,
     "font_ascent": 448,
     "font_descent": 64,
     "font_design_size": 16,

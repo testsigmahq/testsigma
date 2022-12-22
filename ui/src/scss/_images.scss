@@ -70,6 +70,9 @@
     min-width: 14px;
   }
 }
+.octocat{
+  content: url("~assets/images/Octocat.png");
+}
 
 .register-agent{
   background-image: url("~assets/color_icons/registering-agent.svg");
@@ -1195,6 +1198,19 @@
   background-position: 10% center;
   width: 25%;
   height: 48px;
+}
+
+.xray-software {
+  background-image: url("~assets/images/xray.png");
+  background-size: contain;
+  background-repeat:   no-repeat;
+  &.bug-list-jira-software{
+    background-size: 50px;
+    background-position: center center;
+  }
+  &.sm-h {
+    height: 35px;
+  }
 }
 
 .resizeable-image{

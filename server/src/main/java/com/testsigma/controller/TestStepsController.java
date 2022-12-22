@@ -98,10 +98,7 @@ public class TestStepsController {
   public void bulkDelete(@RequestParam(value = "ids[]") Long[] ids) throws ResourceNotFoundException {
     // [TODO] [Pratheepv] position update is stopping from bulk delete query
     log.debug("DELETE /test_steps/bulk_update_properties with ids::" + Arrays.toString(ids));
-    for (Long id : ids) {
-      TestStep step = this.service.find(id);
-      this.service.destroy(step);
-    }
+    this.service.bulkDelete(ids);
   }
 
   @PutMapping(value = "/bulk_update_properties")
@@ -120,11 +117,19 @@ public class TestStepsController {
 
   @PutMapping(value = "/bulk_update")
   @ResponseStatus(HttpStatus.ACCEPTED)
-  public void bulkUpdate(@RequestBody List<TestStepRequest> testStepRequests) {
+  public void bulkUpdate(@RequestBody List<TestStepRequest> testStepRequests) throws TestsigmaException {
     log.debug("PUT /test_steps/bulk_update with body::" + testStepRequests);
     for (TestStepRequest request : testStepRequests) {
       TestStep step = this.mapper.map(request);
       this.service.update(step);
     }
   }
+
+  @GetMapping("/linked_test_steps")
+  public Page<TestStepDTO> indexTestStepsHavingPrerequisiteSteps(@RequestParam(value = "ids[]") Long[] ids,
+                                                                 @PageableDefault(size = Integer.MAX_VALUE) Pageable pageable) throws ResourceNotFoundException {
+    List<TestStepDTO> testSteps = this.service.indexTestStepsHavingPrerequisiteSteps(ids);
+    return new PageImpl<>(testSteps,pageable,testSteps.size());
+  }
+
 }

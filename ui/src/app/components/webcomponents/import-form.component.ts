@@ -40,8 +40,9 @@ export class ImportFormComponent extends BaseComponent implements OnInit {
   public dependencies: string = '{"isTestCaseEnabled":["isTestStepEnabled", "isRestStepEnabled", "isTestDataEnabled", "isTestCasePriorityEnabled", "isTestCaseTypeEnabled", "isElementEnabled", "isElementScreenNameEnabled"],' +
     '"isTestStepEnabled" : [ "isRestStepEnabled", "isTestDataEnabled", "isTestCasePriorityEnabled", "isTestCaseTypeEnabled", "isElementEnabled", "isElementScreenNameEnabled"],' +
     '"isRequirementEnabled" : ["isTestCaseEnabled", "isTestStepEnabled", "isRestStepEnabled", "isTestDataEnabled", "isTestCasePriorityEnabled", "isTestCaseTypeEnabled", "isElementEnabled", "isElementScreenNameEnabled"],' +
-    '"isTestPlanEnabled":["isTestDeviceEnabled", "isSuitesEnabled", "isAgentEnabled"],' +
-    '"isTestDeviceEnabled":["isSuitesEnabled", "isAgentEnabled"],' +
+    '"isTestPlanEnabled":["isTestCaseEnabled", "isTestDeviceEnabled", "isSuitesEnabled", "isUploadsEnabled", "isAgentEnabled", "isTestStepEnabled", "isRestStepEnabled", "isTestDataEnabled", "isTestCasePriorityEnabled", "isTestCaseTypeEnabled", "isElementEnabled", "isElementScreenNameEnabled"],' +
+    '"isSuitesEnabled":["isRestStepEnabled", "isTestStepEnabled", "isTestDataEnabled", "isTestCasePriorityEnabled", "isTestCaseTypeEnabled", "isElementEnabled", "isElementScreenNameEnabled", "isTestCaseEnabled", "isTestCaseTypeEnabled"],'+
+    '"isTestDeviceEnabled":["isSuitesEnabled", "isAgentEnabled", "isUploadsEnabled", "isTestCaseEnabled", "isTestStepEnabled", "isRestStepEnabled", "isTestDataEnabled", "isTestCasePriorityEnabled", "isTestCaseTypeEnabled", "isElementEnabled", "isElementScreenNameEnabled"],' +
     '"isElementEnabled":["isElementScreenNameEnabled"]}';
 
   constructor(
@@ -112,7 +113,7 @@ export class ImportFormComponent extends BaseComponent implements OnInit {
     this.selectedWorkspace = null;
     if (application) {
       this.selectedWorkspace = application;
-      console.log("Setting selected workspace as  - ", application);
+      console.log("Setting selected application as  - ", application);
       this.fetchVersions()
     }
   }

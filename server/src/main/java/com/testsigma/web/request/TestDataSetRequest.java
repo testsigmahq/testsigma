@@ -16,6 +16,8 @@ import org.json.JSONObject;
 
 @Data
 public class TestDataSetRequest {
+  private Long id;
+  private Long testDataProfileId;
   private String name;
   private String description;
   private Boolean expectedToFail;

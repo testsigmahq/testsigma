@@ -15,6 +15,10 @@ import {PageObject} from "../shared/models/page-object";
 
 export class TestDataSet extends Base implements Deserializable, Serializable{
   @serializable
+  public id: number;
+  @serializable
+  public testDataProfileId: number;
+  @serializable
   public name: String;
   @serializable
   public description: String;
@@ -28,6 +32,8 @@ export class TestDataSet extends Base implements Deserializable, Serializable{
     return "{" + dataStrings.substring(1) + "}";
   }, v => v))
   public data:JSON;
+  @serializable
+  public position: number;
   public selected: Boolean = false;
 
   deserialize(input: any): this {

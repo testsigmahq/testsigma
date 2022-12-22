@@ -21,4 +21,5 @@ public class UserPreferenceDTO {
   private Timestamp createdDate;
   private Timestamp updatedDate;
   private boolean showedGitHubStar;
+  private Long clickedSkipForNow;
 }

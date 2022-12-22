@@ -3,7 +3,8 @@
   [formGroup]="loopForm">
   <div
     *ngIf="testDataList?.content?.length"
-    class="align-items-center pb-15 step-container-section pt-4 pl-4">
+    class="align-items-center pb-15 step-container-section pt-4 pl-4"
+    [style]="'padding-left: calc('+ indentation*3 +'px + 15px) !important' ">
     <div class="py-10">
       <span
         class="bg-white rb-medium"
@@ -31,10 +32,11 @@
             disableOptionCentering panelClass="single"
             (selectionChange)="toggleStartIndex()"
             [formControlName]="['startIndex']">
+            <mat-option [value]="-1" [textContent]="'test_step.for_loop.option_start' | translate"></mat-option>
             <mat-option
               *ngFor="let startIndex of startArray"
               [value]="startIndex"
-              [textContent]="currentTestDataList.data[startIndex-1]?.name+' (#'+(startIndex)+')'">
+              [textContent]="this.testStep.testData.data[startIndex-1]?.name+' ('+startIndex+')'">
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -53,7 +55,7 @@
             <mat-option
               *ngFor="let endIndex of endArray"
               [value]="endIndex"
-              [textContent]="currentTestDataList.data[endIndex-1]?.name+' (#'+(endIndex)+')'">
+              [textContent]="isNotNumber(endIndex)? endIndex: this.testStep.testData.data[endIndex-1]?.name+' ('+endIndex+')'">
             </mat-option>
             <mat-option [value]="-1" [textContent]="'test_step.for_loop.option_end' | translate"></mat-option>
           </mat-select>
@@ -67,6 +69,7 @@
     <i class="fa-help text-t-secondary pr-7"></i>
     <a
       class=" text-t-secondary"
+      rel="noreferrer nofollow"
       href="https://testsigma.com/docs/test-cases/step-types/for-loop/"
       target="_blank"
       [translate]="'step.create.help.note'"></a>

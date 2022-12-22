@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {WorkspaceVersion} from "../../models/workspace-version.model";
 import {TestPlan} from "../../models/test-plan.model";
@@ -18,6 +18,7 @@ import {PlatformOsVersion} from "../../agents/models/platform-os-version.model";
 import {PlatformService} from "../../agents/services/platform.service";
 import {PlatformBrowserVersion} from "../../agents/models/platform-browser-version.model";
 import {CloudDevice} from "../../agents/models/cloud-device.model";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-test-plan-suite-selection',
@@ -47,6 +48,8 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
   public agentIsOffline:boolean;
   isOpen = false;
   @ViewChild('caseLevelParallelDialog') overlayDir: CdkConnectedOverlay;
+  @Output('updateHeaderBtns') updateHeaderBtns = new EventEmitter<{tabPosition: Number, buttons: any[]}>();
+  @Input('tabPosition') tabPosition: Number;
 
   openCaseLevelParallelDialog(){
     this.isOpen = true;
@@ -66,7 +69,8 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
       private formBuilder: FormBuilder,
       private matDialog: MatDialog,
       private devicesService: DevicesService,
-      private platformService: PlatformService) {
+      private platformService: PlatformService,
+      private translate: TranslateService) {
   }
 
   get testPlanLabType() {
@@ -150,6 +154,7 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
 
   ngOnInit(): void {
     this.setFormStates();
+    this.invokeBtnState(this.isInValid);
   }
 
   ngOnChanges() {
@@ -214,7 +219,9 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
       osVersion: new FormControl(environment?.osVersion, []),
       browserVersion: new FormControl(environment?.browserVersion, []),
       deviceName : new FormControl(environment?.deviceName, []),
-      resolution : new FormControl(environment?.resolution, [])
+      resolution : new FormControl(environment?.resolution, []),
+      testPlanLabType: new FormControl(this.testPlan.testPlanLabType, [Validators.required]),
+      workspaceVersionId: new FormControl(this.testPlan.workspaceVersionId|| this.version.id, [Validators.required]),
     });
     if(suiteIds?.length > 0) {
       environmentFormGroup.setControl('suiteIds', this.formBuilder.array([]));
@@ -463,5 +470,85 @@ export class TestPlanSuiteSelectionComponent implements OnInit {
 
   setAgentStatus(isAgentOnline:boolean){
     this.agentIsOffline = !isAgentOnline;
+  }
+
+  setEnvironmentVersion(version: WorkspaceVersion) {
+    this.activeExecutionEnvironment.version = version;
+    if(version.workspace.isMobileNative) {
+      this.addControls(this.activeEnvironmentFormGroup, this.activeExecutionEnvironment);
+      this.activeExecutionEnvironment.testSuites = [];
+      setTimeout(()=>{
+        this.activeExecutionEnvironment.browser=undefined;
+        this.activeExecutionEnvironment.browserVersion=undefined;
+        this.activeExecutionEnvironment.resolution=undefined;
+        this.activeExecutionEnvironment.testSuites = [];
+        this.activeEnvironmentFormGroup.get('suiteIds').patchValue([]);
+        this.activeEnvironmentFormGroup.get('browser').patchValue('');
+        this.activeEnvironmentFormGroup.get('browserVersion').patchValue('');
+        this.activeEnvironmentFormGroup.get('resolution').patchValue('');
+      }, 500);
+    }
+  }
+
+  setEnvironmentPreRequisite(executionEnvironment: TestDevice) {
+    this.activeExecutionEnvironment.prerequisiteTestDevicesId = executionEnvironment?.id || null;
+    let index = this.testDevices.findIndex(env => env == executionEnvironment);
+    this.activeExecutionEnvironment.prerequisiteTestDevicesIdIndex = index > -1 ? index : null;
+    this.activeEnvironmentFormGroup.controls['prerequisiteTestDevicesIdIndex'].setValue(this.activeExecutionEnvironment.prerequisiteTestDevicesIdIndex);
+    this.activeEnvironmentFormGroup.controls['prerequisiteTestDevicesId'].setValue(executionEnvironment?.id || null);
+  }
+
+  addControls(environmentFormGroup: FormGroup, environment?: TestDevice) {
+    environmentFormGroup.addControl('deviceId', new FormControl(environment?.deviceId, [this.requiredIfValidator(() => !this.isRest && this.isHybrid)]));
+    environmentFormGroup.addControl('appPathType', new FormControl(environment?.appPathType || ApplicationPathType.UPLOADS, [Validators.required]));
+    environmentFormGroup.addControl('appUploadId', new FormControl(environment?.appUploadId, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.UPLOADS)]));
+    environmentFormGroup.addControl('appUploadVersionId', new FormControl(environment?.appUploadVersionId, []));
+    environmentFormGroup.addControl('appUrl', new FormControl(environment?.appUrl, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.USE_PATH), Validators.pattern(/^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/)]));
+    if (this.version.workspace.isAndroidNative) {
+      environmentFormGroup.addControl('appPackage', new FormControl(environment?.appPackage, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.APP_DETAILS && this.isHybrid)]));
+      environmentFormGroup.addControl('appActivity', new FormControl(environment?.appActivity, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.APP_DETAILS&& this.isHybrid)]));
+    }
+    else {
+      environmentFormGroup.addControl('appBundleId', new FormControl(environment?.appBundleId, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.APP_DETAILS && this.isHybrid)]));
+    }
+    environmentFormGroup.addControl('workspaceType', new FormControl(this.selectedVersion.workspace.workspaceType));
+    return environmentFormGroup;
+  }
+
+  get selectedVersion(){
+    return this.activeExecutionEnvironment?.version || this.version;
+  }
+
+  setTestPlanType() {
+    return;
+    if(this.testPlan.testPlanType == TestPlanType.CROSS_BROWSER){
+      this.testPlan.testPlanType = TestPlanType.DISTRIBUTED;
+    } else {
+      this.testPlan.testPlanType = TestPlanType.CROSS_BROWSER;
+    }
+  }
+
+  invokeBtnState(isInvalid) {
+    this.updateHeaderBtns.emit({
+      tabPosition: this.tabPosition,
+      buttons: [
+        {
+          className: 'theme-btn-clear-default',
+          content: this.translate.instant('pagination.previous'),
+          clickHandler: ()=> this.previous()
+        },
+        {
+          className: 'theme-btn-primary ml-15',
+          content: this.translate.instant('pagination.next'),
+          isDisabled: isInvalid,
+          clickHandler: ()=> (isInvalid ? '' : this.next())
+        }
+      ]
+    });
+  }
+
+  get activeExecutionEnvIndex() {
+    let idx = this.testDevices.indexOf(this.activeExecutionEnvironment);
+    return idx >= 0? idx : this.testDevices.length;
   }
 }

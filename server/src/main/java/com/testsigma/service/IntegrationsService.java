@@ -14,6 +14,9 @@ import com.testsigma.web.request.IntegrationsRequest;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -80,18 +83,18 @@ public class IntegrationsService {
   }
 
   /**
-   * @return list of external workspace config
+   * @return integrations pages
    */
-  public List<Integrations> findAll() {
-    return integrationsRepository.findAll();
+  public Page<Integrations> findAll(Specification<Integrations> specification, Pageable pageable) {
+    return integrationsRepository.findAll(specification, pageable);
   }
 
   public Integrations findByApplication(Integration application)
     throws IntegrationNotFoundException {
-    return this.findOptionalByWorkspace(application).orElseThrow(() -> new IntegrationNotFoundException(application.name() + " - Integration Not Enabled"));
+    return this.findOptionalByApplication(application).orElseThrow(() -> new IntegrationNotFoundException(application.name() + " - Integration Not Enabled"));
   }
 
-  public Optional<Integrations> findOptionalByWorkspace(Integration application) {
+  public Optional<Integrations> findOptionalByApplication(Integration application) {
     return this.integrationsRepository.findByWorkspaceId(application.getId().longValue());
   }
 

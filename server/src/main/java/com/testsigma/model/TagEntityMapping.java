@@ -81,6 +81,15 @@ public class TagEntityMapping {
   @WhereJoinTable(clause = "type ='TEST_SUITE'")
   private TestSuite testSuite;
 
+  @ManyToOne
+  @Fetch(value = FetchMode.SELECT)
+  @JoinColumn(name = "entity_id", referencedColumnName = "id", insertable = false, updatable = false)
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  @NotFound(action = NotFoundAction.IGNORE)
+  @WhereJoinTable(clause = "type ='TEST_PLAN'")
+  private TestPlan testPlan;
+
   public TagEntityMapping() {
     super();
   }

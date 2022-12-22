@@ -7,6 +7,8 @@ import java.util.Map;
 
 public class NaturalTextActionConstants {
   public final static String TEST_STEP_DATA_MAP_KEY_TEST_DATA = "test-data";
+  public final static String TEST_STEP_DATA_MAP_KEY_TEST_DATA_RECORDER = "testData";
+  public final static String TEST_STEP_KEY_UI_IDENTIFIER_RECORDER = "uiIdentifier";
   public final static String TEST_STEP_DATA_MAP_KEY_TEST_DATA_TYPE = "test-data-type";
   public final static String TEST_STEP_DATA_MAP_KEY_ELEMENT = "element";
   public final static String TEST_STEP_DATA_MAP_KEY_ATTRIBUTE = "attribute";

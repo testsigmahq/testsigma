@@ -8,6 +8,7 @@ CREATE TABLE `user_preferences`
   `created_date`        DATETIME   DEFAULT CURRENT_TIMESTAMP,
   `updated_date`        DATETIME   DEFAULT CURRENT_TIMESTAMP,
   `showed_github_star`  BIT(1)     DEFAULT b'0',
+  `clicked_skip_for_now` SMALLINT DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_user_preferences_on_email` (`email`)
 ) ENGINE = InnoDB

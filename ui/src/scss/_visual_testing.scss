@@ -21,6 +21,7 @@
       @extend .w-100;
     }
     .canvas-container {
+      margin: auto;
       @extend .position-absolute;
       top: 0;
       left: 0;
@@ -43,13 +44,9 @@
   }
   &.overlay-enabled {
     .compare-section {
-      @extend .mh-100, .ts-col-100, .position-absolute, .h-100;
+      @extend .mh-100, .ts-col-100, .position-absolute, .h-100 , .w-100;
       .canvas-container {
         opacity: 0.8;
-        @extend .w-100;
-        canvas[class$='-canvas'] {
-          @extend .w-100;
-        }
       }
     }
     .compare-border {
@@ -65,7 +62,7 @@
     @extend .d-flex,.ts-col-100,.theme-border-b;
     height: 53px;
     .vi-text {
-      flex: 0 0 calc(50% - 4px);max-width: calc(50% - 4px); padding: 17px 60px;
+      flex: 0 0 calc(50% - 2px);max-width: calc(50% - 2px); padding: 17px 60px;
       .vi-title {
         @extend .fz-14,.rb-medium;
       }

@@ -194,7 +194,7 @@ public class DatabaseMigrationConfig {
         log.info("Trying to create a database - " + dbName);
         String mysqlHostName = parseMysqlHostName(dataSourceUrl);
         String parseMysqlPort = parseMysqlPort(dataSourceUrl);
-        String connectionUrl = "jdbc:mysql://" + mysqlHostName + ":" + parseMysqlPort + "?useSSL=false";
+        String connectionUrl = "jdbc:mysql://" + mysqlHostName + ":" + parseMysqlPort + "?allowPublicKeyRetrieval=true&useSSL=false";
         Connection connection1 = null;
         try {
             log.info("Establishing connection to mysql server - " + connectionUrl);
@@ -213,7 +213,7 @@ public class DatabaseMigrationConfig {
     private String parseMysqlDatabaseName(String url) {
         String dbName = "testsigma_opensource";
         try {
-            Pattern pattern = Pattern.compile("^jdbc:mysql:\\/\\/(.+):([0-9]+)\\/(.+)\\?useSSL=false$");
+            Pattern pattern = Pattern.compile("^jdbc:mysql:\\/\\/(.+):([0-9]+)\\/(.+)\\?allowPublicKeyRetrieval=true&useSSL=false$");
             Matcher matcher = pattern.matcher(url);
             if (matcher.matches()) {
                 dbName = matcher.group(3);
@@ -227,7 +227,7 @@ public class DatabaseMigrationConfig {
     private String parseMysqlHostName(String url) {
         String dbName = "localhost";
         try {
-            Pattern pattern = Pattern.compile("^jdbc:mysql:\\/\\/(.+):([0-9]+)\\/(.+)\\?useSSL=false$");
+            Pattern pattern = Pattern.compile("^jdbc:mysql:\\/\\/(.+):([0-9]+)\\/(.+)\\?allowPublicKeyRetrieval=true&useSSL=false$");
             Matcher matcher = pattern.matcher(url);
             if (matcher.matches()) {
                 dbName = matcher.group(1);
@@ -241,7 +241,7 @@ public class DatabaseMigrationConfig {
     private String parseMysqlPort(String url) {
         String dbName = "3306";
         try {
-            Pattern pattern = Pattern.compile("^jdbc:mysql:\\/\\/(.+):([0-9]+)\\/(.+)\\?useSSL=false$");
+            Pattern pattern = Pattern.compile("^jdbc:mysql:\\/\\/(.+):([0-9]+)\\/(.+)\\?allowPublicKeyRetrieval=true&useSSL=false$");
             Matcher matcher = pattern.matcher(url);
             if (matcher.matches()) {
                 dbName = matcher.group(2);

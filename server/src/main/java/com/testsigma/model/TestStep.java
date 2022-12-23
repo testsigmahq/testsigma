@@ -279,7 +279,7 @@ public class TestStep {
     if(toElement != null) {
       testStepDataMap.setToUiIdentifier(toElement);
     }
-    if (ifConditionExpectedResults.length > 0) {
+    if (ifConditionExpectedResults != null && ifConditionExpectedResults.length > 0) {
       testStepDataMap.setIfConditionExpectedResults(ifConditionExpectedResults);
     }
     if (forLoopStartIndex != null || forLoopTestDataId != null || forLoopEndIndex != null) {

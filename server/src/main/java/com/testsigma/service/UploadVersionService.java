@@ -176,7 +176,7 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
     return uploadVersion;
   }
 
-  private File copyUploadToTempFile(MultipartFile uploadedFile) throws TestsigmaException {
+  public File copyUploadToTempFile(MultipartFile uploadedFile) throws TestsigmaException {
     try {
       String fileName = uploadedFile.getOriginalFilename().replaceAll("\\+", "_");
       String fileBaseName = FilenameUtils.getBaseName(fileName);

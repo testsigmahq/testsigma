@@ -140,7 +140,7 @@ public class RunTimeDataService {
     List<RunTimeVariableDTO> runTimeVariableDTOS = new ArrayList<>();
     if(testStep.getAction().indexOf("Store current") != -1 && testStep.getDataMap() != null){
       runTimeVariableName = testStep.getDataMap().getAttribute();
-    } else if(testStep.getDataMap() != null) {
+    } else if(testStep.getDataMap() != null && testStep.getDataMap().getTestData() != null) {
       TestStepNlpData testStepNlpData = testStep.getDataMap().getTestData().getOrDefault(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA,null);
       runTimeVariableName = (testStepNlpData != null)?testStepNlpData.getValue():runTimeVariableName;
     }

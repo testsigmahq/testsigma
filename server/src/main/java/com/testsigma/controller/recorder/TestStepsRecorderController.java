@@ -35,10 +35,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping(path = "/os_recorder/v2/test_steps", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -138,6 +135,11 @@ public class TestStepsRecorderController {
             TestStepRequest testStepRequest = testStepRecorderMapper.mapRequest(request);
             TestStep testStep = mapper.map(testStepRequest);
             testStep.setCreatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+            if(testStep.getPosition() == null) {
+                Optional<TestStep> lastTestStep = service.findTopByTestCaseIdOrderByPositionDesc(testStep.getTestCaseId());
+                int position = lastTestStep.isPresent() ? lastTestStep.get().getPosition()+1 : 0;
+                testStep.setPosition(position);
+            }
             if (testStep.getParentId() != null)
                 testStep.setDisabled(this.service.find(testStep.getParentId()).getDisabled());
             testStep = service.create(testStep);
@@ -147,7 +149,13 @@ public class TestStepsRecorderController {
             testStepRecorderDTO.setUiIdentifierDTO(uiIdentifierMapper.mapDTO(uiIdentifierMapper.map(element)));
         } else{
             TestStepRequest testStepRequest = testStepRecorderMapper.mapRequest(request);
-            TestStep testStep = service.create(mapper.map(testStepRequest));
+            TestStep testStep = mapper.map(testStepRequest);
+            if(testStep.getPosition() == null) {
+                Optional<TestStep> lastTestStep = service.findTopByTestCaseIdOrderByPositionDesc(testStep.getTestCaseId());
+                int position = lastTestStep.isPresent() ? lastTestStep.get().getPosition()+1 : 0;
+                testStep.setPosition(position);
+            }
+            testStep = service.create(testStep);
             testStepDTO = mapper.mapDTO(testStep);
             testStepRecorderDTO = testStepRecorderMapper.mapDTO(testStepDTO);
         }

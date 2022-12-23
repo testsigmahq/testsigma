@@ -27,6 +27,8 @@ import java.util.Optional;
 @Transactional
 public interface TestStepRepository extends JpaRepository<TestStep, Long> {
 
+  Optional<TestStep> findTopByTestCaseIdOrderByPositionDesc(Long testCaseId);
+
   List<TestStep> findAllByTestCaseIdOrderByPositionAsc(Long testCaseId);
 
   List<TestStep> findAllByTestCaseIdAndDisabledIsNotOrderByPositionAsc(Long testCaseId, Boolean notDisabled);

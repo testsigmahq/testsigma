@@ -55,7 +55,7 @@ public class TestProjectImportService {
         }
     }
 
-    private void importFromYamlFile(File yamlFile) throws TestProjectImportException, IOException, ResourceNotFoundException {
+    private boolean importFromYamlFile(File yamlFile) throws TestProjectImportException, IOException, ResourceNotFoundException {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         Optional<TestProjectYamlRequest> testProjectYamlRequest = Optional.empty();
         try {
@@ -67,10 +67,13 @@ public class TestProjectImportService {
         }
         if(testProjectYamlRequest.isPresent()) {
             projectImportService.importFromRequest(testProjectYamlRequest.get());
+            return true;
         }
+        return false;
     }
 
     public void importFromZip(File zipFile) throws TestProjectImportException {
+        Boolean atleastOneFileImported = false, currentFileImported;
         try {
             File tempFolder = Files.createTempDirectory("test_project").toFile();
             File extractedFolder = zipFileService.unZipFile(zipFile, tempFolder);
@@ -80,8 +83,12 @@ public class TestProjectImportService {
                 String extension = FilenameUtils.getExtension(file.getName());
                 if(extension.isBlank() || extension.contains("yaml")){
                     log.info("Trying to import testproject yaml file: " + file.getName());
-                    importFromYamlFile(file);
+                    currentFileImported = importFromYamlFile(file);
+                    atleastOneFileImported = !atleastOneFileImported ? currentFileImported : atleastOneFileImported;
                 }
+            }
+            if(!atleastOneFileImported) {
+                throw new TestProjectImportException("No yaml file imported successfully");
             }
         } catch (IOException | ResourceNotFoundException | TestProjectImportException e) {
             log.error(e.getMessage(), e);

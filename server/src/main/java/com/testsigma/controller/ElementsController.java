@@ -34,6 +34,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -127,7 +128,7 @@ public class ElementsController {
 
   @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
   @ResponseStatus(HttpStatus.OK)
-  public void delete(@PathVariable("id") Long id) throws ResourceNotFoundException {
+  public void delete(@PathVariable("id") Long id) throws TestsigmaException, IOException {
     elementService.delete(elementService.find(id));
   }
 

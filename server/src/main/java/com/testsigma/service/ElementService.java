@@ -19,6 +19,7 @@ import com.testsigma.dto.export.ElementXMLDTO;
 import com.testsigma.event.ElementEvent;
 import com.testsigma.event.EventType;
 import com.testsigma.exception.ResourceNotFoundException;
+import com.testsigma.exception.TestsigmaException;
 import com.testsigma.mapper.ElementMapper;
 import com.testsigma.mapper.recorder.UiIdentifierMapper;
 import com.testsigma.model.*;
@@ -56,6 +57,8 @@ public class ElementService extends XMLExportImportService<Element> {
   private final ElementMapper elementMapper;
   private final ElementScreenService screenNameService;
   private final ApplicationEventPublisher applicationEventPublisher;
+  private final EntityExternalMappingService entityExternalMappingService;
+  private final IntegrationsService integrationsService;
 
   public List<Element> findByNameInAndWorkspaceVersionId(List<String> elementNames, Long workspaceVersionId) {
     return elementRepository.findByNameInAndWorkspaceVersionId(elementNames, workspaceVersionId);
@@ -167,7 +170,15 @@ public class ElementService extends XMLExportImportService<Element> {
     return element;
   }
 
-  public void delete(Element element) {
+  public void delete(Element element) throws TestsigmaException, IOException {
+    Optional<Integrations> testProjectIntegration = integrationsService.findOptionalByApplication(Integration.TestProjectImport);
+    if(testProjectIntegration.isPresent()) {
+      Optional<EntityExternalMapping> entityExternalMapping = entityExternalMappingService.
+              findByEntityIdAndEntityTypeAndApplicationId(element.getId(), EntityType.ELEMENT, testProjectIntegration.get().getId());
+      if (entityExternalMapping.isPresent()) {
+        entityExternalMappingService.destroy(entityExternalMapping.get());
+      }
+    }
     elementRepository.delete(element);
     this.resetDuplicate(element.getWorkspaceVersionId(), element.getLocatorValue(), element.getLocatorType(), element.getScreenNameId());
     publishEvent(element, EventType.DELETE);

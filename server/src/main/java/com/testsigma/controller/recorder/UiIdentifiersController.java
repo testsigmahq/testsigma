@@ -11,6 +11,7 @@ package com.testsigma.controller.recorder;
 
 import com.testsigma.dto.ElementDTO;
 import com.testsigma.exception.ResourceNotFoundException;
+import com.testsigma.exception.TestsigmaException;
 import com.testsigma.mapper.ElementMapper;
 import com.testsigma.mapper.recorder.UiIdentifierMapper;
 import com.testsigma.model.*;
@@ -32,6 +33,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -120,7 +122,7 @@ public class UiIdentifiersController {
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
     @PreAuthorize("hasPermission('FIELD_DEFINITION','FULL_ACCESS')")
     @ResponseStatus(HttpStatus.OK)
-    public void delete(@PathVariable("id") Long id) throws ResourceNotFoundException {
+    public void delete(@PathVariable("id") Long id) throws TestsigmaException, IOException {
         uiIdentifierService.delete(uiIdentifierService.find(id));
     }
 

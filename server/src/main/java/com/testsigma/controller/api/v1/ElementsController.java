@@ -12,6 +12,7 @@ package com.testsigma.controller.api.v1;
 import com.testsigma.dto.api.APIElementDTO;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaDatabaseException;
+import com.testsigma.exception.TestsigmaException;
 import com.testsigma.mapper.ElementMapper;
 import com.testsigma.model.Element;
 import com.testsigma.model.LocatorType;
@@ -29,6 +30,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 @RestController("apiElementsController")
@@ -75,7 +77,7 @@ public class ElementsController {
 
   @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
   @ResponseStatus(HttpStatus.OK)
-  public void delete(@PathVariable("id") Long id) throws ResourceNotFoundException {
+  public void delete(@PathVariable("id") Long id) throws TestsigmaException, IOException {
     elementService.delete(elementService.find(id));
   }
 }

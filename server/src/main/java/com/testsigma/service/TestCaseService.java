@@ -297,11 +297,6 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
     testCase.setName(testCaseRequest.getName());
     testCase.setCreatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
     testCase.setLastRunId(null);
-    if (testCaseRequest.getIsStepGroup()) {
-      testCase.setTestDataStartIndex(null);
-      testCase.setTestDataId(null);
-      testCase.setIsDataDriven(false);
-    }
     testCase.setIsStepGroup(testCaseRequest.getIsStepGroup());
     testCase.setCopiedFrom(parentCase.getId());
     testCase.setPreRequisiteCase(null);

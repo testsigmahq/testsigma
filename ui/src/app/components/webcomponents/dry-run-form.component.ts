@@ -1,4 +1,4 @@
-import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
 import {NotificationsService, NotificationType} from 'angular2-notifications';
@@ -31,6 +31,8 @@ import {TestCaseResultService} from "../../services/test-case-result.service";
 import {TestCaseResult} from "../../models/test-case-result.model";
 import {TestPlanResult} from "../../models/test-plan-result.model";
 import {PlatformService} from "../../agents/services/platform.service";
+import {InternalRoute} from "../../enums/internalRoute";
+import {buildUrl} from "../../utils/url";
 
 @Component({
   selector: 'app-dry-run-form',
@@ -51,9 +53,9 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
   public emptyElements: String[] = [];
   public invalidUrls: string[] = [];
   public searchAutoComplete = new FormControl();
-  public filteredDryRunConfigs: AdhocRunConfiguration[] =[];
-  public refresh: boolean=true;
-  public zeroActiveAgents:boolean = false;
+  public filteredDryRunConfigs: AdhocRunConfiguration[] = [];
+  public refresh: boolean = true;
+  public zeroActiveAgents: boolean = false;
 
   constructor(
     public authGuard: AuthenticationGuard,
@@ -102,6 +104,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
   get isAndroidNative(): boolean {
     return this.version?.workspace?.isAndroidNative;
   }
+
   get isHybrid() {
     return this.dryExecutionForm?.controls['testPlanLabType']?.value === TestPlanLabType.Hybrid;
   }
@@ -117,11 +120,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
     });
     this.agentService.findAll().subscribe(res => {
       res.content.forEach(agent => {
-        if (!agent.isOnline()) {
-          this.zeroActiveAgents = true;
-        }else{
-          this.zeroActiveAgents = false;
-        }
+        this.zeroActiveAgents = !agent.isOnline();
       })
     });
 
@@ -151,12 +150,12 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
       environmentId: new FormControl(this.testPlan.environmentId, []),
       testDevices: this.formBuilder.array([
         this.formBuilder.group({
-          agentId : new FormControl(this.testPlan.testDevices[0].agentId, [this.requiredIfValidator(() => this.isHybrid)]),
+          agentId: new FormControl(this.testPlan.testDevices[0].agentId, [this.requiredIfValidator(() => this.isHybrid)]),
           deviceId: new FormControl(this.testPlan.testDevices[0]?.deviceId, [this.requiredIfValidator(() => this.isHybrid && this.version?.workspace.isMobile)]),
-          platformOsVersionId :new FormControl(this.testPlan.testDevices[0].platformOsVersionId,  [this.requiredIfValidator(() => !this.isRest && this.isHybrid && !this.isPrivateGrid)]),
-          platformScreenResolutionId : new FormControl(this.testPlan.testDevices[0].platformScreenResolutionId, [this.requiredIfValidator(() => this.version?.workspace.isWeb && !this.isHybrid && !this.isPrivateGrid)]),
-          platformBrowserVersionId :new FormControl(this.testPlan.testDevices[0].platformBrowserVersionId, [this.requiredIfValidator(() => !this.version?.workspace.isMobile && !this.isRest && !this.isHybrid && !this.isPrivateGrid)]),
-          platformDeviceId : new FormControl(this.testPlan.testDevices[0].platformDeviceId,  [this.requiredIfValidator(() => !this.version?.workspace.isWeb && !this.isRest && !this.isHybrid && !this.isPrivateGrid)]),
+          platformOsVersionId: new FormControl(this.testPlan.testDevices[0].platformOsVersionId, [this.requiredIfValidator(() => !this.isRest && this.isHybrid && !this.isPrivateGrid)]),
+          platformScreenResolutionId: new FormControl(this.testPlan.testDevices[0].platformScreenResolutionId, [this.requiredIfValidator(() => this.version?.workspace.isWeb && !this.isHybrid && !this.isPrivateGrid)]),
+          platformBrowserVersionId: new FormControl(this.testPlan.testDevices[0].platformBrowserVersionId, [this.requiredIfValidator(() => !this.version?.workspace.isMobile && !this.isRest && !this.isHybrid && !this.isPrivateGrid)]),
+          platformDeviceId: new FormControl(this.testPlan.testDevices[0].platformDeviceId, [this.requiredIfValidator(() => !this.version?.workspace.isWeb && !this.isRest && !this.isHybrid && !this.isPrivateGrid)]),
         })
       ])
     })
@@ -178,7 +177,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
     this.saving = true;
     this.normalizeFormValue();
     this.dryTestPlanService.create(this.testPlan).subscribe((res: TestPlanResult) => {
-      this.testCaseResultService.findAll("testPlanResultId:"+res.id+",iteration:null", "id,desc").subscribe((res: Page<TestCaseResult>) => {
+      this.testCaseResultService.findAll("testPlanResultId:" + res.id + ",iteration:null", "id,desc").subscribe((res: Page<TestCaseResult>) => {
         this.saving = false;
         this.dialogRef.close();
         this.navigateToResults(res)
@@ -224,17 +223,16 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
   }
 
   setConfigurationId(configuration: AdhocRunConfiguration) {
-    this.refresh= false;
+    this.refresh = false;
     this.configuration = undefined;
-    if(configuration?.id) {
+    if (configuration?.id) {
       this.configuration = configuration;
-      if(configuration!=null && configuration.platformOsVersionId!=null) {
+      if (configuration != null && configuration.platformOsVersionId != null) {
         this.platformService.findOsVersion(configuration.platformOsVersionId, this.testPlan.testPlanLabType).subscribe((platformOsversion) => {
           configuration.platform = platformOsversion.platform;
           this.setDryFormValues(configuration);
         });
-      }
-      else{
+      } else {
         this.setDryFormValues(configuration);
       }
     } else {
@@ -242,7 +240,9 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
       this.createExecution();
       this.addFormControls();
     }
-    setTimeout(()=> {this.refresh=true}, 100);
+    setTimeout(() => {
+      this.refresh = true
+    }, 100);
   }
 
   setDryFormValues(configuration: AdhocRunConfiguration) {
@@ -279,8 +279,8 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
     this.configuration = new AdhocRunConfiguration().deserializeDryRunForm(this.dryExecutionForm.getRawValue());
     this.configuration.workspaceType = this.version.workspace.workspaceType;
     let environment = this.dryExecutionForm.getRawValue().testDevices[0];
-    if(this.isHybrid){
-      this.agentService.findAll("id:"+ this.dryExecutionForm.getRawValue().testDevices[0].agentId).subscribe(res => {
+    if (this.isHybrid) {
+      this.agentService.findAll("id:" + this.dryExecutionForm.getRawValue().testDevices[0].agentId).subscribe(res => {
         this.configuration.name = this.configuration.formattedHybridName(res.content[0].name, environment);
         this.openSaveConfigForm();
       });
@@ -290,7 +290,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
     }
   }
 
-  openSaveConfigForm(){
+  openSaveConfigForm() {
     delete this.configuration.id;
     const dialogRef = this.matDialog.open(DryRunSavedConfigFormComponent, {
       width: '30%',
@@ -333,7 +333,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
     environment.matchBrowserVersion = this.testPlan.matchBrowserVersion;
     environment.testPlanLabType = this.testPlan.testPlanLabType;
     this.testPlan.testDevices = [environment];
-    if(!environment.isAppUploadType) {
+    if (!environment.isAppUploadType) {
       environment.appUploadId = null;
     }
     if (!environment.isAppDetailsType) {
@@ -344,8 +344,8 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
       environment.appUrl = null;
     }
 
-    if (this.testPlan.isHybrid){
-      environment.platformBrowserVersionId=null;
+    if (this.testPlan.isHybrid) {
+      environment.platformBrowserVersionId = null;
       environment.platformDeviceId = null;
       environment.platformScreenResolutionId = null;
     }
@@ -366,7 +366,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
 
   private createExecution() {
     this.testPlan = new DryTestPlan();
-    this.testPlan.name = "Dry run::"+ new Date();
+    this.testPlan.name = "Dry run::" + new Date();
     this.testPlan.elementTimeOut = 30;
     this.testPlan.pageTimeOut = 30;
     this.testPlan.screenshot = Screenshot.ALL_TYPES;
@@ -379,11 +379,13 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
   }
 
   private fetchEmptyElements() {
-    this.elementService.findEmptyElements( this.options.testCaseId ,this.version.id).subscribe(
+    this.elementService.findEmptyElements(this.options.testCaseId, this.version.id).subscribe(
       res => {
         res.content.forEach((element) => this.emptyElements.push(element.name));
       },
-      err => {console.log("g")}
+      err => {
+        console.log("g")
+      }
     )
   }
 
@@ -392,28 +394,29 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
       res => {
         res.forEach((url) => this.invalidUrls.push(url));
       },
-      err => {}
+      err => {
+      }
     )
   }
 
   disableRunButton() {
-    return this.saving || this.savingConfig  || this.emptyElements.length>0 || !this.dryExecutionForm?.valid
-      || (!this.isHybrid &&  this.invalidUrls.length>0) || (this.isHybrid && this.zeroActiveAgents) ;
+    return this.saving || this.savingConfig || this.emptyElements.length > 0 || !this.dryExecutionForm?.valid
+      || (!this.isHybrid && this.invalidUrls.length > 0) || (this.isHybrid && this.zeroActiveAgents);
   }
 
   private searchDryRunConfigs(term: any) {
     this.filteredDryRunConfigs = this.configurations.filter(config => config.name.includes(term.trim()))
   }
 
-  closeDialogTab(){
+  closeDialogTab() {
     this.dialogRef.close();
   }
 
-  navigateToResults(res){
-    if(this.router.url.includes('test_case_results')) {
-      window.location.href = window.location.origin + `/ui/td/test_case_results/${res?.content[0]?.id}`;
+  navigateToResults(res) {
+    if (this.router.url.includes('test_case_results')) {
+      window.location.href = window.location.origin + buildUrl([InternalRoute.UI, InternalRoute.TD, InternalRoute.TEST_CASE_RESULTS]) + res?.content[0]?.id;
     } else {
-      this.router.navigate(['/td', 'test_case_results', res?.content[0]?.id]);
+      this.router.navigate([InternalRoute.TD, InternalRoute.TEST_CASE_RESULTS, res?.content[0]?.id]);
     }
   }
 }

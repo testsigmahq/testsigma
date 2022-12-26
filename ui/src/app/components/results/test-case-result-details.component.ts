@@ -72,6 +72,9 @@ export class TestCaseResultDetailsComponent extends BaseComponent implements OnI
   public runResultEntityType: EntityType = EntityType.RUN_RESULT;
   public version:WorkspaceVersion;
 
+  readonly STEPS = 'steps';
+  readonly STEPS_CURRENT = 'steps_current';
+  readonly ATTACHMENT = 'attachment';
   @ViewChild(RouterOutlet) outlet: RouterOutlet;
 
   constructor(public authGuard: AuthenticationGuard,
@@ -114,7 +117,7 @@ export class TestCaseResultDetailsComponent extends BaseComponent implements OnI
   }
 
   ngOnInit() {
-    this.activeTab = 'steps';
+    this.activeTab = this.STEPS;
     this.route.params.subscribe((params: Params) => {
       this.pushToParent(this.route, params);
       this.testCaseResultId = params.resultId;
@@ -383,6 +386,9 @@ export class TestCaseResultDetailsComponent extends BaseComponent implements OnI
     console.log(hasSteps);
   }
 
+  /**
+   * This method trigers a DryRunFormModal.
+   */
   openDryRun() {
     this.matModal.open(DryRunFormComponent, {
       height: "100vh",
@@ -396,13 +402,10 @@ export class TestCaseResultDetailsComponent extends BaseComponent implements OnI
   }
 
   public fetchVersion(workspaceVersionId:number){
-    this.chromeRecorderService.isChromeBrowser();
-    this.chromeRecorderService.pingRecorder();
     this.workspaceVersionService.show(workspaceVersionId).subscribe((res)=>{
       this.version = res;
       if (this.version.workspace.isWebMobile) {
         this.chromeRecorderService.isChromeBrowser();
-        this.chromeRecorderService.pingRecorder();
         setTimeout(() => {
           if (this.chromeRecorderService.isInstalled) {
             this.chromeRecorderService.recorderVersion = this.version;

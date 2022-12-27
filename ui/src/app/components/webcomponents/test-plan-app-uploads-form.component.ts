@@ -150,7 +150,7 @@ export class TestPlanAppUploadsFormComponent implements OnInit {
 
   ngOnChanges(): void {
     this.resetUploadFormControls(this.appSrcTypeControl.value);
-    this.appSrcTypeControl.valueChanges.subscribe(value => this.resetUploadFormControls(value));
+    this.appSrcTypeControl?.valueChanges?.subscribe(value => this.resetUploadFormControls(value));
     if(this.appSrcTypeControl.value == this.pathTypes[2])
       this.environmentFormGroup.get('appUploadId')?.setValidators(Validators.required);
     else
@@ -170,7 +170,7 @@ export class TestPlanAppUploadsFormComponent implements OnInit {
   }
 
   get appSrcTypeControl(): FormControl {
-    return <FormControl>(this.environmentFormGroup.getRawValue().appPathType? this.environmentFormGroup.controls['appPathType'] : ApplicationPathType.USE_PATH);
+    return <FormControl>(this.environmentFormGroup?.getRawValue().appPathType? this.environmentFormGroup?.controls['appPathType'] : ApplicationPathType.USE_PATH);
   }
 
   get isAppPathType() {

@@ -67,7 +67,7 @@ export class DryRunMobileNativeFormComponent extends BaseComponent implements On
     return <ApplicationPathType>(<FormGroup>this.environmentFormGroup)?.controls['appPathType']?.value;
   }
 
-  ngOnInit(): void {
+  ngOnChanges(){
     this.addControls();
   }
 
@@ -79,7 +79,7 @@ export class DryRunMobileNativeFormComponent extends BaseComponent implements On
     (<FormGroup>(<FormGroup>this.nativeForm?.controls['testDevices']).controls[0]).addControl('deviceId', new FormControl(this.dryExecution.testDevices[0].deviceId, [this.requiredIfValidator(() => {
       return this.isHybrid;
     })]));
-    this.environmentFormGroup.addControl('appPathType', new FormControl(this.dryExecution.testDevices[0].appPathType || (ApplicationPathType.UPLOADS), [Validators.required]));
+    this.environmentFormGroup.addControl('appPathType', new FormControl(this.dryExecution.testDevices[0].appPathType || ApplicationPathType.UPLOADS, [Validators.required]));
     this.environmentFormGroup.addControl('appUrl', new FormControl(this.dryExecution.testDevices[0].appUrl, [this.requiredIfValidator(() => this.appPathType == ApplicationPathType.USE_PATH), Validators.pattern(/^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/)]));
     this.environmentFormGroup.addControl('appPackage', new FormControl(this.dryExecution.testDevices[0].appPackage, [this.requiredIfValidator(() => (this.appPathType == ApplicationPathType.APP_DETAILS && this.isAndroidNative))]));
     this.environmentFormGroup.addControl('appActivity', new FormControl(this.dryExecution.testDevices[0].appActivity, [this.requiredIfValidator(() => (this.appPathType == ApplicationPathType.APP_DETAILS && this.isAndroidNative))]));

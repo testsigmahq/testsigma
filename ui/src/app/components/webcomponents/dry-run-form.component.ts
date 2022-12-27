@@ -195,7 +195,6 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
     this.dryRunSavedConfigurationService.findAll(this.version.workspace.workspaceType).subscribe(res => {
       this.configurations = res;
       this.noneConfiguration = new AdhocRunConfiguration();
-      this.setConfigurationId(null);
     }, (error) => {
       this.noneConfiguration = new AdhocRunConfiguration();
       this.setConfigurationId(null);

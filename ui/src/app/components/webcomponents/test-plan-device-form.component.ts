@@ -9,7 +9,7 @@ import {PlatformBrowser} from "../../agents/models/platform-browser.model";
 import {MobileOsType} from "../../agents/enums/mobile-os-type.enum";
 import {AgentService} from "../../agents/services/agent.service";
 import {Browser} from "../../agents/models/browser.model";
-import {Browsers} from "../../enums/browsers";
+import {WebBrowser} from "../../enums/web-browser";
 
 @Component({
   selector: 'app-test-plan-device-form',
@@ -104,9 +104,9 @@ export class TestPlanDeviceFormComponent extends TestPlanPlatformOsVersionFormCo
     this.environmentFormGroup.controls['platformDeviceId'].setValue(cloudDevice?.id);
     this.environmentFormGroup.controls['deviceName'].setValue(cloudDevice?.name);
     if (this.version.workspace.isMobileWeb) {
-      let browser = new PlatformBrowser().deserialize({id: "chrome", name: "Chrome"});
+      let browser = new PlatformBrowser().deserialize({id: WebBrowser.CHROME, name: WebBrowser.CHROME});
       if (this.platform.isIOS)
-        browser = new PlatformBrowser().deserialize({id: "safari", name: "Safari"});
+        browser = new PlatformBrowser().deserialize({id: WebBrowser.SAFARI, name: WebBrowser.SAFARI});
       this.environmentFormGroup.controls['browser']?.setValue(browser.name.toUpperCase());
     }
   }

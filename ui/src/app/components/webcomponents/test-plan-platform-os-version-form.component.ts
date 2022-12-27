@@ -4,7 +4,7 @@ import {Platform} from "../../agents/models/platform.model";
 import {PlatformOsVersion} from "../../agents/models/platform-os-version.model";
 import {FormGroup} from '@angular/forms';
 import {WorkspaceVersion} from "../../models/workspace-version.model";
-import {TestPlanLabType} from "../../enums/test-plan-lab-type.enum";
+import {TestPlanLabType,WebBrowser} from "../../enums";
 import {PlatformBrowser} from "../../agents/models/platform-browser.model";
 import {PlatformBrowserVersion} from "../../agents/models/platform-browser-version.model";
 import {Agent} from "../../agents/models/agent.model";
@@ -13,7 +13,6 @@ import {AgentService} from "../../agents/services/agent.service";
 import {Page} from "../../shared/models/page";
 import {Pageable} from "../../shared/models/pageable";
 import {Platform as EnumPlatform} from "../../enums/platform.enum";
-import {Browsers} from "../../enums/browsers";
 
 @Component({
   selector: 'app-test-plan-platform-os-version-form',
@@ -68,14 +67,14 @@ export class TestPlanPlatformOsVersionFormComponent implements OnInit {
     this.platformBrowser = null;
     this.browserVersion = null;
     this.isBrowserLoaded = false;
-    this.platformOsVersions=null;
+    this.platformOsVersions = null;
     if (changes && changes['testPlanLabType'] && !this.isEdit) {
       if (!changes['testPlanLabType']['firstChange'] &&
         (changes['testPlanLabType']['currentValue'] == TestPlanLabType.TestsigmaLab)) {
         this.environmentFormGroup?.controls['platformOsVersionId']?.patchValue(null);
       }
     }
-    if(changes && changes['environmentFormGroup'] && !changes['environmentFormGroup']['firstChange'] && !this.isEdit && this.isHybrid) {
+    if (changes && changes['environmentFormGroup'] && !changes['environmentFormGroup']['firstChange'] && !this.isEdit && this.isHybrid) {
       this.setTargetMachines();
     }
   }
@@ -96,7 +95,7 @@ export class TestPlanPlatformOsVersionFormComponent implements OnInit {
           this.platform = this.platforms[0];
           this.environmentFormGroup?.controls['platform']?.setValue(this.platform?.id);
         }
-        if(!this.platform){
+        if (!this.platform) {
           if (this.version.workspace.isWeb)
             this.platform = this.platforms.find(platform => platform.isWindows);
           else if (this.version.workspace.isAndroidNative)
@@ -107,7 +106,7 @@ export class TestPlanPlatformOsVersionFormComponent implements OnInit {
             this.platform = this.platforms.find(platform => platform.isIOS);
         }
         this.fetchOsVersions();
-    });
+      });
   }
 
   setPlatform(platformId) {
@@ -119,14 +118,13 @@ export class TestPlanPlatformOsVersionFormComponent implements OnInit {
     this.platformService.findAllOsVersions(this.platform, this.version.workspace.workspaceType, this.testPlanLabType).subscribe(res => {
       this.platformOsVersions = res;
       if (this.environmentFormGroup?.controls['platformOsVersionId']?.value)
-        this.platformOsVersion = this.platformOsVersions.find(osVersion => osVersion.id ==  this.environmentFormGroup?.controls['platformOsVersionId']?.value)
+        this.platformOsVersion = this.platformOsVersions.find(osVersion => osVersion.id == this.environmentFormGroup?.controls['platformOsVersionId']?.value)
       if (!this.platformOsVersion || setValue) {
-        if (this.platformOsVersions.length>0) {
+        if (this.platformOsVersions.length > 0) {
           this.platformOsVersion = this.platformOsVersions[0];
           this.environmentFormGroup?.controls['platformOsVersionId'].setValue(this.platformOsVersion.id);
           this.environmentFormGroup.controls['osVersion']?.setValue(this.platformOsVersion.version);
-        }
-        else{
+        } else {
           this.platformOsVersion = null;
           this.environmentFormGroup?.controls['platformOsVersionId'].setValue(null);
           this.environmentFormGroup.controls['osVersion']?.setValue("Not Available");
@@ -157,12 +155,12 @@ export class TestPlanPlatformOsVersionFormComponent implements OnInit {
         if (!this.platformBrowser || setValue) {
           this.platformBrowser = this.browsers[0];
           this.environmentFormGroup?.controls['browser']?.setValue(this.platformBrowser?.id);
-          if(this.version.workspace.isMobileWeb && this.platformBrowser.isChrome){
-            this.environmentFormGroup?.controls['browser']?.setValue(Browsers.CHROME);
+          if (this.version.workspace.isMobileWeb && this.platformBrowser.isChrome) {
+            this.environmentFormGroup?.controls['browser']?.setValue(WebBrowser.CHROME);
           }
         }
       }
-      if (this.isPrivateGrid){
+      if (this.isPrivateGrid) {
         if (this.environmentFormGroup?.controls['browser']?.value)
           this.platformBrowser = this.browsers.find(browser => browser.name == this.environmentFormGroup?.controls['browser']?.value);
         if (!this.platformBrowser || setValue) {
@@ -179,23 +177,22 @@ export class TestPlanPlatformOsVersionFormComponent implements OnInit {
   fetchBrowserVersions(setValue?: Boolean) {
     this.platformService.findAllBrowserVersions(this.platform, this.platformOsVersion, this.platformBrowser, this.version.workspace.workspaceType, this.testPlanLabType).subscribe(res => {
       this.browserVersions = res;
-      if ( this.environmentFormGroup?.controls['platformBrowserVersionId']?.value) {
+      if (this.environmentFormGroup?.controls['platformBrowserVersionId']?.value) {
         this.browserVersion = this.browserVersions.find(browserVersion => browserVersion.id === this.environmentFormGroup?.controls['platformBrowserVersionId']?.value)
       }
       if (setValue || !this.browserVersion) {
-        if (this.browserVersions.length>0) {
+        if (this.browserVersions.length > 0) {
           this.browserVersion = this.browserVersions[0];
           this.environmentFormGroup?.controls['platformBrowserVersionId'].setValue(this.browserVersion.id);
           this.environmentFormGroup?.controls['browserVersion']?.setValue(this.browserVersion?.version);
-        }
-        else{
+        } else {
           this.browserVersion = null;
           this.environmentFormGroup?.controls['platformBrowserVersionId'].setValue(null);
           this.environmentFormGroup?.controls['browserVersion']?.disable();
         }
       }
     });
-    this.isBrowserLoaded=true;
+    this.isBrowserLoaded = true;
   }
 
   setPlatformBrowserVersion(browserVersionId) {
@@ -220,22 +217,22 @@ export class TestPlanPlatformOsVersionFormComponent implements OnInit {
   setAgent(agent: Agent, isEdit?: boolean) {
     this.agent = agent;
     let rawData = this.environmentFormGroup['controls'];
-    if (rawData.browser?.value && (isEdit == undefined || isEdit == null))
+    if (rawData.browser?.value && (isEdit == undefined))
       isEdit = true;
     let data = {};
     if (!isEdit && this.agent && this.version.workspace.isWeb)
       this.browser = this.agent.browsers[0];
     let osType = this.version.workspace?.isMobileNative ?
-      ((this.version.workspace.isAndroidNative) ? EnumPlatform.Android: EnumPlatform.iOS): this.agent?.osType;
+      ((this.version.workspace.isAndroidNative) ? EnumPlatform.Android : EnumPlatform.iOS) : this.agent?.osType;
     data['platform'] = osType;
     data['osVersion'] = this.agent?.osVersion
     data['browser'] = this.browser?.name?.toUpperCase()
     data['browserVersion'] = this.browser?.majorVersion
     if (isEdit && this.agent) {
       let findBrowser = this.agent.browsers.find(browser => browser.name.toUpperCase() == rawData.browser.value);
-      let browser: Browser = findBrowser ? findBrowser : this.version.workspace.isWeb? this.agent.browsers[0]: null;
+      let browser: Browser = findBrowser ? findBrowser : this.version.workspace.isWeb ? this.agent.browsers[0] : null;
       data['platform'] = this.agent?.osType == rawData.platform.value ? rawData.platform.value :
-        (this.agent?.osType? this.agent?.osType : osType);
+        (this.agent?.osType ? this.agent?.osType : osType);
       data['osVersion'] = this.agent?.osVersion == rawData.osVersion.value ? rawData.osVersion.value : this.agent?.osVersion;
       data['browser'] = browser?.name?.toUpperCase()
       data['browserVersion'] = browser?.majorVersion
@@ -245,10 +242,9 @@ export class TestPlanPlatformOsVersionFormComponent implements OnInit {
           data['browser'] = this.browser?.name?.toUpperCase();
         }
       });
-      this.agentsEmpty = true;
-      setTimeout(()=> {this.agentsEmpty=false}, 10);
+      this.agentsEmpty = false;
     }
-    this.environmentFormGroup.controls['platform'].setValue((this.version.workspace.isMobileWeb||this.version.workspace.isWeb)?null:data['platform'])
+    this.environmentFormGroup.controls['platform'].setValue((this.version.workspace.isMobileWeb || this.version.workspace.isWeb) ? null : data['platform'])
     this.environmentFormGroup.controls['osVersion'].setValue(data['osVersion']);
     this.environmentFormGroup.controls['browser']?.setValue(data['browser']);
     this.environmentFormGroup.controls['browserVersion']?.setValue(data['browserVersion']);
@@ -259,7 +255,7 @@ export class TestPlanPlatformOsVersionFormComponent implements OnInit {
     this.browserVersion = null;
     this.platformBrowser = null;
     this.environmentFormGroup.controls['browserVersion']?.setValue(this.browser?.majorVersion);
-    if(!this.isHybrid)
+    if (!this.isHybrid)
       this.environmentFormGroup.controls['platformBrowserVersionId']?.setValue(this.browser?.id);
   }
 
@@ -290,7 +286,7 @@ export class TestPlanPlatformOsVersionFormComponent implements OnInit {
   fetchAgents() {
     let pageable = new Pageable();
     pageable.pageSize = 1;
-    this.agentService.findAll(null, null,pageable).subscribe(res => this.agentsEmpty = res.empty);
+    this.agentService.findAll(null, null, pageable).subscribe(res => this.agentsEmpty = res.empty);
   }
 
 }

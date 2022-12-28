@@ -31,7 +31,7 @@ import {TestCaseResultService} from "../../services/test-case-result.service";
 import {TestCaseResult} from "../../models/test-case-result.model";
 import {TestPlanResult} from "../../models/test-plan-result.model";
 import {PlatformService} from "../../agents/services/platform.service";
-import {InternalRoute} from "../../enums/internalRoute";
+import {InternalRoute} from "../../enums/internal-route";
 import {buildUrl} from "../../utils/url";
 
 @Component({
@@ -228,7 +228,7 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
     this.configuration = undefined;
     if (configuration?.id) {
       this.configuration = configuration;
-      if (configuration != null && configuration.platformOsVersionId != null) {
+      if (configuration.platformOsVersionId != null) {
         this.platformService.findOsVersion(configuration.platformOsVersionId, this.testPlan.testPlanLabType).subscribe((platformOsversion) => {
           configuration.platform = platformOsversion.platform;
           this.setDryFormValues(configuration);
@@ -385,7 +385,9 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
         res.content.forEach((element) => this.emptyElements.push(element.name));
       },
       err => {
-        console.log("g")
+        this.translate.get("err.empty_elements").subscribe((res)=>{
+          this.showAPIError(err,res)
+        })
       }
     )
   }
@@ -396,6 +398,9 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
         res.forEach((url) => this.invalidUrls.push(url));
       },
       err => {
+        this.translate.get("err.url_validation").subscribe((res)=>{
+          this.showAPIError(err,res)
+        })
       }
     )
   }

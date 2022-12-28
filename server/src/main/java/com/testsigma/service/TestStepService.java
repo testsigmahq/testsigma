@@ -133,7 +133,9 @@ public class TestStepService extends XMLExportImportService<TestStep> {
     }
 
     public TestStep update(TestStep testStep) throws TestsigmaException {
-        if (testStep.getConditionType()==TestStepConditionType.LOOP_WHILE &&testStep.getMaxIterations()>101){
+        if (testStep.getConditionType()==TestStepConditionType.LOOP_WHILE
+                && testStep.getMaxIterations() != null
+                && testStep.getMaxIterations()>100){
             throw  new TestsigmaException(String.format("In While Loop, please set Max iterations between 1 to 100"));
         }
         testStep = updateDetails(testStep);

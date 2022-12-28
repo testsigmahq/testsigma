@@ -2137,5 +2137,7 @@
   "message.common.xray_link.pre_failure": "Please assign Xray Id to all {{EntityName}}",
   "message.common.prerequisite_not_linked": "Prerequisite test case not linked",
   "hint.xray.assets": "Enable Jira Integration to publish the logs, screenshots & videos in execution result.",
-  "xray.filter.title": "Added Xray Id"
+  "xray.filter.title": "Added Xray Id",
+  "err.empty_elements": "Error While fetching empty elements",
+  "err.url_validation": "Error while validating testdata url"
 }

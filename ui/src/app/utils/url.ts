@@ -5,7 +5,5 @@
  */
 
 export const buildUrl = (commands:string[]) => {
-  commands.unshift('');
-  commands.push('');
-  return commands.join('/')
+  return "/"+commands.join('/')+"/"
 }

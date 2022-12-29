@@ -182,7 +182,7 @@ export abstract class TestStepListItemComponent extends BaseComponent implements
     this.isCloning = true;
     let testStepNew: TestStep = new TestStep().deserialize(testStep.serialize());
     testStepNew.id = undefined;
-    testStepNew.position = this.testSteps.totalElements+1;
+    testStepNew.position = this.testSteps.totalElements;
     testStepNew.copiedFrom = testStep.id;
     delete testStepNew.parentId;
     this.testStepService.create(testStepNew).subscribe((step) => {

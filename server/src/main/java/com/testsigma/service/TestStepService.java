@@ -10,6 +10,7 @@ package com.testsigma.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.testsigma.constants.NaturalTextActionConstants;
 import com.testsigma.dto.BackupDTO;
 import com.testsigma.dto.TestStepDTO;
 import com.testsigma.dto.export.TestStepCloudXMLDTO;
@@ -30,7 +31,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -209,7 +209,18 @@ public class TestStepService extends XMLExportImportService<TestStep> {
     }
 
     public void updateTestDataParameterName(Long testDataId, String parameter, String newParameterName) {
-        this.repository.updateTopLevelTestDataParameter(newParameterName, parameter, testDataId);
+        List<TestStep> testSteps = this.repository.getTopLevelTestDataParameter(testDataId);
+        for(TestStep testStep : testSteps) {
+            TestStepData testStepData = testStep.getDataMap();
+            if(testStepData != null && testStepData.getTestData() != null) {
+                testStepData.getTestData().values().forEach(data -> {
+                    if(data.getValue().equals(parameter) && data.getType().equals("parameter")) {
+                        data.setValue(newParameterName);
+                        save(testStep);
+                    }
+                });
+            }
+        }
         List<TestStep> topConditionalSteps = this.repository.getTopLevelConditionalStepsExceptLoop(testDataId);
         for (TestStep step : topConditionalSteps) {
             updateChildLoops(step.getId(), parameter, newParameterName);
@@ -225,8 +236,19 @@ public class TestStepService extends XMLExportImportService<TestStep> {
     }
 
     private void updateChildLoops(Long parentId, String parameter, String newParameterName) {
-        this.repository.updateChildStepsTestDataParameter(newParameterName, parameter, parentId);
-        this.repository.updateChildStepsTestDataParameterUsingTestDataProfileId(newParameterName, parameter, parentId);
+        List<TestStep> childSteps = this.repository.getChildStepsTestDataParameter(parentId);
+        childSteps.addAll(this.repository.getChildStepsTestDataParameterUsingTestDataProfileId(parentId));
+        for(TestStep testStep : childSteps) {
+            TestStepData testStepData = testStep.getDataMap();
+            if(testStepData != null && testStepData.getTestData() != null) {
+                testStepData.getTestData().values().forEach(data -> {
+                    if(data.getValue() == parameter && data.getType() == "parameter") {
+                        data.setValue(newParameterName);
+                        save(testStep);
+                    }
+                });
+            }
+        }
         List<TestStep> conditionalSteps = this.repository.getChildConditionalStepsExceptLoop(parentId);
         for (TestStep step : conditionalSteps) {
             updateChildLoops(step.getId(), parameter, newParameterName);
@@ -345,7 +367,7 @@ public class TestStepService extends XMLExportImportService<TestStep> {
                             }
                         }
                     }
-                    if (Objects.equals(step.getTestDataType(), TestDataType.function.getDispName()) && step.getType() != TestStepType.CUSTOM_FUNCTION) {
+                    if (Objects.equals(step.getDataMap().getTestData().get("test-data").getType(), TestDataType.function.getDispName()) && step.getType() != TestStepType.CUSTOM_FUNCTION) {
                         message = "Deprecated Data Generator / Data Generator not found!";
                         defaultDataGeneratorService.find(step.getTestDataFunctionId());
                     }
@@ -389,9 +411,15 @@ public class TestStepService extends XMLExportImportService<TestStep> {
     private void mapDeprecatedActionsWithUpdatesOnes(TestStep step) {
         ActionTestDataMap filteredMap = this.actionTestDataMap.stream().filter(dataMap -> dataMap.getTestDataHash().containsKey(step.getNaturalTextActionId())).findFirst().orElse(null);
         if (filteredMap != null) {
-            step.setTestData(filteredMap.getTestDataHash().get(step.getNaturalTextActionId()));
+            TestStepData testStepData = step.getDataMap() != null ? new TestStepData() : step.getDataMap();
+            if(testStepData.getTestData() == null) {
+                testStepData.setTestData(new HashMap<>());
+            }
+            TestStepNlpData testStepNlpData = new TestStepNlpData();
+            testStepNlpData.setValue(filteredMap.getTestDataHash().get(step.getNaturalTextActionId()));
+            testStepNlpData.setType(TestDataType.raw.getDispName());
+            testStepData.getTestData().put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA, testStepNlpData);
             step.setNaturalTextActionId(filteredMap.getOptimizedActionId());
-            step.setTestDataType(TestDataType.raw.getDispName());
         }
     }
 

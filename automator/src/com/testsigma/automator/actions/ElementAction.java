@@ -108,6 +108,11 @@ public abstract class ElementAction extends DriverAction {
     return testDataPropertiesEntity.getTestDataValue();
   }
 
+  protected String getTestDataType(String testDataNlpVarName) {
+    TestDataPropertiesEntity testDataPropertiesEntity = getTestDataPropertiesEntity(testDataNlpVarName);
+    return testDataPropertiesEntity.getTestDataType();
+  }
+
   protected FindByType getFindByType() {
     return getFindByType(TESTS_TEP_DATA_MAP_KEY_ELEMENT);
   }

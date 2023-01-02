@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.util.Map;
+
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -12,17 +14,13 @@ public class TestStepDataMap {
 
 
   @JsonProperty("condition_if")
-  private ResultConstant[] ifConditionExpectedResults;
+  private Object ifConditionExpectedResults;
   @JsonProperty("condition-type")
   private TestStepConditionType conditionType;
   @JsonProperty("test-data")
-  private String testData;
-  @JsonProperty("test-data-function")
-  private DefaultDataGenerator defaultDataGenerator;
+  private Map<String, TestStepNlpData> testData;
   @JsonProperty("custom-step")
   private TestStepCustomStep customStep;
-  @JsonProperty("test-data-type")
-  private String testDataType;
   @JsonProperty("element")
   private String element;
   @JsonProperty("from-element")
@@ -37,10 +35,8 @@ public class TestStepDataMap {
   private TestStepWhileLoop whileLoop;
   @JsonProperty("whileCondition")
   private String whileCondition;
-  @JsonProperty("addon_test_data_function")
-  private AddonTestStepTestData addonTDF;
   @JsonProperty("visual_enabled")
   private Boolean visualEnabled;
-  @JsonProperty("test-data-id")
-  private Long testDataId;
+  @JsonProperty("migrated")
+  private Boolean migrated = Boolean.FALSE;
 }

@@ -204,19 +204,21 @@ public class StepProcessor {
         }
         testDatasMap.put(entry.getKey(), testDataPropertiesEntity);
       }
-    } else {
-      String testDataName = NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA;
-      String testDataValue = testStepDTO.getTestData();
-      String testDataType = testStepDTO.getTestDataType();
+    } else if(testStepDTO.getDataMap() != null && testStepDTO.getDataMap().getTestData() != null){
+      for(String key : testStepDTO.getDataMap().getTestData().keySet()) {
+        String testDataName = key;
+        String testDataValue = testStepDTO.getDataMap().getTestData().get(key).getValue();
+        String testDataType = testStepDTO.getDataMap().getTestData().get(key).getType();
 
-      if (!org.apache.commons.lang3.StringUtils.isEmpty(testDataName)) {
-        com.testsigma.automator.entity.TestDataPropertiesEntity testDataPropertiesEntity = getTestDataEntityDTO(testDataName,
-          testDataValue, testDataType, null, exeTestStepEntity);
-        if (TestDataType.getTypeFromName(testDataType) == TestDataType.raw) {
-          testDataPropertiesEntity.setTestDataValue(testStepDTO.getTestData());
+        if (!org.apache.commons.lang3.StringUtils.isEmpty(testDataName)) {
+          com.testsigma.automator.entity.TestDataPropertiesEntity testDataPropertiesEntity = getTestDataEntityDTO(testDataName,
+                  testDataValue, testDataType, null, exeTestStepEntity);
+          if (TestDataType.getTypeFromName(testDataType) == TestDataType.raw) {
+            testDataPropertiesEntity.setTestDataValue(testDataValue);
+          }
+
+          testDatasMap.put(testDataName, testDataPropertiesEntity);
         }
-
-        testDatasMap.put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA, testDataPropertiesEntity);
       }
     }
     exeTestStepEntity.setTestDataMap(testDatasMap);
@@ -272,7 +274,6 @@ public class StepProcessor {
             MessageConstants.getMessage(MessageConstants.MSG_UNKNOWN_ENVIRONMENT_PARAMETER_IN_TEST_STEP, testDataValue,
               testCaseEntityDTO.getTestCaseName(), environmentParamSetName));
         }
-        String originalTestDataEnvironmentValue = testDataValue;
         testDataValue = environmentParameters.get(testDataValue);
         break;
       case parameter:
@@ -441,15 +442,18 @@ public class StepProcessor {
   private void populateTestDataFunctionDetailsFromMap(DefaultDataGeneratorsEntity defaultDataGeneratorsEntity, TestCaseStepEntityDTO exeTestStepEntity)
     throws TestsigmaException {
     TestStepDataMap testStepDataMap = testStepDTO.getDataMapBean();
-    if (testStepDataMap != null) {
-      if (testStepDataMap.getAddonTDF() != null) {
-        defaultDataGeneratorsEntity.setArguments(testStepDataMap.getAddonTDF().getTestDataFunctionArguments());
-        defaultDataGeneratorsEntity.setIsAddonFn(true);
-        AddonPluginTestDataFunctionEntityDTO tdfEntityDTO = addonService.fetchPluginTestDataFunctionEntities(testStepDataMap.getAddonTDF().getTestDataFunctionId());
-        ArrayList<AddonPluginTestDataFunctionEntityDTO> tdfEntityDTOList = new ArrayList<AddonPluginTestDataFunctionEntityDTO>();
-        tdfEntityDTOList.add(tdfEntityDTO);
-        exeTestStepEntity.setAddonPluginTDFEntityList(tdfEntityDTOList);
-        return;
+    for(String key : testStepDataMap.getTestData().keySet()) {
+      TestStepNlpData testStepNlpData = testStepDataMap.getTestData().get(key);
+      if (testStepNlpData != null) {
+        if (testStepNlpData.getAddonTDF() != null) {
+          defaultDataGeneratorsEntity.setArguments(testStepNlpData.getAddonTDF().getTestDataFunctionArguments());
+          defaultDataGeneratorsEntity.setIsAddonFn(true);
+          AddonPluginTestDataFunctionEntityDTO tdfEntityDTO = addonService.fetchPluginTestDataFunctionEntities(testStepNlpData.getAddonTDF().getTestDataFunctionId());
+          ArrayList<AddonPluginTestDataFunctionEntityDTO> tdfEntityDTOList = new ArrayList<AddonPluginTestDataFunctionEntityDTO>();
+          tdfEntityDTOList.add(tdfEntityDTO);
+          exeTestStepEntity.setAddonPluginTDFEntityList(tdfEntityDTOList);
+          return;
+        }
       }
     }
     if (testStepDTO.getTestDataFunctionId() == null) {
@@ -459,7 +463,8 @@ public class StepProcessor {
     DefaultDataGenerator defaultDataGenerator = defaultDataGeneratorService.find(testStepDTO.getTestDataFunctionId());
     defaultDataGeneratorsEntity.setClassName(defaultDataGenerator.getFile().getClassName());
     defaultDataGeneratorsEntity.setFunctionName(defaultDataGenerator.getFunctionName());
-    defaultDataGeneratorsEntity.setArguments(testStepDTO.getTestDataFunctionArgs());
+    Map<String, String> args = (HashMap) defaultDataGenerator.getArguments();
+    defaultDataGeneratorsEntity.setArguments(args);
     Map<String, String> argsTypes = (HashMap) defaultDataGenerator.getArguments().get("arg_types");
     defaultDataGeneratorsEntity.setArgumentTypes(argsTypes);
     defaultDataGeneratorsEntity.setClassPackage(defaultDataGenerator.getFile().getClassPackage());

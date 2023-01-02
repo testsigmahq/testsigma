@@ -7,13 +7,11 @@
 
 package com.testsigma.service;
 
-import com.testsigma.constants.AutomatorMessages;
 import com.testsigma.constants.MessageConstants;
 import com.testsigma.constants.NaturalTextActionConstants;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.model.*;
 import com.testsigma.model.recorder.RunTimeVariableDTO;
-import com.testsigma.model.recorder.TestStepNlpData;
 import com.testsigma.repository.RunTimeDataRepository;
 import com.testsigma.web.request.RuntimeRequest;
 import lombok.RequiredArgsConstructor;
@@ -98,7 +96,7 @@ public class RunTimeDataService {
     this.update(runTimeData);
   }
 
-  public List<RunTimeVariableDTO> getAllRuntimeVariablesInVersion(Long workspaceVersionId) {
+  public List<RunTimeVariableDTO> getAllRuntimeVariablesInVersion(Long workspaceVersionId) throws Exception {
     log.info("Fetching all runtime variables used in application version:"+workspaceVersionId);
     List<RunTimeVariableDTO> runTimeVariableDTOS = new ArrayList<>();
     List<NaturalTextActions> storeTemplates = naturalTextActionsService.findAllByAction("store");
@@ -134,15 +132,15 @@ public class RunTimeDataService {
     return runTimeVariableDTOS;
   }
 
-  private List<RunTimeVariableDTO> getRunTimeVariableDTOsForNlpStep(TestStep testStep) {
+  private List<RunTimeVariableDTO> getRunTimeVariableDTOsForNlpStep(TestStep testStep) throws Exception {
     String runTimeVariableName = null;
     log.info("Fetching runtime variable name from testStep:"+testStep.getId());
     List<RunTimeVariableDTO> runTimeVariableDTOS = new ArrayList<>();
-    if(testStep.getAction().indexOf("Store current") != -1 && testStep.getDataMap() != null){
-      runTimeVariableName = testStep.getDataMap().getAttribute();
-    } else if(testStep.getDataMap() != null && testStep.getDataMap().getTestData() != null) {
-      TestStepNlpData testStepNlpData = testStep.getDataMap().getTestData().getOrDefault(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA,null);
-      runTimeVariableName = (testStepNlpData != null)?testStepNlpData.getValue():runTimeVariableName;
+    if(testStep.getAction().indexOf("Store current") != -1 && testStep.getDataMapBean() != null){
+      runTimeVariableName = testStep.getDataMapBean().getAttribute();
+    } else if(testStep.getDataMapBean() != null && testStep.getDataMapBean().getTestData() != null) {
+      TestStepNlpData testStepNlpData = testStep.getDataMapBean().getTestData().getOrDefault(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA,null);
+      runTimeVariableName = (testStepNlpData != null)? testStepNlpData.getValue():runTimeVariableName;
     }
 
     if(runTimeVariableName != null){

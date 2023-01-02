@@ -89,6 +89,7 @@ public class RestStepProcessor extends StepProcessor {
     testCaseStepEntityDTO.setAdditionalData(restDetails);
   }
 
+  /*
   public void setStepDetails(TestCaseStepEntityDTO testCaseStepEntityDTO, TestStepDTO testStepDTO) {
     StepDetailsDTO stepDetails = new StepDetailsDTO();
     stepDetails.setNaturalTextActionId(testStepDTO.getNaturalTextActionId());
@@ -104,7 +105,7 @@ public class RestStepProcessor extends StepProcessor {
     stepDetails.setTestDataName(testCaseStepEntityDTO.getTestDataName());
     stepDetails.setTestDataValue(testCaseStepEntityDTO.getTestDataValue());
     testCaseStepEntityDTO.setStepDetails(stepDetails);
-  }
+  }*/
 
   private JSONObject replaceTestDataAndEnvironmentParams(JSONObject requestString)
     throws TestsigmaException {

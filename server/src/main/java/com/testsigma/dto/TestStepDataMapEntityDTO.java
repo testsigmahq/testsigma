@@ -2,13 +2,16 @@ package com.testsigma.dto;
 
 import com.testsigma.automator.entity.DefaultDataGeneratorsEntity;
 import com.testsigma.model.TestStepConditionType;
+import com.testsigma.model.TestStepNlpData;
 import lombok.Data;
+
+import java.util.Map;
 
 @Data
 public class TestStepDataMapEntityDTO {
   private Object ifConditionExpectedResults;
   private TestStepConditionType conditionType;
-  private String testData;
+  private Map<String, TestStepNlpDataEntityDTO> testDataMap;
   private DefaultDataGeneratorsEntity testDataFunction;
   private String testDataType;
   private String element;

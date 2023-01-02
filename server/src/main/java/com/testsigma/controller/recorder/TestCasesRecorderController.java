@@ -16,7 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
@@ -109,13 +108,17 @@ public class TestCasesRecorderController {
             return invalidUrlList;
         }
         for (TestStep testStep : testSteps) {
-            if (testStep.getTestDataType().equals("raw")) {
-                urls.add(testStep.getTestData());
-                String url = testStep.getTestData();
-                if ((url.indexOf("http://localhost") > -1)
-                        || (url.indexOf("https://localhost") > -1)
-                        || invalidUrl(url)) {
-                    invalidUrlList.add(url);
+            if (testStep.getRecorderDataMap() != null && testStep.getRecorderDataMap().getTestData() != null) {
+                for(String key : testStep.getRecorderDataMap().getTestData().keySet()) {
+                    if(!testStep.getRecorderDataMap().getTestData().get(key).getType().equals("raw"))
+                        continue;
+                    String url = testStep.getRecorderDataMap().getTestData().get(key).getValue();
+                    urls.add(url);
+                    if ((url.indexOf("http://localhost") > -1)
+                            || (url.indexOf("https://localhost") > -1)
+                            || invalidUrl(url)) {
+                        invalidUrlList.add(url);
+                    }
                 }
             }
         }

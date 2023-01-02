@@ -14,10 +14,10 @@ import com.testsigma.dto.*;
 import com.testsigma.dto.export.TestStepXMLDTO;
 import com.testsigma.model.*;
 import com.testsigma.web.request.TestStepRequest;
-import com.testsigma.web.request.testproject.TestProjectTestStepRequest;
 import org.mapstruct.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,
   nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
@@ -34,9 +34,12 @@ public interface TestStepMapper {
 
 //  @Mapping(target = "testDataFunction", expression = "java(this.mapTestDataFunction(testStepDataMap.getTestDataFunction()))")
   @Mapping(target = "forLoop", expression = "java(this.mapForLoop(testStepDataMap.getForLoop()))")
+  @Mapping(target = "testDataMap", expression = "java(this.mapTestData(testStepDataMap.getTestData()))")
   TestStepDataMapEntityDTO mapDataMap(TestStepDataMap testStepDataMap);
 
   TestStepForLoopEntityDTO mapForLoop(TestStepForLoop testStepForLoop);
+
+  Map<String, TestStepNlpDataEntityDTO> mapTestData(Map<String, TestStepNlpData> testDataMap);
 
   DefaultDataGeneratorsEntity mapTestDataFunction(DefaultDataGeneratorsDetails defaultDataGeneratorsDetails);
 
@@ -65,16 +68,12 @@ public interface TestStepMapper {
   @Mapping(target = "preRequisiteStepId", expression = "java(request.getPreRequisiteStepId())")
   @Mapping(target = "naturalTextActionId", expression = "java(request.getNaturalTextActionId())")
   @Mapping(target = "addonActionId", expression = "java(request.getAddonActionId())")
-  @Mapping(target = "testData", expression = "java(request.getTestData())")
-  @Mapping(target = "testDataType", expression = "java(request.getTestDataType())")
-  @Mapping(target = "element", expression = "java(request.getElement())")
-  @Mapping(target = "attribute", expression = "java(request.getAttribute())")
-  @Mapping(target = "forLoopStartIndex", expression = "java(request.getForLoopStartIndex())")
-  @Mapping(target = "forLoopEndIndex", expression = "java(request.getForLoopEndIndex())")
-  @Mapping(target = "forLoopTestDataId", expression = "java(request.getForLoopTestDataId())")
-  @Mapping(target = "addonTDF", expression = "java(request.getAddonTDF())")
-  @Mapping(target = "testDataFunctionId", expression = "java(request.getTestDataFunctionId())")
-  @Mapping(target = "testDataFunctionArgs", expression = "java(request.getTestDataFunctionArgs())")
+  @Mapping(target = "dataMap", expression = "java(mapFromDataMap(request.getDataMap()))")
+  @Mapping(target = "element", expression = "java(request.getDataMap().getElement())")
+  @Mapping(target = "attribute", expression = "java(request.getDataMap().getAttribute())")
+  @Mapping(target = "forLoopStartIndex", expression = "java(request.getDataMap().getForLoop().getStartIndex())")
+  @Mapping(target = "forLoopEndIndex", expression = "java(request.getDataMap().getForLoop().getEndIndex())")
+  @Mapping(target = "forLoopTestDataId", expression = "java(request.getDataMap().getForLoop().getTestDataId())")
   @Mapping(target = "maxIterations", expression = "java(request.getMaxIterations())")
   void merge(TestStepRequest request, @MappingTarget TestStep testStep);
 
@@ -91,5 +90,13 @@ public interface TestStepMapper {
   @Mapping(target = "authorizationType", expression = "java(org.apache.commons.lang3.ObjectUtils.defaultIfNull(restStepDTO.getAuthorizationType(), com.testsigma.model.RestStepAuthorizationType.NONE).ordinal())")
   @Mapping(target = "authorizationValue", expression = "java(org.apache.commons.lang3.ObjectUtils.defaultIfNull(restStepDTO.getAuthorizationValue(), \"\").toString())")
   RestStepEntityDTO mapStepEntity(RestStepDTO restStepDTO);
+
+  default TestStepData mapFromDataMap(TestStepDataMap testStepDataMap) {
+    TestStepData testStepData = new TestStepData();
+    if(testStepDataMap != null && testStepDataMap.getTestData() != null) {
+      testStepData.setTestData(testStepDataMap.getTestData());
+    }
+    return testStepData;
+  }
 }
 

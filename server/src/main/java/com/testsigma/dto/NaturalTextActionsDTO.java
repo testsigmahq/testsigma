@@ -14,6 +14,7 @@ import com.testsigma.model.WorkspaceType;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class NaturalTextActionsDTO {
@@ -23,6 +24,6 @@ public class NaturalTextActionsDTO {
   private NaturalTextActionDataDTO data;
   private String displayName;
   private String action;
-  private List allowedValues;
+  private Map<String, List> allowedValues;
   private StepActionType stepActionType;
 }

@@ -244,13 +244,19 @@ public class TestCasesController {
       return invalidUrlList;
     }
     for (TestStep testStep : testSteps) {
-      if (testStep.getTestDataType().equals("raw")) {
-        urls.add(testStep.getTestData());
-        String url = testStep.getTestData();
-        if ((url.indexOf("http://localhost") > -1)
-          || (url.indexOf("https://localhost") > -1)
-          || invalidUrl(url)) {
-          invalidUrlList.add(url);
+      TestStepDataMap testStepDataMap = testStep.getDataMapBean();
+      if(testStepDataMap == null || testStepDataMap.getTestData() == null) {
+        continue;
+      }
+      for(String key : testStepDataMap.getTestData().keySet()) {
+        if (testStepDataMap.getTestData().get(key).getType().equals("raw")) {
+          String url = testStepDataMap.getTestData().get(key).getValue();
+          urls.add(url);
+          if ((url.indexOf("http://localhost") > -1)
+                  || (url.indexOf("https://localhost") > -1)
+                  || invalidUrl(url)) {
+            invalidUrlList.add(url);
+          }
         }
       }
     }

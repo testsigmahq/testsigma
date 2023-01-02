@@ -104,6 +104,7 @@ public abstract class Action {
   }
 
   protected TestDataPropertiesEntity getTestDataPropertiesEntity(String testDataActionVariableName) {
+    log.info("Printing testDataPropertiesEntityMap: " + testDataPropertiesEntityMap);
     return testDataPropertiesEntityMap.get(testDataActionVariableName);
   }
 

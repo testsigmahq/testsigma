@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.testsigma.model.*;
 import lombok.Data;
 
+import java.util.Map;
+
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -16,15 +18,13 @@ public class TestStepCloudDataMap {
   @JsonProperty("condition-type")
   private TestStepConditionType conditionType;
   @JsonProperty("test-data")
-  private String testData;
+  private Map<String, TestStepNlpData> testData;
   @JsonProperty("kibbutz_test_data_function")
   private AddonTestStepTestData kibbutzTDF;
   @JsonProperty("test-data-function")
   private CloudTestDataFunction testDataFunction;
   @JsonProperty("custom-step")
   private TestStepCustomStep customStep;
-  @JsonProperty("test-data-type")
-  private String testDataType;
   @JsonProperty("ui-identifier")
   private String element;
   @JsonProperty("from-ui-identifier")

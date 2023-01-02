@@ -7,13 +7,9 @@
 
 package com.testsigma.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.testsigma.constants.NaturalTextActionConstants;
-import com.testsigma.dto.export.CloudTestDataFunction;
-import com.testsigma.model.recorder.KibbutzTestStepTestData;
-import com.testsigma.model.recorder.TestStepNlpData;
+import com.testsigma.model.recorder.RecorderTestStepNlpData;
 import com.testsigma.model.recorder.TestStepRecorderDataMap;
 import com.testsigma.model.recorder.TestStepRecorderForLoop;
 import com.testsigma.service.ObjectMapperService;
@@ -76,10 +72,7 @@ public class TestStep {
   private ResultConstant[] ifConditionExpectedResults;
 
   @Column(name = "test_data")
-  private String testData;
-
-  @Column(name = "test_data_type")
-  private String testDataType;
+  private String dataMap;
 
   @Column(name = "element")
   private String element;
@@ -233,15 +226,18 @@ public class TestStep {
   public TestStepDataMap getDataMapBean() {
     TestStepDataMap testStepDataMap = new TestStepDataMap();
     testStepDataMap.setIfConditionExpectedResults(ifConditionExpectedResults);
-    testStepDataMap.setTestData(testData);
-    testStepDataMap.setTestDataType(testDataType);
     testStepDataMap.setElement(element);
     testStepDataMap.setFromElement(fromElement);
     testStepDataMap.setToElement(toElement);
     testStepDataMap.setAttribute(attribute);
     testStepDataMap.setVisualEnabled(visualEnabled);
     ObjectMapperService mapper = new ObjectMapperService();
-    testStepDataMap.setAddonTDF(mapper.parseJson(addonTestData, AddonTestStepTestData.class));
+    if(dataMap != null) {
+      TestStepData testStepData = mapper.parseJson(this.dataMap, TestStepData.class);
+      if (testStepData != null) {
+        testStepDataMap.setTestData(testStepData.getTestData());
+      }
+    }
     DefaultDataGeneratorsDetails functionDetails = new DefaultDataGeneratorsDetails();
     functionDetails.setId(testDataFunctionId);
     functionDetails.setArguments(testDataFunctionArgs);
@@ -253,22 +249,21 @@ public class TestStep {
     return testStepDataMap;
   }
 
-  public TestStepRecorderDataMap getDataMap() {
+  public TestStepRecorderDataMap getRecorderDataMap() throws Exception {
     ObjectMapperService mapperService = new ObjectMapperService();
-    TestStepRecorderDataMap testStepDataMap;
-    try {
-      testStepDataMap = mapperService.parseJsonModel(testData, TestStepRecorderDataMap.class);
-    } catch (Exception e) {
-      testStepDataMap = new TestStepRecorderDataMap();
-      TestStepNlpData testStepNlpData = new TestStepNlpData();
-      testStepNlpData.setValue(testData);
-      testStepNlpData.setType(testDataType);
-      testStepDataMap.setTestData(new HashMap<>() {{
-        put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA, testStepNlpData);
-      }});
-    }
-    if (testStepDataMap == null) {
-      testStepDataMap = new TestStepRecorderDataMap();
+    TestStepRecorderDataMap testStepDataMap = new TestStepRecorderDataMap();
+    if(dataMap != null) {
+      TestStepData testStepData = mapperService.parseJsonModel(this.dataMap, TestStepData.class);
+      if(testStepData != null && testStepData.getTestData() != null) {
+        for (String key : testStepData.getTestData().keySet()) {
+          RecorderTestStepNlpData recorderTestStepNlpData = new RecorderTestStepNlpData();
+          recorderTestStepNlpData.setValue(testStepData.getTestData().get(key).getValue());
+          recorderTestStepNlpData.setType(testStepData.getTestData().get(key).getType());
+          testStepDataMap.setTestData(new HashMap<>() {{
+            put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA_RECORDER, recorderTestStepNlpData);
+          }});
+        }
+      }
     }
     if (element != null) {
       testStepDataMap.setUiIdentifier(element);
@@ -292,13 +287,20 @@ public class TestStep {
     return testStepDataMap;
   }
 
-  public void setTestDataType(String testDataType) {
-    if (testDataType !=null){
-      if (testDataType.equals("global"))
-        this.testDataType = TestDataType.global.getDispName();
-      else if (testDataType.equals("phone_number") || testDataType.equals("mail_box"))
-        this.testDataType = TestDataType.raw.getDispName();
-      else this.testDataType = testDataType;
+  public TestStepData getDataMap() {
+    if(dataMap == null) {
+      return null;
     }
+    ObjectMapperService mapper = new ObjectMapperService();
+    return mapper.parseJson(this.dataMap, TestStepData.class);
   }
+
+  public void setDataMap(TestStepData testStepData) {
+    this.dataMap = new ObjectMapperService().convertToJson(testStepData);
+  }
+
+  public String getStringDataMap() {
+    return dataMap;
+  }
+
 }

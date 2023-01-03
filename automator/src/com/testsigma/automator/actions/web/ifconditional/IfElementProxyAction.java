@@ -1,5 +1,6 @@
 package com.testsigma.automator.actions.web.ifconditional;
 
+import com.testsigma.automator.constants.NaturalTextActionConstants;
 import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.actions.ElementAction;
 import com.testsigma.automator.actions.constants.ActionConstants;
@@ -10,7 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 public class IfElementProxyAction extends ElementAction {
   @Override
   public void execute() throws Exception {
-    String status = getTestData();
+    String status = getTestData(NaturalTextActionConstants.TEST_DATA_ENABLED_KEY);
     switch (status) {
       case ActionConstants.ENABLED:
         VerifyElementEnabledAction enabled = (VerifyElementEnabledAction) this.initializeChildSnippet(VerifyElementEnabledAction.class);

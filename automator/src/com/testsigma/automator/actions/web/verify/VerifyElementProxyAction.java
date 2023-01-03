@@ -8,7 +8,16 @@ import java.lang.reflect.InvocationTargetException;
 public class VerifyElementProxyAction extends ElementAction {
   @Override
   public void execute() throws Exception {
-    String status = getTestData();
+    String status = getTestData(NaturalTextActionConstants.TEST_DATA_PRESENT_ENABLED_KEY);
+    if(status == null) {
+      status = getTestData(NaturalTextActionConstants.TEST_DATA_SELECTED_NOT_SELECTED);
+    }
+    if(status == null) {
+      status = getTestData(NaturalTextActionConstants.TEST_DATA_VISIBLE_KEY);
+    }
+    if(status == null) {
+      status = getTestData(NaturalTextActionConstants.TEST_DATA_CHECKED_KEY);
+    }
     switch (status) {
       case NaturalTextActionConstants.DISPLAYED:
         VerifyElementPresenceAction presence = (VerifyElementPresenceAction) this.initializeChildSnippet(VerifyElementPresenceAction.class);

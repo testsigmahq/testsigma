@@ -1,5 +1,6 @@
 package com.testsigma.automator.actions.mobile.mobileweb.generic;
 
+import com.testsigma.automator.constants.NaturalTextActionConstants;
 import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.actions.constants.ActionConstants;
 import com.testsigma.automator.actions.mobile.mobileweb.press.PressMobileWebKeyProxyAction;
@@ -8,7 +9,7 @@ import com.testsigma.automator.actions.mobile.mobileweb.press.PressMobileWebKeyP
 public class AlertCancelMobileWebProxyAction extends PressMobileWebKeyProxyAction {
   @Override
   public void execute() throws Exception {
-    String key = getTestData();
+    String key = getTestData(NaturalTextActionConstants.TEST_DATA_OK_KEY);
     switch (key) {
       case ActionConstants.CANCEL:
         DismissAlertAction cancel = (DismissAlertAction) this.initializeChildSnippet(DismissAlertAction.class);

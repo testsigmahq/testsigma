@@ -136,6 +136,7 @@ export class TestPlanSuiteMachineSelectionComponent extends BaseComponent implem
       if(res) {
         if(this.filter == 'All') {
           this.testSuiteList = this.versionFilter? [...this.testSuiteList.filter(item=> item.workspaceVersionId != this.versionFilter.id), ...res] : res;
+          this.selectAllTestSuites({checked:!this.hasMixedAppVersion})
           this.constructTestSuiteIdMap();
         } else {
           this.mapTestSuitesToMachine(this.filter, res);
@@ -323,15 +324,18 @@ export class TestPlanSuiteMachineSelectionComponent extends BaseComponent implem
         }
       ]
     });
-
     this.hasTestSuitesWithoutMachine.emit(this.isNextDisabled);
     this.executionEnvironmentService.formValueChanges.next();
   }
 
   handleNext() {
-    this.emptyTestSuiteSelection();
     this.versionFilter = null;
     this.filter = 'All';
+    if(!this.executionEnvironments.length || (this.isNextDisabled && this.executionEnvironments.length)){
+      this.formSubmitted = true;
+      return;
+    }
+    this.emptyTestSuiteSelection();
     this.stepper.next();
   }
 

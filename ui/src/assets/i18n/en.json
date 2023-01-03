@@ -2086,6 +2086,8 @@
   "test_plan.suite.filters": "Filters",
   "test_plan.suite.enable.e2e": "Enable End-to-End testing",
   "test_plan.form.help.e2e": "More details - <a href='https://testsigma.com/tutorials/test-plans/cross-platform-end-to-end-testing/' target='_blank'>End-to-End Testing Guide</a>.",
+  "testplan.form.machine.mandatory.message": "Required: Associate Test Machine with Test Suites to create Test Plan",
+  "requirement.mandatory.message": "Requirement is mandatory for all test cases, project should have atleast 1 requirement",
   "test_plan.environments.all": "All",
   "test_plan.suite.disabled.mixed_apps": "This operation is not allowed for Test Plan of type End-to-End",
   "test_plan.suite.disabled.prev_diff": "This operation is not allowed as previously selected Test Suite's application version is different",

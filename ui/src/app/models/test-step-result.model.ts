@@ -184,7 +184,7 @@ export class TestStepResult extends ResultBase implements PageObject {
       })
       parsedStep = parsedStep.replace(new RegExp('</TSTESTDAT>', 'g'), '</span>')
     }
-    if (this.stepDetail && (this.stepDetail.element || this.stepDetail.fromElement || this.stepDetail.toElement)) {
+    if (this.stepDetail && (this.stepDetail.dataMap.elementString || this.stepDetail.dataMap.fromElementString || this.stepDetail.dataMap.toElementString)) {
       parsedStep = this.replaceElement(parsedStep);
     }
     if (this.stepDetails && this.stepDetails.dataMap && this.stepDetails.dataMap.attribute) {

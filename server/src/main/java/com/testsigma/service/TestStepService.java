@@ -211,7 +211,7 @@ public class TestStepService extends XMLExportImportService<TestStep> {
     public void updateTestDataParameterName(Long testDataId, String parameter, String newParameterName) {
         List<TestStep> testSteps = this.repository.getTopLevelTestDataParameter(testDataId);
         for(TestStep testStep : testSteps) {
-            TestStepData testStepData = testStep.getDataMap();
+            TestStepDataMap testStepData = testStep.getDataMap();
             if(testStepData != null && testStepData.getTestData() != null) {
                 testStepData.getTestData().values().forEach(data -> {
                     if(data.getValue().equals(parameter) && data.getType().equals("parameter")) {
@@ -239,7 +239,7 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         List<TestStep> childSteps = this.repository.getChildStepsTestDataParameter(parentId);
         childSteps.addAll(this.repository.getChildStepsTestDataParameterUsingTestDataProfileId(parentId));
         for(TestStep testStep : childSteps) {
-            TestStepData testStepData = testStep.getDataMap();
+            TestStepDataMap testStepData = testStep.getDataMap();
             if(testStepData != null && testStepData.getTestData() != null) {
                 testStepData.getTestData().values().forEach(data -> {
                     if(data.getValue() == parameter && data.getType() == "parameter") {
@@ -411,7 +411,7 @@ public class TestStepService extends XMLExportImportService<TestStep> {
     private void mapDeprecatedActionsWithUpdatesOnes(TestStep step) {
         ActionTestDataMap filteredMap = this.actionTestDataMap.stream().filter(dataMap -> dataMap.getTestDataHash().containsKey(step.getNaturalTextActionId())).findFirst().orElse(null);
         if (filteredMap != null) {
-            TestStepData testStepData = step.getDataMap() != null ? new TestStepData() : step.getDataMap();
+            TestStepDataMap testStepData = step.getDataMap() != null ? new TestStepDataMap() : step.getDataMap();
             if(testStepData.getTestData() == null) {
                 testStepData.setTestData(new HashMap<>());
             }

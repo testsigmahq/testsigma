@@ -1,3 +1,48 @@
+-- MySQL dump 10.13  Distrib 5.7.39, for osx10.17 (x86_64)
+--
+-- Host: localhost    Database: testsigma_opensource
+-- ------------------------------------------------------
+-- Server version	5.7.39
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `natural_text_action_examples`
+--
+
+DROP TABLE IF EXISTS `natural_text_action_examples`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `natural_text_action_examples` (
+                                                `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                                                `natural_text_action_id` bigint(20) DEFAULT NULL,
+                                                `description` text COLLATE utf8_unicode_ci,
+                                                `example` text COLLATE utf8_unicode_ci,
+                                                `workspace` text COLLATE utf8_unicode_ci,
+                                                `data` json DEFAULT NULL,
+                                                `created_date` datetime DEFAULT CURRENT_TIMESTAMP,
+                                                `updated_date` datetime DEFAULT CURRENT_TIMESTAMP,
+                                                PRIMARY KEY (`id`),
+                                                KEY `index_natural_text_action_examples_on_natural_text_action_id` (`natural_text_action_id`),
+                                                CONSTRAINT `fk_natural_text_action_id_to_natural_text_actions` FOREIGN KEY (`natural_text_action_id`) REFERENCES `natural_text_actions` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=865 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `natural_text_action_examples`
+--
+
+LOCK TABLES `natural_text_action_examples` WRITE;
+/*!40000 ALTER TABLE `natural_text_action_examples` DISABLE KEYS */;
 INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `description`, `example`, `workspace`, `data`, `created_date`, `updated_date`) VALUES (1,1,'Wait until specified text is present on current Page','In this example, execution will wait until specified text \"Register\" is present on current Page','https://travel.testsigma.com/login','{\"test data\": \"Register\"}','2022-08-17 14:08:28','2022-08-17 14:08:28');
 INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `description`, `example`, `workspace`, `data`, `created_date`, `updated_date`) VALUES (2,2,'Wait until specified text is absent on current Page','In this example, execution will wait until specified text \"HOME123\" is absent on current Page','https://demoqa.com/','{\"test data\": \"HOME123\"}','2022-08-17 14:08:28','2022-08-17 14:08:28');
 INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `description`, `example`, `workspace`, `data`, `created_date`, `updated_date`) VALUES (3,3,'Wait until current Page Title changes to specified text','In this example, execution will wait until current Page Title changes to specified text \"Google Images\"','https://www.google.com','{\"test data\": \"Google Images\"}','2021-10-19 19:37:03','2021-10-19 19:37:03');
@@ -514,3 +559,16 @@ INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `des
 INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `description`, `example`, `workspace`, `data`, `created_date`, `updated_date`) VALUES (862,30041,'Verify that the element is not present','In this example, We will verify that the element is not present','https://app.testsigma.com/','{\"element\": \"\\\\\\\\#{.*?}\"}','2022-01-28 16:06:57','2022-01-28 16:06:57');
 INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `description`, `example`, `workspace`, `data`, `created_date`, `updated_date`) VALUES (863,30043,'Verify that the element is present','In this example, We will verify that the element is present','https://app.testsigma.com/','{\"element\": \"\\\\\\\\#{.*?}\"}','2022-01-28 16:06:57','2022-01-28 16:06:57');
 INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `description`, `example`, `workspace`, `data`, `created_date`, `updated_date`) VALUES (864,30107,'Tap on the enter key','In this example, we can Tap on the enter key','API Demos','{}','2022-01-28 16:06:57','2022-01-28 16:06:57');
+/*!40000 ALTER TABLE `natural_text_action_examples` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2023-01-03 12:04:50

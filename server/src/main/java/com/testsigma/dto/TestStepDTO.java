@@ -37,7 +37,7 @@ public class TestStepDTO implements Cloneable, Serializable {
 
   @JsonProperty("conditionIf")
   private ResultConstant[] ifConditionExpectedResults = new ResultConstant[0];
-  private TestStepData dataMap;
+  private TestStepDataMap dataMap;
   private String attribute;
   private String element;
   private String fromElement;

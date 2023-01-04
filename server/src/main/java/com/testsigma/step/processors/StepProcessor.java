@@ -433,7 +433,7 @@ public class StepProcessor {
         customFunction.getArguments().get("arg_types").toString(), HashMap.class);
       testDataFunctionEntity.setArgumentTypes(functionArguments);
       testDataFunctionEntity.setClassPackage(customFunctionFile.getClassPackage());
-      testDataFunctionEntity.setCustomFunctionType(CustomFunctionType.DefaultTestData);
+      //testDataFunctionEntity.setCustomFunctionType(CustomFunctionType.DefaultTestData);
 //      testDataFunctionEntity.setBinaryFileUrl(getSignedURL(customFunctionFile.getBinary_file_url(), customFunctionFile.getClassName()));
     }
     testDataFunctionEntity.setId(addonTestStepTestData.getTestDataFunctionId());

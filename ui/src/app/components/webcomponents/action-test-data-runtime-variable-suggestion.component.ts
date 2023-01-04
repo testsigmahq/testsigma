@@ -127,7 +127,7 @@ export class ActionTestDataRuntimeVariableSuggestionComponent implements OnInit 
   }
 
   selectSuggestion(testStep?: TestStep, dataValue? : String) {
-    let suggestion = dataValue ? dataValue : testStep?.testDataVal;//testStep?.dataMap?.attribute;
+    let suggestion = dataValue ? dataValue : testStep?.dataMap?.attribute;//testStep?.dataMap?.attribute;
     console.log(testStep);
     this.testDataRuntimeVariable ? this.mobileRecorderEventService.returnData.next({type: TestDataType.runtime, data: suggestion}) : this.dialogRef.close(suggestion);
   }
@@ -206,8 +206,8 @@ export class ActionTestDataRuntimeVariableSuggestionComponent implements OnInit 
       this.filteredSuggestion = [];
       if(this.testSteps?.length){
         this.testSteps.forEach(suggestion => {
-          Object.keys(suggestion.testDataVal).forEach(item => {
-            if(suggestion.testDataVal.includes(searchText)){
+          Object.keys(suggestion.dataMap.testData).forEach(item => {
+            if(suggestion.dataMap.testData[item].value.includes(searchText)){
               this.filteredSuggestion.push(suggestion);
             }
           })

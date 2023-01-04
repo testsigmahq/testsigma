@@ -8,6 +8,8 @@
 package com.testsigma.model;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.testsigma.automator.entity.DefaultDataGeneratorsEntity;
 import com.testsigma.constants.NaturalTextActionConstants;
 import com.testsigma.model.recorder.RecorderTestStepNlpData;
 import com.testsigma.model.recorder.TestStepRecorderDataMap;
@@ -287,16 +289,50 @@ public class TestStep {
     return testStepDataMap;
   }
 
-  public TestStepData getDataMap() {
-    if(dataMap == null) {
-      return null;
+  public TestStepDataMap getDataMap() {
+    ObjectMapperService mapperService = new ObjectMapperService();
+    Map<String, Map<String, String>> map = mapperService.parseJson(dataMap, Map.class);
+    TestStepDataMap testStepDataMap = new TestStepDataMap();
+    log.info("Parsing json to map: " + map);
+    if(map!= null && map.containsKey("test-data")) {
+      TestStepNlpData testStepNlpData = new TestStepNlpData();
+      testStepNlpData.setValue(map.get("test-data").get("test-data"));
+      testStepNlpData.setType(map.get("test-data").get("type"));
+      if(map.get("test-data").containsKey("testDataFunction")) {
+        testStepNlpData.setTestDataFunction(new ObjectMapper().convertValue(map.get("test-data").get("testDataFunction"), DefaultDataGeneratorsEntity.class));
+      }
+      if(map.get("test-data").containsKey("addonTDF")) {
+        testStepNlpData.setAddonTDF(new ObjectMapper().convertValue(map.get("test-data").get("addonTDF"), AddonTestStepTestData.class));
+      }
+      testStepDataMap.setTestData(new HashMap<>() {{
+          put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA, testStepNlpData);
+      }});
+      if (element != null) {
+        testStepDataMap.setElement(element);
+      }
+      if(fromElement != null) {
+        testStepDataMap.setFromElement(fromElement);
+      }
+      if(toElement != null) {
+        testStepDataMap.setToElement(toElement);
+      }
+      if (ifConditionExpectedResults != null && ifConditionExpectedResults.length > 0) {
+        testStepDataMap.setIfConditionExpectedResults(ifConditionExpectedResults);
+      }
+      if (forLoopStartIndex != null || forLoopTestDataId != null || forLoopEndIndex != null) {
+        TestStepForLoop testStepForLoop= new TestStepForLoop();
+        testStepForLoop.setTestDataId(forLoopTestDataId);
+        testStepForLoop.setStartIndex(forLoopStartIndex);
+        testStepForLoop.setEndIndex(forLoopEndIndex);
+        testStepDataMap.setForLoop(testStepForLoop);
+      }
     }
-    ObjectMapperService mapper = new ObjectMapperService();
-    return mapper.parseJson(this.dataMap, TestStepData.class);
+    log.info("Parsed json to testStepDataMap: " + testStepDataMap);
+    return testStepDataMap;
   }
 
-  public void setDataMap(TestStepData testStepData) {
-    this.dataMap = new ObjectMapperService().convertToJson(testStepData);
+  public void setDataMap(TestStepDataMap testStepDataMap) {
+    this.dataMap = new ObjectMapperService().convertToJson(testStepDataMap);
   }
 
   public String getStringDataMap() {

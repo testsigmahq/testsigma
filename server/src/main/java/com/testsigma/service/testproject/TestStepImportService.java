@@ -154,8 +154,8 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
 
     private void setTestDataIfExists(TestProjectTestStepRequest stepRequest, TestStep testStep, Boolean isStepGroup){
         if(!stepRequest.getParameterMaps().isEmpty()) {
-            TestStepData testStepData = new TestStepData();
-            testStepData.setTestData(new HashMap<>());
+            TestStepDataMap testStepDataMap = new TestStepDataMap();
+            testStepDataMap.setTestData(new HashMap<>());
             TestStepNlpData testStepNlpData = new TestStepNlpData();
             String stepTestData = stepRequest.getParameterMaps().get(0).getValue();
             if(stepTestData.startsWith("[[")){
@@ -180,8 +180,8 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
                 testStepNlpData.setType(TestDataType.raw.name());
             }
             testStepNlpData.setValue(stepTestData);
-            testStepData.getTestData().put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA, testStepNlpData);
-            testStep.setDataMap(testStepData);
+            testStepDataMap.getTestData().put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA, testStepNlpData);
+            testStep.setDataMap(testStepDataMap);
         }
     }
 

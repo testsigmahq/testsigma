@@ -228,8 +228,9 @@ export class ChromeRecorderService {
 
       let cloudUrlExpression = /(?:^|\s)((http[s]?:\/\/)?(?:localhost|[\w-]+(?:\.[\w-]+)+)(:\d+)?(\/\S*)?)|(file:\/\/\/.+(?:\.[\w-]+))/;
       res.content.forEach((testStep) => {
-        if (this.navigateTemplate.includes(<number>testStep?.naturalTextActionId) && testStep.testDataType == TestDataType.raw && cloudUrlExpression.test(<string>testStep.testDataValue))
-          this.recorderTestCase.startUrl = testStep.testDataValue;
+        let testData = testStep.dataMap?.testData?.['test-data'];
+        if (this.navigateTemplate.includes(<number>testStep?.naturalTextActionId) && testData.type == TestDataType.raw && cloudUrlExpression.test(<string>testData.value))
+          this.recorderTestCase.startUrl = testData.value;
       });
 
       if (!res?.content?.length) {

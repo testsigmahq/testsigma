@@ -26,7 +26,7 @@ export class NaturalTextActions extends Base implements PageObject {
   @serializable
   public action: String;
   @serializable(custom(v => v, v => v))
-  public allowedValues: string[];
+  public allowedValues: Map<string, string[]>;
   @serializable(object(NaturalTextActionData))
   public data: NaturalTextActionData;
   @serializable(custom(v => v, v => v))
@@ -50,16 +50,43 @@ export class NaturalTextActions extends Base implements PageObject {
   }
   get htmlGrammar(): String {
     let naturalText = this.naturalText;
+    naturalText = this.testDataReplacer(naturalText, this.allowedValues)
     if (naturalText.match(/#{elementnameTo}/g) || naturalText.match(/#{from-element}/g)) {
       naturalText = naturalText.replace(/#{elementname}|#{from-element}/g, '<span class="element">from element</span>');
       naturalText = naturalText.replace(/#{elementnameTo}|#{to-element}/g, '<span class="element">to element</span>');
     }
-    let span_class= this.allowedValues?'selected_list':'test_data';
     naturalText = naturalText.replace(/#{elementname}/g, '<span class="element">element</span>')
       .replace(/#{element}/g, '<span class="element">element</span>')
-      .replace(/\$\{([^}]+)\}/g, "<span class="+span_class+">"+this.extractTestDataString+"</span>")
       .replace(/@{attribute}/g, '<span class="attribute">attribute</span>');
     return naturalText;
+  }
+
+  testDataReplacer(grammar: String, allowedValues: Map<string,string[]>) {
+    let dataList = this.data?.testData ? Object.keys(this.data?.testData) : [];
+    let testDataList = grammar.match(/\$\{([^}]+)\}/g);
+    if(testDataList?.length)
+      testDataList.forEach(
+        (item, index) => {
+          let testDataReplaced = item.replace(/<em +(.*?)>/g, 'HIGH_LIGHT_START').
+          replace(/<\/em>/g, 'HIGH_LIGHT_END').
+          replace(/[&#,+()$~%.'":*?<>{}]/g,"");
+          let parameter = item.replace(/<em +(.*?)>/g, '').
+          replace(/<\/em>/g, '').
+          replace(/[&#,+()$~%'":*?<>{}]/g,"");
+          let span_class= allowedValues?.[parameter]?.length ? 'selected_list':'test_data';
+          grammar = grammar.replace(new RegExp(item.replace(/\$/g, "\\$").
+            replace(/\{/g, "\\{").
+            replace(/\}/g, "\\}")),
+            "<span class='"+(span_class+' test_data')+"' data-reference='"+parameter+"'>"+(this.data?.testData?.[parameter] ? (this.data?.testData?.[parameter].replace(/HIGH_LIGHT_START/g, '<em class="nlp-highlight">').replace(/HIGH_LIGHT_END/g, '</em>')) : '' )+"</span>");
+        })
+    if(dataList?.length) {
+      dataList.forEach(parameter => {
+        let rejext = new RegExp("\\$\\{"+parameter+"\\}");
+        let span_class= allowedValues?.[parameter]?.length ? 'selected_list':'test_data';
+        grammar = grammar.replace(rejext, "<span class='"+(span_class +' test_data')+"' data-reference='"+parameter+"'>"+this.data?.testData?.[parameter]+"</span>");
+      })
+    }
+    return grammar;
   }
 
   get searchableGrammar(): string{

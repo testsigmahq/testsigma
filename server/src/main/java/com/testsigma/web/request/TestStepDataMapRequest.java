@@ -14,7 +14,7 @@ public class TestStepDataMapRequest {
 
   private ResultConstant[] ifConditionExpectedResults;
   private TestStepConditionType conditionType;
-  private Map<String, TestStepNlpData> testData;
+  private Map<String, TeststepNlpDataRequest> testData;
   private String element;
   private String fromElement;
   private String toElement;

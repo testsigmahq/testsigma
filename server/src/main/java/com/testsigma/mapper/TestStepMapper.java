@@ -68,7 +68,7 @@ public interface TestStepMapper {
   @Mapping(target = "preRequisiteStepId", expression = "java(request.getPreRequisiteStepId())")
   @Mapping(target = "naturalTextActionId", expression = "java(request.getNaturalTextActionId())")
   @Mapping(target = "addonActionId", expression = "java(request.getAddonActionId())")
-  @Mapping(target = "dataMap", expression = "java(mapFromDataMap(request.getDataMap()))")
+  @Mapping(target = "dataMap", expression = "java(request.getDataMap())")
   @Mapping(target = "element", expression = "java(request.getDataMap().getElement())")
   @Mapping(target = "attribute", expression = "java(request.getDataMap().getAttribute())")
   @Mapping(target = "forLoopStartIndex", expression = "java(request.getDataMap().getForLoop().getStartIndex())")
@@ -91,12 +91,5 @@ public interface TestStepMapper {
   @Mapping(target = "authorizationValue", expression = "java(org.apache.commons.lang3.ObjectUtils.defaultIfNull(restStepDTO.getAuthorizationValue(), \"\").toString())")
   RestStepEntityDTO mapStepEntity(RestStepDTO restStepDTO);
 
-  default TestStepData mapFromDataMap(TestStepDataMap testStepDataMap) {
-    TestStepData testStepData = new TestStepData();
-    if(testStepDataMap != null && testStepDataMap.getTestData() != null) {
-      testStepData.setTestData(testStepDataMap.getTestData());
-    }
-    return testStepData;
-  }
 }
 

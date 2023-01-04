@@ -421,27 +421,27 @@ export class TestStep extends Base implements PageObject {
   }
 
   get isTestdataProfile(){
-    return this.template?.data?.testDataForLoop?.['test-data-profile'];
+    return this.template?.data?.testData?.['test-data-profile'];
   }
 
   get isTestDataLeftParameter() {
-    return this.template?.data?.testDataForLoop['left-data'] == 'parameter';//TODO need to change type tag based
+    return this.template?.data?.testData['left-data'] == 'parameter';//TODO need to change type tag based
   }
 
   get isTestDataRightParameter() {
-    return this.template?.data?.testDataForLoop['right-data'] == 'parameter';//TODO need to change type tag based
+    return this.template?.data?.testData['right-data'] == 'parameter';//TODO need to change type tag based
   }
 
   get isTestDataLeftSetName() {
-    return this.template?.data?.testDataForLoop['left-data'] == 'start-set-name';//TODO need to change type tag based
+    return this.template?.data?.testData['left-data'] == 'start-set-name';//TODO need to change type tag based
   }
 
   get isTestDataRightSetName() {
-    return this.template?.data?.testDataForLoop['right-data'] == "end-set-name";//TODO need to change type tag based
+    return this.template?.data?.testData['right-data'] == "end-set-name";//TODO need to change type tag based
   }
 
   get isTestdataParameter(){
-    return this.template?.data?.testDataForLoop?.['parameter'];
+    return this.template?.data?.testData?.['parameter'];
   }
 
   get testDataId(): Number {

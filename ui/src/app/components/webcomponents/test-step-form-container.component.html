@@ -14,10 +14,10 @@
       [class.px-5]="stepRecorderView"
       [class.py-4]="stepRecorderView">
       <i
-        [class.fa-nlp-new]="isActionText && !testStep?.isForLoop"
+        [class.fa-nlp-new]="isActionText"
         [class.fa-step-group]="isStepGroup"
         [class.fa-rest-new]="isRest"
-        [class.fa-power-loop]="testStep?.isForLoop"
+        [class.fa-power-loop]="isForLoop"
         [class.fz-15]="!stepRecorderView"
         class="section-action-icons"></i>
     </div>
@@ -138,25 +138,9 @@
       (click)="showForm = true;formSubmitted=false"
       [class.w-90]="stepConditionType"
       [class.w-95]="!stepConditionType"
-      [class.d-none-important]="testStep.isForLoop && isNoTestDataProfile"
       type="text" class="pl-14 border-0" [placeholder]="'step.title.place_holder' | translate"/>
-    <div *ngIf="isNoTestDataProfile && testStep.isForLoop"
-         class="result-status-text-2 py-10 bg-white w-95">
-      <i class="fa-warning px-7  bg-white"></i>
-      <span
-        class="bg-white"
-        [translate]="'test_step.for_loop.profile.none'"></span>
-      <a
-        [routerLink]="['/td', version?.id, 'data', 'new']"
-        target="_blank"
-        class="result-status-text-0 px-2  bg-white"
-        [translate]="'message.common.click_here'"></a>
-      <span
-        class="bg-white"
-        [translate]="'test_step.for_loop.profile.none_mgs'"></span>
-    </div>
     <div
-      *ngIf="!isRest && !isConditionalWhileType && !testStep.isForLoop"
+      *ngIf="!isRest && !isConditionalWhileType"
       class="d-inline-block w-100-60"
       [class.show-else-if]="isElseIfType"
       [class.show-while]="isConditionalWhileType"
@@ -179,7 +163,7 @@
     [class.has-if]="isIfType"
     [indentation]="indexPosition().toString().length > 3 ? indexPosition().toString().length : 0"
     [class.has-while-loop]="isConditionalWhileType"
-    *ngIf="isActionText && testSteps && !(testStep.isForLoop && isNoTestDataProfile)"
+    *ngIf="isActionText && testSteps"
     [testStep]="testStep"
     [testSteps]="testSteps"
     [version]="version"

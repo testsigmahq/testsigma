@@ -36,6 +36,7 @@ import {InfiniteScrollableDataSource} from "../../data-sources/infinite-scrollab
 import {LinkedEntitiesModalComponent} from "../../shared/components/webcomponents/linked-entities-modal.component";
 import {PageObject} from "../../shared/models/page-object";
 import {SharedService} from "../../services/shared.service";
+import {RunButtonDisableService} from "../../services/run-button-disable.service";
 
 @Component({
   selector: 'app-steps-list',
@@ -100,6 +101,7 @@ export class StepsListComponent extends BaseComponent implements OnInit {
     private testStepService: TestStepService,
     private AddonActionService: AddonActionService,
     private sharedService:SharedService,
+    private runButtonDisableService:RunButtonDisableService
     ) {
     super(authGuard, notificationsService, translate, toastrService);
   }
@@ -370,5 +372,7 @@ export class StepsListComponent extends BaseComponent implements OnInit {
 
   setTestSteps($event: TestStep[]) {
     this.testSteps = $event;
+    let EnableStep=this.testSteps?.find(testStep=> !testStep.disabled)? true: false;
+    this.runButtonDisableService.setEnableStepData(EnableStep);
   }
 }

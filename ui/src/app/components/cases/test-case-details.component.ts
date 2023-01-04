@@ -26,6 +26,7 @@ import {EntityExternalMapping} from "../../models/entity-external-mapping.model"
 import {EntityExternalMappingService} from "../../services/entity-external-mapping.service";
 import {EntityType} from "../../enums/entity-type.enum";
 import {XrayKeyWarningComponent} from "../../agents/components/webcomponents/xray-key-warning-component";
+import {RunButtonDisableService} from "../../services/run-button-disable.service";
 
 @Component({
   selector: 'app-test-case-details',
@@ -44,6 +45,7 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
   public stepsLength: number;
   public entityType: EntityType = EntityType.TEST_CASE;
   public entityExternalMapping: EntityExternalMapping;
+  public enabledStepPresent: boolean;
 
   constructor(
     public authGuard: AuthenticationGuard,
@@ -55,6 +57,7 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
     // private userService: UserService,
     private testCaseService: TestCaseService,
     private testSuiteService: TestSuiteService,
+    private runButtonDisableService:RunButtonDisableService,
     private versionService: WorkspaceVersionService,
     private matModal: MatDialog,
     private router: Router,
@@ -80,6 +83,9 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
     this.testCaseService.getStepLengthEmitter().subscribe(hasInspectorFeatureres => {
       this.stepsLength = hasInspectorFeatureres;
     })
+
+    this.runButtonDisableService.enableStepdata$
+      .subscribe(enableStepdata => this.enabledStepPresent = enableStepdata);
   }
 
   fetchUserPreference() {
@@ -333,4 +339,6 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
       }
     )
   }
+
+
 }

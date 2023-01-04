@@ -1923,6 +1923,7 @@
   "settings.auth.api.key": "API Key",
   "settings.auth.api.confirm_key": "Confirm API Key",
   "settings.auth.jwt.secret": "JWT Secret",
+  "test_plan.test_suite.all_suite_machine_error": "All Test Suites must be associated with Test Machines/Devices",
   "settings.auth.jwt.confirm_secret": "Confirm JWT Secret",
   "settings.auth.form_login": "Username Password Authentication Details",
   "settings.auth.google_oauth": "Google OAuth2 Configuration Details",

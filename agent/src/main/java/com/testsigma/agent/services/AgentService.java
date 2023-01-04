@@ -47,8 +47,10 @@ public class AgentService {
           osVersion = "8";
         } else if (osVersion.startsWith("6.3")) {
           osVersion = "8.1";
-        } else if (osVersion.startsWith("10.0")) {
+        } else if (osVersion.startsWith("10.0.1")) {
           osVersion = "10";
+        } else if (osVersion.startsWith("10.0.2")){
+          osVersion = "11";
         }
       } else if (SystemUtils.IS_OS_MAC_OSX) {
         if (osVersion.startsWith("10.16")) {

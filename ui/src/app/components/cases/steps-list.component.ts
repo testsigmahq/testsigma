@@ -331,9 +331,6 @@ export class StepsListComponent extends BaseComponent implements OnInit {
     this.currentStepType = obj;
   }
 
-  get isActionText() {
-    return this.currentStepType == TestStepType.ACTION_TEXT;
-  }
 
   get isRest() {
     return this.currentStepType == TestStepType.REST_STEP;
@@ -345,23 +342,6 @@ export class StepsListComponent extends BaseComponent implements OnInit {
 
   get isForLoop() {
     return this.currentStepType == TestStepType.FOR_LOOP;
-  }
-
-  get isRecording() {
-    return this.currentStepType == 'record';
-  }
-
-
-  openDryRun() {
-    this.matDialog.open(DryRunFormComponent, {
-      height: "100vh",
-      width: '60%',
-      position: {top: '0px', right: '0px'},
-      panelClass: ['mat-dialog', 'rds-none'],
-      data: {
-        testCaseId: this.testCase.id
-      },
-    })
   }
 
   onSelectTemplate(template: NaturalTextActions) {

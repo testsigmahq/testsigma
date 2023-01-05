@@ -103,6 +103,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   public argumentList: any;
   public currentDataTypeIndex: number;
   public skipFocus: boolean;
+  public selectedTestDataProfile: TestData;
   private elementSuggestion: MatDialogRef<ActionElementSuggestionComponent>;
   private StepMsg = ["Navigate to https://www.google.com/",
     "Enter admin in the userName field",
@@ -237,6 +238,11 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
     this.setTemplate(this.currentTemplate);
     this.showTemplates = false;
+    if(changes['conditionTypeChange']?.currentValue && !changes['conditionTypeChange']?.firstChange) {
+      this.showActions = true;
+      this.showTemplates = true;
+      this.currentFocusedIndex = 0;
+    }
   }
 
   getAddonTemplateAllowedValues(reference?) {
@@ -895,6 +901,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
               this.currentDataItemIndex = index;
               this.replacer.nativeElement.contentEditable = false;
               this.resetValidation();
+              if (this.removeHtmlTags(item?.textContent).trim().length)
               if (!this.removeHtmlTags(item?.textContent).trim().length)
                 this.showDataDropdown();
               else
@@ -995,7 +1002,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
               this.selectTestDataPlaceholder();
             })
           })
-      // });
+
     }
   }
 
@@ -1141,7 +1148,8 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       return;
     }
     this.selectNodeAndFocus(element);
-    //this.isShowDataTypes = false;
+    this.showDataTypes = false;
+    setTimeout(() => this.showDataTypes = true, 300);
   }
 
   setCursorAtAttribute() {
@@ -1329,12 +1337,12 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   }
 
   private testDataFunctionDataAssign(item, functionData){
-    if(functionData.kibbutzTDF) {
-      if(functionData.kibbutzTDF.testDataFunctionArguments)
-        item.setAttribute('data-test-data-function-arguments', JSON.stringify(functionData.kibbutzTDF.testDataFunctionArguments));
-      if(functionData.kibbutzTDF.testDataFunctionId)
-        item.setAttribute('data-test-data-function-id', functionData.kibbutzTDF.testDataFunctionId);
-      item.setAttribute('data-function-data', JSON.stringify(functionData.kibbutzTDF));
+    if(functionData.addonTDF) {
+      if(functionData.addonTDF.testDataFunctionArguments)
+        item.setAttribute('data-test-data-function-arguments', JSON.stringify(functionData.addonTDF.testDataFunctionArguments));
+      if(functionData.addonTDF.testDataFunctionId)
+        item.setAttribute('data-test-data-function-id', functionData.addonTDF.testDataFunctionId);
+      item.setAttribute('data-function-data', JSON.stringify(functionData.addonTDF));
       item.setAttribute('data-is-kibbutz-fn', true);
     } else if(functionData.testDataFunction){
       item.setAttribute('data-function-data', JSON.stringify(functionData.testDataFunction));
@@ -1882,7 +1890,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
     if(step.isForLoop){
       step.forLoopData = this.testStep.forLoopData;
-      //step.forLoopData.testDataProfileData = this.selectedTestDataProfile;
+      step.forLoopData.testDataProfileData = this.selectedTestDataProfile;
     }
     this.actionForm.reset();
     this.onSave.emit(step);
@@ -2026,17 +2034,15 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   }
 
   selectTestDataProfile(testdata) {
-    //if(!this.isSpotEditEnable) {
-    //  this.resetTestData();
-    //}
+    this.resetTestData();
     this.resetCFArguments();
     this.currentTestDataType = TestDataType.raw;
     this.assignDataValue(testdata.name || testdata, this.testDataPlaceholder());
     this.showDataTypes = false;
     if(testdata instanceof TestData) {
-      //this.selectedTestDataProfile = testdata;
-      //if(this.testStep.isTestDataParameter)
-      //  this.fetchTestDataSet();
+      this.selectedTestDataProfile = testdata;
+      if(this.testStep.isTestdataParameter)
+        this.fetchTestDataSet();
     }
   }
 

@@ -98,7 +98,7 @@ export class LabEnvironmentScreenShortInfoComponent implements OnInit {
       this.agentService.findAll("id:"+this.testDevice?.agentId).subscribe(res=> {
         if(res.content.length) {
           this.agent = res.content[0]
-          this.testDevice.platform = Agent.getPlatformFromOsType(this.agent.osType);
+          this.testDevice.platform = this.agent.getPlatformFromOsType(this.agent.osType);
           this.testDevice.osVersion = this.agent.osVersion;
           this.browser = this.agent.browsers.find(browser => browser.name.toUpperCase() == this.testDevice.browser);
           this.testDevice.browserVersion = this.browser?.majorVersion;

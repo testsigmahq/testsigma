@@ -111,7 +111,7 @@ export class TestPlanExecutionEnvironmentInfoComponent implements OnInit {
         if(res.content.length){
           agent = res.content[0];
           if(this.testDevice.browser!=null){
-            this.testDevice.platform = Agent.getPlatformFromOsType(agent.osType);
+            this.testDevice.platform = agent.getPlatformFromOsType(agent.osType);
             this.testDevice.osVersion = agent.osVersion;
             let browser = agent.browsers.find(browser => browser.name.toUpperCase() == this.testDevice.browser)
             this.testDevice.browserVersion = browser.majorVersion;

@@ -83,7 +83,7 @@ export class Agent extends Base implements PageObject {
     return this.osType === AgentOsType.WINDOWS;
   }
 
-  static getPlatformFromOsType(osType: AgentOsType): Platform {
+  public getPlatformFromOsType(osType: AgentOsType): Platform {
     switch (osType) {
       case AgentOsType.LINUX:
         return Platform.Linux

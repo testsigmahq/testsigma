@@ -78,7 +78,7 @@ export class TestPlanMachineInfoComponent implements OnInit {
         if(res.content.length){
           this.agent = res.content[0];
           if(this.executionEnvironment.browser!=null){
-            this.executionEnvironment.platform = Agent.getPlatformFromOsType(this.agent.osType);
+            this.executionEnvironment.platform = this.agent.getPlatformFromOsType(this.agent.osType);
             this.executionEnvironment.osVersion = this.agent.osVersion;
             let browser = this.agent.browsers.find(browser => browser.name.toUpperCase() == this.executionEnvironment.browser)
             this.executionEnvironment.browserVersion = browser.majorVersion;

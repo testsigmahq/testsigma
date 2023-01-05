@@ -879,8 +879,8 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
 
   attachTestDataEvent() {
     if (this.testDataPlaceholder()?.length) {
-      this.testStep?.dataMap?.testData?.forEach(function(value,key) {
-          this.currentTestDataType = this.mapTestDataType(value.type) || this.currentTestDataType || TestDataType.raw;
+      // this.testStep?.dataMap?.testData?.forEach(function(value,key) {
+          this.currentTestDataType =  this.currentTestDataType || TestDataType.raw;
           console.log('attaching test data events');
           this.currentAddonAllowedValues = undefined
           this.testDataPlaceholder().forEach((item, index) => {
@@ -995,7 +995,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
               this.selectTestDataPlaceholder();
             })
           })
-      });
+      // });
     }
   }
 

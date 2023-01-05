@@ -11,6 +11,7 @@ import com.testsigma.dto.RestStepResponseDTO;
 import com.testsigma.dto.TestStepDTO;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaException;
+import com.testsigma.mapper.ForLoopConditionsMapper;
 import com.testsigma.mapper.TestStepMapper;
 import com.testsigma.model.TestStep;
 import com.testsigma.model.TestStepPriority;
@@ -45,6 +46,8 @@ public class TestStepsController {
   private final HttpClient httpClient;
   private final TestStepService service;
   private final TestStepMapper mapper;
+  //private final ForLoopConditionService forLoopConditionsService;
+  private final ForLoopConditionsMapper forLoopConditionsMapper;
 
   @RequestMapping(path = "/fetch_rest_response", method = RequestMethod.POST)
   public RestStepResponseDTO fetchApiResponse(@RequestBody RestStepRequest restStepRequest) {

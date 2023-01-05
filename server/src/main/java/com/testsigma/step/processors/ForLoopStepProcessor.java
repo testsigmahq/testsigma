@@ -18,7 +18,7 @@ public class ForLoopStepProcessor extends StepProcessor {
                               WorkspaceType workspaceType, Map<String, Element> elementMap,
                               TestStepDTO testStepDTO, Long testPlanId, TestDataSet testDataSet,
                               Map<String, String> environmentParams, TestCaseEntityDTO testCaseEntityDTO,
-                              String environmentParamSetName, String dataProfile, Map<Long, Integer> dataSetIndex) {
+                              String environmentParamSetName, String dataProfile, Map<Long, Long> dataSetIndex) {
     super(webApplicationContext, testCaseStepEntityDTOS, workspaceType, elementMap, testStepDTO, testPlanId, testDataSet,
       environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile, dataSetIndex);
   }
@@ -57,7 +57,7 @@ public class ForLoopStepProcessor extends StepProcessor {
           TestDataSet dataSet = dataBank.get(i);
           TestCaseStepEntityDTO iteEntity = new TestCaseStepEntityDTO(); //iterableEntity -- Iteration
           iteEntity.setId(parentEntity.getId());
-          dataSetIndex.put(testStepDTO.getId(), i);
+          dataSetIndex.put(testStepDTO.getId(), Long.valueOf(i));
           for (int lcount = 0; lcount < parentEntity.getTestStepDTOS().size(); lcount++) {
             TestStepDTO loopChildEntity = parentEntity.getTestStepDTOS().get(lcount);
 

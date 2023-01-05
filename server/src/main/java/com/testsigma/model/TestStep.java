@@ -91,6 +91,9 @@ public class TestStep {
   @Transient
   private String toElement;
 
+  @Transient
+  private ForLoopCondition forLoopConditions;
+
   @Column(name = "for_loop_start_index")
   private Integer forLoopStartIndex;
 
@@ -291,22 +294,24 @@ public class TestStep {
 
   public TestStepDataMap getDataMap() {
     ObjectMapperService mapperService = new ObjectMapperService();
-    Map<String, Map<String, String>> map = mapperService.parseJson(dataMap, Map.class);
+    Map<String, Map<String, Map<String, String>>> map = mapperService.parseJson(dataMap, Map.class);
     TestStepDataMap testStepDataMap = new TestStepDataMap();
     log.info("Parsing json to map: " + map);
     if(map!= null && map.containsKey("test-data")) {
-      TestStepNlpData testStepNlpData = new TestStepNlpData();
-      testStepNlpData.setValue(map.get("test-data").get("test-data"));
-      testStepNlpData.setType(map.get("test-data").get("type"));
-      if(map.get("test-data").containsKey("testDataFunction")) {
-        testStepNlpData.setTestDataFunction(new ObjectMapper().convertValue(map.get("test-data").get("testDataFunction"), DefaultDataGeneratorsEntity.class));
+      for(String key : map.get("test-data").keySet()) {
+        TestStepNlpData testStepNlpData = new TestStepNlpData();
+        testStepNlpData.setValue(map.get("test-data").get(key).get("value"));
+        testStepNlpData.setType(map.get("test-data").get(key).get("type"));
+        if(map.get("test-data").get(key).containsKey("testDataFunction")) {
+          testStepNlpData.setTestDataFunction(new ObjectMapper().convertValue(map.get("test-data").get(key).get("testDataFunction"), DefaultDataGeneratorsEntity.class));
+        }
+        if(map.get("test-data").get(key).containsKey("addonTDF")) {
+          testStepNlpData.setAddonTDF(new ObjectMapper().convertValue(map.get("test-data").get(key).get("addonTDF"), AddonTestStepTestData.class));
+        }
+        testStepDataMap.setTestData(new HashMap<>() {{
+          put(key, testStepNlpData);
+        }});
       }
-      if(map.get("test-data").containsKey("addonTDF")) {
-        testStepNlpData.setAddonTDF(new ObjectMapper().convertValue(map.get("test-data").get("addonTDF"), AddonTestStepTestData.class));
-      }
-      testStepDataMap.setTestData(new HashMap<>() {{
-          put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA, testStepNlpData);
-      }});
       if (element != null) {
         testStepDataMap.setElement(element);
       }

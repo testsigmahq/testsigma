@@ -44,14 +44,14 @@ public class StepProcessor {
   protected ProxyAddonService addonService;
   protected TestStepService testStepService;
   protected DefaultDataGeneratorService defaultDataGeneratorService;
-  protected Map<Long, Integer> dataSetIndex;
+  protected Map<Long, Long> dataSetIndex;
   WebApplicationContext webApplicationContext;
 
   public StepProcessor(WebApplicationContext webApplicationContext, List<TestCaseStepEntityDTO> testCaseStepEntityDTOS,
                        WorkspaceType workspaceType, Map<String, Element> elementMap,
                        TestStepDTO testStepDTO, Long testPlanId, TestDataSet testDataSet,
                        Map<String, String> environmentParameters, TestCaseEntityDTO testCaseEntityDTO, String environmentParamSetName,
-                       String dataProfile, Map<Long, Integer> dataSetIndex) {
+                       String dataProfile, Map<Long, Long> dataSetIndex) {
     this.webApplicationContext = webApplicationContext;
     this.testCaseStepEntityDTOS = testCaseStepEntityDTOS;
     this.workspaceType = workspaceType;
@@ -298,7 +298,7 @@ public class StepProcessor {
     try {
       TestStep testStep = testStepService.find(step.getTestDataProfileStepId());
       TestData testData = testDataProfileService.find(testStep.getForLoopTestDataId());
-      return testData.getTempTestData().get(dataSetIndex.get(testStep.getId()));
+      return testData.getTempTestData().get(dataSetIndex.get(testStep.getId()).intValue());
     } catch (Exception e) {
       TestStep parentStep = step.getParentId() != null ? testStepService.find(step.getParentId()) : null;
       if (Objects.equals(step.getTestDataProfileStepId(), this.testCaseEntityDTO.getTestDataId())) {
@@ -306,7 +306,7 @@ public class StepProcessor {
         return testData.getTempTestData().get(this.testCaseEntityDTO.getTestDataIndex());
       } else if (parentStep != null) {
         TestData testData = testDataProfileService.find(parentStep.getForLoopTestDataId());
-        return testData.getTempTestData().get(dataSetIndex.get(parentStep.getId()));
+        return testData.getTempTestData().get(dataSetIndex.get(parentStep.getId()).intValue());
       } else
         return null;
     }

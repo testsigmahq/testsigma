@@ -181,7 +181,7 @@ import {SharedService} from "../../services/shared.service";
                  [routerLink]="['/td', 'cases', testStep.stepGroupId, 'steps']"
                  [matTooltip]="'test_step.step_group.view_details' | translate"></a>
               <a
-                *ngIf="!canShowConditionalStepActions && isBreakContinueLoopStep && !this.testStep?.isForLoop"
+                *ngIf="!canShowConditionalStepActions && isBreakContinueLoopStep "
                 (click)="isCloning ? '' : clone(testStep)"
                 [class.not-allowed]="isCloning"
                 [matTooltip]="'hint.message.common.clone' | translate"

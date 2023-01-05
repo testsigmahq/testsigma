@@ -30,7 +30,7 @@ public class RestStepProcessor extends StepProcessor {
                            WorkspaceType workspaceType, Map<String, Element> elementMap,
                            TestStepDTO testStepDTO, Long testPlanId, TestDataSet testDataSet,
                            Map<String, String> environmentParams, TestCaseEntityDTO testCaseEntityDTO,
-                           String environmentParamSetName, String dataProfile, Map<Long, Integer> dataSetIndex) {
+                           String environmentParamSetName, String dataProfile, Map<Long, Long> dataSetIndex) {
     super(webApplicationContext, testCaseStepEntityDTOS, workspaceType, elementMap, testStepDTO, testPlanId, testDataSet,
       environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile, dataSetIndex);
   }

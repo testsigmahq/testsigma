@@ -4,13 +4,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.*;
 
 @Data
 @ToString
 @EqualsAndHashCode
-public class TestCaseStepResult {
+public class TestCaseStepResult implements Serializable {
   private Long id;
   private Long envRunId;
   private Long testCaseId;
@@ -48,6 +49,7 @@ public class TestCaseStepResult {
   private String addonActionLogs;
   private Map<String, ElementPropertiesEntity> ElementDetails = new HashMap<>();
   private Map<String,  TestDataPropertiesEntity> testDataDetails = new LinkedHashMap<>();
+  private ForLoopConditionsEntity forLoopConditions;
 
   @ToString.Exclude
   private StepResultMetadataEntity metadata = new StepResultMetadataEntity();

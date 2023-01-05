@@ -22,6 +22,8 @@ export class NaturalTextActionData extends Base implements Deserializable {
   public fromElement: String;
   @serializable
   public toElement: String;
+  @serializable(custom(v=>v, v=>v))
+  public testDataForLoop: Map<string, string>;
 
   deserialize(input: any): this {
     return Object.assign(this, deserialize(NaturalTextActionData, input));

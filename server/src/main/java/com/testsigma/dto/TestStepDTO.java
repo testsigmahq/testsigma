@@ -73,6 +73,7 @@ public class TestStepDTO implements Cloneable, Serializable {
   private Long testDataId;
   private Integer testDataIndex;
   private String setName;
+  private String parentHierarchy;
 
 
   public TestStepDTO clone() throws CloneNotSupportedException {

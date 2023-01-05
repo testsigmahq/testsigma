@@ -25,6 +25,16 @@ public class TestStepRequest {
   private Long testCaseId;
   private Long stepGroupId;
   private TestStepDataMap dataMap;
+  @JsonProperty("conditionIf")
+  private ResultConstant[] ifConditionExpectedResults;
+  private String testData;
+  private String testDataType;
+  private String attribute;
+  private String element;
+  private String fromElement;
+  private String toElement;
+  private Long testDataFunctionId;
+  private Map<String, String> testDataFunctionArgs;
   private Long maxIterations;
   private String exceptedResult;
   private Integer naturalTextActionId;
@@ -44,6 +54,7 @@ public class TestStepRequest {
   private Boolean ignoreStepResult;
   private Boolean visualEnabled = false;
   private Long testDataProfileStepId;
+  private ForLoopConditionRequest forLoopConditionsRequest;
   @JsonProperty()
   private AddonTestStepTestData addonTDF;
 }

@@ -463,6 +463,7 @@ export abstract class TestStepListItemComponent extends BaseComponent implements
   initNewTestStep(position: number, testCaseId): TestStep {
     let testStep = new TestStep();
     testStep.position = position;
+    testStep.dataMap = new StepDetailsDataMap();
     testStep.dataMap.conditionIf = [];
     testStep.testCaseId = testCaseId;
     testStep.waitTime = 30;

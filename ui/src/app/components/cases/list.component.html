@@ -200,7 +200,7 @@
         <div class="ts-col-15 px-25"
              [textContent]="'testcase.status_'+testCase?.status| translate">
         </div>
-        <div *ngIf="isStepGroup" class="ts-col-10 px-25">
+        <div *ngIf="isStepGroup && !isDeletedFilter" class="ts-col-10 px-25">
           <i
             class="fa-trash-thin action-icon" (click)="$event.preventDefault();fetchLinkedTestCases(testCase?.id); $event.stopPropagation()"
             [matTooltip]="'btn.common.remove' | translate"></i>

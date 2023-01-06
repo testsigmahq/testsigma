@@ -539,16 +539,4 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
   public void handlePreRequisiteChange(TestCase testCase) {
     this.testSuiteService.handlePreRequisiteChange(testCase);
   }
-
-
-  public void removeStepGroup(Long testCaseId) throws Exception {
-    //Fetching associated steps using the stepgroup id and deleting them.
-    List<TestStep> steps = this.testStepService.findAllByStepGroupId(testCaseId);
-
-    Long[] stepIds = new Long[steps.size()];
-    for (int i = 0; i < steps.size(); i++) {
-      stepIds[i] = steps.get(i).getId();
-    }
-    this.testStepService.bulkDelete(stepIds);
-  }
 }

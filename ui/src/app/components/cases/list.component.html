@@ -123,7 +123,7 @@
       class="list-header align-items-center min-height-set">
       <div class="ts-col-70 pr-10 d-flex align-items-center">
         <mat-checkbox
-          *ngIf="!isDeletedFilter"
+          *ngIf="!isDeletedFilter && !isStepGroup"
           class="mat-checkbox"
           [(ngModel)]="selectAll" [ngModelOptions]="{standalone: true}"
           (change)="selectAllToggle(selectAll)"
@@ -173,7 +173,7 @@
         *ngFor='let testCase of testCases?.content'>
         <div class="ts-col-70 d-flex align-items-center">
           <mat-checkbox
-            *ngIf="!isDeletedFilter"
+            *ngIf="!isDeletedFilter && !isStepGroup"
             [(ngModel)]="testCase.isSelected" [ngModelOptions]="{standalone: true}"
             (click)="setSelectedList($event,testCase.id)"
             class="mat-checkbox"></mat-checkbox>
@@ -198,7 +198,13 @@
           </a>
         </div>
         <div class="ts-col-15 px-25"
-             [textContent]="'testcase.status_'+testCase?.status| translate"></div>
+             [textContent]="'testcase.status_'+testCase?.status| translate">
+        </div>
+        <div *ngIf="isStepGroup" class="ts-col-10 px-25">
+          <i
+            class="fa-trash-thin action-icon" (click)="$event.preventDefault();fetchLinkedTestCases(testCase?.id); $event.stopPropagation()"
+            [matTooltip]="'btn.common.remove' | translate"></i>
+        </div>
       </a>
       <div
         *ngIf="!testCases?.content?.length && !isFetching && (!!!query || !!query)"

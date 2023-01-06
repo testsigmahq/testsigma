@@ -2139,5 +2139,9 @@
   "hint.xray.assets": "Enable Jira Integration to publish the logs, screenshots & videos in execution result.",
   "xray.filter.title": "Added Xray Id",
   "err.empty_elements": "Error While fetching empty elements",
-  "err.url_validation": "Error while validating testdata url"
+  "err.url_validation": "Error while validating testdata url",
+  "step_group.delete.impacted.message":  "Deleting this Step Group will impact <span class='text-red-warning'>{{Testcases}} Test cases</span>",
+  "step_group.testcase.listing":  "{{name}} <span class='text-t-secondary'>{{isEdited}}</span>",
+  "step_group.delete.zero_impacted.message":  "No test cases will be impacted on deleting this step group.",
+  "step_group.summary.title": "Step Group Details"
 }

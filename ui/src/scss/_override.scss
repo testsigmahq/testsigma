@@ -894,6 +894,11 @@ ngx-json-viewer.custom-json-view {
     padding-left: 0px!important;
   }
 }
+.delete-confirm-popup{
+  .cdk-virtual-scroll-content-wrapper{
+    position: unset;
+  }
+}
 .comment-list{
   .cdk-virtual-scroll-viewport{
     @extend .d-inline-block;
@@ -969,7 +974,8 @@ ngx-json-viewer.custom-json-view {
 
 .delete-dialog{
   .mat-dialog-actions{
-    @extend .pr-0
+    @extend .pr-0;
+    padding-left: 0px !important;
   }
 }
 .ui-identifier-tab{

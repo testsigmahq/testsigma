@@ -126,10 +126,10 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
         data: {
           description: this.translate.instant("message.common.confirmation.message", {FieldName: this.isGroup }),
           isPermanentDelete: permanently,
-          title: 'Test Case',
-          item: 'test case',
+          title: this.isGroup,
+          item: this.isGroup.toLowerCase(),
           name: this.testCase.name,
-          note: this.translate.instant('message.common.confirmation.test_data_des', {Item:'test case'}),
+          note: this.translate.instant('message.common.confirmation.test_data_des', {Item:this.isGroup.toLowerCase()}),
           confirmation: permanently ? this.translate.instant("message.common.confirmation.note") : this.translate.instant("message.common.confirmation.note_trash"),
         },
         panelClass: ['matDialog', 'delete-confirm']
@@ -238,6 +238,43 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
           _this.openLinkedTestCasesDialog(testCases);
       }
     }
+  }
+  public fetchLinkedTestCases(stepGroupId) {
+    let testCases: InfiniteScrollableDataSource;
+    testCases = new InfiniteScrollableDataSource(this.testCaseService, "workspaceVersionId:" + this.version.id + ",deleted:false,stepGroupId:" + stepGroupId);
+    waitTillRequestResponds();
+    let _this = this;
+
+    function waitTillRequestResponds() {
+      if (testCases.isFetching)
+        setTimeout(() => waitTillRequestResponds(), 100);
+      else {
+        _this.openStepGroupDeleteDialog(testCases);
+      }
+    }
+  }
+
+    private openStepGroupDeleteDialog(list) {
+    this.translate.get("message.common.confirmation.default").subscribe((res) => {
+      const dialogRef = this.matModal.open(ConfirmationModalComponent, {
+        width: '450px',
+        data: {
+          testCaseId: this.testCase?.id,
+          description: res,
+          isPermanentDelete: true,
+          linkedEntityList: list,
+          item : "Step group",
+          note: this.translate.instant('message.common.confirmation.requirement_type')
+        },
+        panelClass: ['matDialog', 'delete-confirm']
+      });
+      dialogRef.afterClosed()
+        .subscribe(result => {
+          if (result) {
+            this.markAsDeleted();
+          }
+        });
+    })
   }
 
 

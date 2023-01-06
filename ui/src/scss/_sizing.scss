@@ -127,7 +127,12 @@ $abbrev in (width: w, height: h) {
 .h-100-40 {
   height: calc(100% - 40px)!important;
 }
-
+.h-24px{
+  height: 24px;
+}
+.w-24px{
+  width: 24px;
+}
 .h-100-250 {
   height: calc(100% - 250px)!important;
 }

@@ -158,7 +158,11 @@ public class TestCasesController {
         }
       }
     }
-    testCaseService.markAsDelete(validIds);
+    try {
+      testCaseService.markAsDelete(validIds);
+    }catch (Exception e){
+      log.error("Exception while deleting test case");
+    }
     if(validIds.size()!= ids.size()){
       return new ResponseEntity<>("Select List contains PreRequisite Test cases", HttpStatus.BAD_REQUEST);
     }

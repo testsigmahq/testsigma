@@ -653,6 +653,13 @@ public class TestStepService extends XMLExportImportService<TestStep> {
     public Optional<TestStep> findTopByTestCaseIdOrderByPositionDesc(Long testCaseId) {
         return this.repository.findTopByTestCaseIdOrderByPositionDesc(testCaseId);
     }
+    public List<TestStep> findAllByStepGroupId(Long stepGroupId){
+        return this.repository.findAllByStepGroupId(stepGroupId);
+    }
+
+    public void deleteStepsByStepGroupId(Long stepGroupId){
+        repository.deleteStepsByTestComponentId(stepGroupId);
+    }
 
 }
 

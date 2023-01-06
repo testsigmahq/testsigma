@@ -285,6 +285,7 @@ import { FilterFormComponent as PlanFilterComponet} from './components/plans/fil
 import {XrayKeyWarningComponent} from './agents/components/webcomponents/xray-key-warning-component';
 import {XrayComponent} from './components/xraycomponent/xray.component';
 import {TestProjectImportComponent} from "./components/webcomponents/test-project-import.component";
+import {ConfirmationModalComponent} from "./shared/components/webcomponents/confirmation-modal.component";
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);

@@ -57,8 +57,15 @@
             <i class="fa-pencil-on-paper"></i>
           </a>
           <button
-            *ngIf="!testCase?.deleted"
+            *ngIf="!testCase?.deleted && !testCase?.isStepGroup"
             (click)="deleteTestCase()"
+            [matTooltip]="'hint.message.common.delete' | translate"
+            class="btn icon-btn border-rds-2 ml-14">
+            <i class="fa-trash-thin"></i>
+          </button>
+          <button
+            *ngIf="!testCase?.deleted && testCase?.isStepGroup"
+            (click)="fetchLinkedTestCases(testCase?.id)"
             [matTooltip]="'hint.message.common.delete' | translate"
             class="btn icon-btn border-rds-2 ml-14">
             <i class="fa-trash-thin"></i>

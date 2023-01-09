@@ -15,7 +15,7 @@ import {MobileOsVersionService} from "../../../agents/services/mobile-os-version
 import {CloudDevice} from "../../../agents/models/cloud-device.model";
 import {AuthenticationGuard} from "../../guards/authentication.guard";
 import {BaseComponent} from "../base.component";
-import {NotificationsService} from 'angular2-notifications';
+import {NotificationsService, NotificationType} from 'angular2-notifications';
 import {TranslateService} from '@ngx-translate/core';
 import {ToastrService} from "ngx-toastr";
 import {MobileOsType} from "../../../agents/enums/mobile-os-type.enum";
@@ -24,9 +24,9 @@ import {PlatformService} from "../../../agents/services/platform.service";
 import {PlatformOsVersion} from "../../../agents/models/platform-os-version.model";
 import {Platform} from "../../../agents/models/platform.model";
 import {Pageable} from "../../models/pageable";
-import {UploadType} from "../../enums/upload-type.enum";
 import {ActivatedRoute, Params} from "@angular/router";
 import {MobileInspectionComponent} from "../../../agents/components/webcomponents/mobile-inspection.component";
+import {SupportedDeviceType} from "../../../agents/enums/supported-device-type";
 
 @Component({
   selector: 'app-inspection-modal',
@@ -241,6 +241,10 @@ export class InspectionModalComponent extends BaseComponent implements OnInit {
   }
 
   launch() {
+    if(!this.checkUploadCompatability()){
+      this.showNotification(NotificationType.Error, this.translate.instant("mobile_recorder.message.ipa.error"))
+      return;
+    }
     this.data.uiId = this.uiId;
     this.data.agent = this.agent;
     this.data.uploadId = this.uploadSelectionForm.getRawValue().app_upload_id;
@@ -413,5 +417,11 @@ export class InspectionModalComponent extends BaseComponent implements OnInit {
 
   isTestStep(){
     return this.isStepGroup;
+  }
+
+  private checkUploadCompatability() {
+    if(!this.isIOS) return true;
+    let device = this.devices?.content?.find(device => this.deviceId == device.id);
+    return (device?.isEmulator && this.upload.supportedDeviceType == SupportedDeviceType.IOS_EMULATOR) ||  (!device?.isEmulator && this.upload.supportedDeviceType == SupportedDeviceType.IOS_DEVICE);
   }
 }

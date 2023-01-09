@@ -181,6 +181,6 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
   }
   get isButtonDisabled() {
     return (this.upload.id ? (!this.getRawValue()?.name || this.uploadForm.controls?.name?.errors ||
-    this.uploadedFileObject?.name ? this.uploadForm.invalid : false) : this.uploadForm.invalid) || !this.upload.name || this.maxSizeError;
+    this.uploadedFileObject?.name ? this.uploadForm.invalid : false) : this.uploadForm.invalid) || !this.upload.name || this.maxSizeError || this.upload.supportedDeviceType==this.SupportedDeviceType.NULL;
   }
 }

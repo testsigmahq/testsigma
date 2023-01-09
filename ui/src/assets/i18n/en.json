@@ -1386,6 +1386,7 @@
   "uploads.list.message.copied": "Copied!",
   "uploads.list.copy_path": "Copy Path",
   "uploads.bulk_delete.confirmation.message": "Are you sure you want to delete the selected ( {{FieldName}} ) Uploads?",
+  "uploads.linked.with.test_cases": "This Upload is used in the below Test Cases,Please remove the mapping and try again",
   "uploads.form.create_title": "Upload",
   "uploads.form.edit_title": "Update File",
   "uploads.form.label.select_file_type": "Select Type",
@@ -2139,5 +2140,6 @@
   "hint.xray.assets": "Enable Jira Integration to publish the logs, screenshots & videos in execution result.",
   "xray.filter.title": "Added Xray Id",
   "err.empty_elements": "Error While fetching empty elements",
-  "err.url_validation": "Error while validating testdata url"
+  "err.url_validation": "Error while validating testdata url",
+  "message.common.uploads.deleted.failure": "Failed to delete some of the Uploads since they are already associated to some Test Cases."
 }

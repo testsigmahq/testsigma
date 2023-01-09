@@ -23,6 +23,7 @@ public interface UploadVersionRepository extends BaseRepository<UploadVersion, L
   List<UploadVersion> findAllByLastUploadedTimeBeforeAndUploadTypeIn(Timestamp lastUploadedTime, Collection<UploadType> uploadType);
 
   List<UploadVersion> findAllByUploadTypeIn(Collection<UploadType> uploadType);
+  List<UploadVersion> findAllByUploadId(Long uploadId);
 
 
   Optional<UploadVersion> findByNameAndUploadId(String name, Long importedId);

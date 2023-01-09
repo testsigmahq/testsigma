@@ -46,8 +46,8 @@ export class UploadService {
     );
   }
 
-  public bulkDestroy(ids: number[]): Observable<void> {
-    let params = new HttpParams().set("ids[]", ids.toString());
+  public bulkDestroy(ids: number[], workspaceVersionId: number ): Observable<void> {
+    let params = new HttpParams().set("ids[]", ids.toString()).set("workspaceVersionId", workspaceVersionId);
     return this.http.delete<void>(this.URLConstants.uploadsUrl + "/bulk", {
       headers: this.httpHeaders.contentTypeApplication,
       params: params

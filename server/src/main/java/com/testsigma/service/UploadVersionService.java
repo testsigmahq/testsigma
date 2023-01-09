@@ -356,4 +356,7 @@ public class UploadVersionService extends XMLExportImportService<UploadVersion> 
   }
 
 
+  public List<UploadVersion> findByUploadId(Long id) {
+    return uploadVersionRepository.findAllByUploadId(id);
+  }
 }

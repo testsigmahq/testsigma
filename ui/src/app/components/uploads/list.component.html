@@ -8,7 +8,7 @@
 
   <div class="d-flex align-items-center ml-auto"
        *ngIf="selectedUploads.length">
-    <button (click)="checkForLinkedEnvironments(null)"
+    <button (click)="openDeleteDialog()"
             [matTooltip]="'hint.message.common.delete_selected' | translate"
             class="btn icon-btn border-rds-2 ml-14"
             *ngIf="selectedUploads.length">
@@ -97,7 +97,7 @@
               (click)="openSaveUploadForm(upload)"
               class="fa-pencil-on-paper action-icon"></a>
             <a
-              data-placement="bottom" (click)="checkForLinkedEnvironments(upload.id, upload.name)"
+              data-placement="bottom" (click)="checkForLinkedEntities(upload.id, upload.name)"
               [matTooltip]="'pagination.delete' | translate"
               href="javascript:void(0)"
               class="fa-trash-thin action-icon"></a>

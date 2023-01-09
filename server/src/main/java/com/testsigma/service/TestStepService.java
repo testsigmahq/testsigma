@@ -658,7 +658,7 @@ public class TestStepService extends XMLExportImportService<TestStep> {
     }
 
     public void deleteStepsByStepGroupId(Long stepGroupId){
-        repository.deleteStepsByTestComponentId(stepGroupId);
+        repository.deleteStepsByStepGroupId(stepGroupId);
     }
 
 }

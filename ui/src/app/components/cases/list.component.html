@@ -202,7 +202,7 @@
         </div>
         <div *ngIf="isStepGroup && !isDeletedFilter" class="ts-col-10 px-25">
           <i
-            class="fa-trash-thin action-icon" (click)="$event.preventDefault();fetchLinkedTestCases(testCase?.id); $event.stopPropagation()"
+            class="fa-trash-thin action-icon" (click)="fetchTestCase($event,testCase.id)"
             [matTooltip]="'btn.common.remove' | translate"></i>
         </div>
       </a>

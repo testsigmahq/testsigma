@@ -477,4 +477,9 @@ export class TestCasesListComponent extends BaseComponent implements OnInit {
         });
     })
   }
+  fetchTestCase($event,id){
+    $event.preventDefault();
+    this.fetchLinkedTestCases(id);
+    $event.stopPropagation();
+  }
 }

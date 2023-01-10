@@ -135,7 +135,17 @@ export class ConfirmationModalComponent {
     }
     window.open(window.location.origin + entityUrl+"?stepGroupId="+this.modalData?.testCaseId, "_blank");
   }
-
+  /**
+   * This is a function which is used to format Linked Entity if the modalData contains entityUrl.
+   *
+   * @param {url} n - A string param
+   * @param {linkedEntity}  - A string param
+   * @return {replaceParamValues} Function which replaces param values in a url with data values
+   *
+   * @example
+   *
+   *  formatEntityUrlIfExists(url,linkedEntity)
+   *  */
   formatEntityUrlIfExists(url,linkedEntity){
     return this.replaceParamValues(url, {entityId: linkedEntity?.id, versionId: linkedEntity?.workspaceVersionId})
   }

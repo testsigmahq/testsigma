@@ -227,7 +227,12 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
     testCases = new InfiniteScrollableDataSource(this.testSuiteService, ",testcaseId:" + this.testCaseId);
     waitTillRequestResponds();
     let _this = this;
-
+    /**
+     * This is a function which is used to add a timeout when testCases.isFetching returns true. Gives a timeout for the testcases to be fetched.
+     * @example
+     *
+     * waitTillRequestResponds()
+     * */
     function waitTillRequestResponds() {
       if (testCases.isFetching)
         setTimeout(() => waitTillRequestResponds(), 100);

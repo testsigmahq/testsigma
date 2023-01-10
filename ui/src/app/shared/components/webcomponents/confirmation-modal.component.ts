@@ -1,7 +1,7 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {FormControl} from "@angular/forms";
-
+import {EntityUrlEnum} from "../../../enums/entity-url.enum";
 
 @Component({
   selector: 'delete-dialog',
@@ -131,7 +131,7 @@ export class ConfirmationModalComponent {
     if(this.modalData?.entityUrl)
       entityUrl = this.formatEntityUrlIfExists(this.modalData?.entityUrl, linkedEntity);
     if(!entityUrl) {
-      entityUrl = "/ui/td/cases/" + linkedEntity?.id + "/steps";
+      entityUrl = EntityUrlEnum.CASE + linkedEntity?.id + EntityUrlEnum.STEPS;
     }
     window.open(window.location.origin + entityUrl+"?stepGroupId="+this.modalData?.testCaseId, "_blank");
   }

@@ -115,35 +115,33 @@ public class UploadService extends XMLExportImportService<Upload> {
   }
 
   public void delete(Upload upload) {
-    this.uploadRepository.delete(upload);
-    publishEvent(upload, EventType.DELETE);
+    TestCaseSpecificationsBuilder builder = new TestCaseSpecificationsBuilder();
+    Long id = upload.getId();
+    Long workspace_id = upload.getWorkspaceId();
+    List<SearchCriteria> params = new ArrayList<>();
+    List<UploadVersion> uploadVersions = uploadVersionService.findByUploadId(id);
+    for(UploadVersion uploadVersion: uploadVersions ) {
+      params.add(new SearchCriteria("testData", SearchOperation.EQUALITY, "testsigma-storage:/"+uploadVersion.getPath()));
+      params.add(new SearchCriteria("workspaceVersionId", SearchOperation.EQUALITY, workspace_id));
+      builder.setParams(params);
+      Specification<TestCase> spec = builder.build();
+      Page<TestCase> linkedTestCases = testCaseService.findAll(spec, PageRequest.of(0, 1));
+      if(linkedTestCases.getTotalElements() > 0){
+        throw new DataIntegrityViolationException("dataIntegrityViolationException: Failed to delete some of the Uploads " +
+                "since they are already associated to some Test Cases.");
+      }
+      this.uploadRepository.delete(upload);
+      publishEvent(upload, EventType.DELETE);
+  }
   }
   public void bulkDelete(Long[] ids, Long workspaceVersionId) throws Exception {
-    Boolean allIdsDeleted = true;
     TestCaseSpecificationsBuilder builder = new TestCaseSpecificationsBuilder();
     for (Long id : ids) {
-      List<SearchCriteria> params = new ArrayList<>();
-      List<UploadVersion> uploadVersions = uploadVersionService.findByUploadId(id);
-      //TODO below check in for(uploadVersions)
-      for(UploadVersion uploadVersion: uploadVersions ) {
-        params.add(new SearchCriteria("testData", SearchOperation.EQUALITY, "testsigma-storage:/"+uploadVersion.getPath()));
-        params.add(new SearchCriteria("workspaceVersionId", SearchOperation.EQUALITY, workspaceVersionId));
-        builder.setParams(params);
-        Specification<TestCase> spec = builder.build();
-        Page<TestCase> linkedTestCases = testCaseService.findAll(spec, PageRequest.of(0, 1));
-        if(linkedTestCases.getTotalElements() > 0){
-          allIdsDeleted = false;
-          break;
-        }
         Upload upload = find(id);
         this.delete(upload);
         }
     }
-    if (!allIdsDeleted) {
-      throw new DataIntegrityViolationException("dataIntegrityViolationException: Failed to delete some of the Uploads " +
-              "since they are already associated to some Test Cases.");
-    }
-  }
+
 
   public void publishEvent(Upload upload, EventType eventType) {
     UploadEvent<Upload> event = createEvent(upload, eventType);

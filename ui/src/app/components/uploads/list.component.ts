@@ -303,7 +303,10 @@ export class ListComponent extends BaseComponent implements OnInit {
         this.fetchUploads();
         this.selectedUploads = []
       },
-      (err) => this.translate.get("message.common.uploads.deleted.failure", {FieldName: "Uploads"}).subscribe(res => this.showAPIError(NotificationType.Error, res,"Uploads","Test Case")))
+      (err) => {
+        this.translate.get("message.common.uploads.deleted.failure", {FieldName: "Uploads"}).subscribe(res => this.showAPIError(NotificationType.Error, res,"Uploads","Test Case"));
+        this.fetchUploads();
+      })
   }
 
   private goToPreviousPageIfEmpty(res) {

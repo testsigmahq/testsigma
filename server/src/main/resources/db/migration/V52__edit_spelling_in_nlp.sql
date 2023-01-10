@@ -1,0 +1,1 @@
+UPDATE `natural_text_actions` SET `natural_text` = 'Store current  ${Test Data Profile Name/Test Data Set Index/Test Data Set Name} value into runtime variable  @{attribute}' WHERE id = 1095;

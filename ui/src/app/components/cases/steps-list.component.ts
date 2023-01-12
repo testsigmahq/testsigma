@@ -283,7 +283,7 @@ export class StepsListComponent extends BaseComponent implements OnInit {
   bulkDestroy() {
     this.testStepService.bulkDestroy(this.selectedStepsList).subscribe({
       next: () => {
-        this.fetchTestCase(this.route.parent.snapshot.params.testCaseId);
+        this.fetchTestCase(this.testCase?.id);
         this.translate.get("message.common.deleted.success", {FieldName: 'Test Steps'}).subscribe((res: string) => {
           this.showNotification(NotificationType.Success, res);
           this.selectedStepsList = [];

@@ -83,7 +83,7 @@
     </div>
     <div  *ngIf="currentTemplate?.allowedValues">
       <div
-        *ngFor="let value of currentTemplate?.allowedValues; let index=index"
+        *ngFor="let value of currentTemplate?.allowedValues['test-data']; let index=index"
         [class.h-active]="currentDataTypeIndex == index"
         (mouseover)="currentDataTypeIndex=index"
         (click)="selectAllowedValues(value, true)"

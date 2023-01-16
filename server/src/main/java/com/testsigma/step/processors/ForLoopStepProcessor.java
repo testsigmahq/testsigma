@@ -26,7 +26,7 @@ public class ForLoopStepProcessor extends StepProcessor {
   private void attachTestDataProfileStepId(List<TestStepDTO> testCaseStepEntityDTOS) {
     for (TestStepDTO testStepEntity : testCaseStepEntityDTOS){
       if (testStepEntity.getTestDataProfileStepId()!=null){
-        Optional<TestStepDTO> TDPStepEntity = testCaseStepEntityDTOS.stream().filter(step -> Objects.equals(step.getForLoopTestDataId(), testStepEntity.getTestDataProfileStepId())).findFirst();
+        Optional<TestStepDTO> TDPStepEntity = testCaseStepEntityDTOS.stream().filter(step -> Objects.equals(step.getDataMap().getForLoop().getTestDataId(), testStepEntity.getTestDataProfileStepId())).findFirst();
         TDPStepEntity.ifPresent(stepDTO -> testStepEntity.setTestDataProfileStepId(stepDTO.getId()));
       }
     }
@@ -39,9 +39,9 @@ public class ForLoopStepProcessor extends StepProcessor {
       this.attachTestDataProfileStepId(testStepDTOS);
     }
 
-    Long testDataId = testStepDTO.getForLoopTestDataId();
-    Integer start = testStepDTO.getForLoopStartIndex();
-    Integer end = testStepDTO.getForLoopEndIndex();
+    Long testDataId = testStepDTO.getDataMap().getForLoop().getTestDataId();
+    Integer start = testStepDTO.getDataMap().getForLoop().getStartIndex();
+    Integer end = testStepDTO.getDataMap().getForLoop().getEndIndex();
 
     TestData testData = testDataProfileService.find(testDataId);
 

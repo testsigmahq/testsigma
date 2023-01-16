@@ -297,7 +297,7 @@ public class StepProcessor {
   public TestDataSet getTestDataIdFromStep(TestCaseStepEntityDTO step) throws ResourceNotFoundException {
     try {
       TestStep testStep = testStepService.find(step.getTestDataProfileStepId());
-      TestData testData = testDataProfileService.find(testStep.getForLoopTestDataId());
+      TestData testData = testDataProfileService.find(testStep.getDataMap().getForLoop().getTestDataId());
       return testData.getTempTestData().get(dataSetIndex.get(testStep.getId()).intValue());
     } catch (Exception e) {
       TestStep parentStep = step.getParentId() != null ? testStepService.find(step.getParentId()) : null;
@@ -305,7 +305,7 @@ public class StepProcessor {
         TestData testData = testDataProfileService.find(step.getTestDataProfileStepId());
         return testData.getTempTestData().get(this.testCaseEntityDTO.getTestDataIndex());
       } else if (parentStep != null) {
-        TestData testData = testDataProfileService.find(parentStep.getForLoopTestDataId());
+        TestData testData = testDataProfileService.find(parentStep.getDataMap().getForLoop().getTestDataId());
         return testData.getTempTestData().get(dataSetIndex.get(parentStep.getId()).intValue());
       } else
         return null;

@@ -75,7 +75,7 @@ public class ParameterTestDataProcessor extends TestDataProcessor{
   private void processOverRiddenParentStepParameter(){
     try {
       TestStep testStep = testStepService.find(stepId);
-      TestData testData = testDataService.find(testStep.getForLoopTestDataId());
+      TestData testData = testDataService.find(testStep.getDataMap().getForLoop().getTestDataId());
       processLoopParameter(testData, parameter, testDataSetService.find(this.stepGroupParentForLoopStepIdTestDataSetMap.get(stepId)));
     }catch (ResourceNotFoundException exception){
       this.exception = exception;

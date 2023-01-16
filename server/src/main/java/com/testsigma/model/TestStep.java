@@ -94,15 +94,6 @@ public class TestStep {
   @Transient
   private ForLoopCondition forLoopConditions;
 
-  @Column(name = "for_loop_start_index")
-  private Integer forLoopStartIndex;
-
-  @Column(name = "for_loop_end_index")
-  private Integer forLoopEndIndex;
-
-  @Column(name = "for_loop_test_data_id")
-  private Long forLoopTestDataId;
-
   @Column(name = "test_data_function_id")
   private Long testDataFunctionId;
 
@@ -246,11 +237,6 @@ public class TestStep {
     DefaultDataGeneratorsDetails functionDetails = new DefaultDataGeneratorsDetails();
     functionDetails.setId(testDataFunctionId);
     functionDetails.setArguments(testDataFunctionArgs);
-    TestStepForLoop forLoop = new TestStepForLoop();
-    forLoop.setStartIndex(forLoopStartIndex);
-    forLoop.setEndIndex(forLoopEndIndex);
-    forLoop.setTestDataId(forLoopTestDataId);
-    testStepDataMap.setForLoop(forLoop);
     return testStepDataMap;
   }
 
@@ -282,13 +268,6 @@ public class TestStep {
     if (ifConditionExpectedResults != null && ifConditionExpectedResults.length > 0) {
       testStepDataMap.setIfConditionExpectedResults(ifConditionExpectedResults);
     }
-    if (forLoopStartIndex != null || forLoopTestDataId != null || forLoopEndIndex != null) {
-      TestStepRecorderForLoop testStepForLoop= new TestStepRecorderForLoop();
-      testStepForLoop.setTestDataId(forLoopTestDataId);
-      testStepForLoop.setStartIndex(forLoopStartIndex);
-      testStepForLoop.setEndIndex(forLoopEndIndex);
-      testStepDataMap.setForLoop(testStepForLoop);
-    }
     return testStepDataMap;
   }
 
@@ -298,6 +277,7 @@ public class TestStep {
     TestStepDataMap testStepDataMap = new TestStepDataMap();
     log.info("Parsing json to map: " + map);
     if(map!= null && map.containsKey("test-data")) {
+      Map<String, TestStepNlpData> testData = new HashMap<>();
       for(String key : map.get("test-data").keySet()) {
         TestStepNlpData testStepNlpData = new TestStepNlpData();
         testStepNlpData.setValue(map.get("test-data").get(key).get("value"));
@@ -308,10 +288,9 @@ public class TestStep {
         if(map.get("test-data").get(key).containsKey("addonTDF")) {
           testStepNlpData.setAddonTDF(new ObjectMapper().convertValue(map.get("test-data").get(key).get("addonTDF"), AddonTestStepTestData.class));
         }
-        testStepDataMap.setTestData(new HashMap<>() {{
-          put(key, testStepNlpData);
-        }});
+        testData.put(key, testStepNlpData);
       }
+      testStepDataMap.setTestData(testData);
       if (element != null) {
         testStepDataMap.setElement(element);
       }
@@ -323,13 +302,6 @@ public class TestStep {
       }
       if (ifConditionExpectedResults != null && ifConditionExpectedResults.length > 0) {
         testStepDataMap.setIfConditionExpectedResults(ifConditionExpectedResults);
-      }
-      if (forLoopStartIndex != null || forLoopTestDataId != null || forLoopEndIndex != null) {
-        TestStepForLoop testStepForLoop= new TestStepForLoop();
-        testStepForLoop.setTestDataId(forLoopTestDataId);
-        testStepForLoop.setStartIndex(forLoopStartIndex);
-        testStepForLoop.setEndIndex(forLoopEndIndex);
-        testStepDataMap.setForLoop(testStepForLoop);
       }
     }
     log.info("Parsed json to testStepDataMap: " + testStepDataMap);

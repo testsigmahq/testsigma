@@ -42,9 +42,6 @@ public class TestStepDTO implements Cloneable, Serializable {
   private String element;
   private String fromElement;
   private String toElement;
-  private Integer forLoopStartIndex;
-  private Integer forLoopEndIndex;
-  private Long forLoopTestDataId;
   private Boolean visualEnabled = false;
   private Long testDataFunctionId;
   private String testDataProfileName;
@@ -96,9 +93,6 @@ public class TestStepDTO implements Cloneable, Serializable {
     json.put("toElement", toElement);
     json.put("attribute", attribute);
     json.put("testDataFunctionArgs", testDataFunctionArgs);
-    json.put("forLoopStartIndex", forLoopStartIndex);
-    json.put("forLoopEndIndex", forLoopEndIndex);
-    json.put("forLoopTestDataId", forLoopTestDataId);
     return json.toMap();
   }
 
@@ -111,11 +105,6 @@ public class TestStepDTO implements Cloneable, Serializable {
     testStepDataMap.setFromElement(fromElement);
     testStepDataMap.setToElement(toElement);
     testStepDataMap.setAttribute(attribute);
-    TestStepForLoop forLoop = new TestStepForLoop();
-    forLoop.setStartIndex(forLoopStartIndex);
-    forLoop.setEndIndex(forLoopEndIndex);
-    forLoop.setTestDataId(forLoopTestDataId);
-    testStepDataMap.setForLoop(forLoop);
     return testStepDataMap;
   }
 
@@ -145,13 +134,6 @@ public class TestStepDTO implements Cloneable, Serializable {
     }
     if(ifConditionExpectedResults.length > 0) {
       testStepDataMap.setIfConditionExpectedResults(ifConditionExpectedResults);
-    }
-    if(forLoopStartIndex != null || forLoopTestDataId != null || forLoopEndIndex != null) {
-      TestStepRecorderForLoop testStepForLoop= new TestStepRecorderForLoop();
-      testStepForLoop.setTestDataId(forLoopTestDataId);
-      testStepForLoop.setStartIndex(forLoopStartIndex);
-      testStepForLoop.setEndIndex(forLoopEndIndex);
-      testStepDataMap.setForLoop(testStepForLoop);
     }
     return testStepDataMap;
   }

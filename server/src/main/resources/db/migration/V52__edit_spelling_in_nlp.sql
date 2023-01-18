@@ -1,1 +1,8 @@
 UPDATE `natural_text_actions` SET `natural_text` = 'Store current  ${Test Data Profile Name/Test Data Set Index/Test Data Set Name} value into runtime variable  @{attribute}' WHERE id = 1095;
+UPDATE `natural_text_actions` SET `natural_text` = 'Store current  ${Test Data Profile Name/Test Data Set Index/Test Data Set Name} value into runtime variable  @{attribute}' WHERE id = 10209;
+UPDATE `natural_text_actions` SET `natural_text` = 'Store current  ${Test Data Profile Name/Test Data Set Index/Test Data Set Name} value into runtime variable  @{attribute}' WHERE id = 20163;
+UPDATE `natural_text_actions` SET `natural_text` = 'Store current  ${Test Data Profile Name/Test Data Set Index/Test Data Set Name} value into runtime variable  @{attribute}' WHERE id = 30192;
+UPDATE `natural_text_action_examples` SET `description` = 'Store current Test Data Profile Name/Test Data Set Index/Test Data Set Name value into runtime variable' WHERE id = 854;
+UPDATE `natural_text_action_examples` SET `description` = 'Store current Test Data Profile Name/Test Data Set Index/Test Data Set Name value into runtime variable' WHERE id = 855;
+UPDATE `natural_text_action_examples` SET `description` = 'Store current Test Data Profile Name/Test Data Set Index/Test Data Set Name value into runtime variable' WHERE id = 856;
+UPDATE `natural_text_action_examples` SET `description` = 'Store current Test Data Profile Name/Test Data Set Index/Test Data Set Name value into runtime variable' WHERE id = 857;

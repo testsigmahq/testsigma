@@ -15,5 +15,8 @@ interface extractStringByDelimiterByPosArguments{
 }
 
 export const extractStringByDelimiterByPos = ({str,delimiter=".",occurence=-1}:extractStringByDelimiterByPosArguments) => {
+  if (str=="domain.com")
+    return str
+  else
   return str.split(delimiter).slice(occurence).join(delimiter)
 }

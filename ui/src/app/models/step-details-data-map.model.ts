@@ -146,7 +146,6 @@ export class StepDetailsDataMap extends Base implements Deserializable {
     delete output.conditionIf;
     delete output.testDataType;
     delete output.testData;
-    delete output.element;
     delete output.fromElement;
     delete output.toElement;
     return output;

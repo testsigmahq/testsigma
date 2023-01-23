@@ -121,11 +121,6 @@ export class ConfirmationModalComponent {
     this.confirmText.valueChanges.subscribe(() => this.isValid = this.confirmText.value.toLocaleLowerCase() == 'delete');
 
   }
-  ngOnInit(){
-  }
-
-
-
   openLinkedEntity(linkedEntity) {
     let entityUrl;
     if(this.modalData?.entityUrl)

@@ -1460,6 +1460,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       if (elementName && elementName.length) {
         targetElement.innerHTML = elementName;
         this.selectedElementName = elementName;
+        this.testStep.dataMap.elementString = elementName;
       }
       if (this.testDataPlaceholder()?.length && !this.isEdit) {
         this.testDataPlaceholder()?.[this.currentDataItemIndex || 0]?.click();
@@ -1467,6 +1468,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       }
     }
   }
+
 
 
   private assignDataValue(dataName, isReplacer?:boolean) {

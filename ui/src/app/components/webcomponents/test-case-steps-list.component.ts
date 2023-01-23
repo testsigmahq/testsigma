@@ -32,6 +32,7 @@ export abstract class TestCaseStepsListComponent extends BaseComponent implement
   @Output('onSelectedStepType') public onSelectedStepType = new EventEmitter<string>();
   @Input('isCheckHelpPreference') isCheckHelpPreference: boolean;
   @ViewChild('stepsVirtualScrollViewNonReorderDisabled') virtualScroll: CdkVirtualScrollViewport;
+  @Input('cdKScrollStepGroupId') cdKScrollStepGroupId: number;
   public isStepFetchCompletedTmp: Boolean = false;
 
   public testSteps: Page<TestStep>;
@@ -362,6 +363,7 @@ export abstract class TestCaseStepsListComponent extends BaseComponent implement
           if (step.stepGroupId)
             step.stepGroup = testCases.content.find(testCase => testCase.id == step.stepGroupId)
         })
+        this.scrollToGroupStepPosition();
       });
     }
   }
@@ -412,6 +414,12 @@ export abstract class TestCaseStepsListComponent extends BaseComponent implement
       setTimeout(() => {
         this.scrollToStepPosition(position);
       }, 200)
+    }
+  }
+  scrollToGroupStepPosition() {
+    if(this.cdKScrollStepGroupId){
+      let position:number = this.testSteps.content.findIndex(step => step.stepGroupId == this.cdKScrollStepGroupId);
+      this.scrollToStepPosition(position);
     }
   }
 

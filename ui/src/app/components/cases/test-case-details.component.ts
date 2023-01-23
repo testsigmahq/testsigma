@@ -65,7 +65,7 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
     super(authGuard, notificationsService, translate,toastrService);
   }
 
-  get isGroup() {
+  get testCaseName() {
     return this.testCase?.isStepGroup ? 'Step Group' : 'Test Case';
   }
 
@@ -120,16 +120,16 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
   }
 
   deleteTestCase(permanently?) {
-    this.translate.get("message.common.confirmation.message", {FieldName: this.isGroup }).subscribe((res) => {
+    this.translate.get("message.common.confirmation.message", {FieldName: this.testCaseName }).subscribe((res) => {
       const dialogRef = this.matModal.open(ConfirmationModalComponent, {
         width: '450px',
         data: {
-          description: this.translate.instant("message.common.confirmation.message", {FieldName: this.isGroup }),
+          description: this.translate.instant("message.common.confirmation.message", {FieldName: this.testCaseName }),
           isPermanentDelete: permanently,
-          title: 'Test Case',
-          item: 'test case',
+          title: this.testCaseName,
+          item: this.testCaseName.toLowerCase(),
           name: this.testCase.name,
-          note: this.translate.instant('message.common.confirmation.test_data_des', {Item:'test case'}),
+          note: this.translate.instant('message.common.confirmation.test_data_des', {Item:this.testCaseName.toLowerCase()}),
           confirmation: permanently ? this.translate.instant("message.common.confirmation.note") : this.translate.instant("message.common.confirmation.note_trash"),
         },
         panelClass: ['matDialog', 'delete-confirm']
@@ -150,7 +150,7 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
     this.testCaseService.markAsDeleted(this.testCaseId).subscribe({
         next: () => {
           this.fetchTestCase();
-          this.translate.get("message.common.deleted.success", {FieldName: this.isGroup }).subscribe((res: string) => {
+          this.translate.get("message.common.deleted.success", {FieldName: this.testCaseName }).subscribe((res: string) => {
             this.showNotification(NotificationType.Success, res);
           });
         },
@@ -158,7 +158,7 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
           if (error.status == "400") {
             this.showNotification(NotificationType.Error, error.error);
           } else {
-            this.translate.get("message.common.deleted.failure", {FieldName: this.isGroup }).subscribe((res: string) => {
+            this.translate.get("message.common.deleted.failure", {FieldName: this.testCaseName }).subscribe((res: string) => {
               this.showNotification(NotificationType.Error, res);
             });
           }
@@ -193,7 +193,7 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
     this.testCaseService.restore(this.testCaseId).subscribe({
         next: () => {
           this.fetchTestCase();
-          this.translate.get("message.common.restore.success", {FieldName: this.isGroup }).subscribe((res: string) => {
+          this.translate.get("message.common.restore.success", {FieldName: this.testCaseName }).subscribe((res: string) => {
             this.showNotification(NotificationType.Success, res);
           });
         },
@@ -201,8 +201,8 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
           if (error.status == "400") {
             this.showNotification(NotificationType.Error, error.error);
           } else {
-            this.translate.get("message.common.restore.failure", {FieldName: this.isGroup }).subscribe((res: string) => {
-              this.showAPIError(error, res, this.isGroup);
+            this.translate.get("message.common.restore.failure", {FieldName: this.testCaseName }).subscribe((res: string) => {
+              this.showAPIError(error, res, this.testCaseName);
             });
           }
         }
@@ -227,7 +227,12 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
     testCases = new InfiniteScrollableDataSource(this.testSuiteService, ",testcaseId:" + this.testCaseId);
     waitTillRequestResponds();
     let _this = this;
-
+    /**
+     * This is a function which is used to add a timeout when testCases.isFetching returns true. Gives a timeout for the testcases to be fetched.
+     * @example
+     *
+     * waitTillRequestResponds()
+     * */
     function waitTillRequestResponds() {
       if (testCases.isFetching)
         setTimeout(() => waitTillRequestResponds(), 100);
@@ -238,6 +243,43 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
           _this.openLinkedTestCasesDialog(testCases);
       }
     }
+  }
+  public fetchLinkedTestCases(stepGroupId) {
+    let testCases: InfiniteScrollableDataSource;
+    testCases = new InfiniteScrollableDataSource(this.testCaseService, "workspaceVersionId:" + this.version.id + ",deleted:false,stepGroupId:" + stepGroupId);
+    waitTillRequestResponds();
+    let _this = this;
+
+    function waitTillRequestResponds() {
+      if (testCases.isFetching)
+        setTimeout(() => waitTillRequestResponds(), 100);
+      else {
+        _this.openStepGroupDeleteDialog(testCases);
+      }
+    }
+  }
+
+    private openStepGroupDeleteDialog(list) {
+    this.translate.get("message.common.confirmation.default").subscribe((res) => {
+      const dialogRef = this.matModal.open(ConfirmationModalComponent, {
+        width: '450px',
+        data: {
+          testCaseId: this.testCase?.id,
+          description: res,
+          isPermanentDelete: true,
+          linkedEntityList: list,
+          item : "Step group",
+          note: this.translate.instant('message.common.confirmation.requirement_type')
+        },
+        panelClass: ['matDialog', 'delete-confirm']
+      });
+      dialogRef.afterClosed()
+        .subscribe(result => {
+          if (result) {
+            this.markAsDeleted();
+          }
+        });
+    })
   }
 
 

@@ -46,7 +46,7 @@
     class="list-container virtual-scroll-viewport theme-only-items-scroll sm-h" >
     <a
       class="list-view green-highlight lg-pm pl-10 text-t-secondary"
-      [routerLink]="['/td', 'cases',  testCase?.id]"
+      (click)="this.navigateToCase(testCase?.id)"
       *cdkVirtualFor='let testCase of testCases'>
       <div
         class="ts-col-65 d-flex">

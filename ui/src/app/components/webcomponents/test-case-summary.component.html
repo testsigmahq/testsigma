@@ -2,7 +2,7 @@
   class="w-100 h-100">
   <div class="theme-overlay-container">
     <div class="theme-overlay-header" id="overlay-header">
-      <span class="theme-overlay-title" [translate]="'testcase.summary.title'"></span>
+      <span class="theme-overlay-title" [translate]="(this.testCase?.isStepGroup ? 'step_group.summary.title': 'testcase.summary.title')"></span>
       <button class="close"
               type="button"
               [matTooltip]="'hint.message.common.close' | translate"

@@ -279,7 +279,7 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
 
   private addLaunchStep() {
     setTimeout(() => {
-      if (this.stepList.isStepFetchComplete) {
+      if (this.stepList?.isStepFetchComplete) {
         if(this.stepList?.testSteps?.content?.length == 0 ){
           this.saveLaunchStep();
           this.stepList.isStepFetchCompletedTmp = false;

@@ -129,4 +129,10 @@ public interface TestStepRepository extends JpaRepository<TestStep, Long> {
   @Modifying
   @Query("DELETE FROM TestStep step WHERE step.testCaseId = :testCaseId")
   void deleteStepsByTestCaseId(@Param("testCaseId") Long testCaseId);
+
+
+  @Modifying
+  @Query("DELETE FROM TestStep step WHERE step.stepGroupId = :stepGroupId")
+  void deleteStepsByStepGroupId(@Param("stepGroupId") Long stepGroupId);
+
 }

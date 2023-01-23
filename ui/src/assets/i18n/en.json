@@ -2131,6 +2131,7 @@
   "message.common.entity_xray_id" : "Enter {{EntityName}} Xray id",
   "message.common.xray_link.success" : "Xray Id Linked to {{EntityName}} Successfully",
   "message.common.xray_link.failure" : "Xray Id Linking to {{EntityName}} Failed",
+  "message.common.uploads.deleted.failure": "Failed to delete some of the Uploads since they are already associated to some Test Cases.",
   "xray.filed.account_url" : "Jira Account URL",
   "message.common.xray_link.duplicate" : "Xray {{EntityName}} is already linked !",
   "xray.button.continue_linking": "Continue linking",
@@ -2141,5 +2142,8 @@
   "xray.filter.title": "Added Xray Id",
   "err.empty_elements": "Error While fetching empty elements",
   "err.url_validation": "Error while validating testdata url",
-  "message.common.uploads.deleted.failure": "Failed to delete some of the Uploads since they are already associated to some Test Cases."
+  "step_group.delete.impacted.message":  "Deleting this Step Group will impact <span class='text-red-warning'>{{Testcases}} Test cases</span>",
+  "step_group.testcase.listing":  "{{name}} <span class='text-t-secondary'>{{isEdited}}</span>",
+  "step_group.delete.zero_impacted.message":  "No test cases will be impacted on deleting this step group.",
+  "step_group.summary.title": "Step Group Details"
 }

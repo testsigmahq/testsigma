@@ -68,7 +68,7 @@
         cdkDragLockAxis="y"
         [cdkDragData]="testStep"
         class="w-100 scroll-item selected-box"
-        *ngFor='let testStep of testSteps?.content; let stepNumber = index; trackBy: trackByIdx'
+        *cdkVirtualFor='let testStep of testSteps?.content; let stepNumber = index; trackBy: trackByIdx'
         (onStepDestroy)="onStepDestroy($event)"
         (onStepSelection)="selectStep(testStep)"
         (onStepDeselection)="deselectStep(testStep)"

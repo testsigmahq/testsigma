@@ -17,6 +17,7 @@ import {MobileStepRecorderComponent} from "../../agents/components/webcomponents
 import {WorkspaceType} from "../../enums/workspace-type.enum";
 import {MobileRecorderEventService} from "../../services/mobile-recorder-event.service";
 import {CdkConnectedOverlay} from "@angular/cdk/overlay";
+import {ElementFilter} from "../../models/element-filter.model";
 
 @Component({
   selector: 'app-action-element-suggestion',
@@ -78,14 +79,14 @@ export class ActionElementSuggestionComponent implements OnInit {
     pageable.pageSize = 50;
     let searchName = '';
     if (term) {
-      searchName = ",name:*" + term + "*";
+      searchName = ",name:*" + encodeURIComponent(new ElementFilter().byPassSpecialCharacters(term)) + "*";
       this.isQueryBased = true;
     } else {
       this.isQueryBased = false
     }
 
-    if(this.option.previousStepElementName || this.option.currentStepElementName ){
-      searchName += ",previousStepElementName:" + (this.option.currentStepElementName || this.option.previousStepElementName);
+    if(this.option.previousStepElementName || this.option.currentStepElementName ) {
+      searchName += ",previousStepElementName:" + encodeURIComponent(new ElementFilter().byPassSpecialCharacters(this.option.currentStepElementName || this.option.previousStepElementName));
     }
 
     this.elements = new InfiniteScrollableDataSource(this.elementService, "workspaceVersionId:"+this.option.version.id+searchName, undefined, 50);

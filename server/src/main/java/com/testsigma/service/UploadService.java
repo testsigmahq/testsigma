@@ -22,11 +22,13 @@ import com.testsigma.model.*;
 import com.testsigma.repository.UploadRepository;
 import com.testsigma.specification.SearchCriteria;
 import com.testsigma.specification.SearchOperation;
+import com.testsigma.specification.TestCaseSpecificationsBuilder;
 import com.testsigma.specification.UploadSpecificationsBuilder;
 import com.testsigma.web.request.UploadRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -50,6 +52,7 @@ public class UploadService extends XMLExportImportService<Upload> {
   private final WorkspaceService workspaceService;
   private final WorkspaceVersionService workspaceVersionService;
   private final UploadVersionService uploadVersionService;
+  private final TestCaseService testCaseService;
   private final UploadMapper mapper;
 
   public Upload find(Long id) throws ResourceNotFoundException {
@@ -112,9 +115,33 @@ public class UploadService extends XMLExportImportService<Upload> {
   }
 
   public void delete(Upload upload) {
-    this.uploadRepository.delete(upload);
-    publishEvent(upload, EventType.DELETE);
+    TestCaseSpecificationsBuilder builder = new TestCaseSpecificationsBuilder();
+    Long id = upload.getId();
+    Long workspace_id = upload.getWorkspaceId();
+    List<SearchCriteria> params = new ArrayList<>();
+    List<UploadVersion> uploadVersions = uploadVersionService.findByUploadId(id);
+    for(UploadVersion uploadVersion: uploadVersions ) {
+      params.add(new SearchCriteria("testData", SearchOperation.EQUALITY, "testsigma-storage:/"+uploadVersion.getPath()));
+      params.add(new SearchCriteria("workspaceVersionId", SearchOperation.EQUALITY, workspace_id));
+      builder.setParams(params);
+      Specification<TestCase> spec = builder.build();
+      Page<TestCase> linkedTestCases = testCaseService.findAll(spec, PageRequest.of(0, 1));
+      if(linkedTestCases.getTotalElements() > 0){
+        throw new DataIntegrityViolationException("dataIntegrityViolationException: Failed to delete some of the Uploads " +
+                "since they are already associated to some Test Cases.");
+      }
+      this.uploadRepository.delete(upload);
+      publishEvent(upload, EventType.DELETE);
   }
+  }
+  public void bulkDelete(Long[] ids, Long workspaceVersionId) throws Exception {
+    TestCaseSpecificationsBuilder builder = new TestCaseSpecificationsBuilder();
+    for (Long id : ids) {
+        Upload upload = find(id);
+        this.delete(upload);
+        }
+    }
+
 
   public void publishEvent(Upload upload, EventType eventType) {
     UploadEvent<Upload> event = createEvent(upload, eventType);

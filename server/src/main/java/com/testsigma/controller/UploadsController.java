@@ -81,9 +81,7 @@ public class UploadsController {
 
   @DeleteMapping(value = "/bulk")
   @ResponseStatus(HttpStatus.ACCEPTED)
-  public void bulkDelete(@RequestParam(value = "ids[]") Long[] ids) throws ResourceNotFoundException {
-    for (Long id : ids) {
-      uploadService.delete(uploadService.find(id));
-    }
+  public void bulkDelete(@RequestParam(value = "ids[]") Long[] ids,@RequestParam(value = "workspaceVersionId") Long workspaceVersionId) throws Exception {
+      uploadService.bulkDelete(ids, workspaceVersionId);
   }
 }

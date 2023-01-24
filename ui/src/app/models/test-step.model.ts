@@ -15,9 +15,7 @@ import {AddonTestStepTestData} from "./addon-test-step-test-data.model";
 import {AddonElementData} from "./addon-element-data.model";
 import {ResultConstant} from "../enums/result-constant.enum";
 import {AddonNaturalTextActionParameter} from "./addons-parameter.model";
-import {ForLoopData} from "./for-loop-data.model";
 import { StepDetailsDataMap } from "./step-details-data-map.model";
-import {LoopIterationType} from "../enums/loop-iteration-type.enum";
 import { TestDataMapValue } from "./test-data-map-value.model";
 
 export class TestStep extends Base implements PageObject {
@@ -91,22 +89,6 @@ export class TestStep extends Base implements PageObject {
   public forLoopEndIndex: number;
   @serializable
   public forLoopTestDataId: number;
-
-  @serializable(alias('forLoopConditionsRequest', optional(custom(v => {
-    if(v) {
-      return v.serialize();
-    }
-    else{
-      return v
-    }
-  }, v => {
-    if(v){
-      return new ForLoopData().deserialize(v);
-    } else {
-      return v;
-    }
-  }))))
-  public forLoopData: ForLoopData;
   @serializable
   public maxIterations: number;
   @serializable
@@ -256,11 +238,7 @@ export class TestStep extends Base implements PageObject {
   get parsedAddonStep(): String {
     let parsedStep = this.addonTemplate?.naturalText;
     if(parsedStep) {
-      if(this.isForLoop) {
-        parsedStep = this.setForLoopDataValue(parsedStep);
-      } else {
-        parsedStep = this.setTestDataValue(parsedStep)
-      }
+      parsedStep = this.setTestDataValue(parsedStep);
     }
     else parsedStep = this.action;
     return parsedStep;
@@ -290,37 +268,6 @@ export class TestStep extends Base implements PageObject {
     return parsedStep;
   }
 
-  setForLoopDataValue(parsedStep) {
-    let templateTestDataKeys = Object.keys(this.template?.data?.['testData']);
-    templateTestDataKeys.forEach(parameter => {
-      let data = this.forLoopData?.setValuesParsed(parameter);
-      if(!!data?.['value']) {
-        let value = data?.['value'];
-        if(data?.['value'] == - 1  && parameter == "right-data") {
-          value = this?.forLoopData?.iterationType == LoopIterationType.INDEX ? "end" : value
-        }
-        if(data?.['value'] == - 1  && parameter == "left-data") {
-          value = this?.forLoopData?.iterationType == LoopIterationType.INDEX ? "start" : value
-        }
-        parsedStep = this.setTestDataType(parsedStep, value,
-          data?.['type'], new RegExp("\\$\\{" + (parameter) + "\\}"), {reference: parameter})
-      } else {
-        parsedStep = this.setTestDataType(parsedStep, "",
-          data?.['type'], new RegExp("\\$\\{" + (parameter) + "\\}"), {reference: parameter})
-      }
-    })
-    templateTestDataKeys.forEach(parameter => {
-      let data = this.forLoopData?.setValuesParsed(parameter);
-      let span_class = this.template?.allowedValues?.[parameter]?.length ? 'nlp-selected-data' : '';
-      if (!!data?.['value']) {
-        parsedStep = parsedStep.replace('<TSTESTDAT ref="' + parameter + '">', '<span title="'+ (this.isCoordinateStep? data?.['value'] : '') +'" class="' + (span_class + ' spot-edit nlp-test-data ') + parameter + '" data-reference="' + parameter + '">')
-      } else {
-        parsedStep = parsedStep.replace('<TSTESTDAT ref="' + parameter + '">', '<span title="'+ (this.isCoordinateStep? data?.['value'] : '') +'" class="' + (span_class + ' spot-edit nlp-test-data text-line-loader my-0 d-inline-block w-50p ') + parameter + '" data-reference="' + parameter + '">')
-      }
-    })
-    parsedStep = parsedStep.replace(new RegExp('</TSTESTDAT>', 'g'), '</span>');
-    return parsedStep
-  }
 
   setTestDataValue(parsedStep) {
     if (this.addonTestData && this.addonElements)
@@ -421,27 +368,27 @@ export class TestStep extends Base implements PageObject {
   }
 
   get isTestdataProfile(){
-    return this.template?.data?.testDataForLoop?.['test-data-profile'];
+    return this.template?.data?.testData?.['test-data-profile'];
   }
 
   get isTestDataLeftParameter() {
-    return this.template?.data?.testDataForLoop['left-data'] == 'parameter';//TODO need to change type tag based
+    return this.template?.data?.testData['left-data'] == 'parameter';//TODO need to change type tag based
   }
 
   get isTestDataRightParameter() {
-    return this.template?.data?.testDataForLoop['right-data'] == 'parameter';//TODO need to change type tag based
+    return this.template?.data?.testData['right-data'] == 'parameter';//TODO need to change type tag based
   }
 
   get isTestDataLeftSetName() {
-    return this.template?.data?.testDataForLoop['left-data'] == 'start-set-name';//TODO need to change type tag based
+    return this.template?.data?.testData['left-data'] == 'start-set-name';//TODO need to change type tag based
   }
 
   get isTestDataRightSetName() {
-    return this.template?.data?.testDataForLoop['right-data'] == "end-set-name";//TODO need to change type tag based
+    return this.template?.data?.testData['right-data'] == "end-set-name";//TODO need to change type tag based
   }
 
   get isTestdataParameter(){
-    return this.template?.data?.testDataForLoop?.['parameter'];
+    return this.template?.data?.testData?.['parameter'];
   }
 
   get testDataId(): Number {

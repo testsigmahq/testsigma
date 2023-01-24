@@ -1301,29 +1301,13 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         });
         if (this.attributePlaceholder())
           this.setStepTestData();
-        if (this.testStep.isForLoop && this.attributePlaceholder()?.length) {
-          this.setStepLoopData();
-        }
-        this.attachActionTemplatePlaceholderEvents();
+          this.attachActionTemplatePlaceholderEvents();
       }
       else
         this.replacer.nativeElement.innerHTML = this.testStep?.action;
     }
   }
-
-  private setStepLoopData() {
-    this.attributePlaceholder().forEach((item, index) => {
-      let reference = item.dataset?.reference;
-      let testData = this.testStep.forLoopData.setValuesParsed(reference);
-      item.setAttribute("data-test-data-type",testData?.['type']);
-      if(testData?.['type'] == TestDataType.function) {
-        let functionData = testData?.['function'];
-        item = this.testDataFunctionDataAssign(item,functionData)
-      }
-      item.innerHTML = this.getDataTypeString(testData?.['type'], testData?.['value']);
-    })
-  }
-
+  
   private setStepTestData(){
     this.testDataPlaceholder().forEach((item, index) => {
       let reference = item.dataset?.reference;
@@ -1889,10 +1873,6 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     step.stepDisplayNumber = this.testStep.stepDisplayNumber;
     if (Boolean(this.stepRecorderView)) {
       this.matModal.openDialogs?.find(dialog => dialog.componentInstance instanceof TestStepMoreActionFormComponent)?.close();
-    }
-    if(step.isForLoop){
-      step.forLoopData = this.testStep.forLoopData;
-      step.forLoopData.testDataProfileData = this.selectedTestDataProfile;
     }
     this.actionForm.reset();
     this.onSave.emit(step);

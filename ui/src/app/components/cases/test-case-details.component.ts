@@ -146,25 +146,47 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
   }
 
   markAsDeleted() {
-    let fieldName = this.testCase.isStepGroup ? 'Step Group' : 'Test Case';
-    this.testCaseService.markAsDeleted(this.testCaseId).subscribe({
+    this.testCase.isStepGroup ? this.markGroupAsDeleted():this.markCaseAsDeleted();
+  }
+
+  markGroupAsDeleted(){
+    let ids: number[] = [this.testCaseId];
+    this.testCaseService.bulkMarkAsDeleted(ids).subscribe({
         next: () => {
-          this.fetchTestCase();
-          this.translate.get("message.common.deleted.success", {FieldName: this.testCaseName }).subscribe((res: string) => {
-            this.showNotification(NotificationType.Success, res);
-          });
+          this.deletionSuccessNotification();
         },
         error: (error) => {
-          if (error.status == "400") {
-            this.showNotification(NotificationType.Error, error.error);
-          } else {
-            this.translate.get("message.common.deleted.failure", {FieldName: this.testCaseName }).subscribe((res: string) => {
-              this.showNotification(NotificationType.Error, res);
-            });
-          }
+          this.deletionFailureNotification(error);
         }
       }
     );
+  }
+
+  markCaseAsDeleted(){    this.testCaseService.markAsDeleted(this.testCaseId).subscribe({
+        next: () => {
+          this.deletionSuccessNotification();
+        },
+        error: (error) => {
+          this.deletionFailureNotification(error);
+        }
+      }
+    );
+  }
+  deletionSuccessNotification(){
+    this.fetchTestCase();
+    this.translate.get("message.common.deleted.success", {FieldName: this.testCaseName }).subscribe((res: string) => {
+      this.showNotification(NotificationType.Success, res);
+    });
+  }
+
+  deletionFailureNotification(error){
+    if (error.status == "400") {
+      this.showNotification(NotificationType.Error, error.error);
+    } else {
+      this.translate.get("message.common.deleted.failure", {FieldName: this.testCaseName }).subscribe((res: string) => {
+        this.showNotification(NotificationType.Error, res);
+      });
+    }
   }
 
   openDetails() {

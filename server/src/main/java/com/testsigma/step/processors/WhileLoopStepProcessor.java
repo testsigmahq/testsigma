@@ -91,6 +91,7 @@ public class WhileLoopStepProcessor extends StepProcessor {
         cstepEntity.setType(centity.getType());
         cstepEntity.setStepGroupId(centity.getStepGroupId());
         cstepEntity.setVisualEnabled(centity.getVisualEnabled());
+        cstepEntity.setComponentTestCaseEntity(centity.getComponentTestCaseEntity());
 
         for (TestStepDTO stepDTOFromGroup : centity.getTestStepDTOS()) {
           if (stepDTOFromGroup.getType() == TestStepType.REST_STEP) {
@@ -119,6 +120,7 @@ public class WhileLoopStepProcessor extends StepProcessor {
           stepEntityFromGroup.setPreRequisite(stepDTOFromGroup.getPreRequisiteStepId());
           stepEntityFromGroup.setType(stepDTOFromGroup.getType());
           stepEntityFromGroup.setStepGroupId(stepDTOFromGroup.getStepGroupId());
+          stepEntityFromGroup.setComponentTestCaseEntity(stepDTOFromGroup.getComponentTestCaseEntity());
           cstepEntity.getTestCaseSteps().add(stepEntityFromGroup);
         }
         exeEntity.getTestCaseSteps().add(cstepEntity);

@@ -314,6 +314,7 @@ public abstract class TestcaseStepRunner {
     log.debug("Executing while loop:" + testcaseStep);
     TestCaseStepEntity whileConditionStep = testcaseStep.getTestCaseSteps().get(0);
     List<TestCaseStepResult> whileLoopIterationResults = new ArrayList<>();
+    Map<Long,Map<String, String>> testDataValueMap = getRunTimeTestDataValueMap(whileConditionStep);
     boolean breakLoop = false;
     ResultConstant whileLoopResult = ResultConstant.SUCCESS;
     boolean conditionFailed = false;
@@ -324,6 +325,7 @@ public abstract class TestcaseStepRunner {
       if (breakLoop) {
         break;
       }
+      resetRunTimeTestDataValues(whileConditionStep,testDataValueMap);
       TestCaseStepResult whileConditionStepResult = new TestCaseStepResult();
       whileConditionStepResult.setEnvRunId(envRunId);
       whileConditionStepResult.setTestCaseResultId(tresult.getId());
@@ -778,4 +780,44 @@ public abstract class TestcaseStepRunner {
                                   TestCaseStepEntity testcaseStep, TestCaseResult testCaseResult) throws AutomatorException;
 
   protected abstract void onStepFailure(ExecutionLabType exeType, WorkspaceType workspaceType, TestPlanRunSettingEntity settings) throws AutomatorException;
+  private void resetRunTimeTestDataValues(TestCaseStepEntity testCaseStepEntity, Map<Long, Map<String, String>> testDataValueMap) {
+    LinkedHashMap<String,TestDataPropertiesEntity> testDataMap = testCaseStepEntity.getTestDataMap();
+    if(testDataMap != null){
+      for (Map.Entry<String, TestDataPropertiesEntity> entry : testDataMap.entrySet()) {
+        TestDataPropertiesEntity testDataPropertiesEntity = entry.getValue();
+        TestDataType testDataType = TestDataType.getTestDataType(ObjectUtils.defaultIfNull(testDataPropertiesEntity.getTestDataType(), "raw"));
+        if("runtime".equalsIgnoreCase(testDataType.toString())){
+          testDataPropertiesEntity.setTestDataValue(testDataValueMap.get(testCaseStepEntity.getId()).get(entry.getKey()));
+        }
+      }
+    }
+    if(testCaseStepEntity.getTestCaseSteps() != null){
+      for(TestCaseStepEntity subEntity : testCaseStepEntity.getTestCaseSteps()){
+        resetRunTimeTestDataValues(subEntity,testDataValueMap);
+      }
+    }
+
+  }
+
+  protected Map<Long,Map<String, String>> getRunTimeTestDataValueMap(TestCaseStepEntity testCaseStepEntity){
+    Map<Long,Map<String, String>> stepToTestDataValuesMap = new HashMap<>();
+    LinkedHashMap<String,TestDataPropertiesEntity> testDataMap = testCaseStepEntity.getTestDataMap();
+    Map<String, String> testDataValuesMap = new HashMap<>();
+    if(testDataMap != null){
+      for (Map.Entry<String, TestDataPropertiesEntity> entry : testDataMap.entrySet()) {
+        TestDataPropertiesEntity testDataPropertiesEntity = entry.getValue();
+        TestDataType testDataType = TestDataType.getTestDataType(ObjectUtils.defaultIfNull(testDataPropertiesEntity.getTestDataType(), "raw"));
+        if("runtime".equalsIgnoreCase(testDataType.toString())){
+          testDataValuesMap.put(entry.getKey(),testDataPropertiesEntity.getTestDataValue());
+        }
+      }
+      stepToTestDataValuesMap.put(testCaseStepEntity.getId(),testDataValuesMap);
+    }
+    if(testCaseStepEntity.getTestCaseSteps() != null){
+      for(TestCaseStepEntity subEntity : testCaseStepEntity.getTestCaseSteps()){
+        stepToTestDataValuesMap.putAll(getRunTimeTestDataValueMap(subEntity));
+      }
+    }
+    return stepToTestDataValuesMap;
+  }
 }

@@ -26,6 +26,7 @@ import {EntityExternalMapping} from "../../models/entity-external-mapping.model"
 import {EntityExternalMappingService} from "../../services/entity-external-mapping.service";
 import {EntityType} from "../../enums/entity-type.enum";
 import {XrayKeyWarningComponent} from "../../agents/components/webcomponents/xray-key-warning-component";
+import {StepGroupFilterService} from "../../services/step-group-filter.service"
 
 @Component({
   selector: 'app-test-case-details',
@@ -61,6 +62,7 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
     private userPreferenceService: UserPreferenceService,
     private chromeRecorderService : ChromeRecorderService,
     public entityExternalMappingService : EntityExternalMappingService,
+    public stepGroupFilterService: StepGroupFilterService,
   ) {
     super(authGuard, notificationsService, translate,toastrService);
   }
@@ -212,8 +214,21 @@ export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
 
   deletePermanently() {
     this.testCaseService.destroy(this.testCaseId).subscribe({ next : () => {
-      this.router.navigate(['/td', this.testCase.workspaceVersionId, this.testCase?.testcaseRedirection, 'filter', this.userPreference?.testCaseFilterId]);
-    },
+        let redirect: any[] = ['/td', this.testCase?.workspaceVersionId, this.testCase?.testcaseRedirection];
+        if(this.testCase.isStepGroup && this.userPreference?.testCaseFilterId) {
+          this.stepGroupFilterService.show(this.userPreference?.testCaseFilterId).subscribe(res =>{
+              redirect = [...redirect, 'filter', this.userPreference?.testCaseFilterId]
+              this.router.navigate(redirect);
+            },
+            err => {
+              this.router.navigate(redirect);
+            }
+          )
+        }
+        else {
+          redirect = [...redirect, 'filter', this.userPreference?.testCaseFilterId]
+          this.router.navigate(redirect);
+        }    },
 
     error: (error) => {
           this.showNotification(NotificationType.Error, error && error.error && error.error.error ? error.error.error :

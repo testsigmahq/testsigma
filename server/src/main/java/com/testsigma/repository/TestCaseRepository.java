@@ -9,8 +9,7 @@
 
 package com.testsigma.repository;
 
-import com.testsigma.dto.TestCaseStatusBreakUpDTO;
-import com.testsigma.dto.TestCaseTypeBreakUpDTO;
+import com.testsigma.dto.*;
 import com.testsigma.model.TestCase;
 import com.testsigma.model.TestCaseStatus;
 import org.springframework.data.domain.Page;
@@ -100,4 +99,13 @@ public interface TestCaseRepository extends PagingAndSortingRepository<TestCase,
           countQuery = "SELECT count(testCase.id) FROM TestCase AS testCase " +
                   "JOIN TestStep AS testStep on testStep.stepGroupId = testCase.id " , nativeQuery= true )
   List<TestCase> findAllByStepGroupId(@Param("stepGroupId") Long stepGroupId);
+
+  @Query(value="SELECT new com.testsigma.dto.FlakyTestsDTO(id,testCaseId,testPlanResultId,result,message)  from TestCaseResult where testPlanResultId in (select id from TestPlanResult where reRunParentId IS NOT NULL and testPlanId IN (select id from TestPlan where workspaceVersionId =:versionId and entityType = 'TEST_PLAN') ) or testPlanResultId in (select reRunParentId from TestPlanResult where reRunParentId IS NOT NULL and testPlanId IN (select id from TestPlan where workspaceVersionId =:versionId and entityType = 'TEST_PLAN'))")
+  List<FlakyTestsDTO> getFlakyTests(@Param("versionId") Long versionId);
+
+  @Query(value="select new com.testsigma.dto.RunDurationTrendDTO(testPlanId, result, duration, buildNo, createdDate) from TestPlanResult order by createdDate")
+  List<RunDurationTrendDTO> getRunDurationTrend(@Param("versionId") Long versionId);
+
+  @Query(value="select new com.testsigma.dto.TopFailuresDTO(count(id), message) from TestCaseResult where testPlanResultId in (select id from TestPlanResult where testPlanId in (select id from TestPlan where workspaceVersionId =:versionId and entityType = 'TEST_PLAN')) and result = 'FAILURE' group by message order by count(id) desc")
+  List<TopFailuresDTO> getTopFailures(@Param("versionId") Long versionId);
 }

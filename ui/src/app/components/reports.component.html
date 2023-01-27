@@ -4,15 +4,14 @@
     <a
       class="normal-text"
       [routerLinkActive]="'active'"
-      [routerLinkActiveOptions]="{ exact: true }"
-      [routerLink]="['../plugs']">
+      [routerLink]="['./analytics']">
       <span [translate]="'Dashboard'" ></span>
     </a>
   </li>
   <li class="nav-items" role="presentation">
     <a
       [routerLinkActive]="'active'"
-      [routerLink]="['./bug_report']"
+      [routerLink]="['./custom_reports']"
       class="normal-text">
       <span [translate]="'Reports'"></span>
     </a>
@@ -20,10 +19,56 @@
   <li class="nav-items" role="presentation">
     <a
       [routerLinkActive]="'active'"
-      [routerLink]="['./test_lab']"
+      [routerLink]="['./query_engine']"
       class="normal-text">
       <span [translate]="'Query Reporting Engine'"></span>
     </a>
   </li>
 </ul>
+  <div class="page-content page-virtual-scroll pt-40 d-flex-wrap">
+    <div class="x-sm-h ts-col-18 theme-border border-rds-5 p-40 d-flex mr-10">
+      <div class="highChart">
+      <highcharts-chart
+        [Highcharts] = "Highcharts"
+        [options] = "chartOptions">
+      </highcharts-chart>
+      </div>
+    </div>
+
+    <div class="x-sm-h ts-col-18 theme-border border-rds-5 p-40 d-flex mr-10">
+      <div class="highChart">
+        <highcharts-chart
+          [Highcharts] = "Highcharts"
+          [options] = "chartOptions">
+        </highcharts-chart>
+      </div>
+    </div>
+
+    <div class="x-sm-h ts-col-18 theme-border border-rds-5 p-40 d-flex mr-10">
+      <div class="highChart">
+        <highcharts-chart
+          [Highcharts] = "Highcharts"
+          [options] = "chartOptions">
+        </highcharts-chart>
+      </div>
+    </div>
+
+    <div class="x-sm-h ts-col-18 theme-border border-rds-5 p-40 d-flex mr-10">
+      <div class="highChart">
+        <highcharts-chart
+          [Highcharts] = "Highcharts"
+          [options] = "chartOptions">
+        </highcharts-chart>
+      </div>
+    </div>
+
+    <div class="x-sm-h ts-col-18 theme-border border-rds-5 p-40 d-flex mr-10">
+      <div class="highChart">
+        <highcharts-chart
+          [Highcharts] = "Highcharts"
+          [options] = "chartOptions">
+        </highcharts-chart>
+      </div>
+    </div>
+  </div>
 </div>

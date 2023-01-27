@@ -57,6 +57,15 @@
       </a>
     </li>
     <li
+      [routerLink]="['/reports']" [routerLinkActive]="'active'">
+      <a [routerLink]="['/reports']" [routerLinkActive]="'active'" [matTooltip]="'left_nav.settings' | translate"
+         placement="right">
+        <span>
+            <i class="fa-reports"></i>
+        </span>
+      </a>
+    </li>
+    <li
       [routerLink]="['/settings']" [routerLinkActive]="'active'">
       <a [routerLink]="['/settings']" [routerLinkActive]="'active'" [matTooltip]="'left_nav.settings' | translate"
          placement="right">

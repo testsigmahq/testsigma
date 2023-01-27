@@ -1,0 +1,29 @@
+<div class="page-header theme-border-b ml-40 pl-0 plugins-list ml-50">
+<ul class="tab-nav" role="tablist">
+  <li class="nav-items" role="presentation">
+    <a
+      class="normal-text"
+      [routerLinkActive]="'active'"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [routerLink]="['../plugs']">
+      <span [translate]="'Dashboard'" ></span>
+    </a>
+  </li>
+  <li class="nav-items" role="presentation">
+    <a
+      [routerLinkActive]="'active'"
+      [routerLink]="['./bug_report']"
+      class="normal-text">
+      <span [translate]="'Reports'"></span>
+    </a>
+  </li>
+  <li class="nav-items" role="presentation">
+    <a
+      [routerLinkActive]="'active'"
+      [routerLink]="['./test_lab']"
+      class="normal-text">
+      <span [translate]="'Query Reporting Engine'"></span>
+    </a>
+  </li>
+</ul>
+</div>

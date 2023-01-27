@@ -35,7 +35,7 @@ import {DetailsComponent as TestPlanDetailsComponent} from "./components/plans/d
 import {DetailsHeaderComponent as TestPlanDetailsHeaderComponent} from "./components/plans/details-header.component";
 import {SuitesComponent as TestPlanSuitesListComponent} from './components/plans/suites.component';
 import {DevicesComponent as TestPlanDevicesListComponent} from './components/plans/devices.component';
-import {PlugsComponent as TestPlanPlugsComponent} from './components/plans/plugs.component';
+import {PlugsComponent, PlugsComponent as TestPlanPlugsComponent} from './components/plans/plugs.component';
 import {SchedulesComponent as TestPlanSchedulesListComponent} from './components/plans/schedules.component';
 import {FormComponent as TestPlanFormComponent} from './components/plans/form.component';
 import {ListComponent as ActionTemplatesListComponent} from "./components/actions/list.component";
@@ -50,6 +50,7 @@ import {TestPlansComponent as EnvironmentTestPlansComponent} from './components/
 import {LoginFormComponent} from "./components/login-form.component";
 import {UnAuthenticationGuardGuard} from "./guards/un-authentication-guard.guard";
 import {AddonAppComponent} from "./components/addon-app.component";
+import {ReportsComponent} from "./components/reports.component";
 import {ConsentGuard} from "./guards/consent.guard";
 import {ConsentComponent} from "./components/webcomponents/consent.component";
 import {OnboardingFormComponent} from "./components/onboarding-form.component";
@@ -369,6 +370,17 @@ const routes: Routes = [
         path: 'addons',
         data: {legacyURL: '#/addons', title: 'page_title.add_ons'},
         component: AddonAppComponent
+      },
+      {
+        path: 'reports',
+        data: {legacyURL: '#/reports', title: 'Reports'},
+        component: ReportsComponent,
+        children: [
+          {path: '', pathMatch: 'full', redirectTo: 'reports'},
+          {path: 'analytics', component: ReportsComponent},
+          {path: 'custom_reports', component: ReportsComponent},
+          {path: 'query_engine', component: ReportsComponent}
+          ]
       },
       {
         path: 'settings',

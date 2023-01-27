@@ -11,8 +11,7 @@ package com.testsigma.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.testsigma.dto.ElementDTO;
-import com.testsigma.dto.TestCaseDTO;
+import com.testsigma.dto.*;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaDatabaseException;
 import com.testsigma.exception.TestsigmaException;
@@ -59,11 +58,25 @@ public class ReportsController {
         List<Map<String,Object>> entities = new ArrayList<Map<String,Object>>();
         for (int i=0;i<responseObject.length();i++) {
             Map<String, Object> result = new ObjectMapper().readValue(responseObject.getJSONObject(i).toString(), new TypeReference<Map<String, Object>>(){});
-//            JSONObject entity = responseObject.getJSONObject(i);
             entities.add(result);
         }
 
         return new ResponseEntity<>(entities, HttpStatus.OK);
+    }
+
+    @GetMapping(value = {"/flaky_tests"})
+    public List<FlakyTestsDTO> getFlakyTests(@RequestParam("versionId") Long versionId) {
+        return this.reportsService.getFlakyTests(versionId);
+    }
+
+    @GetMapping(value = {"/run_duration_trend"})
+    public List<RunDurationTrendDTO> getRunDurationTrend(@RequestParam("versionId") Long versionId) {
+        return this.reportsService.getRunDurationTrend(versionId);
+    }
+
+    @GetMapping(value = {"/top_failures"})
+    public List<TopFailuresDTO> getTopFailures(@RequestParam("versionId") Long versionId) {
+        return this.reportsService.getTopFailures(versionId);
     }
 
 }

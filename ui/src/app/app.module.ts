@@ -226,6 +226,7 @@ import {HelpActionsComponent} from './components/webcomponents/help-actions.comp
 import {TestCaseDataDrivenResultListComponent} from './src/app/components/webcomponents/test-case-data-driven-result-list.component';
 import {ElementBulkUpdateComponent} from './components/webcomponents/element-bulk-update.component';
 import {AddonAppComponent} from './components/addon-app.component';
+import {ReportsComponent} from './components/reports.component';
 import {RouteLoadingComponent} from './components/webcomponents/route-loading.component';
 import {MatCarouselModule} from '@ngmodule/material-carousel';
 import {TestDataFilterComponent} from "./components/data/webcomponents/test-data-filter.component";
@@ -496,6 +497,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     TestCaseDataDrivenResultListComponent,
     ElementBulkUpdateComponent,
     AddonAppComponent,
+    ReportsComponent,
     RouteLoadingComponent,
     TestDataFilterComponent,
     TestDevIconComponent,

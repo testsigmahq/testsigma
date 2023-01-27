@@ -47,6 +47,8 @@ public class ReportsService {
     private final ReportsRepository reportsRepository;
 
     private final TestCaseService testCaseService;
+
+    private final TestCaseRepository testCaseRepository;
     public JSONArray getReport(Long reportId){
         JSONArray reportObject = new JSONArray();
         Optional<Report> report = reportsRepository.findById(reportId);
@@ -93,5 +95,17 @@ public class ReportsService {
             return new ObjectMapperService().convertToJson(testCaseService.findAll(specification,Pageable.unpaged()).getContent());
         }
         return "";
+    }
+
+    public List<FlakyTestsDTO> getFlakyTests(Long versionId){
+        return testCaseRepository.getFlakyTests(versionId);
+    }
+
+    public List<RunDurationTrendDTO> getRunDurationTrend(Long versionId){
+        return testCaseRepository.getRunDurationTrend(versionId);
+    }
+
+    public List<TopFailuresDTO> getTopFailures(Long versionId){
+        return testCaseRepository.getTopFailures(versionId);
     }
 }

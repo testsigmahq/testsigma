@@ -18,6 +18,7 @@ import {ResultsListComponent} from './components/results/list.component';
 import {LabEnvironmentsInfoComponent} from './components/webcomponents/lab-environments-info.component';
 import {RunDetailsComponent} from "./components/results/run-details.component";
 import {TestMachineResultDetailsComponent} from './components/results/test-machine-result-details.component';
+import {CustomReportsPopupComponent} from "./components/webcomponents/custom-reports-popup.component";
 import {SuiteResultDetailsComponent} from './components/results/suite-result-details.component';
 import {TestCaseResultDetailsComponent} from './components/results/test-case-result-details.component';
 import {TestCaseResultsComponent} from './components/webcomponents/test-case-results.component';
@@ -468,6 +469,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     ReRunDetailsComponent,
     ReRunIconComponent,
     ResultStatusLabelComponent,
+    CustomReportsPopupComponent,
     ReRunTestCaseResultsComponent,
     ReRunTestSuiteResultsComponent,
     ReRunTestMachineResultsComponent,

@@ -8,6 +8,11 @@ import html2canvas from 'html2canvas';
 import {TestDeviceResult} from "../models/test-device-result.model";
 import {TestSuiteResult} from "../models/test-suite-result.model";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {Page} from "../shared/models/page";
+import {MatDialog} from "@angular/material/dialog";
+import {TelemetryNotificationComponent} from "./webcomponents/telemetry-notification.component";
+import {ReRunPopupComponent} from "../agents/components/webcomponents/re-run-popup.component";
+import {CustomReportsPopupComponent} from "./webcomponents/custom-reports-popup.component";
 
 @Component({
   selector: 'app-reports',
@@ -21,7 +26,8 @@ export class ReportsComponent implements OnInit {
     private route: ActivatedRoute,
     public router: Router,
     public authGuard: AuthenticationGuard,
-    public reportsService: ReportsService
+    public reportsService: ReportsService,
+    public matModal: MatDialog
   ) {
   }
   public Highcharts: typeof Highcharts = Highcharts;
@@ -37,7 +43,9 @@ export class ReportsComponent implements OnInit {
     {name:"TestPlans"},
   ];
   public dataSource: any[];
+  public reportDataSource:any[];
   public showTable = false;
+  public reportsList:Page<any>;
   public columns = [
     {
       columnDef: 'position',
@@ -60,7 +68,7 @@ export class ReportsComponent implements OnInit {
       cell: (element: any) => `${element}`,
     },
   ];
-
+  public displayedColumns: string[] = ['name', 'module', 'type'];
 
   ngOnInit(): void {
     this.populateFlakyTestsChartOptions();
@@ -69,12 +77,22 @@ export class ReportsComponent implements OnInit {
     this.populateLingeredTestsChartOptions();
     this.populateFailuresByCategoryChartOptions();
     this.isDashboard();
+    this.initReports();
+    Highcharts.AST.allowedAttributes.push('data-name');
     this.router.onSameUrlNavigation = 'reload';
     this.queryReportsForm = new FormGroup({
       name: new FormControl("", [Validators.required, Validators.minLength(4), Validators.maxLength(250)]),
       description: new FormControl(""),
       module: new FormControl("")
     })
+  }
+  ngAfterViewInit(){
+    setTimeout(()=>{
+
+      document.querySelectorAll(".pdf_export").forEach((element)=>{
+        element.addEventListener('click',(event)=>{this.exportToPDF((<HTMLElement>event.currentTarget).getAttribute("data-name"))});
+      })
+    },2000);
   }
 
   populateFlakyTestsChartOptions() {
@@ -92,8 +110,9 @@ export class ReportsComponent implements OnInit {
         }
     },
     title: {
-        text: 'Flaky Tests',
-        align: 'left'
+        text: '<a class="pdf_export" data-name="run-chart4">Flaky Tests</a>',
+        align: 'left',
+      useHTML:true
     },
     subtitle: {
         text: 'Tests that return different results despite no code or test change',
@@ -139,8 +158,9 @@ export class ReportsComponent implements OnInit {
           type: 'spline'
         },
         title: {
-          text: 'Duration Trend',
-          align: 'left'
+          text: '<a class="pdf_export" data-name="run-chart3">Duration Trend</a>',
+          align: 'left',
+          useHTML:true
         },
         subtitle: {
           text: 'Trend of time taken for recent test plan run',
@@ -208,9 +228,9 @@ export class ReportsComponent implements OnInit {
           type: 'column'
         },
         title: {
-          text: 'Top Failures',
-          align: 'left'
-
+          text: '<a class="pdf_export" data-name="run-chart">Top Failures</a>',
+          align: 'left',
+          useHTML:true
         },
         subtitle: {
           text: 'Top failures stacked based on their occurance',
@@ -270,12 +290,12 @@ export class ReportsComponent implements OnInit {
           name: 'Element Not Found Exception',
           type:'column',
           data: [3, 5, 1, 6, 2]
-      }, 
+      },
       {
           name: 'Stale Element Exception',
           type:'column',
           data: [8, 4, 6, 8, 1]
-      }, 
+      },
       {
           name: 'Assertion Errors',
           type:'column',
@@ -294,8 +314,9 @@ export class ReportsComponent implements OnInit {
           type: 'pyramid'
         },
         title: {
-          text: 'Lingered Tests',
-          align: 'left'
+          text: '<a class="pdf_export" data-name="run-chart2">Lingered Tests</a>',
+          align: 'left',
+          useHTML:true
 
         },
         subtitle: {
@@ -445,6 +466,75 @@ export class ReportsComponent implements OnInit {
       console.log(res);
       this.dataSource = res;
       this.showTable = true;
+    });
+  }
+
+  initReports(){
+    this.reportsService.findAll().subscribe((res)=>{
+      this.reportsList = res;
+    });
+  }
+
+  openReport(id){
+    this.reportsService.show(id).subscribe((res)=>{
+      console.log(res);
+      let chartOptions = {
+        chart: {
+          backgroundColor: 'transparent',
+          margin: 0,
+          width: 200,
+          height: 200,
+          type: 'pie'
+        },
+        title: {
+          text: ''
+        },
+        credits: {
+          enabled: false
+        },
+        tooltip: {
+          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        accessibility: {
+          point: {
+            valueSuffix: '%'
+          }
+        },
+        plotOptions: {
+          pie: {
+            size: '100%',
+            innerSize: '60%',
+            slicedOffset: 0,
+            allowPointSelect: true,
+            dataLabels: {
+              enabled: false
+            }
+          }
+        },
+        series: [{
+          name: 'Brands',
+          colorByPoint: true,
+          type:'pie',
+          data: [{
+            name: 'Chrome',
+            y: 70,
+            color:'#1FB47E'
+          },{
+            name: 'Internet Explorer',
+            y: 30,
+            color:'#1FA87E'
+          }]
+        }]
+      };
+      const dialogRef = this.matModal.open<CustomReportsPopupComponent>(CustomReportsPopupComponent, {
+        width: '250px',
+        height: '250px',
+        panelClass: ['rds-none'],
+        data:chartOptions
+      });
+      dialogRef.afterClosed().subscribe( () => {
+        this.router.navigate(['reports','custom_reports']);
+      })
     });
   }
 }

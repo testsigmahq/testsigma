@@ -6,6 +6,7 @@ import {Page} from "../shared/models/page";
 import {Observable, Subject, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {HttpClient, HttpParams} from '@angular/common/http';
+import {Report} from "../models/report.model";
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,7 @@ export class ReportsService{
       headers: this.httpHeaders.contentTypeApplication,
       params: this.httpHeaders.serializeParams(filter, sortBy, pageable)
     }).pipe(
-      map(data => new Page<any>()),
+      map(data => new Page<any>().deserialize(data,Report)),
       catchError(() => throwError('Problem while fetching Reports'))
     )
   }

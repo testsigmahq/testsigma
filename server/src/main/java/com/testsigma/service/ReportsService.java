@@ -146,4 +146,8 @@ public class ReportsService {
             return new ArrayList<Map<String,Object>>();
         }
     }
+
+    public Page<Report> findAll(Specification<Report> specification, Pageable pageable) {
+        return reportsRepository.findAll(specification, pageable);
+    }
 }

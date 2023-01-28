@@ -16,9 +16,11 @@ import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaDatabaseException;
 import com.testsigma.exception.TestsigmaException;
 import com.testsigma.mapper.ElementMapper;
+import com.testsigma.mapper.ReportsMapper;
 import com.testsigma.model.*;
 import com.testsigma.service.*;
 import com.testsigma.specification.ElementSpecificationsBuilder;
+import com.testsigma.specification.ReportsSpecificationBuilder;
 import com.testsigma.specification.SearchCriteria;
 import com.testsigma.specification.SearchOperation;
 import com.testsigma.web.request.ElementRequest;
@@ -52,6 +54,8 @@ import java.util.*;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ReportsController {
     private final ReportsService reportsService;
+
+    private final ReportsMapper reportsMapper;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> show(@PathVariable("id") Long id) throws TestsigmaException,Exception {
@@ -95,6 +99,16 @@ public class ReportsController {
     public ResponseEntity<Object> update(@RequestBody String query) throws TestsigmaException, SQLException, CloneNotSupportedException {
         List<Map<String,Object>> entities = this.reportsService.getQueryReport(query);
         return new ResponseEntity<>(entities, HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public Page<ReportsDTO> index(ReportsSpecificationBuilder builder,
+                                  @PageableDefault(value = 25, page = 0) Pageable pageable) {
+        log.debug("GET /reports");
+        Specification<Report> spec = builder.build();
+        Page<Report> reports = reportsService.findAll(spec, pageable);
+        List<ReportsDTO> testCaseDTOS = reportsMapper.mapDTOs(reports.getContent());
+        return new PageImpl<>(testCaseDTOS, pageable, reports.getTotalElements());
     }
 
 }

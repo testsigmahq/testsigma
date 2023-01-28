@@ -5,7 +5,7 @@
       class="normal-text"
       [routerLinkActive]="'active'"
       [routerLink]="['./analytics']">
-      <span [translate]="'Dashboard'" ></span>
+      <span [translate]="'Analytics'" ></span>
     </a>
   </li>
   <li class="nav-items" role="presentation">
@@ -26,33 +26,16 @@
   </li>
 </ul>
   <div class="page-content page-virtual-scroll pt-40 d-flex-wrap">
-    <div class="x-sm-h ts-col-18 theme-border border-rds-5 p-40 d-flex mr-10">
+    <div>
       <div class="highChart" id="run-chart">
-      <highcharts-chart
-        [Highcharts] = "Highcharts"
-        [options] = "flakyTestsChartOptions">
-      </highcharts-chart>
-      </div>
-      <h3 [translate]="'reports.top_failures'" style="margin-top: -20px;"></h3>
-        <div class="highChart" id="run-chart" style="margin-top: 16px;
-        margin-left: -80px">
-        <highcharts-chart style="width: 100%; height: 400px; display:block"
-          [Highcharts] = "Highcharts"
-          [options] = "chartOptions">
-        </highcharts-chart>
-        </div>
-    </div>
-
-    <div class="x-sm-h ts-col-18 theme-border border-rds-5 p-40 d-flex mr-10">
-      <div class="highChart">
         <highcharts-chart
           [Highcharts] = "Highcharts"
-          [options] = "runDurationTrendChartOptions">
+          [options] = "topFailuresChartOptions">
         </highcharts-chart>
       </div>
     </div>
 
-    <div class="x-sm-h ts-col-18 theme-border border-rds-5 p-40 d-flex mr-10">
+    <div>
       <div class="highChart">
         <highcharts-chart
           [Highcharts] = "Highcharts"
@@ -61,22 +44,23 @@
       </div>
     </div>
 
-    <div class="x-sm-h ts-col-18 theme-border border-rds-5 p-40 d-flex mr-10">
-      <div class="highChart" id="run-chart">
-        <highcharts-chart  style="width: 100%; height: 400px; display: block;"
+    <div>
+      <div class="highChart">
+        <highcharts-chart
           [Highcharts] = "Highcharts"
-          [options] = "populateTopFailuresChartOptions">
+          [options] = "runDurationTrendChartOptions">
         </highcharts-chart>
       </div>
     </div>
 
-    <div class="x-sm-h ts-col-18 theme-border border-rds-5 p-40 d-flex mr-10">
+    <div>
       <div class="highChart">
         <highcharts-chart
           [Highcharts] = "Highcharts"
-          [options] = "failuresByCategoryChartOptions">
+          [options] = "flakyTestsChartOptions">
         </highcharts-chart>
       </div>
     </div>
+
   </div>
 </div>

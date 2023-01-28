@@ -156,47 +156,76 @@ export class ReportsComponent implements OnInit {
           margin: 0,
           width: 200,
           height: 200,
-          type: 'pie'
+          type: 'column'
         },
         title: {
-          text: ''
+          text: 'Top Failures',
+          align: 'left'
+
         },
-        credits: {
-          enabled: false
+        xAxis: {
+          categories: ['plan1', 'plan2', 'plan3', 'plan4'],
+          title: {
+            text: 'Test Plan'
         },
-        tooltip: {
-          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        },
-        accessibility: {
-          point: {
-            valueSuffix: '%'
+      },
+      yAxis: {
+          min: 0,
+          title: {
+              text: 'Count of failures'
+          },
+          stackLabels: {
+              enabled: true,
+              style: {
+                  fontWeight: 'bold',
+                  color: ( // theme
+                      Highcharts.defaultOptions.title.style &&
+                      Highcharts.defaultOptions.title.style.color
+                  ) || 'gray',
+                  textOutline: 'none'
+              }
           }
-        },
-        plotOptions: {
-          pie: {
-            size: '100%',
-            innerSize: '60%',
-            slicedOffset: 0,
-            allowPointSelect: true,
-            dataLabels: {
-              enabled: false
-            }
+      },
+      legend: {
+          align: 'left',
+          x: 70,
+          verticalAlign: 'top',
+          y: 70,
+          floating: true,
+          backgroundColor:
+              Highcharts.defaultOptions.legend.backgroundColor || 'white',
+          borderColor: '#CCC',
+          borderWidth: 1,
+          shadow: false
+      },
+      tooltip: {
+          headerFormat: '<b>{point.x}</b><br/>',
+          pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+      },
+      plotOptions: {
+          column: {
+              stacking: 'normal',
+              dataLabels: {
+                  enabled: true
+              }
           }
-        },
-        series: [{
-          name: 'Brands',
-          colorByPoint: true,
-          type:'pie',
-          data: [{
-            name: 'Chrome',
-            y: 70,
-            color:'#1FB47E'
-          },{
-            name: 'Internet Explorer',
-            y: 30,
-            color:'#1FA87E'
-          }]
-        }]
+      },
+      exporting: {
+        enabled: false
+      },
+      series: [{
+          name: 'Element Not Found Exception',
+          type:'column',
+          data: [3, 5, 1, 13]
+      }, {
+          name: 'Stale Element Exception',
+          type:'column',
+          data: [14, 8, 8, 12]
+      }, {
+          name: 'Assertion Failure',
+          type:'column',
+          data: [0, 2, 6, 3]
+      }]
       };
     });
   }

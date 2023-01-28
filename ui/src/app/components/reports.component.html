@@ -33,6 +33,14 @@
         [options] = "flakyTestsChartOptions">
       </highcharts-chart>
       </div>
+      <h3 [translate]="'reports.top_failures'" style="margin-top: -20px;"></h3>
+        <div class="highChart" id="run-chart" style="margin-top: 16px;
+        margin-left: -80px">
+        <highcharts-chart style="width: 100%; height: 400px; display:block"
+          [Highcharts] = "Highcharts"
+          [options] = "chartOptions">
+        </highcharts-chart>
+        </div>
     </div>
 
     <div class="x-sm-h ts-col-18 theme-border border-rds-5 p-40 d-flex mr-10">
@@ -54,10 +62,10 @@
     </div>
 
     <div class="x-sm-h ts-col-18 theme-border border-rds-5 p-40 d-flex mr-10">
-      <div class="highChart">
-        <highcharts-chart
+      <div class="highChart" id="run-chart">
+        <highcharts-chart  style="width: 100%; height: 400px; display: block;"
           [Highcharts] = "Highcharts"
-          [options] = "topFailuresChartOptions">
+          [options] = "populateTopFailuresChartOptions">
         </highcharts-chart>
       </div>
     </div>

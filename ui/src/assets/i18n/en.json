@@ -258,6 +258,7 @@
   "left_nav.workspace_settings": "Workspace Settings",
   "left_nav.agents": "Agents",
   "left_nav.settings": "Settings",
+  "left_nav.reports": "Reports",
   "left_nav.usage_details": "Usage Details",
   "left_nav.help": "Help",
   "left_nav.whats_new": "What's new on Testsigma OS?",
@@ -2146,5 +2147,10 @@
   "step_group.delete.impacted.message":  "Deleting this Step Group will impact <span class='text-red-warning'>{{Testcases}} Test cases</span>",
   "step_group.testcase.listing":  "{{name}} <span class='text-t-secondary'>{{isEdited}}</span>",
   "step_group.delete.zero_impacted.message":  "No test cases will be impacted on deleting this step group.",
-  "step_group.summary.title": "Step Group Details"
+  "step_group.summary.title": "Step Group Details",
+  "reports.top_failures": "Top Failures",
+  "reports.flaky_tests": "Flaky Tests",
+  "reports.failure_category": "Failure by Category",
+  "reports.slow_tests": "Lingered Test",
+  "reports.duration_trend": "Run Duration Trend"
 }

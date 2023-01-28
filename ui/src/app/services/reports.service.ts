@@ -46,7 +46,28 @@ export class ReportsService{
   public getRunDurationTrend(versionId: number): Observable<any[]> {
     return this.http.get<any[]>(this.URLConstants.reportsURL + "/run_duration_trend?versionId=" + versionId, {headers: this.httpHeaders.contentTypeApplication}).pipe(
       map(data => data),
-      catchError(() => throwError('Problem while getting Test Case::CoverageSummary'))
+      catchError(() => throwError('Problem while getting run duration Trend'))
+    );
+  }
+
+  public getTopFailures(versionId: number): Observable<any[]> {
+    return this.http.get<any[]>(this.URLConstants.reportsURL + "/top_failures?versionId=" + versionId, {headers: this.httpHeaders.contentTypeApplication}).pipe(
+      map(data => data),
+      catchError(() => throwError('Problem while getting Top Failures'))
+    );
+  }
+
+  public getLingeredTests(versionId: number): Observable<any[]> {
+    return this.http.get<any[]>(this.URLConstants.reportsURL + "/lingered_tests?versionId=" + versionId, {headers: this.httpHeaders.contentTypeApplication}).pipe(
+      map(data => data),
+      catchError(() => throwError('Problem while getting Lingered tests'))
+    );
+  }
+
+  public getFailuresByCategory(versionId: number): Observable<any[]> {
+    return this.http.get<any[]>(this.URLConstants.reportsURL + "/failures_by_category?versionId=" + versionId, {headers: this.httpHeaders.contentTypeApplication}).pipe(
+      map(data => data),
+      catchError(() => throwError('Problem while getting failures by category'))
     );
   }
 

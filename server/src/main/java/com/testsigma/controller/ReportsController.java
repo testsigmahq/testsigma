@@ -79,4 +79,14 @@ public class ReportsController {
         return this.reportsService.getTopFailures(versionId);
     }
 
+    @GetMapping(value = {"/lingered_tests"})
+    public List<LingeredTestsDTO> getLingeredTests(@RequestParam("versionId") Long versionId) {
+        return this.reportsService.getLingeredTests(versionId);
+    }
+
+    @GetMapping(value = {"/failures_by_category"})
+    public List<FailuresByCategoryDTO> getFailuresByCategory(@RequestParam("versionId") Long versionId) {
+        return this.reportsService.getFailuresByCategory(versionId);
+    }
+
 }

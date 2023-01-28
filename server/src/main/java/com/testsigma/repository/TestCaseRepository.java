@@ -108,4 +108,10 @@ public interface TestCaseRepository extends PagingAndSortingRepository<TestCase,
 
   @Query(value="select new com.testsigma.dto.TopFailuresDTO(count(id), message) from TestCaseResult where testPlanResultId in (select id from TestPlanResult where testPlanId in (select id from TestPlan where workspaceVersionId =:versionId and entityType = 'TEST_PLAN')) and result = 'FAILURE' group by message order by count(id) desc")
   List<TopFailuresDTO> getTopFailures(@Param("versionId") Long versionId);
+
+  @Query(value="select new com.testsigma.dto.LingeredTestsDTO(testCaseId, duration, result) from TestCaseResult where result not in ('NOT_EXECUTED', 'QUEUED') and testPlanResultId in (select id from TestPlanResult where testPlanId in (select id from TestPlan where workspaceVersionId =:versionId and entityType = 'TEST_PLAN')) order by duration DESC")
+  List<LingeredTestsDTO> getLingeredTests(@Param("versionId") Long versionId,Pageable pageable);
+
+  @Query(value="select new com.testsigma.dto.FailuresByCategoryDTO(count(id), result,message) from TestCaseResult where testPlanResultId in (select id from TestPlanResult where testPlanId in (select id from TestPlan where workspaceVersionId =:versionId and entityType = 'TEST_PLAN')) and result = 'FAILURE' group by message order by count(id) desc")
+  List<FailuresByCategoryDTO> getFailuresByCategory(@Param("versionId") Long versionId);
 }

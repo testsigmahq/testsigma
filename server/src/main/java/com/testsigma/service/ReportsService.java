@@ -108,4 +108,13 @@ public class ReportsService {
     public List<TopFailuresDTO> getTopFailures(Long versionId){
         return testCaseRepository.getTopFailures(versionId);
     }
+
+    public List<LingeredTestsDTO> getLingeredTests(Long versionId){
+        Pageable pageable = PageRequest.of(0,10);
+        return testCaseRepository.getLingeredTests(versionId,pageable);
+    }
+
+    public List<FailuresByCategoryDTO> getFailuresByCategory(Long versionId){
+        return testCaseRepository.getFailuresByCategory(versionId);
+    }
 }

@@ -93,4 +93,13 @@ export class ReportsService{
     );
   }
 
+  public runQueryReport(any: any): Observable<any> {
+    return this.http.post<any>(this.URLConstants.reportsURL+"/generate_query_report", any, {
+      headers: this.httpHeaders.contentTypeApplication
+    }).pipe(
+      map(data => data),
+      catchError((error) => throwError(error))
+    );
+  }
+
 }

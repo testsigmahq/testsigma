@@ -12,6 +12,7 @@
     <a
       [routerLinkActive]="'active'"
       [routerLink]="['./custom_reports']"
+      (click)="goToPage('custom_reports')"
       class="normal-text">
       <span [translate]="'Reports'"></span>
     </a>
@@ -25,20 +26,22 @@
     </a>
   </li>
 </ul>
-  <div class="page-content page-virtual-scroll pt-40 d-flex-wrap">
-    <div class="x-sm-h ts-col-18 theme-border border-rds-5 p-40 d-flex mr-10">
-      <div class="highChart" id="run-chart">
+  <div *ngIf="this.router.url.indexOf('analytics')!=-1">
+  <div class="page-content page-virtual-scroll pt-40 d-flex-wrap" >
+    <div class="x-sm-h ts-col-18 theme-border border-rds-5 p-40 d-flex mr-10" >
+      <div class="highChart" id="run-chart" *ngIf="this.router.url.indexOf('analytics')!=-1">
       <highcharts-chart
         [Highcharts] = "Highcharts"
-        [options] = "flakyTestsChartOptions">
+        [options] = "flakyTestsChartOptions"
+        *ngIf="this.router.url.indexOf('analytics')!=-1">
       </highcharts-chart>
       </div>
       <h3 [translate]="'reports.top_failures'" style="margin-top: -20px;"></h3>
-        <div class="highChart" id="run-chart" style="margin-top: 16px;
+        <div class="highChart" style="margin-top: 16px;
         margin-left: -80px">
         <highcharts-chart style="width: 100%; height: 400px; display:block"
           [Highcharts] = "Highcharts"
-          [options] = "chartOptions">
+          [options] = "topFailuresChartOptions">
         </highcharts-chart>
         </div>
     </div>
@@ -62,10 +65,10 @@
     </div>
 
     <div class="x-sm-h ts-col-18 theme-border border-rds-5 p-40 d-flex mr-10">
-      <div class="highChart" id="run-chart">
+      <div class="highChart">
         <highcharts-chart  style="width: 100%; height: 400px; display: block;"
           [Highcharts] = "Highcharts"
-          [options] = "populateTopFailuresChartOptions">
+          [options] = "topFailuresChartOptions">
         </highcharts-chart>
       </div>
     </div>
@@ -77,6 +80,81 @@
           [options] = "failuresByCategoryChartOptions">
         </highcharts-chart>
       </div>
+    </div>
+  </div>
+    </div>
+  <div *ngIf="this.router.url.indexOf('query_engine')!=-1">
+    <div class="page-content page-virtual-scroll pt-40 d-flex-wrap" >
+      <form
+        class="ts-form create-form-full-view w-75 px-0"
+        [formGroup]="queryReportsForm">
+        <div class="px-0">
+          <div class="content-view">
+            <div class="d-flex">
+              <a
+                class="form-title"
+                [translate]="'QUERY REPORTS'"></a>
+            </div>
+            <div
+              class="create-form-title mb-8 pt-30"
+              [translate]="'Enter Report Name'"></div>
+            <div class="form-group pb-14 ml-auto">
+              <input
+                class="form-control"
+                required
+                name="name"
+                formControlName="name"
+                autofocus/>
+            </div>
+            <div class="form-group">
+              <mat-form-field appearance="fill">
+                <mat-label>Module</mat-label>
+                <mat-select formControlName="module">
+                  <mat-option *ngFor="let module of modules" [value]="module.name">
+                    {{module.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="form-group">
+              <div
+                class="mt-15">
+               <textarea
+                 class="form-control resize-none"
+                 name="byValue"
+                 [placeholder]="'enter query here'"
+                 [formControlName]="['description']"
+                 rows="4"></textarea>
+              </div>
+            </div>
+
+
+            </div>
+          </div>
+        <div class="theme-overlay-footer mb-10">
+      <button
+        class="theme-btn-primary"
+        appAsyncBtn
+        [message]="'message.common.saving'"
+        [textContent]="'Run'"
+        (click)="getQueryReport()">
+      </button>
+        </div>
+      </form>
+      <div *ngIf="showTable">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table">
+        <ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
+          <th mat-header-cell *matHeaderCellDef>
+            {{column.header}}
+          </th>
+          <td mat-cell *matCellDef="let row">
+            {{column.cell(row)}}
+          </td>
+        </ng-container>
+
+      </table>
+      </div>
+
     </div>
   </div>
 </div>

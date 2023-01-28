@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import * as Highcharts from 'highcharts';
 import {ReportsService} from "../services/reports.service";
 import {AuthenticationGuard} from "../shared/guards/authentication.guard";
@@ -7,6 +7,7 @@ import jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
 import {TestDeviceResult} from "../models/test-device-result.model";
 import {TestSuiteResult} from "../models/test-suite-result.model";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-reports',
@@ -18,6 +19,7 @@ import {TestSuiteResult} from "../models/test-suite-result.model";
 export class ReportsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
+    public router: Router,
     public authGuard: AuthenticationGuard,
     public reportsService: ReportsService
   ) {
@@ -28,6 +30,36 @@ export class ReportsComponent implements OnInit {
   public topFailuresChartOptions : Highcharts.Options;
   public lingeredTestsChartOptions : Highcharts.Options;
   public failuresByCategoryChartOptions : Highcharts.Options;
+  public queryReportsForm: FormGroup;
+  public modules: any[] = [
+    {name:"TestCases"},
+    {name:"TestSuites"},
+    {name:"TestPlans"},
+  ];
+  public dataSource: any[];
+  public showTable = false;
+  public columns = [
+    {
+      columnDef: 'position',
+      header: 'No.',
+      cell: (element: any) => `${element}`,
+    },
+    {
+      columnDef: 'name',
+      header: 'Name',
+      cell: (element: any) => `${element}`,
+    },
+    {
+      columnDef: 'weight',
+      header: 'Weight',
+      cell: (element: any) => `${element}`,
+    },
+    {
+      columnDef: 'symbol',
+      header: 'Symbol',
+      cell: (element: any) => `${element}`,
+    },
+  ];
 
 
   ngOnInit(): void {
@@ -36,6 +68,13 @@ export class ReportsComponent implements OnInit {
     this.populateTopFailuresChartOptions();
     this.populateLingeredTestsChartOptions();
     this.populateFailuresByCategoryChartOptions();
+    this.isDashboard();
+    this.router.onSameUrlNavigation = 'reload';
+    this.queryReportsForm = new FormGroup({
+      name: new FormControl("", [Validators.required, Validators.minLength(4), Validators.maxLength(250)]),
+      description: new FormControl(""),
+      module: new FormControl("")
+    })
   }
 
   populateFlakyTestsChartOptions() {
@@ -391,5 +430,26 @@ export class ReportsComponent implements OnInit {
 
     obj.categories = categories;
     return obj;
+  }
+
+  isDashboard(){
+    return this.router.url.indexOf("analytics")!=-1;
+  }
+
+  goToPage(url){
+    this.router.routeReuseStrategy.shouldReuseRoute = function () {
+      return false;
+    }
+    this.router.onSameUrlNavigation = 'reload';
+    this.router.navigate(['/reports', url]);
+  }
+
+  getQueryReport(){
+    let query = this.queryReportsForm.controls["description"].value;
+    this.reportsService.runQueryReport(query).subscribe((res)=>{
+      console.log(res);
+      this.dataSource = res;
+      this.showTable = true;
+    });
   }
 }

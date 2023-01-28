@@ -92,46 +92,38 @@ export class ReportsComponent implements OnInit {
         }
     },
     title: {
-        text: 'Number of confirmed COVID-19'
+        text: 'Flaky Tests',
+        align: 'left'
     },
     subtitle: {
-        text: 'Source: ' +
-            '<a href="https://www.fhi.no/en/id/infectious-diseases/coronavirus/daily-reports/daily-reports-COVID19/"' +
-            'target="_blank">FHI</a>'
+        text: 'Tests that return different results despite no code or test change',
+        align: 'left'
     },
     legend: {
       enabled: false
     },
     xAxis: {
-        categories: ['0-9', '10-19', '20-29', '30-39', '40-49', '50-59', '60-69', '70-79', '80-89', '90+'],
-        title: {
-            text: 'Age groups'
-        }
+      categories: ['#189', '#190', '#191', '#192', '#193'],
+      title: {
+            text: 'Test Runs'
+        },
+      maxPadding: 0.05,
+      showLastLabel: true
     },
     yAxis: {
         title: {
             margin: 20,
-            text: 'Reported cases'
+            text: 'Failure Count'
         }
     },
     tooltip: {
-        headerFormat: '<b>Age: {point.x}</b><br>'
-    },
-    plotOptions: {
-        // series: {
-        //   type: 'slowstochastic',
-        //     depth: 25,
-        //     colorByPoint: true
-        // }
-        column: {
-          depth: 25
-      }
+      headerFormat: '<b>{series.name}: {point.x}</b><br>',
+      pointFormat: 'Flaky: {point.y} tests',
     },
     series: [{
         type: 'line',
-        data: [95321, 169339, 121105, 136046, 106800, 58041, 26766, 14291,
-            7065, 3283],
-        name: 'Cases',
+        data: [12, 3, 5, 6, 4],
+        name: 'Plan ID',
         showInLegend: false,
         colorByPoint: true
     }]
@@ -178,9 +170,8 @@ export class ReportsComponent implements OnInit {
           enabled: false
       },
       tooltip: {
-          headerFormat: '<b>{series.name}</b><br/>',
-          pointFormat: '{point.y} minutes',
-          shared: true
+        headerFormat: '<b>{series.name}: {point.x}</b><br>',
+        pointFormat: 'Duration: {point.y} mins',
       },
       plotOptions: {
           spline: {
@@ -192,7 +183,7 @@ export class ReportsComponent implements OnInit {
           }
       },
       series: [{
-          name: 'Duration',
+          name: 'Plan ID:',
           type: 'line',
           marker: {
             symbol: 'square'
@@ -234,7 +225,7 @@ export class ReportsComponent implements OnInit {
       yAxis: {
           min: 0,
           title: {
-              text: 'Count of Failures'
+              text: 'Failures Count'
           },
           stackLabels: {
               enabled: true,

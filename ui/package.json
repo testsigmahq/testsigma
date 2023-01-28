@@ -46,7 +46,8 @@
     "scriptjs": "^2.5.9",
     "serializr": "^2.0.5",
     "tslib": "^2.2.0",
-    "zone.js": "~0.11.4"
+    "zone.js": "~0.11.4",
+    "jspdf": "^2.5.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^12.2.13",

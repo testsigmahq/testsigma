@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import * as Highcharts from 'highcharts';
-import {AddonActionService} from "../services/addon-action.service";
+import {ReportsService} from "../services/reports.service";
 import {AuthenticationGuard} from "../shared/guards/authentication.guard";
+import jspdf from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-reports',
@@ -22,6 +24,18 @@ export class ReportsComponent implements OnInit {
 
   ngOnInit(): void {
     this.populateChartOptions();
+    setTimeout(function(){
+    var elem = document.getElementById("run-chart");
+    html2canvas(elem).then(canvas => {
+      var imgWidth = 208;
+      var imgHeight = canvas.height * imgWidth / canvas.width;
+      const contentDataURL = canvas.toDataURL('image/png')
+      var position = 0;
+      var doc = new jspdf("p","mm","a4");
+      doc.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight)
+      doc.save('skill-set.pdf');
+    });
+    },2000);
   }
 
   populateChartOptions() {
@@ -54,11 +68,7 @@ export class ReportsComponent implements OnInit {
           slicedOffset: 0,
           allowPointSelect: true,
           dataLabels: {
-            enabled: true,
-            padding: 0,
-            style: {
-              fontSize: '8px'
-            }
+            enabled: false
           }
         }
       },

@@ -76,6 +76,7 @@ export class UrlConstantsService {
   public testProjectImportURL = this.apiBase + "/settings/backups/test_project";
 
   public onboardingURL = this.apiBase + '/onboarding';
+  public reportsURL = this.apiBase + "/reports";
 
   public agentDownloadTagUrl = this.agentsUrl + "/download_tag";
   constructor() {

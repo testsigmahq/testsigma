@@ -1,66 +1,143 @@
 <div class="page-header theme-border-b ml-40 pl-0 plugins-list ml-50">
-<ul class="tab-nav" role="tablist">
-  <li class="nav-items" role="presentation">
-    <a
-      class="normal-text"
-      [routerLinkActive]="'active'"
-      [routerLink]="['./analytics']">
-      <span [translate]="'Analytics'" ></span>
-    </a>
-  </li>
-  <li class="nav-items" role="presentation">
-    <a
-      [routerLinkActive]="'active'"
-      [routerLink]="['./custom_reports']"
-      class="normal-text">
-      <span [translate]="'Reports'"></span>
-    </a>
-  </li>
-  <li class="nav-items" role="presentation">
-    <a
-      [routerLinkActive]="'active'"
-      [routerLink]="['./query_engine']"
-      class="normal-text">
-      <span [translate]="'Query Reporting Engine'"></span>
-    </a>
-  </li>
-</ul>
-  <div class="page-content page-virtual-scroll pt-40 d-flex-wrap">
-    <div>
-      <div class="highChart" id="run-chart">
-        <highcharts-chart
-          [Highcharts] = "Highcharts"
-          [options] = "topFailuresChartOptions">
-        </highcharts-chart>
+  <ul class="tab-nav" role="tablist">
+    <li class="nav-items" role="presentation">
+      <a
+        class="normal-text"
+        [routerLinkActive]="'active'"
+        [routerLink]="['./analytics']">
+        <span [translate]="'Dashboard'" ></span>
+      </a>
+    </li>
+    <li class="nav-items" role="presentation">
+      <a
+        [routerLinkActive]="'active'"
+        [routerLink]="['./custom_reports']"
+        (click)="goToPage('custom_reports')"
+        class="normal-text">
+        <span [translate]="'Reports'"></span>
+      </a>
+    </li>
+    <li class="nav-items" role="presentation">
+      <a
+        [routerLinkActive]="'active'"
+        [routerLink]="['./query_engine']"
+        class="normal-text">
+        <span [translate]="'Query Reporting Engine'"></span>
+      </a>
+    </li>
+  </ul>
+    <div *ngIf="this.router.url.indexOf('analytics')!=-1">
+      <div class="page-content page-virtual-scroll pt-40 d-flex-wrap">
+        <div>
+          <div class="highChart" id="run-chart">
+            <highcharts-chart
+              [Highcharts] = "Highcharts"
+              [options] = "topFailuresChartOptions">
+            </highcharts-chart>
+          </div>
+        </div>
+    
+        <div>
+          <div class="highChart">
+            <highcharts-chart
+              [Highcharts] = "Highcharts"
+              [options] = "lingeredTestsChartOptions">
+            </highcharts-chart>
+          </div>
+        </div>
+    
+        <div>
+          <div class="highChart">
+            <highcharts-chart
+              [Highcharts] = "Highcharts"
+              [options] = "runDurationTrendChartOptions">
+            </highcharts-chart>
+          </div>
+        </div>
+    
+        <div>
+          <div class="highChart">
+            <highcharts-chart
+              [Highcharts] = "Highcharts"
+              [options] = "flakyTestsChartOptions">
+            </highcharts-chart>
+          </div>
+        </div>
+    
+      </div>
+      </div>
+    <div *ngIf="this.router.url.indexOf('query_engine')!=-1">
+      <div class="page-content page-virtual-scroll pt-40 d-flex-wrap" >
+        <form
+          class="ts-form create-form-full-view w-75 px-0"
+          [formGroup]="queryReportsForm">
+          <div class="px-0">
+            <div class="content-view">
+              <div class="d-flex">
+                <a
+                  class="form-title"
+                  [translate]="'QUERY REPORTS'"></a>
+              </div>
+              <div
+                class="create-form-title mb-8 pt-30"
+                [translate]="'Enter Report Name'"></div>
+              <div class="form-group pb-14 ml-auto">
+                <input
+                  class="form-control"
+                  required
+                  name="name"
+                  formControlName="name"
+                  autofocus/>
+              </div>
+              <div class="form-group">
+                <mat-form-field appearance="fill">
+                  <mat-label>Module</mat-label>
+                  <mat-select formControlName="module">
+                    <mat-option *ngFor="let module of modules" [value]="module.name">
+                      {{module.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="form-group">
+                <div
+                  class="mt-15">
+                 <textarea
+                   class="form-control resize-none"
+                   name="byValue"
+                   [placeholder]="'enter query here'"
+                   [formControlName]="['description']"
+                   rows="4"></textarea>
+                </div>
+              </div>
+  
+  
+              </div>
+            </div>
+          <div class="theme-overlay-footer mb-10">
+        <button
+          class="theme-btn-primary"
+          appAsyncBtn
+          [message]="'message.common.saving'"
+          [textContent]="'Run'"
+          (click)="getQueryReport()">
+        </button>
+          </div>
+        </form>
+        <div *ngIf="showTable">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table">
+          <ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
+            <th mat-header-cell *matHeaderCellDef>
+              {{column.header}}
+            </th>
+            <td mat-cell *matCellDef="let row">
+              {{column.cell(row)}}
+            </td>
+          </ng-container>
+  
+        </table>
+        </div>
+  
       </div>
     </div>
-
-    <div>
-      <div class="highChart">
-        <highcharts-chart
-          [Highcharts] = "Highcharts"
-          [options] = "lingeredTestsChartOptions">
-        </highcharts-chart>
-      </div>
-    </div>
-
-    <div>
-      <div class="highChart">
-        <highcharts-chart
-          [Highcharts] = "Highcharts"
-          [options] = "runDurationTrendChartOptions">
-        </highcharts-chart>
-      </div>
-    </div>
-
-    <div>
-      <div class="highChart">
-        <highcharts-chart
-          [Highcharts] = "Highcharts"
-          [options] = "flakyTestsChartOptions">
-        </highcharts-chart>
-      </div>
-    </div>
-
   </div>
-</div>

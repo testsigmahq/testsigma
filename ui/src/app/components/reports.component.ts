@@ -128,7 +128,7 @@ export class ReportsComponent implements OnInit {
       }
     },
     series: [{
-        type: 'cylinder',
+        type: 'line',
         data: [95321, 169339, 121105, 136046, 106800, 58041, 26766, 14291,
             7065, 3283],
         name: 'Cases',

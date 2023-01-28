@@ -23,6 +23,7 @@ import com.testsigma.specification.SearchCriteria;
 import com.testsigma.specification.SearchOperation;
 import com.testsigma.web.request.ElementRequest;
 import com.testsigma.web.request.ElementScreenNameRequest;
+import com.testsigma.web.request.TestCaseRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.json.JSONArray;
@@ -87,6 +88,13 @@ public class ReportsController {
     @GetMapping(value = {"/failures_by_category"})
     public List<FailuresByCategoryDTO> getFailuresByCategory(@RequestParam("versionId") Long versionId) {
         return this.reportsService.getFailuresByCategory(versionId);
+    }
+
+    @RequestMapping(value = "/generate_query_report", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Object> update(@RequestBody String query) throws TestsigmaException, SQLException, CloneNotSupportedException {
+        List<Map<String,Object>> entities = this.reportsService.getQueryReport(query);
+        return new ResponseEntity<>(entities, HttpStatus.OK);
     }
 
 }

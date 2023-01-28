@@ -3,6 +3,7 @@ package com.testsigma.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.testsigma.dto.*;
 import com.testsigma.dto.export.TestCaseCloudXMLDTO;
@@ -33,6 +34,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
@@ -49,6 +52,8 @@ public class ReportsService {
     private final TestCaseService testCaseService;
 
     private final TestCaseRepository testCaseRepository;
+
+    private final EntityManager entityManager;
     public JSONArray getReport(Long reportId){
         JSONArray reportObject = new JSONArray();
         Optional<Report> report = reportsRepository.findById(reportId);
@@ -116,5 +121,29 @@ public class ReportsService {
 
     public List<FailuresByCategoryDTO> getFailuresByCategory(Long versionId){
         return testCaseRepository.getFailuresByCategory(versionId);
+    }
+
+    public List<Map<String,Object>> getQueryReport(String query){
+        try{
+        Query nativeQuery = entityManager.createNativeQuery(query);
+        List<Object> resultObject = nativeQuery.getResultList();
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Map<String,Object>> toBeReturned = new ArrayList<Map<String,Object>>();
+        Integer i = 0;
+        for(Object result:resultObject){
+            String queryResult = objectMapper.writeValueAsString(result);
+            queryResult = queryResult.substring(1); // index starts at zero
+            queryResult = queryResult.substring(0, queryResult.length() - 1);
+            List<Object> resultList = new ArrayList<Object>(Arrays.asList(queryResult.split(",")));
+            Map<String, Object> resultIndex = new HashMap<>();
+            resultIndex.put(i.toString(),resultList);
+            toBeReturned.add(resultIndex);
+            i++;
+        }
+        return toBeReturned;
+        } catch(Exception e){
+            log.error("This shouldnt come.....");
+            return new ArrayList<Map<String,Object>>();
+        }
     }
 }

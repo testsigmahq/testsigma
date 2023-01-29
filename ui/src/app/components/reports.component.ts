@@ -110,9 +110,9 @@ export class ReportsComponent implements OnInit {
         }
     },
     title: {
-        text: '<a class="pdf_export" data-name="run-chart4">Flaky Tests</a>',
+        text: '<span>Flaky Tests</span><button title="Download" class="pdf_export btn icon-btn ml-16" data-name="flakyTestsChart"><i class="fa-download-thin" "=""></i></button>',
         align: 'left',
-      useHTML:true
+        useHTML:true
     },
     subtitle: {
         text: 'Tests that return different results despite no code or test change',
@@ -158,7 +158,7 @@ export class ReportsComponent implements OnInit {
           type: 'spline'
         },
         title: {
-          text: '<a class="pdf_export" data-name="run-chart3">Duration Trend</a>',
+          text: '<span>Duration Trend</span><button title="Download" class="pdf_export btn icon-btn ml-16" data-name="runDurationTrendChart"><i class="fa-download-thin" "=""></i></button>',
           align: 'left',
           useHTML:true
         },
@@ -228,7 +228,7 @@ export class ReportsComponent implements OnInit {
           type: 'column'
         },
         title: {
-          text: '<a class="pdf_export" data-name="run-chart">Top Failures</a>',
+          text: '<span>Top Failures</span><button title="Download" class="pdf_export btn icon-btn ml-16" data-name="topFailuresChart"><i class="fa-download-thin" "=""></i></button>',
           align: 'left',
           useHTML:true
         },
@@ -314,7 +314,7 @@ export class ReportsComponent implements OnInit {
           type: 'pyramid'
         },
         title: {
-          text: '<a class="pdf_export" data-name="run-chart2">Lingered Tests</a>',
+          text: '<span>Slow Tests</span><button title="Download" class="pdf_export btn icon-btn ml-16" data-name="lingeredTestsChart"><i class="fa-download-thin" "=""></i></button>',
           align: 'left',
           useHTML:true
 
@@ -425,9 +425,37 @@ export class ReportsComponent implements OnInit {
         var position = 0;
         var doc = new jspdf("p","mm","a4");
         doc.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight)
-        doc.save('skill-set.pdf');
+        doc.save(elemId + '.pdf');
       });
     },2000);
+  }
+
+  exportInsights(){
+    setTimeout(function(){
+      const doc = new jspdf('p', 'mm', 'a4');
+      const options = {
+        pagesplit: true
+      };
+      const ids = document.getElementsByClassName('highChart')
+      const length = ids.length;
+      for (let i = 0; i < length; i++) {
+        const chart = document.getElementById(ids[i].id);
+        html2canvas(chart).then(canvas => {
+          var imgWidth = 208;
+          var imgHeight = canvas.height * imgWidth / canvas.width;
+          const contentDataURL = canvas.toDataURL('image/png')
+          var position = 0;
+          var doc = new jspdf("p","mm","a4");
+          doc.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight)
+          if (i < (length - 1)) {
+            doc.addPage();
+          }
+        });
+      }
+      // download the pdf with all charts
+      doc.save('All_Insights_' + Date.now() + '.pdf');
+    },2000);
+
   }
 
   formatLingeredTestsOutput(res){

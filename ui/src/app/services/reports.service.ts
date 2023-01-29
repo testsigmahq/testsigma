@@ -95,10 +95,10 @@ export class ReportsService{
   }
 
   public create(any: any): Observable<any> {
-    return this.http.post<any>(this.URLConstants.reportsURL, any.serialize(), {
+    return this.http.post<any>(this.URLConstants.reportsURL, any, {
       headers: this.httpHeaders.contentTypeApplication
     }).pipe(
-      map(data => new any().deserialize(data)),
+      map(data => data),
       catchError((error) => throwError(error))
     );
   }

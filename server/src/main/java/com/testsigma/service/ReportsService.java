@@ -14,9 +14,7 @@ import com.testsigma.exception.*;
 import com.testsigma.mapper.TestCaseMapper;
 import com.testsigma.mapper.TestStepMapper;
 import com.testsigma.model.*;
-import com.testsigma.repository.ReportsRepository;
-import com.testsigma.repository.TagRepository;
-import com.testsigma.repository.TestCaseRepository;
+import com.testsigma.repository.*;
 import com.testsigma.specification.*;
 import com.testsigma.web.request.TestCaseCopyRequest;
 import com.testsigma.web.request.TestCaseRequest;
@@ -52,6 +50,11 @@ public class ReportsService {
     private final TestCaseService testCaseService;
 
     private final TestCaseRepository testCaseRepository;
+
+    private final ReportsModuleRepository reportsModuleRepository;
+
+    private final ReportsConfigurationRepository reportsConfigurationRepository;
+    private final WorkspaceVersionRepository workspaceVersionRepository;
 
     private final EntityManager entityManager;
     public JSONArray getReport(Long reportId){
@@ -149,5 +152,16 @@ public class ReportsService {
 
     public Page<Report> findAll(Specification<Report> specification, Pageable pageable) {
         return reportsRepository.findAll(specification, pageable);
+    }
+
+    public Report create(String name){
+        Report report = new Report();
+        Long versionId = 39l;
+        report.setName(name);
+        report.setReportType(ReportType.CUSTOM);
+        report.setReportModule(reportsModuleRepository.findById(1l).get());
+        report.setReportConfiguration(reportsConfigurationRepository.findById(1l).get());
+        report.setWorkspaceVersion(workspaceVersionRepository.getById(39l));
+        return reportsRepository.save(report);
     }
 }

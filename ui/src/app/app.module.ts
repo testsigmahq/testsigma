@@ -188,6 +188,7 @@ import {WeeklyScheduleCalendarComponent} from './components/webcomponents/weekly
 import {TestCaseByStatusSummaryComponent} from './components/webcomponents/test-case-by-status-summary.component';
 import {TestCaseByTypeSummaryComponent} from './components/webcomponents/test-case-by-type-summary.component';
 import {BySummaryDonutChartComponent} from './components/webcomponents/by-summary-donut-chart.component';
+import {CreateReportPopupComponent} from "./components/webcomponents/create-report-popup.component";
 import {Ng9OdometerModule} from 'ng9-odometer';
 import {DryRunSavedConfigFormComponent} from './components/webcomponents/dry-run-saved-config-form.component';
 import {DryRunSavedConfigListComponent} from "./components/webcomponents/dry-run-saved-config-list.component";
@@ -348,6 +349,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     TestMachineResultDetailsPaginationComponent,
     TestSuiteResultDetailsPaginationComponent,
     TestCaseResultDetailsPaginationComponent,
+    CreateReportPopupComponent,
     SafeUrlPipe,
     TdRedirectComponent,
     ElementAutoHealingListComponent,

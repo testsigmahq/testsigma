@@ -36,21 +36,21 @@ public class Report {
     @Enumerated(EnumType.STRING)
     private ReportType reportType;
 
-    @OneToOne
+    @ManyToOne
     @Fetch(value = FetchMode.SELECT)
     @JoinColumn(name = "module_id", referencedColumnName = "id", insertable = false, updatable = false)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private ReportModule reportModule;
 
-    @OneToOne
+    @ManyToOne
     @Fetch(value = FetchMode.SELECT)
     @JoinColumn(name = "config_id", referencedColumnName = "id", insertable = false, updatable = false)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private ReportConfiguration reportConfiguration;
 
-    @OneToOne
+    @ManyToOne
     @Fetch(value = FetchMode.SELECT)
     @JoinColumn(name = "version_id", referencedColumnName = "id", insertable = false, updatable = false)
     @EqualsAndHashCode.Exclude

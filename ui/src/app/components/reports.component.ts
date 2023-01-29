@@ -13,6 +13,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {TelemetryNotificationComponent} from "./webcomponents/telemetry-notification.component";
 import {ReRunPopupComponent} from "../agents/components/webcomponents/re-run-popup.component";
 import {CustomReportsPopupComponent} from "./webcomponents/custom-reports-popup.component";
+import {CreateReportPopupComponent} from "./webcomponents/create-report-popup.component";
 
 @Component({
   selector: 'app-reports',
@@ -494,6 +495,7 @@ export class ReportsComponent implements OnInit {
       console.log(res);
       this.dataSource = res;
       this.showTable = true;
+      this.openReport(1);
     });
   }
 
@@ -507,7 +509,7 @@ export class ReportsComponent implements OnInit {
     this.reportsService.show(id).subscribe((report)=>{
     this.reportsService.generateReport(id).subscribe((res)=>{
       console.log(res);
-      let seriesData = this.convertToSeriesForPie(res,report);
+      // let seriesData = this.convertToSeriesForPie(res,report);
       let chartOptions = {
         chart: {
           backgroundColor: 'transparent',
@@ -542,10 +544,18 @@ export class ReportsComponent implements OnInit {
           }
         },
         series: [{
-          name: report.reportConfiguration["chartGroupField"]?.fieldName,
+          name: report.name,
           colorByPoint: true,
           type:'pie',
-          data: seriesData
+          data: [{
+            name: 'Chrome',
+            y: 70,
+            color:'#1FB47E'
+          },{
+            name: 'Internet Explorer',
+            y: 30,
+            color:'#1FA87E'
+          }]
         }]
       };
       const dialogRef = this.matModal.open<CustomReportsPopupComponent>(CustomReportsPopupComponent, {
@@ -588,5 +598,16 @@ export class ReportsComponent implements OnInit {
         series.push(obj);
     });
     return series;
+  }
+
+  openCreateForm(){
+    const dialogRef = this.matModal.open<CreateReportPopupComponent>(CreateReportPopupComponent, {
+      width: '500px',
+      height: '500px',
+      panelClass: ['rds-none']
+    });
+    dialogRef.afterClosed().subscribe( () => {
+      this.router.navigate(['reports','custom_reports']);
+    })
   }
 }

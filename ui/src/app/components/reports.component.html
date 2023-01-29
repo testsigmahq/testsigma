@@ -160,6 +160,7 @@
         <div class="short-hand-actions">
           <button
             [matTooltip]="'Create'"
+            (click)="openCreateForm()"
             class="theme-btn-primary border-rds-2 ml-44" style="margin-right: 50px !important;">
             <span [translate]="'Create'"></span>
           </button>
@@ -179,8 +180,6 @@
             <span
               class="ts-col-25" [translate]="'Description'"></span>
             <span
-              class="ts-col-25" [translate]="'Module'"></span>
-            <span
               class="ts-col-25 ts-col-15 mx-30" [translate]="'Type'"></span>
           </div>
         </div>
@@ -197,10 +196,6 @@
             <span
               class="ts-col-25 list-title"
               [textContent]="report?.description"
-              ></span>
-            <span
-              class="ts-col-25 list-title"
-              [textContent]="report?.reportModule?.moduleName"
               ></span>
             <span
               class="ts-col-15 list-title"

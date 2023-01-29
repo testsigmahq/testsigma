@@ -121,4 +121,11 @@ public class ReportsController {
         return new PageImpl<>(testCaseDTOS, pageable, reports.getTotalElements());
     }
 
+    @RequestMapping(method = RequestMethod.POST)
+    public ReportsDTO create(@RequestBody String reportName) throws TestsigmaException, SQLException {
+        log.debug("POST /reports");
+        Report report = reportsService.create(reportName);
+        return reportsMapper.map(report);
+    }
+
 }

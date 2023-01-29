@@ -1,6 +1,7 @@
 package com.testsigma.dto;
 
 
+import com.testsigma.model.ReportConfiguration;
 import com.testsigma.model.ReportModule;
 import com.testsigma.model.ReportType;
 import com.testsigma.model.WorkspaceVersion;
@@ -14,5 +15,6 @@ public class ReportsDTO {
     private ReportType reportType;
     private ReportModule reportModule;
     private WorkspaceVersion workspaceVersion;
+    private ReportConfiguration reportConfiguration;
 }
 

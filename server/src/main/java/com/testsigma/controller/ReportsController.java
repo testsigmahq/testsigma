@@ -18,6 +18,7 @@ import com.testsigma.exception.TestsigmaException;
 import com.testsigma.mapper.ElementMapper;
 import com.testsigma.mapper.ReportsMapper;
 import com.testsigma.model.*;
+import com.testsigma.repository.ReportsRepository;
 import com.testsigma.service.*;
 import com.testsigma.specification.ElementSpecificationsBuilder;
 import com.testsigma.specification.ReportsSpecificationBuilder;
@@ -57,8 +58,17 @@ public class ReportsController {
 
     private final ReportsMapper reportsMapper;
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> show(@PathVariable("id") Long id) throws TestsigmaException,Exception {
+    private final ReportsRepository reportsRepository;
+
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public ReportsDTO show(@PathVariable("id") Long id) throws TestsigmaException,Exception {
+        Optional<Report> report = reportsRepository.findById(id);
+        return reportsMapper.map(report.get());
+    }
+
+    @RequestMapping(value = "/generate_report/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> generateReport(@PathVariable("id") Long id) throws TestsigmaException,Exception {
         JSONArray responseObject = reportsService.getReport(id);
         List<Map<String,Object>> entities = new ArrayList<Map<String,Object>>();
         for (int i=0;i<responseObject.length();i++) {

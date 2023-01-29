@@ -29,7 +29,9 @@ import java.util.List;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface ReportsMapper {
+    @Mapping(target = "reportConfiguration.reportCriteriaMappings", ignore = true)
     ReportsDTO map(Report report);
 
+    @Mapping(target = "reportConfiguration.reportCriteriaMappings", ignore = true)
     List<ReportsDTO> mapDTOs(List<Report> reports);
 }

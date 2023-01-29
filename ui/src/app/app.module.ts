@@ -210,6 +210,7 @@ import {LoginFormComponent} from './components/login-form.component';
 import {RecaptchaModule} from 'ng-recaptcha';
 import {CommonModule} from "@angular/common";
 import {ElementMetadataComponent} from "./components/webcomponents/element-metadata.component";
+import {ReportConfiguration} from "./models/report-configuration.model";
 import {MantisIssueFormComponent} from './components/webcomponents/mantis-issue-form.component';
 import {MantisIssueDetailsComponent} from './components/webcomponents/mantis-issue-details.component';
 import {BackLogIssueFormComponent} from './components/webcomponents/backlog-issue-form.component';

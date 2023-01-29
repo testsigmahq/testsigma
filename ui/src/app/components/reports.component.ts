@@ -504,8 +504,10 @@ export class ReportsComponent implements OnInit {
   }
 
   openReport(id){
-    this.reportsService.show(id).subscribe((res)=>{
+    this.reportsService.show(id).subscribe((report)=>{
+    this.reportsService.generateReport(id).subscribe((res)=>{
       console.log(res);
+      let seriesData = this.convertToSeriesForPie(res,report);
       let chartOptions = {
         chart: {
           backgroundColor: 'transparent',
@@ -540,18 +542,10 @@ export class ReportsComponent implements OnInit {
           }
         },
         series: [{
-          name: 'Brands',
+          name: report.reportConfiguration["chartGroupField"]?.fieldName,
           colorByPoint: true,
           type:'pie',
-          data: [{
-            name: 'Chrome',
-            y: 70,
-            color:'#1FB47E'
-          },{
-            name: 'Internet Explorer',
-            y: 30,
-            color:'#1FA87E'
-          }]
+          data: seriesData
         }]
       };
       const dialogRef = this.matModal.open<CustomReportsPopupComponent>(CustomReportsPopupComponent, {
@@ -564,5 +558,35 @@ export class ReportsComponent implements OnInit {
         this.router.navigate(['reports','custom_reports']);
       })
     });
+    });
+  }
+
+  convertToSeriesForPie(res,report){
+    let series = [];
+    let colorMap = {
+      "DRAFT":'red',
+      "READY":'green'
+  }
+  let seriesCount = {} as any;
+    let i=0;
+    res.forEach((data)=> {
+      let key = report.reportConfiguration["chartGroupField"]?.fieldName;
+      let obj = {} as any;
+      obj.name = key;
+      obj.color = colorMap[data[key]];
+      if(seriesCount[key])
+        seriesCount[key]++;
+      else
+        seriesCount[key] = 1;
+      let flag=0;
+      series.forEach((sData)=>{
+        if(sData.name == key)
+          flag = 1;
+      });
+      obj.y = seriesCount[key];
+      if(flag==0)
+        series.push(obj);
+    });
+    return series;
   }
 }

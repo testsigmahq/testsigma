@@ -37,6 +37,15 @@ export class ReportsService{
     );
   }
 
+
+
+  public generateReport(id: number): Observable<any> {
+    return this.http.get<any>(this.URLConstants.reportsURL + "/generate_report/" + id, {headers: this.httpHeaders.contentTypeApplication}).pipe(
+      map(data => data),
+      catchError(() => throwError('Problem while getting reports::' + id))
+    );
+  }
+
   public getFlakyTests(versionId: number): Observable<any[]> {
     return this.http.get<any[]>(this.URLConstants.reportsURL + "/flaky_tests?versionId=" + versionId, {headers: this.httpHeaders.contentTypeApplication}).pipe(
       map(data => data),

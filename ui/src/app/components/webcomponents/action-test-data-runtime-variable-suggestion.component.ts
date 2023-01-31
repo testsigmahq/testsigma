@@ -127,7 +127,7 @@ export class ActionTestDataRuntimeVariableSuggestionComponent implements OnInit 
   }
 
   selectSuggestion(testStep?: TestStep, dataValue? : String) {
-    let suggestion = dataValue ? dataValue : testStep?.dataMap?.attribute;//testStep?.dataMap?.attribute;
+    let suggestion = dataValue ? dataValue : ( testStep?.dataMap?.testData["test-data"]?.value? testStep.dataMap?.testData["test-data"]?.value: testStep.dataMap?.testData["test-data2"]?.value)
     console.log(testStep);
     this.testDataRuntimeVariable ? this.mobileRecorderEventService.returnData.next({type: TestDataType.runtime, data: suggestion}) : this.dialogRef.close(suggestion);
   }

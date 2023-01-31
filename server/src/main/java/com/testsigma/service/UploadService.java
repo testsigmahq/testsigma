@@ -54,6 +54,7 @@ public class UploadService extends XMLExportImportService<Upload> {
   private final UploadVersionService uploadVersionService;
   private final TestCaseService testCaseService;
   private final UploadMapper mapper;
+  private final TestDeviceService testDeviceService;
 
   public Upload find(Long id) throws ResourceNotFoundException {
     Upload upload = this.uploadRepository.findById(id)
@@ -106,6 +107,7 @@ public class UploadService extends XMLExportImportService<Upload> {
 
   public Upload update(Upload upload) throws TestsigmaException {
     upload = this.uploadRepository.save(upload);
+    testDeviceService.updateUploadVersion(upload);
     publishEvent(upload, EventType.UPDATE);
     return upload;
   }

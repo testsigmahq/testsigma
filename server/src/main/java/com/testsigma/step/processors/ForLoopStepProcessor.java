@@ -18,7 +18,7 @@ public class ForLoopStepProcessor extends StepProcessor {
                               WorkspaceType workspaceType, Map<String, Element> elementMap,
                               TestStepDTO testStepDTO, Long testPlanId, TestDataSet testDataSet,
                               Map<String, String> environmentParams, TestCaseEntityDTO testCaseEntityDTO,
-                              String environmentParamSetName, String dataProfile, Map<Long, Long> dataSetIndex) {
+                              String environmentParamSetName, String dataProfile, Map<Long, Integer> dataSetIndex) {
     super(webApplicationContext, testCaseStepEntityDTOS, workspaceType, elementMap, testStepDTO, testPlanId, testDataSet,
       environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile, dataSetIndex);
   }
@@ -26,7 +26,7 @@ public class ForLoopStepProcessor extends StepProcessor {
   private void attachTestDataProfileStepId(List<TestStepDTO> testCaseStepEntityDTOS) {
     for (TestStepDTO testStepEntity : testCaseStepEntityDTOS){
       if (testStepEntity.getTestDataProfileStepId()!=null){
-        Optional<TestStepDTO> TDPStepEntity = testCaseStepEntityDTOS.stream().filter(step -> Objects.equals(step.getDataMap().getForLoop().getTestDataId(), testStepEntity.getTestDataProfileStepId())).findFirst();
+        Optional<TestStepDTO> TDPStepEntity = testCaseStepEntityDTOS.stream().filter(step -> Objects.equals(step.getForLoopTestDataId(), testStepEntity.getTestDataProfileStepId())).findFirst();
         TDPStepEntity.ifPresent(stepDTO -> testStepEntity.setTestDataProfileStepId(stepDTO.getId()));
       }
     }
@@ -39,9 +39,9 @@ public class ForLoopStepProcessor extends StepProcessor {
       this.attachTestDataProfileStepId(testStepDTOS);
     }
 
-    Long testDataId = testStepDTO.getDataMap().getForLoop().getTestDataId();
-    Integer start = testStepDTO.getDataMap().getForLoop().getStartIndex();
-    Integer end = testStepDTO.getDataMap().getForLoop().getEndIndex();
+    Long testDataId = testStepDTO.getForLoopTestDataId();
+    Integer start = testStepDTO.getForLoopStartIndex();
+    Integer end = testStepDTO.getForLoopEndIndex();
 
     TestData testData = testDataProfileService.find(testDataId);
 
@@ -57,7 +57,7 @@ public class ForLoopStepProcessor extends StepProcessor {
           TestDataSet dataSet = dataBank.get(i);
           TestCaseStepEntityDTO iteEntity = new TestCaseStepEntityDTO(); //iterableEntity -- Iteration
           iteEntity.setId(parentEntity.getId());
-          dataSetIndex.put(testStepDTO.getId(), Long.valueOf(i));
+          dataSetIndex.put(testStepDTO.getId(), i);
           for (int lcount = 0; lcount < parentEntity.getTestStepDTOS().size(); lcount++) {
             TestStepDTO loopChildEntity = parentEntity.getTestStepDTOS().get(lcount);
 

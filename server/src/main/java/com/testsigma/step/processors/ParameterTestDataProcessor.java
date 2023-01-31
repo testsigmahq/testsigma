@@ -25,7 +25,7 @@ public class ParameterTestDataProcessor extends TestDataProcessor{
   protected Integer index;
   protected  Long stepId;
   protected TestData testData;
-  protected Map<Long, Long> stepGroupParentForLoopStepIdTestDataSetMap;
+  protected Map<Long, Integer> stepGroupParentForLoopStepIdIndexes;
   public static final Long OVERRIDE_STEP_GROUP_STEP_WITH_TEST_CASE_PROFILE_ID = -2l;
   protected TestDataSetService testDataSetService;
   String TEST_DATA_NOT_FOUND = "Test Step is not Executed Because TestData parameter is not found %s with in selected step id Test data profile.";
@@ -39,14 +39,14 @@ public class ParameterTestDataProcessor extends TestDataProcessor{
 
   public ParameterTestDataProcessor(TestCaseEntityDTO testCaseEntityDTO,
                                     TestCaseStepEntityDTO testCaseStepEntityDTO,
-                                    Map<Long, Long> stepGroupParentForLoopStepIdTestDataSetMap,
+                                    Map<Long, Integer> stepGroupParentForLoopStepIdIndexes,
                                     com.testsigma.model.TestDataSet testDataSet, String parameter,
                                     TestDataPropertiesEntity testDataPropertiesEntity,
                                     WebApplicationContext context) {
     super(testCaseStepEntityDTO, testCaseEntityDTO, testDataPropertiesEntity, context);
     this.testCaseEntityDTO = testCaseEntityDTO;
     this.testCaseStepEntityDTO = testCaseStepEntityDTO;
-    this.stepGroupParentForLoopStepIdTestDataSetMap = stepGroupParentForLoopStepIdTestDataSetMap;
+    this.stepGroupParentForLoopStepIdIndexes = stepGroupParentForLoopStepIdIndexes;
     this.testDataSet = testDataSet;
     this.parameter = parameter;
     this.testDataSetService =  (TestDataSetService) context.getBean("testDataSetService");
@@ -75,8 +75,9 @@ public class ParameterTestDataProcessor extends TestDataProcessor{
   private void processOverRiddenParentStepParameter(){
     try {
       TestStep testStep = testStepService.find(stepId);
-      TestData testData = testDataService.find(testStep.getDataMap().getForLoop().getTestDataId());
-      processLoopParameter(testData, parameter, testDataSetService.find(this.stepGroupParentForLoopStepIdTestDataSetMap.get(stepId)));
+      TestData testData = testDataService.find(testStep.getForLoopTestDataId());
+      processLoopParameter(testData, parameter,
+              this.stepGroupParentForLoopStepIdIndexes.get(stepId));
     }catch (ResourceNotFoundException exception){
       this.exception = exception;
       log.error(exception, exception);
@@ -87,7 +88,7 @@ public class ParameterTestDataProcessor extends TestDataProcessor{
   public void processTestCaseParameter(Long testCaseId, Integer index) {
     try {
       TestData testData = testDataService.find(testCaseService.find(testCaseId).getTestDataId());
-      processLoopParameter(testData, parameter, testData.getTempTestData().get(index));
+      processLoopParameter(testData, parameter, index);
     }catch (ResourceNotFoundException exception){
       this.exception = exception;
       log.error(exception, exception);
@@ -95,12 +96,12 @@ public class ParameterTestDataProcessor extends TestDataProcessor{
     }
   }
 
-  public void processLoopParameter(TestData testData, String parameter, TestDataSet testDataSet) {
+  public void processLoopParameter(TestData testData, String parameter, Integer index) {
     try {
       this.index = index;
       this.parameter = parameter;
       this.testData = testData;
-      processTestData(testDataSet, parameter);
+      processTestData(testData.getTempTestData().get(index), parameter);
     } catch (IndexOutOfBoundsException indexOutOfBoundsException) {
       exception = indexOutOfBoundsException;
       setForLoopErrorMessage();

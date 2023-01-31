@@ -169,7 +169,7 @@ public class VisualTestingService {
     if (testStepResult.getParentResultId() != null) {
       TestStepResult parentStepResult = testStepResultService.find(testStepResult.getParentResultId());
       TestStep testStep = testStepService.find(parentStepResult.getStepId());
-      return (testStep.getDataMap().getForLoop().getTestDataId() != null) ? testStep.getDataMap().getForLoop().getTestDataId() : 0;
+      return (testStep.getForLoopTestDataId() != null) ? testStep.getForLoopTestDataId() : 0;
     }
     if (testCaseResult.getParentId() != null && testCaseResult.getTestDataId() != null) {
       testDataId = testCaseResult.getTestDataId();

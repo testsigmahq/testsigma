@@ -38,8 +38,7 @@ public class TestCaseEntityDTO implements Cloneable {
   private String message;
   private Long phoneNumberId;
   private Boolean visualEnabled = false;
-  private String parentHierarchy;
-  private Map<Long, Long> stepGroupParentForLoopStepIdTestDataSetMap;
+  private Map<Long, Integer> stepGroupParentForLoopStepIdIndexes;
 
   public TestCaseEntityDTO clone() throws CloneNotSupportedException {
     TestCaseEntityDTO entity = (TestCaseEntityDTO) super.clone();
@@ -52,8 +51,8 @@ public class TestCaseEntityDTO implements Cloneable {
 
   }
 
-  public Map<Long, Long> getStepGroupParentForLoopStepIdTestDataSetMap(){
-    return stepGroupParentForLoopStepIdTestDataSetMap != null ? stepGroupParentForLoopStepIdTestDataSetMap : new HashMap<>();
+  public Map<Long, Integer> getStepGroupParentForLoopStepIdIndexes(){
+    return stepGroupParentForLoopStepIdIndexes != null ? stepGroupParentForLoopStepIdIndexes : new HashMap<>();
   }
 
 }

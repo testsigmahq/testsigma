@@ -91,8 +91,14 @@ public class TestStep {
   @Transient
   private String toElement;
 
-  @Transient
-  private ForLoopCondition forLoopConditions;
+  @Column(name = "for_loop_start_index")
+  private Integer forLoopStartIndex;
+
+  @Column(name = "for_loop_end_index")
+  private Integer forLoopEndIndex;
+
+  @Column(name = "for_loop_test_data_id")
+  private Long forLoopTestDataId;
 
   @Column(name = "test_data_function_id")
   private Long testDataFunctionId;
@@ -303,6 +309,11 @@ public class TestStep {
       if (ifConditionExpectedResults != null && ifConditionExpectedResults.length > 0) {
         testStepDataMap.setIfConditionExpectedResults(ifConditionExpectedResults);
       }
+      TestStepForLoop forLoop = new TestStepForLoop();
+      forLoop.setStartIndex(forLoopStartIndex);
+      forLoop.setEndIndex(forLoopEndIndex);
+      forLoop.setTestDataId(forLoopTestDataId);
+      testStepDataMap.setForLoop(forLoop);
     }
     log.info("Parsed json to testStepDataMap: " + testStepDataMap);
     return testStepDataMap;

@@ -44,14 +44,14 @@ public class StepProcessor {
   protected ProxyAddonService addonService;
   protected TestStepService testStepService;
   protected DefaultDataGeneratorService defaultDataGeneratorService;
-  protected Map<Long, Long> dataSetIndex;
+  protected Map<Long, Integer> dataSetIndex;
   WebApplicationContext webApplicationContext;
 
   public StepProcessor(WebApplicationContext webApplicationContext, List<TestCaseStepEntityDTO> testCaseStepEntityDTOS,
                        WorkspaceType workspaceType, Map<String, Element> elementMap,
                        TestStepDTO testStepDTO, Long testPlanId, TestDataSet testDataSet,
                        Map<String, String> environmentParameters, TestCaseEntityDTO testCaseEntityDTO, String environmentParamSetName,
-                       String dataProfile, Map<Long, Long> dataSetIndex) {
+                       String dataProfile, Map<Long, Integer> dataSetIndex) {
     this.webApplicationContext = webApplicationContext;
     this.testCaseStepEntityDTOS = testCaseStepEntityDTOS;
     this.workspaceType = workspaceType;
@@ -297,8 +297,8 @@ public class StepProcessor {
   public TestDataSet getTestDataIdFromStep(TestCaseStepEntityDTO step) throws ResourceNotFoundException {
     try {
       TestStep testStep = testStepService.find(step.getTestDataProfileStepId());
-      TestData testData = testDataProfileService.find(testStep.getDataMap().getForLoop().getTestDataId());
-      return testData.getTempTestData().get(dataSetIndex.get(testStep.getId()).intValue());
+      TestData testData = testDataProfileService.find(testStep.getForLoopTestDataId());
+      return testData.getTempTestData().get(dataSetIndex.get(testStep.getId()));
     } catch (Exception e) {
       TestStep parentStep = step.getParentId() != null ? testStepService.find(step.getParentId()) : null;
       if (Objects.equals(step.getTestDataProfileStepId(), this.testCaseEntityDTO.getTestDataId())) {

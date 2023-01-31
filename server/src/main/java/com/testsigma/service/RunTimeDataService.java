@@ -132,15 +132,15 @@ public class RunTimeDataService {
     return runTimeVariableDTOS;
   }
 
-  private List<RunTimeVariableDTO> getRunTimeVariableDTOsForNlpStep(TestStep testStep) throws Exception {
+  private List<RunTimeVariableDTO> getRunTimeVariableDTOsForNlpStep(TestStep testStep) {
     String runTimeVariableName = null;
     log.info("Fetching runtime variable name from testStep:"+testStep.getId());
     List<RunTimeVariableDTO> runTimeVariableDTOS = new ArrayList<>();
-    if(testStep.getAction().indexOf("Store current") != -1 && testStep.getDataMapBean() != null){
-      runTimeVariableName = testStep.getDataMapBean().getAttribute();
-    } else if(testStep.getDataMapBean() != null && testStep.getDataMapBean().getTestData() != null) {
-      TestStepNlpData testStepNlpData = testStep.getDataMapBean().getTestData().getOrDefault(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA,null);
-      runTimeVariableName = (testStepNlpData != null)? testStepNlpData.getValue():runTimeVariableName;
+    if(testStep.getAction().indexOf("Store current") != -1 && testStep.getDataMap() != null){
+      runTimeVariableName = testStep.getDataMap().getAttribute();
+    } else if(testStep.getDataMap() != null && testStep.getDataMap().getTestData() != null) {
+      TestStepNlpData testStepNlpData = testStep.getDataMap().getTestData().getOrDefault(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA,null);
+      runTimeVariableName = (testStepNlpData != null)?testStepNlpData.getValue():runTimeVariableName;
     }
 
     if(runTimeVariableName != null){

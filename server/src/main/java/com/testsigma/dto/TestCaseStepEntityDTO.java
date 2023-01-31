@@ -67,9 +67,6 @@ public class TestCaseStepEntityDTO implements Cloneable {
   private Long maxIterations;
   private List<TestCaseStepEntityDTO> testCaseSteps = new ArrayList<>();
   private Map<String, String> additionalScreenshotPaths = new HashMap<>();
-  private Map<Long, Long> stepGroupParentForLoopStepIdTestDataSetMap;
-  private ForLoopConditionDTO forLoopConditionsEntity;
-  private String parentHierarchy;
   private String failureMessage;
 
   public TestCaseStepEntityDTO clone() throws CloneNotSupportedException {

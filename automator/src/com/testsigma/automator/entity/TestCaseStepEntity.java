@@ -15,9 +15,6 @@ public class TestCaseStepEntity implements Cloneable {
   public LinkedHashMap<String, TestDataPropertiesEntity> testDataMap;
   public Map<String, ElementPropertiesEntity> elementsMap;
   public Map<String, AttributePropertiesEntity> attributesMap;
-
-  private Map<Long, Long> stepGroupParentForLoopStepIdTestDataSetMap;
-
   public AddonNaturalTextActionEntity addonNaturalTextActionEntity;
   private Long id;
   private ResultConstant[] ifConditionExpectedResults;
@@ -65,9 +62,6 @@ public class TestCaseStepEntity implements Cloneable {
   private int noOfRetriesOnStepFailure = 1;
   private String failureMessage;
   private Long maxIterations;
-  private Boolean runCurrentStep = Boolean.FALSE;
-  private String parentHierarchy;
-  private ForLoopConditionsEntity forLoopConditionsEntity;
 
   public TestCaseStepEntity clone() throws CloneNotSupportedException {
     TestCaseStepEntity exeStepEntity = (TestCaseStepEntity) super.clone();

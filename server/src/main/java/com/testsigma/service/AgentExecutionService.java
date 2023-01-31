@@ -1155,11 +1155,11 @@ public class AgentExecutionService {
     testCaseResultService.markTestCaseResultAsInProgress(testCaseResult);
   }
 
-  private Map<Long, Long> getStepGroupParentForLoopStepIdIndexes(TestCaseEntityDTO testCaseEntityDTO){
-    Map<Long, Long> dataIndex = testCaseEntityDTO.getStepGroupParentForLoopStepIdTestDataSetMap();
+  private Map<Long, Integer> getStepGroupParentForLoopStepIdIndexes(TestCaseEntityDTO testCaseEntityDTO){
+    Map<Long, Integer> dataIndex = testCaseEntityDTO.getStepGroupParentForLoopStepIdIndexes();
     if(!testCaseEntityDTO.getIsStepGroup()){
       dataIndex.put(ParameterTestDataProcessor.OVERRIDE_STEP_GROUP_STEP_WITH_TEST_CASE_PROFILE_ID,
-              testCaseEntityDTO.getTestDataIndex() == null ? 0L : testCaseEntityDTO.getTestDataIndex().longValue());
+              testCaseEntityDTO.getTestDataIndex() == null ? 0 : testCaseEntityDTO.getTestDataIndex());
     }
     return dataIndex;
   }
@@ -1372,7 +1372,7 @@ public class AgentExecutionService {
                                                             com.testsigma.model.TestDataSet testDataSet,
                                                             Long testPlanId, Map<String, String> environmentParams,
                                                             TestCaseEntityDTO testCaseEntityDTO, String environmentParamSetName,
-                                                            String dataProfile, Map<Long, Long> dataSetIndex) throws Exception {
+                                                            String dataProfile, Map<Long, Integer> dataSetIndex) throws Exception {
 
     List<Long> loopIds = new ArrayList<>();
     List<Long> skipIds = new ArrayList<>();

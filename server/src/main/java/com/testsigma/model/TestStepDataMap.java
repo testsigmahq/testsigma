@@ -37,6 +37,8 @@ public class TestStepDataMap {
   private String whileCondition;
   @JsonProperty("visual_enabled")
   private Boolean visualEnabled;
+  @JsonProperty("test-data-id")
+  private Long testDataId;
   @JsonProperty("migrated")
   private Boolean migrated = Boolean.FALSE;
 }

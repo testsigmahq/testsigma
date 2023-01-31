@@ -45,9 +45,17 @@ public interface TestStepRecorderMapper {
     List<TestStepRecorderDTO> mapDTOs(List<TestStepDTO> testStepDTO);
 
 
+    @Mapping(target = "ifConditionExpectedResults", expression = "java(mapIfConditionExpectedResults(testStepRecorderRequest))")
+    @Mapping(target = "toElement", source = "testStepRecorderRequest.dataMap.fromUiIdentifier")
     @Mapping(target = "dataMap", expression = "java(mapDataMap(testStepRecorderRequest.getDataMap()))")
     @Mapping(target = "stepGroupId", source = "testComponentId")
     @Mapping(target = "naturalTextActionId", source = "templateId")
+    @Mapping(target = "fromElement", source = "testStepRecorderRequest.dataMap.toUiIdentifier")
+    @Mapping(target = "forLoopTestDataId", source = "testStepRecorderRequest.dataMap.forLoop.testDataId")
+    @Mapping(target = "forLoopStartIndex", source = "testStepRecorderRequest.dataMap.forLoop.startIndex")
+    @Mapping(target = "forLoopEndIndex", source = "testStepRecorderRequest.dataMap.forLoop.endIndex")
+    @Mapping(target = "element", expression = "java(mapElement(testStepRecorderRequest))")
+    @Mapping(target = "attribute", source = "testStepRecorderRequest.dataMap.attribute")
     @Mapping(target = "addonTestData", source = "kibbutzPluginNlpData.testData")
     @Mapping(target = "addonTDF", ignore = true)
     @Mapping(target = "addonNaturalTextActionData", ignore = true)
@@ -109,7 +117,7 @@ public interface TestStepRecorderMapper {
                 .map(values -> values.stream().findFirst())
                 .map(nlpData -> nlpData.get().getType());
         return dataType.isPresent() ? dataType.get() : null;
-    }
+    }*/
 
     default ResultConstant[] mapIfConditionExpectedResults(TestStepRecorderRequest testStepRecorderRequest) {
         Optional<Object> ifCondtionExpectedResults = Optional.ofNullable(testStepRecorderRequest)
@@ -130,7 +138,7 @@ public interface TestStepRecorderMapper {
             return testStepRecorderRequest.getDataMap().getUiIdentifier();
         }
         return null;
-    }*/
+    }
 
     default TestStepType gettType(TestStepDTO dto) {
         TestStepType type = dto.getType();

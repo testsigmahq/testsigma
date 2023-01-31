@@ -8,5 +8,4 @@ public class StepResultForLoopMetadataEntity {
   private int index;
   private String iteration;
   private String testDataName;
-  private Boolean emptyIterations;
 }

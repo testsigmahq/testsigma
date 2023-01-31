@@ -33,6 +33,9 @@ public class TestStepRequest {
   private String element;
   private String fromElement;
   private String toElement;
+  private Integer forLoopStartIndex;
+  private Integer forLoopEndIndex;
+  private Long forLoopTestDataId;
   private Long testDataFunctionId;
   private Map<String, String> testDataFunctionArgs;
   private Long maxIterations;
@@ -54,7 +57,6 @@ public class TestStepRequest {
   private Boolean ignoreStepResult;
   private Boolean visualEnabled = false;
   private Long testDataProfileStepId;
-  private ForLoopConditionRequest forLoopConditionsRequest;
   @JsonProperty()
   private AddonTestStepTestData addonTDF;
 }

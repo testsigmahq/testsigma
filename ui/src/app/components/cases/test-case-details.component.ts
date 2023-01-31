@@ -30,7 +30,12 @@ import {XrayKeyWarningComponent} from "../../agents/components/webcomponents/xra
 @Component({
   selector: 'app-test-case-details',
   templateUrl: './test-case-details.component.html',
-  styles: []
+  styles: [`.test-case-details{
+    display: flex;
+    flex-direction: column;}
+  .theme-details-scroll{
+    height: calc(100vh - 8.5rem);
+  }`]
 })
 export class TestCaseDetailsComponent extends BaseComponent implements OnInit {
 

@@ -151,6 +151,7 @@ export class UploadsFormComponent extends BaseComponent implements OnInit {
       this.upload.latestVersion.fileSize = this.uploadedFileObject.size;
     }
     if (this.upload.id){
+      this.upload.name = event.target.files[0].name;
       this.upload.latestVersion = this.upload.latestVersion || new UploadVersion();
         this.upload.latestVersion.fileSize = this.uploadedFileObject.size;
     }

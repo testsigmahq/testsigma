@@ -222,8 +222,8 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         }
     }
 
-    public void updateElementName(String oldName, String newName) {
-        this.repository.updateElementName(newName, oldName);
+    public void updateElementName(String oldName, String newName, Long workspaceVersionId) {
+        this.repository.updateElementName(newName, oldName,workspaceVersionId);
     }
 
     private void updateChildLoops(Long parentId, String parameter, String newParameterName) {
@@ -243,8 +243,8 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         return this.repository.countAllByAddonActionIdIn(ids);
     }
 
-    public void updateAddonElementsName(String oldName, String newName) {
-        List<TestStep> testSteps = this.repository.findAddonElementsByName(oldName);
+    public void updateAddonElementsName(String oldName, String newName,Long workspaceVersionId) {
+        List<TestStep> testSteps = this.repository.findAddonElementsByName(oldName,workspaceVersionId);
         testSteps.forEach(testStep -> {
             Map<String, AddonElementData> elements = testStep.getAddonElements();
             for (Map.Entry<String, AddonElementData> entry : elements.entrySet()) {

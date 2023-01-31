@@ -202,7 +202,7 @@ export class ElementFormComponent extends BaseComponent implements OnInit {
     this.elementForm = new FormGroup({
       created_type: new FormControl(this.element.createdType),
       name: new FormControl(this.element.name, [Validators.required, Validators.minLength(4),
-        Validators.pattern('[a-zA-Z0-9_\\\- ]+$'), Validators.maxLength(250), this.noWhitespaceValidator]),
+        Validators.pattern(/^[a-zA-Z0-9~!@*()_[\]:;'.<>_\- ]+$/), Validators.maxLength(250), this.noWhitespaceValidator]),
       definition: new FormControl(this.element.locatorValue),
       locatorType: new FormControl(this.element.locatorType),
       screen_name: new FormControl(this.element.screenNameObj.name, [Validators.required,

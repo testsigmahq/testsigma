@@ -179,7 +179,7 @@ export class ElementsContainerComponent extends BaseComponent implements OnInit 
     this.elements.forEach((element: Element, $index) => {
       if (!element.saved && !element.errors) {
         this.formSubmitted = true;
-        if (element.name.match('^[a-zA-Z0-9_\\\- ]+$')) {
+        if (element.name.match(/^[a-zA-Z0-9~!@*()_[\]:;'.<>_\- ]+$/)) {
           element.saving = true;
           this.createScreenName(element.screenNameObj.name.toString()).subscribe((screenName) => {
             element.screenNameId = screenName.id;
@@ -236,7 +236,7 @@ export class ElementsContainerComponent extends BaseComponent implements OnInit 
 
     this.elementForm = new FormGroup({
       name: new FormControl(this.element.name, [Validators.required, Validators.minLength(4), Validators.maxLength(250),
-        Validators.pattern('[a-zA-Z0-9_\\\- ]+$'), this.isNameDuplicate(), this.noWhitespaceValidator]),
+        Validators.pattern(/^[a-zA-Z0-9~!@*()_[\]:;'.<>_\- ]+$/), this.isNameDuplicate(), this.noWhitespaceValidator]),
       screen_name: new FormControl(this.element.screenNameObj?.name, [Validators.required,
         Validators.minLength(4)]),
       definition: new FormControl(this.element.locatorValue, [Validators.required]),

@@ -179,7 +179,7 @@ export class TestStepResult extends ResultBase implements PageObject {
         let data = this.stepDetail.dataMap.testData?.[parameter];
         if (data) {
           let span_class = this.template?.allowedValues?.[parameter]?.length ? 'nlp-selected-data' : '';
-          parsedStep = parsedStep.replace('<TSTESTDAT ref="' + parameter + '">', '<span class="' + (span_class + ' spot-edit nlp-test-data ') + parameter + '" data-reference="' + parameter + '">')
+          parsedStep = parsedStep.replace('<TSTESTDAT ref="' + parameter + '">', '<span class="' + (span_class + ' spot-edit action-test-data ') + parameter + '" data-reference="' + parameter + '">')
         }
       })
       parsedStep = parsedStep.replace(new RegExp('</TSTESTDAT>', 'g'), '</span>')

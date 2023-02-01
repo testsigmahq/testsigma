@@ -116,7 +116,7 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
     capabilities.add(new WebDriverCapability(TSCapabilityType.VERSION, platformBrowserVersion.getVersion()));
     Browsers browser = platformBrowserVersion.getName();
     if (browser.equals(Browsers.Safari) &&
-      Float.parseFloat(platformBrowserVersion.getVersion()) > 12) {
+      Float.parseFloat(platformBrowserVersion.getDisplayVersion()) > 12) {
       capabilities.add(new WebDriverCapability(TSCapabilityType.SELENIUM_VERSION, "3.4.0"));
     } else {
       capabilities.add(new WebDriverCapability(TSCapabilityType.SELENIUM_VERSION, "3.8.1"));

@@ -78,7 +78,6 @@ public class TestStepDTO implements Cloneable, Serializable {
   private Long testDataId;
   private Integer testDataIndex;
   private String setName;
-  private TestCaseEntityDTO componentTestCaseEntity;
 
   public TestStepDTO clone() throws CloneNotSupportedException {
     TestStepDTO entity = (TestStepDTO) super.clone();

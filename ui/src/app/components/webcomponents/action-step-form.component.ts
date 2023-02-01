@@ -680,7 +680,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       delete this.testStep.testDataFunctionArgs;
       delete this.testStep.dataMap.testData;
       delete this.testStep.element;
-      delete this.testStep.dataMap.attribute;
+      delete this.testStep.attribute;
       return true
     } else {
       return false;
@@ -1300,6 +1300,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
             this.assignDataValue(this.getDataTypeString(dataMapValue.type, dataMapValue.value));
         });
         if (this.attributePlaceholder())
+          this.attributePlaceholder().innerHTML=this.testStep?.attribute;
           this.setStepTestData();
           this.attachActionTemplatePlaceholderEvents();
       }
@@ -1307,7 +1308,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         this.replacer.nativeElement.innerHTML = this.testStep?.action;
     }
   }
-  
+
   private setStepTestData(){
     this.testDataPlaceholder().forEach((item, index) => {
       let reference = item.dataset?.reference;

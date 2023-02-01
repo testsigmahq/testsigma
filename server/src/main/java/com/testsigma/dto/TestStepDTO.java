@@ -79,7 +79,7 @@ public class TestStepDTO implements Cloneable, Serializable {
   private Integer testDataIndex;
   private String setName;
 
-  
+
   public TestStepDTO clone() throws CloneNotSupportedException {
     TestStepDTO entity = (TestStepDTO) super.clone();
     List<TestStepDTO> steps = new ArrayList<>();

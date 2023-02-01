@@ -63,6 +63,11 @@ export class TestStepService {
   }
 
   public create(step: TestStep): Observable<TestStep> {
+    if (step.addonTestData){
+    step.addonTemplate.parameters.filter(a=> a.allowedValues.length==0).forEach(p=>{
+      let temp = p.reference;
+      step.action = step.action.replace(temp, step.addonTestData[temp].value);
+    });}
     return this.http.post<TestStep>(this.URLConstants.testStepsUlr, step.serialize(), {
       headers: this.httpHeaders.contentTypeApplication
     }).pipe(

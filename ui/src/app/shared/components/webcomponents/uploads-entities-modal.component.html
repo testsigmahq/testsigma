@@ -22,12 +22,30 @@
         class="list-container virtual-scroll-viewport"
         itemSize="27"
         style="max-height:261px;height:261px">
+        <div class="ts-col-100 pointer d-flex">
+        <div class="text-truncate  w-235">
+              <span
+                [textContent]="'Test Plans'">
+              </span>
+        </div>
+        <div>
+              <span
+                [textContent]="'Test Machines'">
+              </span>
+        </div></div>
         <div
           *cdkVirtualFor="let linkedEntity of modalData.linkedEntityList ; let index=index; let first=first"
           [class.border-separator-t-1]="first"
           class="list-view md-pm green-highlight">
           <div (click)="openLinkedEntity(linkedEntity.testPlanId)" class="ts-col-100 pointer d-flex" target="_blank">
-            <div class="text-truncate">
+
+            <div class="text-truncate w-235">
+              <span
+                [textContent]="linkedEntity.name"
+                [matTooltip]="linkedEntity.title">
+              </span>
+            </div>
+            <div>
               <span
                 [textContent]="linkedEntity.title"
                 [matTooltip]="linkedEntity.title">

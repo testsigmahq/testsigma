@@ -8,7 +8,7 @@
 
   <div class="d-flex align-items-center ml-auto"
        *ngIf="selectedUploads.length">
-    <button (click)="openDeleteDialog()"
+    <button (click)="checkForLinkedEntities()"
             [matTooltip]="'hint.message.common.delete_selected' | translate"
             class="btn icon-btn border-rds-2 ml-14"
             *ngIf="selectedUploads.length">

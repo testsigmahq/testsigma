@@ -1313,7 +1313,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     this.testDataPlaceholder().forEach((item, index) => {
       let reference = item.dataset?.reference;
       let testData = this.testStep.testData?.[reference];
-      item.setAttribute("data-test-data-type",testData.type);
+      item.setAttribute("data-test-data-type",testData?.type);
       if(testData.type == TestDataType.function) {
         item = this.testDataFunctionDataAssign(item,testData)
       }

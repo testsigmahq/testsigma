@@ -133,7 +133,9 @@ public class TestStepService extends XMLExportImportService<TestStep> {
     }
 
     public TestStep update(TestStep testStep) throws TestsigmaException {
-        if (testStep.getConditionType()==TestStepConditionType.LOOP_WHILE &&testStep.getMaxIterations()>101){
+        if (testStep.getConditionType()==TestStepConditionType.LOOP_WHILE
+                && testStep.getMaxIterations() != null
+                && testStep.getMaxIterations()>100){
             throw  new TestsigmaException(String.format("In While Loop, please set Max iterations between 1 to 100"));
         }
         testStep = updateDetails(testStep);
@@ -231,8 +233,8 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         }
     }
 
-    public void updateElementName(String oldName, String newName) {
-        this.repository.updateElementName(newName, oldName);
+    public void updateElementName(String oldName, String newName, Long workspaceVersionId) {
+        this.repository.updateElementName(newName, oldName,workspaceVersionId);
     }
 
     private void updateChildLoops(Long parentId, String parameter, String newParameterName) {
@@ -263,8 +265,8 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         return this.repository.countAllByAddonActionIdIn(ids);
     }
 
-    public void updateAddonElementsName(String oldName, String newName) {
-        List<TestStep> testSteps = this.repository.findAddonElementsByName(oldName);
+    public void updateAddonElementsName(String oldName, String newName,Long workspaceVersionId) {
+        List<TestStep> testSteps = this.repository.findAddonElementsByName(oldName,workspaceVersionId);
         testSteps.forEach(testStep -> {
             Map<String, AddonElementData> elements = testStep.getAddonElements();
             for (Map.Entry<String, AddonElementData> entry : elements.entrySet()) {
@@ -678,6 +680,10 @@ public class TestStepService extends XMLExportImportService<TestStep> {
 
     public Optional<TestStep> findTopByTestCaseIdOrderByPositionDesc(Long testCaseId) {
         return this.repository.findTopByTestCaseIdOrderByPositionDesc(testCaseId);
+    }
+
+    public void deleteStepsByStepGroupId(Long stepGroupId){
+        repository.deleteStepsByStepGroupId(stepGroupId);
     }
 
 }

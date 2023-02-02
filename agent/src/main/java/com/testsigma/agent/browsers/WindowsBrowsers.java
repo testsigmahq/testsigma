@@ -197,7 +197,7 @@ public class WindowsBrowsers {
     String version = NOT_FOUND;
     String edgeRegKey = searchRegistryByPattern(
       "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\",
-      ".*(Microsoft Edge.*)");
+      ".*(Microsoft Edge$)");
 
     if (StringUtils.isNotBlank(edgeRegKey)) {
       version = searchRegistryByPattern(
@@ -208,7 +208,7 @@ public class WindowsBrowsers {
     if (StringUtils.isBlank(version) || NOT_FOUND.equals(version)) {
       edgeRegKey = searchRegistryByPattern(
         "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\",
-        ".*(Microsoft Edge.*)");
+        ".*(Microsoft Edge$)");
 
       if (StringUtils.isNotBlank(edgeRegKey)) {
         version = searchRegistryByPattern(
@@ -220,9 +220,14 @@ public class WindowsBrowsers {
 
     if (StringUtils.isBlank(version) || NOT_FOUND.equals(version)) {
       String registryKey = "HKEY_CLASSES_ROOT\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppModel\\PackageRepository\\Packages";
-      String regexPattern = ".*Microsoft.MicrosoftEdge_(.*)";
+      String regexPattern = ".*Microsoft.MicrosoftEdge.Stable_(.*)";
       String regValue = searchRegistryByPattern(registryKey, regexPattern);
       version = regValue.split("_")[0];
+      if(StringUtils.isBlank(version) || NOT_FOUND.equals(version)) {
+        regexPattern = ".*Microsoft.MicrosoftEdge_(.*)";
+        regValue = searchRegistryByPattern(registryKey, regexPattern);
+        version = regValue.split("_")[0];
+      }
     }
     if (version.equals(NOT_FOUND))
       version = getBrowserVersionFromExe("Microsoft\\Edge\\Application\\msedge.exe");

@@ -19,10 +19,7 @@ import com.testsigma.dto.export.TestDeviceXMLDTO;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaDatabaseException;
 import com.testsigma.mapper.ExportTestDeviceMapper;
-import com.testsigma.model.TestDevice;
-import com.testsigma.model.TestDeviceSuite;
-import com.testsigma.model.TestPlan;
-import com.testsigma.model.UploadVersion;
+import com.testsigma.model.*;
 import com.testsigma.repository.TestDeviceRepository;
 import com.testsigma.repository.TestDeviceSuiteRepository;
 import com.testsigma.specification.SearchCriteria;
@@ -55,6 +52,10 @@ public class TestDeviceService extends XMLExportImportService<TestDevice> {
   private final ExportTestDeviceMapper mapper;
   private final TestPlanService testPlanService;
   private final UploadVersionService uploadVersionService;
+
+  public List<TestDevice> findByWorkspaceIdAndAppUploadId(Long workspaceId, Long appUploadId) {
+    return testDeviceRepository.findByWorkspaceVersionWorkspaceIdAndAppUploadId(workspaceId, appUploadId);
+  }
 
   public List<TestDevice> findByTargetMachine(Long agentId) {
     return testDeviceRepository.findTestDeviceByAgentId(agentId);
@@ -95,6 +96,14 @@ public class TestDeviceService extends XMLExportImportService<TestDevice> {
     this.handleEnvironmentSuiteMappings(testDevice);
     //this.suiteMappingService.save(executionEnvironment);
     return testDevice;
+  }
+
+  public void updateUploadVersion(Upload upload) {
+    List<TestDevice> testDevices = findByWorkspaceIdAndAppUploadId(upload.getWorkspace().getId(), upload.getId());
+    for(TestDevice testDevice : testDevices) {
+      testDevice.setAppUploadVersionId(upload.getLatestVersionId());
+      update(testDevice);
+    }
   }
 
   public void delete(Set<Long> executionEnvironmentIds) {

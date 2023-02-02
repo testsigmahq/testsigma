@@ -530,17 +530,7 @@ INSERT INTO `natural_text_actions` (`id`, `workspace_type`, `natural_text`, `dat
 INSERT INTO `natural_text_actions` (`id`, `workspace_type`, `natural_text`, `data`, `display_name`, `snippet_class`, `action`, `import_to_web`, `import_to_mobile_web`, `import_to_android_native`, `import_to_ios_native`, `created_date`, `updated_date`, `allowed_values`, `condition_type`) VALUES (30155,'IOSNative','Checkbox #{element} is  ${test-data}','{\"test-data\":{\"test-data\":\"checked/unchecked\"},\"element\":\"\\\\\\\\#{.*?}\"}','IfElement','com.testsigma.automator.actions.mobile.ios.ifconditional.CheckboxElementStatusAction','verify',NULL,NULL,NULL,NULL,'2021-12-22 14:54:08','2021-12-22 14:54:08','[\"checked\", \"unchecked\"]','IF_CONDITION');
 INSERT INTO `natural_text_actions` (`id`, `workspace_type`, `natural_text`, `data`, `display_name`, `snippet_class`, `action`, `import_to_web`, `import_to_mobile_web`, `import_to_android_native`, `import_to_ios_native`, `created_date`, `updated_date`, `allowed_values`, `condition_type`) VALUES (30156,'IOSNative','Element #{element} value is empty','{\"element\":\"\\\\\\\\#{.*?}\"}','IfElement','com.testsigma.automator.actions.mobile.ios.ifconditional.EmptyElementAction','verify',NULL,NULL,NULL,NULL,'2021-12-22 14:54:08','2021-12-22 14:54:08',NULL,'IF_CONDITION');
 
-
 /*!40000 ALTER TABLE `natural_text_actions` ENABLE KEYS */;
 UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2023-01-03 13:22:25

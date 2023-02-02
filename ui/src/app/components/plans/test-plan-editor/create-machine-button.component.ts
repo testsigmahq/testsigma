@@ -13,7 +13,7 @@ import {MapTestMachineFormComponent} from "./map-test-machine-form.component";
       #trigger="cdkOverlayOrigin" cdkOverlayOrigin
       [ngClass]="{'disabled': isDisabled}"
       [matTooltip]="tooltip"
-      class="theme-btn-primary ml-15"
+      class="theme-btn-clear-default ml-15"
       (click)="toggleDropdown()"
     >
       <span [translate]="'test_plan.add.machine'"></span>

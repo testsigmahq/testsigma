@@ -69,12 +69,26 @@
             [class.mouse-over]="testCaseResult?.testCase?.preRequisite">
             <button
               [disabled]="startSync"
-              *ngIf="(testCaseResult.iteration && !testCaseResult.parentResult?.isExecuting||!testCaseResult.iteration) && !testCaseResult?.isExecuting && isDry"
+              *ngIf="(!testCaseResult.parentResult?.isExecuting||!testCaseResult.iteration) && !testCaseResult?.isExecuting && isDry && activeTab == this.STEPS"
               (click)=" startExecution(getTestCaseResult()?.testDeviceResult?.testPlanResult?.dryTestPlan)"
               class="theme-btn-primary py-6">
               <i class="fa-filled-circled-play pr-4"></i>
               <span [translate]="startSync ? 'btn.common.please_wait' :'dry.testcase.btn.re_run'"></span>
             </button>
+          </div>
+          <button
+            *ngIf="(!testCaseResult.parentResult?.isExecuting||!testCaseResult.iteration) && !testCaseResult?.isExecuting && isDry && activeTab == this.STEPS_CURRENT"
+            class="theme-btn-primary py-6"
+            (click)="openDryRun()"
+          >
+            <i class="fa-filled-circled-play pr-7"></i>
+            <span
+              [translate]="'test_plan.btn.run'"></span>
+          </button>
+          <div
+            *ngIf="(!testCaseResult.parentResult?.isExecuting||!testCaseResult.iteration) && !testCaseResult?.isExecuting && isDry && activeTab == this.STEPS_CURRENT && version?.workspace?.isWebMobile"
+          >
+            <app-chrome-record-button></app-chrome-record-button>
           </div>
           <button
             *ngIf="testCaseResult?.isExecuting && isDry"
@@ -83,6 +97,14 @@
             <i class="fa-stop-circle-solid pr-4"></i>
             <span [translate]="'hint.message.common.stop'"></span>
           </button>
+          <div *ngIf="version?.workspace?.isMobileNative && !testCase?.deleted && activeTab== this.STEPS_CURRENT && (!testCaseResult.parentResult?.isExecuting||!testCaseResult.iteration) && !testCaseResult?.isExecuting && isDry">
+            <button
+              *ngIf="hasInspectorFeature()"
+              [routerLink]="['/td', 'record', testCase.workspaceVersionId]"
+              [queryParams]="{isRecord: true, isStepRecord: true, testCaseId:testCase.id}"
+              class="theme-btn-clear-default  ml-14"
+              [translate]="'elements.btn.record'"></button>
+          </div>
           <button
             *ngIf="!isDry"
             [disabled]="testCaseResult?.isExecuting"
@@ -245,8 +267,8 @@
       <ul class="tab-nav" role="tablist">
         <li class="nav-items" role="presentation">
           <a
-            (click)="activeTab = 'steps'"
-            [class.active]="activeTab == 'steps'"
+            (click)="activeTab = this.STEPS"
+            [class.active]="activeTab == this.STEPS"
             [class.md-height-border]="testCaseResult?.parentId"
             class="normal-text">
             <i class="fa-list"></i>
@@ -255,8 +277,8 @@
         </li>
         <li class="nav-items" role="presentation">
           <a
-            (click)="activeTab = 'steps_current'"
-            [class.active]="activeTab == 'steps_current'"
+            (click)="activeTab = this.STEPS_CURRENT"
+            [class.active]="activeTab == this.STEPS_CURRENT"
             [class.md-height-border]="testCaseResult?.parentId"
             class="normal-text">
             <i class="fa-list"></i>
@@ -265,9 +287,9 @@
         </li>
         <li class="nav-items" role="presentation">
           <a
-            (click)="activeTab = 'attachment'"
+            (click)="activeTab = this.ATTACHMENT"
             [class.md-height-border]="testCaseResult?.parentId"
-            [class.active]="activeTab == 'attachment'"
+            [class.active]="activeTab == this.ATTACHMENT"
             class="normal-text">
             <i class="fa-pin-alt"></i>
             <span [translate]="'message.common.attachments'"></span>
@@ -275,8 +297,8 @@
         </li>
       </ul>
       <div
-        [class.d-flex]="activeTab == 'steps'"
-        [class.align-items-center]="activeTab == 'steps'"
+        [class.d-flex]="activeTab == this.STEPS"
+        [class.align-items-center]="activeTab == this.STEPS"
         class="ml-auto">
         <app-auto-refresh
           *ngIf="(testCaseResult?.isQueued || testCaseResult?.parentResult?.isQueued)"
@@ -286,14 +308,14 @@
       </div>
     </div>
     <div class="d-flex-wrap ts-col-100 theme-details-scroll h-100">
-      <div class="ts-col-100 h-100 bg-default" *ngIf="activeTab == 'steps_current'">
+      <div class="ts-col-100 h-100 bg-default" *ngIf="activeTab == this.STEPS_CURRENT">
         <app-steps-list
           class="h-100"
           [testCaseId]="testCaseResult?.testCase?.id"
           [headerTabListhidden]="true"
         ></app-steps-list>
       </div>
-      <div *ngIf="activeTab == 'steps' && !testCaseResult?.isExecuting && !hasSteps && isTestCaseFetchingCompleted"
+      <div *ngIf="activeTab == this.STEPS && !testCaseResult?.isExecuting && !hasSteps && isTestCaseFetchingCompleted"
            class="empty-full-container w-100">
         <div class="empty-run-md" *ngIf="!testCaseResult.message"></div>
         <div class="empty-text" [translate]="'test_step.no_steps'"*ngIf="!testCaseResult.message"></div>
@@ -304,7 +326,7 @@
              [innerHTML]="queueSizeErrorMessage| SanitizeHtml"
              *ngIf="testCaseResult?.message && queueSizeErrorMessage"></div>
       </div>
-      <div class="d-flex ts-col-100 h-100" *ngIf="activeTab == 'steps'">
+      <div class="d-flex ts-col-100 h-100" *ngIf="activeTab == this.STEPS">
         <div
           *ngIf="(testCaseResult?.isExecuting || !testCaseResult?.isQueued)"
           class="h-100 rb-regular"
@@ -345,7 +367,7 @@
       </div>
       <div class="ts-col-100 h-100 bg-default">
         <app-result-attachment
-          *ngIf="activeTab == 'attachment'"
+          *ngIf="activeTab == this.ATTACHMENT"
           [attachmentRow]="'TESTCASE_RESULT'"
           [attachmentRowId]="testCaseResult?.id"
           class="h-100 d-flex"></app-result-attachment>

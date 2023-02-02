@@ -40,6 +40,15 @@
 	}
 }
 
+.text-activationErrorNote{
+  color: $error-note;
+}
+.text-new-error{
+  color: $text-new-error;
+}
+.bg-light-red{
+  background: $light-red-color;
+}
 .green-on-hover{
   transition: background 0.1s ease-in-out;
   &:hover, &:active, &.h-active{

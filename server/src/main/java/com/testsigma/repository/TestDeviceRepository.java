@@ -28,6 +28,8 @@ public interface TestDeviceRepository extends BaseRepository<TestDevice, Long> {
 
   Page<TestDevice> findAll(Specification<TestDevice> spec, Pageable pageable);
 
+  List<TestDevice> findByWorkspaceVersionWorkspaceIdAndAppUploadId(Long workspaceId, Long appUploadId);
+
   List<TestDevice> findByTestPlanId(Long testPlanId);
 
   @Modifying

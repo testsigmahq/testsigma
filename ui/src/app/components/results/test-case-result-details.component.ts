@@ -36,6 +36,10 @@ import {
   TestsigmaGitHubStarLoveComponent
 } from "../../shared/components/webcomponents/testsigma-github-star-love.component";
 import {UserPreferenceService} from "../../services/user-preference.service";
+import {DryRunFormComponent} from "../webcomponents/dry-run-form.component";
+import {ChromeRecorderService} from "../../services/chrome-recoder.service";
+import {WorkspaceVersionService} from "../../shared/services/workspace-version.service";
+import {WorkspaceVersion} from "../../models/workspace-version.model";
 
 @Component({
   selector: 'app-test-case-result-details',
@@ -51,7 +55,7 @@ export class TestCaseResultDetailsComponent extends BaseComponent implements OnI
   public testStepDetailsOpen = false;
   @ViewChild('detailsRef') overlayDir: CdkConnectedOverlay;
 
-  public activeTab: string;
+  public activeTab: "steps_current" | "steps" | "attachment";
   public autoRefreshSubscription: Subscription;
   public autoRefreshInterval: number = 10000;
   public isDisabledAutoRefresh: boolean = false;
@@ -66,7 +70,11 @@ export class TestCaseResultDetailsComponent extends BaseComponent implements OnI
   public hasSteps: boolean = true;
   public userPreference:UserPreference;
   public runResultEntityType: EntityType = EntityType.RUN_RESULT;
+  public version:WorkspaceVersion;
 
+  readonly STEPS = 'steps';
+  readonly STEPS_CURRENT = 'steps_current';
+  readonly ATTACHMENT = 'attachment';
   @ViewChild(RouterOutlet) outlet: RouterOutlet;
 
   constructor(public authGuard: AuthenticationGuard,
@@ -85,7 +93,9 @@ export class TestCaseResultDetailsComponent extends BaseComponent implements OnI
               public testPlanResultService: TestPlanResultService,
               public testPlanService: TestPlanService,
               public userPreferenceService: UserPreferenceService,
-              public testDeviceService: TestDeviceService) {
+              public testDeviceService: TestDeviceService,
+              public chromeRecorderService:ChromeRecorderService,
+              private workspaceVersionService: WorkspaceVersionService,) {
     super(authGuard, notificationsService, translate, toastrService);
   }
 
@@ -107,7 +117,7 @@ export class TestCaseResultDetailsComponent extends BaseComponent implements OnI
   }
 
   ngOnInit() {
-    this.activeTab = 'steps';
+    this.activeTab = this.STEPS;
     this.route.params.subscribe((params: Params) => {
       this.pushToParent(this.route, params);
       this.testCaseResultId = params.resultId;
@@ -334,6 +344,8 @@ export class TestCaseResultDetailsComponent extends BaseComponent implements OnI
   fetchTestCase(testCaseId) {
     this.testCaseService.show(testCaseId).subscribe(res => {
       this.testCase = res;
+      this.fetchVersion(this.testCase?.workspaceVersionId)
+      this.chromeRecorderService.recorderTestCase = this.testCase;
       if(res.preRequisite)
         this.fetchPreReqDryTestCaseResult(res.preRequisite);
     });
@@ -372,5 +384,41 @@ export class TestCaseResultDetailsComponent extends BaseComponent implements OnI
   setStepsCount(hasSteps:boolean){
     this.hasSteps = hasSteps;
     console.log(hasSteps);
+  }
+
+  /**
+   * This method trigers a DryRunFormModal.
+   */
+  openDryRun() {
+    this.matModal.open(DryRunFormComponent, {
+      height: "100vh",
+      width: '60%',
+      position: {top: '0px', right: '0px'},
+      panelClass: ['mat-dialog', 'rds-none'],
+      data: {
+        testCaseId: this.testCase.id
+      },
+    })
+  }
+
+  public fetchVersion(workspaceVersionId:number){
+    this.workspaceVersionService.show(workspaceVersionId).subscribe((res)=>{
+      this.version = res;
+      if (this.version.workspace.isWebMobile) {
+        this.chromeRecorderService.isChromeBrowser();
+        setTimeout(() => {
+          if (this.chromeRecorderService.isInstalled) {
+            this.chromeRecorderService.recorderVersion = this.version;
+            this.chromeRecorderService.recorderTestCase = this.testCase;
+          }
+        }, 200);
+    }})
+
+  }
+
+  hasInspectorFeature() {
+    return (
+      this.version && this.version.workspace.isAndroidNative
+    ) || (this.version && this.version.workspace.isIosNative);
   }
 }

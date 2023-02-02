@@ -100,7 +100,7 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
 
   public TestCase find(Long id) throws ResourceNotFoundException {
     return testCaseRepository.findById(id).orElseThrow(
-      () -> new ResourceNotFoundException("Couldn't find TestCase resource with id:" + id));
+            () -> new ResourceNotFoundException("Couldn't find TestCase resource with id:" + id));
   }
 
   public TestCaseEntityDTO find(Long id, Long environmentResultId, String testDataSetName, Long testCaseResultId) {
@@ -126,7 +126,7 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
       agentExecutionService.setTestPlan(testPlan);
       agentExecutionService.checkTestCaseIsInReadyState(testCase);
       agentExecutionService
-        .loadTestCase(testDataSetName, testCaseEntityDTO, testPlan, testDevice, workspace);
+              .loadTestCase(testDataSetName, testCaseEntityDTO, testPlan, testDevice, workspace);
     } catch (TestsigmaNoMinsAvailableException e) {
       log.debug("======= Testcase Error=========");
       log.error(e.getMessage(), e);
@@ -201,8 +201,8 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
     if (testCaseRequest.getTags() != null) {
       tagService.updateTags(testCaseRequest.getTags(), TagType.TEST_CASE, testCase.getId());
     }
-    if (testCase.getPreRequisite() != null && !testCase.getPreRequisite().equals(oldPreRequisite)){
-        testSuiteService.handlePreRequisiteChange(testCase);
+    if (testCase.getPreRequisite() != null && !testCase.getPreRequisite().equals(oldPreRequisite)) {
+      testSuiteService.handlePreRequisiteChange(testCase);
     }
     return testCase;
   }
@@ -249,6 +249,9 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
   }
 
   public Integer markAsDelete(List<Long> ids) {
+    for(Long id : ids) {
+      this.testStepService.deleteStepsByStepGroupId(id);
+    }
     return testCaseRepository.markAsDelete(ids);
   }
 
@@ -260,7 +263,7 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
     TestCase testcase = this.find(id);
     testCaseRepository.delete(testcase);
     Optional<Integrations> testProjectIntegration = integrationsService.findOptionalByApplication(Integration.TestProjectImport);
-    if(testProjectIntegration.isPresent()) {
+    if (testProjectIntegration.isPresent()) {
       Optional<EntityExternalMapping> entityExternalMapping =
               entityExternalMappingService.findByEntityIdAndEntityTypeAndApplicationId(testcase.getId(), EntityType.TEST_CASE, testProjectIntegration.get().getId());
       if (entityExternalMapping.isPresent()) {
@@ -274,11 +277,11 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
     return this.testCaseRepository.countByVersion(versionId);
   }
 
-  public Long testCaseCountByPreRequisite(Long testCaseId){
+  public Long testCaseCountByPreRequisite(Long testCaseId) {
     return this.testCaseRepository.countByPreRequisite(testCaseId);
   }
 
-  public List<Long> getTestCaseIdsByPreRequisite(Long testCaseId){
+  public List<Long> getTestCaseIdsByPreRequisite(Long testCaseId) {
     return this.testCaseRepository.getTestCaseIdsByPreRequisite(testCaseId);
   }
 
@@ -304,7 +307,7 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
     List<String> tags = tagService.list(TagType.TEST_CASE, parentCase.getId());
     tagService.updateTags(tags, TagType.TEST_CASE, testCase.getId());
     List<TestStep> steps = this.fetchTestSteps(parentCase, testCaseRequest.getStepIds());
-    if (steps.size()>0) {
+    if (steps.size() > 0) {
       List<TestStep> newSteps = new ArrayList<>();
       Map<Long, TestStep> parentStepIds = new HashMap<Long, TestStep>();
       Integer position = 0;
@@ -326,7 +329,7 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
         step.setPreRequisiteStepId(prerequiste != null ? prerequiste.getId() : null);
         step.setId(null);
         TestStep testDataProfileStep = parentStepIds.get(parentStep != null ? step.getTestDataProfileStepId() : null);
-        if(testDataProfileStep != null)
+        if (testDataProfileStep != null)
           step.setTestDataProfileStepId(testDataProfileStep.getId());
         step.setParentStep(parentStep);
         step = this.testStepService.create(step);
@@ -334,7 +337,7 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
         newSteps.add(step);
         position++;
       }
-      if(testCaseRequest.getIsReplace() != null && testCaseRequest.getIsReplace().booleanValue()) {
+      if (testCaseRequest.getIsReplace() != null && testCaseRequest.getIsReplace().booleanValue()) {
         createAndReplace(steps, testCase, parentCase);
       }
     }
@@ -430,15 +433,16 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
     if (importDTO.getIsCloudImport()) {
       return mapper.mapTestCasesCloudXMLList(xmlMapper.readValue(xmlData, new TypeReference<List<TestCaseCloudXMLDTO>>() {
       }));
-    }
-    else{
+    } else {
       return mapper.mapTestCasesXMLList(xmlMapper.readValue(xmlData, new TypeReference<List<TestCaseXMLDTO>>() {
       }));
     }
   }
+
   @Override
   public Optional<TestCase> findImportedEntity(TestCase testCase, BackupDTO importDTO) {
-   return testCaseRepository.findAllByWorkspaceVersionIdAndImportedId(importDTO.getWorkspaceVersionId(), testCase.getId());}
+    return testCaseRepository.findAllByWorkspaceVersionIdAndImportedId(importDTO.getWorkspaceVersionId(), testCase.getId());
+  }
 
   @Override
   public TestCase processBeforeSave(Optional<TestCase> previous, TestCase present, TestCase toImport, BackupDTO importDTO) {

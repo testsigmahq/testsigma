@@ -32,6 +32,7 @@ export abstract class TestCaseStepsListComponent extends BaseComponent implement
   @Output('onSelectedStepType') public onSelectedStepType = new EventEmitter<string>();
   @Input('isCheckHelpPreference') isCheckHelpPreference: boolean;
   @ViewChild('stepsVirtualScrollViewNonReorderDisabled') virtualScroll: CdkVirtualScrollViewport;
+  @Input('cdKScrollStepGroupId') cdKScrollStepGroupId: number;
   public isStepFetchCompletedTmp: Boolean = false;
 
   public testSteps: Page<TestStep>;
@@ -251,6 +252,9 @@ export abstract class TestCaseStepsListComponent extends BaseComponent implement
 
   drop(event: CdkDragDrop<TestStep[]>) {
     if (event.previousIndex != event.currentIndex) {
+      if(this.testSteps.content[event.currentIndex].isConditionalWhileLoop && event.previousIndex > event.currentIndex){
+        --event.currentIndex
+      }
       moveItemInArray(this.testSteps.content, event.previousIndex, event.currentIndex);
       this.testSteps.content = [...this.testSteps.content];
       let startIndex = event.previousIndex,
@@ -266,7 +270,7 @@ export abstract class TestCaseStepsListComponent extends BaseComponent implement
       let previousStep = this.testSteps.content[event.currentIndex - 1];
       console.log(previousStep, event.currentIndex - 1);
       if (previousStep) {
-        if (previousStep.isForLoop || previousStep.isConditionalIf || previousStep.isConditionalElseIf || previousStep.isConditionalElse || previousStep.isConditionalWhileLoop || previousStep.isWhileLoop) {
+        if (previousStep.isForLoop || previousStep.isConditionalIf || previousStep.isConditionalElseIf || previousStep.isConditionalElse || previousStep.isConditionalWhileLoop) {
           event.item.data.parentStep = previousStep;
           event.item.data.parentId = previousStep.id;
           if(previousStep.disabled) {
@@ -359,6 +363,7 @@ export abstract class TestCaseStepsListComponent extends BaseComponent implement
           if (step.stepGroupId)
             step.stepGroup = testCases.content.find(testCase => testCase.id == step.stepGroupId)
         })
+        this.scrollToGroupStepPosition();
       });
     }
   }
@@ -409,6 +414,12 @@ export abstract class TestCaseStepsListComponent extends BaseComponent implement
       setTimeout(() => {
         this.scrollToStepPosition(position);
       }, 200)
+    }
+  }
+  scrollToGroupStepPosition() {
+    if(this.cdKScrollStepGroupId){
+      let position:number = this.testSteps.content.findIndex(step => step.stepGroupId == this.cdKScrollStepGroupId);
+      this.scrollToStepPosition(position);
     }
   }
 

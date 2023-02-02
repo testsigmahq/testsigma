@@ -223,7 +223,7 @@ export class ChromeRecorderService {
   }
 
   public fetchSteps() {
-    let query = "testCaseId:" + this.recorderTestCase.id;
+    let query = "testCaseId:" + this.recorderTestCase?.id;
     return this.testStepService.findAll(query, 'position').subscribe(res => {
 
       let cloudUrlExpression = /(?:^|\s)((http[s]?:\/\/)?(?:localhost|[\w-]+(?:\.[\w-]+)+)(:\d+)?(\/\S*)?)|(file:\/\/\/.+(?:\.[\w-]+))/;

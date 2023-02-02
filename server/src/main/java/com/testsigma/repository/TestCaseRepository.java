@@ -94,4 +94,10 @@ public interface TestCaseRepository extends PagingAndSortingRepository<TestCase,
   Optional<TestCase> findTestCaseByWorkspaceVersionIdAndName(Long versionId, String name);
 
   Optional<TestCase> findAllByWorkspaceVersionIdAndImportedId(Long versionId, Long importedId);
+
+  @Query(value = "SELECT testCase FROM TestCase AS testCase " +
+          "JOIN TestStep AS testStep on testStep.stepGroupId = testCase.id ",
+          countQuery = "SELECT count(testCase.id) FROM TestCase AS testCase " +
+                  "JOIN TestStep AS testStep on testStep.stepGroupId = testCase.id " , nativeQuery= true )
+  List<TestCase> findAllByStepGroupId(@Param("stepGroupId") Long stepGroupId);
 }

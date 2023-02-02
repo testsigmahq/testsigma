@@ -1462,8 +1462,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     for (let i = 0; i < testDataPlaceHolders.length; i++) {
       const content = testDataPlaceHolders[i].innerHTML;
       if ((testDataPlaceHolders[i]?.contentEditable||Boolean(isReplacer)) && ((testDataPlaceHolders[i].getAttribute("data-test-data-type") == null) ||
-        ((testDataPlaceHolders[i].getAttribute("data-test-data-type") != null && (Boolean(isReplacer) ||content == '@| |' || content == '!| |' || content == '*| |'
-          || content == "$| <span class='test_data_place'></span> |" || content == "~| <span class='test_data_place'></span> |" || content == "" || !this.removeHtmlTags(testDataPlaceHolders[i].textContent).trim().length))))) {
+        ((testDataPlaceHolders[i].getAttribute("data-test-data-type") != null)))) {
         testDataPlaceHolders[i].innerHTML = dataName;
         testDataPlaceHolders[i].setAttribute("data-test-data-type", this.currentTestDataType);
         break;

@@ -25,6 +25,7 @@ import {UserPreferenceService} from "../../services/user-preference.service";
 import {UserPreference} from "../../models/user-preference.model";
 import {BackupFormComponent} from "../webcomponents/backup-form.component";
 import {ToastrService} from "ngx-toastr";
+import { InfiniteScrollableDataSource } from 'app/data-sources/infinite-scrollable-data-source';
 
 @Component({
   selector: 'app-list',
@@ -75,7 +76,7 @@ export class TestCasesListComponent extends BaseComponent implements OnInit {
   }
 
   get isStepGroup() {
-    return this.router.url.indexOf("/step_groups") > -1;
+    return this.router.url.indexOf("/step_groups") !== -1;
   }
 
   get urlString() {
@@ -436,5 +437,49 @@ export class TestCasesListComponent extends BaseComponent implements OnInit {
     if (!tempFilter) {
       this.userPreferenceService.save(userPreference).subscribe(res => this.userPreference = res)
     }
+  }
+  public fetchLinkedTestCases(stepGroupId) {
+    let testCases: InfiniteScrollableDataSource;
+    testCases = new InfiniteScrollableDataSource(this.testCaseService, "workspaceVersionId:" + this.versionId + ",deleted:false,stepGroupId:" + stepGroupId);
+    waitTillRequestResponds();
+    let _this = this;
+
+    function waitTillRequestResponds() {
+      if (testCases.isFetching)
+        setTimeout(() => waitTillRequestResponds(), 100);
+      else {
+        _this.openStepGroupDeleteDialog(testCases, stepGroupId);
+      }
+    }
+  }
+
+  private openStepGroupDeleteDialog(list, id) {
+
+    this.translate.get("message.common.confirmation.default").subscribe((res) => {
+      const dialogRef = this.matDialog.open(ConfirmationModalComponent, {
+        width: '450px',
+        data: {
+          testCaseId: id,
+          description: res,
+          isPermanentDelete: true,
+          linkedEntityList: list,
+          item : "Step group",
+          note: this.translate.instant('message.common.confirmation.requirement_type')
+        },
+        panelClass: ['matDialog', 'delete-confirm']
+      });
+      dialogRef.afterClosed()
+        .subscribe(result => {
+          if (result) {
+            this.selectedTestCases = id;
+            this.multipleDelete();
+          }
+        });
+    })
+  }
+  fetchTestCase($event,id){
+    $event.preventDefault();
+    this.fetchLinkedTestCases(id);
+    $event.stopPropagation();
   }
 }

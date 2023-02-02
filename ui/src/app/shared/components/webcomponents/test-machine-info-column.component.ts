@@ -140,7 +140,7 @@ export class TestMachineInfoColumnComponent implements OnInit {
       this.agentService.findAll("id:"+this.testDevice?.agentId).subscribe(res=> {
         if(res.content?.length){
           this.agent = res.content[0]
-          this.testDevice.platform = Agent.getPlatformFromOsType(this.agent.osType);
+          this.testDevice.platform = this.agent.getPlatformFromOsType(this.agent.osType);
           this.testDevice.osVersion = this.agent.osVersion;
           if(this.testDevice.browser!=null) {
             this.testDevice.browserVersion = this.agent.browsers.find(browser =>

@@ -49,6 +49,8 @@ export class LabEnvironmentsInfoComponent implements OnInit {
   @Input('testPlan') testPlan: TestPlan;
   @Input('testDevices') testDevices : TestDevice[];
 
+  public agent:Agent;
+
   constructor( private platformService: PlatformService,
                private devicesService: DevicesService,
                private agentService: AgentService) {
@@ -61,18 +63,17 @@ export class LabEnvironmentsInfoComponent implements OnInit {
     this.testDevices.forEach((env)=>{
       if(env.testPlanLabType == TestPlanLabType.Hybrid){
         this.agentService.findAll("id:"+env?.agentId).subscribe(res=> {
-          let agent;
           if(res.content.length){
-            agent = res.content[0];
+            this.agent = res.content[0];
             if(env.browser!=null){
-              env.platform = Agent.getPlatformFromOsType(agent.osType);
-              env.osVersion = agent.osVersion;
-              let browser = agent.browsers.find(browser => browser.name.toUpperCase() == env.browser)
+              env.platform = this.agent.getPlatformFromOsType(this.agent.osType);
+              env.osVersion = this.agent.osVersion;
+              let browser = this.agent.browsers.find(browser => browser.name.toUpperCase() == env.browser)
               env.browserVersion = browser.majorVersion;
             }
           }
-          if(env.deviceId && agent)
-            this.devicesService.findAll(agent.id).subscribe(res => {
+          if(env.deviceId && this.agent)
+            this.devicesService.findAll(this.agent.id).subscribe(res => {
               let agentDevice = res.content.find(device => device.id == env.deviceId);
               console.log(agentDevice);
               env.platform = AgentDevice.getPlatformFromMobileOStype(agentDevice.osName);

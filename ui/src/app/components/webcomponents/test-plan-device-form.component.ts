@@ -8,6 +8,8 @@ import {AgentDevice} from "../../agents/models/agent-device.model";
 import {PlatformBrowser} from "../../agents/models/platform-browser.model";
 import {MobileOsType} from "../../agents/enums/mobile-os-type.enum";
 import {AgentService} from "../../agents/services/agent.service";
+import {Browser} from "../../agents/models/browser.model";
+import {WebBrowser} from "../../enums/web-browser";
 
 @Component({
   selector: 'app-test-plan-device-form',
@@ -49,7 +51,7 @@ export class TestPlanDeviceFormComponent extends TestPlanPlatformOsVersionFormCo
 
   public fetchDevices(setValue?: Boolean) {
     this.isDeviceListInProgress = true;
-    if (this.platform)
+    if (this.platform){
     this.platformService.findAllDevices(this.platform, this.platformOsVersion, this.version.workspace.workspaceType, this.testPlanLabType).subscribe(res => {
       this.cloudDevices = res;
       this.cloudDevices.forEach(device => {
@@ -74,7 +76,11 @@ export class TestPlanDeviceFormComponent extends TestPlanPlatformOsVersionFormCo
       }
       this.environmentFormGroup?.controls?.['deviceName']?.setValue(this.cloudDevice?.name);
       this.isDeviceListInProgress =false;
-    });
+      if(this.cloudDevice){
+        this.setCloudDevice(this.cloudDevice);
+      }
+      }
+    )};
   }
 
   setOsVersion(versionId) {
@@ -95,19 +101,25 @@ export class TestPlanDeviceFormComponent extends TestPlanPlatformOsVersionFormCo
   }
 
   setCloudDevice(cloudDevice) {
-    this.environmentFormGroup.controls['platformDeviceId'].setValue(cloudDevice.id);
-    this.environmentFormGroup.controls['deviceName'].setValue(cloudDevice.name);
+    this.environmentFormGroup.controls['platformDeviceId'].setValue(cloudDevice?.id);
+    this.environmentFormGroup.controls['deviceName'].setValue(cloudDevice?.name);
+    if (this.version.workspace.isMobileWeb) {
+      let browser = new PlatformBrowser().deserialize({id: WebBrowser.CHROME, name: WebBrowser.CHROME});
+      if (this.platform.isIOS)
+        browser = new PlatformBrowser().deserialize({id: WebBrowser.SAFARI, name: WebBrowser.SAFARI});
+      this.environmentFormGroup.controls['browser']?.setValue(browser.name.toUpperCase());
+    }
   }
 
   setAgentDevice(agentDevice: AgentDevice) {
     this.agentDevice = null;
     this.agentDevice = agentDevice;
-    this.platformOsVersion=this.platformOsVersions.find(osVersion => osVersion.version==agentDevice.osVersion+".0")
+    this.platformOsVersion=this.platformOsVersions.find(osVersion => osVersion.version==agentDevice?.osVersion+".0")
     this.environmentFormGroup.controls['platformOsVersionId'].setValue(this.platformOsVersion.id)
-    this.environmentFormGroup.controls['deviceId'].setValue(agentDevice.id);
+    this.environmentFormGroup.controls['deviceId'].setValue(agentDevice?.id);
     if (this.version.workspace.isMobileWeb) {
       let browser = new PlatformBrowser().deserialize({id: "chrome", name: "Chrome"});
-      if (agentDevice.isIOS)
+      if (agentDevice?.isIOS)
         browser = new PlatformBrowser().deserialize({id: "safari", name: "Safari"});
       this.environmentFormGroup.controls['browser']?.setValue(browser.name.toUpperCase());
     }

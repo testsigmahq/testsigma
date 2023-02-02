@@ -266,8 +266,8 @@ public class ElementService extends XMLExportImportService<Element> {
 
   private void eventCallForUpdate(String oldName, Element element){
     if (!oldName.equals(element.getName())) {
-      testStepService.updateElementName(oldName, element.getName());
-      testStepService.updateAddonElementsName(oldName, element.getName());
+      testStepService.updateElementName(oldName, element.getName(), element.getWorkspaceVersionId());
+      testStepService.updateAddonElementsName(oldName, element.getName(),element.getWorkspaceVersionId());
     }
     publishEvent(element, EventType.UPDATE);
   }

@@ -1,3 +1,4 @@
+<div class="test-case-details">
 <div class="details-page-container">
   <app-placeholder-loader class="ts-col-100" *ngIf="!isTestCaseFetchingCompleted" [isDetails]="true"></app-placeholder-loader>
   <div
@@ -57,8 +58,15 @@
             <i class="fa-pencil-on-paper"></i>
           </a>
           <button
-            *ngIf="!testCase?.deleted"
+            *ngIf="!testCase?.deleted && !testCase?.isStepGroup"
             (click)="deleteTestCase()"
+            [matTooltip]="'hint.message.common.delete' | translate"
+            class="btn icon-btn border-rds-2 ml-14">
+            <i class="fa-trash-thin"></i>
+          </button>
+          <button
+            *ngIf="!testCase?.deleted && testCase?.isStepGroup"
+            (click)="fetchLinkedTestCases(testCase?.id)"
             [matTooltip]="'hint.message.common.delete' | translate"
             class="btn icon-btn border-rds-2 ml-14">
             <i class="fa-trash-thin"></i>
@@ -114,6 +122,6 @@
     </div>
   </div>
 </div>
-<div class="theme-details-scroll sm-h mt-10">
+<div class="theme-details-scroll mt-10">
   <router-outlet></router-outlet>
 </div>

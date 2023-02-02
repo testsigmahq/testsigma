@@ -74,14 +74,14 @@ public interface TestStepRepository extends JpaRepository<TestStep, Long> {
   @Query(value = "select * from test_steps where for_loop_test_data_id is null  and step.test_data_profile_step_id=:testDataProfileStepId", nativeQuery = true)
   List<TestStep> getChildStepsTestDataParameterUsingTestDataProfileId(@Param("testDataProfileStepId") Long testDataProfileStepId);
 
-  @Query(value = "update  test_steps step set element=:newName where step.element=:oldName", nativeQuery = true)
+  @Query(value = "update  test_steps step inner join test_cases on test_cases.id = step.test_case_id set step.element=:newName where step.element=:oldName and test_cases.workspace_version_id=:workspaceVersionId", nativeQuery = true)
   @Modifying
   void updateElementName(@Param("newName") String newName,
-                         @Param("oldName") String oldName);
+                         @Param("oldName") String oldName, @Param("workspaceVersionId")Long workspaceVersionId);
 
-  @Query(value = "select * from test_steps where addon_action_id is not null\n" +
-    "and JSON_SEARCH(JSON_EXTRACT(addon_natural_text_action_data , '$.\"elements\".*.*'), 'all', :oldName) is not null;\n", nativeQuery = true)
-  List<TestStep> findAddonElementsByName(@Param("oldName") String oldName);
+  @Query(value = "select * from test_steps step inner join test_cases on test_cases.id = step.test_case_id where addon_action_id is not null\n" +
+    "and JSON_SEARCH(JSON_EXTRACT(addon_natural_text_action_data , '$.\"elements\".*.*'), 'all', :oldName) is not null and test_cases.workspace_version_id=:workspaceVersionId\n", nativeQuery = true)
+  List<TestStep> findAddonElementsByName(@Param("oldName") String oldName, @Param("workspaceVersionId")Long workspaceVersionId);
 
   @Query(value = "select step.* from test_steps step where step.for_loop_start_index is null and step.parent_id is null and test_case_id in (select id from test_cases where test_data_id=:testDataId) and (condition_type is not null and condition_type > 0)", nativeQuery = true)
   List<TestStep> getTopLevelConditionalStepsExceptLoop(@Param("testDataId") Long testDataId);
@@ -120,4 +120,10 @@ public interface TestStepRepository extends JpaRepository<TestStep, Long> {
   @Modifying
   @Query("DELETE FROM TestStep step WHERE step.testCaseId = :testCaseId")
   void deleteStepsByTestCaseId(@Param("testCaseId") Long testCaseId);
+
+
+  @Modifying
+  @Query("DELETE FROM TestStep step WHERE step.stepGroupId = :stepGroupId")
+  void deleteStepsByStepGroupId(@Param("stepGroupId") Long stepGroupId);
+
 }

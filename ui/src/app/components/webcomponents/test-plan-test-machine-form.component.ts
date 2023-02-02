@@ -32,8 +32,10 @@ export class TestPlanTestMachineFormComponent extends TestPlanPlatformOsVersionF
       this.environmentFormGroup.patchValue({agentId: undefined});
       this.fetchPlatForms();
     }
-    if(this.isHybrid)
+    if(this.isHybrid){
       this.setTargetMachines();
+      this.fetchPlatForms();
+    }
   }
 
   postOsVersionFetch(setValue?: Boolean) {

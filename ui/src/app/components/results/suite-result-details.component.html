@@ -230,10 +230,9 @@
           [testSuiteResult]="suiteResult"></app-test-suite-test-case-results>
         <app-placeholder-loader *ngIf="!suiteResult"></app-placeholder-loader>
       </div>
-      <div class="ts-col-100 h-100 bg-default">
-
+      <div class="ts-col-100 h-100 bg-default"
+           *ngIf="activeTab == 'attachment' && !isCaseLevelExecution">
         <app-result-attachment
-          *ngIf="activeTab == 'attachment' && !isCaseLevelExecution"
           [attachmentRow]="'TESTSUITE_RESULT'"
           [attachmentRowId]="suiteResult.id"
           class="h-100 d-flex"></app-result-attachment>

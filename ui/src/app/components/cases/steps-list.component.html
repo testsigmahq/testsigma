@@ -116,6 +116,7 @@
       (onStepSelection)="selectedSteps($event)"
       (onStepDrag)="onPositionChange($event)"
       (onSelectedStepType)="onStepType($event)"
+      [cdKScrollStepGroupId]="this.cdKScrollStepGroupId"
     ></app-test-case-action-steps>
     <app-placeholder-loader *ngIf="!templates"></app-placeholder-loader>
     <div

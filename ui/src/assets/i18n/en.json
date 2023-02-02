@@ -95,7 +95,7 @@
   "message.common.confirmation.project_des":"You will lose all Test cases, Elements, Test data profiles, Custom functions, Uploads, Requirements, Test suites, Test plans, Run results and Environments associated with this {{Item}}.",
   "message.common.confirmation.testcase_des":"You will lose all Test steps, Run reports and Run configuration associated with this {{Item}}.",
   "message.common.confirmation.test_data_des":"You will lose all Run reports and Run configuration associated with this {{Item}}.",
-  "message.common.confirmation.upload_des":"You will lose all Uploaded version, Run reports and Run configuration associated with this {{Item}}.",
+  "message.common.confirmation.upload_des":"You will lose all Uploaded version, Run reports and Run configuration associated with thisthis {{Item}}.",
   "message.common.confirmation.test_suite_des":"You will lose all Run reports associated with this {{Item}}.",
   "message.common.confirmation.test_plan_des":"You will lose all Run reports associated with this {{Item}}.",
   "message.common.confirmation.uploads_des": "This file and all of its versions will be permanently deleted and not be retrievable. Please type DELETE to confirm",

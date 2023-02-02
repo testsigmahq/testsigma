@@ -146,7 +146,7 @@ export class ListComponent extends BaseComponent implements OnInit {
     }
   }
 
-  checkForLinkedTestCases(testData?,id?) {
+  checkForLinkedTestCases(testData?,id?,name?) {
     let testCases: InfiniteScrollableDataSource;
     let query = "workspaceVersionId:" + this.versionId + ",testData:" + encodeURI(testData?.join("#"))
     query = this.byPassSpecialCharacters(query);
@@ -160,7 +160,7 @@ export class ListComponent extends BaseComponent implements OnInit {
         setTimeout(() => waitTillRequestResponds(), 100);
       else {
         if (testCases.isEmpty)
-          _this.openDeleteDialog(id);
+          _this.openDeleteDialog(id,name);
         else
           _this.openLinkedTestCasesDialog(testCases);
       }
@@ -198,7 +198,7 @@ export class ListComponent extends BaseComponent implements OnInit {
         if (environmentResults.isEmpty)
           _this.uploadVersionService.findAll("uploadId:" + id).subscribe(res => {
             let uploadPaths = res.content.map(version =>"testsigma-storage:/" + version.path)
-            _this.checkForLinkedTestCases(uploadPaths,id);
+            _this.checkForLinkedTestCases(uploadPaths,id,name);
           })
         else
           _this.openLinkedUploadsDialog(environmentResults);
@@ -221,7 +221,7 @@ export class ListComponent extends BaseComponent implements OnInit {
   }
 
   openDeleteDialog(id?, name?: string) {
-    let message = id ? "message.common.confirmation.default" : "uploads.bulk_delete.confirmation.message";
+    let message = id ? 'message.common.confirmation.default' : 'uploads.bulk_delete.confirmation.message';
     this.translate.get(message, {FieldName: this.selectedUploads.length}).subscribe((res) => {
       const dialogRef = this.matDialog.open(ConfirmationModalComponent, {
         width: '450px',
@@ -231,7 +231,7 @@ export class ListComponent extends BaseComponent implements OnInit {
           title: name? 'Upload' : 'Uploads',
           item: 'upload',
           name: name ? name : 'multiple uploads',
-          note: this.translate.instant('message.common.confirmation.upload_des', {Item:'upload'})
+          note: this.translate.instant('message.common.confirmation.uploads_des', {Item:'upload  '})
         },
         panelClass: ['matDialog', 'delete-confirm']
       });

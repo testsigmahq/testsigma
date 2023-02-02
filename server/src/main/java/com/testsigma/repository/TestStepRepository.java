@@ -7,7 +7,6 @@
 
 package com.testsigma.repository;
 
-import com.testsigma.model.TestCase;
 import com.testsigma.model.TestStep;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -69,16 +68,11 @@ public interface TestStepRepository extends JpaRepository<TestStep, Long> {
 
   List<TestStep> findAllByTestCaseIdAndIdInOrderByPosition(Long testCaseId, List<Long> stepIds);
 
-  @Query(value = "update test_steps step set test_data=:newTestDataParameter where test_data_type=\"parameter\" and test_data=:oldTestDataParameter and (condition_type is null or condition_type=0)  and test_case_id in (select id from test_cases where test_data_id=:testDataId) and step.parent_id is null", nativeQuery = true)
-  @Modifying
-  void updateTopLevelTestDataParameter(@Param("newTestDataParameter") String newTestDataParameter,
-                                       @Param("oldTestDataParameter") String oldTestDataParameter,
-                                       @Param("testDataId") Long testDataId);
-  @Query(value = "update test_steps step set test_data=:newTestDataParameter where test_data_type=\"parameter\" and test_data=:oldTestDataParameter and for_loop_test_data_id is null  and step.test_data_profile_step_id=:testDataProfileStepId", nativeQuery = true)
-  @Modifying
-  void updateChildStepsTestDataParameterUsingTestDataProfileId(@Param("newTestDataParameter") String newTestDataParameter,
-                                                               @Param("oldTestDataParameter") String oldTestDataParameter,
-                                                               @Param("testDataProfileStepId") Long testDataProfileStepId);
+  @Query(value = "select * from test_steps where (condition_type is null or condition_type=0)  and test_case_id in (select id from test_cases where test_data_id=:testDataId) and step.parent_id is null", nativeQuery = true)
+  List<TestStep> getTopLevelTestDataParameter(@Param("testDataId") Long testDataId);
+
+  @Query(value = "select * from test_steps where for_loop_test_data_id is null  and step.test_data_profile_step_id=:testDataProfileStepId", nativeQuery = true)
+  List<TestStep> getChildStepsTestDataParameterUsingTestDataProfileId(@Param("testDataProfileStepId") Long testDataProfileStepId);
 
   @Query(value = "update  test_steps step inner join test_cases on test_cases.id = step.test_case_id set step.element=:newName where step.element=:oldName and test_cases.workspace_version_id=:workspaceVersionId", nativeQuery = true)
   @Modifying
@@ -92,11 +86,8 @@ public interface TestStepRepository extends JpaRepository<TestStep, Long> {
   @Query(value = "select step.* from test_steps step where step.for_loop_start_index is null and step.parent_id is null and test_case_id in (select id from test_cases where test_data_id=:testDataId) and (condition_type is not null and condition_type > 0)", nativeQuery = true)
   List<TestStep> getTopLevelConditionalStepsExceptLoop(@Param("testDataId") Long testDataId);
 
-  @Query(value = "update test_steps step set test_data=:newTestDataParameter where test_data_type=\"parameter\" and test_data=:oldTestDataParameter and for_loop_start_index is null and step.parent_id=:parentId", nativeQuery = true)
-  @Modifying
-  void updateChildStepsTestDataParameter(@Param("newTestDataParameter") String newTestDataParameter,
-                                         @Param("oldTestDataParameter") String oldTestDataParameter,
-                                         @Param("parentId") Long parentId);
+  @Query(value = "select * from test_steps where for_loop_start_index is null and step.parent_id=:parentId", nativeQuery = true)
+  List<TestStep> getChildStepsTestDataParameter(@Param("parentId") Long parentId);
 
   @Query(value = "select step.* from test_steps step where step.for_loop_start_index is null and step.parent_id=:parentId and (condition_type is not null and condition_type > 0)", nativeQuery = true)
   List<TestStep> getChildConditionalStepsExceptLoop(@Param("parentId") Long parentId);

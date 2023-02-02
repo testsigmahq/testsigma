@@ -9,6 +9,7 @@
 
 package com.testsigma.automator.actions.mobile.mobileweb.swipe;
 
+import com.testsigma.automator.constants.NaturalTextActionConstants;
 import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.actions.constants.ActionConstants;
 import com.testsigma.automator.actions.mobile.swipe.*;
@@ -19,7 +20,7 @@ public class MobileWebSwipeElementProxyAction extends MobileNativeSwipeElementPr
 
   @Override
   public void execute() throws Exception {
-    String direction = getTestData();
+    String direction = getTestData(NaturalTextActionConstants.TEST_DATA_MIDDLE_TOP_KEY);
     switch (direction) {
       case ActionConstants.TOP_TO_BOTTOM:
         SwipeFromTopToBottomAction topToBottom = (SwipeFromTopToBottomAction) this.initializeChildSnippet(SwipeFromTopToBottomAction.class);

@@ -11,6 +11,7 @@ import com.testsigma.dto.AddonNaturalTextActionDTO;
 import com.testsigma.dto.AddonNaturalTextActionParameterEntityDTO;;
 import com.testsigma.dto.AddonPluginTestDataFunctionDTO;
 import com.testsigma.dto.AddonPluginTestDataFunctionParameterEntityDTO;
+import com.testsigma.dto.export.CloudTestDataFunction;
 import com.testsigma.model.*;
 import com.testsigma.web.request.AddonNaturalTextActionRequest;
 import com.testsigma.web.request.AddonRequest;

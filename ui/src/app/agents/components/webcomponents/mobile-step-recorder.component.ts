@@ -292,7 +292,7 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
 
   public createStep(currentStep: TestStep, isSwitchStep?:boolean) {
     this.dialog.openDialogs?.find( dialog => dialog.componentInstance instanceof TestStepMoreActionFormComponent)?.close();
-    currentStep.action = currentStep.template.actionText(currentStep?.element?.toString(), currentStep?.testDataVal?.toString())
+    currentStep.action = currentStep.template.actionText(currentStep?.element?.toString(), currentStep?.dataMap?.testData?.toString())
     if (this.stepList.isAnyStepEditing) {
       if (this.stepList.editedStep.isConditionalType||this.isElseIfStep) {
         currentStep.parentId = this.stepList.editedStep.id;
@@ -428,7 +428,7 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
       currentStep.preRequisiteStepId = commonData.get('preRequisiteStepId').value;
       currentStep.conditionType = commonData.get('conditionType').value;
       currentStep.disabled = commonData.get('disabled').value;
-      currentStep.conditionIf = commonData.get('conditionIf')?.value;
+      currentStep.dataMap.conditionIf = commonData.get('conditionIf')?.value;
     } else {
       currentStep.waitTime = 30;
       currentStep.priority = TestStepPriority.MAJOR;
@@ -457,8 +457,7 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
     this.naturalTextActionsService.findAll("id:" + templateId).subscribe(templates => {
       let currentStep: TestStep = this.populateAttributesFromDetails(templates?.content[0]);
       if (Boolean(testData)) {
-        currentStep.testDataVal = testData;
-        currentStep.testDataType = TestDataType.raw;
+        currentStep.dataMap.testData['testDataType'] = TestDataType.raw;
       }
       if (Boolean(elementName)) {
         let locatorType = (mobileElement.accessibilityId) ? ElementLocatorType.accessibility_id :

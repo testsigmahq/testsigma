@@ -21,7 +21,6 @@ public interface NLPTemplateMapper {
     @Mapping(target = "deprecated", ignore = true)
     @Mapping(target = "applicationType", source = "workspaceType")
     @Mapping(target = "data.testData", ignore = true)
-    @Mapping(target = "allowedValues", expression = "java(mapAllowedValues(naturalTextActionDataDTO.getAllowedValues()))")
     NLPTemplateDTO mapDTO(NaturalTextActionsDTO naturalTextActionDataDTO);
 
     List<NLPTemplateDTO> mapDTOs(List<NaturalTextActionsDTO> naturalTextActionsDTOs);

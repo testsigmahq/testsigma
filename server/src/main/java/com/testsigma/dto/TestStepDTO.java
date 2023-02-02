@@ -10,15 +10,11 @@
 package com.testsigma.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.testsigma.constants.NaturalTextActionConstants;
-import com.testsigma.dto.export.CloudTestDataFunction;
 import com.testsigma.model.*;
-import com.testsigma.model.recorder.KibbutzTestStepTestData;
-import com.testsigma.model.recorder.TestStepNlpData;
+import com.testsigma.model.recorder.RecorderTestStepNlpData;
 import com.testsigma.model.recorder.TestStepRecorderDataMap;
 import com.testsigma.model.recorder.TestStepRecorderForLoop;
-import com.testsigma.service.ObjectMapperService;
 import lombok.Data;
 import org.json.JSONObject;
 
@@ -41,8 +37,7 @@ public class TestStepDTO implements Cloneable, Serializable {
 
   @JsonProperty("conditionIf")
   private ResultConstant[] ifConditionExpectedResults = new ResultConstant[0];
-  private String testData;
-  private String testDataType;
+  private TestStepDataMap dataMap;
   private String attribute;
   private String element;
   private String fromElement;
@@ -94,8 +89,7 @@ public class TestStepDTO implements Cloneable, Serializable {
   public Map<String, Object> getDataMapJson() {
     JSONObject json = new JSONObject();
     json.put("conditionIf", ifConditionExpectedResults);
-    json.put("testData", testData);
-    json.put("testDataType", testDataType);
+    json.put("value", dataMap);
     json.put("element", element);
     json.put("fromElement", fromElement);
     json.put("toElement", toElement);
@@ -112,16 +106,11 @@ public class TestStepDTO implements Cloneable, Serializable {
   public TestStepDataMap getDataMapBean() {
     TestStepDataMap testStepDataMap = new TestStepDataMap();
     testStepDataMap.setIfConditionExpectedResults(ifConditionExpectedResults);
-    testStepDataMap.setTestData(testData);
-    testStepDataMap.setTestDataType(testDataType);
+    testStepDataMap.setTestData(dataMap != null ? dataMap.getTestData() : null);
     testStepDataMap.setElement(element);
     testStepDataMap.setFromElement(fromElement);
     testStepDataMap.setToElement(toElement);
     testStepDataMap.setAttribute(attribute);
-    testStepDataMap.setAddonTDF(addonTDF);
-    DefaultDataGeneratorsDetails functionDetails = new DefaultDataGeneratorsDetails();
-    functionDetails.setId(testDataFunctionId);
-    functionDetails.setArguments(testDataFunctionArgs);
     TestStepForLoop forLoop = new TestStepForLoop();
     forLoop.setStartIndex(forLoopStartIndex);
     forLoop.setEndIndex(forLoopEndIndex);
@@ -131,23 +120,16 @@ public class TestStepDTO implements Cloneable, Serializable {
   }
 
   public TestStepRecorderDataMap mapTestData() {
-    ObjectMapperService mapperService = new ObjectMapperService();
-    TestStepRecorderDataMap testStepDataMap;
-    try {
-      testStepDataMap = mapperService.parseJsonModel(testData, TestStepRecorderDataMap.class);
-    }
-    catch(Exception e) {
-      //Map<String, String> map = mapperService.parseJson(testData, Map.class);
-      testStepDataMap = new TestStepRecorderDataMap();
-      TestStepNlpData testStepNlpData = new TestStepNlpData();
-      testStepNlpData.setValue(testData);
-      testStepNlpData.setType(testDataType);
-      testStepDataMap.setTestData(new HashMap<>() {{
-        put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA_RECORDER, testStepNlpData);
-      }});
-    }
-    if(testStepDataMap == null) {
-      testStepDataMap = new TestStepRecorderDataMap();
+    TestStepRecorderDataMap testStepDataMap = new TestStepRecorderDataMap();
+    if(dataMap != null && dataMap.getTestData() != null) {
+      for (String key : dataMap.getTestData().keySet()) {
+          RecorderTestStepNlpData recorderTestStepNlpData = new RecorderTestStepNlpData();
+          recorderTestStepNlpData.setValue(dataMap.getTestData().get(key).getValue());
+          recorderTestStepNlpData.setType(dataMap.getTestData().get(key).getType());
+          testStepDataMap.setTestData(new HashMap<>() {{
+            put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA_RECORDER, recorderTestStepNlpData);
+          }});
+      }
     }
     if(element != null) {
       testStepDataMap.setUiIdentifier(element);

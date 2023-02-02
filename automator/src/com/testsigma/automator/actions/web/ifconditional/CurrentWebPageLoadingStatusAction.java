@@ -1,6 +1,7 @@
 package com.testsigma.automator.actions.web.ifconditional;
 
 import com.testsigma.automator.actions.ElementAction;
+import com.testsigma.automator.constants.NaturalTextActionConstants;
 import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.actions.CustomExpectedConditions;
 import com.testsigma.automator.actions.constants.ActionConstants;
@@ -17,7 +18,7 @@ public class CurrentWebPageLoadingStatusAction extends ElementAction {
 
   @Override
   public void execute() throws Exception {
-    String status = getTestData();
+    String status = getTestData(NaturalTextActionConstants.TEST_DATA_LOADED_NOT_LOADED_KEY);
     switch (status) {
       case ActionConstants.LOADED:
         try {

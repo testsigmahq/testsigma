@@ -52,7 +52,8 @@ public class AddonService {
   private void saveTestDataFunctions(Addon pluginDB, List<AddonPluginTestDataFunction> testDataFunctionList) {
     for (AddonPluginTestDataFunction testDataFunction : testDataFunctionList) {
       testDataFunction.setAddonId(pluginDB.getId());
-      testDataFunctionService.create(testDataFunction);
+      testDataFunctionService.
+              create(testDataFunction);
     }
   }
 

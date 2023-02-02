@@ -1,5 +1,6 @@
 package com.testsigma.service.testproject;
 
+import com.testsigma.constants.NaturalTextActionConstants;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestProjectImportException;
 import com.testsigma.model.*;
@@ -152,15 +153,17 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
     }
 
     private void setTestDataIfExists(TestProjectTestStepRequest stepRequest, TestStep testStep, Boolean isStepGroup){
-        testStep.setTestDataType(TestDataType.raw.name());
         if(!stepRequest.getParameterMaps().isEmpty()) {
+            TestStepDataMap testStepDataMap = new TestStepDataMap();
+            testStepDataMap.setTestData(new HashMap<>());
+            TestStepNlpData testStepNlpData = new TestStepNlpData();
             String stepTestData = stepRequest.getParameterMaps().get(0).getValue();
             if(stepTestData.startsWith("[[")){
                 stepTestData = stepTestData.substring(2,stepTestData.length()-2);
                 if(this.projectParametersMap.containsKey(stepTestData)) {
                     stepTestData = this.projectParametersMap.get(stepTestData);
                 }
-                testStep.setTestDataType(TestDataType.raw.name());
+                testStepNlpData.setType(TestDataType.raw.name());
             } else if(stepTestData.startsWith("{{") && isStepGroup) {
                 stepTestData = stepTestData.substring(2,stepTestData.length()-2);
                 for(TestProjectStepParameter parameter : this.testCaseRequest.getParameters()) {
@@ -174,9 +177,11 @@ public class TestStepImportService extends BaseImportService<TestProjectTestStep
                 if(this.testCaseParametersMap.containsKey(stepTestData)) {
                     stepTestData = this.testCaseParametersMap.get(stepTestData);
                 }
-                testStep.setTestDataType(TestDataType.raw.name());
+                testStepNlpData.setType(TestDataType.raw.name());
             }
-            testStep.setTestData(stepTestData);
+            testStepNlpData.setValue(stepTestData);
+            testStepDataMap.getTestData().put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA, testStepNlpData);
+            testStep.setDataMap(testStepDataMap);
         }
     }
 

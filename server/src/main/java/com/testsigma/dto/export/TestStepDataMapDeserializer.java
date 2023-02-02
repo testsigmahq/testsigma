@@ -5,11 +5,13 @@ import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.testsigma.automator.constants.NaturalTextActionConstants;
 import com.testsigma.model.*;
 import com.testsigma.service.ObjectMapperService;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 @Log4j2
@@ -27,10 +29,14 @@ public class TestStepDataMapDeserializer extends JsonDeserializer<TestStepCloudD
       TestStepCloudDataMap testStepDataMap = new TestStepCloudDataMap();
       log.info("Parsing json to map: " + map);
       if (map.containsKey("test-data")) {
+        Map<String, String> testData = mapperService.parseJson(treeNode.get("test-data").get("test-data").toString(), Map.class);
+        TestStepNlpData testStepNlpData = new TestStepNlpData();
+        testStepNlpData.setValue(testData.get("value"));
+        testStepNlpData.setType(testData.get("type"));
+        Map<String, TestStepNlpData> dataMap = new HashMap<>();
+        dataMap.put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA, testStepNlpData);
+        testStepDataMap.setTestData(dataMap);
         if (treeNode.get("test-data").get("test-data")!=null){
-          Map<String, String> testData = mapperService.parseJson(treeNode.get("test-data").get("test-data").toString(), Map.class);
-          testStepDataMap.setTestData(testData.get("value").toString());
-          testStepDataMap.setTestDataType(testData.get("type").toString());
           if (testData.containsKey("test-data-function")) {
             testStepDataMap.setTestDataFunction(new ObjectMapper().convertValue(testData.get("test-data-function"),
                     CloudTestDataFunction.class));
@@ -49,8 +55,6 @@ public class TestStepDataMapDeserializer extends JsonDeserializer<TestStepCloudD
           }
         }
         else {
-          testStepDataMap.setTestData(map.get("test-data").toString());
-          testStepDataMap.setTestDataType(map.get("test-data-type").toString());
           if (map.containsKey("test-data-function")) {
             testStepDataMap.setTestDataFunction(new ObjectMapper().convertValue(map.get("test-data-function"),
                     CloudTestDataFunction.class));

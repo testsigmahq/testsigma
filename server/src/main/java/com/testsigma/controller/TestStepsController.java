@@ -57,8 +57,7 @@ public class TestStepsController {
     log.debug("GET /test_steps ");
     Specification<TestStep> spec = builder.build();
     Page<TestStep> testStep = this.service.findAll(spec, pageable);
-    List<TestStepDTO> testDataDTOS =
-      mapper.mapDTOs(testStep.getContent());
+    List<TestStepDTO> testDataDTOS = mapper.mapDTOs(testStep.getContent());
     return new PageImpl<>(testDataDTOS, pageable, testStep.getTotalElements());
   }
 

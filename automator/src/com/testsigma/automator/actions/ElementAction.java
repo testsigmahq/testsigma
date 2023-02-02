@@ -105,7 +105,15 @@ public abstract class ElementAction extends DriverAction {
 
   protected String getTestData(String testDataActionVarName) {
     TestDataPropertiesEntity testDataPropertiesEntity = getTestDataPropertiesEntity(testDataActionVarName);
+    if(testDataPropertiesEntity == null) {
+      return null;
+    }
     return testDataPropertiesEntity.getTestDataValue();
+  }
+
+  protected String getTestDataType(String testDataNlpVarName) {
+    TestDataPropertiesEntity testDataPropertiesEntity = getTestDataPropertiesEntity(testDataNlpVarName);
+    return testDataPropertiesEntity.getTestDataType();
   }
 
   protected FindByType getFindByType() {

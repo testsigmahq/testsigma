@@ -117,7 +117,7 @@
             <div
               class="ts-col-30 d-flex pointer" (click)="selectSuggestion(item)"
               [matTooltip]="'suggestion.runtime_vars.click_here.tooltip' | translate">
-               {{item.testDataVal}}
+              {{item.dataMap?.testData["test-data"]?.value? item.dataMap?.testData["test-data"]?.value: item.dataMap?.testData["test-data2"]?.value }}
             </div>
             <div class="text-dark ts-col-55 pl-5 loader-section mb-0">
 

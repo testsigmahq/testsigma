@@ -10,6 +10,7 @@
 package com.testsigma.mapper;
 
 
+import com.testsigma.automator.entity.DefaultDataGeneratorsEntity;
 import com.testsigma.dto.ElementDTO;
 import com.testsigma.dto.ElementMetaDataDTO;
 import com.testsigma.dto.StepResultMetadataDTO;

@@ -20,44 +20,46 @@
          *ngIf="testStep">
       <div class="details-container value-md md">
         <div class="details-items ts-col-100"
-             *ngIf="!testStep?.isRestStep && testStep?.testDataValue && !testStep?.addonTestData">
-          <div class="ts-col-100 d-flex">
-            <label class="details-title ts-col-25" [translate]="'test_step.results.test_data'"></label>
-            <div class="rb-medium"
-                 [class.pointer]="(testStep?.addonTestData && !testStep?.testDataValue.includes('::'))"
-                 (click)="(testStep?.addonTestData && !testStep?.testDataValue.includes('::')) ? openAddonDetails(testStep?.addonTestData?.testDataFunctionId) : ''"
-                 [translate]="testStep?.testDataValue">
+             *ngIf="!testStep?.isRestStep && testStep?.getAllTestData?.length && !testStep?.addonTestData">
+          <div *ngFor="let data of testStep?.getAllTestData">
+            <div class="ts-col-100 d-flex">
+              <label class="details-title ts-col-25" [translate]="'data.parameterNameValue'"></label>
+              <div class="rb-medium"
+                   [class.pointer]="(data['addonTDF'] && !data['value'].includes('::'))"
+                   (click)="(data['addonTDF'] && !data['value'].includes('::'))  ? openAddonDetails(data['addonTDF']?.testDataFunctionId) : ''"
+                   [translate]="data['value']">
+              </div>
             </div>
-          </div>
 
-          <div class="ts-col-100 mt-10">
-            <div *ngIf="testStep?.testDataFunctionId">
-              <div class="d-flex" *ngIf="canShowCustomFunctionsParameters(testStep?.testDataFunctionArgs)">
+            <div class="ts-col-100 mt-10" *ngIf="data['testDataFunction'] || data['addonTDF']">
+              <div *ngIf="data['testDataFunction']">
+                <div class="d-flex" *ngIf="canShowCustomFunctionsParameters(data['testDataFunction']?.args)">
+                  <label class="details-title ts-col-25"></label>
+                  <div class="mt-10">
+                    <span [translate]="'natural_text_action.custom_function.suggestion.input'" class="rb-medium"></span>
+                    <div *ngFor="let item of data['testDataFunction']?.args | keyvalue; let index=index" class="pl-5 pt-5">
+                      <span [textContent]="item.key" class="pl-5 rb-medium" *ngIf="!item.key.startsWith('arg')"></span>
+                      <span [textContent]="item.value" class="pl-5"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="data['addonTDF']" class="d-flex">
                 <label class="details-title ts-col-25"></label>
-                <div class="mt-10">
-                  <span [translate]="'natural_text_action.custom_function.suggestion.input'" class="rb-medium"></span>
-                  <div *ngFor="let item of testStep?.testDataFunctionArgs | keyvalue; let index=index" class="pl-5 pt-5">
-                    <span [textContent]="item.key" class="pl-5 rb-medium" *ngIf="!item.key.startsWith('arg')"></span>
-                    <span [textContent]="item.value" class="pl-5"></span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div *ngIf="testStep?.addonTestData" class="d-flex">
-              <label class="details-title ts-col-25"></label>
-              <div class="ts-col-100">
-                <div  *ngIf="canShowCustomFunctionsParameters(testStep?.addonTestData.testDataFunctionArguments)">
-                  <span [translate]="'natural_text_action.custom_function.suggestion.input'" class="rb-medium"></span>
-                  <div *ngFor="let item of testStep?.addonTestData?.testDataFunctionArguments | keyvalue; let index=index" class="pl-5 pt-5">
-                    <span [textContent]="item.key" class="pl-5 rb-medium" *ngIf="!item.key.startsWith('arg')"></span>
-                    <span [textContent]="item.value" class="pl-5"></span>
+                <div class="ts-col-100">
+                  <div  *ngIf="canShowCustomFunctionsParameters(data['addonTDF']?.testDataFunctionArguments)">
+                    <span [translate]="'natural_text_action.custom_function.suggestion.input'" class="rb-medium"></span>
+                    <div *ngFor="let item of data['addonTDF']?.testDataFunctionArguments | keyvalue; let index=index" class="pl-5 pt-5">
+                      <span [textContent]="item.key" class="pl-5 rb-medium" *ngIf="!item.key.startsWith('arg')"></span>
+                      <span [textContent]="item.value" class="pl-5"></span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+
 
         <div class="details-items ts-col-100"
              *ngIf="!testStep?.isRestStep && canShowAddonDetails(testStep?.addonTestData)">

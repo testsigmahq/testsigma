@@ -1,6 +1,28 @@
 package com.testsigma.automator.constants;
 
 public class NaturalTextActionConstants {
+  public static final String TEST_DATA_PROFILE_NAME_INDEX_KEY = "Test Data Profile Name/Test Data Set Index/Test Data Set Name";
+  public static final String TEST_DATA_VISIBLE_KEY = "visible/not visible";
+  public static final String TEST_DATA_CHECKED_KEY = "checked/unchecked";
+  public static final String TEST_DATA_ENABLED_KEY = "enabled/disabled/visible/etc.";
+  public static final String TEST_DATA_ENABLED_DISABLED_KEY = "enabled/disabled";
+  public static final String TEST_DATA_OK_KEY = "OK/Cancel";
+  public static final String TEST_DATA_LEFT_TO_RIGHT_KEY = "left to right/top to bottom/etc.";
+  public static final String TEST_DATA_SPACE_KEY = "space/backspace/enter";
+  public static final String TEST_DATA_ENABLE_KEY = "Enable/Disable";
+  public static final String TEST_DATA_VISIBLE_ENABLE_KEY = "visible/enabled/clickable/etc.";
+  public static final String TEST_DATA_PRESENT_KET = "present/enabled/displayed/etc.";
+  public static final String TEST_DATA_RIGHT_KEY = "right/left/top/bottom";
+
+  public static final String TEST_DATA_PRESENT_ENABLED_KEY = "present/enabled/checked/displayed/etc.";
+  public static final String TEST_DATA_VISIBLE_SELECTED_KEY = "visible/selected/enabled/clickable/etc.";
+  public static final String TEST_DATA_UP_TO_DOWN_TO_KEY = "up to/down to/to";
+  public static final String TEST_DATA_TOP_BOTTOM_KEY = "top/bottom";
+  public static final String TEST_DATA_BACK_FORWARD_KEY = "Back/Forward/Refresh";
+  public static final String TEST_DATA_LOADED_NOT_LOADED_KEY = "loaded/not loaded";
+  public static final String TEST_DATA_SELECTED_NOT_SELECTED = "selected/not selected";
+  public static final String TEST_DATA_MIDDLE_TOP_KEY = "{middle to top/top to bottom/etc.";
+
   public final static String TEST_STEP_DATA_MAP_KEY_TEST_DATA = "test-data";
   public final static String TEST_STEP_DATA_MAP_KEY_FROM_ELEMENT = "from-element";
   public final static String TEST_STEP_DATA_MAP_KEY_TO_ELEMENT = "to-element";

@@ -9,6 +9,7 @@
 
 package com.testsigma.model;
 
+import com.testsigma.automator.constants.NaturalTextActionConstants;
 import com.testsigma.converter.NaturalTextActionDataConverter;
 import com.testsigma.service.ObjectMapperService;
 import lombok.Data;
@@ -17,7 +18,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "natural_text_actions")
@@ -77,7 +80,18 @@ public class NaturalTextActions {
     this.allowedValues = new ObjectMapperService().convertToJson(allowedValues);
   }
 
-  public List getAllowedValues(){
-    return new ObjectMapperService().parseJson(this.allowedValues, List.class);
+  public LinkedHashMap<String, List> getAllowedValues() {
+    ObjectMapperService objectMapperService = new ObjectMapperService();
+    try {
+      return (LinkedHashMap<String, List>) objectMapperService.parseJsonModel(this.allowedValues, Map.class);
+    } catch(Exception e) {
+      List list = objectMapperService.parseJson(this.allowedValues, List.class);
+      if(list != null) {
+        return new LinkedHashMap<>() {{
+          put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA, list);
+        }};
+      }
+    }
+    return null;
   }
 }

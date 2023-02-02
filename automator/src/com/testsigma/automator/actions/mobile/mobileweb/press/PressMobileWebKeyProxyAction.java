@@ -1,5 +1,6 @@
 package com.testsigma.automator.actions.mobile.mobileweb.press;
 
+import com.testsigma.automator.constants.NaturalTextActionConstants;
 import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.actions.constants.ActionConstants;
 import com.testsigma.automator.actions.web.verify.VerifyElementProxyAction;
@@ -8,7 +9,7 @@ import com.testsigma.automator.actions.web.verify.VerifyElementProxyAction;
 public class PressMobileWebKeyProxyAction extends VerifyElementProxyAction {
   @Override
   public void execute() throws Exception {
-    String key = getTestData();
+    String key = getTestData(NaturalTextActionConstants.TEST_DATA_SPACE_KEY);
     switch (key) {
       case ActionConstants.SPACE:
         MobileWebPressSpaceAction space = (MobileWebPressSpaceAction) this.initializeChildSnippet(MobileWebPressSpaceAction.class);

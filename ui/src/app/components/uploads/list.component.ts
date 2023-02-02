@@ -166,6 +166,7 @@ export class ListComponent extends BaseComponent implements OnInit {
       }
     }
   }
+
   private openLinkedTestCasesDialog(list) {
     this.translate.get("uploads.linked.with.test_cases").subscribe((res) => {
       this.matDialog.open(LinkedEntitiesModalComponent, {
@@ -180,11 +181,10 @@ export class ListComponent extends BaseComponent implements OnInit {
     });
   }
 
-
-
   checkForLinkedEntities(id?: number, name?: string) {
     this.checkForLinkedEnvironments(id, name);
   }
+
   checkForLinkedEnvironments(id, name?: string) {
     let environmentResults: InfiniteScrollableDataSource;
     environmentResults = new InfiniteScrollableDataSource(this.environmentService, "appUploadId@"+(id ? id : this.selectedUploads.join("#"))+",entityType:TEST_PLAN");
@@ -206,7 +206,7 @@ export class ListComponent extends BaseComponent implements OnInit {
       }
     }
   }
-
+  
   private  openLinkedUploadsDialog(list) {
     this.translate.get("message.delete.uploads").subscribe((res) => {
       this.matDialog.open(UploadEntitiesModalComponent, {

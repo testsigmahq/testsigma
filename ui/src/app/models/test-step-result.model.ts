@@ -172,7 +172,7 @@ export class TestStepResult extends ResultBase implements PageObject {
         if (data) {
           let value = data.value;
           value = this.replaceAddonTestData(data?.type, value);
-          parsedStep = parsedStep.replace(new RegExp(this.template?.data?.['testData']?.[parameter].replace(/\\\\/g, '\\')), '<TSTESTDAT ref="' + parameter + '">' + value + '</TSTESTDAT>')
+          parsedStep = parsedStep.replace(new RegExp("\\$\\{"+(parameter)+"\\}"), '<TSTESTDAT ref="' + parameter + '">' + value + '</TSTESTDAT>')
         }
       })
       Object.keys(this.template?.data?.['testData']).forEach(parameter => {

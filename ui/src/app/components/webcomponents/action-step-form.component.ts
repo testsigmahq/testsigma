@@ -1295,7 +1295,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         this.currentTemplate = this.testStep.template;
         if (this.testStep?.element)
           this.assignElement(this.testStep?.element, this.elementPlaceholder()[0]);
-        this.testStep?.dataMap?.testData.forEach((dataMapValue: TestDataMapValue, key: string) => {
+        this.testStep?.dataMap?.testData?.forEach((dataMapValue: TestDataMapValue, key: string) => {
           if (!dataMapValue.value && !dataMapValue.type)
             this.assignDataValue(this.getDataTypeString(dataMapValue.type, dataMapValue.value));
         });

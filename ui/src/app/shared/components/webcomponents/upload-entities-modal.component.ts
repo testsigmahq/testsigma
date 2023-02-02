@@ -31,8 +31,10 @@ export class UploadEntitiesModalComponent extends LinkedEntitiesModalComponent {
       res=> {
         this.setTestPlanNames(res.content)
       },
-      error=>{console.log(error)}
-      )
+      error=>{
+              console.log(error)
+           }
+         )
       }
 
   openLinkedEntity(id) {

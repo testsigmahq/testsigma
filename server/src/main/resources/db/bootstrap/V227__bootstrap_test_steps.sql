@@ -394,14 +394,5 @@ INSERT INTO `test_steps` (`id`, `action`, `pre_requisite`, `priority`, `step_id`
 INSERT INTO `test_steps` (`id`, `action`, `pre_requisite`, `priority`, `step_id`, `test_case_id`, `step_group_id`, `natural_text_action_id`, `type`, `addon_test_data`, `addon_elements`, `condition_if`, `test_data`, `element`, `attribute`, `for_loop_start_index`, `for_loop_end_index`, `for_loop_test_data_id`, `addon_test_data_function`, `test_data_function_id`, `test_data_function_args`, `max_iterations`, `wait_time`, `condition_type`, `parent_id`, `copied_from`, `disabled`, `visual_enabled`, `ignore_step_result`, `addon_plugin_tdf_data`, `addon_natural_text_action_data`, `addon_action_id`, `imported_id`, `test_data_profile_step_id`, `created_date`, `updated_date`) VALUES (1430,'Tap on back_navigation',NULL,'MAJOR',18,171,NULL,20073,'ACTION_TEXT',NULL,NULL,'[]',NULL,'back_navigation',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,30,NULL,NULL,NULL,0,0,0,NULL,NULL,NULL,NULL,NULL,'2022-01-07 12:48:49','2022-01-07 13:17:00');
 /*!40000 ALTER TABLE `test_steps` ENABLE KEYS */;
 UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2023-01-25 17:13:08

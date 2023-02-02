@@ -34,7 +34,7 @@ public interface TestStepMapper {
 
 //  @Mapping(target = "testDataFunction", expression = "java(this.mapTestDataFunction(testStepDataMap.getTestDataFunction()))")
   @Mapping(target = "forLoop", expression = "java(this.mapForLoop(testStepDataMap.getForLoop()))")
-  @Mapping(target = "testDataMap", expression = "java(this.mapTestData(testStepDataMap.getTestData()))")
+  @Mapping(target = "testData", expression = "java(this.mapTestData(testStepDataMap.getTestData()))")
   TestStepDataMapEntityDTO mapDataMap(TestStepDataMap testStepDataMap);
 
   TestStepForLoopEntityDTO mapForLoop(TestStepForLoop testStepForLoop);

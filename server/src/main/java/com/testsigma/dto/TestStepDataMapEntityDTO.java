@@ -11,9 +11,7 @@ import java.util.Map;
 public class TestStepDataMapEntityDTO {
   private Object ifConditionExpectedResults;
   private TestStepConditionType conditionType;
-  private Map<String, TestStepNlpDataEntityDTO> testDataMap;
-  private DefaultDataGeneratorsEntity testDataFunction;
-  private String testDataType;
+  private Map<String, TestStepNlpDataEntityDTO> testData;
   private String element;
   private String fromElement;
   private String toElement;

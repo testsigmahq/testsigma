@@ -1785,7 +1785,7 @@
   "step.create.help.expert": "Get expert help for Test Case creation,",
   "step.create.help.expert_msg": "Chat with Us!",
   "td_nav.add_ons": "Addons",
-  "message.delete.uploads": "This Upload is used in the below Test Devices, Please remove the mapping and try again.",
+  "message.delete.uploads": "Deleting this upload will cause failures for the listed test plans, please edit the test plans to change the upload used before proceeding",
   "test_plan_form.machine-empty": "You now need to install the Testsigma Agent then select your {{LabelName}}",
   "test_plan_form.agents_info": "Click here to know more about this",
   "test_plan_form.install": "Install",

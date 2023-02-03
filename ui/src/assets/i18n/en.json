@@ -2147,5 +2147,6 @@
   "step_group.delete.impacted.message":  "Deleting this Step Group will impact <span class='text-red-warning'>{{Testcases}} Test cases</span>",
   "step_group.testcase.listing":  "{{name}} <span class='text-t-secondary'>{{isEdited}}</span>",
   "step_group.delete.zero_impacted.message":  "No test cases will be impacted on deleting this step group.",
-  "step_group.summary.title": "Step Group Details"
+  "step_group.summary.title": "Step Group Details",
+  "data.parameterNameValue":"Test-Data"
 }

@@ -1,5 +1,6 @@
 package com.testsigma.controller.recorder;
 
+import com.testsigma.constants.NaturalTextActionConstants;
 import com.testsigma.dto.RestStepResponseDTO;
 import com.testsigma.dto.TestStepDTO;
 import com.testsigma.exception.ResourceNotFoundException;
@@ -8,13 +9,8 @@ import com.testsigma.mapper.ElementMapper;
 import com.testsigma.mapper.TestStepMapper;
 import com.testsigma.mapper.recorder.TestStepRecorderMapper;
 import com.testsigma.mapper.recorder.UiIdentifierMapper;
-import com.testsigma.model.Element;
-import com.testsigma.model.TestStep;
-import com.testsigma.model.TestStepPriority;
-import com.testsigma.model.TestStepType;
-import com.testsigma.model.recorder.TestStepRecorderDTO;
-import com.testsigma.model.recorder.TestStepRecorderRequest;
-import com.testsigma.model.recorder.UiIdentifierRequest;
+import com.testsigma.model.*;
+import com.testsigma.model.recorder.*;
 import com.testsigma.service.ElementService;
 import com.testsigma.service.TestStepService;
 import com.testsigma.specification.TestStepSpecificationsBuilder;
@@ -36,6 +32,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping(path = "/os_recorder/v2/test_steps", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -96,6 +94,7 @@ public class TestStepsRecorderController {
 
 
             TestStepRequest testStepRequest = testStepRecorderMapper.mapRequest(request);
+            replaceCamelCase(testStepRequest.getDataMap());
             mapper.merge(testStepRequest, testStep);
             testStep.setUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 
@@ -108,6 +107,7 @@ public class TestStepsRecorderController {
             testStepRecorderDTO.setUiIdentifierDTO(uiIdentifierMapper.mapDTO(uiIdentifierMapper.map(element)));
         } else{
             TestStepRequest testStepRequest = testStepRecorderMapper.mapRequest(request);
+            replaceCamelCase(testStepRequest.getDataMap());
             testStep = this.service.update(mapper.map(testStepRequest));
             testStepDTO = mapper.mapDTO(testStep);
             testStepRecorderDTO = testStepRecorderMapper.mapDTO(testStepDTO);
@@ -124,6 +124,7 @@ public class TestStepsRecorderController {
         if(request.getType() == TestStepType.NLP_TEXT) {
             request.setType(TestStepType.ACTION_TEXT);
         }
+        //replaceCamelCase(request.getDataMap());
         if(request.getIsStepRecorder() && request.getUiIdentifierRequest() != null){
             log.info("Create Test step from Step recorder");
             UiIdentifierRequest uiIdentifierRequest = request.getUiIdentifierRequest();
@@ -133,6 +134,7 @@ public class TestStepsRecorderController {
             request.getDataMap().setUiIdentifier(element.getName());
 
             TestStepRequest testStepRequest = testStepRecorderMapper.mapRequest(request);
+            replaceCamelCase(testStepRequest.getDataMap());
             TestStep testStep = mapper.map(testStepRequest);
             testStep.setCreatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
             if(testStep.getPosition() == null) {
@@ -149,6 +151,7 @@ public class TestStepsRecorderController {
             testStepRecorderDTO.setUiIdentifierDTO(uiIdentifierMapper.mapDTO(uiIdentifierMapper.map(element)));
         } else{
             TestStepRequest testStepRequest = testStepRecorderMapper.mapRequest(request);
+            replaceCamelCase(testStepRequest.getDataMap());
             TestStep testStep = mapper.map(testStepRequest);
             if(testStep.getPosition() == null) {
                 Optional<TestStep> lastTestStep = service.findTopByTestCaseIdOrderByPositionDesc(testStep.getTestCaseId());
@@ -230,5 +233,23 @@ public class TestStepsRecorderController {
             testStepRecorderDTOS.add(testStepRecorderDTO);
         }
         return testStepRecorderDTOS;
+    }
+
+    private void replaceCamelCase(TestStepDataMap testStepDataMap) {
+        Map<String, TestStepNlpData> testDataMap = new HashMap<>();
+        for (Iterator<String> keys = testStepDataMap.getTestData().keySet().iterator(); keys.hasNext();) {
+            String key = keys.next();
+            TestStepNlpData testStepNlpData = testStepDataMap.getTestData().get(key);
+            if(key.equals("testData1")) {
+                testDataMap.put("test-data1", testStepNlpData);
+            }
+            else if(key.equals("testData2")) {
+                testDataMap.put("test-data2", testStepNlpData);
+            }
+            else {
+                testDataMap.put("test-data", testStepNlpData);
+            }
+        }
+        testStepDataMap.setTestData(testDataMap);
     }
 }

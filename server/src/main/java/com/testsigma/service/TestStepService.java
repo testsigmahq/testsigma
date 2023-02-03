@@ -339,6 +339,7 @@ public class TestStepService extends XMLExportImportService<TestStep> {
     @Override
     public List<TestStep> readEntityListFromXmlData(String xmlData, XmlMapper xmlMapper, BackupDTO importDTO) throws JsonProcessingException, ResourceNotFoundException {
         if (importDTO.getIsCloudImport()) {
+            xmlData = xmlData.replaceAll("API_STEP", "REST_STEP");
             List<TestStep> steps = mapper.mapTestStepsCloudList(xmlMapper.readValue(xmlData, new TypeReference<List<TestStepCloudXMLDTO>>() {
             }));
             HashMap<TestStep, String> stepsMap= this.affectedTestCaseXLSExportService.getStepsMap();

@@ -23,7 +23,11 @@ import java.util.Map;
   nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
   nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface TestStepMapper {
+  @Mapping(target = "dataMap", expression = "java(testStep.getDataMap())")
+  TestStepXMLDTO mapTestStep(TestStep testStep);
+
   List<TestStepXMLDTO> mapTestSteps(List<TestStep> testSteps);
+
   List<TestStepDTO> mapTestStepsToDTO(List<TestStep> testSteps);
   TestStep map(TestStepDTO testStepDTO);
 

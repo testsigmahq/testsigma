@@ -402,7 +402,7 @@ export class TestStep extends Base implements PageObject {
   public serialize(): JSON {
     let output = serialize(this);
     let conditionIf: string[] = [];
-    this.dataMap.conditionIf?.forEach(key => {
+    this.dataMap?.conditionIf?.forEach(key => {
       if (key == ResultConstant.SUCCESS)
         conditionIf.push("0")
       else if (key == ResultConstant.FAILURE)

@@ -206,7 +206,6 @@ export class ListComponent extends BaseComponent implements OnInit {
       }
     }
   }
-  
   private  openLinkedUploadsDialog(list) {
     this.translate.get("message.delete.uploads").subscribe((res) => {
       this.matDialog.open(UploadEntitiesModalComponent, {

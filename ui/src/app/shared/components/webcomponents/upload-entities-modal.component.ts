@@ -22,20 +22,19 @@ export class UploadEntitiesModalComponent extends LinkedEntitiesModalComponent {
     this.setTestPlans(this.modalData?.linkedEntityList.cachedItems)
   }
 
-  setTestPlans(testdevices){
-   let testPlanIds = [];
-   testdevices.forEach((data: TestDevice) => {
-     testPlanIds.push(data.testPlanId);
-   })
-    this.testPlanService.findAll("id@"+ testPlanIds.join("#")).subscribe(
-      res=> {
+  setTestPlans(testdevices) {
+    let testPlanIds = [];
+    testdevices.forEach((data: TestDevice) => {
+      testPlanIds.push(data.testPlanId);
+    })
+    this.testPlanService.findAll("id@" + testPlanIds.join("#")).subscribe(
+      res => {
         this.setTestPlanNames(res.content)
       },
-      error=>{
-              console.log(error)
-           }
-         )
-      }
+      error => {
+        console.log(error)
+      })
+  }
 
   openLinkedEntity(id) {
     let entityUrl;

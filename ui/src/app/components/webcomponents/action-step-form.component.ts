@@ -897,8 +897,8 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
               this.getTestdataProfile(item.dataset?.reference);
               this.getParameter(item.dataset?.reference);
               this.currentDataTypeIndex = 0;
-              item.contentEditable = true;
               this.currentDataItemIndex = index;
+              item.contentEditable = true;
               this.replacer.nativeElement.contentEditable = false;
               this.resetValidation();
               if (this.removeHtmlTags(item?.textContent).trim().length)
@@ -1461,11 +1461,13 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     const testDataPlaceHolders = this.testDataPlaceholder();
     for (let i = 0; i < testDataPlaceHolders.length; i++) {
       const content = testDataPlaceHolders[i].innerHTML;
-      if ((testDataPlaceHolders[i]?.contentEditable||Boolean(isReplacer)) && ((testDataPlaceHolders[i].getAttribute("data-test-data-type") == null) ||
-        ((testDataPlaceHolders[i].getAttribute("data-test-data-type") != null)))) {
-        testDataPlaceHolders[i].innerHTML = dataName;
-        testDataPlaceHolders[i].setAttribute("data-test-data-type", this.currentTestDataType);
-        break;
+      if(this.currentDataItemIndex == i) {
+        if ((testDataPlaceHolders[i]?.contentEditable || Boolean(isReplacer)) && ((testDataPlaceHolders[i].getAttribute("data-test-data-type") == null) ||
+          ((testDataPlaceHolders[i].getAttribute("data-test-data-type") != null)))) {
+          testDataPlaceHolders[i].innerHTML = dataName;
+          testDataPlaceHolders[i].setAttribute("data-test-data-type", this.currentTestDataType);
+          break;
+        }
       }
     }
     if (dataName.startsWith('~|') || dataName.startsWith('$|')) {

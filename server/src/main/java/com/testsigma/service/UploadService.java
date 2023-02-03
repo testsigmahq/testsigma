@@ -123,7 +123,7 @@ public class UploadService extends XMLExportImportService<Upload> {
     List<SearchCriteria> params = new ArrayList<>();
     List<UploadVersion> uploadVersions = uploadVersionService.findByUploadId(id);
     for(UploadVersion uploadVersion: uploadVersions ) {
-        params.add(new SearchCriteria("testData", SearchOperation.EQUALITY, "testsigma-storage:/"+uploadVersion.getPath()));
+        params.add(new SearchCriteria("testDataValue", SearchOperation.EQUALITY, "testsigma-storage:/"+uploadVersion.getPath()));
         builder.setParams(params);
         Specification<TestCase> spec = builder.build();
         Page<TestCase> linkedTestCases = testCaseService.findAll(spec, PageRequest.of(0, 1));

@@ -92,9 +92,13 @@ public class TestCaseSpecification extends BaseSpecification<TestCase> {
     } else if(criteria.getKey().equals("forLoopTestDataId")){
       Join s = root.join("testSteps",JoinType.INNER);
       return s.get("forLoopTestDataId");
-    } else if(criteria.getKey().equals("testData")){
+    } else if(criteria.getKey().equals("dataMap")){
       Join s = root.join("testSteps", JoinType.INNER);
-      return s.get("testData");
+      return s.get("dataMap");
+    }
+    else if(criteria.getKey().equals("testDataValue")){
+      Join s = root.join("testSteps", JoinType.INNER);
+      return s.get("dataMap");
     }
     return root.get(criteria.getKey());
   }
@@ -142,12 +146,17 @@ public class TestCaseSpecification extends BaseSpecification<TestCase> {
           builder.function("JSON_EXTRACT", String.class, getPath(criteria, root), builder.literal("$.\"" + cf_key + "\"")),
           criteria.getValue().toString());
       }
-    } else if (key.equals("stepGroupId") || key.equals("tagId")) {
+    } else if(key.equals("testDataValue")){
+      query.groupBy(root.get("id"));
+      return builder.equal(builder.function("JSON_EXTRACT", String.class, getPath(criteria, root),
+              builder.literal("$.\"test-data\".\"test-data\".value")), criteria.getValue().toString());
+    }
+
+    else if (key.equals("stepGroupId") || key.equals("tagId")) {
       query.groupBy(root.get("id"));
       return super.toPredicate(root, query, builder);
-    } else {
-      return super.toPredicate(root, query, builder);
     }
+    return super.toPredicate(root, query, builder);
   }
 
   private Predicate handleCustomFieldMultiValue(String key, SearchCriteria criteria, CriteriaBuilder builder, Root<TestCase> root) {

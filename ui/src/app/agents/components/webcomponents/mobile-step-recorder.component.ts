@@ -46,6 +46,8 @@ import {TestCaseActionStepsComponent} from "../../../components/webcomponents/te
 import {WorkspaceVersion} from "../../../models/workspace-version.model";
 import {DuplicateLocatorWarningComponent} from "../../../components/webcomponents/duplicate-locator-warning.component";
 import {AddonActionService} from "../../../services/addon-action.service";
+import {StepDetailsDataMap} from "../../../models/step-details-data-map.model";
+import { TestDataMapValue } from 'app/models/test-data-map-value.model';
 
 @Component({
     selector: 'app-mobile-step-recorder',
@@ -419,7 +421,7 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
     let currentStep = new TestStep();
     currentStep.template = template;
     currentStep.naturalTextActionId = currentStep.template.id;
-    //currentStep.dataMap = new StepDetailsDataMap();
+    currentStep.dataMap = new StepDetailsDataMap();
     currentStep.type = TestStepType.ACTION_TEXT;
     let commonData = this.stepList?.stepForm
     if(commonData.get('waitTime')){
@@ -428,7 +430,7 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
       currentStep.preRequisiteStepId = commonData.get('preRequisiteStepId').value;
       currentStep.conditionType = commonData.get('conditionType').value;
       currentStep.disabled = commonData.get('disabled').value;
-      currentStep.dataMap.conditionIf = commonData.get('conditionIf')?.value;
+      currentStep.conditionIf = commonData.get('conditionIf')?.value;
     } else {
       currentStep.waitTime = 30;
       currentStep.priority = TestStepPriority.MAJOR;
@@ -457,7 +459,10 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
     this.naturalTextActionsService.findAll("id:" + templateId).subscribe(templates => {
       let currentStep: TestStep = this.populateAttributesFromDetails(templates?.content[0]);
       if (Boolean(testData)) {
-        currentStep.dataMap.testData['testDataType'] = TestDataType.raw;
+        currentStep.dataMap.testData = new Map<string, TestDataMapValue>();
+        currentStep.dataMap.testData['test-data'] = new TestDataMapValue();
+        currentStep.dataMap.testData['test-data'].value = testData;
+        currentStep.dataMap.testData['test-data'].type = TestDataType.raw;
       }
       if (Boolean(elementName)) {
         let locatorType = (mobileElement.accessibilityId) ? ElementLocatorType.accessibility_id :

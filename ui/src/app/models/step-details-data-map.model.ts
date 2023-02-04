@@ -121,7 +121,7 @@ export class StepDetailsDataMap extends Base implements Deserializable {
   public serialize(): JSON {
     let output = serialize(this);
     let conditionIf: string[] = [];
-    this.conditionIf.forEach(key => {
+    this.conditionIf?.forEach(key => {
       if (key == ResultConstant.SUCCESS)
         conditionIf.push("0")
       else if (key == ResultConstant.FAILURE)

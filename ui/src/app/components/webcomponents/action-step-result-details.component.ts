@@ -22,6 +22,7 @@ import {ActivatedRoute} from "@angular/router";
 import {AddonElementData} from "../../models/addon-element-data.model";
 import {AddonTestStepTestData} from "../../models/addon-test-step-test-data.model";
 import {TestDeviceResultService} from "../../shared/services/test-device-result.service";
+import {UploadVersionService} from "../../shared/services/upload-version.service";
 import {TestDeviceResult} from "../../models/test-device-result.model";
 import {UploadService} from "../../shared/services/upload.service";
 
@@ -70,6 +71,7 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
     private environmentResultService: TestDeviceResultService,
     private testStepResultService: TestStepResultService,
     private uploadService: UploadService,
+    private uploadVersionService: UploadVersionService,
     private router: ActivatedRoute) {
     super(authGuard, notificationsService, translate, toastrService);
     defaultPageScrollConfig.scrollOffset = 200;
@@ -321,10 +323,16 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
     if (this.environmentResult.testDeviceSettings.appId)
       json['appId'] = this.environmentResult.testDeviceSettings.appId;
     this.appDetails = json;
-    if (this.environmentResult.testDeviceSettings.appUploadId || this.environmentResult.testDeviceSettings.appId)
-      this.uploadService.find(this.environmentResult.testDeviceSettings.appUploadId || this.environmentResult.testDeviceSettings.appId).subscribe(app => {
-        this.appDetails['appName'] = app.name;
+    if (this.environmentResult.testDeviceSettings.appUploadId || this.environmentResult.testDeviceSettings.appId){
+      this.uploadVersionService.find(this.environmentResult.appUploadVersionId).subscribe(version => {
+        this.appDetails['appName'] = version?.fileName;
+        this.appDetails['version'] = version?.name;
+        this.appDetails['versionId'] = version?.id;
+        this.uploadService.find(version?.uploadId).subscribe(upload=> {
+          this.appDetails['appName'] = upload.name;
+        })
       })
+    }
   }
 
   canShowDetails() {

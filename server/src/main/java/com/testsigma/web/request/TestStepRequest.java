@@ -27,8 +27,6 @@ public class TestStepRequest {
   private TestStepDataMap dataMap;
   @JsonProperty("conditionIf")
   private ResultConstant[] ifConditionExpectedResults;
-  private String testData;
-  private String testDataType;
   private String attribute;
   private String element;
   private String fromElement;

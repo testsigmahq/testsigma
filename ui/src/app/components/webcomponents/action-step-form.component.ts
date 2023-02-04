@@ -204,7 +204,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     if (this.testStep?.id) {
       this.oldStepData = new TestStep().deserialize(this.testStep);
       this.oldStepData.dataMap.testData = this.testStep.dataMap.testData;
-      this.testStep.dataMap.conditionIf = Object.assign([], JSON.parse(JSON.stringify(this.testStep.dataMap.conditionIf)));
+      this.testStep.conditionIf = Object.assign([], JSON.parse(JSON.stringify(this.testStep.conditionIf)));
     }
     this.actionForm.addControl('action', new FormControl(this.testStep.action, []));
     this.testStep.type = TestStepType.ACTION_TEXT;

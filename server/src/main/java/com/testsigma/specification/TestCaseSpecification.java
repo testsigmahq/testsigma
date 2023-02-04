@@ -146,6 +146,7 @@ public class TestCaseSpecification extends BaseSpecification<TestCase> {
           builder.function("JSON_EXTRACT", String.class, getPath(criteria, root), builder.literal("$.\"" + cf_key + "\"")),
           criteria.getValue().toString());
       }
+      //TODO-Change the regex to match all testdata values in the JSON.
     } else if(key.equals("testDataValue")){
       query.groupBy(root.get("id"));
       return builder.equal(builder.function("JSON_EXTRACT", String.class, getPath(criteria, root),

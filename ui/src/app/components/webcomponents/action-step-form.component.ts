@@ -719,6 +719,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       }
       if(testDataValue) {
         this.testStep.dataMap.testData = testDataValue;
+        this.setDataMapValues();
       }
       this.testStep.deserializeCommonProperties(this.actionForm.getRawValue());
       return true;
@@ -1762,8 +1763,8 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     this.resetCFArguments();
   }
 
-  /*private setDataMapValues() {
-    this.testStep.testDataType = this.currentTestDataType;
+  private setDataMapValues() {
+    this.testStep.dataMap.testDataType = this.currentTestDataType;
     if (this.currentTestDataType && this.currentTestDataType == TestDataType.function && this.currentTestDataFunction) {
       let formValue = this.actionForm.getRawValue();
       delete formValue.action
@@ -1787,7 +1788,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       testData.type = this.currentTestDataType;
       this.testStep.addonTDF = testData;
     }
-  }*/
+  }
 
 
   getArguments(formValue): JSON {

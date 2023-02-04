@@ -445,7 +445,7 @@ public class StepProcessor {
     for(String key : testStepDataMap.getTestData().keySet()) {
       TestStepNlpData testStepNlpData = testStepDataMap.getTestData().get(key);
       if (testStepNlpData != null) {
-        if (testStepNlpData.getAddonTDF() != null) {
+        if (testStepNlpData.getAddonTDF() != null && testStepNlpData.getAddonTDF().getValue() != null) {
           defaultDataGeneratorsEntity.setArguments(testStepNlpData.getAddonTDF().getTestDataFunctionArguments());
           defaultDataGeneratorsEntity.setIsAddonFn(true);
           AddonPluginTestDataFunctionEntityDTO tdfEntityDTO = addonService.fetchPluginTestDataFunctionEntities(testStepNlpData.getAddonTDF().getTestDataFunctionId());
@@ -463,8 +463,7 @@ public class StepProcessor {
     DefaultDataGenerator defaultDataGenerator = defaultDataGeneratorService.find(testStepDTO.getTestDataFunctionId());
     defaultDataGeneratorsEntity.setClassName(defaultDataGenerator.getFile().getClassName());
     defaultDataGeneratorsEntity.setFunctionName(defaultDataGenerator.getFunctionName());
-    Map<String, String> args = (HashMap) defaultDataGenerator.getArguments();
-    defaultDataGeneratorsEntity.setArguments(args);
+    defaultDataGeneratorsEntity.setArguments(testStepDTO.getTestDataFunctionArgs());
     Map<String, String> argsTypes = (HashMap) defaultDataGenerator.getArguments().get("arg_types");
     defaultDataGeneratorsEntity.setArgumentTypes(argsTypes);
     defaultDataGeneratorsEntity.setClassPackage(defaultDataGenerator.getFile().getClassPackage());

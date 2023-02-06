@@ -64,7 +64,7 @@ export class TestStepService {
 
   public create(step: TestStep): Observable<TestStep> {
     if (step.addonTestData){
-    step.addonTemplate.parameters.filter(a=> a.allowedValues.length==0).forEach(p=>{
+    step.addonTemplate.parameters.filter(a=> a.allowedValues?.length==0).forEach(p=>{
       let temp = p.reference;
       step.action = step.action.replace(temp, step.addonTestData[temp].value);
     });}

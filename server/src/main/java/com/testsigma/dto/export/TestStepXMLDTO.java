@@ -59,6 +59,8 @@ public class TestStepXMLDTO extends BaseXMLDTO {
   private Integer recordActive = 1;
   @JsonIgnore
   private String testStepKey;
+  @JsonProperty("IgnoreStepResult")
+  private Boolean ignoreStepResult;
   @JsonIgnore
   private Long copiedFrom;
   @JsonProperty("phone-number-id")

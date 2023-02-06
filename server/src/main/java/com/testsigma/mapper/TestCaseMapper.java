@@ -96,6 +96,9 @@ public interface TestCaseMapper {
 
   List<TestCase> mapTestCasesCloudXMLList(List<TestCaseCloudXMLDTO> readValue);
 
+  @Mapping(target = "testDataStartIndex", source = "testDataStartIndex", defaultValue = "0")
+  TestCase testCaseCloudXMLDTOToTestCase(TestCaseCloudXMLDTO testCaseCloudXMLDTO);
+
   List<TestDataSetDTO> testDataSetListToTestDataSetDTOList(List<TestDataSet> dataSets);
 
   default TestDataProfileDTO testDataToTestDataProfileDTO(TestData testData) {

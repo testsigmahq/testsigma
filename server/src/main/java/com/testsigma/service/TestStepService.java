@@ -370,7 +370,7 @@ public class TestStepService extends XMLExportImportService<TestStep> {
                             }
                         }
                     }
-                    if (Objects.equals(step.getDataMap().getTestData().get("test-data").getType(), TestDataType.function.getDispName()) && step.getType() != TestStepType.CUSTOM_FUNCTION) {
+                    if (step.getDataMap().getTestData() != null && Objects.equals(step.getDataMap().getTestData().get("test-data").getType(), TestDataType.function.getDispName()) && step.getType() != TestStepType.CUSTOM_FUNCTION) {
                         message = "Deprecated Data Generator / Data Generator not found!";
                         defaultDataGeneratorService.find(step.getTestDataFunctionId());
                     }

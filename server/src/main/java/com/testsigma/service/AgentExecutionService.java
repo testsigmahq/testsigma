@@ -1321,8 +1321,10 @@ public class AgentExecutionService {
     if (agent != null && testPlanLabType == TestPlanLabType.Hybrid) {
       Platform platform = agent.getOsType().getPlatform();
       String osVersion = agent.getPlatformOsVersion(platform);
+      log.info("Platform: " + platform + ", OsVersion: " + osVersion);
       Browsers browser = OSBrowserType.getBrowser(testDevice.getBrowser());
       String browserVersion = agent.getBrowserVersion(browser.toString());
+      log.info("Browser: " + browser + ", BrowserVersion: " + browserVersion);
       platformBrowserVersion = platformsService.getPlatformBrowserVersion(platform, osVersion, browser, browserVersion, testPlanLabType);
     } else {
       platformBrowserVersion = platformsService.getPlatformBrowserVersion(testDevice.getPlatformBrowserVersionId(), testPlanLabType);

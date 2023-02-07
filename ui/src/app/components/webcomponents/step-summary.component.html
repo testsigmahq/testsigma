@@ -20,7 +20,7 @@
          *ngIf="testStep">
       <div class="details-container value-md md">
         <div class="details-items ts-col-100"
-             *ngIf="!testStep?.isRestStep && testStep?.getAllTestData?.length && !testStep?.addonTestData">
+             *ngIf="!testStep?.isRestStep && (testStep?.getAllTestData?.length || testStep?.element) && !testStep?.addonTestData">
           <div *ngFor="let data of testStep?.getAllTestData">
             <div class="ts-col-100 d-flex">
               <label class="details-title ts-col-25" [translate]="'data.parameterNameValue'"></label>

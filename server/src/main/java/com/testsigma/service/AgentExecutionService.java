@@ -1315,9 +1315,9 @@ public class AgentExecutionService {
   protected void populatePlatformBrowserDetails(TestDevice testDevice, TestDeviceSettings settings,
                                                 TestPlanLabType testPlanLabType, Agent agent,EnvironmentEntityDTO environmentEntityDTO)
     throws TestsigmaException {
-
-
     PlatformBrowserVersion platformBrowserVersion = null;
+    log.info("Agent: " + agent);
+    log.info("TestPlanLabType: " + testPlanLabType);
     if (agent != null && testPlanLabType == TestPlanLabType.Hybrid) {
       Platform platform = agent.getOsType().getPlatform();
       String osVersion = agent.getPlatformOsVersion(platform);
@@ -1327,8 +1327,11 @@ public class AgentExecutionService {
       log.info("Browser: " + browser + ", BrowserVersion: " + browserVersion);
       platformBrowserVersion = platformsService.getPlatformBrowserVersion(platform, osVersion, browser, browserVersion, testPlanLabType);
     } else {
+      log.info("TestDevice: " + testDevice);
+      log.info("TestPlanLabType:: " + testPlanLabType);
       platformBrowserVersion = platformsService.getPlatformBrowserVersion(testDevice.getPlatformBrowserVersionId(), testPlanLabType);
     }
+    log.info("PlatformBrowserVersion: " + platformBrowserVersion);
     if (testPlanLabType.isHybrid()) {
       matchHybridBrowserVersion(agent, platformBrowserVersion, testDevice, platformBrowserVersion.getName(),environmentEntityDTO);
     }

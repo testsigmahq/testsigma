@@ -4,8 +4,6 @@ import com.testsigma.model.*;
 import com.testsigma.web.request.RestStepDetailsRequest;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 public class TestStepRecorderRequest {
     private Long id;
@@ -42,6 +40,6 @@ public class TestStepRecorderRequest {
     public Boolean isStepGroupSpotEdit = false;
     private Long blockId;
     private Boolean isStepRecorder = false;
-    private UiIdentifierRequest uiIdentifierRequest;
+    private UiIdentifierRequest elementRequest;
 
 }

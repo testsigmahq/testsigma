@@ -3,7 +3,6 @@ package com.testsigma.mapper.recorder;
 import com.testsigma.dto.TestStepDTO;
 import com.testsigma.model.ResultConstant;
 import com.testsigma.model.TestStepDataMap;
-import com.testsigma.model.TestStepNlpData;
 import com.testsigma.model.TestStepType;
 import com.testsigma.model.recorder.TestStepRecorderDTO;
 import com.testsigma.model.recorder.TestStepRecorderDataMap;
@@ -12,9 +11,7 @@ import com.testsigma.service.ObjectMapperService;
 import com.testsigma.web.request.TestStepRequest;
 import org.mapstruct.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,
@@ -132,8 +129,8 @@ public interface TestStepRecorderMapper {
     }
 
     default String mapElement(TestStepRecorderRequest testStepRecorderRequest) {
-        if(testStepRecorderRequest.getUiIdentifierRequest() != null) {
-            return testStepRecorderRequest.getUiIdentifierRequest().getName();
+        if(testStepRecorderRequest.getElementRequest() != null) {
+            return testStepRecorderRequest.getElementRequest().getName();
         } else if(testStepRecorderRequest.getDataMap() != null) {
             return testStepRecorderRequest.getDataMap().getUiIdentifier();
         }

@@ -1,11 +1,9 @@
 package com.testsigma.controller.recorder;
 
-import com.testsigma.constants.NaturalTextActionConstants;
 import com.testsigma.dto.RestStepResponseDTO;
 import com.testsigma.dto.TestStepDTO;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaException;
-import com.testsigma.mapper.ElementMapper;
 import com.testsigma.mapper.TestStepMapper;
 import com.testsigma.mapper.recorder.TestStepRecorderMapper;
 import com.testsigma.mapper.recorder.UiIdentifierMapper;
@@ -32,8 +30,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping(path = "/os_recorder/v2/test_steps", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -84,9 +80,9 @@ public class TestStepsRecorderController {
         if(request.getType() == TestStepType.NLP_TEXT) {
             request.setType(TestStepType.ACTION_TEXT);
         }
-        if(request.getIsStepRecorder() && request.getUiIdentifierRequest() != null){
+        if(request.getIsStepRecorder() && request.getElementRequest() != null){
             log.info("Update Test step from Step recorder");
-            UiIdentifierRequest uiIdentifierRequest = request.getUiIdentifierRequest();
+            UiIdentifierRequest uiIdentifierRequest = request.getElementRequest();
             ElementRequest elementRequest = uiIdentifierMapper.mapRequest(uiIdentifierRequest);
             Element element = uiIdentifierMapper.map(elementRequest);
             element = elementService.createUiIdentifierFromRecorder(element);
@@ -125,9 +121,9 @@ public class TestStepsRecorderController {
             request.setType(TestStepType.ACTION_TEXT);
         }
         //replaceCamelCase(request.getDataMap());
-        if(request.getIsStepRecorder() && request.getUiIdentifierRequest() != null){
+        if(request.getIsStepRecorder() && request.getElementRequest() != null){
             log.info("Create Test step from Step recorder");
-            UiIdentifierRequest uiIdentifierRequest = request.getUiIdentifierRequest();
+            UiIdentifierRequest uiIdentifierRequest = request.getElementRequest();
             ElementRequest elementRequest = uiIdentifierMapper.mapRequest(uiIdentifierRequest);
             Element element = uiIdentifierMapper.map(elementRequest);
             element = elementService.createUiIdentifierFromRecorder(element);
@@ -204,9 +200,9 @@ public class TestStepsRecorderController {
             if (request.getType() == TestStepType.NLP_TEXT) {
                 request.setType(TestStepType.ACTION_TEXT);
             }
-            if (request.getIsStepRecorder() && request.getUiIdentifierRequest() != null) {
+            if (request.getIsStepRecorder() && request.getElementRequest() != null) {
                 log.info("Update Test step from Step recorder");
-                UiIdentifierRequest uiIdentifierRequest = request.getUiIdentifierRequest();
+                UiIdentifierRequest uiIdentifierRequest = request.getElementRequest();
                 ElementRequest elementRequest = uiIdentifierMapper.mapRequest(uiIdentifierRequest);
                 Element element = uiIdentifierMapper.map(elementRequest);
                 element = elementService.createUiIdentifierFromRecorder(element);

@@ -9,6 +9,7 @@ import {UploadService} from "../../services/upload.service";
 import {UploadVersion} from "../../models/upload-version.model";
 import {UploadVersionService} from "../../services/upload-version.service";
 import {TestPlanLabType} from '../../../enums/test-plan-lab-type.enum';
+import {SupportedDeviceType} from "../../../agents/enums/supported-device-type";
 
 @Component({
   selector: 'app-uploads-auto-complete',
@@ -99,7 +100,7 @@ export class UploadsAutoCompleteComponent implements OnInit {
         if(res.content.length) {
           if(this.formControl.value && res.content.find(upload => upload.id == this.formControl.value)) {
             if(this.isIOSNativeHybridAndDeviceNotNull) {
-              this.setUpload(res.content.find(upload => upload.id == this.formControl.value && upload.signed));
+              this.setUpload(res.content.find(upload => upload.id == this.formControl.value));
               this.formControl.setValue(this.value?.id);
             } else {
               this.setUpload(res.content.find(upload => upload.id == this.formControl.value));
@@ -122,7 +123,7 @@ export class UploadsAutoCompleteComponent implements OnInit {
           }
           if(this.isIOSNativeHybridAndDeviceNotNull){
             res.content.forEach((upload: Upload) => {
-              upload.isDisabled = !upload.signed;
+              upload.isDisabled = upload.supportedDeviceType == SupportedDeviceType.IOS_EMULATOR ? false : !upload.signed;
             });
           }
           this.isContainsApp.emit(true);

@@ -1298,17 +1298,21 @@ public class AgentExecutionService {
         osVersion = agentDevice.getPlatformOsVersion();
         platform = agentDevice.getOsName().getPlatform();
       }
+      log.info("Platform: " + platform + ", OsVersion: " + osVersion + ", WorkspaceType: " + testDevice.getWorkspaceVersion().getWorkspace().getWorkspaceType() + ", TestPlanLabType: " + testPlanLabType);
       platformOsVersion = platformsService.getPlatformOsVersion(platform, osVersion, testDevice.getWorkspaceVersion().getWorkspace().getWorkspaceType(), testPlanLabType);
     }
     else {
+      log.info("PlatformOsVersionId:" + testDevice.getPlatformOsVersionId() + ", TestPlanLabType: " + testPlanLabType);
       platformOsVersion = platformsService.getPlatformOsVersion(testDevice.getPlatformOsVersionId(), testPlanLabType);
     }
-  if (testPlanLabType != TestPlanLabType.PrivateGrid)
+    log.info("PlatformOsVersion: " + platformOsVersion);
+    if (testPlanLabType != TestPlanLabType.PrivateGrid)
          settings.setPlatform(platformOsVersion.getPlatform());
-  else
-    settings.setPlatform(testDevice.getPlatform());
-    if (TestPlanLabType.Hybrid == testPlanLabType) {
-      settings.setOsVersion(platformOsVersion.getVersion());
+    else {
+      settings.setPlatform(testDevice.getPlatform());
+      if (TestPlanLabType.Hybrid == testPlanLabType) {
+        settings.setOsVersion(platformOsVersion.getVersion());
+      }
     }
   }
 

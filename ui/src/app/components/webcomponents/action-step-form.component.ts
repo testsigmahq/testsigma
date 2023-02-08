@@ -694,6 +694,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     let elementValue = this.elementPlaceholder()[0]?.textContent?.replace(/&nbsp;/g, "");
     let attributeValue = this.attributePlaceholder()?.textContent?.replace(/&nbsp;/g, "");
     let action = this.replacer.nativeElement.innerHTML.replace(/<span class="element+(.*?)>(.*?)<\/span>/g, elementValue)
+      .replace(/<span class="test_data+(.*?)>(.*?)<\/span>/g, "test data")
       .replace(/<span class="attribute+(.*?)>(.*?)<\/span>/g, attributeValue)
       .replace(/&nbsp;/g, "");
     if (this.elementPlaceholder().length) {

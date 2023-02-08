@@ -673,11 +673,11 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       this.testStep.addonElements = elements;
       this.testStep.type = TestStepType.ACTION_TEXT;
       this.testStep.addonTemplate = this.currentAddonTemplate;
+      this.testStep.testDataFunctionArgs = testData['values-count']?.testDataFunctionArguments;
+      this.testStep.testDataFunctionId = testData['values-count']?.testDataFunctionId;
       this.testStep.deserializeCommonProperties(this.actionForm.getRawValue());
       delete this.testStep.template;
       delete this.testStep.naturalTextActionId;
-      delete this.testStep.testDataFunctionId;
-      delete this.testStep.testDataFunctionArgs;
       delete this.testStep.dataMap.testData;
       delete this.testStep.element;
       delete this.testStep.attribute;
@@ -1223,7 +1223,8 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   private assignEditTemplate() {
     let firstDataFunction = 0;
     let argumentsList;
-    if(this.testStep?.addonTDF?.value) {
+    if(this.testStep?.addonActionId) {
+      this.showTestDataCF(this.testStep.addonActionId);
       Object.keys(this.testStep?.addonTDF?.value)?.forEach((testdataName, index) => {
         if(index == 0 && this.testStep.addonTDF?.value?.[testdataName]?.type == TestDataType.function){
           firstDataFunction = this.testStep.addonTDF?.value?.[testdataName]?.testDataFunctionId;
@@ -1231,25 +1232,25 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         }
       })
     }
-    if(!!this.testStep?.dataMap?.testData?.size) {
-      this.testDataPlaceholder().forEach((item,index) => {
-        this.testStep.dataMap.testData.forEach((testData: TestDataMapValue) => {
+    if(this.testStep?.dataMap?.testData["test-data"].type == TestDataType.function) {
+      this.showTestDataCF(this.testStep?.testDataFunctionId);
+      this.testStep.dataMap.testData.forEach((testData: TestDataMapValue) => {
           if (testData?.type == TestDataType.function || firstDataFunction) {
             if (testData['testDataFunction'].id)
-              this.showTestDataCF(testData['testDataFunction'].id);
-            else if (testData['kibbutzTDF']['testDataFunctionId'] || firstDataFunction) {
-              if(testData['kibbutzTDF']['isKibbutzFn']){
-                this.showAddonTDF(firstDataFunction ? firstDataFunction : testData['kibbutzTDF']['testDataFunctionId'], argumentsList);
+              this.showTestDataCF(this.testStep?.testDataFunctionId);
+            else if (testData['addonTDF']['testDataFunctionId'] || firstDataFunction) {
+              if(testData['addonTDF']['isAddonFn']){
+                this.showAddonTDF(firstDataFunction ? firstDataFunction : testData['addonTDF']['testDataFunctionId'], argumentsList);
               }
               else{
-                this.showTestDataCF(firstDataFunction ? firstDataFunction : testData['kibbutzTDF']['testDataFunctionId']);
+                console.log("show called");
+                this.showTestDataCF(firstDataFunction ? firstDataFunction : testData['addonTDF']['testDataFunctionId']);
               }
               this.editSerialize();
             }
           }
         })
 
-      })
 
     } else {
       this.editSerialize();

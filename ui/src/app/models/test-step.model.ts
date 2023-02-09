@@ -623,6 +623,11 @@ export class TestStep extends Base implements PageObject {
         testDataList.push(data);
       })
     }
+    else if (this.addonTemplate) {
+      if (this.addonTestData["values-count"]?.value || this.addonTestData) {
+        testDataList.push(this.addonTestData["values-count"]?.value || this.addonTestData);
+      }
+    }
     return testDataList;
   }
 }

@@ -20,6 +20,50 @@
          *ngIf="testStep">
       <div class="details-container value-md md">
         <div class="details-items ts-col-100"
+             *ngIf="!testStep?.isRestStep && canShowAddonTestData()">
+          <div *ngFor="let testData of getAddonTestDataAndElements(testStep?.addonTestData)" class="pt-8">
+            <div class="ts-col-100 d-flex">
+              <label class="details-title ts-col-25" [translate]="'test_step.results.test_data'"></label>
+              <div class="rb-medium"
+                   [class.pointer]="!testData.value?.includes('::')"
+                   (click)="!testData.value?.includes('::') ? openAddonDetails(testData?.testDataFunctionId): ''"
+                   [translate]="testData.value">
+              </div>
+            </div>
+            <div class="d-flex" *ngIf="canShowCustomFunctionsParameters(testData?.testDataFunctionArguments)">
+              <label class="details-title ts-col-25"></label>
+              <div class="mt-10">
+                <span [translate]="'natural_text_action.custom_function.suggestion.input'" class="rb-medium"></span>
+                <div *ngFor="let item of testData?.testDataFunctionArguments | keyvalue; let index=index" class="pl-5 pt-5">
+                  <span [textContent]="item.key+' = '" class="pl-5" *ngIf="!item.key.startsWith('arg')"></span>
+                  <span [textContent]=" item.value" class="pl-5"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!testStep?.isRestStep && canShowAddonElementDetails()" class="ts-col-100">
+          <div
+            class="details-items ts-col-100"
+            *ngFor="let addonElement of getAddonTestDataAndElements(testStep?.addonElements)">
+            <div class="ts-col-100 d-flex">
+              <label class="details-title ts-col-25" [translate]="'test_step.results.element'"></label>
+              <div class="d-flex align-items-center flex-wrap">
+                <div
+                  [matTooltip]="'step_result.hint.edit_element' | translate"
+                  class="pointer pb-5 pr-5"
+                  (click)="openEditElement(addonElement.name, true)">
+                <span class="text-link rb-medium"
+                      [textContent]="addonElement.name"></span>
+                  <i class="fa-pencil-on-paper px-4"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="details-items ts-col-100"
              *ngIf="!testStep?.isRestStep && (testStep?.getAllTestData?.length || testStep?.element) && !testStep?.addonTestData">
           <div *ngFor="let data of testStep?.getAllTestData">
             <div class="ts-col-100 d-flex">
@@ -60,31 +104,6 @@
             </div>
           </div>
 
-
-        <div class="details-items ts-col-100"
-             *ngIf="!testStep?.isRestStep && canShowAddonDetails(testStep?.addonTestData)">
-          <div *ngFor="let testData of getAddonTestDataAndElements(testStep?.addonTestData)" class="pt-8">
-            <div class="ts-col-100 d-flex">
-              <label class="details-title ts-col-25" [translate]="'test_step.results.test_data'"></label>
-              <div class="rb-medium"
-                   [class.pointer]="!testData.value.includes('::')"
-                   (click)="!testData.value.includes('::') ? openAddonDetails(testData?.testDataFunctionId): ''"
-                   [translate]="testData.value">
-              </div>
-            </div>
-            <div class="d-flex" *ngIf="canShowCustomFunctionsParameters(testData?.testDataFunctionArguments)">
-              <label class="details-title ts-col-25"></label>
-              <div class="mt-10">
-                <span [translate]="'natural_text_action.custom_function.suggestion.input'" class="rb-medium"></span>
-                <div *ngFor="let item of testData?.testDataFunctionArguments | keyvalue; let index=index" class="pl-5 pt-5">
-                  <span [textContent]="item.key+' = '" class="pl-5" *ngIf="!item.key.startsWith('arg')"></span>
-                  <span [textContent]=" item.value" class="pl-5"></span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div
           class="details-items ts-col-100"
           *ngIf="!testStep?.isRestStep && testStep?.element">
@@ -99,26 +118,6 @@
                 class="text-link rb-medium"
                 [textContent]="testStep.element"></span>
                 <i class="fa-pencil-on-paper px-4"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div *ngIf="!testStep?.isRestStep && canShowAddonDetails(testStep?.addonElements)" class="ts-col-100">
-          <div
-            class="details-items ts-col-100"
-            *ngFor="let addonElement of getAddonTestDataAndElements(testStep?.addonElements)">
-            <div class="ts-col-100 d-flex">
-              <label class="details-title ts-col-25" [translate]="'test_step.results.element'"></label>
-              <div class="d-flex align-items-center flex-wrap">
-                <div
-                  [matTooltip]="'step_result.hint.edit_element' | translate"
-                  class="pointer pb-5 pr-5"
-                  (click)="openEditElement(addonElement.name, true)">
-                <span class="text-link rb-medium"
-                      [textContent]="addonElement.name"></span>
-                  <i class="fa-pencil-on-paper px-4"></i>
-                </div>
               </div>
             </div>
           </div>
@@ -213,4 +212,5 @@
       </div>
     </div>
   </div>
+</div>
 </div>

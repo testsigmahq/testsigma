@@ -332,7 +332,7 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
         if (testDataProfileStep != null)
           step.setTestDataProfileStepId(testDataProfileStep.getId());
         step.setParentStep(parentStep);
-        step = this.testStepService.create(step);
+        step = this.testStepService.create(step, false);
         parentStepIds.put(parent.getId(), step);
         newSteps.add(step);
         position++;
@@ -358,10 +358,10 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
             && step.getParentId() == null) {
       step.setConditionType(TestStepConditionType.CONDITION_IF);
     }
-    this.testStepService.create(step);
+    this.testStepService.create(step, false);
     for (TestStep parent : steps) {
       TestStep destroyStep = this.testStepService.find(parent.getId());
-      this.testStepService.destroy(destroyStep);
+      this.testStepService.destroy(destroyStep, false);
     }
   }
 

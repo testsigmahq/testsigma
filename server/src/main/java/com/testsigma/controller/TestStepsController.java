@@ -66,7 +66,7 @@ public class TestStepsController {
   public void destroy(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
     log.debug("DELETE /test_steps with id::" + id);
     TestStep testStep = this.service.find(id);
-    service.destroy(testStep);
+    service.destroy(testStep, false);
   }
 
   @PutMapping(path = "/{id}")
@@ -76,7 +76,7 @@ public class TestStepsController {
     TestStep testStep = this.service.find(id);
     mapper.merge(request, testStep);
     testStep.setUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-    testStep = this.service.update(testStep);
+    testStep = this.service.update(testStep, false);
     return this.mapper.mapDTO(testStep);
   }
 
@@ -88,7 +88,7 @@ public class TestStepsController {
     testStep.setCreatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
     if (testStep.getParentId() != null)
       testStep.setDisabled(this.service.find(testStep.getParentId()).getDisabled());
-    testStep = service.create(testStep);
+    testStep = service.create(testStep, false);
     return mapper.mapDTO(testStep);
   }
 
@@ -111,7 +111,7 @@ public class TestStepsController {
 
     log.debug("PUT /test_steps/bulk_update_properties with ids::" + Arrays.toString(ids) + " waitTime ::"
       + waitTime + " priority ::" + testStepPriority + " disabled ::" + disabled +" ignoreStepResult ::" +ignoreStepResult);
-    this.service.bulkUpdateProperties(ids, testStepPriority, waitTime, disabled, ignoreStepResult,visualEnabled);
+    this.service.bulkUpdateProperties(ids, testStepPriority, waitTime, disabled, ignoreStepResult,visualEnabled, false);
   }
 
   @PutMapping(value = "/bulk_update")
@@ -120,7 +120,7 @@ public class TestStepsController {
     log.debug("PUT /test_steps/bulk_update with body::" + testStepRequests);
     for (TestStepRequest request : testStepRequests) {
       TestStep step = this.mapper.map(request);
-      this.service.update(step);
+      this.service.update(step, false);
     }
   }
 

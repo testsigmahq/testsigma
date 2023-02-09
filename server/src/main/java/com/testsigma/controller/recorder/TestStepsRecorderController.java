@@ -58,6 +58,7 @@ public class TestStepsRecorderController {
         Page<TestStep> testStep = this.service.findAll(spec, pageable);
         List<TestStepDTO> testDataDTOS =
                 mapper.mapDTOs(testStep.getContent());
+        testDataDTOS = this.service.filterWhileParentSteps(testDataDTOS);
         List<TestStepRecorderDTO> testStepRecorderDTOS = testStepRecorderMapper.mapDTOs(testDataDTOS);
         return new PageImpl<>(testStepRecorderDTOS, pageable, testStep.getTotalElements());
     }
@@ -67,7 +68,7 @@ public class TestStepsRecorderController {
     public void destroy(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
         log.debug("DELETE /os_recorder/v2/test_steps with id::" + id);
         TestStep testStep = this.service.find(id);
-        service.destroy(testStep);
+        service.destroy(testStep, true);
     }
 
     @PutMapping(path = "/{id}")
@@ -96,7 +97,7 @@ public class TestStepsRecorderController {
 
             if (testStep.getParentId() != null)
                 testStep.setDisabled(this.service.find(testStep.getParentId()).getDisabled());
-            testStep = this.service.update(testStep);
+            testStep = this.service.update(testStep, true);
             testStepDTO = mapper.mapDTO(testStep);
 
             testStepRecorderDTO = testStepRecorderMapper.mapDTO(testStepDTO);
@@ -104,7 +105,7 @@ public class TestStepsRecorderController {
         } else{
             TestStepRequest testStepRequest = testStepRecorderMapper.mapRequest(request);
             replaceCamelCase(testStepRequest.getDataMap());
-            testStep = this.service.update(mapper.map(testStepRequest));
+            testStep = this.service.update(mapper.map(testStepRequest), true);
             testStepDTO = mapper.mapDTO(testStep);
             testStepRecorderDTO = testStepRecorderMapper.mapDTO(testStepDTO);
         }
@@ -140,7 +141,7 @@ public class TestStepsRecorderController {
             }
             if (testStep.getParentId() != null)
                 testStep.setDisabled(this.service.find(testStep.getParentId()).getDisabled());
-            testStep = service.create(testStep);
+            testStep = service.create(testStep, true);
             testStepDTO = mapper.mapDTO(testStep);
 
             testStepRecorderDTO = testStepRecorderMapper.mapDTO(testStepDTO);
@@ -154,7 +155,7 @@ public class TestStepsRecorderController {
                 int position = lastTestStep.isPresent() ? lastTestStep.get().getPosition()+1 : 0;
                 testStep.setPosition(position);
             }
-            testStep = service.create(testStep);
+            testStep = service.create(testStep, true);
             testStepDTO = mapper.mapDTO(testStep);
             testStepRecorderDTO = testStepRecorderMapper.mapDTO(testStepDTO);
         }
@@ -170,7 +171,7 @@ public class TestStepsRecorderController {
         log.debug("DELETE /os_recorder/test_steps/bulk_update_properties with ids::" + Arrays.toString(ids));
         for (Long id : ids) {
             TestStep step = this.service.find(id);
-            this.service.destroy(step);
+            this.service.destroy(step, true);
         }
     }
 
@@ -185,7 +186,7 @@ public class TestStepsRecorderController {
 
         log.debug("PUT /os_recorder/test_steps/bulk_update_properties with ids::" + Arrays.toString(ids) + " waitTime ::"
                 + waitTime + " priority ::" + testStepPriority + " disabled ::" + disabled +" ignoreStepResult ::" +ignoreStepResult);
-        this.service.bulkUpdateProperties(ids, testStepPriority, waitTime, disabled, ignoreStepResult,visualEnabled);
+        this.service.bulkUpdateProperties(ids, testStepPriority, waitTime, disabled, ignoreStepResult,visualEnabled, true);
     }
 
     @PutMapping(value = "/bulk_update")
@@ -215,14 +216,14 @@ public class TestStepsRecorderController {
 
                 if (testStep.getParentId() != null)
                     testStep.setDisabled(this.service.find(testStep.getParentId()).getDisabled());
-                testStep = this.service.update(testStep);
+                testStep = this.service.update(testStep, true);
                 testStepDTO = mapper.mapDTO(testStep);
 
                 testStepRecorderDTO = testStepRecorderMapper.mapDTO(testStepDTO);
                 testStepRecorderDTO.setUiIdentifierDTO(uiIdentifierMapper.mapDTO(uiIdentifierMapper.map(element)));
             } else {
                 TestStepRequest testStepRequest = testStepRecorderMapper.mapRequest(request);
-                testStep = this.service.update(mapper.map(testStepRequest));
+                testStep = this.service.update(mapper.map(testStepRequest), true);
                 testStepDTO = mapper.mapDTO(testStep);
                 testStepRecorderDTO = testStepRecorderMapper.mapDTO(testStepDTO);
             }

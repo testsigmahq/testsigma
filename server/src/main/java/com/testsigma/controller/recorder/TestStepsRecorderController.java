@@ -233,6 +233,9 @@ public class TestStepsRecorderController {
     }
 
     private void replaceCamelCase(TestStepDataMap testStepDataMap) {
+        if(testStepDataMap.getTestData() == null) {
+            return;
+        }
         Map<String, TestStepNlpData> testDataMap = new HashMap<>();
         for (Iterator<String> keys = testStepDataMap.getTestData().keySet().iterator(); keys.hasNext();) {
             String key = keys.next();

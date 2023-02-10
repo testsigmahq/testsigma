@@ -34,7 +34,7 @@ public class TestStepRecorderDTO implements Cloneable, Serializable {
     private RestStepDTO restStep;
     private Long phoneNumberId;
     private Long kibbutzPluginNlpId;
-    //private KibbutzPluginNLPData kibbutzPluginNlpData;
+    private KibbutzPluginNLPData kibbutzPluginNlpData;
     private Long mailBoxId;
     private Boolean disabled;
     private Boolean ignoreStepResult;

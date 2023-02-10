@@ -1,17 +1,14 @@
 package com.testsigma.mapper.recorder;
 
 import com.testsigma.dto.TestStepDTO;
-import com.testsigma.model.ResultConstant;
-import com.testsigma.model.TestStepDataMap;
-import com.testsigma.model.TestStepType;
-import com.testsigma.model.recorder.TestStepRecorderDTO;
-import com.testsigma.model.recorder.TestStepRecorderDataMap;
-import com.testsigma.model.recorder.TestStepRecorderRequest;
+import com.testsigma.model.*;
+import com.testsigma.model.recorder.*;
 import com.testsigma.service.ObjectMapperService;
 import com.testsigma.web.request.TestStepRequest;
 import org.mapstruct.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,
@@ -19,6 +16,7 @@ import java.util.Optional;
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface TestStepRecorderMapper {
 
+    @Mapping(target = "kibbutzPluginNlpData", expression = "java(mapKibbutzData(testStepDTO))")
     @Mapping(target = "uiIdentifierDTO", ignore = true)
     @Mapping(target = "testComponentId", source = "stepGroupId")
     @Mapping(target = "templateId", source = "naturalTextActionId")
@@ -38,6 +36,12 @@ public interface TestStepRecorderMapper {
     @Mapping(target = "blockId", ignore = true)
     @Mapping(target = "type", expression = "java(gettType(testStepDTO))")
     TestStepRecorderDTO mapDTO(TestStepDTO testStepDTO);
+
+    @Mapping(target = "uiIdentifiers", source = "testStepDTO.addonElements")
+    @Mapping(target = "testData", expression = "java(mapKibbutzTestData(testStepDTO.getAddonTestData()))")
+    KibbutzPluginNLPData mapKibbutzData(TestStepDTO testStepDTO);
+
+    Map<String, KibbutzTestStepTestData> mapKibbutzTestData(Map<String, AddonTestStepTestData> addonTestData);
 
     List<TestStepRecorderDTO> mapDTOs(List<TestStepDTO> testStepDTO);
 

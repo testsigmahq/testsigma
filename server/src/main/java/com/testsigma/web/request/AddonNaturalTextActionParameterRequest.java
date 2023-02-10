@@ -18,5 +18,5 @@ public class AddonNaturalTextActionParameterRequest {
   private String reference;
   private String description;
   private AddonActionParameterType type;
-  private List allowedValues;
+  private String[] allowedValues;
 }

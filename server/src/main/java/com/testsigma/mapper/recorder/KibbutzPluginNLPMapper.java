@@ -17,11 +17,11 @@ public interface KibbutzPluginNLPMapper {
 
     @Mapping(target = "applicationType", source = "workspaceType")
     @Mapping(target = "parameters", expression = "java(mapNLPParameter(dto.getParameters()))")
+    @Mapping(target = "grammar", source = "naturalText")
     KibbutzPluginNLPDTO mapKibbutzPluginNLPDTOs(AddonNaturalTextActionDTO dto);
 
     List<KibbutzPluginNLPDTO> mapKibbutzPluginNLPDTOs(List<AddonNaturalTextActionDTO> dtos);
 
-    @Mapping(target = "allowedValues", expression = "java(parameter.getAllowedValues() != null ? (String[]) parameter.getAllowedValues().toArray() : null)")
     KibbutzPluginNLPParameterDTO mapNLPParameter(AddonNaturalTextActionParameterDTO parameter);
 
     List<KibbutzPluginNLPParameterDTO> mapNLPParameter(List<AddonNaturalTextActionParameterDTO> parameters);

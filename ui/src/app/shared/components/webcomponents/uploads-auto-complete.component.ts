@@ -123,7 +123,7 @@ export class UploadsAutoCompleteComponent implements OnInit {
           }
           if(this.isIOSNativeHybridAndDeviceNotNull){
             res.content.forEach((upload: Upload) => {
-              upload.isDisabled = upload.supportedDeviceType == SupportedDeviceType.IOS_EMULATOR ? false : !upload.signed;
+              upload.isDisabled = false;
             });
           }
           this.isContainsApp.emit(true);

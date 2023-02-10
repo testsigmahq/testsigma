@@ -47,6 +47,9 @@ public interface ElementRepository extends BaseRepository<Element, Long> {
   Optional<Element> findAllByWorkspaceVersionIdAndImportedId(Long applicationVersionId, Long id);
 
   Optional<Element> findByNameAndWorkspaceVersionId(String name, Long workspaceVersionId);
+
+  Page<Element> findByNameAndWorkspaceVersionId(Pageable pageable, String name, Long workspaceVersionId);
+
   @Query(value= "SELECT * FROM elements T1 " +
           "INNER JOIN element_screen_names T2 on T1.screen_name_id=T2.id " +
           "where T1.workspace_version_id=:versionId " +

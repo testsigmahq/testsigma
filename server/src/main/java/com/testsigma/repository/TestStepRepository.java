@@ -47,6 +47,8 @@ public interface TestStepRepository extends JpaRepository<TestStep, Long> {
     nativeQuery = true)
   List<String> findTestStepsByTestCaseIdIn(@Param("testCaseIds") List<Long> testCaseIds);
 
+  Optional<TestStep> findFirstByTestCaseIdOrderByPositionDesc(@Param("testCaseId") Long testCaseId);
+
   Page<TestStep> findAll(Specification<TestStep> spec, Pageable pageable);
 
   @Modifying

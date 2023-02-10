@@ -168,6 +168,7 @@ public class TestStepService extends XMLExportImportService<TestStep> {
                 &&(testStep.getMaxIterations() != null && (testStep.getMaxIterations() > 100))){
             throw  new TestsigmaException(String.format("In While Loop, please set Max iterations between 1 to 100"));
         }
+        setTestStepPosition(testStep);
         this.repository.incrementPosition(testStep.getPosition(), testStep.getTestCaseId());
         RestStep restStep = testStep.getRestStep();
         testStep.setRestStep(null);
@@ -187,6 +188,13 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         }
         publishEvent(testStep, EventType.CREATE);
         return testStep;
+    }
+
+    private void setTestStepPosition(TestStep testStep) {
+        if (testStep.getPosition() == null) {
+            Optional<TestStep> lastStep = this.repository.findFirstByTestCaseIdOrderByPositionDesc(testStep.getTestCaseId());
+            testStep.setPosition(lastStep.map(step -> step.getPosition() + 1).orElse(0));
+        }
     }
 
     public TestStep handleWhileTestStepCreate(TestStep testStep) throws TestsigmaException {

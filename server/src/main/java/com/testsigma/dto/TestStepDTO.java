@@ -121,14 +121,13 @@ public class TestStepDTO implements Cloneable, Serializable {
 
   public TestStepRecorderDataMap mapTestData() {
     TestStepRecorderDataMap testStepDataMap = new TestStepRecorderDataMap();
+    testStepDataMap.setTestData(new HashMap<>());
     if(dataMap != null && dataMap.getTestData() != null) {
       for (String key : dataMap.getTestData().keySet()) {
           RecorderTestStepNlpData recorderTestStepNlpData = new RecorderTestStepNlpData();
           recorderTestStepNlpData.setValue(dataMap.getTestData().get(key).getValue());
           recorderTestStepNlpData.setType(dataMap.getTestData().get(key).getType());
-          testStepDataMap.setTestData(new HashMap<>() {{
-            put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA_RECORDER, recorderTestStepNlpData);
-          }});
+          testStepDataMap.getTestData().put(key.replace("-d", "D"), recorderTestStepNlpData);
       }
     }
     if(element != null) {

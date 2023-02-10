@@ -302,13 +302,16 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         for(TestStep testStep : testSteps) {
             TestStepDataMap testStepData = testStep.getDataMap();
             if(testStepData != null && testStepData.getTestData() != null) {
-                testStepData.getTestData().values().forEach(data -> {
-                    if(data.getValue().equals(parameter) && data.getType().equals("parameter")) {
-                        data.setValue(newParameterName);
-                        save(testStep);
+                testStepData.getTestData().entrySet().forEach(stringTestStepNlpDataEntry -> {
+                    if(stringTestStepNlpDataEntry.getValue().getValue().equals(parameter)){
+                        stringTestStepNlpDataEntry.getValue().setValue(newParameterName);
                     }
                 });
             }
+            TestStepDataMap map = testStep.getDataMap();
+            map.setTestData(testStepData.getTestData());
+            testStep.setDataMap(map);
+            save(testStep);
         }
         List<TestStep> topConditionalSteps = this.repository.getTopLevelConditionalStepsExceptLoop(testDataId);
         for (TestStep step : topConditionalSteps) {
@@ -330,13 +333,16 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         for(TestStep testStep : childSteps) {
             TestStepDataMap testStepData = testStep.getDataMap();
             if(testStepData != null && testStepData.getTestData() != null) {
-                testStepData.getTestData().values().forEach(data -> {
-                    if(data.getValue() == parameter && data.getType() == "parameter") {
-                        data.setValue(newParameterName);
-                        save(testStep);
+                testStepData.getTestData().entrySet().forEach(stringTestStepNlpDataEntry -> {
+                    if(stringTestStepNlpDataEntry.getValue().getValue().equals(parameter)){
+                        stringTestStepNlpDataEntry.getValue().setValue(newParameterName);
                     }
                 });
             }
+            TestStepDataMap map = testStep.getDataMap();
+            map.setTestData(testStepData.getTestData());
+            testStep.setDataMap(map);
+            save(testStep);
         }
         List<TestStep> conditionalSteps = this.repository.getChildConditionalStepsExceptLoop(parentId);
         for (TestStep step : conditionalSteps) {

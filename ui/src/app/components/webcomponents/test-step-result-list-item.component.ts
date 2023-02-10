@@ -26,6 +26,7 @@ import {WorkspaceVersion} from "../../models/workspace-version.model";
 import {AddonNaturalTextAction} from "../../models/addon-natural-text-action.model";
 import {NaturalTextActionsService} from "../../services/natural-text-actions.service";
 import {SharedService} from "../../services/shared.service";
+import {TestDataService} from "../../services/test-data.service";
 
 
 @Component({
@@ -261,7 +262,9 @@ export class TestStepResultListItemComponent extends TestStepListItemComponent i
     private matDialog: MatDialog,
     public router: Router,
     public sharedService : SharedService,
-    public testStepService: TestStepService) {
+    public testStepService: TestStepService,
+    public testDataService: TestDataService
+    ) {
     super(authGuard, notificationsService, translate, toastrService, testStepService,naturalTestActionService, matDialog,sharedService);
   }
 

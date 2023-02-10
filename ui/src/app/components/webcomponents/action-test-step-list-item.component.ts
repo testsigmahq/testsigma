@@ -311,6 +311,11 @@ export class ActionTestStepListItemComponent extends TestStepListItemComponent i
   }
 
   ngOnInit(): void {
+    if(this.testStep.forLoopTestDataId){
+      this.testDataService.show(this.testStep.forLoopTestDataId).subscribe(testData=>{
+        this.testStep.testData=testData;
+      })
+    }
   }
 
   showDetails(testStep: TestStep) {

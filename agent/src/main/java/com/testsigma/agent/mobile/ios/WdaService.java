@@ -43,6 +43,7 @@ public class WdaService {
       IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
       log.info("Installing WDA on device - " + device.getUniqueId());
       String wdaPresignedUrl = fetchWdaUrl(device);
+      log.info("Wda presigned url: " + wdaPresignedUrl);
       downloadedWdaFile = File.createTempFile("wda_", ".ipa");
       FileUtils.copyURLToFile(new URL(wdaPresignedUrl), downloadedWdaFile, (60 * 1000), (60 * 1000));
       log.info("Downloaded WDA to local file - " + downloadedWdaFile.getAbsolutePath());

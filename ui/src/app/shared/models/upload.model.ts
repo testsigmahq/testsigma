@@ -12,7 +12,7 @@ export class Upload extends Base implements PageObject {
   public latestVersionId: number;
 
   @serializable(optional())
-  public supportedDeviceType: SupportedDeviceType = SupportedDeviceType.NULL;
+  public supportedDeviceType: SupportedDeviceType = SupportedDeviceType.IOS_DEVICE;
 
   public selected: Boolean;
   public filePathCopied: boolean;

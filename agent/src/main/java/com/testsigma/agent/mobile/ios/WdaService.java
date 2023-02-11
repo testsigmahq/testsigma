@@ -176,7 +176,7 @@ public class WdaService {
   private void checkWDARelayProcessStatus(MobileDevice device) throws TestsigmaException, AutomatorException, InterruptedException {
     IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
     int retries = 3;
-    while (device.getWdaProcess() == null && retries-- > 0) {
+    while (device.getWdaRelayProcess() == null && retries-- > 0) {
       log.info("WDA process not started yet, waiting for 5 seconds...");
       Thread.sleep(5000);
     }

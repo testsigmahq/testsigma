@@ -173,9 +173,13 @@ public class WdaService {
       , "Unable to start WDA Process on device - " + device.getName());
   }
 
-  private void checkWDARelayProcessStatus(MobileDevice device) throws TestsigmaException, AutomatorException {
+  private void checkWDARelayProcessStatus(MobileDevice device) throws TestsigmaException, AutomatorException, InterruptedException {
     IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
-
+    int retries = 3;
+    while (device.getWdaProcess() == null && retries-- > 0) {
+      log.info("WDA process not started yet, waiting for 5 seconds...");
+      Thread.sleep(5000);
+    }
     if ((device.getWdaRelayProcess() != null) && device.getWdaRelayProcess().isAlive()) {
       log.info("Checked if the WDA relay process is still alive and it seems to be still running on device - " +
         device.getName());

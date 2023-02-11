@@ -46,8 +46,8 @@ public class IOSEmulatorScheduler extends BaseScheduler {
 
             for(MobileDevice device : deviceMap.values()) {
                 if(!simulatorUniqueIds.contains(device.getUniqueId()) && device.getOsName().equals(MobileOs.IOS)) {
-                    log.info("Removing mobile device {} from device container", device.getUniqueId());
-                    this.deviceContainer.deleteDevice(device.getUniqueId());
+                    //log.info("Removing mobile device {} from device container", device.getUniqueId());
+                   // this.deviceContainer.deleteDevice(device.getUniqueId());
                 }
             }
         } catch (Exception e) {

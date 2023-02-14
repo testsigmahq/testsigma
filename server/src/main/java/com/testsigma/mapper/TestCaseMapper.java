@@ -18,6 +18,8 @@ import com.testsigma.dto.export.ElementXMLDTO;
 import com.testsigma.dto.export.TestCaseCloudXMLDTO;
 import com.testsigma.dto.export.TestCaseDataDrivenConditionCloudXMLDTO;
 import com.testsigma.dto.export.TestCaseXMLDTO;
+import com.testsigma.model.DataDrivenIterationType;
+import com.testsigma.model.Operator;
 import com.testsigma.model.TestCase;
 import com.testsigma.model.TestData;
 import com.testsigma.model.TestDataSet;
@@ -43,7 +45,12 @@ public interface TestCaseMapper {
     condition.setTestCaseId(testCase.getId());
     condition.setTestDataProfileId(testCase.getTestDataId());
     condition.setTestDataIndex(Long.valueOf(testCase.getTestDataStartIndex()));
-    condition.setTestDataEndIndex(-1L);
+    Long endIndex = testCase.getTestDataEndIndex() != null ? Long.valueOf(testCase.getTestDataEndIndex()) : -1L;
+    condition.setTestDataEndIndex(endIndex);
+    if (testCase.getIsDataDriven()) {
+      condition.setIterationType(DataDrivenIterationType.INDEX);
+      condition.setOperator(Operator.BETWEEN);
+    }
     return condition;
   }
 

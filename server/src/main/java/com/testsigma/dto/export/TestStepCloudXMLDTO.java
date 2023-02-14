@@ -88,6 +88,10 @@ public class TestStepCloudXMLDTO extends BaseXMLDTO {
   private String typeName;
   @JsonProperty("VisualEnabled")
   private Boolean visualEnabled = false;
+  @JsonProperty("MaxIterations")
+  private Integer maxIterations;
+  
+  // Fields for OS -> Cloud import compatibility
   @JsonProperty("Element")
   private String element;
   @JsonProperty("TestDataFunctionId")

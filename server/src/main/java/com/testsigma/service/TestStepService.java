@@ -390,9 +390,20 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         return testStepSpecificationsBuilder.build();
     }
 
+//    @Override
+//    protected List<TestStepXMLDTO> mapToXMLDTOList(List<TestStep> list) {
+//        return exportTestStepMapper.mapTestSteps(list);
+//    }
+
     @Override
-    protected List<TestStepXMLDTO> mapToXMLDTOList(List<TestStep> list) {
-        return exportTestStepMapper.mapTestSteps(list);
+    protected List<TestStepCloudXMLDTO> mapToXMLDTOList(List<TestStep> list) {
+        List<TestStepCloudXMLDTO> testStepCloudXMLDTOS = exportTestStepMapper.mapToCloudTestSteps(list);
+        for (TestStepCloudXMLDTO step : testStepCloudXMLDTOS) {
+            if (TestStepType.FOR_LOOP.equals(step.getType())) {
+                step.setNaturalTextActionId(1099);
+            }
+        }
+        return testStepCloudXMLDTOS;
     }
 
     public void publishEvent(TestStep testSuite, EventType eventType) {

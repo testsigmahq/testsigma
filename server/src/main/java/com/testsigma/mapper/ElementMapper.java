@@ -13,12 +13,14 @@ import com.testsigma.dto.api.APIElementDTO;
 import com.testsigma.dto.ElementDTO;
 import com.testsigma.dto.ElementNotificationDTO;
 import com.testsigma.dto.export.ElementCloudXMLDTO;
+import com.testsigma.dto.export.ElementMetaDataCloudXMLDTO;
 import com.testsigma.dto.export.ElementXMLDTO;
 import com.testsigma.model.Element;
 import com.testsigma.model.ElementMetaData;
 import com.testsigma.model.ElementMetaDataRequest;
 import com.testsigma.web.request.ElementRequest;
 import com.testsigma.web.request.testproject.TestProjectElementRequest;
+import org.json.JSONArray;
 import org.mapstruct.*;
 
 import java.util.List;
@@ -29,6 +31,27 @@ import java.util.List;
 public interface ElementMapper {
 
   List<ElementXMLDTO> mapElements(List<Element> elementsList);
+  List<ElementCloudXMLDTO> mapToCloudElements(List<Element> elementsList);
+  
+  @Mapping(target = "cloudMetadata", expression = "java(mapToCloudMetadata(element.getMetadata()))")
+  ElementCloudXMLDTO mapToCloudElement(Element element);
+
+  default ElementMetaDataCloudXMLDTO mapToCloudMetadata(ElementMetaData elementMetaData) {
+    ElementMetaDataCloudXMLDTO metaDataCloudXMLDTO = new ElementMetaDataCloudXMLDTO();
+    if (elementMetaData == null) {
+      return metaDataCloudXMLDTO;
+    }
+    metaDataCloudXMLDTO.setXPath(elementMetaData.getXPath());
+    metaDataCloudXMLDTO.setCurrentElement(elementMetaData.getCurrentElement());
+    if (elementMetaData.getTestData() != null) {
+      JSONArray jsonArray = new JSONArray();
+      jsonArray.put(elementMetaData.getTestData());
+      metaDataCloudXMLDTO.setTestData(jsonArray);
+    } else {
+      metaDataCloudXMLDTO.setTestData(new JSONArray());
+    }
+    return metaDataCloudXMLDTO;
+  }
 
   @Mapping(target = "currentElement", expression = "java(elementMetaDataRequest.getStringCurrentElement())")
   ElementMetaData map(ElementMetaDataRequest elementMetaDataRequest);

@@ -22,6 +22,7 @@ import java.util.List;
 public interface ElementScreenNameMapper {
 
   List<ElementScreenNameXMLDTO> mapElementScreenNameList(List<ElementScreenName> elementScreenNames);
+  List<ElementScreenNameCloudXMLDTO> mapToCloudElementScreenNameList(List<ElementScreenName> elementScreenNames);
 
   @IterableMapping(qualifiedByName = "mapData")
   List<ElementScreenNameDTO> map(List<ElementScreenName> screenNames);

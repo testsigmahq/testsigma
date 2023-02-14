@@ -16,6 +16,7 @@ import com.testsigma.dto.TestDataSetDTO;
 import com.testsigma.dto.export.ElementCloudXMLDTO;
 import com.testsigma.dto.export.ElementXMLDTO;
 import com.testsigma.dto.export.TestCaseCloudXMLDTO;
+import com.testsigma.dto.export.TestCaseDataDrivenConditionCloudXMLDTO;
 import com.testsigma.dto.export.TestCaseXMLDTO;
 import com.testsigma.model.TestCase;
 import com.testsigma.model.TestData;
@@ -31,6 +32,20 @@ import java.util.List;
   nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface TestCaseMapper {
   List<TestCaseXMLDTO> mapTestcases(List<TestCase> requirements);
+  List<TestCaseCloudXMLDTO> mapToCloudTestcases(List<TestCase> testCases);
+  
+  @Mapping(target = "testCaseDataDrivenCondition", expression = "java(mapToCloudDataDrivenCondition(testCase))")
+  TestCaseCloudXMLDTO mapToCloudTestcase(TestCase testCase);
+  
+  default TestCaseDataDrivenConditionCloudXMLDTO mapToCloudDataDrivenCondition(TestCase testCase) {
+    if (testCase == null || testCase.getTestDataId() == null) return null;
+    TestCaseDataDrivenConditionCloudXMLDTO condition =  new TestCaseDataDrivenConditionCloudXMLDTO();
+    condition.setTestCaseId(testCase.getId());
+    condition.setTestDataProfileId(testCase.getTestDataId());
+    condition.setTestDataIndex(Long.valueOf(testCase.getTestDataStartIndex()));
+    condition.setTestDataEndIndex(-1L);
+    return condition;
+  }
 
   @Named("mapData")
   @Mapping(target = "testCaseName", source = "name")

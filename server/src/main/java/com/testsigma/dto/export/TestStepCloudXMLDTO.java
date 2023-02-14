@@ -15,6 +15,7 @@ import com.testsigma.service.ObjectMapperService;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.Map;
 
 
 @Data
@@ -87,6 +88,12 @@ public class TestStepCloudXMLDTO extends BaseXMLDTO {
   private String typeName;
   @JsonProperty("VisualEnabled")
   private Boolean visualEnabled = false;
+  @JsonProperty("Element")
+  private String element;
+  @JsonProperty("TestDataFunctionId")
+  private Long testDataFunctionId;
+  @JsonProperty("TestDataFunctionArgs")
+  private Map<String, String> testDataFunctionArgs;
 
 
  /* public TestStepCloudDataMap getDataMap() {

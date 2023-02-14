@@ -22,7 +22,6 @@ import java.util.Map;
 @Data
 @JsonListRootName(name = "TestDataSets")
 @JsonRootName(value = "TestDataset")
-@JsonFilter("myFilter")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TestDataSetCloudXMLDTO extends BaseXMLDTO {
   @JsonProperty("Name")

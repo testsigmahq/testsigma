@@ -417,8 +417,8 @@ public class TestCaseService extends XMLExportImportService<TestCase> {
   }
 
   @Override
-  protected List<TestCaseXMLDTO> mapToXMLDTOList(List<TestCase> list) {
-    return mapper.mapTestcases(list);
+  protected List<TestCaseCloudXMLDTO> mapToXMLDTOList(List<TestCase> list) {
+    return mapper.mapToCloudTestcases(list);
   }
 
   public void importXML(BackupDTO importDTO) throws IOException, ResourceNotFoundException {

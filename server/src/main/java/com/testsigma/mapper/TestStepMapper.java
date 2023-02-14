@@ -11,6 +11,8 @@ package com.testsigma.mapper;
 
 import com.testsigma.automator.entity.DefaultDataGeneratorsEntity;
 import com.testsigma.dto.*;
+import com.testsigma.dto.export.ForLoopConditionXMLDTO;
+import com.testsigma.dto.export.TestStepCloudXMLDTO;
 import com.testsigma.dto.export.TestStepXMLDTO;
 import com.testsigma.model.*;
 import com.testsigma.web.request.TestStepRequest;
@@ -27,9 +29,26 @@ public interface TestStepMapper {
   TestStepXMLDTO mapTestStep(TestStep testStep);
 
   List<TestStepXMLDTO> mapTestSteps(List<TestStep> testSteps);
+  List<TestStepCloudXMLDTO> mapToCloudTestSteps(List<TestStep> testSteps);
+  List<ForLoopConditionXMLDTO> mapToCloudForConditions(List<TestStep> testSteps);
 
+  default ForLoopConditionXMLDTO mapToCloudForCondition(TestStep testStep) {
+    ForLoopConditionXMLDTO condition = new ForLoopConditionXMLDTO();
+    condition.setTestCaseId(testStep.getTestCaseId());
+    condition.setTestStepId(testStep.getId());
+    condition.setTestDataProfileId(testStep.getForLoopTestDataId());
+    condition.setLeftParamValue(String.valueOf(testStep.getForLoopStartIndex()));
+    condition.setRightParamValue(String.valueOf(testStep.getForLoopEndIndex()));
+    condition.setLeftParamType(TestDataType.raw);
+    condition.setRightParamType(TestDataType.raw);
+    condition.setIterationType(IterationType.INDEX);
+    return condition;
+  }
   List<TestStepDTO> mapTestStepsToDTO(List<TestStep> testSteps);
   TestStep map(TestStepDTO testStepDTO);
+
+  @Mapping(target = "dataMap.forLoop", ignore = true)
+  TestStepCloudXMLDTO mapToCloudTestStep(TestStep testStep);
 
 
   @Mapping(target = "addonTestData", expression = "java(testStep.getAddonTestData())")

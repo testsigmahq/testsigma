@@ -21,6 +21,7 @@ import java.util.List;
   nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface TestCasePriorityMapper {
   List<TestCasePriorityXMLDTO> mapTestCasePriorities(List<TestCasePriority> applications);
+  List<TestCasePriorityCloudXMLDTO> mapToCloudTestCasePriorities(List<TestCasePriority> applications);
 
   TestCasePriorityDTO map(TestCasePriority testCasePriority);
 

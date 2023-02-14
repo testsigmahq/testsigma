@@ -89,8 +89,8 @@ public class TestCasePriorityService extends XMLExportImportService<TestCasePrio
   }
 
   @Override
-  protected List<TestCasePriorityXMLDTO> mapToXMLDTOList(List<TestCasePriority> list) {
-    return mapper.mapTestCasePriorities(list);
+  protected List<TestCasePriorityCloudXMLDTO> mapToXMLDTOList(List<TestCasePriority> list) {
+    return mapper.mapToCloudTestCasePriorities(list);
   }
 
   public Specification<TestCasePriority> getExportXmlSpecification(BackupDTO backupDTO) throws ResourceNotFoundException {

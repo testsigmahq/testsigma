@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.testsigma.annotation.JsonListRootName;
 import com.testsigma.model.ElementCreateType;
 import com.testsigma.model.ElementMetaData;
@@ -27,6 +28,7 @@ import java.sql.Timestamp;
 @JsonListRootName(name = "Elements")
 @JsonRootName(value = "Element")
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ElementCloudXMLDTO extends BaseXMLDTO {
   @JsonProperty("Id")
   private Long id;
@@ -105,6 +107,42 @@ public class ElementCloudXMLDTO extends BaseXMLDTO {
           .setSerializationInclusion(JsonInclude.Include.NON_NULL)
           .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
           .writeValueAsString(uiIdentifierMetaData);
+    } catch (Exception e) {
+      log.error(e, e);
+    }
+  }
+  
+  public String getStringMetadata() {
+    return metadata;
+  }
+  
+  public void setStringMetadata(String metadata) {
+    this.metadata = metadata;
+  }
+
+  public ElementMetaDataCloudXMLDTO getCloudMetadata() {
+    try {
+      if (metadata != null) {
+        return new XmlMapper()
+                .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+                .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
+                .readValue(metadata, ElementMetaDataCloudXMLDTO.class);
+      }
+
+    } catch (JsonProcessingException exception) {
+      log.error(exception, exception);
+    }
+    return null;
+  }
+
+  public void setCloudMetadata(ElementMetaDataCloudXMLDTO uiIdentifierMetaData) {
+    try {
+      if (uiIdentifierMetaData != null) {
+        this.metadata = new XmlMapper()
+                .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+                .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
+                .writeValueAsString(uiIdentifierMetaData);
+      }
     } catch (Exception e) {
       log.error(e, e);
     }

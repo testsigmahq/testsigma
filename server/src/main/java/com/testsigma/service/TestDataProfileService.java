@@ -152,8 +152,8 @@ public class TestDataProfileService extends XMLExportImportService<TestData> {
   }
 
   @Override
-  protected List<TestDataXMLDTO> mapToXMLDTOList(List<TestData> list) {
-    return mapper.mapTestData(list);
+  protected List<TestDataCloudXMLDTO> mapToXMLDTOList(List<TestData> list) {
+    return mapper.mapToCloudTestData(list);
   }
 
   public Specification<TestData> getExportXmlSpecification(BackupDTO backupDTO) {

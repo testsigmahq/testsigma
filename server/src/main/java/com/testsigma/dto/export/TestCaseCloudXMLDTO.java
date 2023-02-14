@@ -133,4 +133,6 @@ public class TestCaseCloudXMLDTO extends BaseXMLDTO {
   private String assigneeName;
   @JsonProperty("Order")
   private String order;
+  @JsonProperty("TestCaseDataDrivenCondition")
+  private TestCaseDataDrivenConditionCloudXMLDTO testCaseDataDrivenCondition;
 }

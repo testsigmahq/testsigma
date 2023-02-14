@@ -22,6 +22,7 @@ import java.util.List;
   nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface TestCaseTypeMapper {
   List<TestCaseTypeXMLDTO> mapTestCaseTypes(List<TestCaseType> applications);
+  List<TestCaseTypeCloudXMLDTO> mapToCloudTestCaseTypes(List<TestCaseType> applications);
 
   TestCaseTypeDTO map(TestCaseType testCaseType);
 

@@ -23,6 +23,8 @@ public interface RestStepMapper {
         return restStepXMLDTOS;
     }
 
+    List<RestStepCloudXMLDTO> mapToCloudRestSteps(List<RestStep> restSteps);
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "stepId", ignore = true)
     RestStep mapStep(RestStep restStep);

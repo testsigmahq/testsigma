@@ -91,8 +91,8 @@ public class ElementScreenService extends XMLExportImportService<ElementScreenNa
   }
 
   @Override
-  protected List<ElementScreenNameXMLDTO> mapToXMLDTOList(List<ElementScreenName> list) {
-    return elementScreenNameMapper.mapElementScreenNameList(list);
+  protected List<ElementScreenNameCloudXMLDTO> mapToXMLDTOList(List<ElementScreenName> list) {
+    return elementScreenNameMapper.mapToCloudElementScreenNameList(list);
   }
 
   public void importXML(BackupDTO importDTO) throws IOException, ResourceNotFoundException {

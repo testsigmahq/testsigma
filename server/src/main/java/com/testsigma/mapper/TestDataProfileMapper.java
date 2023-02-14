@@ -34,9 +34,13 @@ import java.util.Map;
 public interface TestDataProfileMapper {
 
   List<TestDataXMLDTO> mapTestData(List<TestData> test);
+  List<TestDataCloudXMLDTO> mapToCloudTestData(List<TestData> test);
 
   @Mapping(target = "data", expression = "java(test.getTempTestData())")
   TestDataXMLDTO mapTestData(TestData test);
+
+  @Mapping(target = "data", expression = "java(test.getTempTestData())")
+  TestDataCloudXMLDTO mapToCloudTestData(TestData test);
 
   List<TestDataSetXMLDTO> mapTestDataSet(List<TestDataSet> test);
 

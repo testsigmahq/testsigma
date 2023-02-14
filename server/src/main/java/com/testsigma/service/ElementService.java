@@ -264,8 +264,8 @@ public class ElementService extends XMLExportImportService<Element> {
   }
 
   @Override
-  protected List<ElementXMLDTO> mapToXMLDTOList(List<Element> list) {
-    return elementMapper.mapElements(list);
+  protected List<ElementCloudXMLDTO> mapToXMLDTOList(List<Element> list) {
+    return elementMapper.mapToCloudElements(list);
   }
 
   private void eventCallForUpdate(String oldName, Element element){

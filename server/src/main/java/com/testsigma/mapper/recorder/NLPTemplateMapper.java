@@ -60,14 +60,14 @@ public interface NLPTemplateMapper {
                     grammar = result.getGrammar().replaceAll("test-data2", "testData2");
                     result.getData().getTestData().put("testData2", "testData2");
                 }
-                else {
-                    grammar = result.getGrammar().replaceAll("\\$\\{(.*?)}", "\\${testData}");
-                    result.getData().getTestData().put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA_RECORDER,
-                            allowedValues.equals(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA) ? NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA : allowedValues);
+                else if(allowedValues.equals("test-data")) {
+                    grammar = result.getGrammar().replaceAll("test-data", "testData");
+                    result.getData().getTestData().put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA_RECORDER, dto.getData().getTestData().get("test-data"));
                 }
                 result.setGrammar(grammar);
-
             }
+            if(dto.getAllowedValues() != null && dto.getAllowedValues().containsKey("test-data"))
+                result.setAllowedValues(mapAllowedValues(dto.getAllowedValues().get("test-data")));
             results.add(result);
         }
         return results;

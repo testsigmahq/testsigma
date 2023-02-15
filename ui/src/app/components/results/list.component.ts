@@ -206,4 +206,8 @@ export class ResultsListComponent extends BaseComponent implements OnInit {
     this.router.navigate(['/td', this.version.id, 'results']);
     this.fetchTestPlans();
   }
+
+  removeHtmlTags(str) {
+    return str.replace(/<[^>]*>/g, '');
+  }
 }

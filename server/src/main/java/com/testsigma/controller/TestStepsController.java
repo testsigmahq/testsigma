@@ -107,7 +107,7 @@ public class TestStepsController {
                                    @RequestParam(value = "priority", required = false) TestStepPriority testStepPriority,
                                    @RequestParam(value = "disabled", required = false) Boolean disabled,
                                    @RequestParam(value = "ignoreStepResult", required = false) Boolean ignoreStepResult,
-                                   @RequestParam(value = "visualEnabled", required = false) Boolean visualEnabled) {
+                                   @RequestParam(value = "visualEnabled", required = false) Boolean visualEnabled) throws ResourceNotFoundException {
 
     log.debug("PUT /test_steps/bulk_update_properties with ids::" + Arrays.toString(ids) + " waitTime ::"
       + waitTime + " priority ::" + testStepPriority + " disabled ::" + disabled +" ignoreStepResult ::" +ignoreStepResult);

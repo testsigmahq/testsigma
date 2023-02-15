@@ -73,7 +73,7 @@ public interface TestStepRecorderMapper {
 
         if(ifCondtionExpectedResults.isPresent()) {
             ObjectMapperService mapperService = new ObjectMapperService();
-            return mapperService.parseJson(ifCondtionExpectedResults.get().toString(), ResultConstant[].class);
+            return mapperService.parseJson(mapperService.convertToJson(ifCondtionExpectedResults.get()), ResultConstant[].class);
         }
         return null;
     }

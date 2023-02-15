@@ -72,6 +72,10 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         return this.repository.findAllByTestCaseIdOrderByPositionAsc(testCaseId);
     }
 
+    public List<TestStep> findAllByParentId(Long parentId) {
+        return this.repository.findAllByParentId(parentId);
+    }
+
     public List<TestStep> findAllByTestCaseIdAndEnabled(Long testCaseId) {
         List<TestStep> testSteps = repository.findAllByTestCaseIdAndDisabledIsNotOrderByPositionAsc(testCaseId, true);
         List<TestStep> stepGroups = repository.findAllByTestCaseIdAndDisabledIsNotAndStepGroupIdIsNotNullOrderByPositionAsc(testCaseId, true);
@@ -109,9 +113,12 @@ public class TestStepService extends XMLExportImportService<TestStep> {
 
     public void destroy(TestStep testStep, Boolean isRecorderRequest) throws ResourceNotFoundException {
         repository.decrementPosition(testStep.getPosition(), testStep.getTestCaseId());
-        if(testStep.getConditionType() == TestStepConditionType.LOOP_WHILE && isRecorderRequest){
-            TestStep parentWhileStep = testStep.getParentStep();
-            repository.delete(parentWhileStep);
+        if(isRecorderRequest) {
+            if (testStep.getConditionType() == TestStepConditionType.LOOP_WHILE) {
+                TestStep parentWhileStep = testStep.getParentStep();
+                repository.delete(parentWhileStep);
+            }
+            this.handleChildStepsDelete(this.findAllByParentId(testStep.getId()));
         }
         repository.delete(testStep);
         if (testStep.getAddonActionId() != null) {
@@ -119,6 +126,15 @@ public class TestStepService extends XMLExportImportService<TestStep> {
             addonService.notifyActionNotUsing(addonNaturalTextAction);
         }
         publishEvent(testStep, EventType.DELETE);
+    }
+
+    public void handleChildStepsDelete(List<TestStep> childSteps) throws ResourceNotFoundException{
+        if(childSteps!=null && !childSteps.isEmpty()){
+            for(TestStep childStep:childSteps){
+                handleChildStepsDelete(this.findAllByParentId(childStep.getId()));
+                this.destroy(childStep, true);
+            }
+        }
     }
 
     public TestStep find(Long id) throws ResourceNotFoundException {

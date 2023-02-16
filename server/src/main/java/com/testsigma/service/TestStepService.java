@@ -162,7 +162,7 @@ public class TestStepService extends XMLExportImportService<TestStep> {
     }
 
 
-    public TestStep create(TestStep testStep, Boolean isRecorderRequest) throws TestsigmaException,ResourceNotFoundException{
+    public TestStep create(TestStep testStep) throws TestsigmaException,ResourceNotFoundException{
         if(testStep.getAction()!=null
                 && testStep.getConditionType() == TestStepConditionType.LOOP_WHILE
                 &&(testStep.getMaxIterations() != null && (testStep.getMaxIterations() > 100))){
@@ -172,9 +172,7 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         this.repository.incrementPosition(testStep.getPosition(), testStep.getTestCaseId());
         RestStep restStep = testStep.getRestStep();
         testStep.setRestStep(null);
-        if(isRecorderRequest) {
-            testStep = this.handleWhileTestStepCreate(testStep);
-        }
+        testStep = this.handleWhileTestStepCreate(testStep);
         testStep = this.repository.save(testStep);
         if (restStep != null) {
             RestStep newRestStep = mapper.mapStep(restStep);

@@ -1,9 +1,3 @@
--- MySQL dump 10.13  Distrib 5.7.39, for osx10.17 (x86_64)
---
--- Host: localhost    Database: testsigma_opensource
--- ------------------------------------------------------
--- Server version	5.7.39
-
 DROP TABLE IF EXISTS `natural_text_action_examples`;
 CREATE TABLE `natural_text_action_examples`
 (

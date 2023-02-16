@@ -11,6 +11,7 @@ package com.testsigma.mapper;
 
 import com.testsigma.automator.entity.DefaultDataGeneratorsEntity;
 import com.testsigma.dto.*;
+import com.testsigma.dto.export.ForLoopConditionXMLDTO;
 import com.testsigma.dto.export.TestStepXMLDTO;
 import com.testsigma.model.*;
 import com.testsigma.web.request.TestStepRequest;
@@ -90,5 +91,20 @@ public interface TestStepMapper {
   @Mapping(target = "authorizationValue", expression = "java(org.apache.commons.lang3.ObjectUtils.defaultIfNull(restStepDTO.getAuthorizationValue(), \"\").toString())")
   RestStepEntityDTO mapStepEntity(RestStepDTO restStepDTO);
 
+
+  List<ForLoopConditionXMLDTO> mapToCloudForConditions(List<TestStep> testSteps);
+
+  default ForLoopConditionXMLDTO mapToCloudForCondition(TestStep testStep) {
+    ForLoopConditionXMLDTO condition = new ForLoopConditionXMLDTO();
+    condition.setTestCaseId(testStep.getTestCaseId());
+    condition.setTestStepId(testStep.getId());
+    condition.setTestDataProfileId(testStep.getForLoopTestDataId());
+    condition.setLeftParamValue(String.valueOf(testStep.getForLoopStartIndex()));
+    condition.setRightParamValue(String.valueOf(testStep.getForLoopEndIndex()));
+    condition.setLeftParamType(TestDataType.raw);
+    condition.setRightParamType(TestDataType.raw);
+    condition.setIterationType(IterationType.INDEX);
+    return condition;
+  }
 }
 

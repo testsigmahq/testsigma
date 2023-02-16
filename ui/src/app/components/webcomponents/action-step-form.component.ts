@@ -535,16 +535,12 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   }
 
   save(isSkip?: boolean) {
-    if (this.testStep.isConditionalWhileLoop && !isSkip) {
-      this.createWhileStep();
-    } else {
       this.formSubmitted = true;
       if (this.validation()) {
         this.saving = true;
         this.testStepService.create(this.testStep).subscribe(step => this.afterSave(step), e => this.handleSaveFailure(e));
       }
     }
-  }
 
   validateTestData() {
    if ((this.currentAddonTemplate || this.currentTemplate)&& this.navigateTemplate.includes(this.currentTemplate?.id))

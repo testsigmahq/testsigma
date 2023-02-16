@@ -1014,7 +1014,7 @@
   "testcase.details.step_create_group": "{{Name}} Step Group",
   "testcase.details.step_bulk_update": "Bulk Update",
   "testcase.details.step_group.no_test_case": "No Test Case uses this Step Group.",
-  "testcase.list.not_found": "No {{categoryType}} created yet",
+  "testcase.list.not_found": "No {{categoryType}} {{type}} yet",
   "test_step.max_wait_time.info": "< 120 seconds",
   "test_step.max_wait_time.error": "Enter valid wait time between 1 to 120 seconds",
   "test_step.max_iterations.error": "Enter valid maximum iterations (1 to 100)",

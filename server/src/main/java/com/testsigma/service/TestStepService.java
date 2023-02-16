@@ -207,7 +207,7 @@ public class TestStepService extends XMLExportImportService<TestStep> {
             TestStepDataMap parentWhileStepMap = new TestStepDataMap();
             parentWhileStepMap.setWhileCondition("");
             parentWhileStep.setDataMap(parentWhileStepMap);
-            parentWhileStep = create(parentWhileStep, true);
+            parentWhileStep = create(parentWhileStep);
             testStep.setParentStep(parentWhileStep);
             testStep.setParentId(parentWhileStep.getId());
             testStep.setPosition(parentWhileStep.getPosition()+1);

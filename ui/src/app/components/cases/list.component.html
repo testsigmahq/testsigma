@@ -213,7 +213,7 @@
           <div class="empty-run-md"></div>
           <div
             class="empty-text"
-            [translate]="!!query ? 'message.common.search.not_found' : 'testcase.list.not_found' | translate : { categoryType: isStepGroup? 'Step Groups' : 'Test Cases',type: isDeletedFilter? 'added to Trash': 'created'}"></div>
+            [translate]="!!query ? 'message.common.search.not_found' : 'testcase.list.not_found' | translate : { categoryType: isStepGroup? 'Step Groups' : 'Test Cases',type: isDeletedFilter? 'added to trash': 'created'}"></div>
           <div *ngIf="!!!query && currentFilter?.isAllCases">
             <a
               [routerLink]="['/td', versionId, isStepGroup? 'step_groups':'cases', 'create']" [queryParams]="{ isGroup: isStepGroup}"

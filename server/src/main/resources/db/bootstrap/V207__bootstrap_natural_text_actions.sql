@@ -1,52 +1,3 @@
--- MySQL dump 10.13  Distrib 5.7.39, for osx10.17 (x86_64)
---
--- Host: localhost    Database: testsigma_opensource123
--- ------------------------------------------------------
--- Server version	5.7.39
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `natural_text_actions`
---
-
-DROP TABLE IF EXISTS `natural_text_action_examples`;
-DROP TABLE IF EXISTS `natural_text_actions`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `natural_text_actions` (
-                                        `id` bigint(20) NOT NULL AUTO_INCREMENT,
-                                        `workspace_type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                                        `natural_text` text COLLATE utf8_unicode_ci NOT NULL,
-                                        `data` text COLLATE utf8_unicode_ci,
-                                        `display_name` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
-                                        `snippet_class` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL,
-                                        `action` text COLLATE utf8_unicode_ci,
-                                        `import_to_web` int(11) DEFAULT NULL,
-                                        `import_to_mobile_web` int(11) DEFAULT NULL,
-                                        `import_to_android_native` int(11) DEFAULT NULL,
-                                        `import_to_ios_native` int(11) DEFAULT NULL,
-                                        `created_date` datetime DEFAULT CURRENT_TIMESTAMP,
-                                        `updated_date` datetime DEFAULT CURRENT_TIMESTAMP,
-                                        `allowed_values` mediumtext COLLATE utf8_unicode_ci,
-                                        `condition_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-                                        PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=30193 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `natural_text_actions`
---
-
 LOCK TABLES `natural_text_actions` WRITE;
 /*!40000 ALTER TABLE `natural_text_actions` DISABLE KEYS */;
 INSERT INTO `natural_text_actions` (`id`, `workspace_type`, `natural_text`, `data`, `display_name`, `snippet_class`, `action`, `import_to_web`, `import_to_mobile_web`, `import_to_android_native`, `import_to_ios_native`, `created_date`, `updated_date`, `allowed_values`, `condition_type`) VALUES (1,'WebApplication','Wait until the text ${test-data} is present on the current page','{\"test-data\":{\"test-data\":\"test-data\"},\"element\":null,\"attribute\":null,\"from-element\":null,\"to-element\":null}','waitUntilTextIsDisplayed','com.testsigma.automator.actions.web.wait.WaitUntilTextDisplayedAction','wait,verify',1,10067,20052,30052,'2021-10-19 19:37:03','2021-10-19 19:37:03',NULL,NULL);
@@ -608,14 +559,3 @@ INSERT INTO `natural_text_actions` (`id`, `workspace_type`, `natural_text`, `dat
 INSERT INTO `natural_text_actions` (`id`, `workspace_type`, `natural_text`, `data`, `display_name`, `snippet_class`, `action`, `import_to_web`, `import_to_mobile_web`, `import_to_android_native`, `import_to_ios_native`, `created_date`, `updated_date`, `allowed_values`, `condition_type`) VALUES (30172,'IOSNative','Store ${test-data1} in ${test-data2}','{\"test-data\":{\"test-data1\":\"test-data1\",\"test-data2\":\"test-data2\"}}','StoreRuntimeInAnotherRuntime','com.testsigma.automator.actions.mobile.ios.store.StoreRuntimeVariableNlpSnippet','store',1106,10222,20172,30172,'2023-01-03 11:51:43','2023-01-03 11:51:43',NULL,NULL);
 /*!40000 ALTER TABLE `natural_text_actions` ENABLE KEYS */;
 UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2023-01-03 13:22:25

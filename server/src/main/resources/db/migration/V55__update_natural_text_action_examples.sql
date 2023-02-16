@@ -1,19 +1,30 @@
+-- MySQL dump 10.13  Distrib 5.7.39, for osx10.17 (x86_64)
+--
+-- Host: localhost    Database: testsigma_opensource
+-- ------------------------------------------------------
+-- Server version	5.7.39
+
 DROP TABLE IF EXISTS `natural_text_action_examples`;
-CREATE TABLE `natural_text_action_examples` (
-                                                `id` bigint(20) NOT NULL AUTO_INCREMENT,
-                                                `natural_text_action_id` bigint(20) DEFAULT NULL,
-                                                `description` text COLLATE utf8_unicode_ci,
-                                                `example` text COLLATE utf8_unicode_ci,
-                                                `workspace` text COLLATE utf8_unicode_ci,
-                                                `data` json DEFAULT NULL,
-                                                `created_date` datetime DEFAULT CURRENT_TIMESTAMP,
-                                                `updated_date` datetime DEFAULT CURRENT_TIMESTAMP,
-                                                PRIMARY KEY (`id`),
-                                                KEY `index_natural_text_action_examples_on_natural_text_action_id` (`natural_text_action_id`),
-                                                CONSTRAINT `fk_natural_text_action_id_to_natural_text_actions` FOREIGN KEY (`natural_text_action_id`) REFERENCES `natural_text_actions` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=865 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+CREATE TABLE `natural_text_action_examples`
+(
+    `id`           BIGINT(20) NOT NULL AUTO_INCREMENT,
+    `natural_text_action_id`  BIGINT(20),
+    `description`  TEXT,
+    `example`      TEXT,
+    `workspace`  TEXT,
+    `data`         JSON,
+    `created_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updated_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY `index_natural_text_action_examples_on_natural_text_action_id` (`natural_text_action_id`),
+    CONSTRAINT `fk_natural_text_action_id_to_natural_text_actions` FOREIGN KEY (natural_text_action_id) REFERENCES natural_text_actions (id) ON DELETE CASCADE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 2
+  DEFAULT CHARSET = utf8
+  COLLATE utf8_unicode_ci;
 
 LOCK TABLES `natural_text_action_examples` WRITE;
+/*!40000 ALTER TABLE `natural_text_action_examples` DISABLE KEYS */;
 INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `description`, `example`, `workspace`, `data`, `created_date`, `updated_date`) VALUES (1,1,'Wait until specified text is present on current Page','In this example, execution will wait until specified text \"Register\" is present on current Page','https://travel.testsigma.com/login','{\"test data\": \"Register\"}','2022-08-17 14:08:28','2022-08-17 14:08:28');
 INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `description`, `example`, `workspace`, `data`, `created_date`, `updated_date`) VALUES (2,2,'Wait until specified text is absent on current Page','In this example, execution will wait until specified text \"HOME123\" is absent on current Page','https://demoqa.com/','{\"test data\": \"HOME123\"}','2022-08-17 14:08:28','2022-08-17 14:08:28');
 INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `description`, `example`, `workspace`, `data`, `created_date`, `updated_date`) VALUES (3,3,'Wait until current Page Title changes to specified text','In this example, execution will wait until current Page Title changes to specified text \"Google Images\"','https://www.google.com','{\"test data\": \"Google Images\"}','2021-10-19 19:37:03','2021-10-19 19:37:03');
@@ -521,4 +532,6 @@ INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `des
 INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `description`, `example`, `workspace`, `data`, `created_date`, `updated_date`) VALUES (853, 10222,'Store test-data1 in test-data2','In this example, we can store any data into a runtime variable.', '{}','{}','2023-01-28 16:06:57','2023-01-28 16:06:57');
 INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `description`, `example`, `workspace`, `data`, `created_date`, `updated_date`) VALUES (854, 20172,'Store test-data1 in test-data2','In this example, we can store any data into a runtime variable.', '{}','{}','2023-01-28 16:06:57','2023-01-28 16:06:57');
 INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `description`, `example`, `workspace`, `data`, `created_date`, `updated_date`) VALUES (855, 30172,'Store test-data1 in test-data2','In this example, we can store any data into a runtime variable.', '{}','{}','2023-01-28 16:06:57','2023-01-28 16:06:57');
+/*!40000 ALTER TABLE `natural_text_action_examples` ENABLE KEYS */;
 UNLOCK TABLES;
+

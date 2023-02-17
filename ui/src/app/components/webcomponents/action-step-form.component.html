@@ -94,6 +94,34 @@
       </div>
   </div>
 
+
+    <div  *ngIf="currentTemplate?.allowedValues; let first=first">
+      <div
+        *ngFor="let value of listDataItem; let index=index"
+        [class.h-active]="currentDataTypeIndex == index"
+        (mouseover)="currentDataTypeIndex=index"
+        [class.autofocus]="first"
+        (click)="selectAllowedValues(value.name, true)"
+        class="d-flex align-items-center pointer py-8 grey-on-hover">
+        <span
+          class="px-14"
+          [textContent]="value.name"></span>
+      </div>
+    </div>
+
+    <div  *ngIf="currentTemplate?.allowedValues">
+      <div
+        *ngFor="let value of listParameterItem; let index=index"
+        [class.h-active]="currentDataTypeIndex == index"
+        (mouseover)="currentDataTypeIndex=index"
+        (click)="selectAllowedValues(value, true)"
+        class="d-flex align-items-center pointer py-8 grey-on-hover">
+        <span
+          class="px-14"
+          [textContent]="value"></span>
+      </div>
+    </div>
+
   <div  *ngIf="currentAddonTemplate && currentAddonAllowedValues">
     <div
       *ngFor="let value of currentAddonAllowedValues; let index=index"

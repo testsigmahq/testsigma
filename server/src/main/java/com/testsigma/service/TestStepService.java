@@ -278,6 +278,8 @@ public class TestStepService extends XMLExportImportService<TestStep> {
             TestStep parentStep = repository.getById(testStepDTO.getParentId());
             if (parentStep.getParentId() != null) {
                 testStepDTO.setParentId(parentStep.getParentId());
+            } else if(parentStep.getAction() == null) {
+                testStepDTO.setParentId(null);
             }
         }
     }

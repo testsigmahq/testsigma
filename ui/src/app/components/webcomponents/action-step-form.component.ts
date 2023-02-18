@@ -1854,7 +1854,10 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       returnData = returnData.filter(template => template.stepActionType === StepActionType.IF_CONDITION);
     } else if (this.testStep.conditionType === TestStepConditionType.LOOP_WHILE) {
       returnData = returnData.filter(template => template.stepActionType === StepActionType.WHILE_LOOP);
-    } else {
+    } else if(this.testStep.conditionType === TestStepConditionType.LOOP_FOR) {
+      returnData = returnData.filter(template => template.stepActionType === StepActionType.FOR_LOOP);
+    }
+    else {
       returnData = returnData.filter(template => !(template.stepActionType === StepActionType.WHILE_LOOP ||
         template.stepActionType === StepActionType.IF_CONDITION));
     }
@@ -2029,14 +2032,10 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   public getParameter(reference) {
     this.listParameterItem = undefined;
     this.isParameter = false;
-    if ('left-data' == reference) {
-      if(true) {
+    if (('left-data' == reference && this.testStep.isTestDataLeftParameter) || ('right-data' == reference && this.testStep.isTestDataRightParameter)) {
         this.isParameter = true;
         this.fetchTestDataSet();
         this.focusOnSearch();
-      } else {
-
-      }
     }
   }
   public getTestdataProfile(reference?) {

@@ -2027,7 +2027,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   }
 
   public getParameter(reference) {
-    this.listDataItem = undefined;
+    this.listParameterItem = undefined;
     this.isParameter = false;
     if ('left-data' == reference) {
       if(true) {

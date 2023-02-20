@@ -488,7 +488,6 @@
   "platform.name.iOS": "iOS",
   "browser.name.GOOGLECHROME": "Google Chrome",
   "browser.name.CHROME": "Chrome",
-  "browser.name.MOZILLAFIREFOX": "Mozilla Firefox",
   "browser.name.FIREFOX" : "Mozilla Firefox",
   "browser.name.SAFARI": "Safari",
   "browser.name.EDGE": "Edge",

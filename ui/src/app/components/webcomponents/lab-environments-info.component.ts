@@ -37,7 +37,7 @@ import {TestDevice} from "../../models/test-device.model";
              [class.fa-linux-2]="env.isLinux"></span>
           <span
             [matTooltip]="
-            (env?.browser? ('browser.name.'+env?.browser | translate) : env?.deviceName) +
+            (env?.browser=='MOZILLAFIREFOX'? ('browser.name.FIREFOX' | translate):env?.browser?('browser.name.'+env?.browser | translate) : env?.deviceName) +
             (env?.browserVersion ? '( '+env?.browserVersion+' )' : '')"
             class="mr-5 fz-18 text-t-secondary"
             [class.fa-chrome]="env?.isChrome"

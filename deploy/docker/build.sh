@@ -52,7 +52,7 @@ cd "$ROOT_FOLDER" || exit 1
 sh $ROOT_FOLDER/deploy/compile.sh --UI_BUILD_CONF=docker --LOCAL_AGENT_TAG=$AGENT_TAG
 
 echo "Starting build..."
-docker buildx build --platform linux/amd64,linux/arm64,linux/x86_64 -t server -f $ROOT_FOLDER/Dockerfile .
+docker buildx build --platform linux/amd64,linux/arm64 -t server -f $ROOT_FOLDER/Dockerfile .
 
 docker tag server:latest testsigmahq/$IMAGE_NAME:$DOCKER_VERSION
 docker push testsigmahq/$IMAGE_NAME:$DOCKER_VERSION

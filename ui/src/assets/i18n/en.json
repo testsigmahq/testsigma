@@ -488,7 +488,7 @@
   "platform.name.iOS": "iOS",
   "browser.name.GOOGLECHROME": "Google Chrome",
   "browser.name.CHROME": "Chrome",
-  "browser.name.FIREFOX": "Mozilla Firefox",
+  "browser.name.MOZILLAFIREFOX": "Mozilla Firefox",
   "browser.name.SAFARI": "Safari",
   "browser.name.EDGE": "Edge",
   "browser.name.INTERNETEXPLORER": "Internet Explorer",

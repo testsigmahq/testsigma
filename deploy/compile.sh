@@ -37,6 +37,8 @@ cd "$ROOT_FOLDER"
 
 cd $ROOT_FOLDER/ui
 
+export NODE_OPTIONS=--openssl-legacy-provider
+
 npm install --legacy-peer-deps
 
 $ROOT_FOLDER/ui/node_modules/.bin/ng build --configuration=$UI_BUILD_CONF

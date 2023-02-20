@@ -6,13 +6,7 @@ import com.testsigma.automator.constants.NaturalTextActionConstants;
 public class VerifyElementMobileWebProxyAction extends VerifyElementProxyAction {
   @Override
   public void execute() throws Exception {
-    String status = getTestData(NaturalTextActionConstants.TEST_DATA_PRESENT_ENABLED_KEY);
-    if(status == null) {
-      status = getTestData(NaturalTextActionConstants.TEST_DATA_VISIBLE_KEY);
-    }
-    if(status == null) {
-      status = getTestData(NaturalTextActionConstants.TEST_DATA_ENABLED_DISABLED_KEY);
-    }
+    String status = getTestData();
     switch (status) {
       case NaturalTextActionConstants.DISPLAYED:
       case NaturalTextActionConstants.VISIBLE:

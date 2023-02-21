@@ -224,23 +224,28 @@ export class TestStep extends Base implements PageObject {
 
   get parsedStep(): String {
     let parsedStep = this.template?.naturalText;
-    if (parsedStep) {
-      if(this.template?.data?.['testData']) {
-        Object.keys(this.template?.data?.['testData']).forEach(parameter => {
-          let data = this.dataMap?.testData?.[parameter];
-          data = data ? data : this.dataMap?.testData?.[parameter];
-          if (data)
-            parsedStep = this.setTestDataType(parsedStep, data?.['value'], data?.type, new RegExp("\\$\\{"+(parameter)+"\\}"), {reference: parameter})
-        })
-        Object.keys(this.template?.data?.['testData']).forEach(parameter => {
-          let data = this.dataMap?.testData?.[parameter];
-          data = data ? data : this.dataMap?.testData?.[parameter];
-          if (data) {
-            let span_class = this.template?.allowedValues?.[parameter]?.length ? 'nlp-selected-data' : '';
-            parsedStep = parsedStep.replace('<TSTESTDAT ref="' + parameter + '">', '<span class="' + (span_class + ' spot-edit nlp-test-data ') + parameter + '" data-reference="' + parameter + '">')
-          }
-        })
-        parsedStep = parsedStep.replace(new RegExp('</TSTESTDAT>', 'g'), '</span>')
+    if (this.template?.data?.['testData']) {
+      if(this.isForLoop){
+        parsedStep = this.setForLoopDataValue(parsedStep);
+      }
+      else {
+        if (this.template?.data?.['testData']) {
+          Object.keys(this.template?.data?.['testData']).forEach(parameter => {
+            let data = this.dataMap?.testData?.[parameter];
+            data = data ? data : this.dataMap?.testData?.[parameter];
+            if (data)
+              parsedStep = this.setTestDataType(parsedStep, data?.['value'], data?.type, new RegExp("\\$\\{" + (parameter) + "\\}"), {reference: parameter})
+          })
+          Object.keys(this.template?.data?.['testData']).forEach(parameter => {
+            let data = this.dataMap?.testData?.[parameter];
+            data = data ? data : this.dataMap?.testData?.[parameter];
+            if (data) {
+              let span_class = this.template?.allowedValues?.[parameter]?.length ? 'nlp-selected-data' : '';
+              parsedStep = parsedStep.replace('<TSTESTDAT ref="' + parameter + '">', '<span class="' + (span_class + ' spot-edit nlp-test-data ') + parameter + '" data-reference="' + parameter + '">')
+            }
+          })
+          parsedStep = parsedStep.replace(new RegExp('</TSTESTDAT>', 'g'), '</span>')
+        }
       }
       if (this?.element) {
         parsedStep = this.replaceElement(parsedStep);
@@ -665,15 +670,20 @@ export class TestStep extends Base implements PageObject {
   }
 
   get getAllTestData(): TestDataMapValue[] {
-    let testDataList:TestDataMapValue[] = [];
-    if(this.template?.data?.['testData']) {
+    let testDataList: TestDataMapValue[] = [];
+    if (this.template?.data?.['testData']) {
       Object.keys(this.template.data?.['testData']).forEach(parameter => {
         let data = new TestDataMapValue();
-        if(this.dataMap?.testData) {
+        if(this.isForLoop) {
+          data.type = this.forLoopData?.setValuesParsed(parameter)?.['type'];
+          data.value = this.forLoopData?.setValuesParsed(parameter)?.['value']
+        } else if (this.dataMap?.testData?.[parameter]) {
           data = this.dataMap?.testData?.[parameter];
         }
-        data.parameterNameValue = parameter;
-        testDataList.push(data);
+        if(data && data?.value){
+          data.parameterNameValue = this.template.allowedValues?.[parameter] ? parameter : this.template.data?.['testData']?.[parameter];
+          testDataList.push(data);
+        }
       })
     }
     return testDataList;

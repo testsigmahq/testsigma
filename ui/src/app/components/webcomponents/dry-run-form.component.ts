@@ -405,7 +405,10 @@ export class DryRunFormComponent extends BaseComponent implements OnInit {
   }
 
   disableRunButton() {
-    return this.saving || this.savingConfig || this.emptyElements.length > 0 || !this.dryExecutionForm?.valid
+    if(this.isHybrid && this.dryExecutionForm.value.testDevices[0].platform==null)
+      return false
+    else
+      return this.saving || this.savingConfig || this.emptyElements.length > 0 || this.dryExecutionForm?.invalid
       || (!this.isHybrid && this.invalidUrls.length > 0) || (this.isHybrid && this.zeroActiveAgents);
   }
 

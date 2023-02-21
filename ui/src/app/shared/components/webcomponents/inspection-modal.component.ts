@@ -241,10 +241,6 @@ export class InspectionModalComponent extends BaseComponent implements OnInit {
   }
 
   launch() {
-    if(!this.checkUploadCompatability()){
-      this.showNotification(NotificationType.Error, this.translate.instant("mobile_recorder.message.ipa.error"))
-      return;
-    }
     this.data.uiId = this.uiId;
     this.data.agent = this.agent;
     this.data.uploadId = this.uploadSelectionForm.getRawValue().app_upload_id;

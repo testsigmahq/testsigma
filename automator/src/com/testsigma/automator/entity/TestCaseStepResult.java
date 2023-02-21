@@ -4,13 +4,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.*;
 
 @Data
 @ToString
 @EqualsAndHashCode
-public class TestCaseStepResult {
+public class TestCaseStepResult implements Serializable {
   private Long id;
   private Long envRunId;
   private Long testCaseId;

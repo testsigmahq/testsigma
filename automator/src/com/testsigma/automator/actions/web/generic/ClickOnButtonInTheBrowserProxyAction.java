@@ -1,5 +1,6 @@
 package com.testsigma.automator.actions.web.generic;
 
+import com.testsigma.automator.constants.NaturalTextActionConstants;
 import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.actions.DriverAction;
 import com.testsigma.automator.actions.ElementAction;
@@ -14,7 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 public class ClickOnButtonInTheBrowserProxyAction extends ElementAction {
     @Override
     public void execute() throws Exception {
-      String button = getTestData();
+      String button = getTestData(NaturalTextActionConstants.TEST_DATA_BACK_FORWARD_KEY);
       switch (button) {
         case ActionConstants.REFRESH:
           ReLoadCurrentPageAction refresh = (ReLoadCurrentPageAction) this.initializeChildSnippet(ReLoadCurrentPageAction.class);

@@ -15,6 +15,8 @@ import {AddonTestStepTestData} from "./addon-test-step-test-data.model";
 import {AddonElementData} from "./addon-element-data.model";
 import {ResultConstant} from "../enums/result-constant.enum";
 import {AddonNaturalTextActionParameter} from "./addons-parameter.model";
+import { StepDetailsDataMap } from "./step-details-data-map.model";
+import { TestDataMapValue } from "./test-data-map-value.model";
 
 export class TestStep extends Base implements PageObject {
   @serializable
@@ -66,14 +68,21 @@ export class TestStep extends Base implements PageObject {
 
   @serializable(optional(list(primitive())))
   public conditionIf: ResultConstant[];
-  @serializable(alias("testData"))
-  public testDataVal: String;
-  @serializable
-  public testDataType: TestDataType;
   @serializable
   public attribute: String;
   @serializable
   public element: String;
+  @serializable(optional(custom(v => {
+      if (v)
+        return v.serialize();
+    }, v => {
+      if (v) {
+        return new StepDetailsDataMap().deserialize(v)
+      }
+    }
+  )))
+  public dataMap: StepDetailsDataMap;
+
   @serializable
   public forLoopStartIndex: number;
   @serializable
@@ -198,7 +207,23 @@ export class TestStep extends Base implements PageObject {
   get parsedStep(): String {
     let parsedStep = this.template?.naturalText;
     if (parsedStep) {
-      parsedStep = this.replaceTestData(parsedStep, this?.testDataType);
+      if(this.template?.data?.['testData']) {
+        Object.keys(this.template?.data?.['testData']).forEach(parameter => {
+          let data = this.dataMap?.testData?.[parameter];
+          data = data ? data : this.dataMap?.testData?.[parameter];
+          if (data)
+            parsedStep = this.setTestDataType(parsedStep, data?.['value'], data?.type, new RegExp("\\$\\{"+(parameter)+"\\}"), {reference: parameter})
+        })
+        Object.keys(this.template?.data?.['testData']).forEach(parameter => {
+          let data = this.dataMap?.testData?.[parameter];
+          data = data ? data : this.dataMap?.testData?.[parameter];
+          if (data) {
+            let span_class = this.template?.allowedValues?.[parameter]?.length ? 'action-selected-data' : '';
+            parsedStep = parsedStep.replace('<TSTESTDAT ref="' + parameter + '">', '<span class="' + (span_class + ' spot-edit action-test-data ') + parameter + '" data-reference="' + parameter + '">')
+          }
+        })
+        parsedStep = parsedStep.replace(new RegExp('</TSTESTDAT>', 'g'), '</span>')
+      }
       if (this?.element) {
         parsedStep = this.replaceElement(parsedStep);
       }
@@ -213,46 +238,76 @@ export class TestStep extends Base implements PageObject {
   get parsedAddonStep(): String {
     let parsedStep = this.addonTemplate?.naturalText;
     if(parsedStep) {
-      if (this.addonTestData && this.addonElements)
-        this.addonTemplate.parameters?.forEach(parameter => {
-          let referenceName = new RegExp(parameter.reference);
-          if (parameter.isTestData) {
-            let value = this.addonTestData[parameter.reference]?.value;
-            switch (this.addonTestData[parameter.reference]?.type) {
-              case TestDataType.random:
-                value = '~|' + value + '|';
-                break;
-              case TestDataType.runtime:
-                value = '$|' + value + '|';
-                break;
-              case TestDataType.global:
-                value = '*|' + value + '|';
-                break;
-              case TestDataType.parameter:
-                value = '@|' + value + '|';
-                break;
-              case TestDataType.function:
-                value = '!|' + value + '|';
-                break;
-            }
-            parsedStep = parsedStep.replace(referenceName, '<TSTESTDAT ref="' + parameter.reference + '">' + this.getTestData(value) + '</TSTESTDAT>')
-          } else if (parameter.isElement) {
-            parsedStep = parsedStep.replace(referenceName, '<TSELEMENT ref="' + parameter.reference + '">' + this.addonElements[parameter.reference]?.name + '</TSELEMENT>')
-          }
-        })
-
-
-      this.addonTemplate.parameters?.forEach((parameter: AddonNaturalTextActionParameter) => {
-        if (parameter.isTestData) {
-          parsedStep = parsedStep.replace('<TSTESTDAT ref="' + parameter.reference + '">', '<span class="test_data" data-reference="' + parameter.reference + '">')
-        } else if (parameter.isElement) {
-          parsedStep = parsedStep.replace('<TSELEMENT ref="' + parameter.reference + '">', '<span class="element" data-reference="' + parameter.reference + '">')
-        }
-      })
-      parsedStep = parsedStep.replace(new RegExp('</TSTESTDAT>', 'g'), '</span>')
-      parsedStep = parsedStep.replace(new RegExp('</TSELEMENT>', 'g'), '</span>')
+      parsedStep = this.setTestDataValue(parsedStep);
     }
     else parsedStep = this.action;
+    return parsedStep;
+  }
+
+  setTestDataType(parsedStep, value, type, referenceName, parameter) {
+    switch (type) {
+      case TestDataType.global:
+        value = '*|' + value + '|';
+        break;
+      case TestDataType.random:
+        value = '~|' + value + '|';
+        break;
+      case TestDataType.runtime:
+        value = '$|' + value + '|';
+        break;
+      case TestDataType.parameter:
+        value = '@|' + value + '|';
+        break;
+      case TestDataType.function:
+        value = '!|' + value + '|';
+        break;
+    }
+    if(this.isCoordinateStep) value = this.formatCoordinates(value);
+
+    parsedStep = parsedStep.replace(referenceName, '<TSTESTDAT ref="' + parameter.reference + '">' + value + '</TSTESTDAT>');
+    return parsedStep;
+  }
+
+
+  setTestDataValue(parsedStep) {
+    if (this.addonTestData && this.addonElements)
+      this.addonTemplate.parameters?.forEach(parameter => {
+        let referenceName = new RegExp(parameter.reference);
+        if (parameter.isTestData) {
+          let value = this.addonTestData[parameter.reference]?.value;
+          switch (this.addonTestData[parameter.reference]?.type) {
+            case TestDataType.random:
+              value = '~|' + value + '|';
+              break;
+            case TestDataType.runtime:
+              value = '$|' + value + '|';
+              break;
+            case TestDataType.global:
+              value = '*|' + value + '|';
+              break;
+            case TestDataType.parameter:
+              value = '@|' + value + '|';
+              break;
+            case TestDataType.function:
+              value = '!|' + value + '|';
+              break;
+          }
+          parsedStep = parsedStep.replace(referenceName, '<TSTESTDAT ref="' + parameter.reference + '">' + this.getTestData(value) + '</TSTESTDAT>')
+        } else if (parameter.isElement) {
+          parsedStep = parsedStep.replace(referenceName, '<TSELEMENT ref="' + parameter.reference + '">' + this.addonElements[parameter.reference]?.name + '</TSELEMENT>')
+        }
+      })
+
+
+    this.addonTemplate.parameters?.forEach((parameter: AddonNaturalTextActionParameter) => {
+      if (parameter.isTestData) {
+        parsedStep = parsedStep.replace('<TSTESTDAT ref="' + parameter.reference + '">', '<span class="test_data" data-reference="' + parameter.reference + '">')
+      } else if (parameter.isElement) {
+        parsedStep = parsedStep.replace('<TSELEMENT ref="' + parameter.reference + '">', '<span class="element" data-reference="' + parameter.reference + '">')
+      }
+    })
+    parsedStep = parsedStep.replace(new RegExp('</TSTESTDAT>', 'g'), '</span>')
+    parsedStep = parsedStep.replace(new RegExp('</TSELEMENT>', 'g'), '</span>')
     return parsedStep;
   }
 
@@ -312,37 +367,42 @@ export class TestStep extends Base implements PageObject {
     return this.type == TestStepType.FOR_LOOP;
   }
 
+  get isTestdataProfile(){
+    return this.template?.data?.testData?.['test-data-profile'];
+  }
+
+  get isTestDataLeftParameter() {
+    return this.template?.data?.testData['left-data'] == 'parameter';//TODO need to change type tag based
+  }
+
+  get isTestDataRightParameter() {
+    return this.template?.data?.testData['right-data'] == 'parameter';//TODO need to change type tag based
+  }
+
+  get isTestDataLeftSetName() {
+    return this.template?.data?.testData['left-data'] == 'start-set-name';//TODO need to change type tag based
+  }
+
+  get isTestDataRightSetName() {
+    return this.template?.data?.testData['right-data'] == "end-set-name";//TODO need to change type tag based
+  }
+
+  get isTestdataParameter(){
+    return this.template?.data?.testData?.['parameter'];
+  }
+
   get testDataId(): Number {
-    if (this.isForLoop && this.forLoopTestDataId)
-      return this.forLoopTestDataId;
+    return this.dataMap.id;
   }
 
   deserialize(input: any): this {
-    let conditionIf: ResultConstant[] = [];
-    if (input['conditionIf'] instanceof Array)
-      input['conditionIf'].forEach(key => {
-        if (key == "0")
-          conditionIf.push(ResultConstant.SUCCESS)
-        else if (key == "1")
-          conditionIf.push(ResultConstant.FAILURE)
-        else if (key == "2")
-          conditionIf.push(ResultConstant.ABORTED)
-        else if (key == "3")
-          conditionIf.push(ResultConstant.NOT_EXECUTED)
-        else if (key == "4")
-          conditionIf.push(ResultConstant.QUEUED)
-        else if (key == "5")
-          conditionIf.push(ResultConstant.STOPPED)
-      });
-    this.conditionIf = conditionIf;
-
     return Object.assign(this, deserialize(TestStep, input));
   }
 
   public serialize(): JSON {
     let output = serialize(this);
     let conditionIf: string[] = [];
-    this.conditionIf?.forEach(key => {
+    this.conditionIf.forEach(key => {
       if (key == ResultConstant.SUCCESS)
         conditionIf.push("0")
       else if (key == ResultConstant.FAILURE)
@@ -360,66 +420,9 @@ export class TestStep extends Base implements PageObject {
     return output;
   }
 
-  private replaceTestData(parsedStep: String, dataType): String {
-    switch (dataType) {
-      case TestDataType.raw:
-        parsedStep = this.replaceTestDataRaw(parsedStep);
-        break;
-      case TestDataType.parameter:
-        parsedStep = this.replaceTestDataParameter(parsedStep);
-        break;
-      case TestDataType.runtime:
-        parsedStep = this.replaceTestDataRuntime(parsedStep);
-        break;
-      case TestDataType.global:
-        parsedStep = this.replaceTestDataEnvironment(parsedStep);
-        break;
-      case TestDataType.random:
-        parsedStep = this.replaceTestDataRandom(parsedStep);
-        break;
-      case TestDataType.function:
-        parsedStep = this.replaceTestDataFunction(parsedStep);
-        break;
-      default://TODO this.dataMap.testData this is not stored test data type[JAYAVEL S]
-        parsedStep = this.replaceTestDataRaw(parsedStep);
-        break;
-    }
-    return parsedStep;
-  }
-
-  private replaceTestDataRandom(parsedStep: String): String {
-    let testData = this.testDataVal ? this.testDataVal : '';
-    return parsedStep.replace(new RegExp("\\${.*?}"), "<span class='action-test-data'>~|" + testData + "|</span>");
-  }
-
-  private replaceTestDataFunction(parsedStep: String): String {
-    let testData = this.testDataVal ? this.testDataVal : '';
-    return parsedStep.replace(new RegExp("\\${.*?}"), "<span class='action-test-data'>!|" + testData + "|</span>");
-  }
-
-  private replaceTestDataEnvironment(parsedStep: String): String {
-    let testData = this.testDataVal ? this.testDataVal : '';
-    return parsedStep.replace(new RegExp("\\${.*?}"), "<span class='action-test-data'>*|" + testData + "|</span>");
-  }
-
-  private replaceTestDataRuntime(parsedStep: String): String {
-    let testData = this.testDataVal ? this.testDataVal : '';
-    return parsedStep.replace(new RegExp("\\${.*?}"), "<span class='action-test-data'>$|" + testData + "|</span>");
-  }
-
-  private replaceTestDataParameter(parsedStep: String): String {
-    let testData = this.testDataVal ? this.testDataVal : '';
-    return parsedStep.replace(new RegExp("\\${.*?}"), "<span class='action-test-data'>@|" + testData + "|</span>");
-  }
-
-  private replaceTestDataRaw(parsedStep: String): String {
-    let testData = this.testDataVal ? this.testDataVal : '';
-    let span_class= this.template.allowedValues?'action-selected-data':'action-test-data';
-    return parsedStep.replace(new RegExp("\\${.*?}"), "<span class="+span_class+">"+this.getTestData(testData)+"</span>")
-  }
 
   private replaceElement(parsedStep: String): String {
-    let element = this.element ? this.element : '';
+    let element = this.dataMap ? this.element : '';
     return parsedStep.replace(new RegExp("#{.*?}"), "<span class='action-element'>" + element + "</span>");
   }
 
@@ -428,16 +431,11 @@ export class TestStep extends Base implements PageObject {
     return parsedStep.replace(new RegExp("@{.*?}"), "<span class='action-attribute'>" + attributeString + "</span>");
   }
 
-  get testDataValue(): String {
-    return this.testDataVal || this.testDataParameterValue;
-  }
-
   get draggable(): boolean {
-    return !(this.isConditionalElse || this.isConditionalElseIf || this.isConditionalIf || this.isForLoop || this.isConditionalWhileLoop || this.isWhileLoop || (this.parentStep && this.parentStep.isForLoop && this.isTestDataTypeOfParameterType));
+    return !(this.isConditionalElse || this.isConditionalElseIf || this.isConditionalIf || this.isForLoop || this.isConditionalWhileLoop || this.isWhileLoop || (this.parentStep && this.parentStep.isForLoop));
   }
 
   deserializeCommonProperties(input: JSON) {
-
     if (input['waitTime']) {
       this.priority = input['priority'];
       this.waitTime = input['waitTime'];
@@ -509,10 +507,6 @@ export class TestStep extends Base implements PageObject {
     } else {
       return false;
     }
-  }
-
-  get isTestDataTypeOfParameterType() {
-    return this.testDataType && this.testDataType == TestDataType.parameter;
   }
 
   getConditionalParentStep(testStep) {
@@ -608,5 +602,32 @@ export class TestStep extends Base implements PageObject {
 
   private getTestData(value: any) {
     return this.isCoordinateStep? this.formatCoordinates(value):value;
+  }
+
+  referenceValue(referenceName) {
+    if(!!this.dataMap.testData) {
+      return this.dataMap.testData[referenceName]
+    }
+    return false;
+  }
+
+  get getAllTestData(): TestDataMapValue[] {
+    let testDataList:TestDataMapValue[] = [];
+    if(this.template?.data?.['testData']) {
+      Object.keys(this.template.data?.['testData']).forEach(parameter => {
+        let data = new TestDataMapValue();
+        if(this.dataMap?.testData) {
+          data = this.dataMap?.testData?.[parameter];
+        }
+        data.parameterNameValue = parameter;
+        testDataList.push(data);
+      })
+    }
+    else if (this.addonTemplate) {
+      if (this.addonTestData["values-count"]?.value || this.addonTestData) {
+        testDataList.push(this.addonTestData["values-count"]?.value || this.addonTestData);
+      }
+    }
+    return testDataList;
   }
 }

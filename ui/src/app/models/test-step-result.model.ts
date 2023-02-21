@@ -166,7 +166,24 @@ export class TestStepResult extends ResultBase implements PageObject {
 
   get parsedStep(): String {
     let parsedStep = this.template.naturalText;
-    parsedStep = this.replaceTestData(parsedStep, this.stepDetail && (this.stepDetail.dataMap.testDataType || this.metadata.testDataType || this.stepDetail.dataMap.testData));
+    if(this.template?.data?.['testData']) {
+      Object.keys(this.template?.data?.['testData']).forEach(parameter => {
+        let data = this.stepDetail.dataMap.testData?.[parameter];
+        if (data) {
+          let value = data.value;
+          value = this.replaceAddonTestData(data?.type, value);
+          parsedStep = parsedStep.replace(new RegExp("\\$\\{"+(parameter)+"\\}"), '<TSTESTDAT ref="' + parameter + '">' + value + '</TSTESTDAT>')
+        }
+      })
+      Object.keys(this.template?.data?.['testData']).forEach(parameter => {
+        let data = this.stepDetail.dataMap.testData?.[parameter];
+        if (data) {
+          let span_class = this.template?.allowedValues?.[parameter]?.length ? 'nlp-selected-data' : '';
+          parsedStep = parsedStep.replace('<TSTESTDAT ref="' + parameter + '">', '<span class="' + (span_class + ' spot-edit action-test-data ') + parameter + '" data-reference="' + parameter + '">')
+        }
+      })
+      parsedStep = parsedStep.replace(new RegExp('</TSTESTDAT>', 'g'), '</span>')
+    }
     if (this.stepDetail && (this.stepDetail.dataMap.elementString || this.stepDetail.dataMap.fromElementString || this.stepDetail.dataMap.toElementString)) {
       parsedStep = this.replaceElement(parsedStep);
     }

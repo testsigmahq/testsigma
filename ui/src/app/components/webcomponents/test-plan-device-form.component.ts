@@ -114,7 +114,7 @@ export class TestPlanDeviceFormComponent extends TestPlanPlatformOsVersionFormCo
   setAgentDevice(agentDevice: AgentDevice) {
     this.agentDevice = null;
     this.agentDevice = agentDevice;
-    this.platformOsVersion=this.platformOsVersions.find(osVersion => osVersion.version==agentDevice?.osVersion+".0")
+    this.platformOsVersion=this.platformOsVersions.find(osVersion => osVersion.version==agentDevice?.osVersion.split(".")[0]+".0")
     this.environmentFormGroup.controls['platformOsVersionId'].setValue(this.platformOsVersion.id)
     this.environmentFormGroup.controls['deviceId'].setValue(agentDevice?.id);
     if (this.version.workspace.isMobileWeb) {

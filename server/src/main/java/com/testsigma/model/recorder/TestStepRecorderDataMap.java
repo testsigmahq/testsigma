@@ -3,10 +3,7 @@ package com.testsigma.model.recorder;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.testsigma.model.TestStepConditionType;
-import com.testsigma.model.TestStepCustomStep;
-import com.testsigma.model.TestStepForLoop;
-import com.testsigma.model.TestStepWhileLoop;
+import com.testsigma.model.*;
 import lombok.Data;
 
 import java.util.Map;
@@ -21,7 +18,7 @@ public class TestStepRecorderDataMap {
     @JsonProperty("conditionType")
     private TestStepConditionType conditionType;
     @JsonProperty("testData")
-    private Map<String, TestStepNlpData> testData;
+    private Map<String, RecorderTestStepNlpData> testData;
     @JsonProperty("customStep")
     private TestStepCustomStep customStep;
     @JsonProperty("uiIdentifier")

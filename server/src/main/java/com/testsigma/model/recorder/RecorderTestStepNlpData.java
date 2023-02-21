@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TestStepNlpData {
+public class RecorderTestStepNlpData {
     private String type;
     private String value;
     private CloudTestDataFunction testDataFunction;

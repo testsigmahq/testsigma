@@ -60,12 +60,12 @@ public class AddonNaturalTextActionParameter {
   @Column(name = "allowed_values")
   private String allowedValues;
 
-  public void setAllowedValues(List allowedValues){
+  public void setAllowedValues(String[] allowedValues){
     this.allowedValues = new ObjectMapperService().convertToJson(allowedValues);
   }
 
 
-  public List getAllowedValues(){
-    return new ObjectMapperService().parseJson(this.allowedValues, List.class);
+  public String[] getAllowedValues(){
+    return new ObjectMapperService().parseJson(this.allowedValues, String[].class);
   }
 }

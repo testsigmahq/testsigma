@@ -119,24 +119,29 @@ public class UploadService extends XMLExportImportService<Upload> {
   public void delete(Upload upload) {
     TestCaseSpecificationsBuilder builder = new TestCaseSpecificationsBuilder();
     Long id = upload.getId();
-    Long workspace_id = upload.getWorkspaceId();
+    String workspace_type = String.valueOf(upload.getWorkspace().getWorkspaceType());
     List<SearchCriteria> params = new ArrayList<>();
     List<UploadVersion> uploadVersions = uploadVersionService.findByUploadId(id);
     for(UploadVersion uploadVersion: uploadVersions ) {
-      params.add(new SearchCriteria("testData", SearchOperation.EQUALITY, "testsigma-storage:/"+uploadVersion.getPath()));
-      params.add(new SearchCriteria("workspaceVersionId", SearchOperation.EQUALITY, workspace_id));
-      builder.setParams(params);
-      Specification<TestCase> spec = builder.build();
-      Page<TestCase> linkedTestCases = testCaseService.findAll(spec, PageRequest.of(0, 1));
-      if(linkedTestCases.getTotalElements() > 0){
-        throw new DataIntegrityViolationException("dataIntegrityViolationException: Failed to delete some of the Uploads " +
-                "since they are already associated to some Test Cases.");
-      }
-      this.uploadRepository.delete(upload);
+        params.add(new SearchCriteria("testDataValue", SearchOperation.EQUALITY, "testsigma-storage:/"+uploadVersion.getPath()));
+        builder.setParams(params);
+        Specification<TestCase> spec = builder.build();
+        Page<TestCase> linkedTestCases = testCaseService.findAll(spec, PageRequest.of(0, 1));
+        if(linkedTestCases.getTotalElements() > 0){
+          throw new DataIntegrityViolationException("dataIntegrityViolationException: Failed to delete some of the Uploads " +
+                  "since they are already associated to some Test Cases.");
+       }
+        try{
+          this.uploadRepository.delete(upload);
+        }
+        catch(DataIntegrityViolationException e){
+          throw new DataIntegrityViolationException ("dataIntegrityViolationException: Failed to delete some of the Uploads " +
+                  "since they are already associated to some Test Cases, please remove mapping and try again.");
+        }
       publishEvent(upload, EventType.DELETE);
   }
   }
-  public void bulkDelete(Long[] ids, Long workspaceVersionId) throws Exception {
+  public void bulkDelete(Long[] ids) throws Exception {
     TestCaseSpecificationsBuilder builder = new TestCaseSpecificationsBuilder();
     for (Long id : ids) {
         Upload upload = find(id);

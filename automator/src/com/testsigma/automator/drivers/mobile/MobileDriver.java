@@ -75,6 +75,7 @@ public class MobileDriver extends TestsigmaDriver {
   @Override
   protected RemoteWebDriver createDriver(DesiredCapabilities desiredCapabilities) throws AutomatorException {
     try {
+      log.info("Creating driver with capabilities:"+desiredCapabilities);
       Calendar startTime = Calendar.getInstance();
       createDriverInstance(desiredCapabilities);
       log.info("Stating with post mobile driver creation actions");
@@ -83,6 +84,7 @@ public class MobileDriver extends TestsigmaDriver {
       setTimeouts();
       return remoteWebDriver;
     } catch (Exception e) {
+      log.error("Error in driver creation:",e);
       if (e.getCause() instanceof SSLException || e.getCause() instanceof ConnectException) {
         throw new AutomatorException(e.getCause() + String.format(APPIUM_INVALID_URL));
       } else {

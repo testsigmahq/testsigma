@@ -15,5 +15,5 @@ public class DefaultDataGeneratorsEntity {
   private Map<String, String> arguments;
   private Map<String, String> argumentTypes;
   private Boolean isAddonFn = false;
-  private CustomFunctionType customFunctionType;
+  //private CustomFunctionType customFunctionType;
 }

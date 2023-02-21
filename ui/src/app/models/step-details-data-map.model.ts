@@ -13,14 +13,33 @@ import {TestStepForLoop} from "./test-step-for-loop.model";
 import {TestStepTestDataFunction} from "./test-step-test-data-function.model";
 import {CustomStep} from "./custom-step.model";
 import {AddonTestStepTestData} from "./addon-test-step-test-data.model";
+import { TestDataMapValue } from "./test-data-map-value.model";
 
 export class StepDetailsDataMap extends Base implements Deserializable {
   @serializable(optional(list(primitive())))
   public conditionIf: ResultConstant[];
   @serializable(optional())
   public whileCondition: String;
-  @serializable
-  public testData: String;
+  @serializable(custom(v => {
+    if(!v){
+      return v;
+    }
+    let returnData = new Map<string, TestDataMapValue>();
+    Object.keys(v).forEach(item => {
+      returnData[item] = v[item].serialize();
+    })
+    return returnData;
+  }, v => {
+    if(!v){
+      return v;
+    }
+    let returnData = new Map<string, TestDataMapValue>();
+    Object.keys(v).forEach(item => {
+      returnData[item] = new TestDataMapValue().deserialize(v[item]);
+    })
+    return returnData;
+  }))
+  public testData: Map<string, TestDataMapValue>;
   @serializable(alias('test-data-function', optional(custom(v => {
     if (!v)
       return v;
@@ -102,7 +121,7 @@ export class StepDetailsDataMap extends Base implements Deserializable {
   public serialize(): JSON {
     let output = serialize(this);
     let conditionIf: string[] = [];
-    this.conditionIf.forEach(key => {
+    this.conditionIf?.forEach(key => {
       if (key == ResultConstant.SUCCESS)
         conditionIf.push("0")
       else if (key == ResultConstant.FAILURE)
@@ -127,7 +146,6 @@ export class StepDetailsDataMap extends Base implements Deserializable {
     delete output.conditionIf;
     delete output.testDataType;
     delete output.testData;
-    delete output.element;
     delete output.fromElement;
     delete output.toElement;
     return output;

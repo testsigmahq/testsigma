@@ -98,6 +98,7 @@
   "message.common.confirmation.upload_des":"You will lose all Uploaded version, Run reports and Run configuration associated with this {{Item}}.",
   "message.common.confirmation.test_suite_des":"You will lose all Run reports associated with this {{Item}}.",
   "message.common.confirmation.test_plan_des":"You will lose all Run reports associated with this {{Item}}.",
+  "message.common.confirmation.uploads_des": "This file and all of its versions will be permanently deleted and not be retrievable. Please type DELETE to confirm",
   "message.common.confirmation.action_undone":"This action cannot be undone.",
   "message.common.confirmation.btn_delete": "I understand, delete this {{Item}}",
   "message.common.confirmation.placeholder": "Enter 'DELETE' to confirm.",
@@ -2146,5 +2147,6 @@
   "step_group.delete.impacted.message":  "Deleting this Step Group will impact <span class='text-red-warning'>{{Testcases}} Test cases</span>",
   "step_group.testcase.listing":  "{{name}} <span class='text-t-secondary'>{{isEdited}}</span>",
   "step_group.delete.zero_impacted.message":  "No test cases will be impacted on deleting this step group.",
-  "step_group.summary.title": "Step Group Details"
+  "step_group.summary.title": "Step Group Details",
+  "data.parameterNameValue":"Test-Data"
 }

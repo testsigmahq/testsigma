@@ -7,13 +7,11 @@
 
 package com.testsigma.service;
 
-import com.testsigma.constants.AutomatorMessages;
 import com.testsigma.constants.MessageConstants;
 import com.testsigma.constants.NaturalTextActionConstants;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.model.*;
 import com.testsigma.model.recorder.RunTimeVariableDTO;
-import com.testsigma.model.recorder.TestStepNlpData;
 import com.testsigma.repository.RunTimeDataRepository;
 import com.testsigma.web.request.RuntimeRequest;
 import lombok.RequiredArgsConstructor;
@@ -98,7 +96,7 @@ public class RunTimeDataService {
     this.update(runTimeData);
   }
 
-  public List<RunTimeVariableDTO> getAllRuntimeVariablesInVersion(Long workspaceVersionId) {
+  public List<RunTimeVariableDTO> getAllRuntimeVariablesInVersion(Long workspaceVersionId) throws Exception {
     log.info("Fetching all runtime variables used in application version:"+workspaceVersionId);
     List<RunTimeVariableDTO> runTimeVariableDTOS = new ArrayList<>();
     List<NaturalTextActions> storeTemplates = naturalTextActionsService.findAllByAction("store");

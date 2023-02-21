@@ -15,6 +15,8 @@ import {TestStepMoreActionFormComponent} from "./test-step-more-action-form.comp
 import {MobileStepRecorderComponent} from "../../agents/components/webcomponents/mobile-step-recorder.component";
 import {AddonDetailsComponent} from "../../shared/components/webcomponents/addon-details.component";
 import {MobileRecorderEventService} from "../../services/mobile-recorder-event.service";
+import {AddonTestStepTestData} from "../../models/addon-test-step-test-data.model";
+import {AddonElementData} from "../../models/addon-element-data.model";
 
 @Component({
   selector: 'app-step-summary',
@@ -58,9 +60,11 @@ export class StepSummaryComponent implements OnInit {
 
   getAddonTestDataAndElements(map: Map<String, any>) {
     let result = [];
-    Object.keys(map).forEach(key => {
-      result.push(map[key]);
-    });
+    if(map) {
+      Object.keys(map)?.forEach(key => {
+        result.push(map[key]);
+      });
+    }
     return result;
   }
 
@@ -151,4 +155,11 @@ export class StepSummaryComponent implements OnInit {
     this.stepDetails ? this.mobileRecorderEventService.setEmptyAction() : this.matDialogRef.close();
   }
 
+  canShowAddonTestData() {
+     return this.testStep?.addonTestData ? "true":"false";
+  }
+
+  canShowAddonElementDetails() {
+    return this.testStep?.addonElements ? "true":"false";
+  }
 }

@@ -70,6 +70,8 @@ public class TestCaseCloudXMLDTO extends BaseXMLDTO {
   private String customFields;
   @JsonProperty("PreRequisite")
   private Long preRequisite;
+  @JsonProperty("IsActive")
+  private Boolean isActive;
   @JsonProperty("Assignee")
   private Long assignee;
   @JsonProperty("TestcaseKey")

@@ -87,7 +87,9 @@ public class RestStepProcessor extends StepProcessor {
       restDetails.putAll(testStepDTO.getDataMapJson());
     }
     testCaseStepEntityDTO.setAdditionalData(restDetails);
+    setStepDetails(testCaseStepEntityDTO, testStepDTO);
   }
+
 
   public void setStepDetails(TestCaseStepEntityDTO testCaseStepEntityDTO, TestStepDTO testStepDTO) {
     StepDetailsDTO stepDetails = new StepDetailsDTO();

@@ -1298,35 +1298,44 @@ public class AgentExecutionService {
         osVersion = agentDevice.getPlatformOsVersion();
         platform = agentDevice.getOsName().getPlatform();
       }
+      log.info("Platform: " + platform + ", OsVersion: " + osVersion + ", WorkspaceType: " + testDevice.getWorkspaceVersion().getWorkspace().getWorkspaceType() + ", TestPlanLabType: " + testPlanLabType);
       platformOsVersion = platformsService.getPlatformOsVersion(platform, osVersion, testDevice.getWorkspaceVersion().getWorkspace().getWorkspaceType(), testPlanLabType);
     }
     else {
+      log.info("PlatformOsVersionId:" + testDevice.getPlatformOsVersionId() + ", TestPlanLabType: " + testPlanLabType);
       platformOsVersion = platformsService.getPlatformOsVersion(testDevice.getPlatformOsVersionId(), testPlanLabType);
     }
-  if (testPlanLabType != TestPlanLabType.PrivateGrid)
+    log.info("PlatformOsVersion: " + platformOsVersion);
+    if (testPlanLabType != TestPlanLabType.PrivateGrid)
          settings.setPlatform(platformOsVersion.getPlatform());
-  else
-    settings.setPlatform(testDevice.getPlatform());
-    if (TestPlanLabType.Hybrid == testPlanLabType) {
-      settings.setOsVersion(platformOsVersion.getVersion());
+    else {
+      settings.setPlatform(testDevice.getPlatform());
+      if (TestPlanLabType.Hybrid == testPlanLabType) {
+        settings.setOsVersion(platformOsVersion.getVersion());
+      }
     }
   }
 
   protected void populatePlatformBrowserDetails(TestDevice testDevice, TestDeviceSettings settings,
                                                 TestPlanLabType testPlanLabType, Agent agent,EnvironmentEntityDTO environmentEntityDTO)
     throws TestsigmaException {
-
-
     PlatformBrowserVersion platformBrowserVersion = null;
+    log.info("Agent: " + agent);
+    log.info("TestPlanLabType: " + testPlanLabType);
     if (agent != null && testPlanLabType == TestPlanLabType.Hybrid) {
       Platform platform = agent.getOsType().getPlatform();
       String osVersion = agent.getPlatformOsVersion(platform);
+      log.info("Platform: " + platform + ", OsVersion: " + osVersion);
       Browsers browser = OSBrowserType.getBrowser(testDevice.getBrowser());
       String browserVersion = agent.getBrowserVersion(browser.toString());
+      log.info("Browser: " + browser + ", BrowserVersion: " + browserVersion);
       platformBrowserVersion = platformsService.getPlatformBrowserVersion(platform, osVersion, browser, browserVersion, testPlanLabType);
     } else {
+      log.info("TestDevice: " + testDevice);
+      log.info("TestPlanLabType:: " + testPlanLabType);
       platformBrowserVersion = platformsService.getPlatformBrowserVersion(testDevice.getPlatformBrowserVersionId(), testPlanLabType);
     }
+    log.info("PlatformBrowserVersion: " + platformBrowserVersion);
     if (testPlanLabType.isHybrid()) {
       matchHybridBrowserVersion(agent, platformBrowserVersion, testDevice, platformBrowserVersion.getName(),environmentEntityDTO);
     }

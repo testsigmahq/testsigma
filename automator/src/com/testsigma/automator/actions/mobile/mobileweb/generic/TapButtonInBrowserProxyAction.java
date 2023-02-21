@@ -1,5 +1,6 @@
 package com.testsigma.automator.actions.mobile.mobileweb.generic;
 
+import com.testsigma.automator.constants.NaturalTextActionConstants;
 import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.actions.constants.ActionConstants;
 import com.testsigma.automator.actions.web.generic.ClickOnButtonInTheBrowserProxyAction;
@@ -7,7 +8,7 @@ import com.testsigma.automator.actions.web.generic.ClickOnButtonInTheBrowserProx
 public class TapButtonInBrowserProxyAction extends ClickOnButtonInTheBrowserProxyAction {
   @Override
   public void execute() throws Exception {
-    String button = getTestData();
+    String button = getTestData(NaturalTextActionConstants.TEST_DATA_BACK_FORWARD_KEY);
     switch (button) {
       case ActionConstants.REFRESH:
         ReLoadCurrentPageAction refresh = (ReLoadCurrentPageAction) this.initializeChildSnippet(ReLoadCurrentPageAction.class);

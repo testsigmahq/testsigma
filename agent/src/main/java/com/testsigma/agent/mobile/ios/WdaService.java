@@ -43,6 +43,7 @@ public class WdaService {
       IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
       log.info("Installing WDA on device - " + device.getUniqueId());
       String wdaPresignedUrl = fetchWdaUrl(device);
+      log.info("Wda presigned url: " + wdaPresignedUrl);
       downloadedWdaFile = File.createTempFile("wda_", ".ipa");
       FileUtils.copyURLToFile(new URL(wdaPresignedUrl), downloadedWdaFile, (60 * 1000), (60 * 1000));
       log.info("Downloaded WDA to local file - " + downloadedWdaFile.getAbsolutePath());
@@ -156,9 +157,13 @@ public class WdaService {
     }
   }
 
-  private void checkWDAProcessStatus(MobileDevice device) throws TestsigmaException, AutomatorException {
+  private void checkWDAProcessStatus(MobileDevice device) throws TestsigmaException, AutomatorException, InterruptedException {
     IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
-
+    int retries = 3;
+    while (device.getWdaProcess() == null && (device.getWdaProcess().isAlive() || device.getWdaProcess().exitValue() == 0) && retries-- > 0) {
+      log.info("WDA process not started yet, waiting for 5 seconds...");
+      Thread.sleep(5000);
+    }
     if ((device.getWdaProcess() != null) && (device.getWdaProcess().isAlive() || device.getWdaProcess().exitValue() == 0)) {
       log.info("Checked if the WDA process is still alive and it seems to be still running on device - " +
         device.getName());
@@ -169,9 +174,13 @@ public class WdaService {
       , "Unable to start WDA Process on device - " + device.getName());
   }
 
-  private void checkWDARelayProcessStatus(MobileDevice device) throws TestsigmaException, AutomatorException {
+  private void checkWDARelayProcessStatus(MobileDevice device) throws TestsigmaException, AutomatorException, InterruptedException {
     IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
-
+    int retries = 3;
+    while (device.getWdaRelayProcess() == null && !device.getWdaRelayProcess().isAlive() && retries-- > 0) {
+      log.info("WDA process not started yet, waiting for 5 seconds...");
+      Thread.sleep(5000);
+    }
     if ((device.getWdaRelayProcess() != null) && device.getWdaRelayProcess().isAlive()) {
       log.info("Checked if the WDA relay process is still alive and it seems to be still running on device - " +
         device.getName());

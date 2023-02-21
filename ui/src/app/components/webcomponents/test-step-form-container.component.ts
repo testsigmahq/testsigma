@@ -33,6 +33,7 @@ import {ElementFormComponent} from "./element-form.component";
 import {MobileStepRecorderComponent} from "../../agents/components/webcomponents/mobile-step-recorder.component";
 import {MobileRecorderEventService} from "../../services/mobile-recorder-event.service";
 import {OnBoardingSharedService} from "../../services/on-boarding-shared.service";
+import {StepDetailsDataMap} from "../../models/step-details-data-map.model";
 
 @Component({
   selector: 'app-test-step-form-container',
@@ -222,7 +223,9 @@ export class TestStepFormContainerComponent extends BaseComponent implements OnI
   createTestStep(stepDisplayNumber?) {
     this.testStep = this.testStep ? this.testStep : new TestStep();
     let commonData = this.stepForm.getRawValue();
-    this.testStep.conditionIf = [];
+    if(!this.testStep.dataMap) {
+      this.testStep.dataMap = new StepDetailsDataMap();
+    }
     this.testStep.testCaseId = this.testCase.id;
     this.testStep.position = this.position;
     this.testStep.waitTime = 30;

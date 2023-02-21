@@ -1,5 +1,6 @@
 package com.testsigma.automator.actions.web.scroll;
 
+import com.testsigma.automator.constants.NaturalTextActionConstants;
 import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.actions.ActionsAction;
 import com.testsigma.automator.actions.constants.ActionConstants;
@@ -13,7 +14,7 @@ public class ScrollInsideElementProxyAction extends ActionsAction {
 
     @Override
     public void execute() throws Exception {
-      String status = getTestData();
+      String status = getTestData(NaturalTextActionConstants.TEST_DATA_TOP_BOTTOM_KEY);
       switch (status) {
         case ActionConstants.TOP:
           ScrollInsideElementToTopAction top = (ScrollInsideElementToTopAction) this.initializeChildSnippet(ScrollInsideElementToTopAction.class);

@@ -1,11 +1,8 @@
 package com.testsigma.mapper.recorder;
 
 import com.testsigma.dto.TestStepDTO;
-import com.testsigma.model.ResultConstant;
-import com.testsigma.model.TestStepDataMap;
-import com.testsigma.model.TestStepType;
-import com.testsigma.model.recorder.TestStepRecorderDTO;
-import com.testsigma.model.recorder.TestStepRecorderRequest;
+import com.testsigma.model.*;
+import com.testsigma.model.recorder.*;
 import com.testsigma.service.ObjectMapperService;
 import com.testsigma.web.request.TestStepRequest;
 import org.mapstruct.*;
@@ -19,7 +16,8 @@ import java.util.Optional;
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface TestStepRecorderMapper {
 
-    @Mapping(target = "uiIdentifierDTO", ignore = true)
+    @Mapping(target = "kibbutzPluginNlpData", expression = "java(org.apache.commons.collections4.MapUtils.isEmpty(mapKibbutzData(testStepDTO).getTestData()) || org.apache.commons.collections4.MapUtils.isEmpty(mapKibbutzData(testStepDTO).getUiIdentifiers()) ? null : mapKibbutzData(testStepDTO))")
+    @Mapping(target = "uiIdentifierDTO", ignore = true, defaultValue = "null")
     @Mapping(target = "testComponentId", source = "stepGroupId")
     @Mapping(target = "templateId", source = "naturalTextActionId")
     @Mapping(target = "stepDescription", ignore = true)
@@ -28,8 +26,8 @@ public interface TestStepRecorderMapper {
     @Mapping(target = "pageSource", ignore = true)
     @Mapping(target = "mailBoxId", ignore = true)
     @Mapping(target = "kibbutzPluginNlpId", source = "addonActionId")
-    @Mapping(target = "invalidUiIdentifierList", ignore = true)
-    @Mapping(target = "invalidTestDataList", ignore = true)
+    @Mapping(target = "invalidUiIdentifierList", ignore = true, defaultValue = "null")
+    @Mapping(target = "invalidTestDataList", ignore = true, defaultValue = "null")
     @Mapping(target = "importedId", ignore = true)
     @Mapping(target = "hasInvalidUiIdentifier", ignore = true)
     @Mapping(target = "hasInvalidTestData", ignore = true)
@@ -39,15 +37,18 @@ public interface TestStepRecorderMapper {
     @Mapping(target = "type", expression = "java(gettType(testStepDTO))")
     TestStepRecorderDTO mapDTO(TestStepDTO testStepDTO);
 
+    @Mapping(target = "uiIdentifiers", source = "testStepDTO.addonElements")
+    @Mapping(target = "testData", expression = "java(mapKibbutzTestData(testStepDTO.getAddonTestData()))")
+    KibbutzPluginNLPData mapKibbutzData(TestStepDTO testStepDTO);
+
+    Map<String, KibbutzTestStepTestData> mapKibbutzTestData(Map<String, AddonTestStepTestData> addonTestData);
+
     List<TestStepRecorderDTO> mapDTOs(List<TestStepDTO> testStepDTO);
 
 
     @Mapping(target = "ifConditionExpectedResults", expression = "java(mapIfConditionExpectedResults(testStepRecorderRequest))")
     @Mapping(target = "toElement", source = "testStepRecorderRequest.dataMap.fromUiIdentifier")
-    @Mapping(target = "testDataType", expression = "java(mapTestDataType(testStepRecorderRequest))")
-    @Mapping(target = "testDataFunctionId", expression = "java(mapTestDataFunctionId(testStepRecorderRequest))")
-    @Mapping(target = "testDataFunctionArgs", expression = "java(mapTestDataFunctionArgs(testStepRecorderRequest))")
-    @Mapping(target = "testData", expression = "java(mapTestDataValue(testStepRecorderRequest))")
+    @Mapping(target = "dataMap", expression = "java(mapDataMap(testStepRecorderRequest.getDataMap()))")
     @Mapping(target = "stepGroupId", source = "testComponentId")
     @Mapping(target = "naturalTextActionId", source = "templateId")
     @Mapping(target = "fromElement", source = "testStepRecorderRequest.dataMap.toUiIdentifier")
@@ -63,47 +64,7 @@ public interface TestStepRecorderMapper {
     @Mapping(target = "addonActionId", source = "kibbutzPluginNlpId")
     TestStepRequest mapRequest(TestStepRecorderRequest testStepRecorderRequest);
 
-    default String mapTestDataValue(TestStepRecorderRequest testStepRecorderRequest) {
-        Optional<String> data = Optional.ofNullable(testStepRecorderRequest)
-                .map(request -> request.getDataMap())
-                .map(dataMap -> dataMap.getTestData())
-                .map(testData -> testData.values())
-                .map(values -> values.stream().findFirst())
-                .map(nlpData -> nlpData.get().getValue());
-        return data.isPresent() ? data.get() : null;
-    }
-
-    default Long mapTestDataFunctionId(TestStepRecorderRequest testStepRecorderRequest) {
-        Optional<Long> data = Optional.ofNullable(testStepRecorderRequest)
-                .map(request -> request.getDataMap())
-                .map(dataMap -> dataMap.getTestData())
-                .map(testData -> testData.values())
-                .map(values -> values.stream().findFirst())
-                .map(nlpData -> nlpData.get().getTestDataFunction())
-                .map(testDataRecorderFunction -> testDataRecorderFunction.getId());
-        return data.isPresent() ? data.get() : null;
-    }
-
-    default Map<String, String> mapTestDataFunctionArgs(TestStepRecorderRequest testStepRecorderRequest) {
-        Optional<Map<String, String>> data = Optional.ofNullable(testStepRecorderRequest)
-                .map(request -> request.getDataMap())
-                .map(dataMap -> dataMap.getTestData())
-                .map(testData -> testData.values())
-                .map(values -> values.stream().findFirst())
-                .map(nlpData -> nlpData.get().getTestDataFunction())
-                .map(testDataFunction -> testDataFunction.getTestDataFunctionArgs());
-        return data.isPresent() ? data.get() : null;
-    }
-
-    default String mapTestDataType(TestStepRecorderRequest testStepRecorderRequest) {
-        Optional<String> dataType = Optional.ofNullable(testStepRecorderRequest)
-                .map(request -> request.getDataMap())
-                .map(dataMap -> dataMap.getTestData())
-                .map(testData -> testData.values())
-                .map(values -> values.stream().findFirst())
-                .map(nlpData -> nlpData.get().getType());
-        return dataType.isPresent() ? dataType.get() : null;
-    }
+    TestStepDataMap mapDataMap(TestStepRecorderDataMap testStepRecorderDataMap);
 
     default ResultConstant[] mapIfConditionExpectedResults(TestStepRecorderRequest testStepRecorderRequest) {
         Optional<Object> ifCondtionExpectedResults = Optional.ofNullable(testStepRecorderRequest)
@@ -112,14 +73,14 @@ public interface TestStepRecorderMapper {
 
         if(ifCondtionExpectedResults.isPresent()) {
             ObjectMapperService mapperService = new ObjectMapperService();
-            return mapperService.parseJson(ifCondtionExpectedResults.get().toString(), ResultConstant[].class);
+            return mapperService.parseJson(mapperService.convertToJson(ifCondtionExpectedResults.get()), ResultConstant[].class);
         }
         return null;
     }
 
     default String mapElement(TestStepRecorderRequest testStepRecorderRequest) {
-        if(testStepRecorderRequest.getUiIdentifierRequest() != null) {
-            return testStepRecorderRequest.getUiIdentifierRequest().getName();
+        if(testStepRecorderRequest.getElementRequest() != null) {
+            return testStepRecorderRequest.getElementRequest().getName();
         } else if(testStepRecorderRequest.getDataMap() != null) {
             return testStepRecorderRequest.getDataMap().getUiIdentifier();
         }

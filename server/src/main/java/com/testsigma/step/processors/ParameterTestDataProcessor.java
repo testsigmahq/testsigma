@@ -8,8 +8,12 @@ import com.testsigma.model.TestData;
 import com.testsigma.model.TestDataSet;
 import com.testsigma.model.TestStep;
 import com.testsigma.model.TestStepDataMap;
+import com.testsigma.service.TestDataSetService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
@@ -23,6 +27,7 @@ public class ParameterTestDataProcessor extends TestDataProcessor{
   protected TestData testData;
   protected Map<Long, Integer> stepGroupParentForLoopStepIdIndexes;
   public static final Long OVERRIDE_STEP_GROUP_STEP_WITH_TEST_CASE_PROFILE_ID = -2l;
+  protected TestDataSetService testDataSetService;
   String TEST_DATA_NOT_FOUND = "Test Step is not Executed Because TestData parameter is not found %s with in selected step id Test data profile.";
   private final String TEST_DATA_OUT_OF_RANGE = "selected test data profile %s size %s is less than in index %s";
   private final String TEST_DATA_UNKNOWN_ERROR = "Unknown error occurred while processing test data profile %s with index %s and name %s";
@@ -44,6 +49,7 @@ public class ParameterTestDataProcessor extends TestDataProcessor{
     this.stepGroupParentForLoopStepIdIndexes = stepGroupParentForLoopStepIdIndexes;
     this.testDataSet = testDataSet;
     this.parameter = parameter;
+    this.testDataSetService =  (TestDataSetService) context.getBean("testDataSetService");
   }
 
   public void processTestData() {
@@ -71,7 +77,7 @@ public class ParameterTestDataProcessor extends TestDataProcessor{
       TestStep testStep = testStepService.find(stepId);
       TestData testData = testDataService.find(testStep.getForLoopTestDataId());
       processLoopParameter(testData, parameter,
-        this.stepGroupParentForLoopStepIdIndexes.get(stepId));
+              this.stepGroupParentForLoopStepIdIndexes.get(stepId));
     }catch (ResourceNotFoundException exception){
       this.exception = exception;
       log.error(exception, exception);

@@ -26,6 +26,7 @@ import {InfiniteScrollableDataSource} from "../../data-sources/infinite-scrollab
 import {LinkedEntitiesModalComponent} from "../../shared/components/webcomponents/linked-entities-modal.component";
 import {StepsListComponent} from "../cases/steps-list.component";
 import {SharedService} from "../../services/shared.service";
+import {TestDataService} from "../../services/test-data.service";
 
 @Component({
   selector: 'app-test-step-list-item',
@@ -67,7 +68,7 @@ export abstract class TestStepListItemComponent extends BaseComponent implements
     public testStepService: TestStepService,
     public naturalTestActionService: NaturalTextActionsService,
     public matModal: MatDialog,
-    public sharedService: SharedService,
+    public sharedService: SharedService
   ) {
     super(authGuard, notificationsService, translate, toastrService);
   }
@@ -463,6 +464,7 @@ export abstract class TestStepListItemComponent extends BaseComponent implements
   initNewTestStep(position: number, testCaseId): TestStep {
     let testStep = new TestStep();
     testStep.position = position;
+    testStep.dataMap = new StepDetailsDataMap();
     testStep.conditionIf = [];
     testStep.testCaseId = testCaseId;
     testStep.waitTime = 30;

@@ -89,7 +89,7 @@ export class StepDetails extends Base implements Deserializable {
   }
 
   get testDataValue(): String {
-    return this.dataMap && this.dataMap.testData || this.testDataParameterValue;
+    return this.testDataParameterValue;
   }
 
   get isMajor(): boolean{

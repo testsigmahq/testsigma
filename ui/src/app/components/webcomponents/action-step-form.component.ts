@@ -51,6 +51,11 @@ import {AddonTestDataFunctionParameter} from "../../models/addon-test-data-funct
 import {StepActionType} from "../../enums/step-action-type.enum";
 import {ActionTestDataRuntimeVariableSuggestionComponent} from './action-test-data-runtime-variable-suggestion.component';
 import {extractStringByDelimiterByPos} from "../../utils/strings";
+import {TestData} from "../../models/test-data.model";
+import {TestDataService} from "../../services/test-data.service";
+import {TestDataSetService} from "../../services/test-data-set.service";
+import {TestDataMapValue} from "../../models/test-data-map-value.model";
+
 
 @Component({
   selector: 'app-action-step-form',
@@ -98,6 +103,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   public argumentList: any;
   public currentDataTypeIndex: number;
   public skipFocus: boolean;
+  public selectedTestDataProfile: TestData;
   private elementSuggestion: MatDialogRef<ActionElementSuggestionComponent>;
   private StepMsg = ["Navigate to https://www.google.com/",
     "Enter admin in the userName field",
@@ -142,6 +148,9 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   isAttachTestDataEvent: boolean = false;
   private runtimeSuggestion: MatDialogRef<ActionTestDataRuntimeVariableSuggestionComponent>;
   public selectedElementName : String;
+  public listDataItem:string[] | TestData[];
+  public isFetchingListData: boolean = false;
+  public isParameter: boolean = false;
 
   get mobileStepRecorder(): MobileStepRecorderComponent {
     return this.matModal.openDialogs.find(dialog => dialog.componentInstance instanceof MobileStepRecorderComponent).componentInstance;
@@ -170,7 +179,9 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     private matModal: MatDialog,
     private router: Router,
     private _eref: ElementRef,
-    private mobileRecorderEventService: MobileRecorderEventService) {
+    private mobileRecorderEventService: MobileRecorderEventService,
+    private testDataService: TestDataService,
+    private testDataSetService: TestDataSetService) {
     super(authGuard, notificationsService, translate, toastrService);
   }
 
@@ -192,7 +203,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
     if (this.testStep?.id) {
       this.oldStepData = new TestStep().deserialize(this.testStep);
-      this.oldStepData.testDataVal = this.testStep.testDataVal;
+      this.oldStepData.dataMap.testData = this.testStep.dataMap.testData;
       this.testStep.conditionIf = Object.assign([], JSON.parse(JSON.stringify(this.testStep.conditionIf)));
     }
     this.actionForm.addControl('action', new FormControl(this.testStep.action, []));
@@ -227,6 +238,11 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
     this.setTemplate(this.currentTemplate);
     this.showTemplates = false;
+    if(changes['conditionTypeChange']?.currentValue && !changes['conditionTypeChange']?.firstChange) {
+      this.showActions = true;
+      this.showTemplates = true;
+      this.currentFocusedIndex = 0;
+    }
   }
 
   getAddonTemplateAllowedValues(reference?) {
@@ -572,10 +588,9 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       this.testStep.addonElements = this.oldStepData.addonElements;
       this.testStep.addonTDF = this.oldStepData.addonTDF;
     } else if(this.testStep.naturalTextActionId) {
-      this.testStep.testDataVal = this.oldStepData.testDataVal;
+      this.testStep.dataMap.testData = this.oldStepData.dataMap.testData;
       this.testStep.attribute = this.oldStepData.attribute;
       this.testStep.element = this.oldStepData.element;
-      this.testStep.testDataType = this.oldStepData.testDataType;
     }
   }
 
@@ -663,8 +678,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       delete this.testStep.naturalTextActionId;
       delete this.testStep.testDataFunctionId;
       delete this.testStep.testDataFunctionArgs;
-      delete this.testStep.testDataVal;
-      delete this.testStep.testDataType;
+      delete this.testStep.dataMap.testData;
       delete this.testStep.element;
       delete this.testStep.attribute;
       return true
@@ -674,26 +688,16 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   }
 
   validation() {
-    this.replacer.nativeElement.click();
-    this.showTemplates = false;
     if (this.currentAddonTemplate) {
       return this.addonValidation();
     }
     let elementValue = this.elementPlaceholder()[0]?.textContent?.replace(/&nbsp;/g, "");
-    let testDataValue = this.testDataPlaceholder()[0]?.textContent?.replace(/&nbsp;/g, "");
     let attributeValue = this.attributePlaceholder()?.textContent?.replace(/&nbsp;/g, "");
     let action = this.replacer.nativeElement.innerHTML.replace(/<span class="element+(.*?)>(.*?)<\/span>/g, elementValue)
-      .replace(/<span class="test_data+(.*?)>(.*?)\|<\/span>/g, testDataValue)
-      .replace(/<span class="test_data+(.*?)>(.*?)<\/span>/g, testDataValue)
-      .replace(/<span class="selected_list+(.*?)>(.*?)<\/span>/g, testDataValue)
+      .replace(/<span class="test_data+(.*?)>(.*?)<\/span>/g, "test data")
       .replace(/<span class="attribute+(.*?)>(.*?)<\/span>/g, attributeValue)
+      .replace(/<span class="selected_list+(.*?)>(.*?)<\/span>/g, this.currentTemplate?.extractTestDataString)
       .replace(/&nbsp;/g, "");
-    if (testDataValue)
-      ['\@|', '\!|', '\~|', '\$|', '\*|', '\&|'].some(type => {
-        if (testDataValue.startsWith(type))
-          testDataValue = testDataValue.replace(type, '').replace(/&nbsp;/g, "");
-      });
-    testDataValue = testDataValue?.replace('|', '')?.replace(/&nbsp;/g, "");
     if (this.elementPlaceholder().length) {
       this.elementPlaceholder().forEach(item => {
         if (!item.textContent?.replace(/&nbsp;/g, "").trim()?.length) {
@@ -701,29 +705,60 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         }
       })
     }
+    let testDataValue = this.testDataValue(action, this.testStep, this.testDataPlaceholder());
     //this.isValidElement = this.elementPlaceholder() ? elementValue?.trim()?.length : true;
-    this.isValidTestData = this.testDataPlaceholder()[0] ? testDataValue?.trim().length : true;
     this.isValidAttribute = this.attributePlaceholder() ? attributeValue?.trim().length : true;
     if (action && action.length && this.isValidElement && this.isValidTestData && this.isValidAttribute) {
       this.testStep.action = action;
       this.testStep.naturalTextActionId = this.currentTemplate?.id;
       this.testStep.type = TestStepType.ACTION_TEXT;
       this.testStep.template = this.currentTemplate;
-      if (testDataValue) {
-        this.testStep.testDataVal = testDataValue.trim();
-        this.setDataMapValues();
-      }
       if (this.elementPlaceholder().length) {
         this.testStep.element = elementValue
       }
       if (attributeValue) {
         this.testStep.attribute = attributeValue
       }
+      if(testDataValue) {
+        this.testStep.dataMap.testData = testDataValue;
+        this.setDataMapValues();
+      }
       this.testStep.deserializeCommonProperties(this.actionForm.getRawValue());
       return true;
     } else {
       return false;
     }
+  }
+
+  testDataValue(action, testStep, testDataList) {
+    if(testStep?.getAllTestData?.length || testDataList?.length) {
+      let testData = new Map<string, TestDataMapValue>();
+      testDataList.forEach(item => {
+        let reference = item?.['dataset']?.reference;
+        let testDataType = TestDataType[item?.['dataset']?.testDataType || 'raw'];
+        let value = item?.textContent?.replace(/&nbsp;/g, "").trim();
+        let typeValue = false;
+        ['\@|', '\!|', '\~|', '\$|', '\*|', '\%|', '\&|'].some(type => {
+          if (value.startsWith(type)) {
+            typeValue = true;
+            value = value.replace(type, '').replace(/&nbsp;/g, "");
+            value = value.replace('|', '').replace(/&nbsp;/g, "");
+          }
+        });
+        if (value.length) {
+          let setValue = new TestDataMapValue();
+          setValue.type = typeValue? testDataType : TestDataType.raw;
+          setValue['value'] = value;
+          setValue['testDataFunction'] = new TestStepTestDataFunction();
+          setValue['addonTDF'] = new AddonTestStepTestData();
+          testData[reference] = setValue
+        } else {
+          this.isValidTestData = false
+        }
+      })
+      return testData;
+    }
+    return false;
   }
 
   selectTemplate() {
@@ -833,111 +868,144 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
   }
 
+  mapTestDataType(type: String) {
+    switch(type) {
+      case "raw":
+        return TestDataType.raw;
+      case "parameter":
+        return TestDataType.parameter;
+      case "runtime":
+        return TestDataType.runtime;
+      case "global":
+        return TestDataType.global;
+      case "random":
+        return TestDataType.random;
+      case "function":
+        return TestDataType.function;
+    }
+    return null;
+  }
+
   attachTestDataEvent() {
     if (this.testDataPlaceholder()?.length) {
-      this.currentTestDataType = this.testStep?.testDataType || this.currentTestDataType || TestDataType.raw;
-      console.log('attaching test data events');
-      this.currentAddonAllowedValues = undefined
-      this.testDataPlaceholder().forEach((item, index) => {
-        item.addEventListener('click', (event) => {
-          this.isCurrentDataTypeRaw = false;
-          console.log('test data click event triggered');
-          this.getAddonTemplateAllowedValues(item.dataset?.reference)
-          this.currentDataTypeIndex = 0;
-          item.contentEditable = true;
-          this.currentDataItemIndex = index;
-          this.replacer.nativeElement.contentEditable = false;
-          this.resetValidation();
-          this.showDataDropdown();
-          this.showTemplates = false;
-          event.stopPropagation();
-          event.stopImmediatePropagation();
-          return false;
-        });
-        item.addEventListener('keydown', (event) => {
-          if (event.key == "Enter" && !this.showDataTypes) {
-            return this.stopEvent(event);
-          }
-          this.getAddonTemplateAllowedValues(item.dataset?.reference);
-          let value = item?.textContent;
-          let testDataType = ['@|', '!|', '~|', '$|', '*|'].some(type => item?.textContent.includes(type))
-          if (["Escape", "Tab"].includes(event.key))
-            this.showDataTypes = false;
-          if(!this.currentTemplate?.allowedValues || this.currentTemplate?.allowedValues.length!<=0) {
-            if (event.key == "ArrowUp" && this.currentDataTypeIndex != 0)
-              --this.currentDataTypeIndex;
-            if (event.key == "ArrowDown" && this.currentDataTypeIndex < this.dataTypes.length - 1)
-              ++this.currentDataTypeIndex;
-            if (event.key == "Enter") {
+      // this.testStep?.dataMap?.testData?.forEach(function(value,key) {
+          this.currentTestDataType =  this.currentTestDataType || TestDataType.raw;
+          console.log('attaching test data events');
+          this.currentAddonAllowedValues = undefined
+          this.testDataPlaceholder().forEach((item, index) => {
+            item.addEventListener('click', (event) => {
+              this.isCurrentDataTypeRaw = false;
+              console.log('test data click event triggered');
+              this.getAddonTemplateAllowedValues(item.dataset?.reference);
+              this.getTestdataProfile(item.dataset?.reference);
+              this.getParameter(item.dataset?.reference);
+              this.currentDataTypeIndex = 0;
               this.currentDataItemIndex = index;
-              this.selectTestDataType(TestDataType[this.dataTypes[this.currentDataTypeIndex]]);
-              setTimeout(() => {
-                item.innerHTML = this.removeHtmlTags(item?.textContent);
-              }, 100)
-            }
-          }
-          if (value?.trim()?.length && testDataType &&
-            (value?.trim()?.match(/\|/g) || []).length == 1 &&
-            !(event.key == "Backspace" || event.key == "ArrowLeft" || event.key == "ArrowRight")) {
-            this.selectDataType(value)
-          }
-          this.localUrlValid = -1;
-          this.localUrlVerifying = false;
-          this.urlPatternError = false;
-          event.stopPropagation();
-          event.stopImmediatePropagation();
-          return false;
-        });
+              item.contentEditable = true;
+              this.replacer.nativeElement.contentEditable = false;
+              this.resetValidation();
+              if (this.removeHtmlTags(item?.textContent).trim().length)
+              if (!this.removeHtmlTags(item?.textContent).trim().length)
+                this.showDataDropdown();
+              else
+                this.showTemplates = false;
+              event.stopPropagation();
+              event.stopImmediatePropagation();
+              return false;
+            });
+            item.addEventListener('keydown', (event) => {
+              if (event.key == "Enter" && !this.showDataTypes) {
+                return this.stopEvent(event);
+              }
+              this.getAddonTemplateAllowedValues(item.dataset?.reference);
+              let value = item?.textContent;
+              let testDataType = ['@|', '!|', '~|', '$|', '*|'].some(type => item?.textContent.includes(type))
+              if (["Escape", "Tab"].includes(event.key))
+                this.showDataTypes = false;
+              if (!this.currentTemplate?.allowedValues || this.currentTemplate?.allowedValues.size! <= 0) {
+                if (event.key == "ArrowUp" && this.currentDataTypeIndex != 0)
+                  --this.currentDataTypeIndex;
+                if (event.key == "ArrowDown" && this.currentDataTypeIndex < this.dataTypes.length - 1)
+                  ++this.currentDataTypeIndex;
+                if (event.key == "Enter") {
+                  this.currentDataItemIndex = index;
+                  this.selectTestDataType(TestDataType[this.dataTypes[this.currentDataTypeIndex]]);
+                  setTimeout(() => {
+                    item.innerHTML = this.removeHtmlTags(item?.textContent);
+                  }, 100)
+                }
+              }
+              if (value?.trim()?.length && testDataType &&
+                (value?.trim()?.match(/\|/g) || []).length == 1 &&
+                !(event.key == "Backspace" || event.key == "ArrowLeft" || event.key == "ArrowRight")) {
+                this.selectDataType(value)
+              }
+              this.localUrlValid = -1;
+              this.localUrlVerifying = false;
+              this.urlPatternError = false;
+              event.stopPropagation();
+              event.stopImmediatePropagation();
+              return false;
+            });
 
-        item.addEventListener('keyup', (event) => {
-          console.log('test data keyup event triggered');
-          if (event.key == "Enter" && !this.showDataTypes) {
-            this.validateTestData();
-            return this.stopEvent(event);
-          }
-          this.getAddonTemplateAllowedValues(item.dataset?.reference);
-          this.urlPatternError = false;
-          let testDataType = ['@|', '!|', '~|', '$|', '*|'].some(type => item?.textContent.includes(type))
-          if (event.key == "Backspace" && !this.removeHtmlTags(item?.textContent).trim().length) {
-            this.showDataDropdown();
-          }
-          event.stopPropagation();
-          event.stopImmediatePropagation();
-          return false;
-        })
+            item.addEventListener('keyup', (event) => {
+              console.log('test data keyup event triggered');
+              if (event.key == "Enter" && !this.showDataTypes) {
+                this.validateTestData();
+                return this.stopEvent(event);
+              }
+              this.getAddonTemplateAllowedValues(item.dataset?.reference);
+              this.urlPatternError = false;
+              let testDataType = ['@|', '!|', '~|', '$|', '*|'].some(type => item?.textContent.includes(type))
+              if (event.key == "Backspace") {
+                this.selectDataType(item?.textContent, true)
+              }
+              if ((!testDataType && this.removeHtmlTags(item?.textContent).trim().length) || (!(["Escape", "Tab", "Backspace", "ArrowLeft", "ArrowRight", "Enter", "ArrowUp", "ArrowDown", "Shift", "Control", "Meta", "Alt"].includes(event.key)) && item?.textContent)) {
+                this.showDataTypes = false;
+              } else if (!this.removeHtmlTags(item?.textContent).trim().length) {
+                this.showDataTypes = true;
+              }
+              if (event.key == "Backspace" && !this.removeHtmlTags(item?.textContent).trim().length) {
+                this.showDataDropdown();
+              }
+              event.stopPropagation();
+              event.stopImmediatePropagation();
+              return false;
+            })
 
-        // this.testDataPlaceholder().addEventListener('mouseleave', (event) => {
-        //   if(this.testDataPlaceholder()?.textContent.length) {
-        //     let testDataType = ['@|', '!|', '~|', '$|', '*|', '%|'].some(type => this.testDataPlaceholder()?.textContent.includes(type))
-        //     if (this.currentTemplate && this.navigateTemplate.includes(this.currentTemplate.id) && !testDataType) {
-        //       fromEvent(this.replacer.nativeElement, 'mouseleave')
-        //         .pipe(tap((event) => {
-        //           if(this.testDataPlaceholder()?.innerHTML?.length && this.currentTestDataType == TestDataType.raw)
-        //           this.testDataPlaceholder().blur()
-        //         })).subscribe()
-        //
-        //       this.navigateUrlValidation();
-        //     }
-        //   }
-        //   event.stopPropagation();
-        //   event.stopImmediatePropagation();
-        // })
+            // this.testDataPlaceholder().addEventListener('mouseleave', (event) => {
+            //   if(this.testDataPlaceholder()?.textContent.length) {
+            //     let testDataType = ['@|', '!|', '~|', '$|', '*|', '%|'].some(type => this.testDataPlaceholder()?.textContent.includes(type))
+            //     if (this.currentTemplate && this.navigateTemplate.includes(this.currentTemplate.id) && !testDataType) {
+            //       fromEvent(this.replacer.nativeElement, 'mouseleave')
+            //         .pipe(tap((event) => {
+            //           if(this.testDataPlaceholder()?.innerHTML?.length && this.currentTestDataType == TestDataType.raw)
+            //           this.testDataPlaceholder().blur()
+            //         })).subscribe()
+            //
+            //       this.navigateUrlValidation();
+            //     }
+            //   }
+            //   event.stopPropagation();
+            //   event.stopImmediatePropagation();
+            // })
 
-        item.addEventListener('paste', (event) => {
-          event.preventDefault();
-          event.stopPropagation();
-          event.stopImmediatePropagation();
-          const text = (event.originalEvent || event).clipboardData.getData('text/plain');
-          window.document.execCommand('insertText', false, text);
-        })
-        item.addEventListener('dblclick', (event) => {
-          event.preventDefault();
-          event.stopPropagation();
-          event.stopImmediatePropagation();
-          this.currentDataItemIndex = index;
-          this.selectTestDataPlaceholder();
-        })
-      })
+            item.addEventListener('paste', (event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              event.stopImmediatePropagation();
+              const text = (event.originalEvent || event).clipboardData.getData('text/plain');
+              window.document.execCommand('insertText', false, text);
+            })
+            item.addEventListener('dblclick', (event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              event.stopImmediatePropagation();
+              this.currentDataItemIndex = index;
+              this.selectTestDataPlaceholder();
+            })
+          })
+
     }
   }
 
@@ -1083,6 +1151,8 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       return;
     }
     this.selectNodeAndFocus(element);
+    this.showDataTypes = false;
+    setTimeout(() => this.showDataTypes = true, 300);
   }
 
   setCursorAtAttribute() {
@@ -1153,32 +1223,46 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   }
 
   private assignEditTemplate() {
-    if (this.testStep?.testDataType == TestDataType.function) {
-      if (this.testStep?.testDataFunctionId)
-        this.showTestDataCF(this.testStep?.testDataFunctionId);
-      else if (this.testStep?.testDataFunctionId) {
-        this.showAddonTDF(this.testStep?.testDataFunctionId);
-        this.editSerialize();
-      }
+    let firstDataFunction = 0;
+    let argumentsList;
+    if(this.testStep?.addonTDF?.value) {
+      Object.keys(this.testStep?.addonTDF?.value)?.forEach((testdataName, index) => {
+        if(index == 0 && this.testStep.addonTDF?.value?.[testdataName]?.type == TestDataType.function){
+          firstDataFunction = this.testStep.addonTDF?.value?.[testdataName]?.testDataFunctionId;
+          argumentsList = this.testStep.addonTDF?.value?.[testdataName]?.testDataFunctionArguments;
+        }
+      })
+    }
+    if(!!this.testStep?.dataMap?.testData?.size) {
+      this.testDataPlaceholder().forEach((item,index) => {
+        this.testStep.dataMap.testData.forEach((testData: TestDataMapValue) => {
+          if (testData?.type == TestDataType.function || firstDataFunction) {
+            if (testData['testDataFunction'].id)
+              this.showTestDataCF(testData['testDataFunction'].id);
+            else if (testData['kibbutzTDF']['testDataFunctionId'] || firstDataFunction) {
+              if(testData['kibbutzTDF']['isKibbutzFn']){
+                this.showAddonTDF(firstDataFunction ? firstDataFunction : testData['kibbutzTDF']['testDataFunctionId'], argumentsList);
+              }
+              else{
+                this.showTestDataCF(firstDataFunction ? firstDataFunction : testData['kibbutzTDF']['testDataFunctionId']);
+              }
+              this.editSerialize();
+            }
+          }
+        })
+
+      })
+
     } else {
-      this.editSerialize()
+      this.editSerialize();
     }
   }
 
-  showAddonTDF(id: number) {
+  showAddonTDF(id: number, argumentsList) {
     this.addonTestDataFunctionService.show(id).subscribe(res => {
       this.currentAddonTDF = res;
-      this.assignTDFData(res);
+      this.assignTDFData(res, argumentsList);
     })
-  }
-
-
-  getAddonActionData(map: Map<string, any>) {
-    let result = [];
-    Object.keys(map).forEach(key => {
-      result.push(map[key]);
-    });
-    return result;
   }
 
   private editSerialize() {
@@ -1214,15 +1298,48 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         this.currentTemplate = this.testStep.template;
         if (this.testStep?.element)
           this.assignElement(this.testStep?.element, this.elementPlaceholder()[0]);
-        if (this.testStep?.testDataVal)
-          this.assignDataValue(this.getDataTypeString(this.testStep?.testDataType, this.testStep?.testDataVal));
+        this.testStep?.dataMap?.testData?.forEach((dataMapValue: TestDataMapValue, key: string) => {
+          if (!dataMapValue.value && !dataMapValue.type)
+            this.assignDataValue(this.getDataTypeString(dataMapValue.type, dataMapValue.value));
+        });
         if (this.attributePlaceholder())
-          this.attributePlaceholder().innerHTML = this.testStep?.attribute;
-        this.attachActionTemplatePlaceholderEvents();
+          this.attributePlaceholder().innerHTML=this.testStep?.attribute;
+          this.setStepTestData();
+          this.attachActionTemplatePlaceholderEvents();
       }
       else
         this.replacer.nativeElement.innerHTML = this.testStep?.action;
     }
+  }
+
+  private setStepTestData(){
+    this.testDataPlaceholder().forEach((item, index) => {
+      let reference = item.dataset?.reference;
+      let testData = this.testStep?.dataMap?.testData?.[reference];
+      item.setAttribute("data-test-data-type",testData?.type);
+      if(testData.type == TestDataType.function) {
+        item = this.testDataFunctionDataAssign(item,testData)
+      }
+      item.innerHTML = this.getDataTypeString(testData?.type, testData?.['value']);
+    })
+  }
+
+  private testDataFunctionDataAssign(item, functionData){
+    if(functionData.addonTDF) {
+      if(functionData.addonTDF.testDataFunctionArguments)
+        item.setAttribute('data-test-data-function-arguments', JSON.stringify(functionData.addonTDF.testDataFunctionArguments));
+      if(functionData.addonTDF.testDataFunctionId)
+        item.setAttribute('data-test-data-function-id', functionData.addonTDF.testDataFunctionId);
+      item.setAttribute('data-function-data', JSON.stringify(functionData.addonTDF));
+      item.setAttribute('data-is-kibbutz-fn', true);
+    } else if(functionData.testDataFunction){
+      item.setAttribute('data-function-data', JSON.stringify(functionData.testDataFunction));
+      if(functionData.testDataFunction.args)
+        item.setAttribute('data-test-data-function-arguments', JSON.stringify(functionData.testDataFunction.args));
+      if(functionData.testDataFunction.id)
+        item.setAttribute('data-test-data-function-id', functionData.testDataFunction.id);
+    }
+    return item;
   }
 
   private showTestDataCF(id) {
@@ -1269,7 +1386,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     if(this.selectedElementName){
       name = this.selectedElementName;
     }else {
-      name = this.testStep.element;
+      name = this.testStep?.element;
       if(!name && this.testStep?.addonElements && targetElement?.dataset?.reference){
         name = this.testStep.addonElements[targetElement.dataset.reference]?.name;
       }
@@ -1331,6 +1448,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       if (elementName && elementName.length) {
         targetElement.innerHTML = elementName;
         this.selectedElementName = elementName;
+        this.testStep.dataMap.elementString = elementName;
       }
       if (this.testDataPlaceholder()?.length && !this.isEdit) {
         this.testDataPlaceholder()?.[this.currentDataItemIndex || 0]?.click();
@@ -1340,16 +1458,19 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   }
 
 
+
   private assignDataValue(dataName, isReplacer?:boolean) {
     this.showDataTypes = false;
     const testDataPlaceHolders = this.testDataPlaceholder();
     for (let i = 0; i < testDataPlaceHolders.length; i++) {
       const content = testDataPlaceHolders[i].innerHTML;
-      if ((testDataPlaceHolders[i]?.contentEditable||Boolean(isReplacer)) && ((testDataPlaceHolders[i].getAttribute("data-test-data-type") == null) ||
-        ((testDataPlaceHolders[i].getAttribute("data-test-data-type") != null)))) {
-        testDataPlaceHolders[i].innerHTML = dataName;
-        testDataPlaceHolders[i].setAttribute("data-test-data-type", this.currentTestDataType);
-        break;
+      if(this.currentDataItemIndex == i) {
+        if ((testDataPlaceHolders[i]?.contentEditable || Boolean(isReplacer)) && ((testDataPlaceHolders[i].getAttribute("data-test-data-type") == null) ||
+          ((testDataPlaceHolders[i].getAttribute("data-test-data-type") != null)))) {
+          testDataPlaceHolders[i].innerHTML = dataName;
+          testDataPlaceHolders[i].setAttribute("data-test-data-type", this.currentTestDataType);
+          break;
+        }
       }
     }
     if (dataName.startsWith('~|') || dataName.startsWith('$|')) {
@@ -1398,7 +1519,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   }
 
 
-  addTDFControls(argumentList) {
+  addTDFControls(argumentList, isEdit?) {
     const arr = Object.keys(this.actionForm.controls);
     arr.forEach((con) => {
       if (!(con == 'action')) {
@@ -1411,6 +1532,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
           this.testStep?.addonTestData ? this.testStep?.addonTestData[argument.reference] :
             this.testStep?.addonTestData ? this.testStep?.testDataFunctionArgs[argument.reference] : undefined));
       })
+      this.setAddonDataSet(this.testDataPlaceholder?.[this.currentDataItemIndex | 0], this.currentAddonTDF.id, this.actionForm.getRawValue());
     } else {
       this.setAddonTestDataValues(this.currentAddonTDF.id)
     }
@@ -1420,11 +1542,11 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     return obj && Object.keys(obj).length == 0;
   }
 
-  private assignTDFData(data) {
+  private assignTDFData(data, isEdit?) {
     this.currentAddonTDF = data;
     this.currentTestDataFunctionParameters = data.parameters;
     this.assignDataValue(this.getDataTypeString(TestDataType.function, data.displayName))
-    this.addTDFControls(data.parameters);
+    this.addTDFControls(data.parameters, isEdit);
   }
 
 
@@ -1595,6 +1717,18 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     this.currentAddonTDF = null;
   }
 
+  setAddonDataSet(item, customFunctionId, formValue) {
+    item.setAttribute('data-test-data-function-id', customFunctionId)
+    let args: JSON = formValue;
+    let argsArray = new Map<String, String>();
+    delete formValue.action
+    for (let argsKey in args) {
+      argsArray[argsKey] = args[argsKey];
+    }
+    item.setAttribute('data-test-data-function-arguments', JSON.stringify(argsArray));
+    item.setAttribute('data-is-kibbutz-fn', true);
+  }
+
   public setTestDataValues(customFunctionId) {
     this.testDataPlaceholder().forEach((item, index) => {
       if (this.currentDataItemIndex != index)
@@ -1632,7 +1766,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   }
 
   private setDataMapValues() {
-    this.testStep.testDataType = this.currentTestDataType;
+    this.testStep.dataMap.testDataType = this.currentTestDataType;
     if (this.currentTestDataType && this.currentTestDataType == TestDataType.function && this.currentTestDataFunction) {
       let formValue = this.actionForm.getRawValue();
       delete formValue.action
@@ -1846,5 +1980,130 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   }
   public extractStringByKey(str:string){
     return extractStringByDelimiterByPos({str:str})
+  }
+
+  public getParameter(reference) {
+    this.listDataItem = undefined;
+    this.isParameter = false;
+    if ('left-data' == reference && this.testStep.isTestdataParameter) {
+      if(true) {
+        this.isParameter = true;
+        this.fetchTestDataSet();
+        this.focusOnSearch();
+      } else {
+
+      }
+    }
+  }
+  public getTestdataProfile(reference?) {
+    this.listDataItem = undefined;
+    this.isParameter = false;
+    if ('test-data-profile' == reference && this.testStep.isTestdataProfile) {
+      this.fetchTestDataProfile();
+      this.focusOnSearch();
+    }
+  }
+
+  get isDefaultType() {
+    return true;
+    //return !this.listDataItem && (!this.currentAllowedValues?.length || (this.isSpotEditEnable &&
+    //  !this.currentAllowedValues?.length)) && !this.currentKibbutzAllowedValues?.length;
+  }
+
+  get isAllowedValues() {
+    return true;
+    //return !this.listDataItem && !this.currentKibbutzAllowedValues?.length && (this.currentAllowedValues?.length || this.testStep?.kibbutzTemplate?.isConditionalIF || this.testStep?.kibbutzTemplate?.isConditionalWhileLoop)
+  }
+
+  get isKibbutzAllowedValues(){
+    return false;
+    //return !this.listDataItem && this.currentKibbutzTemplate && this.currentKibbutzAllowedValues;
+  }
+
+  selectTestDataProfile(testdata) {
+    this.resetTestData();
+    this.resetCFArguments();
+    this.currentTestDataType = TestDataType.raw;
+    this.assignDataValue(testdata.name || testdata, this.testDataPlaceholder());
+    this.showDataTypes = false;
+    if(testdata instanceof TestData) {
+      this.selectedTestDataProfile = testdata;
+      if(this.testStep.isTestdataParameter)
+        this.fetchTestDataSet();
+    }
+  }
+
+  fetchTestDataProfile(term?) {
+    let searchName = '';
+    if (term) {
+      searchName = ",testDataName:*" + term + "*";
+    }
+    this.isFetchingListData = true;
+    this.testDataService.findAll("versionId:" + this.version.id + searchName).subscribe(res => {
+      this.listDataItem = res.content;
+      if (this.testCase?.id && this.testCase?.testDataId) {
+        if (this.listDataItem && !this.listDataItem?.find(req => req?.['id'] == this.testCase.testDataId)) {
+          this.listDataItem.push(this.testCase.testData)
+        }
+      }
+      this.isFetchingListData = false;
+    }, error => {
+      this.isFetchingListData = false;
+    });
+  }
+
+  fetchTestDataSet(term?) {
+    this.isFetchingListData = true;
+    if(this.listDataItem && term?.length) {
+      let returnData = [];
+      this.listDataItem.forEach(data => {
+        if(data.toLowerCase().includes(term)){
+          returnData.push(data);
+        }
+      });
+      this.listDataItem = returnData;
+      this.isFetchingListData = false;
+      return
+    }
+    this.testDataSetService.findAll("testDataProfileId:" + this.testCase?.testData?.id , 'position').subscribe(res => {
+      this.listDataItem = Object.keys(res?.content[0]?.data);
+      this.isFetchingListData = false;
+    }, error => {
+      this.isFetchingListData = false;
+    })
+  }
+
+  focusOnSearch() {
+    this.attachDebounceEvent();
+  }
+
+  attachDebounceEvent() {
+    if (this.searchInput && this.searchInput.nativeElement)
+      fromEvent(this.searchInput.nativeElement, 'keyup')
+        .pipe(
+          filter(Boolean),
+          debounceTime(500),
+          distinctUntilChanged(),
+          tap((event: KeyboardEvent) => {
+            if (this.searchInput?.nativeElement?.value) {
+              if(this.isParameter){
+                this.fetchTestDataSet(this.searchInput.nativeElement.value)
+              } else {
+                this.fetchTestDataProfile(this.searchInput.nativeElement.value)
+              }
+            } else {
+              if(this.isParameter){
+                this.fetchTestDataSet()
+              } else {
+                this.fetchTestDataProfile()
+              }
+            }
+          })
+        )
+        .subscribe();
+    else
+      setTimeout(() => {
+        this.attachDebounceEvent();
+      }, 100);
   }
 }

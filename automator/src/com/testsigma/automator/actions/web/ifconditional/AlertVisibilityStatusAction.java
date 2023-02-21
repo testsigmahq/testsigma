@@ -3,13 +3,14 @@ package com.testsigma.automator.actions.web.ifconditional;
 import com.testsigma.automator.actions.ElementAction;
 import com.testsigma.automator.actions.constants.ActionConstants;
 import com.testsigma.automator.actions.web.verify.*;
+import com.testsigma.automator.constants.NaturalTextActionConstants;
 
 import java.lang.reflect.InvocationTargetException;
 
 public class AlertVisibilityStatusAction extends ElementAction {
   @Override
   public void execute() throws Exception {
-    String status = getTestData();
+    String status = getTestData(NaturalTextActionConstants.TEST_DATA_VISIBLE_KEY);
     switch (status) {
       case ActionConstants.NOT_VISIBLE:
         VerifyAlertAbsenceAction absence = (VerifyAlertAbsenceAction) this.initializeChildSnippet(VerifyAlertAbsenceAction.class);

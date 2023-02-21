@@ -10,6 +10,7 @@
 package com.testsigma.automator.actions;
 
 import com.testsigma.automator.constants.ActionResult;
+import com.testsigma.automator.constants.NaturalTextActionConstants;
 import com.testsigma.automator.entity.AttributePropertiesEntity;
 import com.testsigma.automator.entity.ElementPropertiesEntity;
 import com.testsigma.automator.entity.TestDataProfileEntity;
@@ -104,7 +105,12 @@ public abstract class Action {
   }
 
   protected TestDataPropertiesEntity getTestDataPropertiesEntity(String testDataActionVariableName) {
-    return testDataPropertiesEntityMap.get(testDataActionVariableName);
+    log.info("Printing testDataPropertiesEntityMap: " + testDataPropertiesEntityMap);
+    TestDataPropertiesEntity testDataPropertiesEntity = testDataPropertiesEntityMap.get(testDataActionVariableName);
+    if(testDataPropertiesEntity != null) {
+      return testDataPropertiesEntity;
+    }
+    return testDataPropertiesEntityMap.get(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA);
   }
 
   protected AttributePropertiesEntity getAttributePropertiesEntity(String actionAttributeVarName) {

@@ -2,6 +2,7 @@ package com.testsigma.mapper;
 
 import com.testsigma.dto.export.*;
 import com.testsigma.model.*;
+import com.testsigma.service.ObjectMapperService;
 import org.mapstruct.*;
 
 import java.util.ArrayList;
@@ -34,9 +35,12 @@ public interface RestStepMapper {
     @Mapping(target = "ifConditionExpectedResults", expression = "java(getIfConditionExpectedResults(map.getIfConditionExpectedResults()))")
     @Mapping(target = "testDataFunctionId", expression = "java(getTestDataFunctionId(map.getTestDataFunction()))")
     @Mapping(target = "testDataFunctionArgs", expression = "java(getTestDataFunctionArgs(map.getTestDataFunction()))")
+    @Mapping(target = "dataMap", expression = "java(mapDataMap(map))")
     TestStep mapDataMapToStep(TestStepCloudDataMap map);
 
     TestStep mapForLoopToStep(TestStepCloudForLoop loop);
+
+    TestStepDataMap mapDataMap(TestStepCloudDataMap dataMap);
 
     void merge(TestStep step, @MappingTarget TestStep testStep);
 
@@ -94,5 +98,9 @@ public interface RestStepMapper {
             return generator.getTestDataFunctionArgs();
         }
         return null;
+    }
+
+    default String convertDataMap(TestStepCloudDataMap testStepDataMap) {
+        return new ObjectMapperService().convertToJson(testStepDataMap);
     }
 }

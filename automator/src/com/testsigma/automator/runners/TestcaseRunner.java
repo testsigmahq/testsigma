@@ -11,6 +11,8 @@ import com.testsigma.automator.service.ObjectMapperService;
 import com.testsigma.automator.utilities.ScreenCaptureUtil;
 import com.testsigma.automator.utilities.ScreenshotUploadTask;
 import com.testsigma.automator.utilities.UploadThreadPool;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;

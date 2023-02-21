@@ -24,10 +24,9 @@ public class TestStepRequest {
   private String action;
   private Long testCaseId;
   private Long stepGroupId;
+  private TestStepDataMap dataMap;
   @JsonProperty("conditionIf")
   private ResultConstant[] ifConditionExpectedResults;
-  private String testData;
-  private String testDataType;
   private String attribute;
   private String element;
   private String fromElement;
@@ -38,7 +37,6 @@ public class TestStepRequest {
   private Long testDataFunctionId;
   private Map<String, String> testDataFunctionArgs;
   private Long maxIterations;
-
   private String exceptedResult;
   private Integer naturalTextActionId;
   private TestStepType type;

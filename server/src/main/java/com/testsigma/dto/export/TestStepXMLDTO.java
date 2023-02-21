@@ -8,6 +8,7 @@
 package com.testsigma.dto.export;
 
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.testsigma.annotation.JsonListRootName;
 import com.testsigma.model.*;
 import lombok.Data;
@@ -58,6 +59,8 @@ public class TestStepXMLDTO extends BaseXMLDTO {
   private Integer recordActive = 1;
   @JsonIgnore
   private String testStepKey;
+  @JsonProperty("IgnoreStepResult")
+  private Boolean ignoreStepResult;
   @JsonIgnore
   private Long copiedFrom;
   @JsonProperty("phone-number-id")
@@ -80,16 +83,14 @@ public class TestStepXMLDTO extends BaseXMLDTO {
   private Boolean visualEnabled = false;
   @JsonProperty("condition_if")
   private ResultConstant[] ifConditionExpectedResults;
-  @JsonProperty("test-data")
-  private String testData;
+  @JsonProperty("dataMap")
+  private TestStepDataMap dataMap;
   @JsonProperty("MaxIterations")
   private Integer maxIterations;
   @JsonProperty("test-data-function")
   private DefaultDataGenerator defaultDataGenerator;
   @JsonProperty("custom-step")
   private TestStepCustomStep customStep;
-  @JsonProperty("test-data-type")
-  private String testDataType;
   @JsonProperty("element")
   private String element;
   @JsonProperty("from-element")

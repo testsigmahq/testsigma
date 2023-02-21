@@ -7,13 +7,11 @@
 
 package com.testsigma.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.testsigma.automator.entity.DefaultDataGeneratorsEntity;
 import com.testsigma.constants.NaturalTextActionConstants;
-import com.testsigma.dto.export.CloudTestDataFunction;
-import com.testsigma.model.recorder.KibbutzTestStepTestData;
-import com.testsigma.model.recorder.TestStepNlpData;
+import com.testsigma.model.recorder.RecorderTestStepNlpData;
 import com.testsigma.model.recorder.TestStepRecorderDataMap;
 import com.testsigma.model.recorder.TestStepRecorderForLoop;
 import com.testsigma.service.ObjectMapperService;
@@ -76,10 +74,7 @@ public class TestStep {
   private ResultConstant[] ifConditionExpectedResults;
 
   @Column(name = "test_data")
-  private String testData;
-
-  @Column(name = "test_data_type")
-  private String testDataType;
+  private String dataMap;
 
   @Column(name = "element")
   private String element;
@@ -233,42 +228,39 @@ public class TestStep {
   public TestStepDataMap getDataMapBean() {
     TestStepDataMap testStepDataMap = new TestStepDataMap();
     testStepDataMap.setIfConditionExpectedResults(ifConditionExpectedResults);
-    testStepDataMap.setTestData(testData);
-    testStepDataMap.setTestDataType(testDataType);
     testStepDataMap.setElement(element);
     testStepDataMap.setFromElement(fromElement);
     testStepDataMap.setToElement(toElement);
     testStepDataMap.setAttribute(attribute);
     testStepDataMap.setVisualEnabled(visualEnabled);
     ObjectMapperService mapper = new ObjectMapperService();
-    testStepDataMap.setAddonTDF(mapper.parseJson(addonTestData, AddonTestStepTestData.class));
+    if(dataMap != null) {
+      TestStepData testStepData = mapper.parseJson(this.dataMap, TestStepData.class);
+      if (testStepData != null) {
+        testStepDataMap.setTestData(testStepData.getTestData());
+      }
+    }
     DefaultDataGeneratorsDetails functionDetails = new DefaultDataGeneratorsDetails();
     functionDetails.setId(testDataFunctionId);
     functionDetails.setArguments(testDataFunctionArgs);
-    TestStepForLoop forLoop = new TestStepForLoop();
-    forLoop.setStartIndex(forLoopStartIndex);
-    forLoop.setEndIndex(forLoopEndIndex);
-    forLoop.setTestDataId(forLoopTestDataId);
-    testStepDataMap.setForLoop(forLoop);
     return testStepDataMap;
   }
 
-  public TestStepRecorderDataMap getDataMap() {
+  public TestStepRecorderDataMap getRecorderDataMap() throws Exception {
     ObjectMapperService mapperService = new ObjectMapperService();
-    TestStepRecorderDataMap testStepDataMap;
-    try {
-      testStepDataMap = mapperService.parseJsonModel(testData, TestStepRecorderDataMap.class);
-    } catch (Exception e) {
-      testStepDataMap = new TestStepRecorderDataMap();
-      TestStepNlpData testStepNlpData = new TestStepNlpData();
-      testStepNlpData.setValue(testData);
-      testStepNlpData.setType(testDataType);
-      testStepDataMap.setTestData(new HashMap<>() {{
-        put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA, testStepNlpData);
-      }});
-    }
-    if (testStepDataMap == null) {
-      testStepDataMap = new TestStepRecorderDataMap();
+    TestStepRecorderDataMap testStepDataMap = new TestStepRecorderDataMap();
+    if(dataMap != null) {
+      TestStepData testStepData = mapperService.parseJsonModel(this.dataMap, TestStepData.class);
+      if(testStepData != null && testStepData.getTestData() != null) {
+        for (String key : testStepData.getTestData().keySet()) {
+          RecorderTestStepNlpData recorderTestStepNlpData = new RecorderTestStepNlpData();
+          recorderTestStepNlpData.setValue(testStepData.getTestData().get(key).getValue());
+          recorderTestStepNlpData.setType(testStepData.getTestData().get(key).getType());
+          testStepDataMap.setTestData(new HashMap<>() {{
+            put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA_RECORDER, recorderTestStepNlpData);
+          }});
+        }
+      }
     }
     if (element != null) {
       testStepDataMap.setUiIdentifier(element);
@@ -282,23 +274,57 @@ public class TestStep {
     if (ifConditionExpectedResults != null && ifConditionExpectedResults.length > 0) {
       testStepDataMap.setIfConditionExpectedResults(ifConditionExpectedResults);
     }
-    if (forLoopStartIndex != null || forLoopTestDataId != null || forLoopEndIndex != null) {
-      TestStepRecorderForLoop testStepForLoop= new TestStepRecorderForLoop();
-      testStepForLoop.setTestDataId(forLoopTestDataId);
-      testStepForLoop.setStartIndex(forLoopStartIndex);
-      testStepForLoop.setEndIndex(forLoopEndIndex);
-      testStepDataMap.setForLoop(testStepForLoop);
-    }
     return testStepDataMap;
   }
 
-  public void setTestDataType(String testDataType) {
-    if (testDataType !=null){
-      if (testDataType.equals("global"))
-        this.testDataType = TestDataType.global.getDispName();
-      else if (testDataType.equals("phone_number") || testDataType.equals("mail_box"))
-        this.testDataType = TestDataType.raw.getDispName();
-      else this.testDataType = testDataType;
+  public TestStepDataMap getDataMap() {
+    ObjectMapperService mapperService = new ObjectMapperService();
+    Map<String, Map<String, Map<String, String>>> map = mapperService.parseJson(dataMap, Map.class);
+    TestStepDataMap testStepDataMap = new TestStepDataMap();
+    log.info("Parsing json to map: " + map);
+    if(map!= null && map.containsKey("test-data")) {
+      Map<String, TestStepNlpData> testData = new HashMap<>();
+      for(String key : map.get("test-data").keySet()) {
+        TestStepNlpData testStepNlpData = new TestStepNlpData();
+        testStepNlpData.setValue(map.get("test-data").get(key).get("value"));
+        testStepNlpData.setType(map.get("test-data").get(key).get("type"));
+        if(map.get("test-data").get(key).containsKey("testDataFunction")) {
+          testStepNlpData.setTestDataFunction(new ObjectMapper().convertValue(map.get("test-data").get(key).get("testDataFunction"), DefaultDataGeneratorsEntity.class));
+        }
+        if(map.get("test-data").get(key).containsKey("addonTDF")) {
+          testStepNlpData.setAddonTDF(new ObjectMapper().convertValue(map.get("test-data").get(key).get("addonTDF"), AddonTestStepTestData.class));
+        }
+        testData.put(key, testStepNlpData);
+      }
+      testStepDataMap.setTestData(testData);
+      if (element != null) {
+        testStepDataMap.setElement(element);
+      }
+      if(fromElement != null) {
+        testStepDataMap.setFromElement(fromElement);
+      }
+      if(toElement != null) {
+        testStepDataMap.setToElement(toElement);
+      }
+      if (ifConditionExpectedResults != null && ifConditionExpectedResults.length > 0) {
+        testStepDataMap.setIfConditionExpectedResults(ifConditionExpectedResults);
+      }
+      TestStepForLoop forLoop = new TestStepForLoop();
+      forLoop.setStartIndex(forLoopStartIndex);
+      forLoop.setEndIndex(forLoopEndIndex);
+      forLoop.setTestDataId(forLoopTestDataId);
+      testStepDataMap.setForLoop(forLoop);
     }
+    log.info("Parsed json to testStepDataMap: " + testStepDataMap);
+    return testStepDataMap;
   }
+
+  public void setDataMap(TestStepDataMap testStepDataMap) {
+    this.dataMap = new ObjectMapperService().convertToJson(testStepDataMap);
+  }
+
+  public String getStringDataMap() {
+    return dataMap;
+  }
+
 }

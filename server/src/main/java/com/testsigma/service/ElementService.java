@@ -73,6 +73,10 @@ public class ElementService extends XMLExportImportService<Element> {
     return elementRepository.findByNameAndWorkspaceVersionId(name, workspaceVersionId);
   }
 
+  public Page<Element> findByNameAndWorkspaceVersionId(Pageable pageable, String name, Long workspaceVersionId) {
+    return elementRepository.findByNameAndWorkspaceVersionId(pageable, name, workspaceVersionId);
+  }
+
   public Element find(Long id) throws ResourceNotFoundException {
     return elementRepository.findById(id)
       .orElseThrow(() -> new ResourceNotFoundException("Element is not found with id: " + id));

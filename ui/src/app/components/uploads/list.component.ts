@@ -148,7 +148,7 @@ export class ListComponent extends BaseComponent implements OnInit {
 
   checkForLinkedTestCases(testData?,id?,name?) {
     let testCases: InfiniteScrollableDataSource;
-    let query = "workspaceVersionId:" + this.versionId + ",testData:" + encodeURI(testData?.join("#"))
+    let query = "workspaceVersionId:" + this.versionId + ",testDataValue:" + encodeURI(testData?.join("#"))
     query = this.byPassSpecialCharacters(query);
     testCases = new InfiniteScrollableDataSource(this.testCaseService,query);
 
@@ -166,6 +166,7 @@ export class ListComponent extends BaseComponent implements OnInit {
       }
     }
   }
+
   private openLinkedTestCasesDialog(list) {
     this.translate.get("uploads.linked.with.test_cases").subscribe((res) => {
       this.matDialog.open(LinkedEntitiesModalComponent, {
@@ -180,11 +181,10 @@ export class ListComponent extends BaseComponent implements OnInit {
     });
   }
 
-
-
-  checkForLinkedEntities(id, name?: string) {
+  checkForLinkedEntities(id?: number, name?: string) {
     this.checkForLinkedEnvironments(id, name);
   }
+
   checkForLinkedEnvironments(id, name?: string) {
     let environmentResults: InfiniteScrollableDataSource;
     environmentResults = new InfiniteScrollableDataSource(this.environmentService, "appUploadId@"+(id ? id : this.selectedUploads.join("#"))+",entityType:TEST_PLAN");
@@ -196,17 +196,17 @@ export class ListComponent extends BaseComponent implements OnInit {
         setTimeout(() => waitTillRequestResponds(environmentResults, id, name), 100);
       else {
         if (environmentResults.isEmpty)
-          _this.uploadVersionService.findAll("uploadId:" + id).subscribe(res => {
+          _this.uploadVersionService.findAll("uploadId@" + (id ? id : _this.selectedUploads.join("#"))).subscribe(res => {
             let uploadPaths = res.content.map(version =>"testsigma-storage:/" + version.path)
             _this.checkForLinkedTestCases(uploadPaths,id,name);
           })
-        else
+        else {
           _this.openLinkedUploadsDialog(environmentResults);
+        }
       }
     }
   }
-
-  private openLinkedUploadsDialog(list) {
+  private  openLinkedUploadsDialog(list) {
     this.translate.get("message.delete.uploads").subscribe((res) => {
       this.matDialog.open(UploadEntitiesModalComponent, {
         width: '568px',

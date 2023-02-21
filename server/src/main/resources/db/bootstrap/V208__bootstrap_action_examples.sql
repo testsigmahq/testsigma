@@ -520,5 +520,10 @@ INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `des
 INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `description`, `example`, `workspace`, `data`, `created_date`, `updated_date`) VALUES (863, 30043, 'Verify that the element is present', 'In this example, We will verify that the element is present', 'https://app.testsigma.com/', '{\"element\": \"\\\\\\\\#{.*?}\"}', '2022-01-28 16:06:57', '2022-01-28 16:06:57');
 INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `description`, `example`, `workspace`, `data`, `created_date`, `updated_date`) VALUES (864, 30107, 'Tap on the enter key','In this example, we can Tap on the enter key', 'API Demos', '{}', '2022-01-28 16:06:57', '2022-01-28 16:06:57');
 
+INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `description`, `example`, `workspace`, `data`, `created_date`, `updated_date`) VALUES (865, 1106,'Store test-data1 in test-data2','In this example, we can store any data into a runtime variable.', '{}','{}','2023-01-28 16:06:57','2023-01-28 16:06:57');
+INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `description`, `example`, `workspace`, `data`, `created_date`, `updated_date`) VALUES (866, 10222,'Store test-data1 in test-data2','In this example, we can store any data into a runtime variable.', '{}','{}','2023-01-28 16:06:57','2023-01-28 16:06:57');
+INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `description`, `example`, `workspace`, `data`, `created_date`, `updated_date`) VALUES (867, 40060,'Store test-data1 in test-data2','In this example, we can store any data into a runtime variable.', '{}','{}','2023-01-28 16:06:57','2023-01-28 16:06:57');
+INSERT INTO `natural_text_action_examples` (`id`, `natural_text_action_id`, `description`, `example`, `workspace`, `data`, `created_date`, `updated_date`) VALUES (868, 40061,'Store test-data1 in test-data2','In this example, we can store any data into a runtime variable.', '{}','{}','2023-01-28 16:06:57','2023-01-28 16:06:57');
+
 
 UNLOCK TABLES;

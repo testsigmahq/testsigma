@@ -15,7 +15,7 @@ public class UploadFileAction extends ElementAction {
     findElement();
     String downloadURL = getTestDataPropertiesEntity(TEST_STEP_DATA_MAP_KEY_TEST_DATA).getTestDataValuePreSignedURL();
     String fileName = String.format("%s_%s", System.currentTimeMillis(), FilenameUtils.getName(new URL(downloadURL).getPath()));
-    String filePath = String.format("%s%s%s", FileUtils.getTempDirectoryPath().endsWith("\\")?FileUtils.getTempDirectoryPath().substring(0,FileUtils.getTempDirectoryPath().length()-1):FileUtils.getTempDirectoryPath(), File.separator, fileName);
+    String filePath = String.format("%s%s%s", FileUtils.getTempDirectoryPath().endsWith(File.separator)?FileUtils.getTempDirectoryPath().substring(0,FileUtils.getTempDirectoryPath().length()-1):FileUtils.getTempDirectoryPath(), File.separator, fileName);
     FileUtils.copyURLToFile(new URL(downloadURL), new File(filePath), (60* 1000), (60 * 1000));
     getElement().sendKeys(filePath);
     setSuccessMessage("Successfully executed.");

@@ -123,8 +123,6 @@ public abstract class XMLExportImportService<T> {
         log.debug("backup file " + backupDTO.getSrcFiles().getAbsolutePath() + File.separator + fileName + "_" + index + ".xml" + " initiated");
         XmlMapper xmlMapper = new XmlMapper();
         xmlMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-        xmlMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        xmlMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         File fileToZip = new File(backupDTO.getSrcFiles().getAbsolutePath() + File.separator + fileName + "_" + index + ".xml");
         FileOutputStream fileOutputStream = new FileOutputStream(fileToZip);
 

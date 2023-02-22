@@ -15,9 +15,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.testsigma.annotation.JsonListRootName;
 import com.testsigma.model.ElementCreateType;
-import com.testsigma.model.ElementMetaData;
 import com.testsigma.model.LocatorType;
-import com.testsigma.service.ObjectMapperService;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -78,14 +76,4 @@ public class ElementXMLDTO extends BaseXMLDTO {
   private String comments;
   @JsonProperty("is_duplicated")
   private Boolean isDuplicated = false;
-  @JsonProperty("metadata")
-  private String metadata;
-
-  public ElementMetaData getMetadata() {
-    return new ObjectMapperService().parseJson(metadata, ElementMetaData.class);
-  }
-
-  public void setMetadata(ElementMetaData elementMetaData) {
-    this.metadata = new ObjectMapperService().convertToJson(elementMetaData);
-  }
 }

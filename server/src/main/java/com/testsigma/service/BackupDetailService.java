@@ -63,7 +63,6 @@ public class BackupDetailService extends XMLExportImportService<BackupDetail> {
   private final BackupDetailMapper exportBackupEntityMapper;
   private final TestSuiteService testSuiteService;
   private final SuiteTestCaseMappingService suiteTestCaseMappingService;
-  private final ForLoopConditionService forLoopConditionService;
 
   @Value("${unzip.dir}")
   private String unzipDir;
@@ -184,7 +183,6 @@ public class BackupDetailService extends XMLExportImportService<BackupDetail> {
         uploadVersionService.export(backupDTO);
         testcaseService.export(backupDTO);
         teststepService.export(backupDTO);
-        forLoopConditionService.export(backupDTO);
         reststepService.export(backupDTO);
         testSuiteService.export(backupDTO);
         suiteTestCaseMappingService.export(backupDTO);

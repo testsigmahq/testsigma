@@ -72,6 +72,10 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         return this.repository.findAllByTestCaseIdOrderByPositionAsc(testCaseId);
     }
 
+    public List<TestStep> findAllByParentId(Long parentId) {
+        return this.repository.findAllByParentId(parentId);
+    }
+
     public List<TestStep> findAllByTestCaseIdAndEnabled(Long testCaseId) {
         List<TestStep> testSteps = repository.findAllByTestCaseIdAndDisabledIsNotOrderByPositionAsc(testCaseId, true);
         List<TestStep> stepGroups = repository.findAllByTestCaseIdAndDisabledIsNotAndStepGroupIdIsNotNullOrderByPositionAsc(testCaseId, true);
@@ -109,9 +113,12 @@ public class TestStepService extends XMLExportImportService<TestStep> {
 
     public void destroy(TestStep testStep, Boolean isRecorderRequest) throws ResourceNotFoundException {
         repository.decrementPosition(testStep.getPosition(), testStep.getTestCaseId());
-        if(testStep.getConditionType() == TestStepConditionType.LOOP_WHILE && isRecorderRequest){
-            TestStep parentWhileStep = testStep.getParentStep();
-            repository.delete(parentWhileStep);
+        if(isRecorderRequest) {
+            if (testStep.getConditionType() == TestStepConditionType.LOOP_WHILE) {
+                TestStep parentWhileStep = testStep.getParentStep();
+                repository.delete(parentWhileStep);
+            }
+            this.handleChildStepsDelete(this.findAllByParentId(testStep.getId()));
         }
         repository.delete(testStep);
         if (testStep.getAddonActionId() != null) {
@@ -121,11 +128,20 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         publishEvent(testStep, EventType.DELETE);
     }
 
+    public void handleChildStepsDelete(List<TestStep> childSteps) throws ResourceNotFoundException{
+        if(childSteps!=null && !childSteps.isEmpty()){
+            for(TestStep childStep:childSteps){
+                handleChildStepsDelete(this.findAllByParentId(childStep.getId()));
+                this.destroy(childStep, true);
+            }
+        }
+    }
+
     public TestStep find(Long id) throws ResourceNotFoundException {
         return this.repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("TestStep missing with id:" + id));
     }
 
-    private TestStep updateDetails(TestStep testStep, Boolean isRecorderRequest) {
+    private TestStep updateDetails(TestStep testStep, Boolean isRecorderRequest) throws ResourceNotFoundException {
         RestStep restStep = testStep.getRestStep();
         testStep.setRestStep(null);
         if(isRecorderRequest)
@@ -236,12 +252,14 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         return newTestSteps;
     }
 
-    public void handleWhileTestStepUpdate(TestStep testStep){
+    public void handleWhileTestStepUpdate(TestStep testStep) throws ResourceNotFoundException {
         // Updating disabled property and timeout and parent step to the
         if(testStep.getConditionType() == TestStepConditionType.LOOP_WHILE){
-            TestStep parentWhileStep = testStep.getParentStep();
-            if(parentWhileStep.getId() != testStep.getParentId())
-                parentWhileStep.setParentId(testStep.getParentId());
+            Long updatedParentId = testStep.getParentId();
+            testStep = this.find(testStep.getId());
+            TestStep parentWhileStep = this.find(testStep.getParentId());
+            if(!parentWhileStep.getId().equals(testStep.getParentId()))
+                parentWhileStep.setParentId(updatedParentId);
             parentWhileStep.setDisabled(testStep.getDisabled());
             parentWhileStep.setWaitTime(testStep.getWaitTime());
             parentWhileStep = this.repository.save(parentWhileStep);
@@ -260,20 +278,20 @@ public class TestStepService extends XMLExportImportService<TestStep> {
             TestStep parentStep = repository.getById(testStepDTO.getParentId());
             if (parentStep.getParentId() != null) {
                 testStepDTO.setParentId(parentStep.getParentId());
-            } else {
+            } else if(parentStep.getAction() == null) {
                 testStepDTO.setParentId(null);
             }
         }
     }
 
     public void bulkUpdateProperties(Long[] ids, TestStepPriority testStepPriority, Integer waitTime, Boolean disabled,
-                                     Boolean ignoreStepResult,Boolean visualEnabled, Boolean isRecorderRequest) {
+                                     Boolean ignoreStepResult,Boolean visualEnabled, Boolean isRecorderRequest) throws ResourceNotFoundException {
         this.repository.bulkUpdateProperties(ids, testStepPriority != null ? testStepPriority.toString() : null, waitTime,visualEnabled);
         if (disabled != null || ignoreStepResult != null)
             this.bulkUpdateDisableAndIgnoreResultProperties(ids, disabled, ignoreStepResult, isRecorderRequest);
     }
 
-    private void bulkUpdateDisableAndIgnoreResultProperties(Long[] ids, Boolean disabled, Boolean ignoreStepResult, Boolean isRecorderRequest) {
+    private void bulkUpdateDisableAndIgnoreResultProperties(Long[] ids, Boolean disabled, Boolean ignoreStepResult, Boolean isRecorderRequest) throws ResourceNotFoundException {
         List<TestStep> testSteps = this.repository.findAllByIdInOrderByPositionAsc(ids);
         for (TestStep testStep : testSteps) {
             if (disabled != null) {

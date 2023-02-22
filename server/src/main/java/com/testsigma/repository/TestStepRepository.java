@@ -30,6 +30,8 @@ public interface TestStepRepository extends JpaRepository<TestStep, Long> {
 
   List<TestStep> findAllByTestCaseIdOrderByPositionAsc(Long testCaseId);
 
+  List<TestStep> findAllByParentId(Long parentId);
+
   List<TestStep> findAllByTestCaseIdAndDisabledIsNotOrderByPositionAsc(Long testCaseId, Boolean notDisabled);
 
   List<TestStep> findAllByTestCaseIdAndNaturalTextActionIdIn(Long testCaseId, List<Integer> NaturalTextActionIds);

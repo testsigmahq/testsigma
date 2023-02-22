@@ -78,6 +78,7 @@ public class TestStepsRecorderController {
         TestStep testStep = this.service.find(id);
         TestStepRecorderDTO testStepRecorderDTO;
         TestStepDTO testStepDTO;
+        Long parentStepId;
         if(request.getType() == TestStepType.NLP_TEXT) {
             request.setType(TestStepType.ACTION_TEXT);
         }
@@ -97,6 +98,7 @@ public class TestStepsRecorderController {
 
             if (testStep.getParentId() != null)
                 testStep.setDisabled(this.service.find(testStep.getParentId()).getDisabled());
+            parentStepId = testStep.getParentId();
             testStep = this.service.update(testStep, true);
             testStepDTO = mapper.mapDTO(testStep);
 
@@ -105,10 +107,12 @@ public class TestStepsRecorderController {
         } else{
             TestStepRequest testStepRequest = testStepRecorderMapper.mapRequest(request);
             replaceCamelCase(testStepRequest.getDataMap());
+            parentStepId = testStepRequest.getParentId();
             testStep = this.service.update(mapper.map(testStepRequest), true);
             testStepDTO = mapper.mapDTO(testStep);
             testStepRecorderDTO = testStepRecorderMapper.mapDTO(testStepDTO);
         }
+        testStepRecorderDTO.setParentId(parentStepId);
         return testStepRecorderDTO;
     }
 
@@ -118,6 +122,7 @@ public class TestStepsRecorderController {
         log.debug("POST /os_recorder/test_steps with request::" + request);
         TestStepRecorderDTO testStepRecorderDTO;
         TestStepDTO testStepDTO;
+        Long parentStepId;
         if(request.getType() == TestStepType.NLP_TEXT) {
             request.setType(TestStepType.ACTION_TEXT);
         }
@@ -133,6 +138,7 @@ public class TestStepsRecorderController {
             TestStepRequest testStepRequest = testStepRecorderMapper.mapRequest(request);
             replaceCamelCase(testStepRequest.getDataMap());
             TestStep testStep = mapper.map(testStepRequest);
+            parentStepId = testStep.getParentId();
             testStep.setCreatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
             if(testStep.getPosition() == null) {
                 Optional<TestStep> lastTestStep = service.findTopByTestCaseIdOrderByPositionDesc(testStep.getTestCaseId());
@@ -150,6 +156,7 @@ public class TestStepsRecorderController {
             TestStepRequest testStepRequest = testStepRecorderMapper.mapRequest(request);
             replaceCamelCase(testStepRequest.getDataMap());
             TestStep testStep = mapper.map(testStepRequest);
+            parentStepId = testStep.getParentId();
             if(testStep.getPosition() == null) {
                 Optional<TestStep> lastTestStep = service.findTopByTestCaseIdOrderByPositionDesc(testStep.getTestCaseId());
                 int position = lastTestStep.isPresent() ? lastTestStep.get().getPosition()+1 : 0;
@@ -162,6 +169,7 @@ public class TestStepsRecorderController {
         if(testStepRecorderDTO.getUiIdentifierDTO() != null) {
             testStepRecorderDTO.getDataMap().setUiIdentifier(testStepRecorderDTO.getUiIdentifierDTO().getName());
         }
+        testStepRecorderDTO.setParentId(parentStepId);
         return testStepRecorderDTO;
     }
 
@@ -182,7 +190,7 @@ public class TestStepsRecorderController {
                                      @RequestParam(value = "priority", required = false) TestStepPriority testStepPriority,
                                      @RequestParam(value = "disabled", required = false) Boolean disabled,
                                      @RequestParam(value = "ignoreStepResult", required = false) Boolean ignoreStepResult,
-                                     @RequestParam(value = "visualEnabled", required = false) Boolean visualEnabled) {
+                                     @RequestParam(value = "visualEnabled", required = false) Boolean visualEnabled) throws ResourceNotFoundException {
 
         log.debug("PUT /os_recorder/test_steps/bulk_update_properties with ids::" + Arrays.toString(ids) + " waitTime ::"
                 + waitTime + " priority ::" + testStepPriority + " disabled ::" + disabled +" ignoreStepResult ::" +ignoreStepResult);

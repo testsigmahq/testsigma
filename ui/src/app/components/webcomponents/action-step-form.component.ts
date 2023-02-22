@@ -55,6 +55,7 @@ import {TestData} from "../../models/test-data.model";
 import {TestDataService} from "../../services/test-data.service";
 import {TestDataSetService} from "../../services/test-data-set.service";
 import {TestDataMapValue} from "../../models/test-data-map-value.model";
+import {ForLoopData} from "../../models/for-loop-data.model";
 
 
 @Component({
@@ -705,6 +706,40 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       })
     }
     let testDataValue = this.testDataValue(action, this.testStep, this.testDataPlaceholder());
+
+    //for-loop-method
+    if(testDataValue) {
+      if(this.testStep.isForLoop) {
+        if (this.selectedTestDataProfile?.id || this.testStep?.forLoopData?.testDataProfileId) {
+          let forLoopTestDataData = this.testStep?.forLoopData?.testDataProfileData;
+          if(this.testStep.isTestDataLeftSetName || this.testStep?.isTestDataRightSetName) {
+            if((testDataValue["left-data"]?.value == 'start-set-name' || testDataValue["left-data"]?.value == 'start')
+              && testDataValue["left-data"]?.type == TestDataType.raw ) {
+              testDataValue["left-data"].value = "-1";
+            }
+            if((testDataValue["right-data"]?.value == 'end-set-name' || testDataValue["right-data"]?.value == 'end')
+              && testDataValue["right-data"]?.type == TestDataType.raw) {
+              testDataValue["right-data"].value = "-1";
+            }
+          }
+          if(this.testStep.isTestDataRightParameter || this.testStep.isTestDataLeftParameter) {
+            if(testDataValue["left-data"]?.value == 'parameter' && testDataValue["left-data"]?.type == TestDataType.raw) {
+              //testDataValue["left-data"].value = this.selectedTestDataSetName
+            }
+            if(testDataValue["right-data"]?.value == 'parameter' && testDataValue["right-data"]?.type == TestDataType.raw) {
+              //testDataValue["right-data"].value = this.selectedTestDataSetName
+            }
+          }
+          this.testStep.forLoopData = this.setForLoopData(testDataValue, this.testStep);
+          this.testStep.forLoopData.testDataProfileData = forLoopTestDataData;
+        } else {
+          this.isValidTestData = true;
+          return false;
+        }
+      }
+    }
+
+
     //this.isValidElement = this.elementPlaceholder() ? elementValue?.trim()?.length : true;
     this.isValidAttribute = this.attributePlaceholder() ? attributeValue?.trim().length : true;
     if (action && action.length && this.isValidElement && this.isValidTestData && this.isValidAttribute) {
@@ -757,6 +792,12 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       return testData;
     }
     return false;
+  }
+
+  setForLoopData(data, step: TestStep) {
+    data['test-data-profile']['value'] = this.selectedTestDataProfile?.id || step.forLoopData?.testDataProfileId;
+    return new ForLoopData().deserializeRawValue(data, step);
+
   }
 
   selectTemplate() {

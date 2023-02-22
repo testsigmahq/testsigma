@@ -784,6 +784,10 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
           setValue['value'] = value;
           setValue['testDataFunction'] = new TestStepTestDataFunction();
           setValue['addonTDF'] = new AddonTestStepTestData();
+          //Test-Data-profile added
+          if(reference == 'test-data-profile') {
+            testData['test-data-profile-id'] = this.getTestDataProfileIdValue();
+          }
           testData[reference] = setValue
         } else {
           this.isValidTestData = false
@@ -912,6 +916,12 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     return [...testDataList, ...selectableList];
   }
 
+  getTestDataProfileIdValue() {
+    const setValue = new TestDataMapValue();
+    setValue.type = TestDataType.raw;
+    setValue['value'] = this.selectedTestDataProfile?.id?.toString();
+    return setValue;
+  }
   mapTestDataType(type: String) {
     switch(type) {
       case "raw":

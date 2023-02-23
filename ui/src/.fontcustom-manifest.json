@@ -1,14 +1,14 @@
 {
   "checksum": {
-    "previous": "79e7bdc8f1969a3294a43002952f0f87261025bd0ab8e307bda5d7be149d11ba",
-    "current": "79e7bdc8f1969a3294a43002952f0f87261025bd0ab8e307bda5d7be149d11ba"
+    "previous": "4b9b3436d5920a6ae48b3e6e48cbe7f332adb73ca3e1f717eb1a95f8a48acbdb",
+    "current": "4b9b3436d5920a6ae48b3e6e48cbe7f332adb73ca3e1f717eb1a95f8a48acbdb"
   },
   "fonts": [
-    "./assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.ttf",
-    "./assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.svg",
-    "./assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.woff",
-    "./assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.eot",
-    "./assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.woff2"
+    "./assets/font_icons/font_custom_4b9b3436d5920a6ae48b3e6e48cbe7f3.ttf",
+    "./assets/font_icons/font_custom_4b9b3436d5920a6ae48b3e6e48cbe7f3.svg",
+    "./assets/font_icons/font_custom_4b9b3436d5920a6ae48b3e6e48cbe7f3.woff",
+    "./assets/font_icons/font_custom_4b9b3436d5920a6ae48b3e6e48cbe7f3.eot",
+    "./assets/font_icons/font_custom_4b9b3436d5920a6ae48b3e6e48cbe7f3.woff2"
   ],
   "glyphs": {
     "4-quabs": {
@@ -42,6 +42,10 @@
     "addons": {
       "codepoint": 62152,
       "source": "./icons/addons.svg"
+    },
+    "agent": {
+      "codepoint": 62164,
+      "source": "./icons/agent.svg"
     },
     "alert": {
       "codepoint": 61700,
@@ -363,6 +367,14 @@
       "codepoint": 61967,
       "source": "./icons/cloud.svg"
     },
+    "cloud_done": {
+      "codepoint": 62165,
+      "source": "./icons/cloud_done.svg"
+    },
+    "cloud_upload_waiting": {
+      "codepoint": 62166,
+      "source": "./icons/cloud_upload_waiting.svg"
+    },
     "code-format": {
       "codepoint": 62103,
       "source": "./icons/code-format.svg"
@@ -439,6 +451,10 @@
       "codepoint": 61939,
       "source": "./icons/cursor-click-flash.svg"
     },
+    "custom-functions-alt": {
+      "codepoint": 62167,
+      "source": "./icons/custom-functions-alt.svg"
+    },
     "dashboard": {
       "codepoint": 61757,
       "source": "./icons/dashboard.svg"
@@ -446,6 +462,10 @@
     "data-grid": {
       "codepoint": 62020,
       "source": "./icons/data-grid.svg"
+    },
+    "data-usage": {
+      "codepoint": 62168,
+      "source": "./icons/data-usage.svg"
     },
     "database-solid": {
       "codepoint": 61758,
@@ -1035,6 +1055,10 @@
       "codepoint": 61834,
       "source": "./icons/nlp-grammar.svg"
     },
+    "nlp-grammar-alt": {
+      "codepoint": 62169,
+      "source": "./icons/nlp-grammar-alt.svg"
+    },
     "nlp-new": {
       "codepoint": 61835,
       "source": "./icons/nlp-new.svg"
@@ -1086,6 +1110,10 @@
     "pencil-on-paper": {
       "codepoint": 61839,
       "source": "./icons/pencil-on-paper.svg"
+    },
+    "pencil-on-paper-new": {
+      "codepoint": 62170,
+      "source": "./icons/pencil-on-paper-new.svg"
     },
     "pencil-thick": {
       "codepoint": 62064,
@@ -1187,6 +1215,14 @@
       "codepoint": 62093,
       "source": "./icons/project-api.svg"
     },
+    "project-desktop-mac": {
+      "codepoint": 62171,
+      "source": "./icons/project-desktop-mac.svg"
+    },
+    "project-desktop-windows": {
+      "codepoint": 62172,
+      "source": "./icons/project-desktop-windows.svg"
+    },
     "project-ios": {
       "codepoint": 62094,
       "source": "./icons/project-ios.svg"
@@ -1239,6 +1275,10 @@
       "codepoint": 62138,
       "source": "./icons/record-play.svg"
     },
+    "redeem": {
+      "codepoint": 62173,
+      "source": "./icons/redeem.svg"
+    },
     "refresh": {
       "codepoint": 61857,
       "source": "./icons/refresh.svg"
@@ -1258,6 +1298,10 @@
     "reports": {
       "codepoint": 61860,
       "source": "./icons/reports.svg"
+    },
+    "requirements-alt": {
+      "codepoint": 62174,
+      "source": "./icons/requirements-alt.svg"
     },
     "rest-cloud": {
       "codepoint": 61862,
@@ -1430,6 +1474,10 @@
     "setting-outlined": {
       "codepoint": 62054,
       "source": "./icons/setting-outlined.svg"
+    },
+    "settings": {
+      "codepoint": 62175,
+      "source": "./icons/settings.svg"
     },
     "settings-wrench": {
       "codepoint": 61884,
@@ -1643,6 +1691,10 @@
       "codepoint": 61911,
       "source": "./icons/triangle-down.svg"
     },
+    "ui-identifiers-alt": {
+      "codepoint": 62176,
+      "source": "./icons/ui-identifiers-alt.svg"
+    },
     "up-arrow-filled": {
       "codepoint": 61913,
       "source": "./icons/up-arrow-filled.svg"
@@ -1778,7 +1830,7 @@
     "copyright": "",
     "css3": false,
     "css_selector": ".fa-{{glyph}}",
-    "debug": true,
+    "debug": false,
     "font_ascent": 448,
     "font_descent": 64,
     "font_design_size": 16,

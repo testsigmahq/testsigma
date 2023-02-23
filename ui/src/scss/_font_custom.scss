@@ -4,10 +4,10 @@
 
 @font-face {
   font-family: "font_custom";
-  src: url("~/assets/font_icons/font_custom_4b9b3436d5920a6ae48b3e6e48cbe7f3.woff2") format("woff2"),
-       url("~/assets/font_icons/font_custom_4b9b3436d5920a6ae48b3e6e48cbe7f3.woff") format("woff"),
-       url("~/assets/font_icons/font_custom_4b9b3436d5920a6ae48b3e6e48cbe7f3.ttf") format("truetype"),
-       url("~/assets/font_icons/font_custom_4b9b3436d5920a6ae48b3e6e48cbe7f3.svg#font_custom") format("svg");
+  src: url("~/assets/font_icons/font_custom_33b611c3842428c6561f5d145675b3f7.woff2") format("woff2"),
+       url("~/assets/font_icons/font_custom_33b611c3842428c6561f5d145675b3f7.woff") format("woff"),
+       url("~/assets/font_icons/font_custom_33b611c3842428c6561f5d145675b3f7.ttf") format("truetype"),
+       url("~/assets/font_icons/font_custom_33b611c3842428c6561f5d145675b3f7.svg#font_custom") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -15,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: "font_custom";
-    src: url("~/assets/font_icons/font_custom_4b9b3436d5920a6ae48b3e6e48cbe7f3.svg#font_custom") format("svg");
+    src: url("~/assets/font_icons/font_custom_33b611c3842428c6561f5d145675b3f7.svg#font_custom") format("svg");
   }
 }
 
@@ -260,6 +260,7 @@
 .fa-list:before,
 .fa-list-alt:before,
 .fa-list-of-frames:before,
+.fa-live-help:before,
 .fa-location:before,
 .fa-lock-open-solid:before,
 .fa-lock-solid:before,
@@ -727,6 +728,7 @@
 .fa-list:before { content: "\f17b"; }
 .fa-list-alt:before { content: "\f17c"; }
 .fa-list-of-frames:before { content: "\f2a3"; }
+.fa-live-help:before { content: "\f2e1"; }
 .fa-location:before { content: "\f17d"; }
 .fa-lock-open-solid:before { content: "\f17e"; }
 .fa-lock-solid:before { content: "\f17f"; }
@@ -1181,6 +1183,7 @@ $font-font_custom-linux-2: "\f17a";
 $font-font_custom-list: "\f17b";
 $font-font_custom-list-alt: "\f17c";
 $font-font_custom-list-of-frames: "\f2a3";
+$font-font_custom-live-help: "\f2e1";
 $font-font_custom-location: "\f17d";
 $font-font_custom-lock-open-solid: "\f17e";
 $font-font_custom-lock-solid: "\f17f";

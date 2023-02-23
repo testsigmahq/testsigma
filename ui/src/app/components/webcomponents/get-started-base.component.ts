@@ -399,14 +399,14 @@ export class GetStartedBaseComponent extends BaseComponent implements OnInit {
 
   private fetchDryTestCaseCount(user) {
     if (this.userCreatedAt)
-      this.dryTestPlanService.findAll("createdDate>" + moment(this.userCreatedAt).format("YYYY-MM-DD")).subscribe(
+      this.dryTestPlanService.findAll("createdDate>" + moment(this.userCreatedAt)).subscribe(
       res => this.getStartedCounts["dryTestCaseCount"] = res.content.length
     );
   }
 
   private fetchTestDataCount(user) {
     if (this.userCreatedAt)
-      this.testDataService.findAll("createdDate>" + moment(this.userCreatedAt).format("YYYY-MM-DD")).subscribe(
+      this.testDataService.findAll("createdDate>" + moment(this.userCreatedAt)).subscribe(
       res => this.getStartedCounts["testDataCount"] = res.content.length
     );
   }

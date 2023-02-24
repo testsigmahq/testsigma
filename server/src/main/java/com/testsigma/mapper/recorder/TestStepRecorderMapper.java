@@ -45,7 +45,6 @@ public interface TestStepRecorderMapper {
 
     List<TestStepRecorderDTO> mapDTOs(List<TestStepDTO> testStepDTO);
 
-
     @Mapping(target = "ifConditionExpectedResults", expression = "java(mapIfConditionExpectedResults(testStepRecorderRequest))")
     @Mapping(target = "toElement", source = "testStepRecorderRequest.dataMap.fromUiIdentifier")
     @Mapping(target = "dataMap", expression = "java(mapDataMap(testStepRecorderRequest.getDataMap()))")

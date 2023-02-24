@@ -705,40 +705,8 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         }
       })
     }
-    let testDataValue = this.testDataValue(action, this.testStep, this.testDataPlaceholder());
 
-    //for-loop-method
-    if(testDataValue) {
-      if(this.testStep.isForLoop) {
-        if (this.selectedTestDataProfile?.id || this.testStep?.forLoopData?.testDataProfileId) {
-          let forLoopTestDataData = this.testStep?.forLoopData?.testDataProfileData;
-          if(this.testStep.isTestDataLeftSetName || this.testStep?.isTestDataRightSetName) {
-            if((testDataValue["left-data"]?.value == 'start-set-name' || testDataValue["left-data"]?.value == 'start')
-              && testDataValue["left-data"]?.type == TestDataType.raw ) {
-              testDataValue["left-data"].value = "-1";
-            }
-            if((testDataValue["right-data"]?.value == 'end-set-name' || testDataValue["right-data"]?.value == 'end')
-              && testDataValue["right-data"]?.type == TestDataType.raw) {
-              testDataValue["right-data"].value = "-1";
-            }
-          }
-          if(this.testStep.isTestDataRightParameter || this.testStep.isTestDataLeftParameter) {
-            if(testDataValue["left-data"]?.value == 'parameter' && testDataValue["left-data"]?.type == TestDataType.raw) {
-              //testDataValue["left-data"].value = this.selectedTestDataSetName
-            }
-            if(testDataValue["right-data"]?.value == 'parameter' && testDataValue["right-data"]?.type == TestDataType.raw) {
-              //testDataValue["right-data"].value = this.selectedTestDataSetName
-            }
-          }
-          this.testStep.forLoopData = this.setForLoopData(testDataValue, this.testStep);
-          this.testStep.forLoopData.testDataProfileData = forLoopTestDataData;
-        } else {
-          this.isValidTestData = true;
-          return false;
-        }
-      }
-    }
-
+    this.testDataValue(action, this.testStep, this.testDataPlaceholder());
 
     //this.isValidElement = this.elementPlaceholder() ? elementValue?.trim()?.length : true;
     this.isValidAttribute = this.attributePlaceholder() ? attributeValue?.trim().length : true;
@@ -753,9 +721,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       if (attributeValue) {
         this.testStep.attribute = attributeValue
       }
-      if(testDataValue) {
-        this.testStep.dataMap.testData = testDataValue;
-      }
+
       this.testStep.deserializeCommonProperties(this.actionForm.getRawValue());
       return true;
     } else {
@@ -763,39 +729,78 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
   }
 
-  testDataValue(action, testStep, testDataList) {
+  testDataValue(action, testStep, testDataList): void {
     if(testStep?.getAllTestData?.length || testDataList?.length) {
-      let testData = new Map<string, TestDataMapValue>();
-      testDataList.forEach(item => {
-        let reference = item?.['dataset']?.reference;
-        let testDataType = TestDataType[item?.['dataset']?.testDataType || 'raw'];
-        let value = item?.textContent?.replace(/&nbsp;/g, "").trim();
-        let typeValue = false;
-        ['\@|', '\!|', '\~|', '\$|', '\*|', '\%|', '\&|'].some(type => {
-          if (value.startsWith(type)) {
-            typeValue = true;
-            value = value.replace(type, '').replace(/&nbsp;/g, "");
-            value = value.replace('|', '').replace(/&nbsp;/g, "");
-          }
-        });
-        if (value.length) {
-          let setValue = new TestDataMapValue();
-          setValue.type = typeValue? testDataType : TestDataType.raw;
-          setValue['value'] = value;
-          setValue['testDataFunction'] = new TestStepTestDataFunction();
-          setValue['addonTDF'] = new AddonTestStepTestData();
-          //Test-Data-profile added
-          if(reference == 'test-data-profile') {
-            testData['test-data-profile-id'] = this.getTestDataProfileIdValue();
-          }
-          testData[reference] = setValue
-        } else {
-          this.isValidTestData = false
+      // for loop condition
+        let t = this.rrr(testDataList);
+        if(t && this.testStep.isForLoop) {
+          this.fff(t)
+        } else if(!this.testStep.isForLoop) {
+          this.testStep.dataMap.testData = t;
         }
-      })
-      return testData;
     }
-    return false;
+  }
+
+  rrr(testDataList): Map<string, any> {
+    let testData = new Map<string, TestDataMapValue>();
+    testDataList.forEach(item => {
+      let reference = item?.['dataset']?.reference;
+      let testDataType = TestDataType[item?.['dataset']?.testDataType || 'raw'];
+      let value = item?.textContent?.replace(/&nbsp;/g, "").trim();
+      let typeValue = false;
+      ['\@|', '\!|', '\~|', '\$|', '\*|', '\%|', '\&|'].some(type => {
+        if (value.startsWith(type)) {
+          typeValue = true;
+          value = value.replace(type, '').replace(/&nbsp;/g, "");
+          value = value.replace('|', '').replace(/&nbsp;/g, "");
+        }
+      });
+      if (value.length) {
+        let setValue = new TestDataMapValue();
+        setValue.type = typeValue? testDataType : TestDataType.raw;
+        setValue['value'] = value;
+        setValue['testDataFunction'] = new TestStepTestDataFunction();
+        setValue['addonTDF'] = new AddonTestStepTestData();
+        //Test-Data-profile added
+        if(reference == 'test-data-profile') {
+          testData['test-data-profile-id'] = this.getTestDataProfileIdValue();
+        }
+        testData[reference] = setValue
+      } else {
+        this.isValidTestData = false
+      }
+    })
+    return testData;
+  }
+
+  fff(testDataValue): void {
+      if (this.selectedTestDataProfile?.id || this.testStep?.forLoopData?.testDataProfileId) {
+        let forLoopTestDataData = this.testStep?.forLoopData?.testDataProfileData;
+        if(this.testStep.isTestDataLeftSetName || this.testStep?.isTestDataRightSetName) {
+          if((testDataValue["left-data"]?.value == 'start-set-name' || testDataValue["left-data"]?.value == 'start')
+            && testDataValue["left-data"]?.type == TestDataType.raw ) {
+            testDataValue["left-data"].value = "-1";
+          }
+          if((testDataValue["right-data"]?.value == 'end-set-name' || testDataValue["right-data"]?.value == 'end')
+            && testDataValue["right-data"]?.type == TestDataType.raw) {
+            testDataValue["right-data"].value = "-1";
+          }
+        }
+        if(this.testStep.isTestDataRightParameter || this.testStep.isTestDataLeftParameter) {
+          if(testDataValue["left-data"]?.value == 'parameter' && testDataValue["left-data"]?.type == TestDataType.raw) {
+            //testDataValue["left-data"].value = this.selectedTestDataSetName
+          }
+          if(testDataValue["right-data"]?.value == 'parameter' && testDataValue["right-data"]?.type == TestDataType.raw) {
+            //testDataValue["right-data"].value = this.selectedTestDataSetName
+          }
+        }
+        this.testStep.forLoopData = this.setForLoopData(testDataValue, this.testStep);
+        this.testStep.forLoopData.testDataProfileData = forLoopTestDataData;
+
+      } else {
+        this.isValidTestData = true;
+      }
+
   }
 
   setForLoopData(data, step: TestStep) {

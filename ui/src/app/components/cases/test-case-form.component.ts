@@ -342,11 +342,6 @@ export class TestCaseFormComponent extends BaseComponent implements OnInit {
     }
     this.testDataService.findAll("versionId:" + this.version.id + searchName).subscribe(res => {
       this.testDataList = res;
-      if(this.testCase?.id && this.testCase?.testDataId)  {
-        if(this.testDataList?.content && !this.testDataList?.content?.find(req => req.id == this.testCase.testDataId)) {
-          this.testDataList.content.push(this.testCase.testData)
-        }
-      }
     });
   }
 

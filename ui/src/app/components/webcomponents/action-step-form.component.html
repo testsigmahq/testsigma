@@ -68,7 +68,7 @@
     tabindex="-1"
     id="testDataContainer"
     class="action-drop-down-container">
-    <div  *ngIf="!currentTemplate?.allowedValues && !currentAddonAllowedValues">
+    <div  *ngIf="!currentTemplate?.allowedValues && !currentAddonAllowedValues && !listDataItem">
       <div
         *ngFor="let type of dataTypes; let index=index"
         [class.h-active]="currentDataTypeIndex == index"
@@ -81,7 +81,7 @@
             [translate]="'action.testDataType.'+type"></span>
       </div>
     </div>
-    <div  *ngIf="currentTemplate?.allowedValues">
+    <div  *ngIf="currentTemplate?.allowedValues && !listDataItem && !listParameterItem">
       <div
         *ngFor="let value of currentTemplate?.allowedValues['test-data']; let index=index"
         [class.h-active]="currentDataTypeIndex == index"
@@ -93,6 +93,30 @@
           [textContent]="value"></span>
       </div>
   </div>
+
+    <div>
+      <div
+        *ngFor="let value of listDataItem; let index=index"
+        [class.h-active]="currentDataTypeIndex == index"
+        (mouseover)="currentDataTypeIndex=index"
+        (click)="selectAllowedValues(value.name, true);selectedTestDataProfile=value;"
+        class="d-flex align-items-center pointer py-8 grey-on-hover">
+        <span
+          class="px-14"
+          [textContent]="value.name"></span>
+      </div>
+    </div>
+
+      <div
+        *ngFor="let value of listParameterItem; let index=index"
+        [class.h-active]="currentDataTypeIndex == index"
+        (mouseover)="currentDataTypeIndex=index"
+        (click)="selectAllowedValues(value, true)"
+        class="d-flex align-items-center pointer py-8 grey-on-hover">
+        <span
+          class="px-14"
+          [textContent]="value"></span>
+    </div>
 
   <div  *ngIf="currentAddonTemplate && currentAddonAllowedValues">
     <div

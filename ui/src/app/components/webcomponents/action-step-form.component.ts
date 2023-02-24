@@ -55,6 +55,7 @@ import {TestData} from "../../models/test-data.model";
 import {TestDataService} from "../../services/test-data.service";
 import {TestDataSetService} from "../../services/test-data-set.service";
 import {TestDataMapValue} from "../../models/test-data-map-value.model";
+import {ForLoopData} from "../../models/for-loop-data.model";
 
 
 @Component({
@@ -149,6 +150,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   private runtimeSuggestion: MatDialogRef<ActionTestDataRuntimeVariableSuggestionComponent>;
   public selectedElementName : String;
   public listDataItem:string[] | TestData[];
+  public listParameterItem:string[];
   public isFetchingListData: boolean = false;
   public isParameter: boolean = false;
 
@@ -680,7 +682,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       delete this.testStep.testDataFunctionArgs;
       delete this.testStep.dataMap.testData;
       delete this.testStep.element;
-      delete this.testStep.attribute;
+      delete this.testStep.dataMap.attribute;
       return true
     } else {
       return false;
@@ -696,7 +698,6 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     let action = this.replacer.nativeElement.innerHTML.replace(/<span class="element+(.*?)>(.*?)<\/span>/g, elementValue)
       .replace(/<span class="test_data+(.*?)>(.*?)<\/span>/g, "test data")
       .replace(/<span class="attribute+(.*?)>(.*?)<\/span>/g, attributeValue)
-      .replace(/<span class="selected_list+(.*?)>(.*?)<\/span>/g, this.currentTemplate?.extractTestDataString)
       .replace(/&nbsp;/g, "");
     if (this.elementPlaceholder().length) {
       this.elementPlaceholder().forEach(item => {
@@ -705,7 +706,9 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         }
       })
     }
-    let testDataValue = this.testDataValue(action, this.testStep, this.testDataPlaceholder());
+
+    this.testDataValue(action, this.testStep, this.testDataPlaceholder());
+
     //this.isValidElement = this.elementPlaceholder() ? elementValue?.trim()?.length : true;
     this.isValidAttribute = this.attributePlaceholder() ? attributeValue?.trim().length : true;
     if (action && action.length && this.isValidElement && this.isValidTestData && this.isValidAttribute) {
@@ -719,10 +722,6 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       if (attributeValue) {
         this.testStep.attribute = attributeValue
       }
-      if(testDataValue) {
-        this.testStep.dataMap.testData = testDataValue;
-        this.setDataMapValues();
-      }
       this.testStep.deserializeCommonProperties(this.actionForm.getRawValue());
       return true;
     } else {
@@ -730,35 +729,84 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
   }
 
-  testDataValue(action, testStep, testDataList) {
+  testDataValue(action, testStep, testDataList): void {
     if(testStep?.getAllTestData?.length || testDataList?.length) {
-      let testData = new Map<string, TestDataMapValue>();
-      testDataList.forEach(item => {
-        let reference = item?.['dataset']?.reference;
-        let testDataType = TestDataType[item?.['dataset']?.testDataType || 'raw'];
-        let value = item?.textContent?.replace(/&nbsp;/g, "").trim();
-        let typeValue = false;
-        ['\@|', '\!|', '\~|', '\$|', '\*|', '\%|', '\&|'].some(type => {
-          if (value.startsWith(type)) {
-            typeValue = true;
-            value = value.replace(type, '').replace(/&nbsp;/g, "");
-            value = value.replace('|', '').replace(/&nbsp;/g, "");
-          }
-        });
-        if (value.length) {
-          let setValue = new TestDataMapValue();
-          setValue.type = typeValue? testDataType : TestDataType.raw;
-          setValue['value'] = value;
-          setValue['testDataFunction'] = new TestStepTestDataFunction();
-          setValue['addonTDF'] = new AddonTestStepTestData();
-          testData[reference] = setValue
-        } else {
-          this.isValidTestData = false
+      // for loop condition
+        let TestDataMapValue = this.testDataNlp(testDataList);
+        if(TestDataMapValue && this.testStep.isForLoop) {
+          this.forLoopNlp(TestDataMapValue)
+        } else if(!this.testStep.isForLoop) {
+          this.testStep.dataMap.testData = TestDataMapValue;
         }
-      })
-      return testData;
     }
-    return false;
+  }
+
+  testDataNlp(testDataList): Map<string, any> {
+    let testData = new Map<string, TestDataMapValue>();
+    testDataList.forEach(item => {
+      let reference = item?.['dataset']?.reference;
+      let testDataType = TestDataType[item?.['dataset']?.testDataType || 'raw'];
+      let value = item?.textContent?.replace(/&nbsp;/g, "").trim();
+      let typeValue = false;
+      ['\@|', '\!|', '\~|', '\$|', '\*|', '\%|', '\&|'].some(type => {
+        if (value.startsWith(type)) {
+          typeValue = true;
+          value = value.replace(type, '').replace(/&nbsp;/g, "");
+          value = value.replace('|', '').replace(/&nbsp;/g, "");
+        }
+      });
+      if (value.length) {
+        let setValue = new TestDataMapValue();
+        setValue.type = typeValue? testDataType : TestDataType.raw;
+        setValue['value'] = value;
+        setValue['testDataFunction'] = new TestStepTestDataFunction();
+        setValue['addonTDF'] = new AddonTestStepTestData();
+        //Test-Data-profile added
+        if(reference == 'test-data-profile') {
+          testData['test-data-profile-id'] = this.getTestDataProfileIdValue();
+        }
+        testData[reference] = setValue
+      } else {
+        this.isValidTestData = false
+      }
+    })
+    return testData;
+  }
+
+  forLoopNlp(testDataValue): void {
+      if (this.selectedTestDataProfile?.id || this.testStep?.forLoopData?.testDataProfileId) {
+        let forLoopTestDataData = this.testStep?.forLoopData?.testDataProfileData;
+        if(this.testStep.isTestDataLeftSetName || this.testStep?.isTestDataRightSetName) {
+          if((testDataValue["left-data"]?.value == 'start-set-name' || testDataValue["left-data"]?.value == 'start')
+            && testDataValue["left-data"]?.type == TestDataType.raw ) {
+            testDataValue["left-data"].value = "-1";
+          }
+          if((testDataValue["right-data"]?.value == 'end-set-name' || testDataValue["right-data"]?.value == 'end')
+            && testDataValue["right-data"]?.type == TestDataType.raw) {
+            testDataValue["right-data"].value = "-1";
+          }
+        }
+        if(this.testStep.isTestDataRightParameter || this.testStep.isTestDataLeftParameter) {
+          if(testDataValue["left-data"]?.value == 'parameter' && testDataValue["left-data"]?.type == TestDataType.raw) {
+            //testDataValue["left-data"].value = this.selectedTestDataSetName
+          }
+          if(testDataValue["right-data"]?.value == 'parameter' && testDataValue["right-data"]?.type == TestDataType.raw) {
+            //testDataValue["right-data"].value = this.selectedTestDataSetName
+          }
+        }
+        this.testStep.forLoopData = this.setForLoopData(testDataValue, this.testStep);
+        this.testStep.forLoopData.testDataProfileData = forLoopTestDataData;
+
+      } else {
+        this.isValidTestData = true;
+      }
+
+  }
+
+  setForLoopData(data, step: TestStep) {
+    data['test-data-profile']['value'] = this.selectedTestDataProfile?.id || step.forLoopData?.testDataProfileId;
+    return new ForLoopData().deserializeRawValue(data, step);
+
   }
 
   selectTemplate() {
@@ -790,6 +838,13 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       this.currentTemplate = template;
       this.attachActionTemplatePlaceholderEvents();
     }
+  }
+
+  setTestDataTemplate(template) {
+    console.log(template)
+    Object.keys(template.data.testData).forEach((item)=>{
+      console.log(item, this.replacer.nativeElement.innerHTML, this.testDataPlaceholder(), this.testDataPlaceholder()[0].classList);
+    })
   }
 
   selectAddonTemplate(template) {
@@ -861,11 +916,33 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   }
 
   testDataPlaceholder() {
-    if (this.currentTemplate?.allowedValues) {
-      return this.replacer?.nativeElement?.querySelectorAll('div.actiontext span.selected_list');
-    } else {
-      return this.replacer?.nativeElement?.querySelectorAll('div.actiontext span.test_data');
+    let testDataList = this.replacer?.nativeElement?.querySelectorAll('div.actiontext span.test_data')?.length ? this.replacer?.nativeElement?.querySelectorAll('div.actiontext span.test_data') : [];
+    let selectableList = this.replacer?.nativeElement?.querySelectorAll('div.actiontext span.selected_list')?.length ? this.replacer?.nativeElement?.querySelectorAll('div.actiontext span.selected_list') : [];
+    return [...testDataList, ...selectableList];
+  }
+
+  getTestDataProfileIdValue() {
+    const setValue = new TestDataMapValue();
+    setValue.type = TestDataType.raw;
+    setValue['value'] = this.selectedTestDataProfile?.id?.toString();
+    return setValue;
+  }
+  mapTestDataType(type: String) {
+    switch(type) {
+      case "raw":
+        return TestDataType.raw;
+      case "parameter":
+        return TestDataType.parameter;
+      case "runtime":
+        return TestDataType.runtime;
+      case "global":
+        return TestDataType.global;
+      case "random":
+        return TestDataType.random;
+      case "function":
+        return TestDataType.function;
     }
+    return null;
   }
 
   mapTestDataType(type: String) {
@@ -888,6 +965,8 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
 
   attachTestDataEvent() {
     if (this.testDataPlaceholder()?.length) {
+
+      this.setTestDataTemplate(this.currentTemplate)
       // this.testStep?.dataMap?.testData?.forEach(function(value,key) {
           this.currentTestDataType =  this.currentTestDataType || TestDataType.raw;
           console.log('attaching test data events');
@@ -914,6 +993,13 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
               return false;
             });
             item.addEventListener('keydown', (event) => {
+              // if(this.isAutoCompleteValues(item?.dataset?.reference) && !["ArrowLeft", "ArrowRight", "Enter", "ArrowUp", "ArrowDown"].includes(event.key)) {
+              //   if(event.key == "Backspace" && !this.showDataTypes) {
+              //     this.showDataTypes = true;
+              //     this.setSuggestionData(item);
+              //   }
+              //   return this.stopEvent(event);
+              // }
               if (event.key == "Enter" && !this.showDataTypes) {
                 return this.stopEvent(event);
               }
@@ -950,6 +1036,13 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
 
             item.addEventListener('keyup', (event) => {
               console.log('test data keyup event triggered');
+              // if(this.isAutoCompleteValues(item?.dataset?.reference) && !["ArrowLeft", "ArrowRight", "Enter", "ArrowUp", "ArrowDown"].includes(event.key)) {
+              //   if(event.key == "Backspace" && !this.showDataTypes) {
+              //     this.showDataTypes = true;
+              //     this.setSuggestionData(item);
+              //   }
+              //   return this.stopEvent(event);
+              // }
               if (event.key == "Enter" && !this.showDataTypes) {
                 this.validateTestData();
                 return this.stopEvent(event);
@@ -1007,6 +1100,14 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
           })
 
     }
+  }
+  public isAutoCompleteValues(reference?) {
+    return ('test-data-profile' == reference && this.testStep.isTestdataProfile) ||
+      ('left-data' == reference && this.testStep.isTestDataLeftSetName) ||
+      ('right-data' == reference && this.testStep.isTestDataRightSetName) ||
+      ('left-data' == reference && this.testStep.isTestDataLeftParameter) ||
+      ('right-data' == reference && this.testStep.isTestDataRightParameter) ||
+      this.currentTemplate?.allowedValues?.[reference]?.length
   }
 
   public stopEvent(event) {
@@ -1139,7 +1240,6 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     this.resetTestData();
     this.currentTestDataType = TestDataType.raw;
     this.assignDataValue(this.getDataTypeString(TestDataType.raw, allowedValue));
-
   }
 
   setCursorAtTestData() {
@@ -1298,25 +1398,40 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         this.currentTemplate = this.testStep.template;
         if (this.testStep?.element)
           this.assignElement(this.testStep?.element, this.elementPlaceholder()[0]);
-        this.testStep?.dataMap?.testData?.forEach((dataMapValue: TestDataMapValue, key: string) => {
+        this.testStep?.dataMap?.testData.forEach((dataMapValue: TestDataMapValue, key: string) => {
           if (!dataMapValue.value && !dataMapValue.type)
             this.assignDataValue(this.getDataTypeString(dataMapValue.type, dataMapValue.value));
         });
         if (this.attributePlaceholder())
-          this.attributePlaceholder().innerHTML=this.testStep?.attribute;
           this.setStepTestData();
-          this.attachActionTemplatePlaceholderEvents();
+        if (this.testStep.isForLoop && this.attributePlaceholder()?.length) {
+          this.setStepLoopData();
+        }
+        this.attachActionTemplatePlaceholderEvents();
       }
       else
         this.replacer.nativeElement.innerHTML = this.testStep?.action;
     }
   }
 
+  private setStepLoopData() {
+    this.attributePlaceholder().forEach((item, index) => {
+      let reference = item.dataset?.reference;
+      let testData = this.testStep.forLoopData.setValuesParsed(reference);
+      item.setAttribute("data-test-data-type",testData?.['type']);
+      if(testData?.['type'] == TestDataType.function) {
+        let functionData = testData?.['function'];
+        item = this.testDataFunctionDataAssign(item,functionData)
+      }
+      item.innerHTML = this.getDataTypeString(testData?.['type'], testData?.['value']);
+    })
+  }
+
   private setStepTestData(){
     this.testDataPlaceholder().forEach((item, index) => {
       let reference = item.dataset?.reference;
-      let testData = this.testStep?.dataMap?.testData?.[reference];
-      item.setAttribute("data-test-data-type",testData?.type);
+      let testData = this.testStep.testData?.[reference];
+      item.setAttribute("data-test-data-type",testData.type);
       if(testData.type == TestDataType.function) {
         item = this.testDataFunctionDataAssign(item,testData)
       }
@@ -1790,7 +1905,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       testData.type = this.currentTestDataType;
       this.testStep.addonTDF = testData;
     }
-  }
+  }*/
 
 
   getArguments(formValue): JSON {
@@ -1814,7 +1929,10 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       returnData = returnData.filter(template => template.stepActionType === StepActionType.IF_CONDITION);
     } else if (this.testStep.conditionType === TestStepConditionType.LOOP_WHILE) {
       returnData = returnData.filter(template => template.stepActionType === StepActionType.WHILE_LOOP);
-    } else {
+    } else if(this.testStep.conditionType === TestStepConditionType.LOOP_FOR) {
+      returnData = returnData.filter(template => template.stepActionType === StepActionType.FOR_LOOP);
+    }
+    else {
       returnData = returnData.filter(template => !(template.stepActionType === StepActionType.WHILE_LOOP ||
         template.stepActionType === StepActionType.IF_CONDITION));
     }
@@ -1849,10 +1967,10 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       testStep.testCaseId = currentStep.testCaseId;
       testStep.position = testStep.position || currentStep.position;
       testStep.testCaseId = this.testCase.id;
-      testStep.conditionIf = this.actionForm.getRawValue()?.conditionIf ? this.actionForm.getRawValue()?.conditionIf : [ResultConstant.SUCCESS];
+      testStep.dataMap.conditionIf = this.actionForm.getRawValue()?.conditionIf ? this.actionForm.getRawValue()?.conditionIf : [ResultConstant.SUCCESS];
       this.saveFromRecorder(testStep);
     } else {
-      testStep.conditionIf = this.actionForm.getRawValue()?.conditionIf ? this.actionForm.getRawValue()?.conditionIf : [ResultConstant.SUCCESS];
+      testStep.dataMap.conditionIf = this.actionForm.getRawValue()?.conditionIf ? this.actionForm.getRawValue()?.conditionIf : [ResultConstant.SUCCESS];
       this.testStep = testStep;
       this.testStep.position = testStep.position || currentStep.position;
       this.testStep.testCaseId = this.testCase.id;
@@ -1878,6 +1996,10 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     step.stepDisplayNumber = this.testStep.stepDisplayNumber;
     if (Boolean(this.stepRecorderView)) {
       this.matModal.openDialogs?.find(dialog => dialog.componentInstance instanceof TestStepMoreActionFormComponent)?.close();
+    }
+    if(step.isForLoop){
+      step.forLoopData = this.testStep.forLoopData;
+      step.forLoopData.testDataProfileData = this.selectedTestDataProfile;
     }
     this.actionForm.reset();
     this.onSave.emit(step);
@@ -1983,16 +2105,12 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   }
 
   public getParameter(reference) {
-    this.listDataItem = undefined;
+    this.listParameterItem = undefined;
     this.isParameter = false;
-    if ('left-data' == reference && this.testStep.isTestdataParameter) {
-      if(true) {
+    if (('left-data' == reference && this.testStep.isTestDataLeftParameter) || ('right-data' == reference && this.testStep.isTestDataRightParameter)) {
         this.isParameter = true;
         this.fetchTestDataSet();
         this.focusOnSearch();
-      } else {
-
-      }
     }
   }
   public getTestdataProfile(reference?) {
@@ -2002,6 +2120,14 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       this.fetchTestDataProfile();
       this.focusOnSearch();
     }
+  }
+  public selectTestDataProfile(testDataProfileId?){
+    this.testDataSetService.findAll("testDataProfileId:" + testDataProfileId, 'position').subscribe(value => {
+      this.listDataItem = Object.keys(value?.content[0]?.data);
+      this.isFetchingListData = false;
+    }, error => {
+      this.isFetchingListData = false;
+    })
   }
 
   get isDefaultType() {
@@ -2020,18 +2146,18 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     //return !this.listDataItem && this.currentKibbutzTemplate && this.currentKibbutzAllowedValues;
   }
 
-  selectTestDataProfile(testdata) {
-    this.resetTestData();
-    this.resetCFArguments();
-    this.currentTestDataType = TestDataType.raw;
-    this.assignDataValue(testdata.name || testdata, this.testDataPlaceholder());
-    this.showDataTypes = false;
-    if(testdata instanceof TestData) {
-      this.selectedTestDataProfile = testdata;
-      if(this.testStep.isTestdataParameter)
-        this.fetchTestDataSet();
-    }
-  }
+  // selectTestDataProfile(testdata) {
+  //   this.resetTestData();
+  //   this.resetCFArguments();
+  //   this.currentTestDataType = TestDataType.raw;
+  //   this.assignDataValue(testdata.name || testdata, this.testDataPlaceholder());
+  //   this.showDataTypes = false;
+  //   if(testdata instanceof TestData) {
+  //     this.selectedTestDataProfile = testdata;
+  //     if(this.testStep.isTestdataParameter)
+  //       this.fetchTestDataSet();
+  //   }
+  // }
 
   fetchTestDataProfile(term?) {
     let searchName = '';
@@ -2066,7 +2192,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       return
     }
     this.testDataSetService.findAll("testDataProfileId:" + this.testCase?.testData?.id , 'position').subscribe(res => {
-      this.listDataItem = Object.keys(res?.content[0]?.data);
+      this.listParameterItem = Object.keys(res?.content[0]?.data);
       this.isFetchingListData = false;
     }, error => {
       this.isFetchingListData = false;

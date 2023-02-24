@@ -316,11 +316,11 @@ export class TestStep extends Base implements PageObject {
     })
     templateTestDataKeys.forEach(parameter => {
       let data = this.forLoopData?.setValuesParsed(parameter);
-      let span_class = this.template?.allowedValues?.[parameter]?.length ? 'nlp-selected-data' : '';
+      let span_class = this.template?.allowedValues?.[parameter]?.length ? 'action-selected-data' : '';
       if (!!data?.['value']) {
-        parsedStep = parsedStep.replace('<TSTESTDAT ref="' + parameter + '">', '<span title="'+ (this.isCoordinateStep? data?.['value'] : '') +'" class="' + (span_class + ' spot-edit nlp-test-data ') + parameter + '" data-reference="' + parameter + '">')
+        parsedStep = parsedStep.replace('<TSTESTDAT ref="' + parameter + '">', '<span title="'+ (this.isCoordinateStep? data?.['value'] : '') +'" class="' + (span_class + ' spot-edit action-test-data ') + parameter + '" data-reference="' + parameter + '">')
       } else {
-        parsedStep = parsedStep.replace('<TSTESTDAT ref="' + parameter + '">', '<span title="'+ (this.isCoordinateStep? data?.['value'] : '') +'" class="' + (span_class + ' spot-edit nlp-test-data text-line-loader my-0 d-inline-block w-50p ') + parameter + '" data-reference="' + parameter + '">')
+        parsedStep = parsedStep.replace('<TSTESTDAT ref="' + parameter + '">', '<span title="'+ (this.isCoordinateStep? data?.['value'] : '') +'" class="' + (span_class + ' spot-edit action-test-data text-line-loader my-0 d-inline-block w-50p ') + parameter + '" data-reference="' + parameter + '">')
       }
     })
     parsedStep = parsedStep.replace(new RegExp('</TSTESTDAT>', 'g'), '</span>');

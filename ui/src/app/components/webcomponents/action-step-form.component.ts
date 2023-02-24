@@ -945,23 +945,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     return null;
   }
 
-  mapTestDataType(type: String) {
-    switch(type) {
-      case "raw":
-        return TestDataType.raw;
-      case "parameter":
-        return TestDataType.parameter;
-      case "runtime":
-        return TestDataType.runtime;
-      case "global":
-        return TestDataType.global;
-      case "random":
-        return TestDataType.random;
-      case "function":
-        return TestDataType.function;
-    }
-    return null;
-  }
+
 
   attachTestDataEvent() {
     if (this.testDataPlaceholder()?.length) {
@@ -1905,7 +1889,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       testData.type = this.currentTestDataType;
       this.testStep.addonTDF = testData;
     }
-  }*/
+  }
 
 
   getArguments(formValue): JSON {

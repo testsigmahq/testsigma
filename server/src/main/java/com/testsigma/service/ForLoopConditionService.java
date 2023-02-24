@@ -1,6 +1,7 @@
 package com.testsigma.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.testsigma.dto.BackupDTO;
 import com.testsigma.dto.export.ForLoopConditionXMLDTO;
@@ -14,6 +15,15 @@ import com.testsigma.repository.TestStepRepository;
 import com.testsigma.specification.SearchCriteria;
 import com.testsigma.specification.SearchOperation;
 import com.testsigma.specification.TestStepSpecificationsBuilder;
+import com.testsigma.mapper.ForLoopConditionsMapper;
+import com.testsigma.model.ForLoopCondition;
+import com.testsigma.model.TestCase;
+import com.testsigma.model.TestData;
+import com.testsigma.model.TestStep;
+import com.testsigma.repository.ForLoopConditionRepository;
+import com.testsigma.specification.ForLoopConditionsSpecificationsBuilder;
+import com.testsigma.specification.SearchCriteria;
+import com.testsigma.specification.SearchOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +33,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;

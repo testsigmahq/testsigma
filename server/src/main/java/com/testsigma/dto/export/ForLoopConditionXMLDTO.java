@@ -34,6 +34,9 @@ public class ForLoopConditionXMLDTO extends BaseXMLDTO {
     @JsonProperty("LeftParamValue")
     private String leftParamValue;
 
+    @JsonProperty("Operator")
+    private Operator operator;
+
     @JsonProperty("RightParamValue")
     private String rightParamValue;
 
@@ -48,4 +51,17 @@ public class ForLoopConditionXMLDTO extends BaseXMLDTO {
 
     @JsonProperty("TestData")
     private String testData;
+
+    @JsonProperty("LeftFunctionId")
+    private Long leftFunctionId;
+
+    @JsonProperty("RightFunctionId")
+    private Long rightFunctionId;
+
+    @JsonProperty("LeftDataMap")
+    private LoopDataMapDTO leftDataMap;
+
+    @JsonProperty("RightDataMap")
+    private LoopDataMapDTO rightDataMap;
 }
+

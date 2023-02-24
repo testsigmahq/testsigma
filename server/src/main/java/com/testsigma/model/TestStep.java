@@ -91,14 +91,8 @@ public class TestStep {
   @Transient
   private String toElement;
 
-  @Column(name = "for_loop_start_index")
-  private Integer forLoopStartIndex;
-
-  @Column(name = "for_loop_end_index")
-  private Integer forLoopEndIndex;
-
-  @Column(name = "for_loop_test_data_id")
-  private Long forLoopTestDataId;
+  @Transient
+  private ForLoopCondition forLoopConditions;
 
   @Column(name = "test_data_function_id")
   private Long testDataFunctionId;

@@ -42,9 +42,6 @@ public class TestStepDTO implements Cloneable, Serializable {
   private String element;
   private String fromElement;
   private String toElement;
-  private Integer forLoopStartIndex;
-  private Integer forLoopEndIndex;
-  private Long forLoopTestDataId;
   private Boolean visualEnabled = false;
   private Long testDataFunctionId;
   private String testDataProfileName;
@@ -73,6 +70,7 @@ public class TestStepDTO implements Cloneable, Serializable {
   private Long testDataId;
   private Integer testDataIndex;
   private String setName;
+  private String parentHierarchy;
 
 
   public TestStepDTO clone() throws CloneNotSupportedException {
@@ -94,11 +92,7 @@ public class TestStepDTO implements Cloneable, Serializable {
     json.put("fromElement", fromElement);
     json.put("toElement", toElement);
     json.put("attribute", attribute);
-    json.put("testDataFunctionId", testDataFunctionId);
     json.put("testDataFunctionArgs", testDataFunctionArgs);
-    json.put("forLoopStartIndex", forLoopStartIndex);
-    json.put("forLoopEndIndex", forLoopEndIndex);
-    json.put("forLoopTestDataId", forLoopTestDataId);
     return json.toMap();
   }
 
@@ -121,13 +115,14 @@ public class TestStepDTO implements Cloneable, Serializable {
 
   public TestStepRecorderDataMap mapTestData() {
     TestStepRecorderDataMap testStepDataMap = new TestStepRecorderDataMap();
-    testStepDataMap.setTestData(new HashMap<>());
     if(dataMap != null && dataMap.getTestData() != null) {
       for (String key : dataMap.getTestData().keySet()) {
           RecorderTestStepNlpData recorderTestStepNlpData = new RecorderTestStepNlpData();
           recorderTestStepNlpData.setValue(dataMap.getTestData().get(key).getValue());
           recorderTestStepNlpData.setType(dataMap.getTestData().get(key).getType());
-          testStepDataMap.getTestData().put(key.replace("-d", "D"), recorderTestStepNlpData);
+          testStepDataMap.setTestData(new HashMap<>() {{
+            put(NaturalTextActionConstants.TEST_STEP_DATA_MAP_KEY_TEST_DATA_RECORDER, recorderTestStepNlpData);
+          }});
       }
     }
     if(element != null) {
@@ -144,13 +139,6 @@ public class TestStepDTO implements Cloneable, Serializable {
     }
     if(ifConditionExpectedResults.length > 0) {
       testStepDataMap.setIfConditionExpectedResults(ifConditionExpectedResults);
-    }
-    if(forLoopStartIndex != null || forLoopTestDataId != null || forLoopEndIndex != null) {
-      TestStepRecorderForLoop testStepForLoop= new TestStepRecorderForLoop();
-      testStepForLoop.setTestDataId(forLoopTestDataId);
-      testStepForLoop.setStartIndex(forLoopStartIndex);
-      testStepForLoop.setEndIndex(forLoopEndIndex);
-      testStepDataMap.setForLoop(testStepForLoop);
     }
     return testStepDataMap;
   }

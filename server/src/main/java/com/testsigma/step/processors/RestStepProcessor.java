@@ -30,7 +30,7 @@ public class RestStepProcessor extends StepProcessor {
                            WorkspaceType workspaceType, Map<String, Element> elementMap,
                            TestStepDTO testStepDTO, Long testPlanId, TestDataSet testDataSet,
                            Map<String, String> environmentParams, TestCaseEntityDTO testCaseEntityDTO,
-                           String environmentParamSetName, String dataProfile, Map<Long, Integer> dataSetIndex) {
+                           String environmentParamSetName, String dataProfile, Map<Long, Long> dataSetIndex) {
     super(webApplicationContext, testCaseStepEntityDTOS, workspaceType, elementMap, testStepDTO, testPlanId, testDataSet,
       environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile, dataSetIndex);
   }
@@ -90,7 +90,6 @@ public class RestStepProcessor extends StepProcessor {
     setStepDetails(testCaseStepEntityDTO, testStepDTO);
   }
 
-
   public void setStepDetails(TestCaseStepEntityDTO testCaseStepEntityDTO, TestStepDTO testStepDTO) {
     StepDetailsDTO stepDetails = new StepDetailsDTO();
     stepDetails.setNaturalTextActionId(testStepDTO.getNaturalTextActionId());
@@ -106,7 +105,7 @@ public class RestStepProcessor extends StepProcessor {
     stepDetails.setTestDataName(testCaseStepEntityDTO.getTestDataName());
     stepDetails.setTestDataValue(testCaseStepEntityDTO.getTestDataValue());
     testCaseStepEntityDTO.setStepDetails(stepDetails);
-  }
+  }*/
 
   private JSONObject replaceTestDataAndEnvironmentParams(JSONObject requestString)
     throws TestsigmaException {

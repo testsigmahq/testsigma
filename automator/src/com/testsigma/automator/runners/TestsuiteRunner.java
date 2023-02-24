@@ -285,6 +285,9 @@ public abstract class TestsuiteRunner {
       dataDrivenTestCaseResult.setParentId(testCaseResult.getId());
       dataDrivenTestCaseResult.setTestDataSetName(dataDrivenTestCase.getTestDataSetName());
       dataDrivenTestCaseResult.setTestDataId(testCaseEntity.getTestDataId());
+      dataDrivenTestCaseResult.setStepGroupParentForLoopStepIdTestDataSetMap(
+              testCaseResult.getStepGroupParentForLoopStepIdTestDataSetMap());
+      dataDrivenTestCase.setParentHierarchy(testCaseEntity.getParentHierarchy()+"_iteration"+dataDrivenTestCaseResult.getId());
       dataDrivenTestCaseResult.setStartTime(new Timestamp(System.currentTimeMillis()));
 
       testCaseResult.getTestCaseResults().add(dataDrivenTestCaseResult);

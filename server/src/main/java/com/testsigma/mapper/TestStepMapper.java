@@ -39,7 +39,7 @@ public interface TestStepMapper {
 
 //  @Mapping(target = "testDataFunction", expression = "java(this.mapTestDataFunction(testStepDataMap.getTestDataFunction()))")
   @Mapping(target = "forLoop", expression = "java(this.mapForLoop(testStepDataMap.getForLoop()))")
-  @Mapping(target = "testData", expression = "java(this.mapTestData(testStepDataMap.getTestData()))")
+  @Mapping(target = "testDataMap", expression = "java(this.mapTestData(testStepDataMap.getTestData()))")
   TestStepDataMapEntityDTO mapDataMap(TestStepDataMap testStepDataMap);
 
   TestStepForLoopEntityDTO mapForLoop(TestStepForLoop testStepForLoop);
@@ -74,6 +74,11 @@ public interface TestStepMapper {
   @Mapping(target = "naturalTextActionId", expression = "java(request.getNaturalTextActionId())")
   @Mapping(target = "addonActionId", expression = "java(request.getAddonActionId())")
   @Mapping(target = "dataMap", expression = "java(request.getDataMap())")
+  @Mapping(target = "element", expression = "java(request.getDataMap().getElement())")
+  @Mapping(target = "attribute", expression = "java(request.getDataMap().getAttribute())")
+  //@Mapping(target = "forLoopStartIndex", expression = "java(request.getDataMap().getForLoop().getStartIndex())")
+  //@Mapping(target = "forLoopEndIndex", expression = "java(request.getDataMap().getForLoop().getEndIndex())")
+  //@Mapping(target = "forLoopTestDataId", expression = "java(request.getDataMap().getForLoop().getTestDataId())")
   @Mapping(target = "maxIterations", expression = "java(request.getMaxIterations())")
   void merge(TestStepRequest request, @MappingTarget TestStep testStep);
 

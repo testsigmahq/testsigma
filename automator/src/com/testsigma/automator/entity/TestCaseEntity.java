@@ -40,4 +40,5 @@ public class TestCaseEntity implements Cloneable, Serializable {
   private String consoleLogPreSignedURL;
   private String harLogPreSignedURL;
   private String appiumLogPreSignedURL;
+  private String parentHierarchy;
 }

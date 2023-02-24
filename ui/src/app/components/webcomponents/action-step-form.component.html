@@ -99,7 +99,7 @@
         *ngFor="let value of listDataItem; let index=index"
         [class.h-active]="currentDataTypeIndex == index"
         (mouseover)="currentDataTypeIndex=index"
-        (click)="selectAllowedValues(value.name, true)"
+        (click)="selectAllowedValues(value.name, true);selectedTestDataProfile=value;"
         class="d-flex align-items-center pointer py-8 grey-on-hover">
         <span
           class="px-14"

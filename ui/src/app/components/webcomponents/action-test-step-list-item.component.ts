@@ -123,17 +123,17 @@ import {SharedService} from "../../services/shared.service";
                 <span class="text-warning"
                       [translate]="testStep?.isConditionalWhileLoop ? '' : 'step.condition_type.'+testStep?.conditionType"></span>
           </span>
-            <span
-              *ngIf="testStep?.isForLoop">
-            <i class="fa-power-loop mr-5 text-nowrap"></i>
-            <span class="text-uppercase text-warning" [translate]="'test_step.for_loop.title'"></span>
-            &nbsp;
-            [
-              <span class="text-link">{{testStep?.testData?.name}}</span>
-            ]
-            &nbsp;[&nbsp;{{testStep?.forLoopStartIndex == -1 ? ('test_step.for_loop.option_start' | translate) : testStep?.forLoopStartIndex}}
-              ...{{testStep?.forLoopEndIndex == -1 ? ('test_step.for_loop.option_end' | translate) : testStep?.forLoopEndIndex}}&nbsp;]
-          </span>
+<!--            <span-->
+<!--              *ngIf="testStep?.isForLoop">-->
+<!--            <i class="fa-power-loop mr-5 text-nowrap"></i>-->
+<!--            <span class="text-uppercase text-warning" [translate]="'test_step.for_loop.title'"></span>-->
+<!--            &nbsp;-->
+<!--            [-->
+<!--              <span class="text-link">{{testStep?.testData?.name}}</span>-->
+<!--            ]-->
+<!--            &nbsp;[&nbsp;{{testStep?.forLoopStartIndex == -1 ? ('test_step.for_loop.option_start' | translate) : testStep?.forLoopStartIndex}}-->
+<!--              ...{{testStep?.forLoopEndIndex == -1 ? ('test_step.for_loop.option_end' | translate) : testStep?.forLoopEndIndex}}&nbsp;]-->
+<!--          </span>-->
             <span
               [matTooltip]="'test_step.type.REST_STEP' | translate"
               *ngIf="testStep?.isRestStep" class="fa-rest-new text-warning mr-5 text-nowrap"></span>

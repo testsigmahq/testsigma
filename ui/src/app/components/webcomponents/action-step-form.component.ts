@@ -1918,7 +1918,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
     else {
       returnData = returnData.filter(template => !(template.stepActionType === StepActionType.WHILE_LOOP ||
-        template.stepActionType === StepActionType.IF_CONDITION));
+        template.stepActionType === StepActionType.IF_CONDITION || template.stepActionType === StepActionType.FOR_LOOP));
     }
     return returnData;
   }

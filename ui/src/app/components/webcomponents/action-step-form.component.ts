@@ -732,16 +732,16 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   testDataValue(action, testStep, testDataList): void {
     if(testStep?.getAllTestData?.length || testDataList?.length) {
       // for loop condition
-        let t = this.rrr(testDataList);
-        if(t && this.testStep.isForLoop) {
-          this.fff(t)
+        let TestDataMapValue = this.testDataNlp(testDataList);
+        if(TestDataMapValue && this.testStep.isForLoop) {
+          this.forLoopNlp(TestDataMapValue)
         } else if(!this.testStep.isForLoop) {
-          this.testStep.dataMap.testData = t;
+          this.testStep.dataMap.testData = TestDataMapValue;
         }
     }
   }
 
-  rrr(testDataList): Map<string, any> {
+  testDataNlp(testDataList): Map<string, any> {
     let testData = new Map<string, TestDataMapValue>();
     testDataList.forEach(item => {
       let reference = item?.['dataset']?.reference;
@@ -773,7 +773,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     return testData;
   }
 
-  fff(testDataValue): void {
+  forLoopNlp(testDataValue): void {
       if (this.selectedTestDataProfile?.id || this.testStep?.forLoopData?.testDataProfileId) {
         let forLoopTestDataData = this.testStep?.forLoopData?.testDataProfileData;
         if(this.testStep.isTestDataLeftSetName || this.testStep?.isTestDataRightSetName) {

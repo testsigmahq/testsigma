@@ -21,13 +21,13 @@ import java.util.Map;
 
 @Log4j2
 public class ParameterTestDataProcessor extends TestDataProcessor{
-  protected com.testsigma.model.TestDataSet testDataSet;
+  protected TestDataSet testDataSet;
   protected Integer index;
   protected  Long stepId;
   protected TestData testData;
   protected Map<Long, Long> stepGroupParentForLoopStepIdTestDataSetMap;
-  public static final Long OVERRIDE_STEP_GROUP_STEP_WITH_TEST_CASE_PROFILE_ID = -2l;
   protected TestDataSetService testDataSetService;
+  public static final Long OVERRIDE_STEP_GROUP_STEP_WITH_TEST_CASE_PROFILE_ID = -2l;
   String TEST_DATA_NOT_FOUND = "Test Step is not Executed Because TestData parameter is not found %s with in selected step id Test data profile.";
   private final String TEST_DATA_OUT_OF_RANGE = "selected test data profile %s size %s is less than in index %s";
   private final String TEST_DATA_UNKNOWN_ERROR = "Unknown error occurred while processing test data profile %s with index %s and name %s";
@@ -74,10 +74,11 @@ public class ParameterTestDataProcessor extends TestDataProcessor{
 
   private void processOverRiddenParentStepParameter(){
     try {
-      TestStep testStep = testStepService.find(stepId);
-      TestData testData = testDataService.find(testStep.getForLoopTestDataId());
-      processLoopParameter(testData, parameter,
-              this.stepGroupParentForLoopStepIdIndexes.get(stepId));
+      TestData testData;
+      TestDataSet testDataSet;
+      testDataSet = testDataSetService.find(this.stepGroupParentForLoopStepIdTestDataSetMap.get(stepId));
+      testData = testDataService.find(testDataSet.getTestDataProfileId());
+      processLoopParameter(testData, parameter, testDataSet);
     }catch (ResourceNotFoundException exception){
       this.exception = exception;
       log.error(exception, exception);

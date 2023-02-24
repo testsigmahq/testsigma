@@ -21,6 +21,7 @@ CREATE TABLE `for_step_conditions` (
     `copied_from` bigint(20) DEFAULT NULL,
     `imported_id` bigint(20) DEFAULT NULL,
     `copied_overriding_from` bigint(20) default null,
+    `type` varchar(250) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'ORIGINAL',
     PRIMARY KEY (`id`),
     UNIQUE KEY `for_step_conditions_fk_id` (`id`),
     CONSTRAINT `for_step_conditions_fk_test_step_id` FOREIGN KEY (`test_step_id`) REFERENCES `test_steps` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,

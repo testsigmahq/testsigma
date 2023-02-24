@@ -16,6 +16,7 @@ import com.testsigma.model.recorder.RecorderTestStepNlpData;
 import com.testsigma.model.recorder.TestStepRecorderDataMap;
 import com.testsigma.model.recorder.TestStepRecorderForLoop;
 import lombok.Data;
+import lombok.ToString;
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -62,6 +63,8 @@ public class TestStepDTO implements Cloneable, Serializable {
   //  private AddonNaturalTextActionData addonNaturalTextActionData;
   private Map<String, AddonTestStepTestData> addonTestData;
   private Map<String, AddonElementData> addonElements;
+  @ToString.Exclude
+  private ForLoopConditionDTO forLoopCondition;
   private Boolean disabled;
   private Boolean ignoreStepResult;
   private Long testDataProfileStepId;
@@ -105,11 +108,7 @@ public class TestStepDTO implements Cloneable, Serializable {
     testStepDataMap.setFromElement(fromElement);
     testStepDataMap.setToElement(toElement);
     testStepDataMap.setAttribute(attribute);
-    TestStepForLoop forLoop = new TestStepForLoop();
-    forLoop.setStartIndex(forLoopStartIndex);
-    forLoop.setEndIndex(forLoopEndIndex);
-    forLoop.setTestDataId(forLoopTestDataId);
-    testStepDataMap.setForLoop(forLoop);
+    testStepDataMap.setForLoop(dataMap != null ? dataMap.getForLoop() : null);
     return testStepDataMap;
   }
 

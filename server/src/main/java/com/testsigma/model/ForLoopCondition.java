@@ -4,6 +4,7 @@ import com.testsigma.dto.LoopDataMapDTO;
 import com.testsigma.service.ObjectMapperService;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import javax.persistence.*;
 
@@ -68,6 +69,16 @@ public class ForLoopCondition {
 
     @Column(name = "imported_id")
     private Long importedId;
+
+    @Column(name = "type")
+    @Enumerated(EnumType.STRING)
+    private ForLoopConditionType type = ForLoopConditionType.ORIGINAL;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JoinColumn(name = "test_step_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private TestStep testStep;
 
     public LoopDataMapDTO getLeftDataMap() {
         ObjectMapperService mapperService = new ObjectMapperService();

@@ -39,7 +39,7 @@ public interface TestStepMapper {
 
 //  @Mapping(target = "testDataFunction", expression = "java(this.mapTestDataFunction(testStepDataMap.getTestDataFunction()))")
   @Mapping(target = "forLoop", expression = "java(this.mapForLoop(testStepDataMap.getForLoop()))")
-  @Mapping(target = "testDataMap", expression = "java(this.mapTestData(testStepDataMap.getTestData()))")
+  @Mapping(target = "testData", expression = "java(this.mapTestData(testStepDataMap.getTestData()))")
   TestStepDataMapEntityDTO mapDataMap(TestStepDataMap testStepDataMap);
 
   TestStepForLoopEntityDTO mapForLoop(TestStepForLoop testStepForLoop);
@@ -103,9 +103,9 @@ public interface TestStepMapper {
     ForLoopConditionXMLDTO condition = new ForLoopConditionXMLDTO();
     condition.setTestCaseId(testStep.getTestCaseId());
     condition.setTestStepId(testStep.getId());
-    condition.setTestDataProfileId(testStep.getForLoopTestDataId());
-    condition.setLeftParamValue(String.valueOf(testStep.getForLoopStartIndex()));
-    condition.setRightParamValue(String.valueOf(testStep.getForLoopEndIndex()));
+    condition.setTestDataProfileId(testStep.getDataMap().getForLoop().getTestDataId());
+    condition.setLeftParamValue(String.valueOf(testStep.getDataMap().getForLoop().getStartIndex()));
+    condition.setRightParamValue(String.valueOf(testStep.getDataMap().getForLoop().getEndIndex()));
     condition.setLeftParamType(TestDataType.raw);
     condition.setRightParamType(TestDataType.raw);
     condition.setIterationType(IterationType.INDEX);

@@ -52,4 +52,5 @@ public class BackupDTO {
   private String serverUrl;
   private Boolean isCloudImport = false;
   private String affectedCasesListPath;
+
 }

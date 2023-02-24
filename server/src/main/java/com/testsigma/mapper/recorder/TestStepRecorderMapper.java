@@ -87,7 +87,7 @@ public interface TestStepRecorderMapper {
             return testStepRecorderRequest.getDataMap().getUiIdentifier();
         }
         return null;
-    }*/
+    }
 
     default TestStepType gettType(TestStepDTO dto) {
         TestStepType type = dto.getType();

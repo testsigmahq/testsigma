@@ -28,6 +28,7 @@ public class NaturalTextActionConstants {
   public final static String TEST_STEP_DATA_MAP_KEY_TO_ELEMENT = "to-element";
   public final static String TESTS_TEP_DATA_MAP_KEY_ELEMENT = "element";
   public final static String TEST_STEP_DATA_MAP_KEY_ATTRIBUTE = "attribute";
+  public final static String TESTSTEP_DATAMAP_KEY_PARAMETER = "parameter";
   public final static String PARAMETERIZED_XPATH_PLACE_HOLDER = "$PARAMETER";
   public static final int WHILE_LOOP_MAX_LIMIT = 100;
   public final static String KEY_CUSTOM_TEST_DATA_FUN = "test-data-function";

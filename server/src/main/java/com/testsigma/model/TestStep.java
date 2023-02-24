@@ -91,8 +91,10 @@ public class TestStep {
   @Transient
   private String toElement;
 
-  @Transient
-  private ForLoopCondition forLoopConditions;
+  @OneToMany(mappedBy = "testStep", fetch = FetchType.EAGER)
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  private List<ForLoopCondition> forLoopConditions;
 
   @Column(name = "test_data_function_id")
   private Long testDataFunctionId;
@@ -291,6 +293,9 @@ public class TestStep {
         testData.put(key, testStepNlpData);
       }
       testStepDataMap.setTestData(testData);
+      if (map.containsKey("for_loop")) {
+        testStepDataMap.setForLoop(new ObjectMapper().convertValue(map.get("for_loop"), TestStepForLoop.class));
+      }
       if (element != null) {
         testStepDataMap.setElement(element);
       }
@@ -303,11 +308,6 @@ public class TestStep {
       if (ifConditionExpectedResults != null && ifConditionExpectedResults.length > 0) {
         testStepDataMap.setIfConditionExpectedResults(ifConditionExpectedResults);
       }
-      TestStepForLoop forLoop = new TestStepForLoop();
-      forLoop.setStartIndex(forLoopStartIndex);
-      forLoop.setEndIndex(forLoopEndIndex);
-      forLoop.setTestDataId(forLoopTestDataId);
-      testStepDataMap.setForLoop(forLoop);
     }
     log.info("Parsed json to testStepDataMap: " + testStepDataMap);
     return testStepDataMap;

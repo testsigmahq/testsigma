@@ -2105,14 +2105,6 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       this.focusOnSearch();
     }
   }
-  public selectTestDataProfile(testDataProfileId?){
-    this.testDataSetService.findAll("testDataProfileId:" + testDataProfileId, 'position').subscribe(value => {
-      this.listDataItem = Object.keys(value?.content[0]?.data);
-      this.isFetchingListData = false;
-    }, error => {
-      this.isFetchingListData = false;
-    })
-  }
 
   get isDefaultType() {
     return true;
@@ -2175,6 +2167,11 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       this.isFetchingListData = false;
       return
     }
+
+      this.testDataSetService.findAll("testDataProfileId:" + this.selectedTestDataProfile.id, 'position').subscribe(value => {
+        this.listParameterItem = Object.keys(value?.content[0]?.data);
+      })
+
     this.testDataSetService.findAll("testDataProfileId:" + this.testCase?.testData?.id , 'position').subscribe(res => {
       this.listParameterItem = Object.keys(res?.content[0]?.data);
       this.isFetchingListData = false;

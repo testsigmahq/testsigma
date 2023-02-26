@@ -485,7 +485,7 @@ export class TestStep extends Base implements PageObject {
   }
 
   private replaceAttribute(parsedStep: String): String {
-    let attributeString = this.dataMap.attribute ? this.dataMap.attribute : '';
+    let attributeString = this.attribute ? this.attribute : '';
     return parsedStep.replace(new RegExp("@{.*?}"), "<span class='action-attribute'>" + attributeString + "</span>");
   }
 

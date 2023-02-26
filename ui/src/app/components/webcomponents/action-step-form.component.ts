@@ -682,7 +682,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       delete this.testStep.testDataFunctionArgs;
       delete this.testStep.dataMap.testData;
       delete this.testStep.element;
-      delete this.testStep.dataMap.attribute;
+      delete this.testStep.attribute;
       return true
     } else {
       return false;
@@ -1382,14 +1382,15 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         this.currentTemplate = this.testStep.template;
         if (this.testStep?.element)
           this.assignElement(this.testStep?.element, this.elementPlaceholder()[0]);
-        this.testStep?.dataMap?.testData.forEach((dataMapValue: TestDataMapValue, key: string) => {
+        this.testStep?.dataMap?.testData?.forEach((dataMapValue: TestDataMapValue, key: string) => {
           if (!dataMapValue.value && !dataMapValue.type)
             this.assignDataValue(this.getDataTypeString(dataMapValue.type, dataMapValue.value));
         });
         if (this.attributePlaceholder())
-          this.setStepTestData();
+           this.attributePlaceholder().innerHTML=this.testStep?.attribute;
+           this.setStepTestData();
         if (this.testStep.isForLoop && this.attributePlaceholder()?.length) {
-          this.setStepLoopData();
+           this.setStepLoopData();
         }
         this.attachActionTemplatePlaceholderEvents();
       }
@@ -1414,7 +1415,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   private setStepTestData(){
     this.testDataPlaceholder().forEach((item, index) => {
       let reference = item.dataset?.reference;
-      let testData = this.testStep.testData?.[reference];
+      let testData = this.testStep?.dataMap?.testData?.[reference];
       item.setAttribute("data-test-data-type",testData.type);
       if(testData.type == TestDataType.function) {
         item = this.testDataFunctionDataAssign(item,testData)

@@ -64,7 +64,7 @@ public class TestStepDTO implements Cloneable, Serializable {
   private Map<String, AddonTestStepTestData> addonTestData;
   private Map<String, AddonElementData> addonElements;
   @ToString.Exclude
-  private ForLoopConditionDTO forLoopCondition;
+  private List<ForLoopConditionDTO> forLoopConditionDTOs;
   private Boolean disabled;
   private Boolean ignoreStepResult;
   private Long testDataProfileStepId;

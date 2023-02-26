@@ -48,8 +48,9 @@ public interface TestStepMapper {
 
   DefaultDataGeneratorsEntity mapTestDataFunction(DefaultDataGeneratorsDetails defaultDataGeneratorsDetails);
 
-
+  @Mapping(target = "forLoopConditionDTOs", expression = "java(this.mapForLoopConditionDTOs(testStep.getForLoopConditions()))")
   TestStepDTO mapDTO(TestStep testStep);
+
   @Mapping(target = "status", source = "expectedResponseStatus")
   RestStepDTO map(RestStep restStep);
 
@@ -76,9 +77,6 @@ public interface TestStepMapper {
   @Mapping(target = "dataMap", expression = "java(request.getDataMap())")
   @Mapping(target = "element", expression = "java(request.getDataMap().getElement())")
   @Mapping(target = "attribute", expression = "java(request.getDataMap().getAttribute())")
-  //@Mapping(target = "forLoopStartIndex", expression = "java(request.getDataMap().getForLoop().getStartIndex())")
-  //@Mapping(target = "forLoopEndIndex", expression = "java(request.getDataMap().getForLoop().getEndIndex())")
-  //@Mapping(target = "forLoopTestDataId", expression = "java(request.getDataMap().getForLoop().getTestDataId())")
   @Mapping(target = "maxIterations", expression = "java(request.getMaxIterations())")
   void merge(TestStepRequest request, @MappingTarget TestStep testStep);
 
@@ -98,6 +96,8 @@ public interface TestStepMapper {
 
 
   List<ForLoopConditionXMLDTO> mapToCloudForConditions(List<TestStep> testSteps);
+
+  List<ForLoopConditionDTO> mapForLoopConditionDTOs(List<ForLoopCondition> forLoopCondition);
 
   default ForLoopConditionXMLDTO mapToCloudForCondition(TestStep testStep) {
     ForLoopConditionXMLDTO condition = new ForLoopConditionXMLDTO();

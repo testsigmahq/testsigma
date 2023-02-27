@@ -60,6 +60,7 @@ public class TestStepsRecorderController {
                 mapper.mapDTOs(testStep.getContent());
         testDataDTOS = this.service.filterWhileParentSteps(testDataDTOS);
         List<TestStepRecorderDTO> testStepRecorderDTOS = testStepRecorderMapper.mapDTOs(testDataDTOS);
+        testStepRecorderDTOS = this.service.setNestedChildElements(testStepRecorderDTOS);
         return new PageImpl<>(testStepRecorderDTOS, pageable, testStep.getTotalElements());
     }
 

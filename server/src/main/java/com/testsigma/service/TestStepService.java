@@ -21,7 +21,9 @@ import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaException;
 import com.testsigma.mapper.RestStepMapper;
 import com.testsigma.mapper.TestStepMapper;
+import com.testsigma.mapper.recorder.TestStepRecorderMapper;
 import com.testsigma.model.*;
+import com.testsigma.model.recorder.TestStepRecorderDTO;
 import com.testsigma.repository.TestStepRepository;
 import com.testsigma.specification.SearchCriteria;
 import com.testsigma.specification.SearchOperation;
@@ -63,6 +65,7 @@ public class TestStepService extends XMLExportImportService<TestStep> {
     private final DefaultDataGeneratorService defaultDataGeneratorService;
     private final ImportAffectedTestCaseXLSExportService affectedTestCaseXLSExportService;
     private final TestStepMapper testStepMapper;
+    private final TestStepRecorderMapper testStepRecorderMapper;
 
     private final List<ActionTestDataMap> actionTestDataMap = getMapsList();
     private final List<Integer> depreciatedIds = DeprecatedActionMapper.getAllDeprecatedActionIds();
@@ -608,6 +611,20 @@ public class TestStepService extends XMLExportImportService<TestStep> {
             }
         }
 
+    }
+
+    public List<TestStepRecorderDTO> setNestedChildElements(List<TestStepRecorderDTO> testStepDTOS){
+        List<TestStepRecorderDTO> testStepDTOSToReturn = new ArrayList<>();
+        for(TestStepRecorderDTO testStepDTO : testStepDTOS){
+            Long parentID = testStepDTO.getId();
+            List<TestStep> childSteps = repository.findAllByParentId(parentID);
+            List<TestStepDTO> childStepDTOs = testStepMapper.mapDTOs(childSteps);
+            List<TestStepRecorderDTO> childStepRecorderDTOs = testStepRecorderMapper.mapDTOs(childStepDTOs);
+            testStepDTO.setChildSteps(childStepRecorderDTOs);
+            if(testStepDTO.getParentId()==null)
+                testStepDTOSToReturn.add(testStepDTO);
+        }
+        return testStepDTOSToReturn;
     }
 
     private void setTemplateId(TestStep present, BackupDTO importDTO) throws ResourceNotFoundException {

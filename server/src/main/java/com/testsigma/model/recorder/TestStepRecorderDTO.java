@@ -52,6 +52,7 @@ public class TestStepRecorderDTO implements Cloneable, Serializable {
     private String pageSourceUrl;
     private String pageSource;
     private Integer index;
+    private List<TestStepRecorderDTO> childSteps;
     private Long blockId;
     private Boolean hasInvalidUiIdentifier;
     private Boolean hasInvalidTestData;

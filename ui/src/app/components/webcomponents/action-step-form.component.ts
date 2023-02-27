@@ -962,6 +962,8 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
               this.getAddonTemplateAllowedValues(item.dataset?.reference);
               this.getTestdataProfile(item.dataset?.reference);
               this.getParameter(item.dataset?.reference);
+              this.getTestdataParameters(item.dataset?.reference);
+              this.isDefaultType(item.dataset?.reference)
               this.currentDataTypeIndex = 0;
               this.currentDataItemIndex = index;
               item.contentEditable = true;
@@ -1416,8 +1418,8 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     this.testDataPlaceholder().forEach((item, index) => {
       let reference = item.dataset?.reference;
       let testData = this.testStep?.dataMap?.testData?.[reference];
-      item.setAttribute("data-test-data-type",testData.type);
-      if(testData.type == TestDataType.function) {
+      item.setAttribute("data-test-data-type",testData?.type);
+      if(testData?.type == TestDataType.function) {
         item = this.testDataFunctionDataAssign(item,testData)
       }
       item.innerHTML = this.getDataTypeString(testData?.type, testData?.['value']);
@@ -2106,11 +2108,19 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       this.focusOnSearch();
     }
   }
+  public getTestdataParameters(reference?) {
+    this.listParameterItem = undefined;
+    this.isParameter = false;
+    if ('parameter' == reference && this.testStep.isTestdataParameter) {
+      this.fetchTestDataSet();
+      this.focusOnSearch();
+    }
+  }
 
-  get isDefaultType() {
-    return true;
-    //return !this.listDataItem && (!this.currentAllowedValues?.length || (this.isSpotEditEnable &&
-    //  !this.currentAllowedValues?.length)) && !this.currentKibbutzAllowedValues?.length;
+   isDefaultType(reference) {
+    if (('right-data' == reference && this.testStep.isTestDataRightParameter)) {
+         return true;
+    }
   }
 
   get isAllowedValues() {

@@ -68,7 +68,7 @@
     tabindex="-1"
     id="testDataContainer"
     class="action-drop-down-container">
-    <div  *ngIf="!currentTemplate?.allowedValues && !currentAddonAllowedValues && !listDataItem">
+    <div  *ngIf="!currentTemplate?.allowedValues && !currentAddonAllowedValues && !listDataItem && !listParameterItem">
       <div
         *ngFor="let type of dataTypes; let index=index"
         [class.h-active]="currentDataTypeIndex == index"

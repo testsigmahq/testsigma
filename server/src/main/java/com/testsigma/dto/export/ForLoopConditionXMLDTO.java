@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.testsigma.annotation.JsonListRootName;
+import com.testsigma.dto.LoopDataMapDTO;
 import com.testsigma.model.IterationType;
+import com.testsigma.model.Operator;
 import com.testsigma.model.TestDataType;
 import lombok.Data;
 
@@ -34,6 +36,9 @@ public class ForLoopConditionXMLDTO extends BaseXMLDTO {
     @JsonProperty("LeftParamValue")
     private String leftParamValue;
 
+    @JsonProperty("Operator")
+    private Operator operator;
+
     @JsonProperty("RightParamValue")
     private String rightParamValue;
 
@@ -48,4 +53,17 @@ public class ForLoopConditionXMLDTO extends BaseXMLDTO {
 
     @JsonProperty("TestData")
     private String testData;
+
+    @JsonProperty("LeftFunctionId")
+    private Long leftFunctionId;
+
+    @JsonProperty("RightFunctionId")
+    private Long rightFunctionId;
+
+    @JsonProperty("LeftDataMap")
+    private LoopDataMapDTO leftDataMap;
+
+    @JsonProperty("RightDataMap")
+    private LoopDataMapDTO rightDataMap;
 }
+

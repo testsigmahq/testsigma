@@ -34,6 +34,7 @@ import {MobileStepRecorderComponent} from "../../agents/components/webcomponents
 import {MobileRecorderEventService} from "../../services/mobile-recorder-event.service";
 import {OnBoardingSharedService} from "../../services/on-boarding-shared.service";
 import {StepDetailsDataMap} from "../../models/step-details-data-map.model";
+import { TestDataService } from 'app/services/test-data.service';
 
 @Component({
   selector: 'app-test-step-form-container',
@@ -67,6 +68,7 @@ export class TestStepFormContainerComponent extends BaseComponent implements OnI
   @Output() stepFormChange = new EventEmitter<FormGroup>();
   public formSubmitted: boolean = false;
   @Input() stepRecorderView?: boolean;
+  public isNoTestDataProfile : boolean = false;
 
   constructor(
     public authGuard: AuthenticationGuard,
@@ -79,7 +81,8 @@ export class TestStepFormContainerComponent extends BaseComponent implements OnI
     private _ngZone: NgZone,
     private testStepService: TestStepService,
     private onBoardingSharedService: OnBoardingSharedService,
-    private mobileRecorderEventService: MobileRecorderEventService
+    private mobileRecorderEventService: MobileRecorderEventService,
+    private testDataService: TestDataService
   ) {
     super(authGuard, notificationsService, translate, toastrService);
   }
@@ -197,6 +200,32 @@ export class TestStepFormContainerComponent extends BaseComponent implements OnI
     this.testStep.ignoreStepResult = true;
   }
 
+  createConditionalFor() {
+    this.isNoTestDataProfile = false;
+    this.changeStepType(TestStepType.ACTION_TEXT);
+    this.testStep.conditionType = TestStepConditionType.LOOP_FOR;
+    this.testStep.priority = TestStepPriority.MINOR;
+    this.testStep.ignoreStepResult = true;
+  }
+
+  fetchTestData(){
+    this.testDataService.findAll("versionId:" + this.version.id ).subscribe(res => {
+      this.createConditionalFor();
+      if (res.empty) {
+        this.isNoTestDataProfile = true;
+        return
+      }
+    }, error => {
+      this.createConditionalFor();
+      this.isNoTestDataProfile = true;
+    })
+  }
+
+  cancelingBubbling(){
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+  }
+
   changeStepType(stepType: string, isWhile?: boolean) {
     if (this.testStep.isConditionalWhileLoop) {
       delete this.testStep.conditionType;
@@ -230,7 +259,7 @@ export class TestStepFormContainerComponent extends BaseComponent implements OnI
     this.testStep.position = this.position;
     this.testStep.waitTime = 30;
     this.testStep.priority = TestStepPriority.MAJOR;
-    this.testStep.conditionIf = [];
+    this.testStep.dataMap.conditionIf = [];
     if (commonData['preRequisiteStepId']) {
       this.testStep.preRequisiteStepId = commonData['preRequisiteStepId']
     }
@@ -343,11 +372,6 @@ export class TestStepFormContainerComponent extends BaseComponent implements OnI
       this.testSteps.content.find(testStep => testStep.id == this.testStep.preRequisiteStepId)
         .stepDisplayNumber = this.indexPosition(true);
     }
-  }
-
-  triggerResize() {
-    this._ngZone.onStable.pipe(take(1))
-      .subscribe(() => this.autosize.resizeToFitContent(true));
   }
 
   get testStepType() {

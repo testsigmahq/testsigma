@@ -1,12 +1,20 @@
 package com.testsigma.mapper.recorder;
 
 import com.testsigma.dto.TestStepDTO;
+import com.testsigma.model.ResultConstant;
+import com.testsigma.model.TestStepDataMap;
+import com.testsigma.model.TestStepNlpData;
+import com.testsigma.model.TestStepType;
+import com.testsigma.model.recorder.TestStepRecorderDTO;
+import com.testsigma.model.recorder.TestStepRecorderDataMap;
+import com.testsigma.model.recorder.TestStepRecorderRequest;
 import com.testsigma.model.*;
 import com.testsigma.model.recorder.*;
 import com.testsigma.service.ObjectMapperService;
 import com.testsigma.web.request.TestStepRequest;
 import org.mapstruct.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -50,12 +58,6 @@ public interface TestStepRecorderMapper {
     @Mapping(target = "dataMap", expression = "java(mapDataMap(testStepRecorderRequest.getDataMap()))")
     @Mapping(target = "stepGroupId", source = "testComponentId")
     @Mapping(target = "naturalTextActionId", source = "templateId")
-    @Mapping(target = "fromElement", source = "testStepRecorderRequest.dataMap.toUiIdentifier")
-    @Mapping(target = "forLoopTestDataId", source = "testStepRecorderRequest.dataMap.forLoop.testDataId")
-    @Mapping(target = "forLoopStartIndex", source = "testStepRecorderRequest.dataMap.forLoop.startIndex")
-    @Mapping(target = "forLoopEndIndex", source = "testStepRecorderRequest.dataMap.forLoop.endIndex")
-    @Mapping(target = "element", expression = "java(mapElement(testStepRecorderRequest))")
-    @Mapping(target = "attribute", source = "testStepRecorderRequest.dataMap.attribute")
     @Mapping(target = "addonTestData", source = "kibbutzPluginNlpData.testData")
     @Mapping(target = "addonTDF", ignore = true)
     @Mapping(target = "addonNaturalTextActionData", ignore = true)

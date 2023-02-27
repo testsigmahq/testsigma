@@ -49,6 +49,7 @@ public class TestCaseStepResult implements Serializable {
   private String addonActionLogs;
   private Map<String, ElementPropertiesEntity> ElementDetails = new HashMap<>();
   private Map<String,  TestDataPropertiesEntity> testDataDetails = new LinkedHashMap<>();
+  private ForLoopConditionsEntity forLoopConditions;
 
   @ToString.Exclude
   private StepResultMetadataEntity metadata = new StepResultMetadataEntity();

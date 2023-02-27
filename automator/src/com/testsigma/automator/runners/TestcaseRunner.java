@@ -39,6 +39,9 @@ public class TestcaseRunner {
   protected Map<Long, TestCaseStepResult> mapStepResult;
   protected boolean skipExecution;
   protected String resultFailureMessage;
+  @Getter
+  @Setter
+  protected Long hostStepId;
 
   public TestcaseRunner(TestCaseEntity testCaseEntity, TestCaseResult testCaseResult,
                         Map<Long, TestCaseStepResult> mapStepResult, boolean skipExecution,

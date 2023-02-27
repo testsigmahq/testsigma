@@ -1391,7 +1391,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         if (this.attributePlaceholder())
            this.attributePlaceholder().innerHTML=this.testStep?.attribute;
            this.setStepTestData();
-        if (this.testStep.isForLoop && this.attributePlaceholder()?.length) {
+        if (this.testStep.isForLoop && this.testDataPlaceholder()?.length) {
            this.setStepLoopData();
         }
         this.attachActionTemplatePlaceholderEvents();
@@ -1402,7 +1402,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   }
 
   private setStepLoopData() {
-    this.attributePlaceholder().forEach((item, index) => {
+    this.testDataPlaceholder().forEach((item, index) => {
       let reference = item.dataset?.reference;
       let testData = this.testStep.forLoopData.setValuesParsed(reference);
       item.setAttribute("data-test-data-type",testData?.['type']);

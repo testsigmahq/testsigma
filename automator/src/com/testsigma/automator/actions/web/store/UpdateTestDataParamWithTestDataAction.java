@@ -17,8 +17,6 @@ public class UpdateTestDataParamWithTestDataAction extends ElementAction {
             "line value may result in unwanted failures in tests where it is being " +
             "used.";
 
-    private final String TEST_DATA_PROFILE_ID = "test-data-profile-id";
-
     private final String TEST_DATA_PROFILE_NAME = "test-data-profile";
 
     @Override
@@ -28,11 +26,9 @@ public class UpdateTestDataParamWithTestDataAction extends ElementAction {
         Assert.isTrue(StringUtils.isNotBlank(value), FAILURE_EMPTY_VALUE);
         Assert.isTrue(!value.contains("\n"),FAILURE_MULTIPLE_LINE_VALUE);
 
-        String testDataName = getTestDataPropertiesEntity(TESTSTEP_DATAMAP_KEY_PARAMETER).getTestDataName();
-        String testDataProfileId = getTestDataPropertiesEntity(TEST_DATA_PROFILE_ID).getTestDataValue();
+        String testDataName = getTestDataPropertiesEntity(TESTSTEP_DATAMAP_KEY_PARAMETER).getTestDataValue();
         String testDataProfileName = getTestDataPropertiesEntity(TEST_DATA_PROFILE_NAME).getTestDataValue();
         testDataParams.put(testDataName, value);
-        testDataParams.put(TEST_DATA_PROFILE_ID, testDataProfileId);
         setSuccessMessage(String.format(SUCCESS_MESSAGE, testDataName, value, testDataProfileName));
     }
 }

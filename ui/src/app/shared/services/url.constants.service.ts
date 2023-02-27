@@ -34,6 +34,7 @@ export class UrlConstantsService {
   public testCasesUrl = this.apiBase + '/test_cases';
   public dryTestPlansUrl = this.apiBase + '/dry_test_plans';
   public userPreferencesUrl = this.apiBase + '/user_preferences';
+  public forLoopConditionsUrl = this.apiBase + '/for_loop_conditions';
   public projectsUrl = this.apiBase + '/new/projects';
   public workspacesUrl = this.apiBase + '/workspaces';
   public testCaseTagsUrl = this.apiBase + '/testcase_tags';

@@ -27,11 +27,17 @@ import {TestDevice} from "../../models/test-device.model";
                 [class.testsigma-lab-logo]="env.isTestsigmaLab"
                 [class.testsigma-local-devices-logo]="env.isHybrid"
                 [matTooltip]="('execution.lab_type.'+env.testPlanLabType) | translate"></span>
+           <span
+             [matTooltip]="
+            (env?.platform ? ('platform.name.'+env?.platform | translate) : '') +
+            ((env?.platform && env?.osVersion)? '( '+ env?.osVersion+' ) ' : ' ')"
+             class="mr-5 fz-18 text-t-secondary"
+             [class.fa-windows-brands]="env?.isWindows"
+             [class.fa-apple]="env?.isMac"
+             [class.fa-linux-2]="env.isLinux"></span>
           <span
             [matTooltip]="
-            (env?.platform ? ('platform.name.'+env?.platform | translate) : '') +
-            ((env?.platform && env?.osVersion)? '( '+ env?.osVersion+' ) ' : ' ') +
-            (env?.browser? ('browser.name.'+env?.browser | translate) : env?.deviceName) +
+            (env?.browser=='MOZILLAFIREFOX'? ('browser.name.FIREFOX' | translate):env?.browser?('browser.name.'+env?.browser | translate) : env?.deviceName) +
             (env?.browserVersion ? '( '+env?.browserVersion+' )' : '')"
             class="mr-5 fz-18 text-t-secondary"
             [class.fa-chrome]="env?.isChrome"

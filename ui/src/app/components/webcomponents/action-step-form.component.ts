@@ -1921,7 +1921,8 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         this.assignDataValue(this.getDataTypeString(TestDataType.parameter, data));
       }
       else if( typeof(data)==="object" ){
-        this.testStep.testDataProfileStepId = data?.testDataProfileStepId;
+        if(this.testStep.type===TestStepType.FOR_LOOP)
+          this.testStep.testDataProfileStepId = data?.testDataProfileStepId;
         this.assignDataValue(this.getDataTypeString(TestDataType.parameter, data?.suggestion));
       }
     }

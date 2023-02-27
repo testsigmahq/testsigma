@@ -2148,5 +2148,6 @@
   "step_group.testcase.listing":  "{{name}} <span class='text-t-secondary'>{{isEdited}}</span>",
   "step_group.delete.zero_impacted.message":  "No test cases will be impacted on deleting this step group.",
   "step_group.summary.title": "Step Group Details",
-  "data.parameterNameValue":"Test-Data"
+  "data.parameterNameValue":"Test-Data",
+  "test_step.for_loop.profile.na": "No Applicable Test Data Profiles found. Create a new Test Data Profile OR Check the association if the Test Data Profile is already created.\n"
 }

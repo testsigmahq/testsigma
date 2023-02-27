@@ -153,6 +153,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   public listParameterItem:string[];
   public isFetchingListData: boolean = false;
   public isParameter: boolean = false;
+  public isTestDataProfileEmpty: boolean = false;
 
   get mobileStepRecorder(): MobileStepRecorderComponent {
     return this.matModal.openDialogs.find(dialog => dialog.componentInstance instanceof MobileStepRecorderComponent).componentInstance;
@@ -2153,7 +2154,13 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
     this.isFetchingListData = true;
     this.testDataService.findAll("versionId:" + this.version.id + searchName).subscribe(res => {
-      this.listDataItem = res.content;
+      if(this.currentTemplate?.htmlGrammar?.toLocaleLowerCase().startsWith("write value")) {
+        this.listDataItem = this.getOnlyAssociatedTestDataProfiles(res.content);
+        this.setTestDataProfileStatus( this.listDataItem );
+      } else {
+        this.listDataItem = res.content;
+        this.setTestDataProfileStatus(res.content);
+      }
       if (this.testCase?.id && this.testCase?.testDataId) {
         if (this.listDataItem && !this.listDataItem?.find(req => req?.['id'] == this.testCase.testDataId)) {
           this.listDataItem.push(this.testCase.testData)
@@ -2164,6 +2171,37 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       this.isFetchingListData = false;
     });
   }
+  // Returns only the related test data profiles for this teststep.
+  getOnlyAssociatedTestDataProfiles(content : TestData[]) {
+    const list:TestData[] = [];
+
+    const parentTDPs = this.testStep?.getAllParentLoopTDPIds(this.testStep, this.testCase, this.testSteps,  []);
+    let parentTDPIds = parentTDPs?.map((tdpData) => tdpData.tdpId);
+
+    content.forEach( item => {
+      if(this.isAssociatedTestDataProfile(item, parentTDPIds)) {
+        list.push(item);
+      }
+    });
+    return list;
+  }
+
+  // Returns true if given tdp is used by one of the parent for loop or used as testcase level TDP.
+  isAssociatedTestDataProfile(tdp: TestData, parentTDPIds) {
+    return  parentTDPIds.includes(tdp.id);
+  }
+
+  setTestDataProfileStatus(testDataProfileList) {
+    if(testDataProfileList && testDataProfileList.length > 0) {
+      this.isTestDataProfileEmpty = false;
+    } else {
+      this.isTestDataProfileEmpty = true;
+    }
+  }
+  get showTestDataProfileEmpty() {
+    return this.isTestDataProfileEmpty;
+  }
+
 
   fetchTestDataSet(term?) {
     this.isFetchingListData = true;

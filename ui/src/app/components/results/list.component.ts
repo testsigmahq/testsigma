@@ -200,6 +200,9 @@ export class ResultsListComponent extends BaseComponent implements OnInit {
         this.discard();
     });
   }
+  removeHtmlTags(str) {
+    return str.replace(/<[^>]*>/g, '');
+  }
 
   discard() {
     this.query = undefined;

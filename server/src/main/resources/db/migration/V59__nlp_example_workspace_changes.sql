@@ -1,0 +1,3 @@
+UPDATE `natural_text_action_examples` SET `workspace` = 'https://travel.testsigma.com/login' WHERE `workspace` = 'https://app.testsigma.com/login';
+UPDATE `natural_text_action_examples` SET (`example`, `workspace`, `data`) = ('In this example, we can verify that the current Page has specified URL \"https://travel.testsigma.com/login\"','https://travel.testsigma.com/login','{\"test data\": \"https://travel.testsigma.com/login\"}') WHERE `id` = 430;
+UPDATE `natural_text_action_examples` SET `workspace` = 'https://travel.testsigma.com/' WHERE `workspace` = 'https://app.testsigma.com/';

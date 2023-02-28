@@ -154,6 +154,9 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   public isFetchingListData: boolean = false;
   public isParameter: boolean = false;
   public isTestDataProfileEmpty: boolean = false;
+  public isTestData: boolean = false;
+
+
 
   get mobileStepRecorder(): MobileStepRecorderComponent {
     return this.matModal.openDialogs.find(dialog => dialog.componentInstance instanceof MobileStepRecorderComponent).componentInstance;
@@ -2119,11 +2122,13 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
   }
 
-   isDefaultType(reference) {
-    if (('right-data' == reference && this.testStep.isTestDataRightParameter)) {
-         return true;
-    }
-  }
+ public isDefaultType(reference) {
+   if ('right-data' == reference){
+       this.isTestData=true;
+   } else {
+       this.isTestData=false;
+   }
+ }
 
   get isAllowedValues() {
     return true;

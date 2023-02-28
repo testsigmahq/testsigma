@@ -12,6 +12,7 @@ import java.util.Optional;
 @Repository
 @Transactional
 public interface ForLoopConditionRepository extends BaseRepository<ForLoopCondition, Long>  {
+
     Optional<ForLoopCondition> findByTestStepId(Long testStepId);
 
     List<ForLoopCondition> findAllByTestStepIdAndImportedId(Long testStepId, Long importedId);
@@ -22,7 +23,7 @@ public interface ForLoopConditionRepository extends BaseRepository<ForLoopCondit
 
     Optional<ForLoopCondition> findByImportedId(Long importedId);
 
-    @NotNull Optional<ForLoopCondition> findById(Long testStepId);
+    @NotNull Optional<ForLoopCondition> findById(Long id);
 
     List<ForLoopCondition> findAllByTestCaseId(Long testCaseId);
 

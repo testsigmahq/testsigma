@@ -58,6 +58,10 @@ public class ForLoopConditionService extends XMLExportImportService<ForLoopCondi
         return forLoopConditionsRepository.findAll(specification, pageable);
     }
 
+    public Optional<ForLoopCondition> findAllByTestCaseStepId(Long testCaseStepId) {
+        return forLoopConditionsRepository.findByTestStepId(testCaseStepId);
+    }
+
     @Override
     protected List<ForLoopConditionXMLDTO> mapToXMLDTOList(List<ForLoopCondition> list) {
         return mapper.mapDtos(list);
@@ -187,5 +191,9 @@ public class ForLoopConditionService extends XMLExportImportService<ForLoopCondi
 
     public Optional<ForLoopCondition> findById(Long stepId) {
         return this.forLoopConditionsRepository.findById(stepId);
+    }
+
+    public Optional<ForLoopCondition> findByTestStepId(Long stepId) {
+        return this.forLoopConditionsRepository.findByTestStepId(stepId);
     }
 }

@@ -4,6 +4,7 @@ import com.testsigma.constants.MessageConstants;
 import com.testsigma.dto.TestCaseEntityDTO;
 import com.testsigma.dto.TestCaseStepEntityDTO;
 import com.testsigma.dto.TestStepDTO;
+import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaException;
 import com.testsigma.model.TestDataSet;
 import com.testsigma.model.*;
@@ -11,6 +12,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.*;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Log4j2
 public class ForLoopStepProcessor extends StepProcessor {
@@ -39,21 +42,29 @@ public class ForLoopStepProcessor extends StepProcessor {
       this.attachTestDataProfileStepId(testStepDTOS);
     }
 
-    Long testDataId = testStepDTO.getDataMap().getForLoop().getTestDataId();
-    Integer start = testStepDTO.getDataMap().getForLoop().getStartIndex();
-    Integer end = testStepDTO.getDataMap().getForLoop().getEndIndex();
+    Optional<ForLoopCondition> forLoopConditionOptional = forLoopConditionsService.findByTestStepId(testStepDTO.getId());
 
+    if(forLoopConditionOptional.isEmpty()) {
+      throw new ResourceNotFoundException("For loop condition not found for test step id: " + testStepDTO.getId());
+    }
+
+    Long testDataId = forLoopConditionOptional.get().getTestDataProfileId();
+    Integer start = 1, end;
     TestData testData = testDataProfileService.find(testDataId);
 
     List<TestCaseStepEntityDTO> entityList = new ArrayList<>();
     List<TestDataSet> dataBank = testData.getTempTestData();
+    Set<String> iterations = getIterations().stream().map(name -> name.getName()).collect(Collectors.toSet());
     if ((dataBank != null) && dataBank.size() > 0) {
       start = (start.equals(LOOP_START)) ? 1 : start;
-      end = (end.equals(LOOP_END)) ? dataBank.size() : end;
+      end = dataBank.size();
 
       if (testStepDTO.getTestStepDTOS() != null && testStepDTO.getTestStepDTOS().size() > 0) {
         for (int i = start - 1; i < end && i < dataBank.size(); i++) {
           TestStepDTO parentEntity = testStepDTO.clone();
+          if(!iterations.contains(dataBank.get(i).getName())) {
+              continue;
+          }
           TestDataSet dataSet = dataBank.get(i);
           TestCaseStepEntityDTO iteEntity = new TestCaseStepEntityDTO(); //iterableEntity -- Iteration
           iteEntity.setId(parentEntity.getId());
@@ -159,10 +170,6 @@ public class ForLoopStepProcessor extends StepProcessor {
         }
       }
       testCaseStepEntityDTOS.addAll(entityList);
-    } else {
-      String errorMessage = com.testsigma.constants.MessageConstants.getMessage(
-        MessageConstants.MSG_UNKNOWN_TEST_DATA_LOOP, testCaseEntityDTO.getTestCaseName());
-      throw new TestsigmaException(errorMessage);
     }
   }
 }

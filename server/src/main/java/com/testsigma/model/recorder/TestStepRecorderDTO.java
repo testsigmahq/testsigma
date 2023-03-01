@@ -1,5 +1,6 @@
 package com.testsigma.model.recorder;
 
+import com.testsigma.dto.ForLoopConditionDTO;
 import com.testsigma.dto.RestStepDTO;
 import com.testsigma.dto.TestCaseEntityDTO;
 import com.testsigma.model.TestStepConditionType;
@@ -59,6 +60,7 @@ public class TestStepRecorderDTO implements Cloneable, Serializable {
     private List<String> invalidUiIdentifierList = new ArrayList<>();
     private List<String> invalidTestDataList = new ArrayList<>();
     private UiIdentifierDTO uiIdentifierDTO;
+    private List<ForLoopConditionDTO> forLoopConditionDTOs;
     // private List<TestStepDataOverriddenMappingDTO> testStepDataOverRiddenMappings;
     //private List<UiIdentifierOverRiddenMappingDTO> uiIdentifierOverRiddenMappings;
     //private ForLoopOverRiddenMappingDTO forLoopOverRiddenMapping;

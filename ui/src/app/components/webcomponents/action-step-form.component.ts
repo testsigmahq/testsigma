@@ -718,7 +718,12 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     if (action && action.length && this.isValidElement && this.isValidTestData && this.isValidAttribute) {
       this.testStep.action = action;
       this.testStep.naturalTextActionId = this.currentTemplate?.id;
-      this.testStep.type = TestStepType.ACTION_TEXT;
+      if(this.testStep.isForLoop){
+        this.testStep.type = TestStepType.FOR_LOOP;
+      }
+      else{
+        this.testStep.type = TestStepType.ACTION_TEXT;
+      }
       this.testStep.template = this.currentTemplate;
       if (this.elementPlaceholder().length) {
         this.testStep.element = elementValue
@@ -1396,7 +1401,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
            this.attributePlaceholder().innerHTML=this.testStep?.attribute;
            this.setStepTestData();
         if (this.testStep.isForLoop && this.testDataPlaceholder()?.length) {
-           this.setStepLoopData();
+          this.setStepLoopData();
         }
         this.attachActionTemplatePlaceholderEvents();
       }

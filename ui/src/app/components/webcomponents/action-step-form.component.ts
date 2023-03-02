@@ -718,12 +718,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     if (action && action.length && this.isValidElement && this.isValidTestData && this.isValidAttribute) {
       this.testStep.action = action;
       this.testStep.naturalTextActionId = this.currentTemplate?.id;
-      if(this.testStep.isForLoop){
-        this.testStep.type = TestStepType.FOR_LOOP;
-      }
-      else{
-        this.testStep.type = TestStepType.ACTION_TEXT;
-      }
+      this.testStep.type = TestStepType.ACTION_TEXT;
       this.testStep.template = this.currentTemplate;
       if (this.elementPlaceholder().length) {
         this.testStep.element = elementValue

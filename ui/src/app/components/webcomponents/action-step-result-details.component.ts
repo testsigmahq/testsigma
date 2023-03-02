@@ -130,8 +130,7 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
   }
 
   getElementDetails() {
-    if (!this.ElementDetails)
-      this.ElementDetails = this.getElements(this.testStepResult?.elementDetails, true);
+    this.ElementDetails = this.getElements(this.testStepResult?.elementDetails, true);
     return this.ElementDetails.length || this.element?.locatorValue;//TODO Fallback element details need to clean
   }
 

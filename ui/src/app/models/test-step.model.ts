@@ -227,8 +227,8 @@ export class TestStep extends Base implements PageObject {
     if (this.template?.data?.['testData']) {
       if(this.isForLoop){
         parsedStep = this.setForLoopDataValue(parsedStep);
-      }
-      else {
+      }}
+    if(parsedStep){
         if (this.template?.data?.['testData']) {
           Object.keys(this.template?.data?.['testData']).forEach(parameter => {
             let data = this.dataMap?.testData?.[parameter];
@@ -245,7 +245,6 @@ export class TestStep extends Base implements PageObject {
             }
           })
           parsedStep = parsedStep.replace(new RegExp('</TSTESTDAT>', 'g'), '</span>')
-        }
       }
       if (this?.element) {
         parsedStep = this.replaceElement(parsedStep);

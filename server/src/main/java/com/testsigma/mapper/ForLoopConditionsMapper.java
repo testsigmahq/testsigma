@@ -4,7 +4,9 @@ import com.testsigma.automator.entity.ForLoopConditionsEntity;
 import com.testsigma.dto.ForLoopConditionDTO;
 import com.testsigma.dto.export.ForLoopConditionXMLDTO;
 import com.testsigma.model.ForLoopCondition;
+import com.testsigma.model.TestCaseFilter;
 import com.testsigma.web.request.ForLoopConditionRequest;
+import com.testsigma.web.request.TestCaseFilterRequest;
 import org.mapstruct.*;
 
 import java.util.List;
@@ -13,6 +15,9 @@ import java.util.List;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface ForLoopConditionsMapper {
+
+    void merge(@MappingTarget ForLoopCondition forLoopCondition, ForLoopConditionRequest request);
+
     List<ForLoopConditionDTO> map(List<ForLoopCondition> models);
 
     List<ForLoopConditionXMLDTO> mapDtos(List<ForLoopCondition> models);

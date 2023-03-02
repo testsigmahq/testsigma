@@ -37,10 +37,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping(path = "/test_steps", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -85,7 +82,20 @@ public class TestStepsController {
     mapper.merge(request, testStep);
     testStep.setUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
     testStep = this.service.update(testStep, false);
-    return this.mapper.mapDTO(testStep);
+    TestStepDTO testStepDTO = this.mapper.mapDTO(testStep);
+    if (request.getForLoopConditionsRequest() != null) {
+      Optional<ForLoopCondition> forLoopConditionOptional = forLoopConditionsService.findByTestStepId(testStepDTO.getId());
+      ForLoopCondition forLoopCondition = new ForLoopCondition();
+      if(forLoopConditionOptional.isPresent()) {
+        forLoopCondition = forLoopConditionOptional.get();
+      }
+      forLoopConditionsMapper.merge(forLoopCondition, request.getForLoopConditionsRequest());
+      forLoopCondition.setTestStepId(testStep.getId());
+      forLoopCondition = forLoopConditionsService.save(forLoopCondition);
+      ForLoopConditionDTO forLoopConditionDTO = forLoopConditionsMapper.map(forLoopCondition);
+      testStepDTO.setForLoopConditionDTOs(new ArrayList<>() {{ add(forLoopConditionDTO); }});
+    }
+    return testStepDTO;
   }
 
   @PostMapping

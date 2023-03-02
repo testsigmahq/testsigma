@@ -500,7 +500,7 @@ public class TestStepService extends XMLExportImportService<TestStep> {
                     stepsMap.put(step, "Custom Functions not supported in OS");
                     log.info("disabling Custom function test step to avoid further issues, since CSFs are deprecated");
                 }
-                if (step.getType() == TestStepType.FOR_LOOP) {
+                if (step.getType() == TestStepType.FOR_LOOP || step.getConditionType() == TestStepConditionType.LOOP_FOR) {
                     Optional<TestData> testData = testDataService.getRecentImportedEntity(importDTO, step.getDataMap().getForLoop().getTestDataId());
                     if (testData.isPresent())
                         step.getDataMap().getForLoop().setTestDataId(testData.get().getId());
@@ -515,7 +515,7 @@ public class TestStepService extends XMLExportImportService<TestStep> {
                     Optional<TestData> testData = testDataService.getRecentImportedEntity(importDTO, step.getTestDataProfileStepId());
                     testData.ifPresent(data -> step.setTestDataProfileStepId(data.getId()));
                 }
-                if (step.getType() == TestStepType.FOR_LOOP) {
+                if (step.getType() == TestStepType.FOR_LOOP || step.getConditionType() == TestStepConditionType.LOOP_FOR) {
                     Optional<TestData> testData = testDataService.getRecentImportedEntity(importDTO, step.getDataMap().getForLoop().getTestDataId());
                     testData.ifPresent(data -> step.getDataMap().getForLoop().setTestDataId(data.getId()));
                 }

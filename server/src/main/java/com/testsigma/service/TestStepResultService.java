@@ -149,7 +149,7 @@ public class TestStepResultService {
       updateTestData = updateTestDataSet(testDataSet, testCaseStepResult.getOutputData());
     }
 
-    if (TestStepType.FOR_LOOP == testCaseStepResult.getTestCaseStepType()) {
+    if (TestStepType.FOR_LOOP == testCaseStepResult.getTestCaseStepType() || testCaseStepResult.getConditionType() == TestStepConditionType.LOOP_FOR) {
       createTestCaseSteps(testCaseStepResult.getStepResults(), testDataSet, groupResultId, condStepsMap);
     } else if (TestStepType.STEP_GROUP == testCaseStepResult.getTestCaseStepType()) {
       boolean updated =

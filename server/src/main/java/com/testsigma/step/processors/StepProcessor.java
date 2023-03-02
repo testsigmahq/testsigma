@@ -146,7 +146,7 @@ public class StepProcessor {
 
     if ((testStepDTO.getType() != null &&
       (testStepDTO.getType() == com.testsigma.model.TestStepType.STEP_GROUP)
-      || (testStepDTO.getType() == com.testsigma.model.TestStepType.FOR_LOOP))) {
+      || (testStepDTO.getType() == com.testsigma.model.TestStepType.FOR_LOOP) || testStepDTO.getConditionType() == TestStepConditionType.LOOP_FOR)) {
       return exeTestStepEntity;
     }
 
@@ -405,8 +405,8 @@ public class StepProcessor {
               && ((childTestStepDTO.getParentId().equals(stepDTOEntity.getId()))
               || (childConditionalStepIds.contains(childTestStepDTO.getParentId())))) {
         if (childTestStepDTO.getType() != null &&
-                (TestStepType.FOR_LOOP.equals(childTestStepDTO.getType())
-                        || TestStepConditionType.LOOP_WHILE.equals(childTestStepDTO.getConditionType()))) {
+                (TestStepType.FOR_LOOP.equals(childTestStepDTO.getType()) ||
+                        (TestStepConditionType.LOOP_FOR.equals(childTestStepDTO.getConditionType()) || TestStepConditionType.LOOP_WHILE.equals(childTestStepDTO.getConditionType())))) {
           loadLoop(childTestStepDTO, stepDTOEntities);
         } else {
           childConditionalStepIds.add(childTestStepDTO.getId());

@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.testsigma.automator.constants.EnvSettingsConstants;
 import com.testsigma.automator.constants.NaturalTextActionConstants;
 import com.testsigma.automator.constants.AutomatorMessages;
+import com.testsigma.automator.constants.TestStepConditionType;
 import com.testsigma.automator.drivers.DriverManager;
 import com.testsigma.automator.entity.*;
 import com.testsigma.automator.exceptions.AutomatorException;
@@ -170,7 +171,8 @@ public abstract class TestcaseStepRunner {
         testCaseStepResult.setSkipMessage(AutomatorMessages.MSG_STEP_PRE_REQUISITE_FAILED);
       }
 
-      if (testCaseStepEntity.getType() != null && testCaseStepEntity.getType() == TestStepType.FOR_LOOP) {
+      if ((testCaseStepEntity.getType() != null && testCaseStepEntity.getType() == TestStepType.FOR_LOOP) ||
+              (testCaseStepEntity.getConditionType() != null && testCaseStepEntity.getConditionType() == ConditionType.LOOP_FOR)) {
         log.debug("For loop execution starts:" + testCaseStepEntity.getId() + " With Iteration:" + testCaseStepEntity.getIteration());
         status = executeForLoop(testCaseStepEntity, testCaseStepResult, testCaseStepResultMap, testCaseResult, parentStatus,
           failedToProcess, screenCaptureUtil, status);

@@ -84,7 +84,7 @@ public class ForLoopStepProcessor extends StepProcessor {
                     workspaceType, elementMap, loopChildEntity, testPlanId, dataSet, environmentParameters,
               testCaseEntityDTO, environmentParamSetName, testData.getTestDataName(),dataSetIndex).processStep();
 
-            if (loopChildEntity.getType() == TestStepType.FOR_LOOP) {
+            if (loopChildEntity.getType() == TestStepType.FOR_LOOP || loopChildEntity.getConditionType() == TestStepConditionType.LOOP_FOR) {
               loopIds.add(loopChildEntity.getId());
               new ForLoopStepProcessor(webApplicationContext, iteEntity.getTestCaseSteps(), workspaceType,
                 elementMap, loopChildEntity, testPlanId, dataSet, environmentParameters, testCaseEntityDTO,
@@ -125,7 +125,7 @@ public class ForLoopStepProcessor extends StepProcessor {
                 continue;
               }
 
-              if (TestStepType.FOR_LOOP == centity.getType()) {
+              if (TestStepType.FOR_LOOP == centity.getType() || centity.getConditionType() == TestStepConditionType.LOOP_FOR) {
                 loopIds.add(centity.getId());
                 new ForLoopStepProcessor(webApplicationContext, stepGroupSpecialSteps, workspaceType,
                   elementMap, centity, testPlanId, dataSet, environmentParameters, testCaseEntityDTO,

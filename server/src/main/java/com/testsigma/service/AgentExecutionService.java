@@ -11,6 +11,7 @@ package com.testsigma.service;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.testsigma.automator.entity.ConditionType;
 import com.testsigma.automator.entity.TestDeviceEntity;
 import com.testsigma.config.ApplicationConfig;
 import com.testsigma.config.StorageServiceFactory;
@@ -1168,7 +1169,8 @@ public class AgentExecutionService {
   private boolean isStepInsideForLoop(TestCaseStepEntityDTO testCaseStepEntity) throws ResourceNotFoundException {
     if (testCaseStepEntity.getParentId() != null) {
       TestStep testStep = testStepService.find(testCaseStepEntity.getParentId());
-      return (testStep.getType() == TestStepType.FOR_LOOP);
+      return (testStep.getType() == TestStepType.FOR_LOOP) ||
+              (testStep.getConditionType() != null && testStep.getConditionType() == TestStepConditionType.LOOP_FOR);
     }
     return false;
   }
@@ -1398,7 +1400,8 @@ public class AgentExecutionService {
       }
 
 
-      if (testStepDTO.getType() == TestStepType.FOR_LOOP) {
+      if (testStepDTO.getType() == TestStepType.FOR_LOOP ||
+              (testStepDTO.getConditionType() != null && testStepDTO.getConditionType() == TestStepConditionType.LOOP_FOR)) {
         loopIds.add(testStepDTO.getId());
         new ForLoopStepProcessor(webApplicationContext, toReturn, workspaceType, elementMap, testStepDTO,
           testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile, dataSetIndex).processLoop(testStepDTOS, loopIds);
@@ -1437,7 +1440,8 @@ public class AgentExecutionService {
             continue;
           }
 
-          if (subTestStepDTO.getType() == TestStepType.FOR_LOOP) {
+          if (subTestStepDTO.getType() == TestStepType.FOR_LOOP ||
+                  (subTestStepDTO.getConditionType() != null && subTestStepDTO.getConditionType() == TestStepConditionType.LOOP_FOR)) {
             loopIds.add(subTestStepDTO.getId());
             new ForLoopStepProcessor(webApplicationContext, stepGroupSpecialSteps, workspaceType, elementMap, subTestStepDTO,
               testPlanId, testDataSet, environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile, dataSetIndex)

@@ -201,7 +201,7 @@ export class TestStepResult extends ResultBase implements PageObject {
     return parsedStep;
   }
   get resultForLoopData() {
-    return this.metadata?.forLoop?.forLoopConditions;
+    return this.metadata?.forLoop?.forLoopCondition;
   }
   setForLoopDataValue(parsedStep) {
     let templateTestDataKeys = Object.keys(this.template?.data?.['testData']);
@@ -218,7 +218,7 @@ export class TestStepResult extends ResultBase implements PageObject {
     })
     templateTestDataKeys.forEach(parameter => {
       let data =  forLoopData?.setValuesParsed(parameter);
-      let span_class = this.template?.allowedValues?.[parameter]?.length ? 'nlp-selected-data' : '';
+      let span_class = this.template?.allowedValues?.[parameter]?.length ? 'action-selected-data' : '';
       if (!!data?.['value']) {
         parsedStep = parsedStep.replace('<TSTESTDAT ref="' + parameter + '">', '<span title="'+ (this.isCoordinateStep? data?.['value'] : '') +'" class="' + (span_class + ' action-test-data ') + parameter + '" data-reference="' + parameter + '">')
       }

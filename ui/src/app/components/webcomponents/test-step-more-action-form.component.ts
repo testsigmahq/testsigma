@@ -216,7 +216,7 @@ export class TestStepMoreActionFormComponent implements OnInit {
   getTextContent(testStep:TestStep){
     let stepText = `Step ${testStep.position + 1} - `
     if(testStep.isForLoop) {
-      return stepText + 'For Loop ';
+      return stepText + '(For Loop) '+ (testStep?.action)
     } else if (testStep.isStepGroup) {
       return stepText+ '(Stepgroup) '+(testStep?.stepGroup?.name)
     } else if (testStep.isRestStep) {

@@ -79,7 +79,7 @@ import {TestDataService} from "../../services/test-data.service";
             <span
               *ngIf="testStepResult.isForLoop">
             <i class="fa-power-loop mr-5 text-nowrap"></i>
-            #{{testStepResult.metadata?.forLoop?.index + 1}}
+            #{{testStepResult.metadata?.forLoop?.index}}
               ::&nbsp;
           </span>
             <span

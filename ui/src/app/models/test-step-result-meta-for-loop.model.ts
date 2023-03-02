@@ -19,8 +19,8 @@ export class TestStepResultMetaForLoop extends Base implements Deserializable {
   public testDataName: String;
   @serializable
   public index: Number;
-  @serializable(alias('for_loop_conditions', optional(object(ForLoopData))))
-  public forLoopConditions: ForLoopData
+  @serializable( optional(object(ForLoopData)))
+  public forLoopCondition: ForLoopData
 
   deserialize(input: any): this {
     return Object.assign(this, deserialize(TestStepResultMetaForLoop, input));

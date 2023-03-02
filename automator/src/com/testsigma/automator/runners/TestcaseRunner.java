@@ -111,6 +111,7 @@ public class TestcaseRunner {
         testCaseStepResult.setTestCaseStepId(testCaseStepEntity.getId());
         testCaseStepResult.setSkipExe(skipExecution);
         testCaseStepResult.setSkipMessage(resultFailureMessage);
+        testCaseStepResult.setForLoopCondition(testCaseStepEntity.getForLoopCondition());
       /*  if (!skipExecution && (workspaceType.equals(WorkspaceType.WebApplication) || workspaceType
           .equals(WorkspaceType.MobileWeb))) {
           url = getUrl();

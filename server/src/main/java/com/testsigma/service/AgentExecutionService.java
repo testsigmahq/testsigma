@@ -104,6 +104,7 @@ public class AgentExecutionService {
   private List<TestCaseDataDrivenResult> dataDrivenResultsReRunList;
   private Boolean isDataDrivenRerun;
   private final XrayCloudService xrayCloudService;
+  private final ForLoopConditionService forLoopConditionService;
 
 
   // ################################################  START  ###################################################

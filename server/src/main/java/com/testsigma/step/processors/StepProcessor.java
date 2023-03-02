@@ -769,7 +769,7 @@ public class StepProcessor {
     testStepEntityDTO.setTestDataProfileName(testCaseEntityDTO.getTestDataProfileName());
     testStepEntityDTO.setStepGroupParentForLoopStepIdTestDataSetMap(this.dataSetIndex);
     testStepEntityDTO.setParentHierarchy(testStepDTO.getParentHierarchy());
-    testStepEntityDTO.setForLoopConditionsEntity(forLoopConditions);
+    testStepEntityDTO.setForLoopCondition(forLoopConditions);
     populatedSnippetClassDetails(testStepEntityDTO);
     if (testStepEntityDTO.getTestCaseSteps() == null) {
       testStepEntityDTO.setTestCaseSteps(new ArrayList<>());

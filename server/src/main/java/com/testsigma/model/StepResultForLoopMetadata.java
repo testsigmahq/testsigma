@@ -2,6 +2,8 @@ package com.testsigma.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.testsigma.dto.ForLoopConditionDTO;
+import com.testsigma.web.request.ForLoopConditionRequest;
 import lombok.Data;
 
 @Data
@@ -12,4 +14,5 @@ public class StepResultForLoopMetadata {
   private String iteration;
   @JsonProperty("testdata")
   private String testDataName;
+  private ForLoopConditionDTO forLoopCondition;
 }

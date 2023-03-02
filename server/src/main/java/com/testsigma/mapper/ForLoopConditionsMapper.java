@@ -1,5 +1,6 @@
 package com.testsigma.mapper;
 
+import com.testsigma.automator.entity.ForLoopConditionsEntity;
 import com.testsigma.dto.ForLoopConditionDTO;
 import com.testsigma.dto.export.ForLoopConditionXMLDTO;
 import com.testsigma.model.ForLoopCondition;

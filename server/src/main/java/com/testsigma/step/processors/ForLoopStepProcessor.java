@@ -1,6 +1,7 @@
 package com.testsigma.step.processors;
 
 import com.testsigma.constants.MessageConstants;
+import com.testsigma.dto.ForLoopConditionDTO;
 import com.testsigma.dto.TestCaseEntityDTO;
 import com.testsigma.dto.TestCaseStepEntityDTO;
 import com.testsigma.dto.TestStepDTO;
@@ -47,7 +48,7 @@ public class ForLoopStepProcessor extends StepProcessor {
     if(forLoopConditionOptional.isEmpty()) {
       throw new ResourceNotFoundException("For loop condition not found for test step id: " + testStepDTO.getId());
     }
-
+    ForLoopConditionDTO forLoopConditionDTO = this.forLoopConditionsMapper.map(forLoopConditionOptional.get());
     Long testDataId = forLoopConditionOptional.get().getTestDataProfileId();
     Integer start = 1, end;
     TestData testData = testDataProfileService.find(testDataId);
@@ -166,6 +167,7 @@ public class ForLoopStepProcessor extends StepProcessor {
           populateStepDetails(testStepDTO, iteEntity);
           iteEntity.setAction(parentEntity.getAction());
           iteEntity.setVisualEnabled(parentEntity.getVisualEnabled());
+          iteEntity.setForLoopCondition(forLoopConditionDTO);
           entityList.add(iteEntity);
         }
       }

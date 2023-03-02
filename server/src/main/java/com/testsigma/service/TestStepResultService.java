@@ -10,6 +10,7 @@
 package com.testsigma.service;
 
 import com.testsigma.constants.AutomatorMessages;
+import com.testsigma.mapper.ForLoopConditionsMapper;
 import com.testsigma.mapper.TestStepResultMapper;
 import com.testsigma.model.*;
 import com.testsigma.repository.TestStepResultRepository;
@@ -38,6 +39,7 @@ public class TestStepResultService {
   private final TestDataProfileService testDataProfileService;
   private final SuggestionResultMappingService suggestionResultMappingService;
   private final TestCaseResultService testCaseResultService;
+  private final ForLoopConditionsMapper forLoopConditionsMapper;
 
   public Page<TestStepResult> findAll(Specification<TestStepResult> spec, Pageable pageable) {
     return this.testStepResultRepository.findAll(spec, pageable);
@@ -118,6 +120,7 @@ public class TestStepResultService {
       loopData.setIteration(testCaseStepResult.getIteration());
       loopData.setIndex(testCaseStepResult.getIndex());
       loopData.setTestDataName(testCaseStepResult.getTestDataProfileName());
+      loopData.setForLoopCondition(testCaseStepResult.getForLoopCondition());
       testCaseStepResult.getMetadata().setForLoop(loopData);
     } else if (TestStepConditionType.LOOP_WHILE == testCaseStepResult.getConditionType()) {
       StepResultWhileLoopMetadataRequest loopData = new StepResultWhileLoopMetadataRequest();

@@ -67,7 +67,7 @@ public class TestCaseStepEntity implements Cloneable {
   private Long maxIterations;
   private Boolean runCurrentStep = Boolean.FALSE;
   private String parentHierarchy;
-  private ForLoopConditionsEntity forLoopConditionsEntity;
+  private ForLoopConditionsEntity forLoopCondition;
 
   public TestCaseStepEntity clone() throws CloneNotSupportedException {
     TestCaseStepEntity exeStepEntity = (TestCaseStepEntity) super.clone();

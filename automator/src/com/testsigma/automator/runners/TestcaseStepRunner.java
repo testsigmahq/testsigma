@@ -101,6 +101,7 @@ public abstract class TestcaseStepRunner {
     testCaseStepResult.setTestPlanRunSettingEntity(testPlanRunSettingEntity);
     testCaseStepResult.setPriority(testCaseStepEntity.getPriority());
     testCaseStepResult.setVisualEnabled(testCaseStepEntity.getVisualEnabled());
+    testCaseStepResult.setForLoopCondition(testCaseStepEntity.getForLoopCondition());
 
     Map<String, String> envDetails = new HashMap<String, String>();
     envDetails.put("testcaseId", testCaseResult.getTestCaseId() + "");

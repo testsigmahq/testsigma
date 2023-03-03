@@ -63,7 +63,7 @@ public interface TestStepRecorderMapper {
     @Mapping(target = "addonNaturalTextActionData", ignore = true)
     @Mapping(target = "addonElements", source = "kibbutzPluginNlpData.uiIdentifiers")
     @Mapping(target = "addonActionId", source = "kibbutzPluginNlpId")
-    @Mapping(target = "element", source = "testStepRecorderRequest.elementRequest.name")
+    @Mapping(target = "element", source = "testStepRecorderRequest.dataMap.uiIdentifier")
     TestStepRequest mapRequest(TestStepRecorderRequest testStepRecorderRequest);
 
     TestStepDataMap mapDataMap(TestStepRecorderDataMap testStepRecorderDataMap);

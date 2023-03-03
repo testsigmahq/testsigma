@@ -4,6 +4,7 @@ import com.testsigma.automator.AutomatorConfig;
 import com.testsigma.automator.constants.AutomatorMessages;
 import com.testsigma.automator.constants.DriverSessionType;
 import com.testsigma.automator.constants.ErrorCodes;
+import com.testsigma.automator.constants.NaturalTextActionConstants;
 import com.testsigma.automator.drivers.DriverManager;
 import com.testsigma.automator.entity.*;
 import com.testsigma.automator.exceptions.AutomatorException;
@@ -40,6 +41,8 @@ public abstract class TestsuiteRunner {
   private HttpClient httpClient;
   private int testCaseFetchWaitInterval;
   private int testCaseFetchMaxTries;
+  private static final String TEST_CASE_PREREQUISITE_FAILED = "TestCase prerequisite failed with ";
+
 
 
   public TestsuiteRunner() {
@@ -194,11 +197,11 @@ public abstract class TestsuiteRunner {
           testCaseRunFailed = true;
           resultFailureMessage = e.getMessage();
           testCaseResult.setResult(ResultConstant.STOPPED);
-          testCaseResult.setMessage(resultFailureMessage);
+          testCaseResult.setMessage(TEST_CASE_PREREQUISITE_FAILED + resultFailureMessage);
         } catch (AutomatorException e) {
           log.error(e.getMessage(), e);
           testCaseRunFailed = true;
-          resultFailureMessage = e.getMessage();
+          resultFailureMessage = TEST_CASE_PREREQUISITE_FAILED + e.getMessage();
           testCaseResult.setResult(ResultConstant.FAILURE);
           testCaseResult.setMessage(resultFailureMessage);
         }

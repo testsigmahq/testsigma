@@ -7,8 +7,22 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum IterationType {
-    INDEX,
-    SET_NAME,
-    PARAMETER_VALUE,
-    VALUE_TYPE;
+    INDEX(1, "Index"),
+    SET_NAME(2, "Set Name"),
+    PARAMETER_VALUE(3, "Parameter Value"),
+    VALUE_TYPE(4, "Value Type");
+
+
+    private final Integer id;
+
+    private final String name;
+
+    public static IterationType getById(Integer id) {
+        for (IterationType type : values()) {
+            if (type.getId().equals(id)) {
+                return type;
+            }
+        }
+        return null;
+    }
 }

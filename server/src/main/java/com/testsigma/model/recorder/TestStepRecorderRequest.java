@@ -30,7 +30,7 @@ public class TestStepRecorderRequest {
     private Long phoneNumberId;
     private Long kibbutzPluginNlpId;
     private KibbutzPluginNLPData kibbutzPluginNlpData;
-    private ForLoopConditionRequest forLoopConditionsRequest;
+    private ForLoopConditionRecorderRequest forLoopCondition;
     private Long mailBoxId;
     private Boolean disabled;
     private Boolean ignoreStepResult;

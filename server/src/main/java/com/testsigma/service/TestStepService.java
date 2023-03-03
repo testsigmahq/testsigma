@@ -19,6 +19,7 @@ import com.testsigma.event.EventType;
 import com.testsigma.event.TestStepEvent;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaException;
+import com.testsigma.mapper.ForLoopConditionsMapper;
 import com.testsigma.mapper.RestStepMapper;
 import com.testsigma.mapper.TestStepMapper;
 import com.testsigma.mapper.recorder.TestStepRecorderMapper;
@@ -66,6 +67,8 @@ public class TestStepService extends XMLExportImportService<TestStep> {
     private final ImportAffectedTestCaseXLSExportService affectedTestCaseXLSExportService;
     private final TestStepMapper testStepMapper;
     private final TestStepRecorderMapper testStepRecorderMapper;
+    private final ForLoopConditionService forLoopConditionService;
+    private final ForLoopConditionsMapper forLoopConditionsMapper;
 
     private final List<ActionTestDataMap> actionTestDataMap = getMapsList();
     private final List<Integer> depreciatedIds = DeprecatedActionMapper.getAllDeprecatedActionIds();
@@ -625,6 +628,16 @@ public class TestStepService extends XMLExportImportService<TestStep> {
                 testStepDTOSToReturn.add(testStepDTO);
         }
         return testStepDTOSToReturn;
+    }
+
+    public List<TestStepRecorderDTO> setForLoopConditions(List<TestStepRecorderDTO> testStepDTOS) {
+        for(TestStepRecorderDTO testStepRecorderDTO : testStepDTOS) {
+            if(testStepRecorderDTO.getConditionType() == TestStepConditionType.LOOP_FOR) {
+                ForLoopCondition forLoopCondition = forLoopConditionService.findByTestStepId(testStepRecorderDTO.getId()).get();
+                testStepRecorderDTO.setForLoopCondition(forLoopConditionsMapper.getForLoopConditionDTO(forLoopCondition));
+            }
+        }
+        return testStepDTOS;
     }
 
     private void setTemplateId(TestStep present, BackupDTO importDTO) throws ResourceNotFoundException {

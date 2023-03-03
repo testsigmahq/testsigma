@@ -11,7 +11,7 @@ CREATE TABLE `for_step_conditions` (
     `left_param_type` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
     `left_param_value` TEXT DEFAULT NULL,
     `operator` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
-    `right_param_type` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
+    `right_param_type` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
     `right_param_value` TEXT DEFAULT NULL,
     `left_function_id` bigint(20) DEFAULT NULL,
     `right_function_id` bigint(20) DEFAULT NULL,

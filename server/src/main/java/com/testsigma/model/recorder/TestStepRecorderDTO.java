@@ -60,7 +60,8 @@ public class TestStepRecorderDTO implements Cloneable, Serializable {
     private List<String> invalidUiIdentifierList = new ArrayList<>();
     private List<String> invalidTestDataList = new ArrayList<>();
     private UiIdentifierDTO uiIdentifierDTO;
-    private List<ForLoopConditionDTO> forLoopConditionDTOs;
+
+    private ForLoopConditionRecorderDTO forLoopCondition;
     // private List<TestStepDataOverriddenMappingDTO> testStepDataOverRiddenMappings;
     //private List<UiIdentifierOverRiddenMappingDTO> uiIdentifierOverRiddenMappings;
     //private ForLoopOverRiddenMappingDTO forLoopOverRiddenMapping;

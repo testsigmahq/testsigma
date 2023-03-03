@@ -16,6 +16,7 @@ CREATE TABLE `natural_text_actions`
   `updated_date`    DATETIME     DEFAULT CURRENT_TIMESTAMP,
   `allowed_values` mediumtext COLLATE utf8_unicode_ci,
   `condition_type`       varchar(255) DEFAULT NULL,
+  `loop_type` varchar(1000) default NULL,
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8

@@ -17,6 +17,7 @@ import com.testsigma.service.TestStepService;
 import com.testsigma.specification.TestStepSpecificationsBuilder;
 import com.testsigma.util.HttpClient;
 import com.testsigma.web.request.ElementRequest;
+import com.testsigma.web.request.ForLoopConditionRequest;
 import com.testsigma.web.request.RestStepRequest;
 import com.testsigma.web.request.TestStepRequest;
 import lombok.RequiredArgsConstructor;
@@ -66,6 +67,7 @@ public class TestStepsRecorderController {
         testDataDTOS = this.service.filterWhileParentSteps(testDataDTOS);
         List<TestStepRecorderDTO> testStepRecorderDTOS = testStepRecorderMapper.mapDTOs(testDataDTOS);
         testStepRecorderDTOS = this.service.setNestedChildElements(testStepRecorderDTOS);
+        testStepRecorderDTOS = this.service.setForLoopConditions(testStepRecorderDTOS);
         return new PageImpl<>(testStepRecorderDTOS, pageable, testStep.getTotalElements());
     }
 
@@ -96,7 +98,6 @@ public class TestStepsRecorderController {
             element = elementService.createUiIdentifierFromRecorder(element);
             request.getDataMap().setUiIdentifier(element.getName());
 
-
             TestStepRequest testStepRequest = testStepRecorderMapper.mapRequest(request);
             replaceCamelCase(testStepRequest.getDataMap());
             mapper.merge(testStepRequest, testStep);
@@ -117,6 +118,20 @@ public class TestStepsRecorderController {
             testStep = this.service.update(mapper.map(testStepRequest), true);
             testStepDTO = mapper.mapDTO(testStep);
             testStepRecorderDTO = testStepRecorderMapper.mapDTO(testStepDTO);
+        }
+
+        if (request.getForLoopCondition() != null) {
+            Optional<ForLoopCondition> forLoopConditionOptional = forLoopConditionsService.findByTestStepId(testStepDTO.getId());
+            ForLoopCondition forLoopCondition = new ForLoopCondition();
+            if(forLoopConditionOptional.isPresent()) {
+                forLoopCondition = forLoopConditionOptional.get();
+            }
+            ForLoopConditionRequest forLoopConditionRequestV1 = forLoopConditionsMapper.getForConditionEntity(request.getForLoopCondition());
+            forLoopConditionsMapper.merge(forLoopCondition, forLoopConditionRequestV1);
+            forLoopCondition.setTestStepId(testStep.getId());
+            forLoopCondition = forLoopConditionsService.save(forLoopCondition);
+            testStepRecorderDTO.setForLoopCondition(forLoopConditionsMapper.getForLoopConditionDTO(forLoopCondition));
+
         }
         testStepRecorderDTO.setParentId(parentStepId);
         return testStepRecorderDTO;
@@ -176,12 +191,13 @@ public class TestStepsRecorderController {
         if(testStepRecorderDTO.getUiIdentifierDTO() != null) {
             testStepRecorderDTO.getDataMap().setUiIdentifier(testStepRecorderDTO.getUiIdentifierDTO().getName());
         }
-        if (request.getForLoopConditionsRequest() != null) {
-            ForLoopCondition forLoopCondition = forLoopConditionsMapper.map(request.getForLoopConditionsRequest());
+        if (request.getForLoopCondition() != null) {
+            ForLoopConditionRequest forLoopConditionRequestV1 = forLoopConditionsMapper.getForConditionEntity(request.getForLoopCondition());
+            ForLoopCondition forLoopCondition = forLoopConditionsMapper.map(forLoopConditionRequestV1);
             forLoopCondition.setTestStepId(testStep.getId());
+            forLoopCondition.setTestCaseId(testStepRecorderDTO.getTestCaseId());
             forLoopCondition = forLoopConditionsService.save(forLoopCondition);
-            ForLoopConditionDTO forLoopConditionDTO = forLoopConditionsMapper.map(forLoopCondition);
-            testStepRecorderDTO.setForLoopConditionDTOs(new ArrayList<>() {{ add(forLoopConditionDTO); }});
+            testStepRecorderDTO.setForLoopCondition(forLoopConditionsMapper.getForLoopConditionDTO(forLoopCondition));
         }
         testStepRecorderDTO.setParentId(parentStepId);
         return testStepRecorderDTO;
@@ -248,6 +264,18 @@ public class TestStepsRecorderController {
                 testStep = this.service.update(mapper.map(testStepRequest), true);
                 testStepDTO = mapper.mapDTO(testStep);
                 testStepRecorderDTO = testStepRecorderMapper.mapDTO(testStepDTO);
+            }
+            if (request.getForLoopCondition() != null) {
+                Optional<ForLoopCondition> forLoopConditionOptional = forLoopConditionsService.findByTestStepId(testStepDTO.getId());
+                ForLoopCondition forLoopCondition = new ForLoopCondition();
+                if(forLoopConditionOptional.isPresent()) {
+                    forLoopCondition = forLoopConditionOptional.get();
+                }
+                ForLoopConditionRequest forLoopConditionRequestV1 = forLoopConditionsMapper.getForConditionEntity(request.getForLoopCondition());
+                forLoopConditionsMapper.merge(forLoopCondition, forLoopConditionRequestV1);
+                forLoopCondition.setTestStepId(testStep.getId());
+                forLoopCondition = forLoopConditionsService.save(forLoopCondition);
+                testStepRecorderDTO.setForLoopCondition(forLoopConditionsMapper.getForLoopConditionDTO(forLoopCondition));
             }
             testStepRecorderDTOS.add(testStepRecorderDTO);
         }

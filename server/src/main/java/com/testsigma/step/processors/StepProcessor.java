@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 @Log4j2
 public class StepProcessor {
+  public final static String PARENT_STEP_STR = "_steps";
   protected static Integer LOOP_END = -1;
   protected static Integer LOOP_START = -1;
   public static String TESTSIGMA_STORAGE = "testsigma-storage:/";

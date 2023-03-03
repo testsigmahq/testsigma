@@ -6,6 +6,7 @@ public class MessageConstants {
   public static final String REPORT_GENERATION_FAILED_TEST_PLAN_RUN_IS_NOT_COMPLETED = "Report generation failed, Test plan run is not completed";
   public static final String ELEMENT_WITH_THE_NAME_IS_NOT_AVAILABLE = "Element with the name \"?1\" is not available";
   public static final String MSG_START_SET_NAME_MISSING = "Given start Set Name (%s) is missing on test data profile. ";
+  public static String NO_ITERATIONS_FILTERED = "No TestData sets matching with the criteria. ";
   public static final String MSG_END_SET_NAME_MISSING = "Given start Set Name (%s) is missing on test data profile. ";
   public static final String MSG_START_SET_NAME_GREATER_POSITION_THAN_END_SET_NAME = "Given start Set Name (%s) position (%s) is grater than end Set Name (%s) position (%s) on test data profile.";
   public static final String MSG_INVALID_START_INDEX = "start index must be greater or equals 1. but its value is %s ";

@@ -55,7 +55,14 @@ public class ForLoopStepProcessor extends StepProcessor {
 
     List<TestCaseStepEntityDTO> entityList = new ArrayList<>();
     List<TestDataSet> dataBank = testData.getTempTestData();
-    Set<String> iterations = getIterations().stream().map(name -> name.getName()).collect(Collectors.toSet());
+    Set<String> iterations = new HashSet<>();
+    String message = "";
+    try {
+      iterations = getIterations().stream().map(name -> name.getName()).collect(Collectors.toSet());
+    } catch (Exception e) {
+      log.error("Loop Iteration filter failed" + e.getMessage(), e);
+      message = e.getMessage();
+    }
     if ((dataBank != null) && dataBank.size() > 0) {
       start = (start.equals(LOOP_START)) ? 1 : start;
       end = dataBank.size();
@@ -64,7 +71,19 @@ public class ForLoopStepProcessor extends StepProcessor {
         for (int i = start - 1; i < end && i < dataBank.size(); i++) {
           TestStepDTO parentEntity = testStepDTO.clone();
           if(!iterations.contains(dataBank.get(i).getName())) {
-              continue;
+            TestStepDTO loopParentStepDTO = testStepDTO.clone();
+            TestCaseStepEntityDTO loopParentStepEntityDTO = super.initEntity(loopParentStepDTO);
+            populateStepDetails(testStepDTO, loopParentStepEntityDTO);
+            loopParentStepEntityDTO.setFailureMessage(MessageConstants.NO_ITERATIONS_FILTERED + message);
+            loopParentStepEntityDTO.setTestDataId(testDataId);
+            loopParentStepEntityDTO.setParentHierarchy(testCaseEntityDTO.getParentHierarchy()
+                    + StepProcessor.PARENT_STEP_STR + testStepDTO.getId());
+            if (testDataName != null) {
+              loopParentStepEntityDTO.setTestDataName(testDataName);
+              loopParentStepEntityDTO.setTestDataProfileName(testDataName);
+            }
+            entityList.add(loopParentStepEntityDTO);
+            continue;
           }
           TestDataSet dataSet = dataBank.get(i);
           TestCaseStepEntityDTO iteEntity = new TestCaseStepEntityDTO(); //iterableEntity -- Iteration

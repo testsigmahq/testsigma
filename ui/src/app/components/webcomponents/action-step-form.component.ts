@@ -1706,7 +1706,8 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       dataProfileIds : this.testStep.getAllParentLoopTDPIds(this.testStep,this.testCase,this.testSteps),
       versionId: this.version?.id,
       testCaseId: this.testCase?.id,
-      stepRecorderView: Boolean(this.stepRecorderView),
+      testCase: this.testCase,
+      stepRecorderView: Boolean(this.stepRecorderView)
     };
     console.log(suggestionData);
     if(this.sendSuggestionDetails(suggestionData, this.mobileRecorderEventService.suggestionDataProfile)) {

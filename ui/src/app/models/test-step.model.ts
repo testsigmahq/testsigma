@@ -514,12 +514,12 @@ export class TestStep extends Base implements PageObject {
   getParentLoopDataId(testStep, testCase) {
     if (testStep.parentStep) {
       if (testStep.parentStep.isForLoop) {
-        return testStep.parentStep?.forLoopTestDataId;
+        return testStep.parentStep?.forLoopData?.testDataProfileId;
       } else {
         return this.getParentLoopDataId(testStep.parentStep, testCase);
       }
     } else {
-      return testCase?.testDataId;
+      return testCase?.testDataProfileId;
     }
   }
 
@@ -528,7 +528,13 @@ export class TestStep extends Base implements PageObject {
       this.setStepDisplayNumber(testSteps.content);
       const parentStep = testStep.parentStep || testSteps.content.find((_testStep)=> _testStep.id===testStep.parentId );
       if( parentStep.isForLoop ){
-        tdpDatas.push({ tdpId : parentStep.forLoopTestDataId , stepDisplayNumber : `${parentStep.stepDisplayNumber}`, startIndex : parentStep?.forLoopStartIndex , endIndex : parentStep?.forLoopEndIndex , id:isImmediateLoop?null:parentStep.id , })
+        tdpDatas.push({
+          tdpId: parentStep.forLoopData?.testDataProfileId,
+          stepDisplayNumber: `${parentStep.stepDisplayNumber}`,
+          startIndex: parentStep?.forLoopData?.leftParamValue,
+          endIndex: parentStep?.forLoopData?.rightParamValue,
+          id: parentStep.id,
+        })
         isImmediateLoop=false;
       };
       return this.getAllParentLoopTDPIds(parentStep,testCase,testSteps,tdpDatas,isImmediateLoop);

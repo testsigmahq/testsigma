@@ -12,6 +12,7 @@ import {NotificationsService, NotificationType} from "angular2-notifications";
 import {TranslateService} from "@ngx-translate/core";
 import {Page} from "../../shared/models/page";
 import {TestData} from "../../models/test-data.model";
+import {TestCase} from "../../models/test-case.model";
 
 @Component({
   selector: 'app-action-test-data-parameter-suggestion',
@@ -19,7 +20,8 @@ import {TestData} from "../../models/test-data.model";
   styles: []
 })
 export class ActionTestDataParameterSuggestionComponent  extends BaseComponent implements OnInit  {
-  testDataProfileDetails;
+
+  @Optional() @Input('testDataProfileDetails') testDataProfileDetails;
   @Optional() @Input('mobileDataProfileDetails') mobileDataProfileDetails;
   public dataProfileSuggestion: any[];
   public filteredSuggestion: any[];
@@ -30,6 +32,7 @@ export class ActionTestDataParameterSuggestionComponent  extends BaseComponent i
   public isQueryBased: boolean = false;
   public versionId: number;
   public testCaseId: number;
+  public testcase: TestCase;
   public multiDataProfileSuggestions: any[];
   public filteredMultiDataProfileSuggestions:any[];
   public showRefreshOption: boolean=false;
@@ -44,7 +47,7 @@ export class ActionTestDataParameterSuggestionComponent  extends BaseComponent i
     private dialogRef: MatDialogRef<ActionTestDataParameterSuggestionComponent, any>,
     private testDataService: TestDataService,
     public testCaseService: TestCaseService,
-    @Inject(MAT_DIALOG_DATA) public option: { dataProfileId?: number, dataProfileIds?:any[], versionId: number, testCaseId: number, stepRecorderView: boolean },
+    @Inject(MAT_DIALOG_DATA) public option: { dataProfileId?: number, dataProfileIds?:any[], versionId: number, testCaseId: number, stepRecorderView: boolean ,testCase: TestCase },
     private mobileRecorderEventService: MobileRecorderEventService,
     public authGuard: AuthenticationGuard,
     public notificationsService: NotificationsService,
@@ -53,6 +56,7 @@ export class ActionTestDataParameterSuggestionComponent  extends BaseComponent i
     super(authGuard, notificationsService, translate);
     this.versionId = this.option.versionId;
     this.testCaseId = this.option.testCaseId;
+    this.testcase = this.option.testCase;
   }
 
   ngOnInit(): void {
@@ -60,6 +64,7 @@ export class ActionTestDataParameterSuggestionComponent  extends BaseComponent i
       this.option = this.testDataProfileDetails;
       this.versionId = this.option.versionId;
       this.testCaseId = this.option.testCaseId;
+      this.testcase = this.option.testCase;
     }
     if (this.mobileDataProfileDetails) {
       this.option = this.mobileDataProfileDetails;
@@ -114,9 +119,9 @@ export class ActionTestDataParameterSuggestionComponent  extends BaseComponent i
             return dataProfile.tdpId === data.id;
           });
           let newTestData = Object.assign({},testData);
-          newTestData.testDataProfileStepId = testData.id;
+          newTestData.testDataProfileStepId = dataProfile.id;
           newTestData.name=`${newTestData.name}${dataProfile.stepDisplayNumber?` [#${dataProfile.stepDisplayNumber}]`:''}`;
-            newTestData.parameters = Object.keys(newTestData.data[0].data);
+          newTestData.parameters = Object.keys(newTestData.data[0].data);
           contentOrder.push(newTestData);
         });
         this.testDataProfileDetails=res;

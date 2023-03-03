@@ -8,10 +8,16 @@ import lombok.Getter;
 @Getter
 public enum Operator {
     CONTAINS(1, "contains"),
-    STARTS_WITH(2, "Start With"),
-    ENDS_WITH(3, "Ends with"),
-    EQUALS(4, "Equals"),
-    IN(5, "IN");
+    STARTS_WITH(2, "start with"),
+    ENDS_WITH(3, "ends with"),
+    EQUALS(4, "equals"),
+    IN(5, "in"),
+    IS_EMPTY(6, "is empty"),
+    IS_NOT_EMPTY(7, "is not empty"),
+    BETWEEN(8, "between"),
+    GREATER_THAN(9, "greater than"),
+    LESS_THAN(10, "less than"),
+    NONE(11, "contains/startwith/Endswith/Equals/IN");
 
     private final Integer id;
 

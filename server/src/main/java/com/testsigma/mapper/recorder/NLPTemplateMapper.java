@@ -2,6 +2,7 @@ package com.testsigma.mapper.recorder;
 
 import com.testsigma.constants.NaturalTextActionConstants;
 import com.testsigma.dto.NaturalTextActionsDTO;
+import com.testsigma.model.Operator;
 import com.testsigma.model.recorder.NLPTemplateDTO;
 
 import java.util.*;
@@ -74,7 +75,11 @@ public interface NLPTemplateMapper {
                     result.getAllowedValues().remove("test-data");
                     if(allowedValues.equals("operator")) {
                         result.getData().getTestData().put("operator", dto.getData().getTestData().get("operator"));
-                        result.getAllowedValues().put("operator", dto.getAllowedValues().get("test-data"));
+                        if(dto.getLoopType().equals("PARAMETER_VALUE") && dto.getNaturalText().endsWith("{operator}")) {
+                            result.getAllowedValues().put("operator", Operator.getForLoopOperatorsEmpty());
+                        } else {
+                            result.getAllowedValues().put("operator", Operator.getForLoopOperatorsExceptEmpty());
+                        }
                     }
                     else if(allowedValues.equals("left-data")) {
                         grammar = result.getGrammar().replaceAll("left-data", "leftData");

@@ -31,7 +31,7 @@ public class OldResultMigrationScheduler {
     private final TestStepResultMapper testStepResultMapper;
     private int pageSize = 100;
 
-    @Scheduled(cron = "0 0/5 * * * *")
+    @Scheduled(cron = "0 0/3 * * * *")
     public void perform() throws Exception {
         log.debug("old step migration is started");
         int currentPage = 0;

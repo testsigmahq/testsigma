@@ -70,11 +70,11 @@ public class ForLoopStepProcessor extends StepProcessor {
       if (testStepDTO.getTestStepDTOS() != null && testStepDTO.getTestStepDTOS().size() > 0) {
         for (int i = start - 1; i < end && i < dataBank.size(); i++) {
           TestStepDTO parentEntity = testStepDTO.clone();
-          if(!iterations.contains(dataBank.get(i).getName())) {
+          if(!iterations.contains(dataBank.get(i).getName()) && iterations.size() == 0) {
             TestStepDTO loopParentStepDTO = testStepDTO.clone();
             TestCaseStepEntityDTO loopParentStepEntityDTO = super.initEntity(loopParentStepDTO);
             populateStepDetails(testStepDTO, loopParentStepEntityDTO);
-            loopParentStepEntityDTO.setFailureMessage(MessageConstants.NO_ITERATIONS_FILTERED + message);
+            loopParentStepEntityDTO.setFailureMessage(MessageConstants.NO_ITERATIONS_FILTERED);
             loopParentStepEntityDTO.setTestDataId(testDataId);
             loopParentStepEntityDTO.setParentHierarchy(testCaseEntityDTO.getParentHierarchy()
                     + StepProcessor.PARENT_STEP_STR + testStepDTO.getId());
@@ -83,7 +83,7 @@ public class ForLoopStepProcessor extends StepProcessor {
               loopParentStepEntityDTO.setTestDataProfileName(testDataName);
             }
             entityList.add(loopParentStepEntityDTO);
-            continue;
+            break;
           }
           TestDataSet dataSet = dataBank.get(i);
           TestCaseStepEntityDTO iteEntity = new TestCaseStepEntityDTO(); //iterableEntity -- Iteration

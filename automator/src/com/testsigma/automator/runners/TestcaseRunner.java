@@ -217,6 +217,9 @@ public class TestcaseRunner {
           testCaseStepsResult = new ArrayList<>();
           testCaseResult.setCurrentIndex(currentIndex);
         }
+        if(testCaseStepEntity.getFailureMessage() != null && !testCaseStepEntity.getFailureMessage().equals(AutomatorMessages.NO_ITERATIONS_FILTERED)) {
+          break;
+        }
 
       }
       testCaseResult.setTestCaseStepResults(testCaseStepsResult);

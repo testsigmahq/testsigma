@@ -14,7 +14,6 @@ import com.testsigma.constants.NaturalTextActionConstants;
 import com.testsigma.model.*;
 import com.testsigma.model.recorder.RecorderTestStepNlpData;
 import com.testsigma.model.recorder.TestStepRecorderDataMap;
-import com.testsigma.model.recorder.TestStepRecorderForLoop;
 import lombok.Data;
 import lombok.ToString;
 import org.json.JSONObject;
@@ -64,7 +63,7 @@ public class TestStepDTO implements Cloneable, Serializable {
   private Map<String, AddonTestStepTestData> addonTestData;
   private Map<String, AddonElementData> addonElements;
   @ToString.Exclude
-  private List<ForLoopConditionDTO> forLoopConditionDTOs;
+  private ForLoopConditionDTO forLoopCondition;
   private Boolean disabled;
   private Boolean ignoreStepResult;
   private Long testDataProfileStepId;

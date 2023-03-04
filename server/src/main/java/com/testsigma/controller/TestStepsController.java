@@ -21,7 +21,6 @@ import com.testsigma.service.ForLoopConditionService;
 import com.testsigma.service.TestStepService;
 import com.testsigma.specification.TestStepSpecificationsBuilder;
 import com.testsigma.util.HttpClient;
-import com.testsigma.web.request.ForLoopConditionRequest;
 import com.testsigma.web.request.RestStepRequest;
 import com.testsigma.web.request.TestStepRequest;
 import lombok.RequiredArgsConstructor;
@@ -93,7 +92,7 @@ public class TestStepsController {
       forLoopCondition.setTestStepId(testStep.getId());
       forLoopCondition = forLoopConditionsService.save(forLoopCondition);
       ForLoopConditionDTO forLoopConditionDTO = forLoopConditionsMapper.map(forLoopCondition);
-      testStepDTO.setForLoopConditionDTOs(new ArrayList<>() {{ add(forLoopConditionDTO); }});
+      testStepDTO.setForLoopCondition(forLoopConditionDTO);
     }
     return testStepDTO;
   }
@@ -113,7 +112,7 @@ public class TestStepsController {
       forLoopCondition.setTestStepId(testStep.getId());
       forLoopCondition = forLoopConditionsService.save(forLoopCondition);
       ForLoopConditionDTO forLoopConditionDTO = forLoopConditionsMapper.map(forLoopCondition);
-      testStepDTO.setForLoopConditionDTOs(new ArrayList<>() {{ add(forLoopConditionDTO); }});
+      testStepDTO.setForLoopCondition(forLoopConditionDTO);
     }
     return testStepDTO;
   }

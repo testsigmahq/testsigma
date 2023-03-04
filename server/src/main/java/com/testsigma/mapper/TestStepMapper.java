@@ -25,6 +25,7 @@ import java.util.Map;
   nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface TestStepMapper {
   @Mapping(target = "dataMap", expression = "java(testStep.getDataMap())")
+  @Mapping(target = "forLoopCondition", expression = "java(this.mapForLoopConditionDTO(testStep.getForLoopConditions()))")
   TestStepXMLDTO mapTestStep(TestStep testStep);
 
   List<TestStepXMLDTO> mapTestSteps(List<TestStep> testSteps);
@@ -97,8 +98,15 @@ public interface TestStepMapper {
 
   List<ForLoopConditionXMLDTO> mapToCloudForConditions(List<TestStep> testSteps);
 
+  default ForLoopCondition mapForLoopCondition(List<ForLoopCondition> forLoopCondition) {
+    if(forLoopCondition != null && forLoopCondition.size() > 0) {
+      return forLoopCondition.get(0);
+    }
+    return null;
+  }
+
   default ForLoopConditionDTO mapForLoopConditionDTO(List<ForLoopCondition> forLoopCondition) {
-    if(forLoopCondition.size() > 0) {
+    if(forLoopCondition != null && forLoopCondition.size() > 0) {
       return mapDTO(forLoopCondition.get(0));
     }
     return null;

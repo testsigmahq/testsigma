@@ -1,5 +1,6 @@
 package com.testsigma.mapper;
 
+import com.testsigma.dto.ForLoopConditionDTO;
 import com.testsigma.dto.export.*;
 import com.testsigma.model.*;
 import com.testsigma.service.ObjectMapperService;
@@ -59,6 +60,30 @@ public interface RestStepMapper {
             list.add(step);
         }
         return list;
+    }
+
+    @Mapping(target = "forLoopConditions", expression = "java(mapToForLoopCondition(readValue.getForLoopCondition()))")
+    TestStep mapTestStep(TestStepXMLDTO readValue);
+
+    default List<ForLoopCondition> mapToForLoopCondition(ForLoopConditionDTO forLoopConditionDTO) {
+        if(forLoopConditionDTO == null) {
+            return null;
+        }
+        ForLoopCondition forLoopCondition = new ForLoopCondition();
+        forLoopCondition.setTestCaseId(forLoopConditionDTO.getTestCaseId());
+        forLoopCondition.setIterationType(forLoopConditionDTO.getIterationType());
+        forLoopCondition.setTestStepId(forLoopConditionDTO.getTestStepId());
+        forLoopCondition.setLeftDataMap(forLoopConditionDTO.getLeftDataMap());
+        forLoopCondition.setLeftFunctionId(forLoopConditionDTO.getLeftFunctionId());
+        forLoopCondition.setLeftParamType(forLoopConditionDTO.getLeftParamType());
+        forLoopCondition.setLeftParamValue(forLoopConditionDTO.getLeftParamValue());
+        forLoopCondition.setRightDataMap(forLoopConditionDTO.getRightDataMap());
+        forLoopCondition.setRightFunctionId(forLoopConditionDTO.getRightFunctionId());
+        forLoopCondition.setRightParamType(forLoopConditionDTO.getRightParamType());
+        forLoopCondition.setRightParamValue(forLoopConditionDTO.getRightParamValue());
+        forLoopCondition.setOperator(forLoopConditionDTO.getOperator());
+        forLoopCondition.setTestDataProfileId(forLoopConditionDTO.getTestDataProfileId());
+        return new ArrayList<>(){{add(forLoopCondition);}};
     }
 
     List<TestStep> mapTestStepsList(List<TestStepXMLDTO> readValue);

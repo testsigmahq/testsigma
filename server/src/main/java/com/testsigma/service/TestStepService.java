@@ -505,7 +505,7 @@ public class TestStepService extends XMLExportImportService<TestStep> {
                     stepsMap.put(step, "Custom Functions not supported in OS");
                     log.info("disabling Custom function test step to avoid further issues, since CSFs are deprecated");
                 }
-                if (step.getType() == TestStepType.FOR_LOOP || step.getConditionType() == TestStepConditionType.LOOP_FOR) {
+                if (step.getConditionType() == TestStepConditionType.LOOP_FOR && step.getForLoopConditions() != null) {
                     Optional<TestData> testData = testDataService.getRecentImportedEntity(importDTO, step.getDataMap().getForLoop().getTestDataId());
                     if (testData.isPresent())
                         step.getDataMap().getForLoop().setTestDataId(testData.get().getId());
@@ -521,8 +521,8 @@ public class TestStepService extends XMLExportImportService<TestStep> {
                     testData.ifPresent(data -> step.setTestDataProfileStepId(data.getId()));
                 }
                 if (step.getType() == TestStepType.FOR_LOOP || step.getConditionType() == TestStepConditionType.LOOP_FOR) {
-                    Optional<TestData> testData = testDataService.getRecentImportedEntity(importDTO, step.getDataMap().getForLoop().getTestDataId());
-                    testData.ifPresent(data -> step.getDataMap().getForLoop().setTestDataId(data.getId()));
+                    Optional<TestData> testData = testDataService.getRecentImportedEntity(importDTO, step.getForLoopConditions().get(0).getTestDataProfileId());
+                    //testData.ifPresent(data -> step.setForLoopConditions());
                 }
             }
             return steps;
@@ -589,6 +589,16 @@ public class TestStepService extends XMLExportImportService<TestStep> {
             Optional<TestStep> recentPrerequisite = getRecentImportedEntityForPreq(present.getTestCaseId(), present.getPreRequisiteStepId());
             if (recentPrerequisite.isPresent())
                 present.setPreRequisiteStepId(recentPrerequisite.get().getId());
+        }
+        return present;
+    }
+
+    @Override
+    public TestStep processAfterSave(Optional<TestStep> previous, TestStep present, TestStep importEntity, BackupDTO importDTO) {
+        if(importEntity != null && importEntity.getForLoopConditions() != null && importEntity.getForLoopConditions().size() > 0) {
+            ForLoopCondition forLoopCondition = importEntity.getForLoopConditions().get(0);
+            forLoopCondition.setTestStepId(present.getId());
+            forLoopConditionService.save(forLoopCondition);
         }
         return present;
     }

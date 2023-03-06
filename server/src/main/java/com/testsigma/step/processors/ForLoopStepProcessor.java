@@ -30,8 +30,7 @@ public class ForLoopStepProcessor extends StepProcessor {
   private void attachTestDataProfileStepId(List<TestStepDTO> testCaseStepEntityDTOS) {
     for (TestStepDTO testStepEntity : testCaseStepEntityDTOS){
       if (testStepEntity.getTestDataProfileStepId()!=null){
-        Optional<TestStepDTO> TDPStepEntity = testCaseStepEntityDTOS.stream().filter(step -> Objects.equals(step.getDataMap().getForLoop().getTestDataId(), testStepEntity.getTestDataProfileStepId())).findFirst();
-        TDPStepEntity.ifPresent(stepDTO -> testStepEntity.setTestDataProfileStepId(stepDTO.getId()));
+        testStepEntity.setTestDataProfileStepId(testStepEntity.getTestDataProfileStepId());
       }
     }
   }

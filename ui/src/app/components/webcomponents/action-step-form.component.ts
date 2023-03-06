@@ -1991,7 +1991,9 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
     if(step.isForLoop){
       step.forLoopData = this.testStep.forLoopData;
-      step.forLoopData.testDataProfileData = this.selectedTestDataProfile;
+      if(this.selectedTestDataProfile) {
+        step.forLoopData.testDataProfileData = this.selectedTestDataProfile;
+      }
     }
     this.actionForm.reset();
     this.onSave.emit(step);

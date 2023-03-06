@@ -2,7 +2,7 @@ version: "3.9"
 services:
   mysql:
     image: mysql:5.7
-    platform: linux/x86_64
+    platform: linux/x86_64 # Replace with linux/arm64/v8 for m1
     container_name: testsigma_mysql
     restart: always
     volumes:
@@ -20,7 +20,7 @@ services:
       interval: 1s
       retries: 120
   testsigma_server:
-    image: testsigmahq/server:v2.7
+    image: testsigmahq/server:v2.8 # Replace with testsigmahq/server:v2.8-m1 for m1
     container_name: testsigma_server
     ports:
       - "9090:9090"

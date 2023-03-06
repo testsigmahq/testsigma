@@ -769,6 +769,9 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         if(reference == 'test-data-profile') {
           testData['test-data-profile-id'] = this.getTestDataProfileIdValue();
         }
+        if(setValue.type == TestDataType.function){
+          this.testStep.testDataFunctionId = this.currentTestDataFunction?.id;
+        }
         testData[reference] = setValue
       } else {
         this.isValidTestData = false

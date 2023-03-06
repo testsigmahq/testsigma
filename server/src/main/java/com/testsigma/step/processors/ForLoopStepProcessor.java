@@ -188,6 +188,7 @@ public class ForLoopStepProcessor extends StepProcessor {
           iteEntity.setVisualEnabled(parentEntity.getVisualEnabled());
           iteEntity.setForLoopCondition(forLoopConditionDTO);
           entityList.add(iteEntity);
+          iterations.remove(dataBank.get(i).getName());
         }
       }
       testCaseStepEntityDTOS.addAll(entityList);

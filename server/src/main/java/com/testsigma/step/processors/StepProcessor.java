@@ -41,6 +41,7 @@ public class StepProcessor {
   protected WorkspaceType workspaceType;
   protected Map<String, Element> elementMap;
   protected TestDataSet testDataSet;
+  protected TestData testData;
   protected TestStepDTO testStepDTO;
   protected Map<String, String> environmentParameters;
   protected TestCaseEntityDTO testCaseEntityDTO;
@@ -556,11 +557,11 @@ public class StepProcessor {
       forLoopConditions = forLoopConditionsMapper.map(forLoopConditionsService.findAllByTestCaseStepId(stepId).get());
     }
 
-    Long testDataSetId = dataSetIndex.containsKey(testStepDTO.getId()) ? dataSetIndex.get(testStepDTO.getId())
+    Long testDataProfileId = dataSetIndex.containsKey(testStepDTO.getId()) ? dataSetIndex.get(testStepDTO.getId())
             : testCaseEntityDTO.getTestDataId();
 
-    if (testDataSetId != null) {
-      testDataSet = testDataSetService.find(testDataSetId);
+    if (testDataProfileId != null) {
+      testData = testDataProfileService.find(testDataProfileId);
     }
     TestData testData = testDataProfileService.find(forLoopConditions.getTestDataProfileId());
     testDataName = testData.getTestDataName();

@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   mysql:
-    image: mysql:5.7
+    image: mysql:5.7 # Replace with mysql:8.0.32 for m1
     platform: linux/x86_64 # Replace with linux/arm64/v8 for m1
     container_name: testsigma_mysql
     restart: always

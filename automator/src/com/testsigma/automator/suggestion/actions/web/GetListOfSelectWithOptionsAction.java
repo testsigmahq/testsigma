@@ -13,7 +13,7 @@ import java.util.Map;
 public class GetListOfSelectWithOptionsAction extends SuggestionAction {
   @Override
   protected void execute() throws Exception {
-    List<WebElement> selectBoxesWithOption = getDriver().findElementsByXPath("//select/option[1]");
+    List<WebElement> selectBoxesWithOption = getDriver().findElements(By.xpath("//select/option[1]"));
     List<Map<String, String>> list = new ArrayList<Map<String, String>>();
     Integer i = 1;
     for (WebElement element : selectBoxesWithOption) {

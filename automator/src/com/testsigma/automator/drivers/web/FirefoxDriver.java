@@ -11,7 +11,7 @@ import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.remote.Browser;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -57,7 +57,7 @@ public class FirefoxDriver extends WebDriver {
     } else {
       super.setTestsigmaLabCapabilities();
     }
-    capabilities.add(new WebDriverCapability(CapabilityType.BROWSER_NAME, BrowserType.FIREFOX));
+    capabilities.add(new WebDriverCapability(CapabilityType.BROWSER_NAME, Browser.FIREFOX));
   }
 
   protected void setAdditionalCapabilities(List<WebDriverCapability> additionalCapabilitiesList) {
@@ -97,7 +97,7 @@ public class FirefoxDriver extends WebDriver {
               profile.setPreference(pro.getKey(), (String) pro.getValue());
             }
           }
-          capabilities.add(new WebDriverCapability(org.openqa.selenium.firefox.FirefoxDriver.PROFILE, profile));
+          capabilities.add(new WebDriverCapability(org.openqa.selenium.firefox.FirefoxDriver.SystemProperty.BROWSER_PROFILE, profile));
           single.remove();
         }
       }

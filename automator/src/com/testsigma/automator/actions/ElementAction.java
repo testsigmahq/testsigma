@@ -62,7 +62,7 @@ public abstract class ElementAction extends DriverAction {
     log.info("Finding an element for Action variable: " + elementActionVariableName);
     setElementSearchCriteria(elementActionVariableName);
     log.info(String.format("Finding element with criteria: %s, Explicit timeout as: %s", elementSearchCriteria, getTimeout()));
-    CustomExpectedConditions.explictWait(getDriver(), elementSearchCriteria.getBy(), getTimeout().intValue());
+    CustomExpectedConditions.explictWait(getDriver(), elementSearchCriteria.getBy(), (int)getTimeout().getSeconds());
     elements = getDriver().findElements(elementSearchCriteria.getBy());
     log.info("No of elements found: " + elements.size());
     if (!elements.isEmpty()) {
@@ -267,13 +267,13 @@ public abstract class ElementAction extends DriverAction {
   }
 
   private void handleInvalidStateExceptionType(Exception e) {
-    if (e instanceof ElementNotVisibleException) {
+    if (e instanceof ElementNotInteractableException) {
       String errorMessage;
       if (elementSearchCriteria != null) {
-        errorMessage = String.format("Element may be present but not visible in current page. Please verify if the " +
+        errorMessage = String.format("Element may be present but not interactable in current page. Please verify if the " +
           "element <b>\"%s:%s\"</b> is pointing to a displayed element.", elementSearchCriteria.getFindByType(), elementSearchCriteria.getByValue());
       } else {
-        errorMessage = "Element may be present but not visible in current page. Please verify the given element criteria is pointing to a displayed/visible element.";
+        errorMessage = "Element may be present but not interactable in current page. Please verify the given element criteria is pointing to a displayed/visible element.";
       }
       setErrorMessage(errorMessage);
       setErrorCode(ErrorCodes.ELEMENT_NOT_VISIBLE);
@@ -283,16 +283,6 @@ public abstract class ElementAction extends DriverAction {
         "If the element is not in view, please try executing step <b>\"Scroll to the element ELEMENT into view\"</b></b>";
       setErrorMessage(errorMessage);
       setErrorCode(ErrorCodes.ELEMENT_CLICK_INTERCEPTED_EXCEPTION);
-    } else if (e instanceof ElementNotSelectableException) {
-      String errorMessage;
-      if (elementSearchCriteria != null) {
-        errorMessage = String.format("Element is present but it is not selectable. Please check if the select element " +
-          "corresponding to locator <b>\"%s:%s\"</b> is enabled and interactable.", elementSearchCriteria.getFindByType(), elementSearchCriteria.getByValue());
-      } else {
-        errorMessage = "Element is present but it is not selectable. Please verify if the select element for given criteria is enabled and selectable.";
-      }
-      setErrorMessage(errorMessage);
-      setErrorCode(ErrorCodes.ELEMENT_NOT_SELECTABLE_EXCEPTION);
     } else {
       String errorMessage = "Cannot perform any action on the element. Though element may be present, it is in a non-interactive state.";
       setErrorMessage(errorMessage);

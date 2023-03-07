@@ -389,7 +389,7 @@ public class AddonAction {
   }
 
   private void handleInvalidStateExceptionType(Exception e) {
-    if (e instanceof ElementNotVisibleException) {
+    if (e instanceof ElementNotInteractableException) {
       String errorMessage;
       if (getElementSearchCriteria()) {
         errorMessage = String.format("Element may be present but not visible in current page. Please verify if the " +
@@ -406,17 +406,6 @@ public class AddonAction {
         "If the element is not in view, please try executing step <b>\"Scroll to the element ELEMENT into view\"</b></b>";
       setErrorMessage(errorMessage);
       setErrorCode(ErrorCodes.ELEMENT_CLICK_INTERCEPTED_EXCEPTION);
-    } else if (e instanceof ElementNotSelectableException) {
-      String errorMessage;
-      if (getElementSearchCriteria()) {
-        errorMessage = String.format("Element is present but it is not selectable. Please check if the select element " +
-            "corresponding to locator <b>\"%s:%s\"</b> is enabled and interactable.",
-          elementPropertiesEntity.getFindByType(), elementPropertiesEntity.getLocatorValue());
-      } else {
-        errorMessage = "Element is present but it is not selectable. Please verify if the select element for given criteria is enabled and selectable.";
-      }
-      setErrorMessage(errorMessage);
-      setErrorCode(ErrorCodes.ELEMENT_NOT_SELECTABLE_EXCEPTION);
     } else {
       String errorMessage = "Cannot perform any action on the element. Though element may be present, it is in a non-interactive state.";
       setErrorMessage(errorMessage);

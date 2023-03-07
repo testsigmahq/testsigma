@@ -38,7 +38,7 @@ public class CheckElementIsInDifferentFrame extends SuggestionAction {
         elementInIframe = getDriver().findElement(elementSearchCriteria.getBy());
         Map<String, String> suggestions = new HashMap<String, String>();
         suggestions.put("Frame Name", "");//iframe.getAttribute("name")
-        suggestions.put("Frame Index", new Integer(i).toString());
+        suggestions.put("Frame Index", i.toString());
         engineResult.getMetaData().setSuggestions(new JSONObject().put("list", suggestions));
         this.suggestionActionResult = SuggestionActionResult.Success;
         break;
@@ -48,7 +48,7 @@ public class CheckElementIsInDifferentFrame extends SuggestionAction {
     }
     if (defaultPathName != jsExecutor.executeScript("return window.location.pathname")) {
       getDriver().switchTo().defaultContent();
-      List<WebElement> elements = getDriver().findElementsByXPath("//iframe[@src=\"" + defaultPathName + "\"]");
+      List<WebElement> elements = getDriver().findElements(By.xpath("//iframe[@src=\"" + defaultPathName + "\"]"));
       if (elements.size() > 0) {
         getDriver().switchTo().frame(elements.get(0));
       }

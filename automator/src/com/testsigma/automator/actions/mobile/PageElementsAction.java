@@ -17,6 +17,8 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.joox.JOOX;
 import org.joox.Match;
+import org.openqa.selenium.remote.Command;
+import org.openqa.selenium.remote.Response;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -28,7 +30,7 @@ import java.util.List;
 import java.util.Set;
 
 @Log4j2
-public class PageElementsAction extends MobileDriverAction {
+public class PageElementsAction extends MobileElementAction {
 
   private static final String SUCCESS_MESSAGE = "Successfully fetched page source for current page";
   @Getter
@@ -41,7 +43,7 @@ public class PageElementsAction extends MobileDriverAction {
   @Override
   public void execute() throws Exception {
     MobileElement mobileElement;
-    getDriver().context("NATIVE_APP");
+    context("NATIVE_APP");
     String pageSource = getDriver().getPageSource();
 
     log.debug("Page source fetched: " + pageSource);
@@ -54,7 +56,7 @@ public class PageElementsAction extends MobileDriverAction {
 
     mobileElement = new MobileElement(match.get(0).cloneNode(true), 1, getPlatform());
     mobileElement.setParent(null);
-    Set<String> contextNames = getDriver().getContextHandles();
+    Set<String> contextNames = getContextHandles();
     mobileElement.setContextNames(contextNames);
     List<MobileWebElement> webViewElements = new ArrayList<>();
     List<MobileElement> webViewElementReferences = new ArrayList<>();
@@ -96,7 +98,7 @@ public class PageElementsAction extends MobileDriverAction {
       }
     }
     mobileElement.setWebViewElements(webViewElements);
-    getDriver().context("NATIVE_APP");
+    context("NATIVE_APP");
     setActualValue(mobileElement);
     populateXpath(mobileElement);
     setSuccessMessage(SUCCESS_MESSAGE);
@@ -126,6 +128,22 @@ public class PageElementsAction extends MobileDriverAction {
     setErrorMessage(e.getMessage());
     setTimeoutException();
     setErrorCode(ErrorCodes.PAGE_ELEMENT_LOAD_TIMEOUT);
+  }
+
+  public Boolean sessionActive() {
+    try {
+      Response response = getDriver().getCommandExecutor().execute(new Command(getDriver().getSessionId(), "status"));
+      return (response.getStatus() == 0) ? Boolean.FALSE : Boolean.TRUE;
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+      return Boolean.FALSE;
+    }
+  }
+
+  private void setTimeoutException() {
+    if (sessionActive() == Boolean.FALSE) {
+      setErrorMessage("Session expired.");
+    }
   }
 
   protected void populateXpath(MobileElement mobileElement) {

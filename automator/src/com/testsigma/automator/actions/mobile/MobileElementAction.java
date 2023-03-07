@@ -9,19 +9,26 @@
 
 package com.testsigma.automator.actions.mobile;
 
+import com.google.common.collect.ImmutableMap;
 import com.testsigma.automator.constants.ActionResult;
 import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.actions.ElementAction;
 import com.testsigma.automator.actions.FindByType;
+import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.android.AndroidElement;
-import io.appium.java_client.ios.IOSElement;
+import io.appium.java_client.NoSuchContextException;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.*;
+import org.openqa.selenium.remote.DriverCommand;
+import org.openqa.selenium.remote.RemoteWebElement;
+import org.openqa.selenium.remote.Response;
 
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.testsigma.automator.constants.NaturalTextActionConstants.TESTS_TEP_DATA_MAP_KEY_ELEMENT;
 
 @Log4j2
@@ -43,7 +50,8 @@ public abstract class MobileElementAction extends ElementAction {
     setElementSearchCriteria(elementActionVariableName);
     AppiumDriver driver = getDriver();
     if (this.getElementSearchCriteria().getFindByType().equals(FindByType.ACCESSIBILITY_ID)) {
-      elements = driver.findElementsByAccessibilityId(getElementSearchCriteria().getByValue());
+//      elements = driver.findElementsByAccessibilityId(getElementSearchCriteria().getByValue());
+      elements = driver.findElements(AppiumBy.accessibilityId(getElementSearchCriteria().getByValue()));
     } else {
       elements = ((WebDriver) driver).findElements(getElementSearchCriteria().getBy());
     }
@@ -93,13 +101,9 @@ public abstract class MobileElementAction extends ElementAction {
 
   public void tapByElementCoOrdinates(WebElement webElement, AppiumDriver driver) throws Exception {
     Point loc = webElement.getLocation();
-    if (webElement instanceof IOSElement) {
-      loc = ((IOSElement) webElement).getCenter();
-    } else if (webElement instanceof AndroidElement) {
-      loc = ((AndroidElement) webElement).getCenter();
-    }
-    int x = loc.getX();
-    int y = loc.getY();
+    Point center = getCenter(webElement);
+    int x = center.getX();
+    int y = center.getY();
     TapPointAction tapPointAction = new TapPointAction();
     tapPointAction.setTapPoint(new com.testsigma.automator.actions.mobile.TapPoint(x,
       y));
@@ -110,6 +114,53 @@ public abstract class MobileElementAction extends ElementAction {
       throw new Exception("Failed to tap at (" + x + ", " + y + ") : " + tapPointAction.getErrorMessage());
     }
   }
+
+  public Point getCenter(WebElement element) {
+    Point upperLeft = element.getLocation();
+    Dimension dimensions = element.getSize();
+    return new Point(upperLeft.getX() + dimensions.getWidth() / 2, upperLeft.getY() + dimensions.getHeight() / 2);
+  }
+
+  public WebDriver context(String name) {
+    AppiumDriver driver = getDriver();
+    checkNotNull(name, "Must supply a context name");
+    try {
+      driver.execute(DriverCommand.SWITCH_TO_CONTEXT, ImmutableMap.of("name", name));
+      return driver;
+    } catch (WebDriverException e) {
+      throw new NoSuchContextException(e.getMessage(), e);
+    }
+  }
+
+
+  public Set<String> getContextHandles() {
+    AppiumDriver driver = getDriver();
+    Response response = driver.execute(DriverCommand.GET_CONTEXT_HANDLES, ImmutableMap.of());
+    Object value = response.getValue();
+    try {
+      //noinspection unchecked
+      List<String> returnedValues = (List<String>) value;
+      return new LinkedHashSet<>(returnedValues);
+    } catch (ClassCastException ex) {
+      throw new WebDriverException(
+              "Returned value cannot be converted to List<String>: " + value, ex);
+    }
+  }
+
+  public String getCurrentContext() {
+    AppiumDriver driver = getDriver();
+    Response response = driver.execute(DriverCommand.GET_CURRENT_CONTEXT_HANDLE, ImmutableMap.of());
+    Object value = response.getValue();
+    try {
+      //noinspection unchecked
+      return (String) value;
+    } catch (ClassCastException ex) {
+      throw new WebDriverException(
+              "Returned value cannot be converted to List<String>: " + value, ex);
+    }
+  }
+
+
 }
 
 

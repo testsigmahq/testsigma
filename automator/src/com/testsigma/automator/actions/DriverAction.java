@@ -65,4 +65,5 @@ public abstract class DriverAction extends Action {
       setDriverImplicitTimeout(Duration.ofSeconds(getGlobalElementTimeOut()));
     }
   }
+
 }

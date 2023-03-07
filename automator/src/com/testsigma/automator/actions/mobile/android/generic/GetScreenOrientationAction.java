@@ -1,10 +1,12 @@
 package com.testsigma.automator.actions.mobile.android.generic;
 
 
+import org.openqa.selenium.remote.DriverCommand;
+
 public class GetScreenOrientationAction extends com.testsigma.automator.actions.mobile.generic.GetScreenOrientationAction {
 
   public void getOrientation() {
-    setActualValue(getDriver().getOrientation());
+    setActualValue(getDriver().execute(DriverCommand.GET_SCREEN_ORIENTATION).getValue().toString());
   }
 
 }

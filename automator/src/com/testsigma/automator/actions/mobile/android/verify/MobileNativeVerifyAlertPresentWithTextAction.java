@@ -10,8 +10,8 @@
 package com.testsigma.automator.actions.mobile.android.verify;
 
 import com.testsigma.automator.actions.mobile.MobileElementAction;
-import io.appium.java_client.MobileElement;
 import lombok.extern.log4j.Log4j2;
+import org.openqa.selenium.WebElement;
 import org.springframework.util.Assert;
 
 import static com.testsigma.automator.constants.NaturalTextActionConstants.TESTS_TEP_DATA_MAP_KEY_ELEMENT;
@@ -31,7 +31,7 @@ public class MobileNativeVerifyAlertPresentWithTextAction extends MobileElementA
     verifyAlertPresence(FAILURE_MESSAGE_NULL);
     constructElementWithDynamicXpath(PARAMETERIZED_XPATH, TESTS_TEP_DATA_MAP_KEY_ELEMENT, TEST_STEP_DATA_MAP_KEY_TEST_DATA, null, false);
     findElement();
-    MobileElement targetElement = (MobileElement) getElement();
+    WebElement targetElement = (WebElement) getElement();
     Assert.isTrue(targetElement.isDisplayed(),
       String.format("The Alert with text %s is not displayed in this page", getTestData()));
     setSuccessMessage(SUCCESS_MESSAGE);

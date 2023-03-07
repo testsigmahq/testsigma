@@ -10,6 +10,7 @@
 package com.testsigma.automator.actions.mobile.android.scroll;
 
 import com.testsigma.automator.actions.mobile.scroll.ScrollToCenterSnippet;
+import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.NotFoundException;
@@ -25,7 +26,7 @@ public class MobileNativeScrollToExactAction extends ScrollToCenterSnippet {
     String uiSelector = "new UiSelector().textMatches(\"" + getTestData() + "\")";
     String command = "new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView("
       + uiSelector + ");";
-    ((AndroidDriver) getDriver()).findElementByAndroidUIAutomator(command);
+    ((AndroidDriver) getDriver()).findElement(AppiumBy.ByAndroidUIAutomator.androidUIAutomator(command));
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 

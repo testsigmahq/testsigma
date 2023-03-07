@@ -1,23 +1,26 @@
 package com.testsigma.automator.actions.mobile.android.generic;
 
+import com.google.common.collect.ImmutableMap;
+import com.testsigma.automator.actions.mobile.generic.GetScreenOrientationAction;
 import org.openqa.selenium.ScreenOrientation;
+import org.openqa.selenium.remote.DriverCommand;
 
 public class ChangeScreenOrientationAction extends com.testsigma.automator.actions.mobile.generic.ChangeScreenOrientationAction {
 
   public void changeOrientation() {
-    if (getDriver().getOrientation().equals(ScreenOrientation.LANDSCAPE)) {
-      changeToPortrait();
-    } else {
-      changeToLandscape();
-    }
+    if (getDriver().execute(DriverCommand.GET_SCREEN_ORIENTATION).getValue().toString().equalsIgnoreCase(ScreenOrientation.LANDSCAPE.value())) {
+        changeToPortrait();
+      } else {
+        changeToLandscape();
+      }
   }
 
   public void changeToPortrait() {
-    getDriver().rotate(ScreenOrientation.PORTRAIT);
+    getDriver().execute(DriverCommand.SET_SCREEN_ORIENTATION, ImmutableMap.of("orientation",ScreenOrientation.PORTRAIT.value().toUpperCase()));
   }
 
   public void changeToLandscape() {
-    getDriver().rotate(ScreenOrientation.LANDSCAPE);
+    getDriver().execute(DriverCommand.SET_SCREEN_ORIENTATION, ImmutableMap.of("orientation",ScreenOrientation.LANDSCAPE.value().toUpperCase()));
   }
 
 }

@@ -1,7 +1,11 @@
 package com.testsigma.automator.actions.mobile.switchactions;
 
+import com.google.common.collect.ImmutableMap;
+import com.testsigma.automator.actions.mobile.MobileDriverAction;
 import com.testsigma.automator.actions.mobile.MobileElementAction;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.remote.DriverCommand;
+import org.openqa.selenium.remote.Response;
 
 import java.util.Set;
 
@@ -15,9 +19,16 @@ public class MobileNativeSwitchToContextWithNameAction extends MobileElementActi
 
   @Override
   protected void execute() throws Exception {
-    currentContext = getDriver().getContext();
-    contexts = getDriver().getContextHandles();
-    getDriver().context(getTestData());
+    currentContext = getCurrentContext();
+    contexts = getContextHandles();
+    if (contexts.size() < 2) {
+      //In browserstack webviews will not be listed on first call.
+      Thread.sleep(2000);
+      contexts = getContextHandles();
+    }
+    contexts.remove("NATIVE_APP");
+    contexts.remove("WEBVIEW_chrome");
+    context(getTestData());
     setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData(), contexts));
   }
 

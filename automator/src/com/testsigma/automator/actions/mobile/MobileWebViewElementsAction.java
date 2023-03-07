@@ -21,8 +21,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.nio.charset.StandardCharsets;
+
 
 @Log4j2
 public class MobileWebViewElementsAction extends PageElementsAction {
@@ -44,7 +46,7 @@ public class MobileWebViewElementsAction extends PageElementsAction {
   @Override
   public void execute() throws Exception {
     MobileWebElement mobileWebElement;
-    getDriver().context(this.context);
+    context(this.context);
     elementsDimensions();
     String webViewPageSource = getDriver().getPageSource();
     log.debug("Page source ::[" + context + "] fetched: " + webViewPageSource);
@@ -66,7 +68,7 @@ public class MobileWebViewElementsAction extends PageElementsAction {
     }
     mobileWebElement = new MobileWebElement(body.cloneNode(true), 1, getPlatform(), this.context);
     mobileWebElement.setWebViewName(this.context);
-    getDriver().context("NATIVE_APP");
+    context("NATIVE_APP");
     setActualValue(mobileWebElement);
     populateXpath(mobileWebElement);
     setSuccessMessage(String.format(SUCCESS_MESSAGE, context));

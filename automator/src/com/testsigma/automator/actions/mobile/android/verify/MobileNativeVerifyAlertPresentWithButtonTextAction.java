@@ -10,8 +10,8 @@
 package com.testsigma.automator.actions.mobile.android.verify;
 
 import com.testsigma.automator.actions.mobile.MobileElementAction;
-import io.appium.java_client.MobileElement;
 import lombok.extern.log4j.Log4j2;
+import org.openqa.selenium.WebElement;
 import org.springframework.util.Assert;
 
 @Log4j2
@@ -30,7 +30,7 @@ public class MobileNativeVerifyAlertPresentWithButtonTextAction extends MobileEl
     verifyAlertPresence(FAILURE_MESSAGE_NULL);
     constructElementWithDynamicXpath(PARAMETERIZED_XPATH);
     findElement();
-    MobileElement targetElement = (MobileElement) getElement();
+    WebElement targetElement = (WebElement) getElement();
     Assert.isTrue(targetElement.isDisplayed(),
       String.format(FAILURE_MESSAGE_NOT_DISPLAYED, getTestData()));
     setSuccessMessage(SUCCESS_MESSAGE);

@@ -18,7 +18,7 @@ public class MobileNativeResetAppSnippet extends MobileElementAction {
 
   @Override
   public void execute() throws Exception {
-    getDriver().resetApp();
+    getDriver().execute("reset");
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 }

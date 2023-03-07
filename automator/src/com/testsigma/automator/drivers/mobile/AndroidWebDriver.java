@@ -39,6 +39,6 @@ public class AndroidWebDriver extends MobileWebDriver {
 
   @Override
   protected void createDriverInstance(DesiredCapabilities desiredCapabilities) throws AutomatorException {
-    remoteWebDriver = new io.appium.java_client.android.AndroidDriver<>(remoteServerURL, desiredCapabilities);
+    remoteWebDriver = new io.appium.java_client.android.AndroidDriver(remoteServerURL, desiredCapabilities);
   }
 }

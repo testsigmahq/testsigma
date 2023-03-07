@@ -15,8 +15,17 @@ import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Pause;
+import org.openqa.selenium.interactions.PointerInput;
+import org.openqa.selenium.interactions.Sequence;
 
 import java.time.Duration;
+import java.util.Arrays;
+
+import static java.time.Duration.ofMillis;
+import static org.openqa.selenium.interactions.PointerInput.Kind.TOUCH;
+import static org.openqa.selenium.interactions.PointerInput.MouseButton.LEFT;
+import static org.openqa.selenium.interactions.PointerInput.Origin.viewport;
 
 @Log4j2
 public class LongPressSnippet extends MobileElementAction {
@@ -25,11 +34,16 @@ public class LongPressSnippet extends MobileElementAction {
 
   @Override
   public void execute() throws Exception {
-    TouchAction action = new TouchAction(getDriver());
     findElement();
     WebElement targetElement = getElement();
     Duration duration = Duration.ofSeconds(Long.parseLong(getTestData()));
-    action.press(PointOption.point(targetElement.getLocation())).waitAction(WaitOptions.waitOptions(duration)).release().perform();
+    PointerInput FINGER = new PointerInput(TOUCH, "finger");
+    Sequence tap = new Sequence(FINGER, 1)
+            .addAction(FINGER.createPointerMove(ofMillis(0), viewport(), targetElement.getLocation().getX(), targetElement.getLocation().getY()))
+            .addAction(FINGER.createPointerDown(LEFT.asArg()))
+            .addAction(new Pause(FINGER, duration))
+            .addAction(FINGER.createPointerUp(LEFT.asArg()));
+    getDriver().perform(Arrays.asList(tap));
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 }

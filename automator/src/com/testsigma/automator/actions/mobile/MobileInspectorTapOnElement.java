@@ -26,7 +26,7 @@ public class MobileInspectorTapOnElement extends MobileElementAction {
       } else if (!targetElement.isDisplayed()) {
         throw new AutomatorException(ELEMENT_IS_NOT_DISPLAYED);
       }
-      if (driver.getContextHandles().size() > 1) {
+      if (getContextHandles().size() > 1) {
         tapByElementCoOrdinates(getElement(), driver);
       } else {
         targetElement.click();

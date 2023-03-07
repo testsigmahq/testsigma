@@ -15,6 +15,7 @@ import com.testsigma.agent.exception.TestsigmaException;
 import com.testsigma.agent.mobile.MobileAutomationServerService;
 import com.testsigma.agent.mobile.DeviceContainer;
 import com.testsigma.agent.mobile.MobileDevice;
+import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
 import lombok.RequiredArgsConstructor;
@@ -58,8 +59,9 @@ public class IosMobileAutomationServer {
       desiredCapabilities.setCapability("xcodeOrgId", "6F4CKCA4LX");
       desiredCapabilities.setCapability("xcodeSigningId", "iPhone Developer");
       desiredCapabilities.setCapability("app", "/Users/vikram/ios-apps/ios-test-app/build/Release-iphoneos/TestApp-iphoneos.app");
-      device.setRemoteWebDriver(new IOSDriver(new URL(mobileAutomationServerService.getMobileAutomationServer().getServerURL()),
-        desiredCapabilities));
+//      device.setRemoteWebDriver(new IOSDriver(new URL(mobileAutomationServerService.getMobileAutomationServer().getServerURL()),
+//        desiredCapabilities));
+      device.setRemoteWebDriver(new AppiumDriver(new URL(mobileAutomationServerService.getMobileAutomationServer().getServerURL()),desiredCapabilities));
     } catch (Exception e) {
       throw new MobileAutomationServerSessionException(e.getMessage());
     }

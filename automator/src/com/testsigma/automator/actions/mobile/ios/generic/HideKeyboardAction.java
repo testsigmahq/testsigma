@@ -1,6 +1,7 @@
 package com.testsigma.automator.actions.mobile.ios.generic;
 
 import com.testsigma.automator.actions.mobile.MobileElementAction;
+import io.appium.java_client.AppiumBy;
 import io.appium.java_client.MobileBy;
 import io.appium.java_client.ios.IOSDriver;
 import lombok.extern.log4j.Log4j2;
@@ -106,7 +107,7 @@ public class HideKeyboardAction extends MobileElementAction {
   private void clickOnHideKeyBoardAccessibilityID() {
     log.info("Using Hide Keyboard accessibilityId to hide keyboard");
     try {
-      getDriver().findElement(MobileBy.AccessibilityId("Hide keyboard")).click();
+      getDriver().findElement(AppiumBy.ByAccessibilityId.accessibilityId("Hide keyboard")).click();
       log.info("Using Hide Keyboard accessibilityId to hide keyboard didn't throw any exception");
     } catch (Exception e) {
       log.error("**Tried to hide keyboard using Hide Keyboard id***", e);

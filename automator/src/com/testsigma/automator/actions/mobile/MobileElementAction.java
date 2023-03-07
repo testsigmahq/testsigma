@@ -14,6 +14,7 @@ import com.testsigma.automator.constants.ActionResult;
 import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.actions.ElementAction;
 import com.testsigma.automator.actions.FindByType;
+import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileBy;
 import io.appium.java_client.NoSuchContextException;
@@ -50,7 +51,7 @@ public abstract class MobileElementAction extends ElementAction {
     AppiumDriver driver = getDriver();
     if (this.getElementSearchCriteria().getFindByType().equals(FindByType.ACCESSIBILITY_ID)) {
 //      elements = driver.findElementsByAccessibilityId(getElementSearchCriteria().getByValue());
-      elements = driver.findElements(MobileBy.AccessibilityId(getElementSearchCriteria().getByValue()));
+      elements = driver.findElements(AppiumBy.ByAccessibilityId.accessibilityId(getElementSearchCriteria().getByValue()));
     } else {
       elements = ((WebDriver) driver).findElements(getElementSearchCriteria().getBy());
     }

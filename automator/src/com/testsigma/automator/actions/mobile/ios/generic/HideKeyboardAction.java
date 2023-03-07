@@ -1,14 +1,8 @@
 package com.testsigma.automator.actions.mobile.ios.generic;
 
-import com.testsigma.automator.actions.mobile.MobileElement;
 import com.testsigma.automator.actions.mobile.MobileElementAction;
-import com.testsigma.automator.actions.mobile.SendKeysAction;
-import io.appium.java_client.AppiumBy;
-import io.appium.java_client.HidesKeyboard;
-import io.appium.java_client.HidesKeyboardWithKeyName;
-import io.appium.java_client.TouchAction;
+import io.appium.java_client.MobileBy;
 import io.appium.java_client.ios.IOSDriver;
-import io.appium.java_client.touch.offset.PointOption;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -20,7 +14,6 @@ import org.openqa.selenium.interactions.Sequence;
 import org.springframework.util.Assert;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,7 +21,6 @@ import static java.time.Duration.ofMillis;
 import static org.openqa.selenium.interactions.PointerInput.Kind.TOUCH;
 import static org.openqa.selenium.interactions.PointerInput.MouseButton.LEFT;
 import static org.openqa.selenium.interactions.PointerInput.Origin.viewport;
-import static io.appium.java_client.MobileCommand.hideKeyboardCommand;
 @Log4j2
 public class HideKeyboardAction extends MobileElementAction {
   private static final String SUCCESS_MESSAGE = "Hide Keyboard executed successfully.";
@@ -114,7 +106,7 @@ public class HideKeyboardAction extends MobileElementAction {
   private void clickOnHideKeyBoardAccessibilityID() {
     log.info("Using Hide Keyboard accessibilityId to hide keyboard");
     try {
-      getDriver().findElement(AppiumBy.accessibilityId("Hide keyboard")).click();
+      getDriver().findElement(MobileBy.AccessibilityId("Hide keyboard")).click();
       log.info("Using Hide Keyboard accessibilityId to hide keyboard didn't throw any exception");
     } catch (Exception e) {
       log.error("**Tried to hide keyboard using Hide Keyboard id***", e);
@@ -123,7 +115,7 @@ public class HideKeyboardAction extends MobileElementAction {
   }
 
   protected boolean isKeyboardShown() {
-    setDriverImplicitTimeout(5);
+    setDriverImplicitTimeout(Duration.ofSeconds(5));
     boolean keyboardShown = ((IOSDriver) getDriver()).isKeyboardShown();
     resetImplicitTimeout();
     return keyboardShown;
@@ -132,9 +124,9 @@ public class HideKeyboardAction extends MobileElementAction {
   protected void resetImplicitTimeout() {
     try {
       long webkitResponseTimeout = (Long) getDriver().getCapabilities().getCapability("webkitResponseTimeout");
-      setDriverImplicitTimeout(webkitResponseTimeout / 1000);
+      setDriverImplicitTimeout(Duration.ofSeconds(webkitResponseTimeout / 1000));
     } catch (Exception e) {
-      setDriverImplicitTimeout(getGlobalElementTimeOut());
+      setDriverImplicitTimeout(Duration.ofSeconds(getGlobalElementTimeOut()));
     }
 
   }

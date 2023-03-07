@@ -176,7 +176,7 @@ public abstract class ElementAction extends DriverAction {
 
 
   protected WebDriverWait getWebDriverWait() {
-    return new WebDriverWait(getDriver(), Duration.ofSeconds(getTimeout()));
+    return new WebDriverWait(getDriver(), getTimeout());
   }
 
   protected void handleException(Exception e) {

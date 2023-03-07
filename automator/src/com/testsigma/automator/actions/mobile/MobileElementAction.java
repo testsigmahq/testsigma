@@ -14,14 +14,13 @@ import com.testsigma.automator.constants.ActionResult;
 import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.actions.ElementAction;
 import com.testsigma.automator.actions.FindByType;
-import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileBy;
 import io.appium.java_client.NoSuchContextException;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.DriverCommand;
-import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.remote.Response;
 
 import java.util.LinkedHashSet;
@@ -51,7 +50,7 @@ public abstract class MobileElementAction extends ElementAction {
     AppiumDriver driver = getDriver();
     if (this.getElementSearchCriteria().getFindByType().equals(FindByType.ACCESSIBILITY_ID)) {
 //      elements = driver.findElementsByAccessibilityId(getElementSearchCriteria().getByValue());
-      elements = driver.findElements(AppiumBy.accessibilityId(getElementSearchCriteria().getByValue()));
+      elements = driver.findElements(MobileBy.AccessibilityId(getElementSearchCriteria().getByValue()));
     } else {
       elements = ((WebDriver) driver).findElements(getElementSearchCriteria().getBy());
     }
@@ -78,7 +77,7 @@ public abstract class MobileElementAction extends ElementAction {
   }
 
   protected void handleStaleelementExecptionOnClickAction() throws Exception {
-    int retriesTimeout = (getTimeout().intValue()) > 0 ? (getTimeout().intValue()) : 30;
+    int retriesTimeout = (getTimeout().toSecondsPart()) > 0 ? (getTimeout().toSecondsPart()) : 30;
     Long pollInterval = 500l;
     By by = getElementSearchCriteria().getBy();
     for (int i = 1; i <= (retriesTimeout * 2); i++) {

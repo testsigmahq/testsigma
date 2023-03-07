@@ -16,9 +16,9 @@ public class MobileNativeSwitchToNativeAppAction extends MobileElementAction {
 
   @Override
   protected void execute() throws Exception {
-    currentContext = getDriver().getContext();
-    contexts = getDriver().getContextHandles();
-    getDriver().context("NATIVE_APP");
+    currentContext = getCurrentContext();
+    contexts = getContextHandles();
+    context("NATIVE_APP");
     setSuccessMessage(String.format(SUCCESS_MESSAGE, "NATIVE_APP", contexts));
   }
 

@@ -14,6 +14,16 @@ import io.appium.java_client.TouchAction;
 import io.appium.java_client.touch.TapOptions;
 import io.appium.java_client.touch.offset.ElementOption;
 import lombok.extern.log4j.Log4j2;
+import org.openqa.selenium.interactions.Pause;
+import org.openqa.selenium.interactions.PointerInput;
+import org.openqa.selenium.interactions.Sequence;
+
+import java.util.Arrays;
+
+import static java.time.Duration.ofMillis;
+import static org.openqa.selenium.interactions.PointerInput.Kind.TOUCH;
+import static org.openqa.selenium.interactions.PointerInput.MouseButton.LEFT;
+import static org.openqa.selenium.interactions.PointerInput.Origin.viewport;
 
 @Log4j2
 public class MobileNativeTapSnippet extends MobileElementAction {
@@ -22,9 +32,14 @@ public class MobileNativeTapSnippet extends MobileElementAction {
 
   @Override
   public void execute() throws Exception {
-    TouchAction action = new TouchAction(getDriver());
     findElement();
-    action.tap(TapOptions.tapOptions().withElement(ElementOption.element(getElement()))).perform();
+    PointerInput FINGER = new PointerInput(TOUCH, "finger");
+    Sequence tap = new Sequence(FINGER, 1)
+            .addAction(FINGER.createPointerMove(ofMillis(0), viewport(), getElement().getLocation().getX(), getElement().getLocation().getY()))
+            .addAction(FINGER.createPointerDown(LEFT.asArg()))
+            .addAction(new Pause(FINGER, ofMillis(2)))
+            .addAction(FINGER.createPointerUp(LEFT.asArg()));
+    getDriver().perform(Arrays.asList(tap));
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 }

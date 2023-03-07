@@ -17,9 +17,9 @@ public class MobileNativeSwitchToWebviewAction extends MobileElementAction {
 
   @Override
   protected void execute() throws Exception {
-    currentContext = getDriver().getContext();
+    currentContext = getCurrentContext();
     String contextName = null;
-    contexts = getDriver().getContextHandles();
+    contexts = getContextHandles();
     for (String context : contexts) {
       //WEBVIEW_Chrome is a chrome context, not a webview inside app.
       if (context != null && context.toUpperCase().startsWith("WEB") && !context.equalsIgnoreCase("WEBVIEW_chrome")) {
@@ -29,7 +29,7 @@ public class MobileNativeSwitchToWebviewAction extends MobileElementAction {
     }
     Assert.notNull(contextName, String.format(FAILURE_MESSAGE_NOT_AVAILABLE, contexts, currentContext));
     Assert.isTrue(Boolean.FALSE.equals(currentContext.equalsIgnoreCase(contextName)), FAILURE_MESSAGE);
-    getDriver().context(contextName);
+    context(contextName);
     setSuccessMessage(String.format(SUCCESS_MESSAGE, contextName, contexts));
   }
 

@@ -6,12 +6,13 @@ import com.testsigma.automator.actions.FindByType;
 import io.appium.java_client.AppiumDriver;
 import lombok.Getter;
 import lombok.Setter;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebElement;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetUniqueXpathAction extends MobileDriverAction {
+public class GetUniqueXpathAction extends MobileElementAction {
   @Getter
   @Setter
   Platform platform;
@@ -23,12 +24,12 @@ public class GetUniqueXpathAction extends MobileDriverAction {
   @Override
   protected void execute() throws Exception {
     AppiumDriver driver = getDriver();
-    List<RemoteWebElement> webElements = new ArrayList<>();
+    List<WebElement> webElements = new ArrayList<>();
     ElementSearchCriteria elementSearchCriteria = new ElementSearchCriteria(FindByType.XPATH, webElement.getXpath());
     if(webElement.getWebViewName() != null) {
-      driver.context(webElement.getWebViewName());
+      context(webElement.getWebViewName());
       webElements = driver.findElements(elementSearchCriteria.getBy());
-      driver.context("NATIVE_APP");
+      context("NATIVE_APP");
     } else {
       webElements = driver.findElements(elementSearchCriteria.getBy());
     }

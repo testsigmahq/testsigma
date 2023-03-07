@@ -10,6 +10,11 @@
 package com.testsigma.automator.actions.mobile.mobileweb.press;
 
 import com.testsigma.automator.actions.mobile.press.PressSpaceSnippet;
+import io.appium.java_client.AppiumBy;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.android.nativekey.AndroidKey;
+import io.appium.java_client.android.nativekey.KeyEvent;
+import io.appium.java_client.ios.IOSMobileCommandHelper;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.Keys;
 
@@ -20,7 +25,11 @@ public class MobileWebPressSpaceAction extends PressSpaceSnippet {
 
   @Override
   public void execute() throws Exception {
-    getDriver().getKeyboard().pressKey(Keys.SPACE);
+    if (getDriver() instanceof AndroidDriver) {
+      ((AndroidDriver) getDriver()).pressKey(new KeyEvent(AndroidKey.SPACE));
+    } else {
+      getDriver().findElement(AppiumBy.accessibilityId("space")).click();
+    }
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 }

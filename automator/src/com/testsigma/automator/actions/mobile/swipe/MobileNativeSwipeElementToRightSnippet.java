@@ -16,8 +16,17 @@ import io.appium.java_client.touch.offset.PointOption;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.PointerInput;
+import org.openqa.selenium.interactions.Sequence;
 
 import java.time.Duration;
+import java.util.Arrays;
+
+import static java.time.Duration.ofMillis;
+import static java.time.Duration.ofSeconds;
+import static org.openqa.selenium.interactions.PointerInput.Kind.TOUCH;
+import static org.openqa.selenium.interactions.PointerInput.MouseButton.LEFT;
+import static org.openqa.selenium.interactions.PointerInput.Origin.viewport;
 
 @Log4j2
 public class MobileNativeSwipeElementToRightSnippet extends MobileElementAction {
@@ -34,9 +43,13 @@ public class MobileNativeSwipeElementToRightSnippet extends MobileElementAction 
     int x = targetElement.getLocation().getX();
     int y = targetElement.getLocation().getY();
 
-    TouchAction swipeTo = new TouchAction(getDriver());
-    Duration d = Duration.ofSeconds(5);
-    swipeTo.press(PointOption.point(x, y)).waitAction(WaitOptions.waitOptions(d)).moveTo(PointOption.point(startx, endy)).release().perform();
+    PointerInput FINGER = new PointerInput(TOUCH, "finger");
+    Sequence swipe = new Sequence(FINGER, 1)
+            .addAction(FINGER.createPointerMove(ofMillis(0), viewport(), x, y))
+            .addAction(FINGER.createPointerDown(LEFT.asArg()))
+            .addAction(FINGER.createPointerMove(ofSeconds(5), viewport(), startx, endy))
+            .addAction(FINGER.createPointerUp(LEFT.asArg()));
+    getDriver().perform(Arrays.asList(swipe));
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 }

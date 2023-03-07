@@ -7,6 +7,8 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.util.Assert;
 
+import java.time.Duration;
+
 public class WaitUntilFileDownloadIsCompleteAction extends ElementAction {
   private static final String SUCCESS_MESSAGE = "Download is completed";
   private static final String FAILURE_MESSAGE = "Download is not yet completed. Waited for <b>\"%s\"</b> seconds for download to complete";
@@ -31,7 +33,7 @@ public class WaitUntilFileDownloadIsCompleteAction extends ElementAction {
         "    return progress_lst";
       //We create a custom wait with long sleep time. Since we are only allowing max of 120 secs for step level timeout(which
       // may not be sufficient for some downloads), we will be giving additional timeout here.
-      WebDriverWait waiter = new WebDriverWait(getDriver(), 600, 5000);
+      WebDriverWait waiter = new WebDriverWait(getDriver(), Duration.ofMillis(600), Duration.ofMillis(500));
       boolean isDownloadComplted = waiter.until(CustomExpectedConditions.downloadToBeCompletedInChrome(chromeJavaScript));
       Assert.isTrue(isDownloadComplted, String.format(FAILURE_MESSAGE, 600));
       setSuccessMessage(SUCCESS_MESSAGE);

@@ -26,6 +26,7 @@ import org.openqa.selenium.remote.UnreachableBrowserException;
 import org.openqa.selenium.support.ui.UnexpectedTagNameException;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -175,7 +176,7 @@ public abstract class ElementAction extends DriverAction {
 
 
   protected WebDriverWait getWebDriverWait() {
-    return new WebDriverWait(getDriver(), getTimeout());
+    return new WebDriverWait(getDriver(), Duration.ofSeconds(getTimeout()));
   }
 
   protected void handleException(Exception e) {

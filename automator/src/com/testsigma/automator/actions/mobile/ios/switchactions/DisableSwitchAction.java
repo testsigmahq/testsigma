@@ -2,7 +2,7 @@ package com.testsigma.automator.actions.mobile.ios.switchactions;
 
 import com.testsigma.automator.actions.constants.ActionConstants;
 import com.testsigma.automator.actions.mobile.MobileElementAction;
-import io.appium.java_client.MobileElement;
+import org.openqa.selenium.WebElement;
 import org.springframework.util.Assert;
 
 public class DisableSwitchAction extends MobileElementAction {
@@ -15,7 +15,7 @@ public class DisableSwitchAction extends MobileElementAction {
   @Override
   protected void execute() throws Exception {
     findElement();
-    MobileElement targetElement = (MobileElement) getElement();
+    WebElement targetElement = (WebElement) getElement();
     String value = targetElement.getAttribute(ActionConstants.ATTRIBUTE_VALUE);
     Assert.notNull(value, String.format(FAILURE_NULL_VALUE, getFindByType(), getLocatorValue(), targetElement.getAttribute(ActionConstants.ATTRIBUTE_TYPE)));
     if (!value.equals("0")) {

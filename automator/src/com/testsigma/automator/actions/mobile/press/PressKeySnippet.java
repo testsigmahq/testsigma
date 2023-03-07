@@ -11,6 +11,10 @@ package com.testsigma.automator.actions.mobile.press;
 
 import com.testsigma.automator.actions.constants.ErrorCodes;
 import com.testsigma.automator.actions.mobile.MobileElementAction;
+import io.appium.java_client.AppiumBy;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.android.nativekey.AndroidKey;
+import io.appium.java_client.android.nativekey.KeyEvent;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.InvalidElementStateException;
 import org.openqa.selenium.Keys;
@@ -23,8 +27,12 @@ public class PressKeySnippet extends MobileElementAction {
 
   @Override
   public void execute() throws Exception {
-
-    getDriver().getKeyboard().pressKey(Keys.valueOf(getTestData().toUpperCase()));
+//    getDriver().getKeyboard().pressKey(Keys.valueOf(getTestData().toUpperCase()));
+    if (getDriver() instanceof AndroidDriver) {
+      ((AndroidDriver) getDriver()).pressKey(new KeyEvent(AndroidKey.valueOf(getTestData().toUpperCase())));
+    } else {
+      getDriver().findElement(AppiumBy.accessibilityId("delete")).click();
+    }
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 

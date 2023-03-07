@@ -18,7 +18,7 @@ public class MobileNativeCloseSnippet extends MobileElementAction {
 
   @Override
   public void execute() throws Exception {
-    getDriver().closeApp();
+    getDriver().execute(io.appium.java_client.MobileCommand.CLOSE_APP);
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 }

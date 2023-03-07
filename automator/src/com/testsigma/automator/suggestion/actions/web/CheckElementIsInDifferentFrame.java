@@ -48,7 +48,7 @@ public class CheckElementIsInDifferentFrame extends SuggestionAction {
     }
     if (defaultPathName != jsExecutor.executeScript("return window.location.pathname")) {
       getDriver().switchTo().defaultContent();
-      List<WebElement> elements = getDriver().findElementsByXPath("//iframe[@src=\"" + defaultPathName + "\"]");
+      List<WebElement> elements = getDriver().findElements(By.xpath("//iframe[@src=\"" + defaultPathName + "\"]"));
       if (elements.size() > 0) {
         getDriver().switchTo().frame(elements.get(0));
       }

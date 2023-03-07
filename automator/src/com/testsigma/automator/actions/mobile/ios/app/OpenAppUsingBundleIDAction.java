@@ -1,6 +1,10 @@
 package com.testsigma.automator.actions.mobile.ios.app;
 
 import com.testsigma.automator.actions.mobile.MobileElementAction;
+import io.appium.java_client.MobileCommand;
+import io.appium.java_client.ios.IOSDriver;
+
+import java.util.HashMap;
 
 public class OpenAppUsingBundleIDAction extends MobileElementAction {
   private static final String SUCCESS_MESSAGE = "Successfully opened app with bundle id <b>%s</b>";
@@ -9,7 +13,7 @@ public class OpenAppUsingBundleIDAction extends MobileElementAction {
 
   @Override
   protected void execute() throws Exception {
-    getDriver().activateApp(getTestData().trim());
+    ((IOSDriver) getDriver()).activateApp(getTestData().trim());
     setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
   }
 

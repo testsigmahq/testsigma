@@ -7,6 +7,7 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 
@@ -204,7 +205,7 @@ public class CustomExpectedConditions {
       return;
     }
     if (by != null) {
-      (new WebDriverWait(driver, wait)).until(ExpectedConditions.presenceOfElementLocated(by));
+      (new WebDriverWait(driver, Duration.ofSeconds(wait))).until(ExpectedConditions.presenceOfElementLocated(by));
     }
   }
 }

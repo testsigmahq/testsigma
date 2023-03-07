@@ -486,7 +486,7 @@ public class StepProcessor {
     DefaultDataGenerator defaultDataGenerator = defaultDataGeneratorService.find(testStepDTO.getTestDataFunctionId());
     defaultDataGeneratorsEntity.setClassName(defaultDataGenerator.getFile().getClassName());
     defaultDataGeneratorsEntity.setFunctionName(defaultDataGenerator.getFunctionName());
-    Map<String, String> args = (HashMap) defaultDataGenerator.getArguments();
+    Map<String, String> args = (HashMap) testStepDTO.getTestDataFunctionArgs();
     defaultDataGeneratorsEntity.setArguments(args);
     Map<String, String> argsTypes = (HashMap) defaultDataGenerator.getArguments().get("arg_types");
     defaultDataGeneratorsEntity.setArgumentTypes(argsTypes);

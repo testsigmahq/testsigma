@@ -765,6 +765,8 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         setValue['value'] = value;
         setValue['testDataFunction'] = new TestStepTestDataFunction();
         setValue['addonTDF'] = new AddonTestStepTestData();
+        setValue['testDataFunction'] = this.setDataMapValues();
+
         //Test-Data-profile added
         if(reference == 'test-data-profile') {
           testData['test-data-profile-id'] = this.getTestDataProfileIdValue();
@@ -772,6 +774,9 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         if(setValue.type == TestDataType.function){
           this.testStep.testDataFunctionId = this.currentTestDataFunction?.id;
         }
+        let formValue = this.actionForm.getRawValue();
+        this.testStep.testDataFunctionArgs=this.getArguments(formValue);
+
         testData[reference] = setValue
       } else {
         this.isValidTestData = false
@@ -1890,6 +1895,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       testDataFunction.package = this.currentTestDataFunction.classPackage;
       this.testStep.testDataFunctionId = this.currentTestDataFunction.id;
       this.testStep.testDataFunctionArgs = this.getArguments(formValue);
+      return testDataFunction;
     } else if (this.currentTestDataType && this.currentTestDataType == TestDataType.function && this.currentAddonTDF) {
       let formValue = this.actionForm.getRawValue();
       delete formValue.action

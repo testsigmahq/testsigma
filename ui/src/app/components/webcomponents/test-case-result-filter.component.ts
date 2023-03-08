@@ -8,6 +8,8 @@ import {TestCaseTypesService} from "../../services/test-case-types.service";
 import {TestCasePrioritiesService} from "../../services/test-case-priorities.service";
 import {Page} from "../../shared/models/page";
 import {TestPlan} from "../../models/test-plan.model";
+import {FormControl, FormGroup} from "@angular/forms";
+import {TestCaseTag} from "../../models/test-case-tag.model";
 
 @Component({
   selector: 'app-test-case-result-filter',
@@ -26,11 +28,28 @@ export class TestCaseResultFilterComponent implements OnInit {
   public filterTestCasePriorities: string[];
   public testcasePrioritiesList: Page<TestCasePriority>;
   public testCaseTypesList: Page<TestCaseType>;
+  public filterTagIds: number[];
+  public tags: TestCaseTag[];
+  public createdDateRange = new FormGroup({
+    start: new FormControl(),
+    end: new FormControl()
+  });
+  public updatedDateRange = new FormGroup({
+    start: new FormControl(),
+    end: new FormControl()
+  });
+  maxDate = new Date();
 
   constructor(
     public translate: TranslateService,
     private testCaseTypeService: TestCaseTypesService,
     private testCasePriorityService: TestCasePrioritiesService) {
+  }
+
+  dateInvalid(DateRange) {
+    return ((DateRange.controls.start.value || DateRange.controls.start.errors?.matDatepickerParse?.text) ||
+        (DateRange.controls.end.value || DateRange.controls.end.errors?.matDatepickerParse?.text) ) &&
+      DateRange.invalid;
   }
 
   get resultConstant() {
@@ -40,7 +59,10 @@ export class TestCaseResultFilterComponent implements OnInit {
   get isFilterChanged(): Boolean {
     return this.filterResult != undefined ||
       this.filterTestCaseTypes != undefined ||
-      this.filterTestCasePriorities != undefined;
+      this.filterTestCasePriorities != undefined||
+      this.filterTagIds != undefined ||
+      (this.updatedDateRange.value.start && !this.dateInvalid(this.updatedDateRange)) ||
+      (this.createdDateRange.value.start && !this.dateInvalid(this.createdDateRange));
   }
 
   ngOnInit() {

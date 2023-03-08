@@ -24,7 +24,7 @@ import {TestPlanLabType} from '../../../enums/test-plan-lab-type.enum';
       <i
         [class.icon-top]="isNativeIcons"
         class="switcher-icon z-in-10 left-n5 fa-{{this.applicationIcon}}" *ngIf="hasApplicationIcon"
-      [ngClass]="this.applicationIcon=='project-website' ? 'top-n1':'top-n4'">
+      >
       </i>
       <input
         type="text" readonly [class.pl-20]="hasProjectIcon || hasApplicationIcon"

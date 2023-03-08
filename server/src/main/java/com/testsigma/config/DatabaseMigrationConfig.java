@@ -73,6 +73,7 @@ public class DatabaseMigrationConfig {
             flyway.migrate();
         } catch (Exception e) {
             flyway.repair();
+            flywayMigrate();
             log.info(e.getMessage(), e);
         }
     }

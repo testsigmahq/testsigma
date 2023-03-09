@@ -1238,8 +1238,16 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     this.resetTestData();
     this.currentTestDataType = TestDataType.raw;
     this.assignDataValue(this.getDataTypeString(TestDataType.raw, allowedValue));
+    this.clickNextItem();
   }
 
+  clickNextItem(){
+      this.testDataPlaceholder().forEach((item, index) => {
+        if(item.contentEditable == "true" && this.testDataPlaceholder()?.length) {
+          setTimeout(() => this.testDataPlaceholder()[index+1]?.click(), 200);
+        }
+      })
+  }
   setCursorAtTestData() {
     this.skipFocus = true;
     let element = this.testDataPlaceholder()[this.currentDataItemIndex || 0];

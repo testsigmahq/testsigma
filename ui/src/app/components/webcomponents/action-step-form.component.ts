@@ -976,12 +976,14 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
               this.getParameter(item.dataset?.reference);
               this.getTestdataParameters(item.dataset?.reference);
               this.isDefaultType(item.dataset?.reference)
+              console.log(item.dataset?.reference);
               this.currentDataTypeIndex = 0;
               this.currentDataItemIndex = index;
               item.contentEditable = true;
               this.replacer.nativeElement.contentEditable = false;
               this.resetValidation();
-              if (this.removeHtmlTags(item?.textContent).trim().length)
+              item.focus();
+              this.showDataTypes=true;
               if (!this.removeHtmlTags(item?.textContent).trim().length)
                 this.showDataDropdown();
               else
@@ -2054,9 +2056,9 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         this.assignDataValue(this.getDataTypeString(TestDataType.parameter, data));
       }
       else if( typeof(data)==="object" ){
-        if(this.testStep.parentStep.conditionType===TestStepConditionType.LOOP_FOR)
+        if(this.testStep.parentStep?.conditionType===TestStepConditionType.LOOP_FOR)
           this.testStep.testDataProfileStepId = data?.testDataProfileStepId;
-        this.assignDataValue(this.getDataTypeString(TestDataType.parameter, data?.suggestion));
+        this.assignDataValue(this.getDataTypeString(TestDataType?.parameter, data?.suggestion));
       }
     }
     else {
@@ -2231,14 +2233,14 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
 
   fetchTestDataSet(term?) {
     this.isFetchingListData = true;
-    if(this.listDataItem && term?.length) {
+    if(this.listParameterItem && term?.length) {
       let returnData = [];
-      this.listDataItem.forEach(data => {
+      this.listParameterItem.forEach(data => {
         if(data.toLowerCase().includes(term)){
           returnData.push(data);
         }
       });
-      this.listDataItem = returnData;
+      this.listParameterItem = returnData;
       this.isFetchingListData = false;
       return
     }

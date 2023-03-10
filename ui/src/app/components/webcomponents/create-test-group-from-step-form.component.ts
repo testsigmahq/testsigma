@@ -11,7 +11,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {ToastrService} from "ngx-toastr";
 import {TestStepService} from "../../services/test-step.service";
 import {TestStepConditionType} from "../../enums/test-step-condition-type.enum";
-import {Router} from "@angular/router";
+
 
 @Component({
   selector: 'app-copy-test-case',
@@ -24,7 +24,6 @@ export class CreateTestGroupFromStepFormComponent extends BaseComponent implemen
   @ViewChild('nameInput') searchInput: ElementRef;
 
   constructor(
-    public router: Router,
     private dialogRef: MatDialogRef<CreateTestGroupFromStepFormComponent>,
     @Inject(MAT_DIALOG_DATA) public options: {
       testCase: TestCase,

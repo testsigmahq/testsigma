@@ -244,7 +244,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
     this.setTemplate(this.currentTemplate);
     this.showTemplates = false;
-    if(changes['conditionTypeChange']?.currentValue && !changes['conditionTypeChange']?.firstChange) {
+    if(changes['conditionTypeChange']?.currentValue && (!changes['conditionTypeChange']?.firstChange || this.version.workspace.isRest)) {
       this.showActions = true;
       this.showTemplates = true;
       this.currentFocusedIndex = 0;

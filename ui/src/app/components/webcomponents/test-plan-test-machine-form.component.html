@@ -15,6 +15,8 @@
           [class.fa-linux-2]="platform?.isLinux"
           [class.fa-windows-brands]="platform?.isWindows"
           [class.fa-apple]="platform?.isMac"
+          [class.fz-15]="platform?.isMac"
+          [class.line-height-none]="platform?.isMac"
           class="mr-10 text-t-secondary"></span>
         <mat-select
           disableOptionCentering panelClass="single"
@@ -25,6 +27,8 @@
             *ngFor="let platform of platforms"
             [value]="platform.id">
             <i [class.fa-apple]="platform?.isMac"
+               [class.fz-15]="platform?.isMac"
+               [class.line-height-none]="platform?.isMac"
                [class.fa-linux-2]="platform?.isLinux"
                [class.fa-windows-brands]="platform?.isWindows" class="mr-10 text-t-secondary"></i>
             <span [textContent]="platform.name"></span>
@@ -171,6 +175,8 @@
       <i [class.fa-linux-2]="agent?.isLinux"
          [class.fa-windows-brands]="agent?.isWindows"
          [class.fa-apple]="agent?.isMac"
+         [class.fz-15]="agent?.isMac"
+         [class.line-height-none]="agent?.isMac"
          class="text-t-secondary mr-4"></i>
       <span *ngIf="!agent?.isLinux" [translate]="environmentFormGroup.controls['osVersion']?.value"></span>
       <label class="control-label required" [translate]="'test_plan.environment.os_version'"></label>

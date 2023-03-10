@@ -557,7 +557,7 @@ export class MobileRecordingComponent extends BaseComponent implements OnInit {
   }
 
   initElement() {
-    this.getSaveElementsComponent().inspectedElement = this.getMirroringContainerComponent().inspectedElement;
+    this.getSaveElementsComponent().inspectedElement = this.getMirroringContainerComponent()?.inspectedElement;
     this.getSaveElementsComponent().editedIndex = -1;
     this.getSaveElementsComponent().initElement();
   }

@@ -17,10 +17,9 @@ import {CdkConnectedOverlay} from "@angular/cdk/overlay";
       class="primary-nav-item"
       #testDevelopment
       [routerLink]="['/td']" [routerLinkActive]="'active'">
-      <a [routerLink]="['/td']" [routerLinkActive]="'active'"
-         [matTooltip]="'left_nav.test_development' | translate" placement="right">
+      <a [routerLink]="['/td']" [routerLinkActive]="'active'">
         <span>
-            <i class="fa-pencil-on-paper"></i>
+            <i class="fa-pencil-on-paper-new"></i>
         </span>
       </a>
     </li>

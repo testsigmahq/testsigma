@@ -40,7 +40,7 @@ import {TestCaseResult} from "../../models/test-case-result.model";
           </span>
             <span
               [matTooltip]="'test_step.type.REST_STEP' | translate"
-              *ngIf="testStepResult.isRestStep" class="fa-rest-new text-warning mr-5 text-nowrap"></span>
+              *ngIf="testStepResult.isRestStep" class="fa-rest-new text-warning mr-5 text-nowrap line-height-none fz-16"></span>
             <span *ngIf="testStepResult.template" [innerHTML]="testStepResult.parsedStep"></span>
             <span *ngIf="testStepResult.isStepGroup" [textContent]="testStepResult.stepGroup?.name"></span>
             <span

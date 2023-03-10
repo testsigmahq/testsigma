@@ -39,13 +39,14 @@ export class LeftNavComponent extends BaseComponent implements OnInit,OnDestroy 
   public isUsageDetailsVisible: boolean;
   public isTestManager = false;
   public displayGlobalAdd: boolean;
+  public primaryIconHover: boolean;
   public moreAction: boolean;
   public userPreference: UserPreference;
   public isNoAuth : boolean;
   public autoRefresh:any;
   @ViewChild('moreActionRef') moreActionOverlay: CdkConnectedOverlay;
   @ViewChild('primaryHelpContainer') overlayDir: CdkConnectedOverlay;
-
+  public currentHoverItem: string;
   constructor(
     public authGuard: AuthenticationGuard,
     public notificationsService: NotificationsService,
@@ -173,4 +174,10 @@ export class LeftNavComponent extends BaseComponent implements OnInit,OnDestroy 
     this.clearIntervalIfGitHubStarIsShown();
   }
 
+  isHoveringItem(itemName) {
+    this.currentHoverItem = itemName;
+  }
+  isIconItemClicked() {
+    this.primaryIconHover = false;
+  }
 }

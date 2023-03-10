@@ -310,7 +310,24 @@
 }
 .highlight-child-on-hover{
   > div, > span, > li {
-    @extend %dropdown-hover;
+    color: #45526C;
+    font-size: 15px;
+    &:hover, &:focus {
+      color: #028C5F;
+      text-decoration: none;
+      background-color: #ECF8F3;
+      @extend .border-rds-4;
+    }
+
+    i  {
+      font-size: 18px;
+    }
+  }
+  .child-item-content {
+    @extend .px-12, .py-8, .d-flex, .mb-8, .align-items-center;
+    i {
+      @extend .pr-10, .fz-20;
+    }
   }
   @extend .pointer;
 }

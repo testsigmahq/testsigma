@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, EventEmitter, Output} from '@angular/core';
 import {BaseComponent} from "../../shared/components/base.component";
 import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
 import {NotificationsService} from 'angular2-notifications';
@@ -13,6 +13,8 @@ import {UserPreferenceService} from "../../services/user-preference.service";
 })
 export class GlobalAddComponent extends BaseComponent implements OnInit {
   public versionId: Number;
+  @Output('isClicked') isClicked = new EventEmitter<boolean>();
+
 
   constructor(
     public authGuard: AuthenticationGuard,
@@ -31,5 +33,8 @@ export class GlobalAddComponent extends BaseComponent implements OnInit {
     this.userPreferenceService.show().subscribe(res => {
       this.versionId = res?.versionId;
     });
+  }
+  isClickedItems() {
+    this.isClicked.emit(false);
   }
 }

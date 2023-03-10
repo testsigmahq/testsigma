@@ -4,68 +4,91 @@
     <a [routerLink]="['']">
     </a>
   </div>
-  <div class="text-center dropright mouse-over" (mouseover)="displayGlobalAdd=true" (mouseleave)="displayGlobalAdd=false">
-    <a class="primary-icon primary-icon-padding" href="javascript:void(0)">
+  <div class="text-center">
+    <div class="p-12"></div>
+    <div class="dropright mouse-over" (mouseover)="displayGlobalAdd=true" (mouseleave)="displayGlobalAdd=false">
+      <a class="primary-icon p-0" href="javascript:void(0)" style="height: unset">
       <div>
         <i class="fa-plus-filled"></i>
       </div>
     </a>
     <app-global-add
       *ngIf="authGuard?.session?.user && displayGlobalAdd"
-      class="global-add-dropdown"></app-global-add>
+      (isClicked)="displayGlobalAdd = $event"
+      class="global-add-dropdown mt-n10"></app-global-add>
+    </div>
+    <div class="p-6"></div>
   </div>
-  <ul class="primary-nav mt-0" id="ul_primary_menu">
-    <li class="pt15 separator mb-30">
-    </li>
-    <li [routerLink]="['/dashboard']" [routerLinkActive]="'active'">
+  <div>
+    <div class="pt15 mb-30" style="
+        border-bottom: solid 1px #01593D !important;
+        width: 100%;">
+    </div>
+    <div class="text-center dropright mouse-over" (mouseover)="primaryIconHover=true" (mouseleave)="primaryIconHover=false">
+      <ul class="primary-nav mt-0" id="ul_primary_menu">
+        <li
+          (mouseover)="isHoveringItem('dashboard')"
+          [routerLink]="['/dashboard']" [routerLinkActive]="'active'">
       <a
-        [routerLink]="['/dashboard']" [routerLinkActive]="'active'"
-        [matTooltip]="'left_nav.dashboard' | translate"
-        placement="right">
+        (click)="isIconItemClicked()"
+        [routerLink]="['/dashboard']" [routerLinkActive]="'active'">
         <span>
             <i class="fa-dashboard"></i>
         </span>
       </a>
     </li>
-    <app-test-dev-icon class="d-block"></app-test-dev-icon>
-    <li [routerLink]="['/workspaces']" [routerLinkActive]="'active'">
-      <a [routerLink]="['/workspaces']" [routerLinkActive]="'active'"
-         [matTooltip]="'left_nav.workspace_settings' | translate" placement="right">
+        <app-test-dev-icon
+          (mouseover)="isHoveringItem('td')"
+          (click)="isIconItemClicked()"
+          class="d-block"></app-test-dev-icon>
+        <li
+          (mouseover)="isHoveringItem('workspaces')"
+          [routerLink]="['/workspaces']" [routerLinkActive]="'active'">
+      <a
+        (click)="isIconItemClicked()" [routerLink]="['/workspaces']" [routerLinkActive]="'active'">
         <span>
             <i class="fa-suitcase"></i>
         </span>
       </a>
     </li>
-    <li [routerLink]="['/agents']" [routerLinkActive]="'active'"
-        placement="right">
+    <li
+      (mouseover)="isHoveringItem('agents')"
+      [routerLink]="['/agents']" [routerLinkActive]="'active'">
       <a
-        [routerLink]="['/agents']" [routerLinkActive]="'active'"
-         [matTooltip]="'left_nav.agents' | translate" placement="right">
+        (click)="isIconItemClicked()" [routerLink]="['/agents']" [routerLinkActive]="'active'">
         <span>
-            <i class="fa fa-desktop"></i>
+            <i class="fa-agent"></i>
         </span>
       </a>
     </li>
     <li
+      (mouseover)="isHoveringItem('addons')"
       [routerLinkActive]="'active'" [routerLink]="['/addons']">
       <a
-        [routerLinkActive]="'active'" [routerLink]="['/addons']" [matTooltip]="'td_nav.add_ons' | translate"
-        placement="right">
+        (click)="isIconItemClicked()" [routerLinkActive]="'active'" [routerLink]="['/addons']">
         <span>
-         <i class="fa-addons"></i>
+         <i class="fa-custom-functions-alt"></i>
         </span>
       </a>
     </li>
     <li
+      (mouseover)="isHoveringItem('settings')"
       [routerLink]="['/settings']" [routerLinkActive]="'active'">
-      <a [routerLink]="['/settings']" [routerLinkActive]="'active'" [matTooltip]="'left_nav.settings' | translate"
-         placement="right">
+      <a
+        (click)="isIconItemClicked()" [routerLink]="['/settings']" [routerLinkActive]="'active'">
         <span>
-            <i class="fa-settings-wrench"></i>
+            <i class="fa-settings"></i>
         </span>
       </a>
     </li>
   </ul>
+    <app-left-nav-hover
+      *ngIf="authGuard?.session?.user && primaryIconHover"
+      [currentHoverItem]="currentHoverItem"
+      (isClicked)="primaryIconHover = $event"
+      class="global-add-dropdown mt-n8"></app-left-nav-hover>
+    </div>
+  </div>
 
   <div class="profile-action-section">
     <div

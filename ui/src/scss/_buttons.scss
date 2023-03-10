@@ -76,7 +76,7 @@ fieldset:disabled a.btn {
   text-shadow: 0 1px 1px #0c862f;
   @extend .rb-medium;
 
-  &:hover, &:active, &:focus {
+  &:hover{
     background-color: #039465 !important;
     border: 1px solid #039465;
   }

@@ -1,15 +1,46 @@
 <div
   *ngIf="authGuard.session.user"
-  class="bg-white border-rds-4 global-create-modal ng-scope p-15 shadow-all2-b4">
+  class="bg-white border-rds-right-4 global-create-modal ng-scope p-15 shadow-left ml-n7">
   <div
-    class="text-uppercase text-list-header fz-11 pb-5"
+    class="pb-10 theme-border-b rb-medium"
+    style="color: #03A973"
     [translate]="'global.add_title'"></div>
   <li>
     <a
+      (click)="isClickedItems()"
       [routerLink]="['/td', versionId, 'cases', 'create']"
-      class="pl-5 f-medium">
-      <i class="fa-test-cases-alt mr-5"></i>
+      [queryParams]="{ isGroup: false}"
+      class="mt-12 f-medium">
+      <i class="fa-test-cases-alt"></i>
       <span [translate]="'global_add.testcase.title'"></span>
+    </a>
+  </li>
+  <li>
+    <a
+      (click)="isClickedItems()"
+      [routerLink]="['/td', versionId, 'step_groups', 'create']"
+      [queryParams]="{ isGroup: true}"
+      class="mt-12 f-medium">
+      <i class="fa-step-group"></i>
+      <span [translate]="'testcase.list.hint.step_group'"></span>
+    </a>
+  </li>
+  <li>
+    <a
+      (click)="isClickedItems()"
+      [routerLink]="['/td', versionId, 'elements', 'create']"
+      class="mt-12 f-medium">
+      <i class="fa-ui-identifiers-alt"></i>
+      <span [textContent]="'td_nav.elements' | translate"></span>
+    </a>
+  </li>
+  <li>
+    <a
+      (click)="isClickedItems()"
+      [routerLink]="['/td', versionId , 'data', 'new']"
+      class="mt-12 f-medium text-nowrap">
+      <i class="fa-test-data-alt"></i>
+      <span [textContent]="'testcase.list.test_data' | translate"></span>
     </a>
   </li>
 </div>

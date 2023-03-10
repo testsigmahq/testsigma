@@ -286,6 +286,9 @@ import {XrayKeyWarningComponent} from './agents/components/webcomponents/xray-ke
 import {XrayComponent} from './components/xraycomponent/xray.component';
 import {TestProjectImportComponent} from "./components/webcomponents/test-project-import.component";
 import {ConfirmationModalComponent} from "./shared/components/webcomponents/confirmation-modal.component";
+import {LeftNavHoverComponent} from "./components/webcomponents/left-nav-hover.component";
+import {DashboardGlobalAddComponent} from "./components/webcomponents/dashboard-global-add.component";
+
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -552,6 +555,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     XrayKeyWarningComponent,
     XrayComponent,
     TestProjectImportComponent,
+    LeftNavHoverComponent,
+    DashboardGlobalAddComponent
   ],
   imports: [
     BrowserModule,

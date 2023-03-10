@@ -346,26 +346,32 @@
 }
 
 .global-create-modal {
+  width: 200px;
 	list-style: none;
 	color: #2d4a60;
 	> li a {
 		@extend .d-flex;
 		@extend .align-items-center;
-		color: #2d4a60;
-		@extend .fz-13;
-	    padding: 10px;
+    color: #38414D;
+    @extend .fz-14;
+    font-weight: 600;
+    padding: 8px 12px 8px 8px;
+    height: 37px;
 	    display: block;
-		@extend .border-rds-2;
+		@extend .border-rds-4;
 	    text-decoration: none;
 	    line-height: 16px;
-	 	&:hover	{
+	 	&:hover, &.active	{
 		    background-color: $light-green-color;
 		    fill: $light-green-color;
 		}
 		i {
-			padding-right: 5px;
+			padding-right: 10px;
 		}
 	}
+  &.shadow-left {
+    box-shadow: 0 10px 30px rgb(0 0 0 / 25%);
+  }
 }
 
 .global-love-modal {

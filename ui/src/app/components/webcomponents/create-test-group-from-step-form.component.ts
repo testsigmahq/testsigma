@@ -11,6 +11,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {ToastrService} from "ngx-toastr";
 import {TestStepService} from "../../services/test-step.service";
 import {TestStepConditionType} from "../../enums/test-step-condition-type.enum";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-copy-test-case',
@@ -23,6 +24,7 @@ export class CreateTestGroupFromStepFormComponent extends BaseComponent implemen
   @ViewChild('nameInput') searchInput: ElementRef;
 
   constructor(
+    public router: Router,
     private dialogRef: MatDialogRef<CreateTestGroupFromStepFormComponent>,
     @Inject(MAT_DIALOG_DATA) public options: {
       testCase: TestCase,
@@ -84,6 +86,10 @@ export class CreateTestGroupFromStepFormComponent extends BaseComponent implemen
       setTimeout(() => this.searchInput.nativeElement.focus(), 200);
     })
   }
+  navigateToCase(testCaseId: number){
+    window.open('td/cases/'+testCaseId.toString(), '_blank');
+
+  }
 
   saveAsStepGroup(isReplace?: boolean) {
     this.saving = true;
@@ -96,6 +102,7 @@ export class CreateTestGroupFromStepFormComponent extends BaseComponent implemen
     }
     this.testCaseService.copy(copyStepGroup).subscribe(
       (testCase) => {
+        this.navigateToCase(testCase.id)
         this.translate.get('test_step.copy_as.step_group.success').subscribe((res: string) => {
           this.showNotification(NotificationType.Success, res);
           this.dialogRef.close({testCase: testCase, isReplace: isReplace});

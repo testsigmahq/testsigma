@@ -4,10 +4,10 @@
 
 @font-face {
   font-family: "font_custom";
-  src: url("~/assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.woff2") format("woff2"),
-       url("~/assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.woff") format("woff"),
-       url("~/assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.ttf") format("truetype"),
-       url("~/assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.svg#font_custom") format("svg");
+  src: url("~/assets/font_icons/font_custom_33b611c3842428c6561f5d145675b3f7.woff2") format("woff2"),
+       url("~/assets/font_icons/font_custom_33b611c3842428c6561f5d145675b3f7.woff") format("woff"),
+       url("~/assets/font_icons/font_custom_33b611c3842428c6561f5d145675b3f7.ttf") format("truetype"),
+       url("~/assets/font_icons/font_custom_33b611c3842428c6561f5d145675b3f7.svg#font_custom") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -15,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: "font_custom";
-    src: url("~/assets/font_icons/font_custom_79e7bdc8f1969a3294a43002952f0f87.svg#font_custom") format("svg");
+    src: url("~/assets/font_icons/font_custom_33b611c3842428c6561f5d145675b3f7.svg#font_custom") format("svg");
   }
 }
 
@@ -30,6 +30,7 @@
 .fa-add-to-queue:before,
 .fa-addon:before,
 .fa-addons:before,
+.fa-agent:before,
 .fa-alert:before,
 .fa-alert-exists:before,
 .fa-all-items:before,
@@ -110,6 +111,8 @@
 .fa-close-alt:before,
 .fa-close-large:before,
 .fa-cloud:before,
+.fa-cloud_done:before,
+.fa-cloud_upload_waiting:before,
 .fa-code-format:before,
 .fa-code-struture:before,
 .fa-code-view:before,
@@ -129,8 +132,10 @@
 .fa-css:before,
 .fa-current-page-url:before,
 .fa-cursor-click-flash:before,
+.fa-custom-functions-alt:before,
 .fa-dashboard:before,
 .fa-data-grid:before,
+.fa-data-usage:before,
 .fa-database-solid:before,
 .fa-default-generators:before,
 .fa-delete-icon:before,
@@ -255,6 +260,7 @@
 .fa-list:before,
 .fa-list-alt:before,
 .fa-list-of-frames:before,
+.fa-live-help:before,
 .fa-location:before,
 .fa-lock-open-solid:before,
 .fa-lock-solid:before,
@@ -278,6 +284,7 @@
 .fa-nlp:before,
 .fa-nlp-2:before,
 .fa-nlp-grammar:before,
+.fa-nlp-grammar-alt:before,
 .fa-nlp-new:before,
 .fa-not-equal-solid:before,
 .fa-npl-grammar-alt:before,
@@ -291,6 +298,7 @@
 .fa-pause-record:before,
 .fa-pdf-file:before,
 .fa-pencil-on-paper:before,
+.fa-pencil-on-paper-new:before,
 .fa-pencil-thick:before,
 .fa-pencil-without-border:before,
 .fa-people-group:before,
@@ -316,6 +324,8 @@
 .fa-profile:before,
 .fa-project-andriod:before,
 .fa-project-api:before,
+.fa-project-desktop-mac:before,
+.fa-project-desktop-windows:before,
 .fa-project-ios:before,
 .fa-project-mobile:before,
 .fa-project-website:before,
@@ -329,11 +339,13 @@
 .fa-record-circle:before,
 .fa-record-new:before,
 .fa-record-play:before,
+.fa-redeem:before,
 .fa-refresh:before,
 .fa-refresh-new:before,
 .fa-refresh-thick:before,
 .fa-reorder:before,
 .fa-reports:before,
+.fa-requirements-alt:before,
 .fa-rest-cloud:before,
 .fa-rest-new:before,
 .fa-restful-api:before,
@@ -377,6 +389,7 @@
 .fa-selection:before,
 .fa-sendkeys:before,
 .fa-setting-outlined:before,
+.fa-settings:before,
 .fa-settings-wrench:before,
 .fa-sheduled:before,
 .fa-shield:before,
@@ -430,6 +443,7 @@
 .fa-trash:before,
 .fa-trash-thin:before,
 .fa-triangle-down:before,
+.fa-ui-identifiers-alt:before,
 .fa-up-arrow-filled:before,
 .fa-up-sort:before,
 .fa-update:before,
@@ -484,6 +498,7 @@
 .fa-add-to-queue:before { content: "\f2d0"; }
 .fa-addon:before { content: "\f291"; }
 .fa-addons:before { content: "\f2c8"; }
+.fa-agent:before { content: "\f2d4"; }
 .fa-alert:before { content: "\f104"; }
 .fa-alert-exists:before { content: "\f29a"; }
 .fa-all-items:before { content: "\f21f"; }
@@ -564,6 +579,8 @@
 .fa-close-alt:before { content: "\f232"; }
 .fa-close-large:before { content: "\f132"; }
 .fa-cloud:before { content: "\f20f"; }
+.fa-cloud_done:before { content: "\f2d5"; }
+.fa-cloud_upload_waiting:before { content: "\f2d6"; }
 .fa-code-format:before { content: "\f297"; }
 .fa-code-struture:before { content: "\f298"; }
 .fa-code-view:before { content: "\f299"; }
@@ -583,8 +600,10 @@
 .fa-css:before { content: "\f139"; }
 .fa-current-page-url:before { content: "\f29c"; }
 .fa-cursor-click-flash:before { content: "\f1f3"; }
+.fa-custom-functions-alt:before { content: "\f2d7"; }
 .fa-dashboard:before { content: "\f13d"; }
 .fa-data-grid:before { content: "\f244"; }
+.fa-data-usage:before { content: "\f2d8"; }
 .fa-database-solid:before { content: "\f13e"; }
 .fa-default-generators:before { content: "\f2b7"; }
 .fa-delete-icon:before { content: "\f13f"; }
@@ -709,6 +728,7 @@
 .fa-list:before { content: "\f17b"; }
 .fa-list-alt:before { content: "\f17c"; }
 .fa-list-of-frames:before { content: "\f2a3"; }
+.fa-live-help:before { content: "\f2e1"; }
 .fa-location:before { content: "\f17d"; }
 .fa-lock-open-solid:before { content: "\f17e"; }
 .fa-lock-solid:before { content: "\f17f"; }
@@ -732,6 +752,7 @@
 .fa-nlp:before { content: "\f188"; }
 .fa-nlp-2:before { content: "\f189"; }
 .fa-nlp-grammar:before { content: "\f18a"; }
+.fa-nlp-grammar-alt:before { content: "\f2d9"; }
 .fa-nlp-new:before { content: "\f18b"; }
 .fa-not-equal-solid:before { content: "\f18c"; }
 .fa-npl-grammar-alt:before { content: "\f2cc"; }
@@ -745,6 +766,7 @@
 .fa-pause-record:before { content: "\f2cd"; }
 .fa-pdf-file:before { content: "\f224"; }
 .fa-pencil-on-paper:before { content: "\f18f"; }
+.fa-pencil-on-paper-new:before { content: "\f2da"; }
 .fa-pencil-thick:before { content: "\f270"; }
 .fa-pencil-without-border:before { content: "\f190"; }
 .fa-people-group:before { content: "\f2bd"; }
@@ -770,6 +792,8 @@
 .fa-profile:before { content: "\f19a"; }
 .fa-project-andriod:before { content: "\f28c"; }
 .fa-project-api:before { content: "\f28d"; }
+.fa-project-desktop-mac:before { content: "\f2db"; }
+.fa-project-desktop-windows:before { content: "\f2dc"; }
 .fa-project-ios:before { content: "\f28e"; }
 .fa-project-mobile:before { content: "\f28f"; }
 .fa-project-website:before { content: "\f290"; }
@@ -783,11 +807,13 @@
 .fa-record-circle:before { content: "\f19f"; }
 .fa-record-new:before { content: "\f1a0"; }
 .fa-record-play:before { content: "\f2ba"; }
+.fa-redeem:before { content: "\f2dd"; }
 .fa-refresh:before { content: "\f1a1"; }
 .fa-refresh-new:before { content: "\f1f7"; }
 .fa-refresh-thick:before { content: "\f1a2"; }
 .fa-reorder:before { content: "\f1a3"; }
 .fa-reports:before { content: "\f1a4"; }
+.fa-requirements-alt:before { content: "\f2de"; }
 .fa-rest-cloud:before { content: "\f1a6"; }
 .fa-rest-new:before { content: "\f1a7"; }
 .fa-restful-api:before { content: "\f1a8"; }
@@ -831,6 +857,7 @@
 .fa-selection:before { content: "\f1bb"; }
 .fa-sendkeys:before { content: "\f20b"; }
 .fa-setting-outlined:before { content: "\f266"; }
+.fa-settings:before { content: "\f2df"; }
 .fa-settings-wrench:before { content: "\f1bc"; }
 .fa-sheduled:before { content: "\f1bd"; }
 .fa-shield:before { content: "\f1be"; }
@@ -884,6 +911,7 @@
 .fa-trash:before { content: "\f1d5"; }
 .fa-trash-thin:before { content: "\f1d6"; }
 .fa-triangle-down:before { content: "\f1d7"; }
+.fa-ui-identifiers-alt:before { content: "\f2e0"; }
 .fa-up-arrow-filled:before { content: "\f1d9"; }
 .fa-up-sort:before { content: "\f1da"; }
 .fa-update:before { content: "\f228"; }
@@ -925,6 +953,7 @@ $font-font_custom-add-previous: "\f103";
 $font-font_custom-add-to-queue: "\f2d0";
 $font-font_custom-addon: "\f291";
 $font-font_custom-addons: "\f2c8";
+$font-font_custom-agent: "\f2d4";
 $font-font_custom-alert: "\f104";
 $font-font_custom-alert-exists: "\f29a";
 $font-font_custom-all-items: "\f21f";
@@ -1005,6 +1034,8 @@ $font-font_custom-close: "\f131";
 $font-font_custom-close-alt: "\f232";
 $font-font_custom-close-large: "\f132";
 $font-font_custom-cloud: "\f20f";
+$font-font_custom-cloud_done: "\f2d5";
+$font-font_custom-cloud_upload_waiting: "\f2d6";
 $font-font_custom-code-format: "\f297";
 $font-font_custom-code-struture: "\f298";
 $font-font_custom-code-view: "\f299";
@@ -1024,8 +1055,10 @@ $font-font_custom-crown: "\f26c";
 $font-font_custom-css: "\f139";
 $font-font_custom-current-page-url: "\f29c";
 $font-font_custom-cursor-click-flash: "\f1f3";
+$font-font_custom-custom-functions-alt: "\f2d7";
 $font-font_custom-dashboard: "\f13d";
 $font-font_custom-data-grid: "\f244";
+$font-font_custom-data-usage: "\f2d8";
 $font-font_custom-database-solid: "\f13e";
 $font-font_custom-default-generators: "\f2b7";
 $font-font_custom-delete-icon: "\f13f";
@@ -1150,6 +1183,7 @@ $font-font_custom-linux-2: "\f17a";
 $font-font_custom-list: "\f17b";
 $font-font_custom-list-alt: "\f17c";
 $font-font_custom-list-of-frames: "\f2a3";
+$font-font_custom-live-help: "\f2e1";
 $font-font_custom-location: "\f17d";
 $font-font_custom-lock-open-solid: "\f17e";
 $font-font_custom-lock-solid: "\f17f";
@@ -1173,6 +1207,7 @@ $font-font_custom-new-project: "\f288";
 $font-font_custom-nlp: "\f188";
 $font-font_custom-nlp-2: "\f189";
 $font-font_custom-nlp-grammar: "\f18a";
+$font-font_custom-nlp-grammar-alt: "\f2d9";
 $font-font_custom-nlp-new: "\f18b";
 $font-font_custom-not-equal-solid: "\f18c";
 $font-font_custom-npl-grammar-alt: "\f2cc";
@@ -1186,6 +1221,7 @@ $font-font_custom-paper-flight: "\f18e";
 $font-font_custom-pause-record: "\f2cd";
 $font-font_custom-pdf-file: "\f224";
 $font-font_custom-pencil-on-paper: "\f18f";
+$font-font_custom-pencil-on-paper-new: "\f2da";
 $font-font_custom-pencil-thick: "\f270";
 $font-font_custom-pencil-without-border: "\f190";
 $font-font_custom-people-group: "\f2bd";
@@ -1211,6 +1247,8 @@ $font-font_custom-productivity: "\f26a";
 $font-font_custom-profile: "\f19a";
 $font-font_custom-project-andriod: "\f28c";
 $font-font_custom-project-api: "\f28d";
+$font-font_custom-project-desktop-mac: "\f2db";
+$font-font_custom-project-desktop-windows: "\f2dc";
 $font-font_custom-project-ios: "\f28e";
 $font-font_custom-project-mobile: "\f28f";
 $font-font_custom-project-website: "\f290";
@@ -1224,11 +1262,13 @@ $font-font_custom-record: "\f19e";
 $font-font_custom-record-circle: "\f19f";
 $font-font_custom-record-new: "\f1a0";
 $font-font_custom-record-play: "\f2ba";
+$font-font_custom-redeem: "\f2dd";
 $font-font_custom-refresh: "\f1a1";
 $font-font_custom-refresh-new: "\f1f7";
 $font-font_custom-refresh-thick: "\f1a2";
 $font-font_custom-reorder: "\f1a3";
 $font-font_custom-reports: "\f1a4";
+$font-font_custom-requirements-alt: "\f2de";
 $font-font_custom-rest-cloud: "\f1a6";
 $font-font_custom-rest-new: "\f1a7";
 $font-font_custom-restful-api: "\f1a8";
@@ -1272,6 +1312,7 @@ $font-font_custom-search_left: "\f1ba";
 $font-font_custom-selection: "\f1bb";
 $font-font_custom-sendkeys: "\f20b";
 $font-font_custom-setting-outlined: "\f266";
+$font-font_custom-settings: "\f2df";
 $font-font_custom-settings-wrench: "\f1bc";
 $font-font_custom-sheduled: "\f1bd";
 $font-font_custom-shield: "\f1be";
@@ -1325,6 +1366,7 @@ $font-font_custom-top-arrow: "\f1d4";
 $font-font_custom-trash: "\f1d5";
 $font-font_custom-trash-thin: "\f1d6";
 $font-font_custom-triangle-down: "\f1d7";
+$font-font_custom-ui-identifiers-alt: "\f2e0";
 $font-font_custom-up-arrow-filled: "\f1d9";
 $font-font_custom-up-sort: "\f1da";
 $font-font_custom-update: "\f228";

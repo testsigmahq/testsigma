@@ -20,6 +20,8 @@
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
     <maven.compiler.plugin>3.8.1</maven.compiler.plugin>
+    <selenium.version>4.8.1</selenium.version>
+    <guava.version>31.1-jre</guava.version>
     <lombok.version>1.18.20</lombok.version>
     <mapstruct.version>1.4.2.Final</mapstruct.version>
     <aws.version>1.11.46</aws.version>
@@ -139,6 +141,12 @@
       <groupId>com.android.tools.ddms</groupId>
       <artifactId>ddmlib</artifactId>
       <version>${android.tools.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>

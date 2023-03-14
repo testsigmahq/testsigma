@@ -139,6 +139,12 @@
       <groupId>org.everit.json</groupId>
       <artifactId>org.everit.json.schema</artifactId>
       <version>${org.everit.json.schema}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -284,7 +290,7 @@
     <dependency>
       <groupId>com.testsigma</groupId>
       <artifactId>testsigma-java-sdk</artifactId>
-      <version>1.0.0.rc1</version>
+      <version>1.0.10_beta_1</version>
     </dependency>
 
     <dependency>

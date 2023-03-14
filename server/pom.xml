@@ -46,7 +46,7 @@
     <flyway.db.version>7.11.0</flyway.db.version>
     <lombok-version>1.18.20</lombok-version>
     <mapstruct-version>1.4.2.Final</mapstruct-version>
-    <google-guava-version>31.0.1-jre</google-guava-version>
+    <google-guava-version>31.1-jre</google-guava-version>
     <one-login-saml-version>2.4.0</one-login-saml-version>
     <spring-data-jpa-version>2.5.2</spring-data-jpa-version>
     <poi.version>3.15</poi.version>

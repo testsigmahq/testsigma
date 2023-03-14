@@ -7,6 +7,7 @@
 
 package com.testsigma.agent.controllers;
 
+import com.testsigma.agent.browsers.AgentBrowser;
 import com.testsigma.agent.config.AgentConfig;
 import com.testsigma.agent.constants.AgentOs;
 import com.testsigma.agent.dto.AgentDTO;
@@ -28,8 +29,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 @Log4j2
 @RestController
@@ -57,7 +61,7 @@ public class HomeController {
       agentDTO.setHostName(hostName);
       agentDTO.setOsVersion(AgentService.getOsVersion());
       agentDTO.setAgentVersion(this.agentConfig.getAgentVersion());
-      agentDTO.setBrowserList(agentBrowserService.getBrowserList());
+      agentDTO.setBrowserList(getUniqueBrowsersList(agentBrowserService.getBrowserList()));
       agentDTO.setHostName(hostName);
       agentDTO.setOsType(osType);
 
@@ -83,5 +87,9 @@ public class HomeController {
       log.error(ex.getMessage(), ex);
     }
     return response;
+  }
+  private ArrayList<AgentBrowser> getUniqueBrowsersList(ArrayList<AgentBrowser> browsers){
+    Set<AgentBrowser> set = browsers.stream().collect(Collectors.toSet());
+    return new ArrayList<>(set);
   }
 }

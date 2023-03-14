@@ -147,4 +147,7 @@ public interface TestDataProfileMapper {
     }
 
   TestData copy(TestData testData);
+
+  @Mapping(target = "testData", ignore = true)
+  TestDataSet copySet(TestDataSet testData);
 }

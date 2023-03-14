@@ -19,6 +19,7 @@ import com.testsigma.event.EventType;
 import com.testsigma.event.TestStepEvent;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaException;
+import com.testsigma.mapper.ForLoopConditionsMapper;
 import com.testsigma.mapper.RestStepMapper;
 import com.testsigma.mapper.TestStepMapper;
 import com.testsigma.mapper.recorder.TestStepRecorderMapper;
@@ -42,9 +43,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -66,6 +69,8 @@ public class TestStepService extends XMLExportImportService<TestStep> {
     private final ImportAffectedTestCaseXLSExportService affectedTestCaseXLSExportService;
     private final TestStepMapper testStepMapper;
     private final TestStepRecorderMapper testStepRecorderMapper;
+    private final ForLoopConditionService forLoopConditionService;
+    private final ForLoopConditionsMapper forLoopConditionsMapper;
 
     private final List<ActionTestDataMap> actionTestDataMap = getMapsList();
     private final List<Integer> depreciatedIds = DeprecatedActionMapper.getAllDeprecatedActionIds();
@@ -500,10 +505,10 @@ public class TestStepService extends XMLExportImportService<TestStep> {
                     stepsMap.put(step, "Custom Functions not supported in OS");
                     log.info("disabling Custom function test step to avoid further issues, since CSFs are deprecated");
                 }
-                if (step.getType() == TestStepType.FOR_LOOP) {
-                    Optional<TestData> testData = testDataService.getRecentImportedEntity(importDTO, step.getForLoopTestDataId());
+                if (step.getConditionType() == TestStepConditionType.LOOP_FOR && step.getForLoopConditions() != null) {
+                    Optional<TestData> testData = testDataService.getRecentImportedEntity(importDTO, step.getDataMap().getForLoop().getTestDataId());
                     if (testData.isPresent())
-                        step.setForLoopTestDataId(testData.get().getId());
+                        step.getDataMap().getForLoop().setTestDataId(testData.get().getId());
                 }
             }
             return steps;
@@ -515,9 +520,9 @@ public class TestStepService extends XMLExportImportService<TestStep> {
                     Optional<TestData> testData = testDataService.getRecentImportedEntity(importDTO, step.getTestDataProfileStepId());
                     testData.ifPresent(data -> step.setTestDataProfileStepId(data.getId()));
                 }
-                if (step.getType() == TestStepType.FOR_LOOP) {
-                    Optional<TestData> testData = testDataService.getRecentImportedEntity(importDTO, step.getForLoopTestDataId());
-                    testData.ifPresent(data -> step.setForLoopTestDataId(data.getId()));
+                if (step.getType() == TestStepType.FOR_LOOP || step.getConditionType() == TestStepConditionType.LOOP_FOR) {
+                    Optional<TestData> testData = testDataService.getRecentImportedEntity(importDTO, step.getForLoopConditions().get(0).getTestDataProfileId());
+                    //testData.ifPresent(data -> step.setForLoopConditions());
                 }
             }
             return steps;
@@ -588,6 +593,16 @@ public class TestStepService extends XMLExportImportService<TestStep> {
         return present;
     }
 
+    @Override
+    public TestStep processAfterSave(Optional<TestStep> previous, TestStep present, TestStep importEntity, BackupDTO importDTO) {
+        if(importEntity != null && importEntity.getForLoopConditions() != null && importEntity.getForLoopConditions().size() > 0) {
+            ForLoopCondition forLoopCondition = importEntity.getForLoopConditions().get(0);
+            forLoopCondition.setTestStepId(present.getId());
+            forLoopConditionService.save(forLoopCondition);
+        }
+        return present;
+    }
+
     public boolean hasToSkip(TestStep testStep, BackupDTO importDTO) {
         Optional<TestCase> testCase = testCaseService.getRecentImportedEntity(importDTO, testStep.getTestCaseId());
         return testCase.isEmpty();
@@ -625,6 +640,16 @@ public class TestStepService extends XMLExportImportService<TestStep> {
                 testStepDTOSToReturn.add(testStepDTO);
         }
         return testStepDTOSToReturn;
+    }
+
+    public List<TestStepRecorderDTO> setForLoopConditions(List<TestStepRecorderDTO> testStepDTOS) {
+        for(TestStepRecorderDTO testStepRecorderDTO : testStepDTOS) {
+            if(testStepRecorderDTO.getConditionType() == TestStepConditionType.LOOP_FOR) {
+                ForLoopCondition forLoopCondition = forLoopConditionService.findByTestStepId(testStepRecorderDTO.getId()).get();
+                testStepRecorderDTO.setForLoopCondition(forLoopConditionsMapper.getForLoopConditionDTO(forLoopCondition));
+            }
+        }
+        return testStepDTOS;
     }
 
     private void setTemplateId(TestStep present, BackupDTO importDTO) throws ResourceNotFoundException {

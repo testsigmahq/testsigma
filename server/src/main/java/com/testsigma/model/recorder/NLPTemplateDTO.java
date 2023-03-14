@@ -19,4 +19,5 @@ public class NLPTemplateDTO {
     private Boolean deprecated;
     private Map<String, List> allowedValues;
     private StepActionType stepActionType;
+    private String loopType;
 }

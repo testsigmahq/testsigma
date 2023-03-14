@@ -21,13 +21,13 @@ import java.util.Map;
 
 @Log4j2
 public class ParameterTestDataProcessor extends TestDataProcessor{
-  protected com.testsigma.model.TestDataSet testDataSet;
+  protected TestDataSet testDataSet;
   protected Integer index;
   protected  Long stepId;
   protected TestData testData;
-  protected Map<Long, Integer> stepGroupParentForLoopStepIdIndexes;
-  public static final Long OVERRIDE_STEP_GROUP_STEP_WITH_TEST_CASE_PROFILE_ID = -2l;
+  protected Map<Long, Long> stepGroupParentForLoopStepIdTestDataSetMap;
   protected TestDataSetService testDataSetService;
+  public static final Long OVERRIDE_STEP_GROUP_STEP_WITH_TEST_CASE_PROFILE_ID = -2l;
   String TEST_DATA_NOT_FOUND = "Test Step is not Executed Because TestData parameter is not found %s with in selected step id Test data profile.";
   private final String TEST_DATA_OUT_OF_RANGE = "selected test data profile %s size %s is less than in index %s";
   private final String TEST_DATA_UNKNOWN_ERROR = "Unknown error occurred while processing test data profile %s with index %s and name %s";
@@ -39,14 +39,14 @@ public class ParameterTestDataProcessor extends TestDataProcessor{
 
   public ParameterTestDataProcessor(TestCaseEntityDTO testCaseEntityDTO,
                                     TestCaseStepEntityDTO testCaseStepEntityDTO,
-                                    Map<Long, Integer> stepGroupParentForLoopStepIdIndexes,
+                                    Map<Long, Long> stepGroupParentForLoopStepIdTestDataSetMap,
                                     com.testsigma.model.TestDataSet testDataSet, String parameter,
                                     TestDataPropertiesEntity testDataPropertiesEntity,
                                     WebApplicationContext context) {
     super(testCaseStepEntityDTO, testCaseEntityDTO, testDataPropertiesEntity, context);
     this.testCaseEntityDTO = testCaseEntityDTO;
     this.testCaseStepEntityDTO = testCaseStepEntityDTO;
-    this.stepGroupParentForLoopStepIdIndexes = stepGroupParentForLoopStepIdIndexes;
+    this.stepGroupParentForLoopStepIdTestDataSetMap = stepGroupParentForLoopStepIdTestDataSetMap;
     this.testDataSet = testDataSet;
     this.parameter = parameter;
     this.testDataSetService =  (TestDataSetService) context.getBean("testDataSetService");
@@ -74,10 +74,11 @@ public class ParameterTestDataProcessor extends TestDataProcessor{
 
   private void processOverRiddenParentStepParameter(){
     try {
-      TestStep testStep = testStepService.find(stepId);
-      TestData testData = testDataService.find(testStep.getForLoopTestDataId());
-      processLoopParameter(testData, parameter,
-              this.stepGroupParentForLoopStepIdIndexes.get(stepId));
+      TestData testData;
+      TestDataSet testDataSet;
+      testDataSet = testDataSetService.find(this.stepGroupParentForLoopStepIdTestDataSetMap.get(stepId));
+      testData = testDataService.find(testDataSet.getTestDataProfileId());
+      processLoopParameter(testData, parameter, testDataSet);
     }catch (ResourceNotFoundException exception){
       this.exception = exception;
       log.error(exception, exception);
@@ -88,7 +89,7 @@ public class ParameterTestDataProcessor extends TestDataProcessor{
   public void processTestCaseParameter(Long testCaseId, Integer index) {
     try {
       TestData testData = testDataService.find(testCaseService.find(testCaseId).getTestDataId());
-      processLoopParameter(testData, parameter, index);
+      processLoopParameter(testData, parameter, testData.getTempTestData().get(index));
     }catch (ResourceNotFoundException exception){
       this.exception = exception;
       log.error(exception, exception);
@@ -96,12 +97,12 @@ public class ParameterTestDataProcessor extends TestDataProcessor{
     }
   }
 
-  public void processLoopParameter(TestData testData, String parameter, Integer index) {
+  public void processLoopParameter(TestData testData, String parameter, TestDataSet testDataSet) {
     try {
       this.index = index;
       this.parameter = parameter;
       this.testData = testData;
-      processTestData(testData.getTempTestData().get(index), parameter);
+      processTestData(testDataSet, parameter);
     } catch (IndexOutOfBoundsException indexOutOfBoundsException) {
       exception = indexOutOfBoundsException;
       setForLoopErrorMessage();

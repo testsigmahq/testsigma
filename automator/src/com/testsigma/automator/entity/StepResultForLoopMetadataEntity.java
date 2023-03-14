@@ -6,6 +6,8 @@ import lombok.Data;
 public class StepResultForLoopMetadataEntity {
 
   private int index;
+  private ForLoopConditionsEntity forLoopConditions;
   private String iteration;
   private String testDataName;
+  private Boolean emptyIterations;
 }

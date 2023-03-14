@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Optional, Output} from '@angular/core';
 import {BaseComponent} from "../../shared/components/base.component";
 import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
 import {TestStepService} from "../../services/test-step.service";
@@ -27,6 +27,8 @@ import {LinkedEntitiesModalComponent} from "../../shared/components/webcomponent
 import {StepsListComponent} from "../cases/steps-list.component";
 import {SharedService} from "../../services/shared.service";
 import {TestDataService} from "../../services/test-data.service";
+import {TestData} from "../../models/test-data.model";
+import {ForLoopData} from "../../models/for-loop-data.model";
 
 @Component({
   selector: 'app-test-step-list-item',
@@ -68,7 +70,8 @@ export abstract class TestStepListItemComponent extends BaseComponent implements
     public testStepService: TestStepService,
     public naturalTestActionService: NaturalTextActionsService,
     public matModal: MatDialog,
-    public sharedService: SharedService
+    public sharedService: SharedService,
+    @Optional() public testDataService?: TestDataService
   ) {
     super(authGuard, notificationsService, translate, toastrService);
   }
@@ -121,19 +124,19 @@ export abstract class TestStepListItemComponent extends BaseComponent implements
     //   }
     // }
   }
-  private openLinkedTestStepsDialog(list) {
-    this.translate.get("step_is_prerequisite_to_another_step").subscribe((res) => {
-      this.matModal.open(LinkedEntitiesModalComponent, {
-        width: '568px',
-        height: 'auto',
-        data: {
-          description: res,
-          linkedEntityList: list,
-        },
-        panelClass: ['mat-dialog', 'rds-none']
-      });
-    });
-  }
+  // private openLinkedTestStepsDialog(list) {
+  //   this.translate.get("step_is_prerequisite_to_another_step").subscribe((res) => {
+  //     this.matModal.open(LinkedEntitiesModalComponent, {
+  //       width: '568px',
+  //       height: 'auto',
+  //       data: {
+  //         description: res,
+  //         linkedEntityList: list,
+  //       },
+  //       panelClass: ['mat-dialog', 'rds-none']
+  //     });
+  //   });
+  // }
 
   destroyStep(testStep: TestStep) {
     this.testStepService.destroy(testStep.id).subscribe(() => {
@@ -156,21 +159,62 @@ export abstract class TestStepListItemComponent extends BaseComponent implements
       steps.content[0].setStepDisplayNumber(steps.content, step.stepDisplayNumber);
       this.assignTemplateForSteps(steps, step)
       step.stepGroupSteps = steps;
-      this.postStepFetchProcessing(steps);
+      this.assignTestDataForSteps(steps);
+
     });
   }
 
   assignTemplateForSteps(testSteps: Page<TestStep>, childStep?:TestStep) {
     testSteps.content.forEach((testStep) => {
+      if(testStep.parentStep)
       testStep.parentStep = testSteps.content.find(res => testStep.parentId == res.id);
       if(childStep)
       testStep.childStep = childStep;
     });
   }
 
-  postStepFetchProcessing(steps: Page<TestStep>) {
+  public assignTestDataForSteps(testSteps: Page<TestStep>) {
+    let testDataIds = [];
+    testSteps.content.forEach(step => {
+      if (step.testDataId) {
+        testDataIds.push(step.testDataId);
+      }
+    })
+    if (testDataIds.length > 0)
+      this.testDataService.findAll("id@" + testDataIds.join("#")).subscribe((testDataPage: Page<TestData>) => {
+        testSteps.content.forEach((step) => {
+          if (step.testDataId)
+            step.testData = testDataPage.content.find(res => res.id == step.testDataId)
+        })
+      });
+    this.testStepService.findAllForLoopData().subscribe((loopData: Page<ForLoopData>) => {
+      let testDataProfileIds = [];
+      testSteps.content.forEach((step) => {
+        if (step.isForLoop && loopData?.content?.find(res => res.testStepId == step.id)) {
+          step.forLoopData = loopData.content.find(res => res.testStepId == step.id)
+          if(!testDataProfileIds.includes(step?.forLoopData?.testDataProfileId) && step?.forLoopData?.testDataProfileId) {
+            testDataProfileIds.push(step.forLoopData.testDataProfileId);
+          }
+        }
+      })
+      this.testDataService.findAll("id@" + testDataProfileIds.join("#")).subscribe((testDataPage: Page<TestData>) => {
+        if(!testDataPage.empty) {
+          testSteps?.content?.forEach(step => {
+            if (step?.forLoopData && testDataPage.content.find(data => data.id == step?.forLoopData?.testDataProfileId)) {
+              step.forLoopData.testDataProfileData = testDataPage.content.find(data => data.id == step?.forLoopData?.testDataProfileId)
+            }
+          })
+        }
+      }, error => {
+      })
+    }, error => {
+    });
 
   }
+
+  // postStepFetchProcessing(steps: Page<TestStep>) {
+  //
+  // }
 
   toggleStepSelection(step: TestStep) {
     if (step.isSelected)
@@ -344,7 +388,7 @@ export abstract class TestStepListItemComponent extends BaseComponent implements
     let lastChild = childSteps[childSteps.length - 1];
     let afterStep = this.initNewTestStep(lastChild.isConditionalType && lastChild != step && !lastChild.parentStep ? lastChild.position - 1 : lastChild.position + 1, step.testCaseId);
     afterStep.conditionType = TestStepConditionType.CONDITION_ELSE_IF;
-    afterStep.conditionIf = [ResultConstant.SUCCESS];
+    afterStep.dataMap.conditionIf = [ResultConstant.SUCCESS];
     afterStep.priority = TestStepPriority.MINOR;
     afterStep.parentId = step.id;
     afterStep.parentStep = step;

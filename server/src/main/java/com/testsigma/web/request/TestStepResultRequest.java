@@ -42,6 +42,7 @@ public class TestStepResultRequest {
   private String iteration;
   private String testDataProfileName;
   private Integer index;
+  private ForLoopConditionRequest forLoopCondition;
   private String rootMsg;
   private Long groupResultId;
   private Integer waitTime;

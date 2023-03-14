@@ -43,6 +43,9 @@ public class NaturalTextActions {
   @Column(name = "display_name")
   private String displayName;
 
+  @Column(name = "loop_type")
+  private String loopType;
+
   @Column
   private String action;
 

@@ -16,6 +16,7 @@ import {AddonNaturalTextAction} from "../../models/addon-natural-text-action.mod
 import {FormGroup} from "@angular/forms";
 import {ChromeRecorderService} from "../../services/chrome-recoder.service";
 import {TestDataMapValue} from "../../models/test-data-map-value.model";
+import {ForLoopData} from "../../models/for-loop-data.model";
 
 @Component({
   selector: 'app-test-case-action-steps',
@@ -82,6 +83,30 @@ export class TestCaseActionStepsComponent extends TestCaseStepsListComponent imp
             step.testData = testDataPage.content.find(res => res.id == step.testDataId)
         })
       });
+
+    this.testStepService.findAllForLoopData().subscribe((loopData: Page<ForLoopData>) => {
+      let testDataProfileIds = [];
+      this.testSteps.content.forEach((step) => {
+        if (step.isForLoop && loopData?.content?.find(res => res.testStepId == step.id)) {
+          step.forLoopData = loopData.content.find(res => res.testStepId == step.id)
+          if(!testDataProfileIds.includes(step?.forLoopData?.testDataProfileId) && step?.forLoopData?.testDataProfileId) {
+            testDataProfileIds.push(step.forLoopData.testDataProfileId);
+          }
+        }
+      })
+      this.testDataService.findAll("id@" + testDataProfileIds.join("#")).subscribe((testDataPage: Page<TestData>) => {
+        if(!testDataPage.empty) {
+          this.testSteps?.content?.forEach(step => {
+            if (step?.forLoopData && testDataPage.content.find(data => data.id == step?.forLoopData?.testDataProfileId)) {
+              step.forLoopData.testDataProfileData = testDataPage.content.find(data => data.id == step?.forLoopData?.testDataProfileId)
+            }
+          })
+        }
+      }, error => {
+      })
+    }, error => {
+    });
+
   }
 
   public setTest(steps: Page<TestStep>) {

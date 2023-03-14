@@ -68,7 +68,7 @@
     tabindex="-1"
     id="testDataContainer"
     class="action-drop-down-container">
-    <div  *ngIf="!currentTemplate?.allowedValues && !currentAddonAllowedValues">
+    <div  *ngIf="isTestData ||!currentTemplate?.allowedValues && !currentAddonAllowedValues && !listDataItem && !listParameterItem">
       <div
         *ngFor="let type of dataTypes; let index=index"
         [class.h-active]="currentDataTypeIndex == index"
@@ -81,7 +81,7 @@
             [translate]="'action.testDataType.'+type"></span>
       </div>
     </div>
-    <div  *ngIf="currentTemplate?.allowedValues">
+    <div  *ngIf="currentTemplate?.allowedValues && !listDataItem && !listParameterItem && !isTestData">
       <div
         *ngFor="let value of currentTemplate?.allowedValues['test-data']; let index=index"
         [class.h-active]="currentDataTypeIndex == index"
@@ -94,7 +94,48 @@
       </div>
   </div>
 
+    <div>
+      <div
+        *ngFor="let value of listDataItem; let index=index"
+        [class.h-active]="currentDataTypeIndex == index"
+        (mouseover)="currentDataTypeIndex=index"
+        (click)="selectAllowedValues(value.name, true);selectedTestDataProfile=value;"
+        class="d-flex align-items-center pointer py-8 grey-on-hover">
+        <span
+          class="px-14"
+          [textContent]="value.name"></span>
+      </div>
+      <div *ngIf="showTestDataProfileEmpty"
+           class="result-status-text-2 py-10 bg-white w-95 px-12">
+        <i class="fa-warning px-4  bg-white"></i>
+        <span
+          class="bg-white"
+          [translate]="'test_step.for_loop.profile.na'"></span>
+        <br><br>
+        <a
+          [routerLink]="['/td', version?.id, 'data', 'new']"
+          target="_blank"
+          class="result-status-text-0 px-2  bg-white"
+          [translate]="'message.common.click_here'"></a>
+        <span
+          class="bg-white"
+          [translate]="'test_step.for_loop.profile.none_mgs'"></span>
+      </div>
+    </div>
+
+      <div
+        *ngFor="let value of listParameterItem; let index=index"
+        [class.h-active]="currentDataTypeIndex == index"
+        (mouseover)="currentDataTypeIndex=index"
+        (click)="selectAllowedValues(value, true)"
+        class="d-flex align-items-center pointer py-8 grey-on-hover">
+        <span
+          class="px-14"
+          [textContent]="value"></span>
+    </div>
+
   <div  *ngIf="currentAddonTemplate && currentAddonAllowedValues">
+
     <div
       *ngFor="let value of currentAddonAllowedValues; let index=index"
       [class.h-active]="currentDataTypeIndex == index"
@@ -105,6 +146,7 @@
           class="px-14"
           [textContent]="value"></span>
     </div>
+
   </div>
 
 

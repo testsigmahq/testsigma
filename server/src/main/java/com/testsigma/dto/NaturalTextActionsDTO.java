@@ -26,4 +26,5 @@ public class NaturalTextActionsDTO {
   private String action;
   private Map<String, List> allowedValues;
   private StepActionType stepActionType;
+  private String loopType;
 }

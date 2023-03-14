@@ -4,10 +4,8 @@ import com.testsigma.dto.TestCaseEntityDTO;
 import com.testsigma.dto.TestCaseStepEntityDTO;
 import com.testsigma.dto.TestStepDTO;
 import com.testsigma.exception.TestsigmaException;
-import com.testsigma.model.WorkspaceType;
-import com.testsigma.model.Element;
+import com.testsigma.model.*;
 import com.testsigma.model.TestDataSet;
-import com.testsigma.model.TestStepType;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -21,7 +19,7 @@ public class WhileLoopStepProcessor extends StepProcessor {
                                 WorkspaceType workspaceType, Map<String, Element> elementMap,
                                 TestStepDTO testStepDTO, Long testPlanId, TestDataSet testDataSet,
                                 Map<String, String> environmentParams, TestCaseEntityDTO testCaseEntityDTO,
-                                String environmentParamSetName, String dataProfile, Map<Long, Integer> dataSetIndex) {
+                                String environmentParamSetName, String dataProfile, Map<Long, Long> dataSetIndex) {
     super(webApplicationContext, testCaseStepEntityDTOS, workspaceType, elementMap, testStepDTO, testPlanId, testDataSet,
       environmentParams, testCaseEntityDTO, environmentParamSetName, dataProfile, dataSetIndex);
   }
@@ -69,7 +67,7 @@ public class WhileLoopStepProcessor extends StepProcessor {
           continue;
         }
 
-        if (TestStepType.FOR_LOOP == centity.getType()) {
+        if (TestStepType.FOR_LOOP == centity.getType() || centity.getConditionType() == TestStepConditionType.LOOP_FOR) {
           new ForLoopStepProcessor(webApplicationContext, stepGroupSpecialSteps, workspaceType,
             elementMap, centity, testPlanId, testDataSet, environmentParameters, testCaseEntityDTO,
             environmentParamSetName, dataProfile,dataSetIndex )
@@ -104,7 +102,7 @@ public class WhileLoopStepProcessor extends StepProcessor {
             testCaseEntityDTO, environmentParamSetName, dataProfile, dataSetIndex)
             .processStep();
 
-          if (TestStepType.FOR_LOOP == stepDTOFromGroup.getType()) {
+          if (TestStepType.FOR_LOOP == stepDTOFromGroup.getType() || stepDTOFromGroup.getConditionType() == TestStepConditionType.LOOP_FOR) {
             new ForLoopStepProcessor(webApplicationContext, stepEntityFromGroup.getTestCaseSteps(), workspaceType,
               elementMap, stepDTOFromGroup, testPlanId, testDataSet, environmentParameters, testCaseEntityDTO,
               environmentParamSetName, dataProfile, dataSetIndex)

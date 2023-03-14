@@ -486,11 +486,13 @@ public class TestCaseResultService {
     for (TestStepResult testStepResult : testStepResults) {
       String action;
       String testStepType = testStepResult.getStepDetails().getType().toString();
+      String conditionType = testStepResult.getStepDetails().getConditionType().toString();
       if (testStepType.equals(TestStepType.STEP_GROUP.getId().toString())) {
         action = testCaseService.find(Long.valueOf(testStepResult.getStepDetails().getStepGroupId().toString())).getName();
       } else if (testStepType.equals(TestStepType.WHILE_LOOP.getId().toString())) {
         action = TestStepConditionType.LOOP_WHILE.getName();
-      } else if (testStepType.equals(TestStepType.FOR_LOOP.getId().toString())) {
+      } else if (testStepType.equals(TestStepType.FOR_LOOP.getId().toString()) ||
+              (conditionType.equals(TestStepConditionType.LOOP_FOR.getName()))) {
         StepResultForLoopMetadata loopData = testStepResult.getMetadata().getForLoop();
         String index = String.valueOf(loopData.getIndex());
         String testdata = loopData.getTestDataName();

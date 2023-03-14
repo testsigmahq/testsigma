@@ -22,6 +22,8 @@ import {AddonElementData} from "./addon-element-data.model";
 import {AddonTestStepTestData} from "./addon-test-step-test-data.model";
 import {TestDataDetails} from "./step-details-test-data-map.model";
 import {ElementDetails} from "./element-details.model";
+import {LoopIterationType} from "../enums/loop-iteration-type.enum";
+import {ForLoopData} from "./for-loop-data.model";
 
 export class TestStepResult extends ResultBase implements PageObject {
   @serializable
@@ -166,6 +168,12 @@ export class TestStepResult extends ResultBase implements PageObject {
 
   get parsedStep(): String {
     let parsedStep = this.template.naturalText;
+
+    if (this.template?.data?.['testData']) {
+      if(this.isForLoop) {
+        parsedStep = this.setForLoopDataValue(parsedStep)
+    }
+    }
     if(this.template?.data?.['testData']) {
       Object.keys(this.template?.data?.['testData']).forEach(parameter => {
         let data = this.stepDetail.dataMap.testData?.[parameter];
@@ -178,8 +186,8 @@ export class TestStepResult extends ResultBase implements PageObject {
       Object.keys(this.template?.data?.['testData']).forEach(parameter => {
         let data = this.stepDetail.dataMap.testData?.[parameter];
         if (data) {
-          let span_class = this.template?.allowedValues?.[parameter]?.length ? 'nlp-selected-data' : '';
-          parsedStep = parsedStep.replace('<TSTESTDAT ref="' + parameter + '">', '<span class="' + (span_class + ' spot-edit action-test-data ') + parameter + '" data-reference="' + parameter + '">')
+          let span_class = this.template?.allowedValues?.[parameter]?.length ? 'action-selected-data' : '';
+          parsedStep = parsedStep.replace('<TSTESTDAT ref="' + parameter + '">', '<span class="' + (span_class + ' action-edit action-test-data ') + parameter + '" data-reference="' + parameter + '">')
         }
       })
       parsedStep = parsedStep.replace(new RegExp('</TSTESTDAT>', 'g'), '</span>')
@@ -192,6 +200,33 @@ export class TestStepResult extends ResultBase implements PageObject {
     }
     return parsedStep;
   }
+  get resultForLoopData() {
+    return this.metadata?.forLoop?.forLoopCondition;
+  }
+  setForLoopDataValue(parsedStep) {
+    let templateTestDataKeys = Object.keys(this.template?.data?.['testData']);
+    let forLoopData = new ForLoopData().deserialize(this.resultForLoopData);
+    forLoopData.testDataProfileName = this.metadata?.forLoop?.testDataName;
+    templateTestDataKeys.forEach(parameter => {
+      let data =  forLoopData?.setValuesParsed(parameter);
+      if(!!data?.['value']) {
+        let value = data?.['value'] == - 1 && forLoopData?.iterationType == LoopIterationType.INDEX ?
+          parameter == 'right-data' ? "end" : "start" : data?.['value']
+        parsedStep = this.setTestDataType(parsedStep, value,
+          data?.['type'], new RegExp("\\$\\{" + (parameter) + "\\}"), {reference: parameter})
+      }
+    })
+    templateTestDataKeys.forEach(parameter => {
+      let data =  forLoopData?.setValuesParsed(parameter);
+      let span_class = this.template?.allowedValues?.[parameter]?.length ? 'action-selected-data' : '';
+      if (!!data?.['value']) {
+        parsedStep = parsedStep.replace('<TSTESTDAT ref="' + parameter + '">', '<span title="'+ (this.isCoordinateStep? data?.['value'] : '') +'" class="' + (span_class + ' action-test-data ') + parameter + '" data-reference="' + parameter + '">')
+      }
+    })
+    parsedStep = parsedStep.replace(new RegExp('</TSTESTDAT>', 'g'), '</span>');
+    return parsedStep
+  }
+
 
   get parseAddonLogs() {
     let parsedStep = this.addonActionLogs.replace('\n', '<br/>');
@@ -425,6 +460,31 @@ export class TestStepResult extends ResultBase implements PageObject {
       return this.parentResult?.stepDisplayNumber + 1;
     }
   }
+
+  setTestDataType(parsedStep, value, type, referenceName, parameter) {
+    switch (type) {
+      case TestDataType.global:
+        value = '*|' + value + '|';
+        break;
+      case TestDataType.random:
+        value = '~|' + value + '|';
+        break;
+      case TestDataType.runtime:
+        value = '$|' + value + '|';
+        break;
+      case TestDataType.parameter:
+        value = '@|' + value + '|';
+        break;
+      case TestDataType.function:
+        value = '!|' + value + '|';
+        break;
+    }
+    if(this.isCoordinateStep) value = this.formatCoordinates(value);
+
+    parsedStep = parsedStep.replace(referenceName, '<TSTESTDAT ref="' + parameter.reference + '">' + value + '</TSTESTDAT>');
+    return parsedStep;
+  }
+
   get isCoordinateStep() {
     let template_ids = [1060, 10164, 20091, 20139, 20164, 30090, 30128, 30162];
     return template_ids.includes(this.testStep?.naturalTextActionId as number);

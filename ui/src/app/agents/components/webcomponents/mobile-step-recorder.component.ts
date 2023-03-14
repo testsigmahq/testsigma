@@ -430,7 +430,7 @@ export class MobileStepRecorderComponent extends MobileRecordingComponent implem
       currentStep.preRequisiteStepId = commonData.get('preRequisiteStepId').value;
       currentStep.conditionType = commonData.get('conditionType').value;
       currentStep.disabled = commonData.get('disabled').value;
-      currentStep.conditionIf = commonData.get('conditionIf')?.value;
+      currentStep.dataMap.conditionIf = commonData.get('conditionIf')?.value;
     } else {
       currentStep.waitTime = 30;
       currentStep.priority = TestStepPriority.MAJOR;

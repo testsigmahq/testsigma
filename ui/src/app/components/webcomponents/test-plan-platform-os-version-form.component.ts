@@ -154,29 +154,31 @@ export class TestPlanPlatformOsVersionFormComponent implements OnInit {
   fetchBrowsers(setValue?: Boolean) {
     this.platformService.findAllBrowsers(this.platform, this.platformOsVersion, this.version.workspace.workspaceType, this.testPlanLabType).subscribe(res => {
       this.browsers = res;
-      if (!this.isPrivateGrid) {
-        if (this.environmentFormGroup?.controls['browser']?.value){
-          this.platformBrowser = this.browsers.find(browser => browser.id == this.environmentFormGroup?.controls['browser']?.value);
-        }
-        if (!this.platformBrowser || setValue) {
-          this.platformBrowser = this.browsers[0];
-          this.environmentFormGroup?.controls['browser']?.setValue(this.platformBrowser?.id);
-          if (this.version.workspace.isMobileWeb && this.platformBrowser.isChrome) {
-            this.environmentFormGroup?.controls['browser']?.setValue(WebBrowser.CHROME);
+      if(!this.isHybrid){
+        if (!this.isPrivateGrid) {
+          if (this.environmentFormGroup?.controls['browser']?.value){
+            this.platformBrowser = this.browsers.find(browser => browser.id == this.environmentFormGroup?.controls['browser']?.value);
+          }
+          if (!this.platformBrowser || setValue) {
+            this.platformBrowser = this.browsers[0];
+            this.environmentFormGroup?.controls['browser']?.setValue(this.platformBrowser?.id);
+            if (this.version.workspace.isMobileWeb && this.platformBrowser.isChrome) {
+              this.environmentFormGroup?.controls['browser']?.setValue(WebBrowser.CHROME);
+            }
           }
         }
-      }
-      if (this.isPrivateGrid) {
-        if (this.environmentFormGroup?.controls['browser']?.value)
-          this.platformBrowser = this.browsers.find(browser => browser.name == this.environmentFormGroup?.controls['browser']?.value);
-        if (!this.platformBrowser || setValue) {
-          this.platformBrowser = this.browsers[0];
-          this.environmentFormGroup?.controls['browser']?.setValue(this.platformBrowser?.name);
+        if (this.isPrivateGrid) {
+          if (this.environmentFormGroup?.controls['browser']?.value)
+            this.platformBrowser = this.browsers.find(browser => browser.name == this.environmentFormGroup?.controls['browser']?.value);
+          if (!this.platformBrowser || setValue) {
+            this.platformBrowser = this.browsers[0];
+            this.environmentFormGroup?.controls['browser']?.setValue(this.platformBrowser?.name);
 
+          }
         }
+        if (this.platformBrowser)
+          this.fetchBrowserVersions(setValue);
       }
-      if (this.platformBrowser)
-        this.fetchBrowserVersions(setValue);
     })
   }
 

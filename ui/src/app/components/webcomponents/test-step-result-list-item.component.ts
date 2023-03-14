@@ -79,9 +79,8 @@ import {TestDataService} from "../../services/test-data.service";
             <span
               *ngIf="testStepResult.isForLoop">
             <i class="fa-power-loop mr-5 text-nowrap"></i>
-            <span [translate]="'step.condition_type.'+testStepResult?.stepDetail?.conditionType"></span>
-            #{{testStepResult.metadata.forLoop.index}} :: {{testStepResult.metadata.forLoop.testDataName}}
-              - {{testStepResult.metadata.forLoop.iteration}}
+            #{{testStepResult.metadata?.forLoop?.index}}
+              ::&nbsp;
           </span>
             <span
               [matTooltip]="'test_step.type.REST_STEP' | translate"

@@ -10,6 +10,7 @@
 package com.testsigma.service;
 
 import com.testsigma.constants.AutomatorMessages;
+import com.testsigma.mapper.ForLoopConditionsMapper;
 import com.testsigma.mapper.TestStepResultMapper;
 import com.testsigma.model.*;
 import com.testsigma.repository.TestStepResultRepository;
@@ -22,6 +23,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
@@ -38,6 +40,7 @@ public class TestStepResultService {
   private final TestDataProfileService testDataProfileService;
   private final SuggestionResultMappingService suggestionResultMappingService;
   private final TestCaseResultService testCaseResultService;
+  private final ForLoopConditionsMapper forLoopConditionsMapper;
 
   public Page<TestStepResult> findAll(Specification<TestStepResult> spec, Pageable pageable) {
     return this.testStepResultRepository.findAll(spec, pageable);
@@ -45,6 +48,10 @@ public class TestStepResultService {
 
   public List<TestStepResult> findAllByTestCaseResultIdAndScreenshotNameIsNotNull(Long testCaseResultId) {
     return this.testStepResultRepository.findAllByTestCaseResultIdAndScreenshotNameIsNotNull(testCaseResultId);
+  }
+
+  public Page<TestStepResult> findAllByForLoopTestCaseResultId(Timestamp startTime, Pageable page) {
+    return this.testStepResultRepository.findAllByForLoopTestCaseResultId(startTime, page);
   }
 
   public List<TestStepResult> findAllByTestCaseResultIdAndScreenshotNameIsNotNullAndVisualEnabledIsTrue(Long testCaseResultId) {
@@ -118,6 +125,7 @@ public class TestStepResultService {
       loopData.setIteration(testCaseStepResult.getIteration());
       loopData.setIndex(testCaseStepResult.getIndex());
       loopData.setTestDataName(testCaseStepResult.getTestDataProfileName());
+      loopData.setForLoopCondition(testCaseStepResult.getForLoopCondition());
       testCaseStepResult.getMetadata().setForLoop(loopData);
     } else if (TestStepConditionType.LOOP_WHILE == testCaseStepResult.getConditionType()) {
       StepResultWhileLoopMetadataRequest loopData = new StepResultWhileLoopMetadataRequest();
@@ -146,7 +154,7 @@ public class TestStepResultService {
       updateTestData = updateTestDataSet(testDataSet, testCaseStepResult.getOutputData());
     }
 
-    if (TestStepType.FOR_LOOP == testCaseStepResult.getTestCaseStepType()) {
+    if (TestStepType.FOR_LOOP == testCaseStepResult.getTestCaseStepType() || testCaseStepResult.getConditionType() == TestStepConditionType.LOOP_FOR) {
       createTestCaseSteps(testCaseStepResult.getStepResults(), testDataSet, groupResultId, condStepsMap);
     } else if (TestStepType.STEP_GROUP == testCaseStepResult.getTestCaseStepType()) {
       boolean updated =

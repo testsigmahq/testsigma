@@ -36,9 +36,8 @@ public class ChromeDriver extends WebDriver {
     if (remoteServerURL != null) {
       remoteWebDriver = new RemoteWebDriver(remoteServerURL, chromeOptions.merge(desiredCapabilities));
     } else {
-      System.out.println("test---" + desiredCapabilities.toString());
-      System.out.println(chromeOptions.toString());
-      remoteWebDriver = new org.openqa.selenium.chrome.ChromeDriver(chromeOptions.merge(desiredCapabilities));
+      chromeOptions = chromeOptions.merge(desiredCapabilities);
+      remoteWebDriver = new org.openqa.selenium.chrome.ChromeDriver(chromeOptions);
     }
   }
 

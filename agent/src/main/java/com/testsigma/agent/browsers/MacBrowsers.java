@@ -14,6 +14,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Log4j2
@@ -33,8 +35,8 @@ public class MacBrowsers {
     this.browsersMap = OsBrowserMap.getInstance().getBrowserMap();
   }
 
-  public ArrayList<AgentBrowser> getBrowserList() {
-    ArrayList<AgentBrowser> browserList = new ArrayList<>();
+  public Set<AgentBrowser> getBrowserList() {
+    Set<AgentBrowser> browserList = new HashSet<>();
 
     try {
       if (runApplicationListCommand()) {

@@ -228,7 +228,7 @@ export class TestStepMoreActionFormComponent implements OnInit {
     } else if (testStep.isConditionalElseIf) {
       return stepText + '(Else If) '+(testStep?.action)
     } else if (testStep.isConditionalElse) {
-      return stepText + '(else) '+(testStep?.action)
+      return stepText + '(Else) '+(testStep?.action || "")
     }
     return stepText + (!!testStep.action? testStep.action : testStep?.stepGroup?.name)
   }

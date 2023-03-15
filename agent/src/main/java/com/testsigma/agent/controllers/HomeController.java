@@ -30,10 +30,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -93,18 +90,18 @@ public class HomeController {
   }
   private Set<AgentBrowser> getUniqueBrowsersList(Set<AgentBrowser> browsers){
     Set<AgentBrowser> set = browsers.stream().collect(Collectors.toSet());
-    Set<AgentBrowser> browsersList = new HashSet<>();
+    HashMap<OsBrowserType,AgentBrowser> browserMap = new HashMap<>();
     for(AgentBrowser set1 : set){
-      AgentBrowser temp1 = set1;
-       for(AgentBrowser set2 : set){
-         if(set1.getName()==set2.getName()){
-           if(temp1.getMajorVersion()<set2.getMajorVersion()){
-             temp1=set2;
-           }
-         }
-       }
-       browsersList.add(temp1);
+      if(browserMap.containsKey(set1.getName())){
+        if(browserMap.get(set1.getName()).getMajorVersion()<set1.getMajorVersion()){
+          browserMap.put(set1.getName(),set1);
+        }
+      }
+      else {
+        browserMap.put(set1.getName(),set1);
+      }
    }
-    return browsersList;
+    Set<AgentBrowser> browserList= new HashSet<>(browserMap.values());
+    return browserList;
   }
 }

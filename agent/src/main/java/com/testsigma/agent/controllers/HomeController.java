@@ -20,6 +20,7 @@ import com.testsigma.agent.services.AgentBrowserService;
 import com.testsigma.agent.services.AgentService;
 import com.testsigma.agent.ws.server.AgentWebServer;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.testsigma.automator.entity.OsBrowserType;
 import com.testsigma.automator.http.HttpResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -30,6 +31,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -88,8 +91,20 @@ public class HomeController {
     }
     return response;
   }
-  private ArrayList<AgentBrowser> getUniqueBrowsersList(ArrayList<AgentBrowser> browsers){
+  private Set<AgentBrowser> getUniqueBrowsersList(Set<AgentBrowser> browsers){
     Set<AgentBrowser> set = browsers.stream().collect(Collectors.toSet());
-    return new ArrayList<>(set);
+    Set<AgentBrowser> browsersList = new HashSet<>();
+    for(AgentBrowser set1 : set){
+      AgentBrowser temp1 = set1;
+       for(AgentBrowser set2 : set){
+         if(set1.getName()==set2.getName()){
+           if(temp1.getMajorVersion()<set2.getMajorVersion()){
+             temp1=set2;
+           }
+         }
+       }
+       browsersList.add(temp1);
+   }
+    return browsersList;
   }
 }

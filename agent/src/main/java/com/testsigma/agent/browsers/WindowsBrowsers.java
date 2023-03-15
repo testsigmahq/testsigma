@@ -14,9 +14,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -83,9 +81,9 @@ public class WindowsBrowsers {
     return browserVersion;
   }
 
-  public ArrayList<AgentBrowser> getBrowserList() throws Exception {
+  public Set<AgentBrowser> getBrowserList() throws Exception {
 
-    ArrayList<AgentBrowser> browserList = new ArrayList<>();
+    Set<AgentBrowser> browserList = new HashSet<>();
     int arch = System.getProperty("os.arch").contains("64") ? 64 : 32;
 
     String nodeValue = (arch == 32) ? "" : "WOW6432Node";

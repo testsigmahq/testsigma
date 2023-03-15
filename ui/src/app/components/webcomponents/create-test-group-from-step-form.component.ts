@@ -85,9 +85,9 @@ export class CreateTestGroupFromStepFormComponent extends BaseComponent implemen
       setTimeout(() => this.searchInput.nativeElement.focus(), 200);
     })
   }
+
   navigateToCase(testCaseId: number){
     window.open('td/cases/'+testCaseId.toString(), '_blank');
-
   }
 
   saveAsStepGroup(isReplace?: boolean) {

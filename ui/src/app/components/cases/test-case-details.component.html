@@ -23,6 +23,7 @@
             <button
               *ngIf="stepsLength && canShowRunResult && !canShowBulkActions"
               (click)="openDryRun()"
+              [disabled]="!enabledStepPresent"
               class="theme-btn-primary">
               <i class="fa-filled-circled-play pr-7"></i>
               <span

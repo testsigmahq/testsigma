@@ -17,6 +17,8 @@ import {ByTypeCount} from "../models/by-type-count.model";
 })
 export class TestCaseService implements FilterableDataSourceService {
   public refeshTestCaseAfterSaveOrUpdate:Subject<boolean> = new Subject<boolean>();
+  private enableStepdata: Subject<any> = new Subject<any>();
+  enableStepdata$: Observable<any> = this.enableStepdata.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -30,6 +32,9 @@ export class TestCaseService implements FilterableDataSourceService {
   }
   public getStepLengthEmitter() {
     return this.stepsFetch;
+  }
+  public getDisable(enableStep:boolean){
+    this.enableStepdata.next(enableStep);
   }
 
   public filter(filterId?: number, versionId?: number, pageable?: Pageable, sortBy?: string): Observable<Page<TestCase>> {

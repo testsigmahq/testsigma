@@ -325,6 +325,7 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
     if (this.environmentResult.testDeviceSettings.appUploadId || this.environmentResult.testDeviceSettings.appId){
       this.uploadVersionService.find(this.environmentResult.appUploadVersionId).subscribe(version => {
         this.appDetails['appName'] = version?.fileName;
+        this.appDetails['appId'] = version?.uploadId;
         this.appDetails['version'] = version?.name;
         this.appDetails['versionId'] = version?.id;
         this.uploadService.find(version?.uploadId).subscribe(upload=> {

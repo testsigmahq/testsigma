@@ -40,7 +40,7 @@
             *ngIf="!testCase?.deleted && false"
             [versionId]="testCase?.workspaceVersionId"
             [testCase]="testCase"></app-test-case-detail-pagination>
-          <div *ngIf="version?.workspace?.isWeb && !testCase?.deleted">
+          <div *ngIf="(version?.workspace?.isWeb || version.workspace.isMobileWeb) && !testCase?.deleted">
             <app-chrome-record-button></app-chrome-record-button>
           </div>
           <button

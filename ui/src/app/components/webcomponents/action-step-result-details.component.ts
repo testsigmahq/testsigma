@@ -149,7 +149,7 @@ export class ActionStepResultDetailsComponent extends BaseComponent implements O
   }
 
   get preRequisiteStep() {
-    return this.preRequestStep?.testStep?.stepDisplayNumber ? this.preRequestStep?.testStep?.stepDisplayNumber : (<number>this.preRequestStep?.stepDetail?.order_id + 1)
+    return this.preRequestStep?.testStep?.stepDisplayNumber ? this.preRequestStep?.testStep?.stepDisplayNumber : (<number>this.preRequestStep?.stepDetail?.order_id)
   }
 
   fetchElementByName(elementName, addonElement?) {

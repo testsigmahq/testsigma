@@ -33,7 +33,7 @@ public class AppInstaller {
       appFile = downloadApp(appUrl);
       String bundleId = getAppBundleId(appFile);
       if(isEmulator) {
-        Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"install", "--udid", deviceUniqueId,
+        Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"install", deviceUniqueId,
                 appFile.getAbsolutePath()}, false);
         p.waitFor(30, TimeUnit.SECONDS);
         String devicePropertiesJsonString = iosDeviceCommandExecutor.getProcessStreamResponse(p);

@@ -2,7 +2,6 @@ package com.testsigma.automator.mobile.ios;
 
 import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.exceptions.TestsigmaException;
-import com.testsigma.automator.service.ObjectMapperService;
 import com.testsigma.automator.utilities.PathUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -22,7 +21,7 @@ import java.util.Arrays;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class IosDeviceCommandExecutor {
 
-  private static final String IDB_EXECUTABLE = "idb";
+  private static final String XCRUN_EXECUTABLE = "xcrun";
 
   public String getTiDeviceExecutablePath() {
     if (SystemUtils.IS_OS_WINDOWS) {
@@ -32,21 +31,21 @@ public class IosDeviceCommandExecutor {
     }
   }
 
-  public String getIdbExecutablePath() throws TestsigmaException {
+  public String getXrunExecutablePath() throws TestsigmaException {
     if (SystemUtils.IS_OS_WINDOWS) {
       throw new TestsigmaException("Idb is not supported for Windows platform");
     } else {
-      return IDB_EXECUTABLE;
+      return XCRUN_EXECUTABLE;
     }
   }
 
   public Process runDeviceCommand(String[] subCommand, Boolean executeWithTiDevice) throws AutomatorException {
     try {
-      String iosDeviceExecutablePath = getIdbExecutablePath();
+      String[] iosDeviceExecutablePath = new String[]{getXrunExecutablePath(), "simctl"};
       if(executeWithTiDevice) {
-        iosDeviceExecutablePath = getTiDeviceExecutablePath();
+        iosDeviceExecutablePath = new String[]{getTiDeviceExecutablePath()};
       }
-      String[] command = ArrayUtils.addAll(new String[]{iosDeviceExecutablePath}, subCommand);
+      String[] command = ArrayUtils.addAll(iosDeviceExecutablePath, subCommand);
 
       log.debug("Running the command - " + Arrays.toString(command));
 

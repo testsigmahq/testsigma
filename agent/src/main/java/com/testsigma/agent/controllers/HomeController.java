@@ -88,8 +88,8 @@ public class HomeController {
     }
     return response;
   }
-  private Set<AgentBrowser> getUniqueBrowsersList(ArrayList<AgentBrowser> browsers){
+  private ArrayList<AgentBrowser> getUniqueBrowsersList(ArrayList<AgentBrowser> browsers){
     Set<AgentBrowser> set = browsers.stream().collect(Collectors.toSet());
-    return (Set<AgentBrowser>) new ArrayList<>(set);
+    return new ArrayList<>(set);
   }
 }

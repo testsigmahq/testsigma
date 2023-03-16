@@ -995,6 +995,8 @@
   "testcase.list.created_date_placeholder": "Select Created Date range",
   "testcase.list.updated_date_placeholder": "Select Updated Date range",
   "testcase.list.filter.title": "Filters",
+  "testcase.list.start_date": "Start date",
+  "testcase.list.end_date": "End date",
   "filter.name": "View Name",
   "filter.visibility": "Visible To",
   "filter.created.success": "{{name}} view created successfully.",

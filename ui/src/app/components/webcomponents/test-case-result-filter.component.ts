@@ -46,7 +46,7 @@ export class TestCaseResultFilterComponent implements OnInit {
     private testCasePriorityService: TestCasePrioritiesService) {
   }
 
-  dateInvalid(DateRange) {
+  isdateInvalid(DateRange) {
     return ((DateRange.controls.start.value || DateRange.controls.start.errors?.matDatepickerParse?.text) ||
         (DateRange.controls.end.value || DateRange.controls.end.errors?.matDatepickerParse?.text) ) &&
       DateRange.invalid;
@@ -61,8 +61,8 @@ export class TestCaseResultFilterComponent implements OnInit {
       this.filterTestCaseTypes != undefined ||
       this.filterTestCasePriorities != undefined||
       this.filterTagIds != undefined ||
-      (this.updatedDateRange.value.start && !this.dateInvalid(this.updatedDateRange)) ||
-      (this.createdDateRange.value.start && !this.dateInvalid(this.createdDateRange));
+      (this.updatedDateRange.value.start && !this.isdateInvalid(this.updatedDateRange)) ||
+      (this.createdDateRange.value.start && !this.isdateInvalid(this.createdDateRange));
   }
 
   ngOnInit() {

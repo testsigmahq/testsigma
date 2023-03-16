@@ -65,7 +65,7 @@
       </mat-form-field>
       <label class="control-label" [translate]="'message.common.createdDate'"></label>
       <div class="error"
-           *ngIf="isdateInvalid(createdDateRange) && !createdDateRangePicker.opened"
+           *ngIf="isInvalidDateRange(createdDateRange) && !createdDateRangePicker.opened"
            [translate]="'form.validation.common.invalid' | translate:{FieldName: 'Created Date'}" ></div>
     </div>
 
@@ -82,7 +82,7 @@
       </mat-form-field>
       <label class="control-label" [translate]="'message.common.updatedDate'"></label>
       <div class="error"
-           *ngIf="isdateInvalid(updatedDateRange) && !updatedDateRangePicker.opened"
+           *ngIf="isInvalidDateRange(updatedDateRange) && !updatedDateRangePicker.opened"
            [translate]="'form.validation.common.invalid' | translate:{FieldName: 'Updated Date'}" ></div>
     </div>
     <div class="form-group">

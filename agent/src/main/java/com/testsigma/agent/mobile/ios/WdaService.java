@@ -42,6 +42,7 @@ public class WdaService {
 
   public void installWdaToDevice(MobileDevice device) throws TestsigmaException {
     File downloadedWdaFile = null;
+    File downloadedWdaDir = null;
     try {
       log.info("Installing WDA on device - " + device.getUniqueId());
       String wdaPresignedUrl = fetchWdaUrl(device);
@@ -51,6 +52,9 @@ public class WdaService {
       log.info("Downloaded WDA to local file - " + downloadedWdaFile.getAbsolutePath());
       Process p;
       if(device.getIsEmulator()) {
+        downloadedWdaDir = Files.createTempDirectory("wda_ipa").toFile();
+        File unZippedFolder = ZipUtil.unZipFile(wdaPresignedUrl, downloadedWdaDir);
+        downloadedWdaFile = new File(unZippedFolder.getAbsolutePath() + "/Payload/wda_simulator.app");
         p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"install", device.getUniqueId(),
                 downloadedWdaFile.getAbsolutePath()}, false);
       } else {

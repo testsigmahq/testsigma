@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 @Log4j2
 @Component
@@ -50,7 +51,9 @@ public class IosDeviceCommandExecutor {
       log.debug("Running the command - " + Arrays.toString(command));
 
       ProcessBuilder processBuilder = new ProcessBuilder(command);
-      return processBuilder.start();
+      Process process = processBuilder.start();
+      process.waitFor(10, TimeUnit.SECONDS);
+      return process;
     } catch (Exception e) {
       throw new AutomatorException(e.getMessage());
     }

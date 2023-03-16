@@ -36,6 +36,8 @@ public class IOSEmulatorScheduler extends BaseScheduler {
             List<MobileDevice> initialSimulatorList = this.iosDeviceService.simulatorDeviceList();
             Map<String, MobileDevice> deviceMap = this.deviceContainer.getDeviceMap();
             Set<String> simulatorUniqueIds = new HashSet<>();
+            log.info("Initial simulators list: " + initialSimulatorList);
+            log.info("Device map: " + deviceMap);
             for(MobileDevice simulator : initialSimulatorList) {
                 simulatorUniqueIds.add(simulator.getUniqueId());
                 if(!deviceMap.containsKey(simulator.getUniqueId())) {

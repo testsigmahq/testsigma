@@ -13,7 +13,7 @@ import {UserPreferenceService} from "../../services/user-preference.service";
 })
 export class GlobalAddComponent extends BaseComponent implements OnInit {
   public versionId: Number;
-  @Output('isClicked') isClicked = new EventEmitter<boolean>();
+  @Output('toggleClickedState') toggleClickedState = new EventEmitter<boolean>();
 
 
   constructor(
@@ -35,6 +35,6 @@ export class GlobalAddComponent extends BaseComponent implements OnInit {
     });
   }
   isClickedItems() {
-    this.isClicked.emit(false);
+    this.toggleClickedState.emit(false);
   }
 }

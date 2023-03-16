@@ -14,7 +14,7 @@
     </a>
     <app-global-add
       *ngIf="authGuard?.session?.user && displayGlobalAdd"
-      (isClicked)="displayGlobalAdd = $event"
+      (toggleClickedState)="displayGlobalAdd = $event"
       class="global-add-dropdown mt-n10"></app-global-add>
     </div>
     <div class="p-6"></div>

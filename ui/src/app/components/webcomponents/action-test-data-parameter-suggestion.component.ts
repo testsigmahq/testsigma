@@ -43,7 +43,6 @@ export class ActionTestDataParameterSuggestionComponent  extends BaseComponent i
   @ViewChild('searchInput') searchInput: ElementRef;
 
 
-
   constructor(
     private dialogRef: MatDialogRef<ActionTestDataParameterSuggestionComponent, any>,
     private testDataService: TestDataService,

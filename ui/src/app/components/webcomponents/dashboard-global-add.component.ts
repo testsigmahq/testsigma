@@ -13,8 +13,7 @@ import {UserPreferenceService} from "../../services/user-preference.service";
       *ngIf="authGuard.session.user"
       class="bg-white border-rds-4 global-create-modal px-12 py-16 shadow-left ml-n7">
       <div
-        class="pb-10 theme-border-b rb-medium"
-        style="color: #03A973"
+        class="pb-10 theme-border-b rb-medium primary-green"
         [translate]="'global.add_title'"></div>
       <li>
         <a
@@ -42,10 +41,10 @@ export class DashboardGlobalAddComponent extends BaseComponent implements OnInit
   }
 
   ngOnInit(): void {
-    this.fetchPreference()
+    this.loadUserPreference()
   }
 
-  fetchPreference() {
+  loadUserPreference() {
     this.userPreferenceService.show().subscribe(res => {
       this.versionId = res?.versionId;
     });

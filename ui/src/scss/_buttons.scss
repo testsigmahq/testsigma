@@ -68,7 +68,12 @@ fieldset:disabled a.btn {
   }
 }
 
-
+.primary-green{
+  color: $primary-green;
+}
+.dark-green{
+  color: $dark-green;
+}
 /*Custom buttons*/
 .btn-primary {
   background-color: $theme-pass-color;
@@ -77,7 +82,7 @@ fieldset:disabled a.btn {
   @extend .rb-medium;
 
   &:hover{
-    background-color: #039465 !important;
+    background-color: $background-green !important;
     border: 1px solid #039465;
   }
 }

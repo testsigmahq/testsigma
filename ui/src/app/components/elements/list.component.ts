@@ -118,7 +118,7 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
           this.isCreateElement = true;
           this.query = undefined
         } else {
-          this.query = query? query : res.q ;
+          this.query = query || res.q ;
         }
         if(query && !this.isCreateElement) this.navigateToQueryBasedUrl();
     });

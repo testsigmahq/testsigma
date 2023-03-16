@@ -28,13 +28,13 @@
 
   &:hover {
     span {
-      background-color: #38414D;
+      background-color: $background-dark-color;
     }
   }
 
   &.active {
     span {
-      background-image: linear-gradient(325deg, #38414D, #38414D);
+      background-image: linear-gradient(325deg, $background-dark-color, $background-dark-color);
     }
   }
   .fa-plus-filled{

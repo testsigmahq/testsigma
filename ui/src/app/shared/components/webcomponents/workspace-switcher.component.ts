@@ -52,6 +52,7 @@ export class WorkspaceSwitcherComponent implements OnInit {
   public applications: Page<Workspace>;
   public versions: Page<WorkspaceVersion>;
   public projectSwitcherForm: FormGroup;
+
   constructor(
     private router: Router,
     private dialogRef: MatDialog,

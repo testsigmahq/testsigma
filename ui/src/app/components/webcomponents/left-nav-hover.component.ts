@@ -98,8 +98,7 @@ export class LeftNavHoverComponent extends BaseComponent implements OnInit {
     super(authGuard, notificationsService, translate);
   }
 
-  ngOnInit(): void {
-  }
+
 
   isCurrentActiveOrHover(itemName){
     return this.currentHoverItem == itemName;

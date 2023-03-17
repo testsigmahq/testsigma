@@ -98,10 +98,10 @@
               <div
                 [matTooltip]="testStepResult?.isElementChanged ? '' : 'step_result.hint.edit_element' | translate"
                 class="pointer"
-                (click)="testStepResult?.isElementChanged ? '' :  openEditElement(testStepResult?.elementDetails?.name)">
+                (click)="testStepResult?.isElementChanged ? '' :  openEditElement(testStepResult?.stepDetails?.dataMap?.elementString)">
             <span
               class="text-link rb-medium"
-              [textContent]="testStepResult?.elementDetails?.name"></span>
+              [textContent]="testStepResult?.stepDetails?.dataMap?.elementString"></span>
               <i class="fa-pencil-on-paper px-4" *ngIf="!testStepResult.isElementChanged"></i>
               </div>
             </div>

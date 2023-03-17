@@ -104,7 +104,7 @@ public interface WorkspaceVersionRepository extends JpaSpecificationExecutor<Wor
   void copyTestPlansFromVersion(@Param("newVersionId") Long newVersionId, @Param("oldVersionId") Long oldVersionId);
 
   @Modifying
-  @Query(value = "insert into test_devices(created_date, title, test_plan_id, device_id, platform_device_id, platform_screen_resolution_id, platform_browser_version_id, platform_os_version_id, disabled, match_browser_version, copied_from) select now(), title, (select id from test_plans where copied_from=test_plan_id and workspace_version_id=?) testPlanId, device_id, platform_device_id, platform_screen_resolution_id, platform_browser_version_id, platform_os_version_id, disabled, match_browser_version, id from test_devices where test_plan_id in (select id from test_plans where workspace_version_id=?)", nativeQuery = true)
+  @Query(value = "insert into test_devices(created_date, title, test_plan_id, device_id, platform_device_id, platform_screen_resolution_id, platform_browser_version_id, platform_os_version_id, workspace_version_id, test_lab_type, disabled, match_browser_version, copied_from) select now(), title, (select id from test_plans where copied_from=test_plan_id and workspace_version_id=:newVersionId) testPlanId, device_id, platform_device_id, platform_screen_resolution_id, platform_browser_version_id, platform_os_version_id, workspace_version_id, test_lab_type, disabled, match_browser_version, id from test_devices where test_plan_id in (select id from test_plans where workspace_version_id=:oldVersionId)", nativeQuery = true)
   void copyTestDevices(@Param("newVersionId") Long newVersionId, @Param("oldVersionId") Long oldVersionId);
 
   @Modifying

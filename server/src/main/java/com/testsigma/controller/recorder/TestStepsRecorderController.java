@@ -1,6 +1,5 @@
 package com.testsigma.controller.recorder;
 
-import com.testsigma.dto.ForLoopConditionDTO;
 import com.testsigma.dto.RestStepResponseDTO;
 import com.testsigma.dto.TestStepDTO;
 import com.testsigma.exception.ResourceNotFoundException;
@@ -45,7 +44,6 @@ public class TestStepsRecorderController {
     private final TestStepService service;
     private final TestStepMapper mapper;
     private final ElementService elementService;
-    //private final ElementMapper elementMapper;
     private final UiIdentifierMapper uiIdentifierMapper;
     private final TestStepRecorderMapper testStepRecorderMapper;
     private final ForLoopConditionService forLoopConditionsService;

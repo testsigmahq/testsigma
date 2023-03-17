@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 public class AgentDTO {
@@ -24,7 +25,7 @@ public class AgentDTO {
   private String hostName;
   private String osVersion;
   private Boolean isRegistered;
-  private List<AgentBrowser> browserList;
+  private Set<AgentBrowser> browserList;
   private String agentBuild;
   private String ipAddress;
   private String title;

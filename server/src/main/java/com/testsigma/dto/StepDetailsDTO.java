@@ -21,6 +21,7 @@ public class StepDetailsDTO {
   private Long id;
   private String stepDescription;
   private TestStepPriority priority;
+  @JsonProperty("order_id")
   private Integer position;
   private Long preRequisiteStepId;
   private String action;

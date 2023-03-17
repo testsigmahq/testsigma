@@ -28,7 +28,7 @@ import {TestPlanLabType} from '../../../enums/test-plan-lab-type.enum';
           [class.lh-1]="!isOldIcons"
         [class.icon-top]="isNativeIcons"
         class="switcher-icon z-in-10 left-n5 fa-{{this.applicationIcon}}" *ngIf="hasApplicationIcon"
-      [ngClass]="this.applicationIcon=='project-website' ? 'top-n1':'top-n4'">
+        [ngClass]="(this.applicationIcon=='project-website' && !isForm) ? 'top-n1':!isForm ? 'top-n4' : '' ">
       </i>
       <input
         type="text" readonly [class.pl-20]="hasProjectIcon || hasApplicationIcon"
@@ -129,7 +129,8 @@ export class AutoCompleteComponent implements OnInit {
   @Optional() @Input('isCloudDeviceDropdown') isCloudDeviceDropdown:Boolean;
   @Output('onSearch') onSearch = new EventEmitter<String>();
   @Output('onValueChange') onValueChange = new EventEmitter<Base>();
-
+  @Input('isImportForm') public isImportForm?:Boolean;
+  @Input('isBackupForm') public isBackupForm?:Boolean;
   public searchAutoComplete = new FormControl();
   public loadingSearch: boolean = false;
   public noneValue: Boolean = false;
@@ -270,5 +271,8 @@ export class AutoCompleteComponent implements OnInit {
 
   applicationTypeValue(item) {
     return item?.applications?.[0]?.applicationType || item?.projectType ;
+  }
+  get isForm(){
+    return this.isBackupForm == true || this.isImportForm == true;
   }
 }

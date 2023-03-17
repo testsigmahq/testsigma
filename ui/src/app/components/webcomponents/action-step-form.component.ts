@@ -1050,7 +1050,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
               this.getAddonTemplateAllowedValues(item.dataset?.reference);
               this.urlPatternError = false;
               let testDataType = ['@|', '!|', '~|', '$|', '*|'].some(type => item?.textContent.includes(type))
-              if (event.key == "Backspace") {
+              if (event.key == "Backspace" && !TestDataType.raw){
                 this.selectDataType(item?.textContent, true)
               }
               if ((!testDataType && this.removeHtmlTags(item?.textContent).trim().length) || (!(["Escape", "Tab", "Backspace", "ArrowLeft", "ArrowRight", "Enter", "ArrowUp", "ArrowDown", "Shift", "Control", "Meta", "Alt"].includes(event.key)) && item?.textContent)) {

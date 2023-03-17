@@ -60,13 +60,19 @@ public class IosDeviceCommandExecutor {
   }
 
   public String getProcessStreamResponse(Process p) throws AutomatorException {
+    return getProcessStreamResponse(p, false);
+  }
+
+  public String getProcessStreamResponse(Process p, Boolean logOutput) throws AutomatorException {
     try {
       String stdOut = IOUtils.toString(p.getInputStream(), StandardCharsets.UTF_8);
       String stdError = IOUtils.toString(p.getErrorStream(), StandardCharsets.UTF_8);
       StringBuilder sb = new StringBuilder();
       sb.append(stdOut);
       sb.append(stdError);
-      log.debug("Command output - " + sb);
+      if (logOutput) {
+        log.debug("Command output - " + sb);
+      }
       return sb.toString();
     } catch (Exception e) {
       throw new AutomatorException(e.getMessage());

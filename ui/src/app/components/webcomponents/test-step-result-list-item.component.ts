@@ -84,7 +84,7 @@ import {TestDataService} from "../../services/test-data.service";
           </span>
             <span
               [matTooltip]="'test_step.type.REST_STEP' | translate"
-              *ngIf="testStepResult.isRestStep" class="fa-rest-new text-warning mr-5 text-nowrap"></span>
+              *ngIf="testStepResult.isRestStep" class="fa-rest-new text-warning mr-5 text-nowrap line-height-none fz-16"></span>
             <span
               class="mw-80 lh-1point4"
               [class.text-warning]="testStepResult.testStep &&!testStepResult?.isBreakContinueLoopStep"

@@ -416,9 +416,4 @@ export class TestCaseResultDetailsComponent extends BaseComponent implements OnI
 
   }
 
-  hasInspectorFeature() {
-    return (
-      this.version && this.version.workspace.isAndroidNative
-    ) || (this.version && this.version.workspace.isIosNative);
-  }
 }

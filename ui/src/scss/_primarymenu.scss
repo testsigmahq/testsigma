@@ -1,14 +1,13 @@
 %filled-circle {
   display: inline-block;
-  padding: 8px;
+  padding: 4px;
   box-sizing: border-box;
-  -moz-border-radius: 50%;
-  border-radius: 100%;
-  border: 1px solid $primary-menu-icon-filled-color;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
 }
 
 .primary-icon {
-  @extend .fz-17;
+  @extend .fz-24;
   color: $white;
   padding: 24px 0;
   line-height: 0;
@@ -20,7 +19,7 @@
   align-items: center;
 
   &:hover, &.active {
-    color: $white!important;
+    color: #03A973!important;
 
     span {
       @extend %filled-circle;
@@ -29,14 +28,17 @@
 
   &:hover {
     span {
-      background-color: #1a4558;
+      background-color: $background-dark-color;
     }
   }
 
   &.active {
     span {
-      background-image: linear-gradient(325deg, $active-light-color, $active-dark-color);
+      background-image: linear-gradient(325deg, $background-dark-color, $background-dark-color);
     }
+  }
+  .fa-plus-filled{
+    font-size: 19px;
   }
 }
 
@@ -45,7 +47,7 @@
   height: 100vh;
   position: relative;
   display: inline-flex;
-  background-color: $secondary-color;
+  background-color: $secondary-primary-color;
   flex-direction: column;
   align-items: center;
   padding: 15px 0;
@@ -59,18 +61,11 @@
     > li, .primary-nav-item {
       position: relative;
       display: block;
-
-      &.separator {
-        border-bottom: solid 1px rgba(160, 157, 157, 0.5294117647058824) !important;
-        margin: 0 10px;
-        width: 70%;
-        list-style: none;
-      }
     }
 
     > li a, .primary-nav-item a  {
       @extend .primary-icon;
-      color: $disable-icon;
+      color: $disable-primary-icon;
     }
   }
 }
@@ -78,7 +73,7 @@
 .profile-action-section {
   @extend .mt-auto, .w-80, .position-absolute, .pb-20;
   bottom: 0;
-  background-color: $secondary-color;
+  background-color: $secondary-primary-color;
 
   .profile-action-dropdown {
     @extend .bg-white, .border-rds-4, .popup-sm-shadow, .position-absolute, .overflow-hidden, .bottom-0;
@@ -96,7 +91,7 @@
   justify-content: center;
   align-items: center;
   margin: auto;
-  border-radius: 10%;
+  border-radius: 50%;
   font-weight: 600;
   color: $white;
   line-height: 0;

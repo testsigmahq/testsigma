@@ -49,6 +49,8 @@ import {Platform} from "../../../enums/platform.enum";
           *ngIf="isHybrid && !agentDevice"
           [class.fa-windows-brands]="isWindows"
           [class.fa-apple]="isMac"
+          [class.fz-15]="agent?.isMac"
+          [class.line-height-none]="agent?.isMac"
           [class.fa-linux-2]="isLinux"
           [matTooltip]="isHybrid && agentDevice ? 'V. ' +agentDevice.osVersion : ( 'agents.list_view.os' | translate) +' : '+ testDevice?.platform+' '+testDevice?.formattedOsVersion"
         ></i>
@@ -59,6 +61,8 @@ import {Platform} from "../../../enums/platform.enum";
           [class.fa-apple]="testDevice?.isMac || testDevice?.isIOS"
           [class.fa-linux-2]="testDevice?.isLinux"
           [class.fa-android-solid]="testDevice?.isAndroid"
+          [class.fz-15]="testDevice?.isMac || testDevice?.isIOS || testDevice?.isAndroid"
+          [class.line-height-none]="testDevice?.isMac || testDevice?.isIOS || testDevice?.isAndroid"
           [matTooltip]="isHybrid && agentDevice ? 'V. ' +agentDevice.osVersion : ( 'agents.list_view.os' | translate) +' : '+ testDevice?.platform+' '+testDevice?.formattedOsVersion"></i>
       </span>
     <div

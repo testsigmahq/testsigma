@@ -65,7 +65,7 @@ import {WorkspaceVersionService} from "../../shared/services/workspace-version.s
                   [routerLink]="['/workspaces', application?.id, 'versions']"
                   [routerLinkActive]="'active'"
                   class="nav-items">
-                  <i class="fa-4-quabs"></i>
+                  <i class="fa-versions"></i>
                   <span [translate]="'application_settings.left_nav.versions'"></span>
                 </a>
               </li>

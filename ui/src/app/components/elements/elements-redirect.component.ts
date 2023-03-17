@@ -29,9 +29,12 @@ export class ElementsRedirectComponent extends BaseComponent implements OnInit {
   ngOnInit() {
     this.route.parent.parent.parent.params.subscribe((params: Params) => {
       this.pushToParent(this.route, params);
-      if (this.router.url.endsWith("/elements")) {
-        this.elementFilterService.findAll(params.versionId).subscribe(res => {
-          this.navigation.replaceUrl(['/td', params.versionId, 'elements', 'filter', res.content.find(filter => filter.isDefault).id])
+      if (this.router.url.endsWith("/elements") || this.router.url.endsWith("/elements/create")) {
+          this.elementFilterService.findAll(params.versionId).subscribe(res => {
+          if(this.router.url.endsWith("/elements/create"))
+            this.router.navigate(['/td', params.versionId, 'elements', 'filter', res.content.find(filter => filter.isDefault).id],  {queryParams: {isCreate: "true"}});
+          else
+            this.router.navigate(['/td', params.versionId, 'elements', 'filter', res.content.find(filter => filter.isDefault).id]);
         });
       }
     })

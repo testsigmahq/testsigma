@@ -19,7 +19,7 @@ export class StepDetails extends Base implements Deserializable {
   public conditionType: TestStepConditionType;
   @serializable
   public action: String;
-  @serializable(alias('position', custom(() => SKIP, (v) => v)))
+  @serializable
   public order_id: Number;
   @serializable
   public priority: TestStepPriority;

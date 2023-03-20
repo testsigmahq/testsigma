@@ -9,16 +9,20 @@
     <div
       [class.disabled]="testStep?.id"
       class="btn-group px-10 py-8 border-rds-4 theme-border pointer border-dashed-style change-step-icon"
-      [class.px-10]="!stepRecorderView"
-      [class.py-8]="!stepRecorderView"
+      [class.px-10]="!stepRecorderView && !(isRest || isStepGroup)"
+      [class.py-8]="!stepRecorderView && !(isRest || isStepGroup)"
+      [class.px-8]="isRest || isStepGroup"
+      [class.py-7]="isRest || isStepGroup"
       [class.px-5]="stepRecorderView"
       [class.py-4]="stepRecorderView">
       <i
         [class.fa-nlp-new]="isActionText && !testStep?.isForLoop"
         [class.fa-step-group]="isStepGroup"
         [class.fa-rest-new]="isRest"
+        [class.fz-20]="isRest || isStepGroup"
+        [class.lh-1]="isRest || isStepGroup"
         [class.fa-power-loop]="testStep?.isForLoop"
-        [class.fz-15]="!stepRecorderView"
+        [class.fz-15]="!stepRecorderView && !(isRest || isStepGroup)"
         class="section-action-icons"></i>
     </div>
     <div
@@ -46,7 +50,7 @@
         <li *ngIf="!version?.workspace?.isRest"
             [class.active]="isActionText && !testStep?.isForLoop"
             class="step-type" (click)="changeStepType(testStepType.ACTION_TEXT)">
-          <i class="fa-nlp-new step-icon"></i>
+          <i class="fa-nlp-new step-icon" style="margin-left: -1px;"></i>
           <span
             class="step-label"
             [translate]="'step.action.label'"></span>
@@ -56,16 +60,16 @@
           (click)="changeStepType(testStepType.STEP_GROUP)"
           [class.active]="isStepGroup"
           class="step-type">
-          <i class="fa-step-group step-icon"></i>
+          <i class="fa-step-group step-icon line-height-none fz-18 ml-n3"></i>
           <span
-            class="step-label"
+            class="step-label ml-n2"
             [translate]="'step.group.label'"></span>
         </li>
         <li
           [class.active]="isRest"
           (click)="changeStepType(testStepType.REST_STEP)"
           class="step-type">
-          <i class="fa-rest-new step-icon"></i>
+          <i class="fa-rest-new step-icon line-height-none fz-18 ml-n3"></i>
           <span
             class="step-label"
             [translate]="'step.rest.label'"></span>
@@ -75,7 +79,7 @@
           *ngIf="!isWhileParentORCondition && !testStep?.isConditionalIf"
           (click)="fetchTestData()"
           class="step-type">
-          <i class="fa-power-loop step-icon"></i>
+          <i class="fa-power-loop step-icon fz-16 ml-n2"></i>
           <span
             class="step-label"
             [translate]="'step.for.label'"></span>

@@ -5,7 +5,7 @@ import {NotificationsService, NotificationType} from 'angular2-notifications';
 import {TranslateService} from '@ngx-translate/core';
 import {BaseComponent} from "../../shared/components/base.component";
 import {ElementService} from "../../shared/services/element.service";
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
 import {TooltipPosition} from "@angular/material/tooltip";
 import {WorkspaceVersionService} from "../../shared/services/workspace-version.service";
@@ -62,6 +62,7 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
   public direction = ",desc";
   public sortedBy = "createdDate";
   public tooltipPositionLeft: TooltipPosition = 'left';
+  private isCreateElement: boolean = false;
 
   constructor(
     public authGuard: AuthenticationGuard,
@@ -112,9 +113,14 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
     this.fetchVersion();
     this.route.params.subscribe(res => {
       this.filterId = res.filterId;
-      this.query = query? query : res.q ;
-      if(query) this.navigateToQueryBasedUrl();
       this.fetchFilters();
+        if (query == 'isCreate'){
+          this.isCreateElement = true;
+          this.query = undefined
+        } else {
+          this.query = query || res.q ;
+        }
+        if(query && !this.isCreateElement) this.navigateToQueryBasedUrl();
     });
     setTimeout(() => this.chromeRecorderService.pingRecorder(), 200);
   }
@@ -145,6 +151,9 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
         this.chromeRecorderService.pingRecorder();
       } else if (this.version.workspace.isMobileNative) {
         this.pingAgent();
+      }
+      if(this.isCreateElement){
+        this.openAddEditElement(null)
       }
     });
   }
@@ -198,8 +207,12 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
             ?.afterClosed().subscribe(r=>this.fetchElements());
         } else if (res)
           this.fetchElements();
+        if (this.isCreateElement) {
+          this.isCreateElement = false;
+          delete this.route.queryParams['value']
+          this.router.navigate(['/td', this.version.id, 'elements', 'filter', this.currentFilter.id]);;
+        }
       });
-
   }
 
   destroyElement(id) {
@@ -364,6 +377,13 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
         this.fetchElements();
       } else
         this.discard();
+    });
+    this.filterDialogRef.afterClosed().subscribe(res =>{
+      if(res) {
+        if (this.isCreateElement) {
+          this.isCreateElement = false
+        }
+      }
     });
   }
 
@@ -537,4 +557,5 @@ export class ElementsListComponent extends BaseComponent implements OnInit {
       this.discard();
     }
   }
+
 }

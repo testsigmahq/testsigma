@@ -111,7 +111,7 @@
         <app-inline-sort
           [ascending]="sortedBy!='locatorType'? undefined : direction == ',asc'"
           (click)="sortBy('locatorType', ((sortedBy!='locatorType' || direction == ',desc')?',asc':',desc'))"
-          [heading]="'elements.created_type'">
+          [heading]="'elements.locator_type'">
         </app-inline-sort>
       </div>
       <div

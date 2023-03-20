@@ -123,12 +123,12 @@
       <a
         [routerLink]="['devices']"
         [routerLinkActive]="'active'"
-        class="normal-text">
+        class="normal-text d-flex align-items-center">
         <i class="fz-15"
           [class.fa-desktop]="!version?.workspace.isMobile"
           [class.fa-mobile-alt-solid]="version?.workspace.isMobile"></i>
         <span [translate]="'test_plans.test_devices.title'" *ngIf="version?.workspace.isMobile"></span>
-        <span [translate]="'test_plans.test_machines.title'" *ngIf="!version?.workspace.isMobile"></span>
+        <span [translate]="'test_plans.test_machines.title'" *ngIf="!version?.workspace.isMobile" class="pb-1"></span>
       </a>
     </li>
     <li class="nav-items" role="presentation" *ngIf="testPlan?.isCustomPlan">

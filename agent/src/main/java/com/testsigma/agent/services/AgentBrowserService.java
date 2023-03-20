@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -36,7 +37,7 @@ public class AgentBrowserService {
   private final WindowsBrowsers windowsBrowsers;
 
   @Getter
-  private ArrayList<AgentBrowser> browserList;
+  private Set<AgentBrowser> browserList;
 
   @PostConstruct
   public void initialise() {

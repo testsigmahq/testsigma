@@ -103,26 +103,15 @@ public class MobileDriver extends TestsigmaDriver {
         return false;
       }
       IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
-      Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"describe", "--udid", udid, "--json"}, false);
-      String deviceDescriptionJson = iosDeviceCommandExecutor.getProcessStreamResponse(p);
-      JSONObject device = getProperties(deviceDescriptionJson);
-      if (device.getString("target_type").equals("simulator")) {
+      Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"list", "devices", "available"}, false);
+      String deviceListOutput = iosDeviceCommandExecutor.getProcessStreamResponse(p);
+      String deviceLine = String.format("(%s) (Booted)", udid.toUpperCase());
+      if (deviceListOutput != null && deviceListOutput.contains(deviceLine)) {
         return true;
       }
     } catch(Exception e) {
       log.error(e.getMessage(), e);
     }
     return false;
-  }
-
-  private JSONObject getProperties(String deviceJson) throws TestsigmaException {
-    try {
-      log.info("Fetching device properties for device - " + deviceJson);
-      JSONObject devicePropertiesJson = new JSONObject(deviceJson);
-      log.info("Fetched device properties for device in json format - " + devicePropertiesJson);
-      return devicePropertiesJson;
-    } catch (Exception e) {
-      throw new TestsigmaException(e.getMessage());
-    }
   }
 }

@@ -299,8 +299,11 @@ const routes: Routes = [
                   {
                     path: '', children: [
                       {path: '', component: ElementsRedirectComponent},
-                      {path: 'filter/:filterId', component: ElementsListComponent},
-                    ]
+                      {path: 'create', component: ElementsRedirectComponent},
+                      {
+                        path: 'filter/:filterId',
+                        data: {legacyURL: '#/td/:versionId/elements/filter/:filterId?isCreate=:isCreate'},
+                        component: ElementsListComponent},                    ]
                   }
                 ]
               },

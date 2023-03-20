@@ -149,14 +149,12 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   isAttachTestDataEvent: boolean = false;
   private runtimeSuggestion: MatDialogRef<ActionTestDataRuntimeVariableSuggestionComponent>;
   public selectedElementName : String;
-  public listDataItem:string[] | TestData[];
-  public listParameterItem:string[];
+  public listDataItem: TestData[] | string[];
   public isFetchingListData: boolean = false;
   public isParameter: boolean = false;
   public isTestDataProfileEmpty: boolean = false;
   public isTestData: boolean = false;
-
-
+  public currentAllowedValues = [];
 
   get mobileStepRecorder(): MobileStepRecorderComponent {
     return this.matModal.openDialogs.find(dialog => dialog.componentInstance instanceof MobileStepRecorderComponent).componentInstance;
@@ -244,7 +242,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
     this.setTemplate(this.currentTemplate);
     this.showTemplates = false;
-    if(changes['conditionTypeChange']?.currentValue && !changes['conditionTypeChange']?.firstChange) {
+    if(changes['conditionTypeChange']?.currentValue && (!changes['conditionTypeChange']?.firstChange || this.version.workspace.isRest)) {
       this.showActions = true;
       this.showTemplates = true;
       this.currentFocusedIndex = 0;
@@ -344,7 +342,6 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
           this.attributePlaceholder()?.removeAttribute("contentEditable");
           this.replacer.nativeElement.focus();
           this.resetValidation();
-          console.log(event);
         })).subscribe();
       fromEvent(this.replacer.nativeElement, 'keyup')
         .pipe(
@@ -853,7 +850,6 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   }
 
   setTestDataTemplate(template) {
-    console.log(template)
     Object.keys(template.data.testData).forEach((item)=>{
       console.log(item, this.replacer.nativeElement.innerHTML, this.testDataPlaceholder(), this.testDataPlaceholder()[0].classList);
     })
@@ -967,18 +963,23 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
           this.currentTestDataType =  this.currentTestDataType || TestDataType.raw;
           console.log('attaching test data events');
           this.currentAddonAllowedValues = undefined
+          this.listDataItem=undefined;
           this.testDataPlaceholder().forEach((item, index) => {
             item.addEventListener('click', (event) => {
               this.isCurrentDataTypeRaw = false;
               console.log('test data click event triggered');
               this.getAddonTemplateAllowedValues(item.dataset?.reference);
+              this.getAllowedValues(item.dataset?.reference);
               this.getTestdataProfile(item.dataset?.reference);
               this.getParameter(item.dataset?.reference);
               this.getTestdataParameters(item.dataset?.reference);
               this.isDefaultType(item.dataset?.reference)
-              console.log(item.dataset?.reference);
               this.currentDataTypeIndex = 0;
               this.currentDataItemIndex = index;
+              if(this.testDataPlaceholder())
+                [...this.testDataPlaceholder()]?.forEach((testDataItem) => {
+                  testDataItem.contentEditable = false;
+                })
               item.contentEditable = true;
               this.replacer.nativeElement.contentEditable = false;
               this.resetValidation();
@@ -1050,7 +1051,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
               this.getAddonTemplateAllowedValues(item.dataset?.reference);
               this.urlPatternError = false;
               let testDataType = ['@|', '!|', '~|', '$|', '*|'].some(type => item?.textContent.includes(type))
-              if (event.key == "Backspace") {
+              if (event.key == "Backspace" && !TestDataType.raw){
                 this.selectDataType(item?.textContent, true)
               }
               if ((!testDataType && this.removeHtmlTags(item?.textContent).trim().length) || (!(["Escape", "Tab", "Backspace", "ArrowLeft", "ArrowRight", "Enter", "ArrowUp", "ArrowDown", "Shift", "Control", "Meta", "Alt"].includes(event.key)) && item?.textContent)) {
@@ -1235,18 +1236,23 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
   }
 
-  selectAllowedValues(allowedValue, isFromHtml?: boolean, isSkipSelect?: boolean) {
+  selectAllowedValues(testdata, isFromHtml?: boolean, isSkipSelect?: boolean) {
     this.resetCFArguments();
     this.resetTestData();
+    if(testdata instanceof TestData){
+      this.selectedTestDataProfile=testdata;
+    }
     this.currentTestDataType = TestDataType.raw;
-    this.assignDataValue(this.getDataTypeString(TestDataType.raw, allowedValue));
+    this.assignDataValue(this.getDataTypeString(TestDataType.raw, testdata.name||testdata));
     this.clickNextItem();
   }
 
   clickNextItem(){
       this.testDataPlaceholder().forEach((item, index) => {
         if(item.contentEditable == "true" && this.testDataPlaceholder()?.length) {
-          setTimeout(() => this.testDataPlaceholder()[index+1]?.click(), 200);
+          setTimeout(() => {
+            this.testDataPlaceholder()[index+1]?.click()
+          }, 200);
         }
       })
   }
@@ -1727,7 +1733,6 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       testCase: this.testCase,
       stepRecorderView: Boolean(this.stepRecorderView)
     };
-    console.log(suggestionData);
     if(this.sendSuggestionDetails(suggestionData, this.mobileRecorderEventService.suggestionDataProfile)) {
       return;
     }
@@ -2117,9 +2122,22 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
   public extractStringByKey(str:string){
     return extractStringByDelimiterByPos({str:str})
   }
+  get isAllowedValues() {
+    return this.currentTemplate?.allowedValues && !this.listDataItem  && !this.isTestData;
+  }
+
+  public getAllowedValues(reference?) {
+    this.currentAllowedValues = undefined;
+    let dataList = this.currentTemplate?.data.testData ? Object.keys(this.currentTemplate?.data.testData) : []
+    dataList.forEach(parameter => {
+      if (parameter == reference) {
+            this.currentAllowedValues = this.currentTemplate?.allowedValues?.['test-data'];
+      }
+    })
+  }
 
   public getParameter(reference) {
-    this.listParameterItem = undefined;
+    this.listDataItem = undefined;
     this.isParameter = false;
     if (('left-data' == reference && this.testStep.isTestDataLeftParameter) || ('right-data' == reference && this.testStep.isTestDataRightParameter)) {
         this.isParameter = true;
@@ -2127,6 +2145,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
         this.focusOnSearch();
     }
   }
+
   public getTestdataProfile(reference?) {
     this.listDataItem = undefined;
     this.isParameter = false;
@@ -2136,7 +2155,7 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
     }
   }
   public getTestdataParameters(reference?) {
-    this.listParameterItem = undefined;
+    this.listDataItem = undefined;
     this.isParameter = false;
     if ('parameter' == reference && this.testStep.isTestdataParameter) {
       this.fetchTestDataSet();
@@ -2151,11 +2170,6 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
        this.isTestData=false;
    }
  }
-
-  get isAllowedValues() {
-    return true;
-    //return !this.listDataItem && !this.currentKibbutzAllowedValues?.length && (this.currentAllowedValues?.length || this.testStep?.kibbutzTemplate?.isConditionalIF || this.testStep?.kibbutzTemplate?.isConditionalWhileLoop)
-  }
 
   get isKibbutzAllowedValues(){
     return false;
@@ -2233,24 +2247,24 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
 
   fetchTestDataSet(term?) {
     this.isFetchingListData = true;
-    if(this.listParameterItem && term?.length) {
+    if(this.listDataItem && term?.length) {
       let returnData = [];
-      this.listParameterItem.forEach(data => {
+      this.listDataItem.forEach(data => {
         if(data.toLowerCase().includes(term)){
           returnData.push(data);
         }
       });
-      this.listParameterItem = returnData;
+      this.listDataItem = returnData;
       this.isFetchingListData = false;
       return
     }
-
-      this.testDataSetService.findAll("testDataProfileId:" + this.selectedTestDataProfile.id, 'position').subscribe(value => {
-        this.listParameterItem = Object.keys(value?.content[0]?.data);
+    let id = this.selectedTestDataProfile?.id || this.testStep?.forLoopData?.testDataProfileId;
+    this.testDataSetService.findAll("testDataProfileId:" + id , 'position').subscribe(value => {
+        this.listDataItem = Object.keys(value?.content[0]?.data);
       })
 
     this.testDataSetService.findAll("testDataProfileId:" + this.testCase?.testData?.id , 'position').subscribe(res => {
-      this.listParameterItem = Object.keys(res?.content[0]?.data);
+      this.listDataItem = Object.keys(res?.content[0]?.data);
       this.isFetchingListData = false;
     }, error => {
       this.isFetchingListData = false;

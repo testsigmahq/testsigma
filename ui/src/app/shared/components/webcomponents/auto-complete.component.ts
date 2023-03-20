@@ -20,11 +20,15 @@ import {TestPlanLabType} from '../../../enums/test-plan-lab-type.enum';
       <div class="d-flex align-items-center">
       <i
         [class.icon-top]="isNativeIcons"
-        class="switcher-icon fa-{{this.projectIcon}}"  *ngIf="hasProjectIcon"></i>
-      <i
+        [class.fz-16]="!isOldIconsProject"
+        [class.lh-1]="!isOldIconsProject"
+        class="switcher-icon fz-18 fa-{{this.projectIcon}}"  *ngIf="hasProjectIcon"></i>
+        <i
+          [class.fz-16]="!isOldIcons"
+          [class.lh-1]="!isOldIcons"
         [class.icon-top]="isNativeIcons"
         class="switcher-icon z-in-10 left-n5 fa-{{this.applicationIcon}}" *ngIf="hasApplicationIcon"
-      [ngClass]="this.applicationIcon=='project-website' ? 'top-n1':'top-n4'">
+        [ngClass]="(this.applicationIcon=='project-website' && !isForm) ? 'top-n1':!isForm ? 'top-n4' : '' ">
       </i>
       <input
         type="text" readonly [class.pl-20]="hasProjectIcon || hasApplicationIcon"
@@ -62,15 +66,21 @@ import {TestPlanLabType} from '../../../enums/test-plan-lab-type.enum';
           <i class="lh-1 mr-6 d-inline-block" *ngIf="hasProjectIcon && this.item.hasMultipleApps"
              [class.fa-all-items]="this.item.hasMultipleApps"
           ></i>
-            <i class="lh-1 mr-6 d-inline-block"
-               *ngIf="hasProjectIcon && !this.item.hasMultipleApps"
+          <i class="lh-1 mr-6 d-inline-block"
+             *ngIf="hasProjectIcon && !this.item.hasMultipleApps"
+             [class.fa-project-api]="applicationTypeValue(this.item) == 'Rest'"></i>
+          <i class="lh-1 mr-6 d-inline-block"
+             *ngIf="hasApplicationIcon"
+             [class.fa-project-api]="this.item.applicationType == 'Rest'"></i>
+          <i class="lh-1 mr-6 d-inline-block fz-16 ml-n8"
+             *ngIf="hasProjectIcon && !this.item.hasMultipleApps"
                [class.fa-project-website]="this.item.projectType == 'WebApplication'"
                [class.fa-project-ios]="this.item.projectType == 'IOSNative'"
                [class.fa-project-andriod]="this.item.projectType == 'AndroidNative'"
                [class.fa-project-mobile]="this.item.projectType == 'MobileWeb'"
                [class.fa-project-api]="this.item.projectType == 'Rest'"
             ></i>
-          <i class="lh-1 mr-6 d-inline-block"
+          <i class="lh-1 mr-6 d-inline-block fz-16 ml-n8"
              *ngIf="hasApplicationIcon"
              [class.fa-project-website]="this.item.workspaceType == 'WebApplication'"
              [class.fa-project-ios]="this.item.workspaceType == 'IOSNative'"
@@ -119,7 +129,8 @@ export class AutoCompleteComponent implements OnInit {
   @Optional() @Input('isCloudDeviceDropdown') isCloudDeviceDropdown:Boolean;
   @Output('onSearch') onSearch = new EventEmitter<String>();
   @Output('onValueChange') onValueChange = new EventEmitter<Base>();
-
+  @Input('isImportForm') public isImportForm?:Boolean;
+  @Input('isBackupForm') public isBackupForm?:Boolean;
   public searchAutoComplete = new FormControl();
   public loadingSearch: boolean = false;
   public noneValue: Boolean = false;
@@ -250,5 +261,18 @@ export class AutoCompleteComponent implements OnInit {
   }
   get isNativeIcons() {
    return  this.applicationIcon == 'project-ios' || this.applicationIcon =='project-andriod';
+  }
+  get isOldIcons() {
+    return this.applicationIcon == 'all-items' || this.applicationIcon == 'project-api';
+  }
+  get isOldIconsProject() {
+    return this.projectIcon == 'all-items' || this.projectIcon == 'project-api';
+  }
+
+  applicationTypeValue(item) {
+    return item?.applications?.[0]?.applicationType || item?.projectType ;
+  }
+  get isForm(){
+    return this.isBackupForm == true || this.isImportForm == true;
   }
 }

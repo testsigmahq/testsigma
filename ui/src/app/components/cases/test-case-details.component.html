@@ -14,7 +14,7 @@
            class="d-flex ts-col-100-67">
           <div class="theme-details-header">
             <a
-              class="title-name"
+              class="title-name h-85"
               [matTooltip]="testCase.name"
               [textContent]="testCase.name"></a>
           </div>
@@ -23,6 +23,7 @@
             <button
               *ngIf="stepsLength && canShowRunResult && !canShowBulkActions"
               (click)="openDryRun()"
+              [disabled]="!enabledStepPresent"
               class="theme-btn-primary">
               <i class="fa-filled-circled-play pr-7"></i>
               <span
@@ -40,7 +41,7 @@
             *ngIf="!testCase?.deleted && false"
             [versionId]="testCase?.workspaceVersionId"
             [testCase]="testCase"></app-test-case-detail-pagination>
-          <div *ngIf="version?.workspace?.isWeb && !testCase?.deleted">
+          <div *ngIf="(version?.workspace?.isWeb || version.workspace.isMobileWeb) && !testCase?.deleted">
             <app-chrome-record-button></app-chrome-record-button>
           </div>
           <button

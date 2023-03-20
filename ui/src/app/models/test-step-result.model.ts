@@ -371,13 +371,16 @@ export class TestStepResult extends ResultBase implements PageObject {
   }
 
   private replaceElement(parsedStep: String): String {
-    let elementString = this.stepDetail && this.stepDetail.dataMap ? this.stepDetail.dataMap.elementString : '';
+    let elementString = this.elementName;
     if (Boolean(elementString))
       return parsedStep.replace(new RegExp("#{.*?}"), "<span class='action-element'>" + elementString + "</span>");
     else if (this.stepDetail && this.stepDetail.dataMap) {
-      let fromAndToElement = parsedStep.replace(new RegExp("#{.*?}"), "<span class='action-element'>" + this.stepDetail.dataMap.fromElementString + "</span>");
-      return fromAndToElement.replace(new RegExp("#{.*?}"), "<span class='action-element'>" + this.stepDetail.dataMap.toElementString + "</span>");
+      let fromAndToElement = parsedStep.replace(new RegExp("#{.*?}"), "<span class='action-element'>" + (this.elementDetails?.['element']?.['elementName'] || this.stepDetail.dataMap.fromElementString) + "</span>");
+      return fromAndToElement.replace(new RegExp("#{.*?}"), "<span class='action-element'>" +(this.elementDetails?.['element']?.['elementName'] || this.stepDetail.dataMap.toElementString) + "</span>");
     }
+  }
+  get elementName() {
+    return this.elementDetails?.['element'] ? this.elementDetails?.['element']?.['elementName'] : this.stepDetail && this.stepDetail.dataMap ? this.stepDetail.dataMap.elementString : '';
   }
 
   private replaceAttribute(parsedStep: String): String {

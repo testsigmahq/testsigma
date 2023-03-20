@@ -13,7 +13,7 @@ import {collapse, expand} from "../../shared/animations/animations";
       <li [class.active]="isUsageDetailsVisible" class="align-items-center d-flex justify-content-center">
         <a [class.active]="isUsageDetailsVisible" [matTooltip]="'left_nav.usage_details' | translate" placement="right"
            (click)="showUsageDetails()">
-          <span><i class="fa-usage-badge ml-2"></i></span>
+          <span><i class="fa-data-usage ml-2"></i></span>
         </a>
       </li>
       <li class="mb-5 mt-8 mx-auto separator text-center"></li>
@@ -26,7 +26,7 @@ import {collapse, expand} from "../../shared/animations/animations";
       </li>
       <li id="beamer-trigger" class="align-items-center d-flex justify-content-center mb-5" data-beamer-click="true" (click)="onOpenBeamer()">
         <a [matTooltip]="'left_nav.whats_new' | translate" placement="right">
-          <span><i class="fa-gift-solid ml-2"></i></span>
+          <span><i class="fa-redeem ml-2"></i></span>
         </a>
       </li>
     </ul>

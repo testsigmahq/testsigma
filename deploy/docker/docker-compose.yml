@@ -20,7 +20,7 @@ services:
       interval: 1s
       retries: 120
   testsigma_server:
-    image: testsigmahq/server:v2.8 # Replace with testsigmahq/server:v2.8-m1 for m1
+    image: testsigmahq/server:v2.9 # Replace with testsigmahq/server:v2.9-m1 for m1
     container_name: testsigma_server
     ports:
       - "9090:9090"

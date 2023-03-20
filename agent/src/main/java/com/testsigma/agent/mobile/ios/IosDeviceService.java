@@ -18,15 +18,14 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.SystemUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Data
 @Log4j2
@@ -39,6 +38,8 @@ public class IosDeviceService {
   private final WebAppHttpClient httpClient;
   private final WdaService wdaService;
   private final ObjectMapperService objectMapperService;
+  private final IosDeviceCommandExecutor iosDeviceCommandExecutor;
+  private final Map<String, String> modelMap = new ConcurrentHashMap<>();
 
   public static int nextTag() {
     return (tag++);
@@ -104,19 +105,13 @@ public class IosDeviceService {
     log.info("Fetching iOS simulator list");
     List<MobileDevice> deviceList = new ArrayList<>();
     IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
-    Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"list-targets", "--json"}, false);
+    Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"list", "devices", "available", "--json"}, false);
     String devicesJsonString = iosDeviceCommandExecutor.getProcessStreamResponse(p);
-    String[] devices = devicesJsonString.split("\n");
-    for(String deviceJson : devices) {
-      JSONObject deviceJsonObject = getSimulatorProperties(deviceJson);
-      if(deviceJsonObject.getString("state").equals(DeviceStatus.BOOTED.getStatus()) && deviceJsonObject.getString("type").equals("simulator")) {
-        try {
-          MobileDevice device = getSimulatorDevice(deviceJsonObject.getString("udid"));
-          deviceList.add(device);
-        } catch(Exception e) {
-          log.error(e.getMessage());
-        }
-      }
+    try {
+      JSONObject devices = new JSONObject(devicesJsonString);
+      deviceList = parseSimulatorDevices(devices);
+    } catch (Exception e) {
+      log.error("Failed to fetch simulators", e);
     }
     return deviceList;
   }
@@ -124,7 +119,6 @@ public class IosDeviceService {
   public JSONObject getDeviceProperties(String uniqueId) throws TestsigmaException {
     try {
       log.info("Fetching device properties for device uniqueID - " + uniqueId);
-      IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
       Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"-u", uniqueId, "info", "--json"}, true);
       String devicePropertiesJsonString = iosDeviceCommandExecutor.getProcessStreamResponse(p);
       log.info("Fetched device properties for device - " + uniqueId + ", properties - " + devicePropertiesJsonString);
@@ -136,21 +130,10 @@ public class IosDeviceService {
     }
   }
 
-  public JSONObject getSimulatorProperties(String deviceJson) throws TestsigmaException {
-    try {
-      return new JSONObject(deviceJson);
-    } catch (Exception e) {
-      throw new TestsigmaException(e.getMessage());
-    }
-  }
-
   public void setupWda(MobileDevice device) throws TestsigmaException, AutomatorException {
     log.info("Setting up WDA on device - " + device.getName());
     try {
       wdaService.installWdaToDevice(device);
-      if(device.getIsEmulator()) {
-        wdaService.installXCTestToDevice(device);
-      }
       wdaService.startWdaOnDevice(device);
     } catch (Exception e) {
       log.error("Error while setting up wda and starting it. Error - ");
@@ -173,24 +156,94 @@ public class IosDeviceService {
     return new AppInstaller(httpClient).installApp(device.getName(), device.getUniqueId(), appUrl, isEmulator);
   }
 
-  public MobileDevice getSimulatorDevice(String udid) throws AutomatorException, TestsigmaException {
-    IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
-    Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"describe", "--udid", udid, "--json"}, false);
-    String deviceDescriptionJson = iosDeviceCommandExecutor.getProcessStreamResponse(p);
-    JSONObject device = getSimulatorProperties(deviceDescriptionJson);
-    MobileDevice mobileDevice = new MobileDevice();
-    mobileDevice.setOsName(MobileOs.IOS);
-    mobileDevice.setUniqueId(device.getString("udid"));
-    mobileDevice.setName(device.getString("name"));
-    mobileDevice.setOsVersion(device.getString("os_version").split(" ")[1]);
-    mobileDevice.setApiLevel(mobileDevice.getOsVersion());
-    mobileDevice.setAbi(device.getString("architecture"));
-    mobileDevice.setIsOnline(device.getString("state").equals(DeviceStatus.BOOTED.getStatus()));
-    mobileDevice.setProductModel(device.isNull("model") ? "-" : device.get("model").toString());
-    mobileDevice.setIsEmulator(device.getString("target_type").equals("simulator"));
-    mobileDevice.setScreenHeight(device.getJSONObject("screen_dimensions").getInt("height"));
-    mobileDevice.setScreenWidth(device.getJSONObject("screen_dimensions").getInt("width"));
-    return mobileDevice;
+  private List<MobileDevice> parseSimulatorDevices(JSONObject devices) {
+    List<MobileDevice> simulatorDevices = new ArrayList<>();
+    JSONObject devicesByVersion = devices.getJSONObject("devices");
+    Set<String> versions = devicesByVersion.keySet();
+    for (String version : versions) {
+      JSONArray deviceList = devicesByVersion.getJSONArray(version);
+      for (int i = 0; i < deviceList.length(); i++) {
+        JSONObject device = deviceList.getJSONObject(i);
+        if (!device.getString("state").equals(DeviceStatus.BOOTED.getStatus())) {
+          continue;
+        }
+        MobileDevice mobileDevice = new MobileDevice();
+        mobileDevice.setOsName(MobileOs.IOS);
+        mobileDevice.setUniqueId(device.getString("udid"));
+        mobileDevice.setName(device.getString("name"));
+        mobileDevice.setOsVersion(parseOsVersion(version));
+        mobileDevice.setApiLevel(mobileDevice.getOsVersion());
+        mobileDevice.setIsOnline(true);
+        mobileDevice.setProductModel(fetchProductModel(device.getString("deviceTypeIdentifier")));
+        mobileDevice.setIsEmulator(true);
+        Map<String, Integer> dimensions = fetchDimensions(mobileDevice.getUniqueId());
+        mobileDevice.setScreenHeight(dimensions.get("height"));
+        mobileDevice.setScreenWidth(dimensions.get("width"));
+        simulatorDevices.add(mobileDevice);
+      }
+    }
+    return simulatorDevices;
+  }
+
+  private Map<String, Integer> fetchDimensions(String udid) {
+    Integer width = null;
+    Integer height = null;
+    Map<String, Integer> dimensions = new HashMap<>();
+    try {
+      Process process = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"io", udid, "enumerate"}, false);
+      String ioOutput = iosDeviceCommandExecutor.getProcessStreamResponse(process);
+      String[] lines = ioOutput.split("\n");
+      int i;
+      for (i = 0; i < lines.length; i++) {
+        if (lines[i].contains("IOSurface port:")) break;
+      }
+      for (i = i + 1; i < lines.length; i++) {
+        String line = lines[i].trim();
+        if (line.startsWith("Port:")) {
+          break;
+        }
+        int dimension = Integer.parseInt(line.substring(line.lastIndexOf('=') + 1).trim());
+        if (line.startsWith("width ")) {
+          width = dimension;
+        } else if (line.startsWith("height ")) {
+          height = dimension;
+        }
+        if (height != null && width != null) break;
+      }
+    } catch (Exception e) {
+      log.error("Could not fetch screen dimensions", e);
+    }
+    dimensions.put("width", width);
+    dimensions.put("height", height);
+    return dimensions;
+  }
+
+  private String fetchProductModel(String deviceTypeIdentifier) {
+    if (!modelMap.containsKey(deviceTypeIdentifier)) {
+      fetchSimulatorModels();
+    }
+    return modelMap.getOrDefault(deviceTypeIdentifier, "-");
+  }
+
+  private void fetchSimulatorModels() {
+    try {
+      Process process = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"list", "devicetypes", "--json"}, false);
+      String deviceTypesOutput = iosDeviceCommandExecutor.getProcessStreamResponse(process);
+      JSONArray deviceTypes = new JSONObject(deviceTypesOutput).getJSONArray("devicetypes");
+      for (int i = 0; i < deviceTypes.length(); i++) {
+        JSONObject deviceType = deviceTypes.getJSONObject(i);
+        modelMap.put(deviceType.getString("identifier"), deviceType.getString("name"));
+      }
+    } catch (Exception e) {
+      log.error("Could not fetch simulator models", e);
+    }
+  }
+
+  private String parseOsVersion(String version) {
+    // com.apple.CoreSimulator.SimRuntime.iOS-15-0
+    String versionWithHyphens = version.substring(version.lastIndexOf('.') + 1);  // -> iOS-15-0
+    String versionWithDots = versionWithHyphens.replaceAll("-", ".");             // -> iOS.15.0
+    return versionWithDots.substring(versionWithDots.indexOf('.') + 1);           // -> 15.0
   }
 
 }

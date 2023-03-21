@@ -27,16 +27,19 @@ public class ChromeDriver extends WebDriver {
   public ChromeDriver() {
     super();
     chromeOptions = new ChromeOptions();
-    chromeOptions.addArguments("--remote-allow-origins=*");
-
   }
 
   @Override
   protected void createDriverInstance(DesiredCapabilities desiredCapabilities) throws AutomatorException {
     if (remoteServerURL != null) {
-      remoteWebDriver = new RemoteWebDriver(remoteServerURL, chromeOptions.merge(desiredCapabilities));
-    } else {
+      chromeOptions = chromeOptions.addArguments("--remote-allow-origins=*");
       chromeOptions = chromeOptions.merge(desiredCapabilities);
+      log.info("chromeOptions::: " + chromeOptions);
+      remoteWebDriver = new RemoteWebDriver(remoteServerURL, chromeOptions);
+    } else {
+      chromeOptions = chromeOptions.addArguments("--remote-allow-origins=*");
+      chromeOptions = chromeOptions.merge(desiredCapabilities);
+      log.info("chromeOptions::: " + chromeOptions);
       remoteWebDriver = new org.openqa.selenium.chrome.ChromeDriver(chromeOptions);
     }
   }

@@ -24,6 +24,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -70,11 +71,11 @@ public class TestsigmaDriver {
   protected void setTimeouts() throws AutomatorException {
     if (settings != null && settings.getElementTimeout() != null) {
       remoteWebDriver.manage().timeouts().implicitlyWait(
-        settings.getElementTimeout(), TimeUnit.SECONDS);
+        Duration.ofSeconds(settings.getElementTimeout()));
     }
     if (settings != null && settings.getPageLoadTimeout() != null) {
       remoteWebDriver.manage().timeouts().implicitlyWait(
-        settings.getPageLoadTimeout(), TimeUnit.SECONDS);
+              Duration.ofSeconds(settings.getPageLoadTimeout()));
     }
 
   }

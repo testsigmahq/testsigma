@@ -83,6 +83,12 @@
 
     </dependency>
 
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-http-jdk-client</artifactId>
+      <version>${selenium.version}</version>
+    </dependency>
+
     <!-- Spring 3 dependencies -->
     <dependency>
       <groupId>org.springframework</groupId>

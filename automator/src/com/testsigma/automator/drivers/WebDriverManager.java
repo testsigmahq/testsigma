@@ -92,7 +92,7 @@ public class WebDriverManager extends DriverManager {
     TestDeviceSettings testDeviceSettings = EnvironmentRunner.getRunnerEnvironmentEntity().getEnvSettings();
     String executionUuid = EnvironmentRunner.getRunnerExecutionId();
     Capabilities cap = driver.getCapabilities();
-    String browserVersion = cap.getBrowserVersion();
+    String browserVersion = cap.getCapability("browserVersion").toString();
 
     if (browserVersion.contains(".")) {
       browserVersion = browserVersion.substring(0, browserVersion.indexOf(".") + 2);

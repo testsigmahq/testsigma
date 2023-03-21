@@ -24,6 +24,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @Log4j2
 public class TestsigmaAgent {
   public static void main(String[] args) {
+    System.setProperty("webdriver.http.factory", "jdk-http-client");
     String wrapperPort = System.getProperty("agent.wrapper.port");
     if (StringUtils.isNotBlank(wrapperPort)) {
       WrapperConnector.getInstance().disconnectHook();

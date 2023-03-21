@@ -50,7 +50,7 @@ public abstract class DriverAction extends Action {
 
   private void setImplicitTimeout() {
     if (getGlobalElementTimeOut() != null && !getTimeout().equals(getGlobalElementTimeOut())) {
-      log.info("Updating implicit timeout to step level timeout:" + getTimeout());
+      log.info("Updating implicit timeout to step level timeout:" + getTimeout().getSeconds());
       setDriverImplicitTimeout(getTimeout());
     }
   }

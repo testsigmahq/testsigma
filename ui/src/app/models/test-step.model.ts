@@ -457,9 +457,6 @@ export class TestStep extends Base implements PageObject {
   }
 
   public serialize(): JSON {
-    if(this.conditionIf == null) {
-      this.conditionIf = [];
-    }
     let output = serialize(this);
     let conditionIf: string[] = [];
     this.conditionIf?.forEach(key => {

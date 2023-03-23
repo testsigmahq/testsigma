@@ -388,7 +388,7 @@ export abstract class TestStepListItemComponent extends BaseComponent implements
     let lastChild = childSteps[childSteps.length - 1];
     let afterStep = this.initNewTestStep(lastChild.isConditionalType && lastChild != step && !lastChild.parentStep ? lastChild.position - 1 : lastChild.position + 1, step.testCaseId);
     afterStep.conditionType = TestStepConditionType.CONDITION_ELSE_IF;
-    afterStep.dataMap.conditionIf = [ResultConstant.SUCCESS];
+    afterStep.conditionIf = [ResultConstant.SUCCESS];
     afterStep.priority = TestStepPriority.MINOR;
     afterStep.parentId = step.id;
     afterStep.parentStep = step;

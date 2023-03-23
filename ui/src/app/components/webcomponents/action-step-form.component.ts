@@ -1983,10 +1983,10 @@ export class ActionStepFormComponent extends BaseComponent implements OnInit {
       testStep.testCaseId = currentStep.testCaseId;
       testStep.position = testStep.position || currentStep.position;
       testStep.testCaseId = this.testCase.id;
-      testStep.dataMap.conditionIf = this.actionForm.getRawValue()?.conditionIf ? this.actionForm.getRawValue()?.conditionIf : [ResultConstant.SUCCESS];
+      testStep.conditionIf = this.actionForm.getRawValue()?.conditionIf ? this.actionForm.getRawValue()?.conditionIf : [ResultConstant.SUCCESS];
       this.saveFromRecorder(testStep);
     } else {
-      testStep.dataMap.conditionIf = this.actionForm.getRawValue()?.conditionIf ? this.actionForm.getRawValue()?.conditionIf : [ResultConstant.SUCCESS];
+      testStep.conditionIf = this.actionForm.getRawValue()?.conditionIf ? this.actionForm.getRawValue()?.conditionIf : [ResultConstant.SUCCESS];
       this.testStep = testStep;
       this.testStep.position = testStep.position || currentStep.position;
       this.testStep.testCaseId = this.testCase.id;

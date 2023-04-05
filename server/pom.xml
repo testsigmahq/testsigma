@@ -30,6 +30,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <jdk.version>11</jdk.version>
     <maven.compiler.plugin>3.8.1</maven.compiler.plugin>
+    <selenium.version>4.8.2</selenium.version>
     <jackson.version>2.11.4</jackson.version>
     <json.version>20160810</json.version>
     <jjwt.version>0.2</jjwt.version>

@@ -5,31 +5,43 @@ import com.testsigma.config.StorageServiceFactory;
 import com.testsigma.constants.MessageConstants;
 import com.testsigma.constants.NaturalTextActionConstants;
 import com.testsigma.dto.*;
+import com.testsigma.automator.entity.TestDataPropertiesEntity;
 import com.testsigma.exception.ExceptionErrorCodes;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaException;
 import com.testsigma.mapper.ElementMapper;
+import com.testsigma.mapper.ForLoopConditionsMapper;
+import com.testsigma.mapper.TestDataProfileMapper;
 import com.testsigma.mapper.TestStepMapper;
 import com.testsigma.model.TestDataSet;
 import com.testsigma.model.*;
 import com.testsigma.service.*;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.net.URL;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Log4j2
 public class StepProcessor {
+  public final static String PARENT_STEP_STR = "_steps";
   protected static Integer LOOP_END = -1;
   protected static Integer LOOP_START = -1;
+  public static String TESTSIGMA_STORAGE = "testsigma-storage:/";
+  protected String testDataName = null;
+  private String leftParamValue;
+  private String rightParamValue;
   protected Long testPlanId;
   protected List<TestCaseStepEntityDTO> testCaseStepEntityDTOS;
   protected WorkspaceType workspaceType;
   protected Map<String, Element> elementMap;
   protected TestDataSet testDataSet;
+  protected TestData testData;
   protected TestStepDTO testStepDTO;
   protected Map<String, String> environmentParameters;
   protected TestCaseEntityDTO testCaseEntityDTO;
@@ -43,15 +55,22 @@ public class StepProcessor {
   protected TestStepMapper testStepMapper;
   protected ProxyAddonService addonService;
   protected TestStepService testStepService;
+  protected TestDataProfileMapper testDataProfileMapper;
   protected DefaultDataGeneratorService defaultDataGeneratorService;
-  protected Map<Long, Integer> dataSetIndex;
+  protected Map<Long, Long> dataSetIndex;
   WebApplicationContext webApplicationContext;
+  @Getter
+  protected ForLoopConditionDTO forLoopConditions;
+  protected ForLoopConditionService forLoopConditionsService;
+  protected ForLoopConditionsMapper forLoopConditionsMapper;
+  protected TestDataSetService testDataSetService;
+  protected StorageServiceFactory storageServiceFactory;
 
   public StepProcessor(WebApplicationContext webApplicationContext, List<TestCaseStepEntityDTO> testCaseStepEntityDTOS,
                        WorkspaceType workspaceType, Map<String, Element> elementMap,
                        TestStepDTO testStepDTO, Long testPlanId, TestDataSet testDataSet,
                        Map<String, String> environmentParameters, TestCaseEntityDTO testCaseEntityDTO, String environmentParamSetName,
-                       String dataProfile, Map<Long, Integer> dataSetIndex) {
+                       String dataProfile, Map<Long, Long> dataSetIndex) {
     this.webApplicationContext = webApplicationContext;
     this.testCaseStepEntityDTOS = testCaseStepEntityDTOS;
     this.workspaceType = workspaceType;
@@ -73,7 +92,13 @@ public class StepProcessor {
     this.restStepService = (RestStepService) webApplicationContext.getBean("restStepService");
     this.defaultDataGeneratorService = (DefaultDataGeneratorService) webApplicationContext.getBean("defaultDataGeneratorService");
     this.testStepMapper = (TestStepMapper) webApplicationContext.getBean("testStepMapperImpl");
+    this.testDataProfileMapper = (TestDataProfileMapper) webApplicationContext.getBean("testDataProfileMapperImpl");
     this.addonService = (ProxyAddonService) webApplicationContext.getBean("proxyAddonService");
+    this.forLoopConditionsService = (ForLoopConditionService) webApplicationContext.getBean("forLoopConditionService");
+    this.forLoopConditionsMapper = (ForLoopConditionsMapper) webApplicationContext.getBean(
+            "forLoopConditionsMapperImpl");
+    this.testDataSetService = (TestDataSetService) webApplicationContext.getBean("testDataSetService");
+    this.storageServiceFactory = (StorageServiceFactory) webApplicationContext.getBean("storageServiceFactory");
   }
 
   protected void processDefault(TestCaseStepEntityDTO exeTestStepEntity) throws TestsigmaException {
@@ -123,7 +148,7 @@ public class StepProcessor {
 
     if ((testStepDTO.getType() != null &&
       (testStepDTO.getType() == com.testsigma.model.TestStepType.STEP_GROUP)
-      || (testStepDTO.getType() == com.testsigma.model.TestStepType.FOR_LOOP))) {
+      || (testStepDTO.getType() == com.testsigma.model.TestStepType.FOR_LOOP) || testStepDTO.getConditionType() == TestStepConditionType.LOOP_FOR)) {
       return exeTestStepEntity;
     }
 
@@ -297,8 +322,8 @@ public class StepProcessor {
   public TestDataSet getTestDataIdFromStep(TestCaseStepEntityDTO step) throws ResourceNotFoundException {
     try {
       TestStep testStep = testStepService.find(step.getTestDataProfileStepId());
-      TestData testData = testDataProfileService.find(testStep.getForLoopTestDataId());
-      return testData.getTempTestData().get(dataSetIndex.get(testStep.getId()));
+      TestData testData = testDataProfileService.find(testStep.getDataMap().getForLoop().getTestDataId());
+      return testData.getTempTestData().get(dataSetIndex.get(testStep.getId()).intValue());
     } catch (Exception e) {
       TestStep parentStep = step.getParentId() != null ? testStepService.find(step.getParentId()) : null;
       if (Objects.equals(step.getTestDataProfileStepId(), this.testCaseEntityDTO.getTestDataId())) {
@@ -382,8 +407,8 @@ public class StepProcessor {
               && ((childTestStepDTO.getParentId().equals(stepDTOEntity.getId()))
               || (childConditionalStepIds.contains(childTestStepDTO.getParentId())))) {
         if (childTestStepDTO.getType() != null &&
-                (TestStepType.FOR_LOOP.equals(childTestStepDTO.getType())
-                        || TestStepConditionType.LOOP_WHILE.equals(childTestStepDTO.getConditionType()))) {
+                (TestStepType.FOR_LOOP.equals(childTestStepDTO.getType()) ||
+                        (TestStepConditionType.LOOP_FOR.equals(childTestStepDTO.getConditionType()) || TestStepConditionType.LOOP_WHILE.equals(childTestStepDTO.getConditionType())))) {
           loadLoop(childTestStepDTO, stepDTOEntities);
         } else {
           childConditionalStepIds.add(childTestStepDTO.getId());
@@ -433,8 +458,6 @@ public class StepProcessor {
         customFunction.getArguments().get("arg_types").toString(), HashMap.class);
       testDataFunctionEntity.setArgumentTypes(functionArguments);
       testDataFunctionEntity.setClassPackage(customFunctionFile.getClassPackage());
-      //testDataFunctionEntity.setCustomFunctionType(CustomFunctionType.DefaultTestData);
-//      testDataFunctionEntity.setBinaryFileUrl(getSignedURL(customFunctionFile.getBinary_file_url(), customFunctionFile.getClassName()));
     }
     testDataFunctionEntity.setId(addonTestStepTestData.getTestDataFunctionId());
   }
@@ -463,7 +486,8 @@ public class StepProcessor {
     DefaultDataGenerator defaultDataGenerator = defaultDataGeneratorService.find(testStepDTO.getTestDataFunctionId());
     defaultDataGeneratorsEntity.setClassName(defaultDataGenerator.getFile().getClassName());
     defaultDataGeneratorsEntity.setFunctionName(defaultDataGenerator.getFunctionName());
-    defaultDataGeneratorsEntity.setArguments(testStepDTO.getTestDataFunctionArgs());
+    Map<String, String> args = (HashMap) testStepDTO.getTestDataFunctionArgs();
+    defaultDataGeneratorsEntity.setArguments(args);
     Map<String, String> argsTypes = (HashMap) defaultDataGenerator.getArguments().get("arg_types");
     defaultDataGeneratorsEntity.setArgumentTypes(argsTypes);
     defaultDataGeneratorsEntity.setClassPackage(defaultDataGenerator.getFile().getClassPackage());
@@ -521,5 +545,283 @@ public class StepProcessor {
       log.info(e.getMessage(),e);
     }
     return locatorValue;
+  }
+
+  protected Set<TestDataSet> getIterations() throws TestsigmaException {
+    log.info("Processing for loop step - " + testStepDTO.getId());
+    List<TestDataSet> testDataList = new ArrayList<>();
+    Pattern COMMA = Pattern.compile(",");
+    Long stepId = testStepDTO.getId();
+
+    if (!testCaseEntityDTO.getIsStepGroup() || forLoopConditions == null) {
+      forLoopConditions = forLoopConditionsMapper.map(forLoopConditionsService.findAllByTestCaseStepId(stepId).get());
+    }
+
+    Long testDataProfileId = dataSetIndex.containsKey(testStepDTO.getId()) ? dataSetIndex.get(testStepDTO.getId())
+            : testCaseEntityDTO.getTestDataId();
+
+    if (testDataProfileId != null) {
+      testData = testDataProfileService.find(testDataProfileId);
+    }
+    TestData testData = testDataProfileService.find(forLoopConditions.getTestDataProfileId());
+    testDataName = testData.getTestDataName();
+    List<TestDataSet> originalDataBank = this.testDataSetService.findByProfileId(testData.getId());
+    List<TestDataSet> dataBank = originalDataBank.stream().map(dataSet -> testDataProfileMapper.copySet(dataSet)).collect(Collectors.toList());
+    IterationType iterationType = forLoopConditions.getIterationType();
+
+    String leftDataParam = getTestDataValue(forLoopConditions.getLeftParamType(), leftParamValue,
+            forLoopConditions.getLeftParamValue(), testData);
+    String rightDataParam = getTestDataValue(forLoopConditions.getRightParamType(), rightParamValue,
+            forLoopConditions.getRightParamValue(), testData);
+    log.debug("LeftDataParam:" + leftDataParam);
+    log.debug("rightDataParam:" + rightDataParam);
+    log.debug("operator:" + forLoopConditions.getOperator());
+
+    Operator operator = forLoopConditions.getOperator();
+
+    if (iterationType == IterationType.INDEX) {
+      if (operator == null)
+        operator = Operator.EQUALS;
+      Integer start = Integer.parseInt(leftDataParam);
+      if (start == -1) {
+        start = 1;
+      }
+      Integer end = Integer.parseInt(rightDataParam);
+      if (end == -1) {
+        end = dataBank.size();
+      }
+      start = start - 1;
+      end = end - 1;
+      if (start < 0) {
+        throw new TestsigmaException(String.format(MessageConstants.MSG_INVALID_START_INDEX, start + 1));
+      }
+
+      if (end + 1 > dataBank.size()) {
+        throw new TestsigmaException(String.format(MessageConstants.MSG_END_INDEX, dataBank.size(), end + 1));
+      }
+
+      if (start > end) {
+        throw new TestsigmaException(String.format(MessageConstants.MSG_INVALID_START_INDEX_GREATER, start + 1, end + 1));
+      }
+
+      testDataList = dataBank.subList(start, end + 1);
+    } else if (iterationType == IterationType.PARAMETER_VALUE) {
+      String parameterName = leftDataParam;
+      List<String> rightParams = (rightDataParam != null) ? COMMA.splitAsStream(rightDataParam).collect(Collectors.toList()) : null;
+      testDataList = filterParameterIterations(dataBank, rightParams, operator, parameterName);
+    } else if (iterationType == IterationType.SET_NAME && operator != null) {
+      List<String> rightParams = COMMA.splitAsStream(rightDataParam).collect(Collectors.toList());
+      testDataList = filterIterations(dataBank, rightParams, operator);
+    } else if (iterationType == IterationType.SET_NAME) {
+      testDataList = filterIterations(dataBank, leftDataParam, rightDataParam);
+    }
+
+    return new HashSet<>(testDataList);
+  }
+
+  private List<TestDataSet> filterIterations(List<TestDataSet> allList, String startSetName, String endSetName) throws TestsigmaException {
+    List<TestDataSet> testDataSetList = new ArrayList<>();
+
+    Optional<TestDataSet> startSet = Objects.equals(startSetName, "-1") ? Optional.of(allList.get(0)) :
+            allList.stream().filter(dataSet -> dataSet.getName().equals(startSetName)).findFirst();
+
+    Optional<TestDataSet> endSet = Objects.equals(endSetName, "-1") ? Optional.of(allList.get(allList.size() - 1)) :
+            allList.stream().filter(dataSet -> dataSet.getName().equals(endSetName)).findFirst();
+
+    validateSetNamesBoundaries(startSet, endSet, Objects.equals(startSetName, "-1") ? "start" :
+            startSetName, Objects.equals(endSetName, "-1") ? "end" : endSetName);
+    if (startSet.isPresent() && endSet.isPresent()) {
+      testDataSetList = allList.subList(startSet.get().getPosition().intValue(), endSet.get().getPosition().intValue() + 1);
+    }
+    return testDataSetList;
+  }
+
+  private void validateSetNamesBoundaries(Optional<TestDataSet> startSet, Optional<TestDataSet> endSet, String startSetName, String endSetName) throws TestsigmaException {
+    if (startSet.isEmpty())
+      throw new TestsigmaException(String.format(MessageConstants.MSG_START_SET_NAME_MISSING, startSetName));
+    if (endSet.isEmpty())
+      throw new TestsigmaException(String.format(MessageConstants.MSG_END_SET_NAME_MISSING, endSetName));
+
+    if (startSet.get().getPosition() > endSet.get().getPosition()) {
+      throw new TestsigmaException(String.format(MessageConstants.MSG_START_SET_NAME_GREATER_POSITION_THAN_END_SET_NAME, startSetName, startSet.get().getPosition(), endSetName, endSet.get().getPosition()));
+    }
+  }
+
+  private List<TestDataSet> filterIterations(List<TestDataSet> allList, List<String> filterNames,
+                                             Operator operator) {
+    List<TestDataSet> testDataSetList = new ArrayList<>();
+    switch (operator) {
+      case EQUALS:
+      case IN:
+        List<String> filterNameList = filterNames.stream().map(filterName -> filterName.toLowerCase()).collect(Collectors.toList());
+        testDataSetList = allList.stream().filter(dataSet -> filterNameList.contains(dataSet.getName().toLowerCase())).collect(
+                Collectors.toList());
+        break;
+      case CONTAINS:
+        testDataSetList = allList.stream().filter(dataSet -> filterNames.stream().anyMatch(
+                filterName -> dataSet.getName().toLowerCase().contains(filterName.toLowerCase()))).collect(Collectors.toList());
+        break;
+      case ENDS_WITH:
+        testDataSetList = allList.stream().filter(dataSet -> filterNames.stream().anyMatch(
+                filterName -> dataSet.getName().toLowerCase().endsWith(filterName.toLowerCase()))).collect(Collectors.toList());
+        break;
+      case STARTS_WITH:
+        testDataSetList = allList.stream().filter(dataSet -> filterNames.stream().anyMatch(
+                filterName -> dataSet.getName().toLowerCase().startsWith(filterName.toLowerCase()))).collect(Collectors.toList());
+        break;
+
+    }
+    return testDataSetList;
+  }
+
+  private List<TestDataSet> filterParameterIterations(List<TestDataSet> allList, List<String> filterNames, Operator operator,
+                                                      String parameter) {
+    List<TestDataSet> testDataSetList = new ArrayList<>();
+    switch (operator) {
+      case EQUALS:
+      case IN:
+        testDataSetList = allList.stream().filter(dataSet ->
+                filterNames.contains(dataSet.getData().getString(parameter))
+        ).collect(Collectors.toList());
+        break;
+      case CONTAINS:
+        testDataSetList = allList.stream().filter(dataSet -> filterNames.stream().anyMatch(
+                filterName -> dataSet.getData().getString(parameter).contains(filterName))).collect(Collectors.toList());
+        break;
+      case ENDS_WITH:
+        testDataSetList = allList.stream().filter(dataSet -> filterNames.stream().anyMatch(
+                filterName -> dataSet.getData().getString(parameter).endsWith(filterName))).collect(Collectors.toList());
+        break;
+      case STARTS_WITH:
+        testDataSetList = allList.stream().filter(dataSet -> filterNames.stream().anyMatch(
+                filterName -> dataSet.getData().getString(parameter).startsWith(filterName))).collect(Collectors.toList());
+        break;
+      case IS_EMPTY:
+        testDataSetList = allList.stream().filter(dataSet -> dataSet.getData().getString(parameter).isEmpty()).collect(Collectors.toList());
+        break;
+      case IS_NOT_EMPTY:
+        testDataSetList = allList.stream().filter(dataSet -> StringUtils.isNotEmpty(dataSet.getData().getString(parameter))).collect(Collectors.toList());
+        break;
+    }
+
+    return testDataSetList;
+  }
+
+  public String getTestDataValue(TestDataType testDataType, String dataParam, String paramValue, TestData testData) throws TestsigmaException {
+    String value = null;
+    if (testDataType == TestDataType.random || testDataType == TestDataType.runtime ||
+            testDataType == TestDataType.function) {
+      if (dataParam == null) {
+        value = paramValue;
+      } else {
+        value = dataParam;
+      }
+    } else if (testDataType == TestDataType.global) {
+      if (this.environmentParameters == null) {
+        throw new TestsigmaException(String.format(MessageConstants.MSG_ENVIRONMENT_NOT_MAPPED));
+      }
+      com.testsigma.automator.entity.TestDataPropertiesEntity testDataPropertiesEntity = new TestDataPropertiesEntity();
+      TestCaseStepEntityDTO testCaseStepEntityDTO = this.initEntity(testStepDTO);
+      TestDataProcessor testDataProcessor = new ParameterTestDataProcessor(testCaseEntityDTO, testCaseStepEntityDTO,
+              testCaseStepEntityDTO.getStepGroupParentForLoopStepIdTestDataSetMap(), testDataSet, paramValue, testDataPropertiesEntity, webApplicationContext);
+      testDataProcessor.processTestData();
+      if (testDataProcessor.getValue() == null) {
+        throw new TestsigmaException(String.format(MessageConstants.MSG_ENVIRONMENT_PARAMETER_NOT_FOUND, paramValue, testDataSet.getName()));
+      }
+      value = getS3Url(testDataProcessor.getValue());
+
+    } else if (testDataType == TestDataType.parameter) {
+      TestDataPropertiesEntity testDataPropertiesEntity = new TestDataPropertiesEntity();
+      TestCaseStepEntityDTO testCaseStepEntityDTO = this.initEntity(testStepDTO);
+      TestDataProcessor testDataProcessor = new ParameterTestDataProcessor(testCaseEntityDTO, testCaseStepEntityDTO,
+              testCaseStepEntityDTO.getStepGroupParentForLoopStepIdTestDataSetMap(), testDataSet, paramValue, testDataPropertiesEntity, webApplicationContext);
+      testDataProcessor.processTestData();
+      testDataPropertiesEntity.setTestDataName(paramValue);
+      value = testDataProcessor.getValue();
+      if (!testDataProcessor.getIsValueSet() || StringUtils.isEmpty(value)) {
+        value = testDataSet.getData().getString(paramValue);
+      }
+    } else if (testDataType == TestDataType.raw) {
+      value = paramValue;
+    }
+    return value;
+  }
+
+  public TestCaseStepEntityDTO initEntity(TestStepDTO testStepDTO) throws ResourceNotFoundException {
+    TestCaseStepEntityDTO testStepEntityDTO = new TestCaseStepEntityDTO();
+    testStepEntityDTO.setId(testStepDTO.getId());
+    testStepEntityDTO.setType(testStepDTO.getType());
+    testStepEntityDTO.setNaturalTextActionId(testStepDTO.getNaturalTextActionId());
+    testStepEntityDTO.setTestCaseId(testStepDTO.getTestCaseId());
+    testStepEntityDTO.setAction(testStepDTO.getAction());
+    testStepEntityDTO.setPriority(testStepDTO.getPriority());
+    testStepEntityDTO.setPreRequisite(testStepDTO.getPreRequisiteStepId());
+    testStepEntityDTO.setPosition(testStepDTO.getPosition());
+    testStepEntityDTO.setWaitTime(testStepDTO.getWaitTime() == null ? 0 : testStepDTO.getWaitTime());
+    if (testStepDTO.getDataMap() != null) {
+      testStepEntityDTO.setIfConditionExpectedResults(testStepDTO.getIfConditionExpectedResults());
+    }
+    testStepEntityDTO.setAdditionalData(testStepDTO.getDataMapJson());
+    testStepEntityDTO.setStepGroupId(testStepDTO.getStepGroupId());
+    testStepEntityDTO.setParentId(testStepDTO.getParentId());
+    testStepEntityDTO.setConditionType(testStepDTO.getConditionType());
+    testStepEntityDTO.setVisualEnabled(testStepDTO.getVisualEnabled());
+    testStepEntityDTO.setTestDataIndex(testCaseEntityDTO.getTestDataIndex());
+    testStepEntityDTO.setTestDataId(testCaseEntityDTO.getTestDataId());
+    testStepEntityDTO.setTestDataProfileName(testCaseEntityDTO.getTestDataProfileName());
+    testStepEntityDTO.setStepGroupParentForLoopStepIdTestDataSetMap(this.dataSetIndex);
+    testStepEntityDTO.setParentHierarchy(testStepDTO.getParentHierarchy());
+    testStepEntityDTO.setForLoopCondition(forLoopConditions);
+    populatedSnippetClassDetails(testStepEntityDTO);
+    if (testStepEntityDTO.getTestCaseSteps() == null) {
+      testStepEntityDTO.setTestCaseSteps(new ArrayList<>());
+    }
+    if (testDataSet != null)
+      testStepEntityDTO.setSetName(testDataSet.getName());
+    testStepEntityDTO.setTestDataId(testCaseEntityDTO.getTestDataId());
+    testStepEntityDTO.setIndex(testStepDTO.getIndex());
+    testStepEntityDTO.setMaxIterations(testStepDTO.getMaxIterations());
+    removeDisabledPrerequisiteStep(testStepEntityDTO);
+    return testStepEntityDTO;
+  }
+
+  protected void removeDisabledPrerequisiteStep(TestCaseStepEntityDTO testCaseStepEntityDTO) throws ResourceNotFoundException {
+    if (testCaseStepEntityDTO.getPreRequisite() != null) {
+      TestStep preRequisiteStep = testStepService.find(testCaseStepEntityDTO.getPreRequisite());
+      if (Boolean.TRUE.equals(preRequisiteStep.getDisabled())) {
+        testCaseStepEntityDTO.setPreRequisite(null);
+      }
+    }
+  }
+
+  protected void populatedSnippetClassDetails(TestCaseStepEntityDTO testCaseStepEntityDTO) throws ResourceNotFoundException {
+    if (testStepDTO.getNaturalTextActionId() != null && testStepDTO.getNaturalTextActionId() > 0) {
+      NaturalTextActions nlpTemplate = naturalTextActionsService.findById(testStepDTO.getNaturalTextActionId().longValue());
+      testCaseStepEntityDTO.setSnippetEnabled(true);
+      testCaseStepEntityDTO.setSnippetClass(nlpTemplate.getSnippetClass());
+    }
+  }
+
+  public String getS3Url(String fileUrl) {
+    if (!org.apache.commons.lang3.StringUtils.isEmpty(fileUrl) && fileUrl.contains(TESTSIGMA_STORAGE)) {
+      String[] arr = fileUrl.split(",");
+      fileUrl = Arrays.stream(arr).map(this::generateS3URL).collect(Collectors.joining(","));
+    }
+    return fileUrl;
+  }
+
+  public String generateS3URL(String fileUrl) {
+    if (!org.apache.commons.lang3.StringUtils.isEmpty(fileUrl) && fileUrl.startsWith(TESTSIGMA_STORAGE)) {
+      fileUrl = fileUrl.replace(TESTSIGMA_STORAGE, "");;
+      String newUrl = fileUrl;
+      URL newPreSignedURL = storageServiceFactory.getStorageService()
+              .generatePreSignedURL(
+                      newUrl,
+                      StorageAccessLevel.WRITE,
+                      180
+              );
+      fileUrl = newPreSignedURL.toString();
+    }
+    return fileUrl;
   }
 }

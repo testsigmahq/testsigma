@@ -16,7 +16,7 @@ import {MapTestMachineFormComponent} from "./map-test-machine-form.component";
       class="theme-btn-clear-default ml-15"
       (click)="toggleDropdown()"
     >
-      <span [translate]="'test_plan.add.machine'"></span>
+      <span [translate]="'test_plan.add.machine' | translate: {ADD: 'Add'}"></span>
       <span *ngIf="executionEnvironments.length" class="fa fa-caret-down ml-10"></span>
     </button>
     <i

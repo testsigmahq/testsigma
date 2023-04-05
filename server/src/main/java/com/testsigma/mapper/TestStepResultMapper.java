@@ -11,10 +11,7 @@ package com.testsigma.mapper;
 
 
 import com.testsigma.automator.entity.DefaultDataGeneratorsEntity;
-import com.testsigma.dto.ElementDTO;
-import com.testsigma.dto.ElementMetaDataDTO;
-import com.testsigma.dto.StepResultMetadataDTO;
-import com.testsigma.dto.TestStepResultDTO;
+import com.testsigma.dto.*;
 import com.testsigma.model.*;
 import com.testsigma.web.request.*;
 import org.mapstruct.*;
@@ -50,6 +47,8 @@ public interface TestStepResultMapper {
   StepResultForLoopMetadata mapForLoop(StepResultForLoopMetadataRequest forLoopMetadataRequest);
 
   StepResultWhileLoopMetadata mapWhileLoop(StepResultWhileLoopMetadataRequest whileLoopMetadataRequest);
+
+  ForLoopConditionDTO map(ForLoopConditionRequest forLoopConditionRequest);
 
   @Mapping(target = "metadata", expression = "java(this.mapMetadataDTO(testStepResult.getMetadata()))")
   TestStepResultDTO mapDTO(TestStepResult testStepResult);

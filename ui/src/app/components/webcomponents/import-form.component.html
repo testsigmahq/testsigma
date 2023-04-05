@@ -49,6 +49,7 @@
                 class="pb-2 d-block"
                 [items]="applications"
                 [formGroup]="workspaceSwitcherForm"
+                [isImportForm]="true"
                 [hasApplicationIcon]="true"
                 [formCtrlName]="workspaceSwitcherForm?.controls['application']"
                 [value]="selectedWorkspace"

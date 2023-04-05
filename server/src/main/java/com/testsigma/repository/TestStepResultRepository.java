@@ -120,6 +120,10 @@ public interface TestStepResultRepository extends JpaRepository<TestStepResult, 
                                      @Param("environmentResultId") Long environmentResultId,
                                      @Param("inResult") ResultConstant inResult);
 
+  @Query(value = "select step_result from TestStepResult step_result join TestCaseResult tcr on tcr.id=step_result.testCaseResultId join TestDeviceResult er on tcr.environmentResultId=er.id join TestPlanResult e on er.testPlanResultId=e.id where step_result.result not IN(com.testsigma.model.ResultConstant.QUEUED) and function('JSON_EXTRACT', step_result.stepDetails, '$.type') = 'FOR_LOOP' and tcr.createdDate < :startTime",
+          countQuery = "select count(step_result.id) as count from TestStepResult step_result join TestCaseResult tcr on tcr.id=step_result.testCaseResultId join TestDeviceResult er on tcr.environmentResultId=er.id join TestPlanResult e on er.testPlanResultId=e.id where step_result.result not IN(com.testsigma.model.ResultConstant.QUEUED) and function('JSON_EXTRACT', step_result.stepDetails, '$.type') = 'FOR_LOOP' and tcr.createdDate < :startTime")
+  Page<TestStepResult> findAllByForLoopTestCaseResultId(@Param("startTime") Timestamp startTime, Pageable pageable);
+
   List<TestStepResult> findAllByTestCaseResultId(Long id);
 
   List<TestStepResult> findAllByTestCaseResultIdAndScreenshotNameIsNotNullAndVisualEnabledIsTrue(Long testCaseResultId);

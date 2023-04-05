@@ -26,7 +26,7 @@
         </a>
         <a
           (click)="closeSuggestion(!option.stepRecorderView)"
-          class="btn theme-btn-primary" [routerLink]="['/td', versionId, 'cases', testCaseId, 'edit']" target="_blank">
+          class="btn theme-btn-primary" [routerLink]="['/td', testcase.workspaceVersionId, testcase.isStepGroup? 'step_groups': 'cases', testCaseId, 'edit']" target="_blank">
           <span [translate]="'btn.common.associate'"></span>
         </a>
         <button

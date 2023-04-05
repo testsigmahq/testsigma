@@ -7,13 +7,17 @@
 
 package com.testsigma.controller;
 
+import com.testsigma.dto.ForLoopConditionDTO;
 import com.testsigma.dto.RestStepResponseDTO;
 import com.testsigma.dto.TestStepDTO;
 import com.testsigma.exception.ResourceNotFoundException;
 import com.testsigma.exception.TestsigmaException;
+import com.testsigma.mapper.ForLoopConditionsMapper;
 import com.testsigma.mapper.TestStepMapper;
+import com.testsigma.model.ForLoopCondition;
 import com.testsigma.model.TestStep;
 import com.testsigma.model.TestStepPriority;
+import com.testsigma.service.ForLoopConditionService;
 import com.testsigma.service.TestStepService;
 import com.testsigma.specification.TestStepSpecificationsBuilder;
 import com.testsigma.util.HttpClient;
@@ -32,9 +36,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping(path = "/test_steps", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -45,6 +47,8 @@ public class TestStepsController {
   private final HttpClient httpClient;
   private final TestStepService service;
   private final TestStepMapper mapper;
+  private final ForLoopConditionService forLoopConditionsService;
+  private final ForLoopConditionsMapper forLoopConditionsMapper;
 
   @RequestMapping(path = "/fetch_rest_response", method = RequestMethod.POST)
   public RestStepResponseDTO fetchApiResponse(@RequestBody RestStepRequest restStepRequest) {
@@ -77,7 +81,20 @@ public class TestStepsController {
     mapper.merge(request, testStep);
     testStep.setUpdatedDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
     testStep = this.service.update(testStep, false);
-    return this.mapper.mapDTO(testStep);
+    TestStepDTO testStepDTO = this.mapper.mapDTO(testStep);
+    if (request.getForLoopConditionsRequest() != null) {
+      Optional<ForLoopCondition> forLoopConditionOptional = forLoopConditionsService.findByTestStepId(testStepDTO.getId());
+      ForLoopCondition forLoopCondition = new ForLoopCondition();
+      if(forLoopConditionOptional.isPresent()) {
+        forLoopCondition = forLoopConditionOptional.get();
+      }
+      forLoopConditionsMapper.merge(forLoopCondition, request.getForLoopConditionsRequest());
+      forLoopCondition.setTestStepId(testStep.getId());
+      forLoopCondition = forLoopConditionsService.save(forLoopCondition);
+      ForLoopConditionDTO forLoopConditionDTO = forLoopConditionsMapper.map(forLoopCondition);
+      testStepDTO.setForLoopCondition(forLoopConditionDTO);
+    }
+    return testStepDTO;
   }
 
   @PostMapping
@@ -89,7 +106,15 @@ public class TestStepsController {
     if (testStep.getParentId() != null)
       testStep.setDisabled(this.service.find(testStep.getParentId()).getDisabled());
     testStep = service.create(testStep, false);
-    return mapper.mapDTO(testStep);
+    TestStepDTO testStepDTO = mapper.mapDTO(testStep);
+    if (request.getForLoopConditionsRequest() != null) {
+      ForLoopCondition forLoopCondition = forLoopConditionsMapper.map(request.getForLoopConditionsRequest());
+      forLoopCondition.setTestStepId(testStep.getId());
+      forLoopCondition = forLoopConditionsService.save(forLoopCondition);
+      ForLoopConditionDTO forLoopConditionDTO = forLoopConditionsMapper.map(forLoopCondition);
+      testStepDTO.setForLoopCondition(forLoopConditionDTO);
+    }
+    return testStepDTO;
   }
 
   @DeleteMapping(value = "/bulk_delete")
@@ -121,6 +146,10 @@ public class TestStepsController {
     for (TestStepRequest request : testStepRequests) {
       TestStep step = this.mapper.map(request);
       this.service.update(step, false);
+      if (request.getForLoopConditionsRequest() != null) {
+        ForLoopCondition forLoopCondition = forLoopConditionsMapper.map(request.getForLoopConditionsRequest());
+        forLoopConditionsService.save(forLoopCondition);
+      }
     }
   }
 

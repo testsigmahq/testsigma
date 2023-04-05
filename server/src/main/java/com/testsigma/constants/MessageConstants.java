@@ -5,6 +5,15 @@ public class MessageConstants {
   public static final String MSG_UNKNOWN_TEST_DATA_DATA = "No Test data profile is mapped to Test case  ?1";
   public static final String REPORT_GENERATION_FAILED_TEST_PLAN_RUN_IS_NOT_COMPLETED = "Report generation failed, Test plan run is not completed";
   public static final String ELEMENT_WITH_THE_NAME_IS_NOT_AVAILABLE = "Element with the name \"?1\" is not available";
+  public static final String MSG_START_SET_NAME_MISSING = "Given start Set Name (%s) is missing on test data profile. ";
+  public static String NO_ITERATIONS_FILTERED = "No TestData sets matching with the criteria. ";
+  public static final String MSG_END_SET_NAME_MISSING = "Given start Set Name (%s) is missing on test data profile. ";
+  public static final String MSG_START_SET_NAME_GREATER_POSITION_THAN_END_SET_NAME = "Given start Set Name (%s) position (%s) is grater than end Set Name (%s) position (%s) on test data profile.";
+  public static final String MSG_INVALID_START_INDEX = "start index must be greater or equals 1. but its value is %s ";
+  public static final String MSG_END_INDEX = "end index must be less than or equals to size of test data %s. but its value is %s ";
+  public static final String MSG_ENVIRONMENT_NOT_MAPPED = "No environment mappped for this testplan or dry execution";
+  public static final String MSG_ENVIRONMENT_PARAMETER_NOT_FOUND = "No value found environment parameter %s in environmnet %s";
+  public static final String MSG_INVALID_START_INDEX_GREATER = "start index must be greater or equals end index. but start value %s is greater than end value %s";
   public static final String MSG_UNKNOWN_ENVIRONMENT_PARAMETER_IN_TEST_STEP = "Environment test data variables \" ?1 \" used in Test Cases \" ?2 \" is not available in the associated Environments \" ?3\".  Take a look at the variable names added to the associated Environments and try again with the right variable name(case sensitive).";
   public static final String MSG_UNKNOWN_ENVIRONMENT_PARAMETER_IN_ELEMENT = "Environment variable with key \" ?1 \" used in Test Case \" ?2 \" is not available in the associated Element \" ?3\".  Take a look at the variable names added to the associated Environments and try again with the right variable name(case sensitive).";
   public static final String MSG_UNKNOWN_ENVIRONMENT_DATA_SET = "Environment variable type test data used in one or more Test Steps. But there is no Environment created or associated with this Execution. Click on Test Development -> Environments menu link to create a new Environments or select the Environments to use in this execution, if already available. Go to https://testsigma.freshdesk.com/support/solutions/articles/32000021868-how-to-use-global-parameter-test-data-in-test-steps- to know more about Environments.";

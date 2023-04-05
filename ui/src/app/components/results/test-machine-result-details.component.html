@@ -139,8 +139,9 @@
           <a
             (click)="activeTab = 'steps'"
             [class.active]="activeTab == 'steps'"
-            class="normal-text">
+            class="normal-text d-flex align-items-center">
             <i
+              class="fz-17 line-height-none"
               [class.fa-test-cases-alt]="showTestCaseResults"
               [class.fa-test-suite]="showTestSuiteResults"></i>
             <div class="dropdown section-title mouse-over">

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Inject, OnInit, Output, QueryList, ViewChildren} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnInit, Output, QueryList, ViewChildren} from '@angular/core';
 import {WorkspaceVersion} from "../../models/workspace-version.model";
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {ElementFilter} from "../../models/element-filter.model";
@@ -22,7 +22,7 @@ import {ToastrService} from "ngx-toastr";
 export class ElementFiltersComponent extends BaseComponent implements OnInit {
 
   @Output('filterAction') filterAction = new EventEmitter<string>();
-
+  @Input('isCreateElement') isCreateElement : Boolean;
   public filterApplied: Boolean;
   public elementLocatorType = ElementLocatorType;
   public tags: ElementTag[];

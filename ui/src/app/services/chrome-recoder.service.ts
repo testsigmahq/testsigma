@@ -52,6 +52,8 @@ export class ChromeRecorderService {
   public recorderVersion: WorkspaceVersion;
   public recorderTemplates: Page<NaturalTextActions>;
   public navigateTemplate = [1044, 94, 10116, 10001];
+  public navigateLastPosition: number;
+  public lastStepGroupIdAndPosition: { position: number; id: number };
 
   constructor(
     private actionTemplateService: NaturalTextActionsService,
@@ -223,22 +225,41 @@ export class ChromeRecorderService {
   }
 
   public fetchSteps() {
-    let query = "testCaseId:" + this.recorderTestCase?.id;
+    let query = "testCaseId:" + this.recorderTestCase.id;
     return this.testStepService.findAll(query, 'position').subscribe(res => {
-
-      let cloudUrlExpression = /(?:^|\s)((http[s]?:\/\/)?(?:localhost|[\w-]+(?:\.[\w-]+)+)(:\d+)?(\/\S*)?)|(file:\/\/\/.+(?:\.[\w-]+))/;
-      res.content.forEach((testStep) => {
-        let testData = testStep.dataMap?.testData?.['test-data'];
-        if (this.navigateTemplate.includes(<number>testStep?.naturalTextActionId) && testData.type == TestDataType.raw && cloudUrlExpression.test(<string>testData.value))
-          this.recorderTestCase.startUrl = testData.value;
-      });
-
+      let stepGroupIds = this.getStarUrl(res, []);
       if (!res?.content?.length) {
         this.recorderTestCase.startUrl = undefined;
+      } else if(stepGroupIds?.length) {
+        return this.testStepService.findAll("testCaseId@"+stepGroupIds.join('#'), 'position').subscribe(steps => {
+          this.getStarUrl(steps);
+          this.isStepRecorder = true;
+          this.startRecording();
+        })
       }
-
       this.isStepRecorder = true;
       this.startRecording()
     });
+  }
+
+  getStarUrl(steps, stepGroupIds?) {
+    let cloudUrlExpression = /(?:^|\s)((http[s]?:\/\/)?(?:localhost|[\w-]+(?:\.[\w-]+)+)(:\d+)?(\/\S*)?)|(file:\/\/\/.+(?:\.[\w-]+))/;
+    steps.content.forEach((testStep, index) => {
+      let testData = testStep.dataMap?.testData?.['test-data'];
+      if(testStep.isStepGroup && stepGroupIds) {
+        stepGroupIds.push(testStep.stepGroupId)
+        this.lastStepGroupIdAndPosition = {position: index, id: testStep.stepGroupId};
+      }
+      if (this.navigateTemplate.includes(<number>testStep?.naturalTextActionId) && testData.type == TestDataType.raw && cloudUrlExpression.test(<string>testData.value)) {
+        if(this.lastStepGroupIdAndPosition?.id ==testStep.testCaseId && !stepGroupIds) {
+          this.recorderTestCase.startUrl = testData.value;
+        } else if(stepGroupIds) {
+          this.recorderTestCase.startUrl = testData.value;
+          this.navigateLastPosition = index;
+        }
+      }
+    });
+    if(stepGroupIds)
+      return stepGroupIds;
   }
 }

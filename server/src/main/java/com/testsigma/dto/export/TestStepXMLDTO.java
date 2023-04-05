@@ -10,6 +10,7 @@ package com.testsigma.dto.export;
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.testsigma.annotation.JsonListRootName;
+import com.testsigma.dto.ForLoopConditionDTO;
 import com.testsigma.model.*;
 import lombok.Data;
 
@@ -99,12 +100,8 @@ public class TestStepXMLDTO extends BaseXMLDTO {
   private String toElement;
   @JsonProperty("attribute")
   private String attribute;
-  @JsonProperty("for-loop-start-index")
-  private Integer forLoopStartIndex;
-  @JsonProperty("for-loop-end-index")
-  private Integer forLoopEndIndex;
-  @JsonProperty("for-loop-test-data-id")
-  private Long forLoopTestDataId;
+  @JsonProperty("forLoopCondition")
+  private ForLoopConditionDTO forLoopCondition;
   @JsonProperty("test-data-function-id")
   private Long testDataFunctionId;
   @JsonProperty("addon-test-data-function")

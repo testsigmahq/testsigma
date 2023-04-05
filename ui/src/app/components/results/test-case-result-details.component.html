@@ -99,7 +99,6 @@
           </button>
           <div *ngIf="version?.workspace?.isMobileNative && !testCase?.deleted && activeTab== this.STEPS_CURRENT && (!testCaseResult.parentResult?.isExecuting||!testCaseResult.iteration) && !testCaseResult?.isExecuting && isDry">
             <button
-              *ngIf="hasInspectorFeature()"
               [routerLink]="['/td', 'record', testCase.workspaceVersionId]"
               [queryParams]="{isRecord: true, isStepRecord: true, testCaseId:testCase.id}"
               class="theme-btn-clear-default  ml-14"

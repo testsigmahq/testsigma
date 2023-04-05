@@ -22,7 +22,7 @@
       class="list-view green-highlight sm-pm lh-1point5 py-16 pointer align-items-center"
       *cdkVirtualFor='let testCasePriority of testCasePriorities;let i = index' [ngSwitch]="testCasePriority.isEdit">
       <div class="ts-col-100 d-flex" *ngSwitchCase="undefined">
-        <div class="ts-col-90 d-flex text-truncate pl-7 rb-medium" [textContent]="testCasePriority.name"></div>
+        <div class="ts-col-90 d-flex pl-7 rb-medium" [textContent]="testCasePriority.name"></div>
         <div class="action-icons ts-col-10" *ngIf="!editMode">
           <i
             class="fa-pencil-on-paper action-icon" [matTooltip]="'btn.common.edit' | translate"

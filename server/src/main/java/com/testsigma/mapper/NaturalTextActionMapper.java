@@ -13,10 +13,7 @@ import com.testsigma.dto.NaturalTextActionsDTO;
 import com.testsigma.dto.NaturaltextActionExampleDTO;
 import com.testsigma.model.NaturalTextActionExample;
 import com.testsigma.model.NaturalTextActions;
-import org.mapstruct.Mapper;
-import org.mapstruct.NullValueCheckStrategy;
-import org.mapstruct.NullValuePropertyMappingStrategy;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
 
 import java.util.List;
 

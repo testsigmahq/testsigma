@@ -13,7 +13,11 @@ import {DevicesService} from "../../../agents/services/devices.service";
   template: `
     <div class="theme-overlay-container">
       <div class="theme-overlay-header px-15">
-        <div class="theme-overlay-title flex-grow-1" translate="test_plan.suite.add_machine.map.title"></div>
+        <div class="theme-overlay-title flex-grow-1">
+          <i
+            [matTooltip]="'hint.message.common.back' | translate"
+            class="fa-back-arrow pr-7 pointer" mat-dialog-close></i>
+          <span translate="test_plan.suite.add_machine.map.title"></span></div>
       </div>
       <div class="theme-overlay-content px-14">
         <!-- Machine list -->

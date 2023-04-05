@@ -14,7 +14,7 @@
         class="d-flex-wrap ts-col-100-77">
         <div class="ts-col-100 d-flex align-items-center">
             <div class="theme-details-header my-auto">
-              <a class="title-name" [textContent]="environment?.name"></a>
+              <a class="title-name pb-3" [textContent]="environment?.name"></a>
             </div>
           <div class="d-flex align-items-baseline ml-auto">
             <button
@@ -50,8 +50,8 @@
         [queryParams]="{v: versionId}">
       <a
         [routerLink]="['plans']" [routerLinkActive]="'active'" [queryParams]="{v: versionId}"
-        class="normal-text">
-        <i class="fa-test-plan"></i>
+        class="normal-text d-flex align-items-center">
+        <i class="fa-test-plan fz-18 line-height-none"></i>
         <span [translate]="'td_nav.test_plan'"></span>
       </a>
     </li>

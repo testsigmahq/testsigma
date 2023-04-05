@@ -2,7 +2,7 @@ import {Component, Input, OnInit, Optional, Renderer2} from '@angular/core';
 import {TestStep} from "../../models/test-step.model";
 import {StepSummaryComponent} from "./step-summary.component";
 import {TestStepService} from "../../services/test-step.service";
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {MatDialog} from '@angular/material/dialog';
 import {AuthenticationGuard} from "../../shared/guards/authentication.guard";
 import {NotificationsService} from 'angular2-notifications';
 import {TranslateService} from '@ngx-translate/core';
@@ -15,15 +15,9 @@ import {TestDataService} from "../../services/test-data.service";
 import {AddonNaturalTextAction} from "../../models/addon-natural-text-action.model";
 import {NaturalTextActionsService} from "../../services/natural-text-actions.service";
 import {FormGroup} from "@angular/forms";
-import {MobileStepRecorderComponent} from "../../agents/components/webcomponents/mobile-step-recorder.component";
-import {ActionElementSuggestionComponent} from "./action-element-suggestion.component";
-import {ActionTestDataFunctionSuggestionComponent} from "./action-test-data-function-suggestion.component";
-import {ActionTestDataParameterSuggestionComponent} from "./action-test-data-parameter-suggestion.component";
-import {ActionTestDataEnvironmentSuggestionComponent} from "./action-test-data-environment-suggestion.component";
-import {TestStepMoreActionFormComponent} from "./test-step-more-action-form.component";
-import {ElementFormComponent} from "./element-form.component";
 import {MobileRecorderEventService} from "../../services/mobile-recorder-event.service";
 import {SharedService} from "../../services/shared.service";
+import {ForLoopData} from "../../models/for-loop-data.model";
 
 
 @Component({
@@ -124,15 +118,8 @@ import {SharedService} from "../../services/shared.service";
                       [translate]="testStep?.isConditionalWhileLoop ? '' : 'step.condition_type.'+testStep?.conditionType"></span>
           </span>
             <span
-              *ngIf="testStep?.isForLoop">
-            <i class="fa-power-loop mr-5 text-nowrap"></i>
-            <span class="text-uppercase text-warning" [translate]="'test_step.for_loop.title'"></span>
-            &nbsp;
-            [
-              <span class="text-link">{{testStep?.testData?.name}}</span>
-            ]
-            &nbsp;[&nbsp;{{testStep?.forLoopStartIndex == -1 ? ('test_step.for_loop.option_start' | translate) : testStep?.forLoopStartIndex}}
-              ...{{testStep?.forLoopEndIndex == -1 ? ('test_step.for_loop.option_end' | translate) : testStep?.forLoopEndIndex}}&nbsp;]
+               *ngIf="testStep?.isForLoop">
+               <i class="fa-power-loop mr-5 text-nowrap"></i>
           </span>
             <span
               [matTooltip]="'test_step.type.REST_STEP' | translate"
@@ -181,7 +168,7 @@ import {SharedService} from "../../services/shared.service";
                  [routerLink]="['/td', 'cases', testStep.stepGroupId, 'steps']"
                  [matTooltip]="'test_step.step_group.view_details' | translate"></a>
               <a
-                *ngIf="!canShowConditionalStepActions && isBreakContinueLoopStep && !this.testStep?.isForLoop"
+                *ngIf="!canShowConditionalStepActions && isBreakContinueLoopStep  && !this.testStep?.isForLoop"
                 (click)="isCloning ? '' : clone(testStep)"
                 [class.not-allowed]="isCloning"
                 [matTooltip]="'hint.message.common.clone' | translate"
@@ -348,7 +335,6 @@ export class ActionTestStepListItemComponent extends TestStepListItemComponent i
   postStepFetchProcessing(steps: Page<TestStep>) {
     this.assignTemplateForSteps(steps);
     this.assignTestDataForSteps(steps);
-    super.postStepFetchProcessing(steps);
   }
 
   assignTemplateForSteps(testSteps: Page<TestStep>, childStep?:TestStep) {
@@ -366,7 +352,7 @@ export class ActionTestStepListItemComponent extends TestStepListItemComponent i
     });
   }
 
-  private assignTestDataForSteps(testSteps: Page<TestStep>) {
+  public assignTestDataForSteps(testSteps: Page<TestStep>) {
     let testDataIds = [];
     testSteps.content.forEach(step => {
       if (step.testDataId) {
@@ -380,6 +366,29 @@ export class ActionTestStepListItemComponent extends TestStepListItemComponent i
             step.testData = testDataPage.content.find(res => res.id == step.testDataId)
         })
       });
+    this.testStepService.findAllForLoopData().subscribe((loopData: Page<ForLoopData>) => {
+      let testDataProfileIds = [];
+      testSteps.content.forEach((step) => {
+        if (step.isForLoop && loopData?.content?.find(res => res.testStepId == step.id)) {
+          step.forLoopData = loopData.content.find(res => res.testStepId == step.id)
+          if(!testDataProfileIds.includes(step?.forLoopData?.testDataProfileId) && step?.forLoopData?.testDataProfileId) {
+            testDataProfileIds.push(step.forLoopData.testDataProfileId);
+          }
+        }
+      })
+      this.testDataService.findAll("id@" + testDataProfileIds.join("#")).subscribe((testDataPage: Page<TestData>) => {
+        if(!testDataPage.empty) {
+          testSteps?.content?.forEach(step => {
+            if (step?.forLoopData && testDataPage.content.find(data => data.id == step?.forLoopData?.testDataProfileId)) {
+              step.forLoopData.testDataProfileData = testDataPage.content.find(data => data.id == step?.forLoopData?.testDataProfileId)
+            }
+          })
+        }
+      }, error => {
+      })
+    }, error => {
+    });
+
   }
 
   get leftIndentAllStep(){

@@ -55,9 +55,7 @@ public class DatabaseMigrationConfig {
                 executeBootStrap();
                 addMigrationEntries();
             } else {
-                log.info("Running any migrations if present on existing database");
-                flyway = Flyway.configure().dataSource(dataSourceUrl, dataSourceUser, dataSourcePassword).placeholderReplacement(false).load();
-                flyway.migrate();
+                flywayMigrate();
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -65,6 +63,18 @@ public class DatabaseMigrationConfig {
         } finally {
             if (connection != null)
                 connection.close();
+        }
+    }
+
+    private void flywayMigrate() {
+        log.info("Running any migrations if present on existing database");
+        Flyway flyway = Flyway.configure().dataSource(dataSourceUrl, dataSourceUser, dataSourcePassword).placeholderReplacement(false).load();
+        try {
+            flyway.migrate();
+        } catch (Exception e) {
+            flyway.repair();
+            flywayMigrate();
+            log.info(e.getMessage(), e);
         }
     }
 

@@ -995,6 +995,8 @@
   "testcase.list.created_date_placeholder": "Select Created Date range",
   "testcase.list.updated_date_placeholder": "Select Updated Date range",
   "testcase.list.filter.title": "Filters",
+  "testcase.list.start_date": "Start date",
+  "testcase.list.end_date": "End date",
   "filter.name": "View Name",
   "filter.visibility": "Visible To",
   "filter.created.success": "{{name}} view created successfully.",
@@ -1417,6 +1419,9 @@
   "nl_actions.list.action.draganddrop": "Drag and Drop",
   "nl_actions.list.action.dropanddown": "Drag and Drop",
   "nl_actions.list.action.doubletap,tap": "Double Tap",
+  "nl_actions.list.action.forloop": "For loop",
+  "nl_actions.list.action.pressEnterKey": "Press Enter",
+  "nl_actions.list.action.navigateBack": "Navigate back",
   "nl_actions.list.action.enter": "Enter",
   "nl_actions.list.action.frame": "Frame",
   "nl_actions.list.action.get": "Get",
@@ -2148,5 +2153,6 @@
   "step_group.testcase.listing":  "{{name}} <span class='text-t-secondary'>{{isEdited}}</span>",
   "step_group.delete.zero_impacted.message":  "No test cases will be impacted on deleting this step group.",
   "step_group.summary.title": "Step Group Details",
-  "data.parameterNameValue":"Test-Data"
+  "data.parameterNameValue":"Test-Data",
+  "test_step.for_loop.profile.na": "No Applicable Test Data Profiles found. Create a new Test Data Profile OR Check the association if the Test Data Profile is already created.\n"
 }

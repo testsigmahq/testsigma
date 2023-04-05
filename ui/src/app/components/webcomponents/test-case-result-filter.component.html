@@ -53,6 +53,53 @@
       </mat-form-field>
       <label class="control-label" [translate]="'testcase.summary.test_case_priority'"></label>
     </div>
+    <div class="form-group">
+      <mat-form-field class="mat-date-custom w-100" appearance="fill">
+        <mat-label [translate]="'testcase.list.created_date_placeholder'"></mat-label>
+        <mat-date-range-input [rangePicker]="createdDateRangePicker" [formGroup]="createdDateRange" [max]="maxDate">
+          <input matStartDate formControlName="start" placeholder="{{ 'testcase.list.start_date' | translate }}" [max]="maxDate" required>
+          <input matEndDate formControlName="end" placeholder="{{ 'testcase.list.end_date' | translate }}" [max]="maxDate" required>
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="createdDateRangePicker"></mat-datepicker-toggle>
+        <mat-date-range-picker #createdDateRangePicker></mat-date-range-picker>
+      </mat-form-field>
+      <label class="control-label" [translate]="'message.common.createdDate'"></label>
+      <div class="error"
+           *ngIf="isInvalidDateRange(createdDateRange) && !createdDateRangePicker.opened"
+           [translate]="'form.validation.common.invalid' | translate:{FieldName: 'Created Date'}" ></div>
+    </div>
+
+    <div class="form-group">
+
+      <mat-form-field class="mat-date-custom w-100" appearance="fill">
+        <mat-label [translate]="'testcase.list.updated_date_placeholder'"></mat-label>
+        <mat-date-range-input [rangePicker]="updatedDateRangePicker" [formGroup]="updatedDateRange" [max]="maxDate">
+          <input matStartDate formControlName="start" placeholder="{{ 'testcase.list.start_date' | translate }}" [max]="maxDate" required>
+          <input matEndDate formControlName="end" placeholder="{{ 'testcase.list.end_date' | translate }}" [max]="maxDate" required>
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="updatedDateRangePicker"></mat-datepicker-toggle>
+        <mat-date-range-picker #updatedDateRangePicker></mat-date-range-picker>
+      </mat-form-field>
+      <label class="control-label" [translate]="'message.common.updatedDate'"></label>
+      <div class="error"
+           *ngIf="isInvalidDateRange(updatedDateRange) && !updatedDateRangePicker.opened"
+           [translate]="'form.validation.common.invalid' | translate:{FieldName: 'Updated Date'}" ></div>
+    </div>
+    <div class="form-group">
+      <mat-form-field class="mat-select-custom w-100 example-full-width" appearance="fill">
+        <mat-select
+          disableOptionCentering panelClass="multiple"
+          (ngModelChange)="filterTagIds"
+          [(ngModel)]="filterTagIds"
+          multiple [(value)]="filterTagIds">
+          <mat-option
+            *ngFor="let tag of tags"
+            [value]="tag.id"
+            [textContent]="tag.name"></mat-option>
+        </mat-select>
+      </mat-form-field>
+      <label class="control-label" [translate]="'testcase.list.tags'"></label>
+    </div>
   </div>
   <div class="position-absolute theme-border-t text-right py-10 pr-20 fixed-full-pos mb-2 hide-get-started">
     <button

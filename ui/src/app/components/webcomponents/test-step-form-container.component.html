@@ -9,16 +9,20 @@
     <div
       [class.disabled]="testStep?.id"
       class="btn-group px-10 py-8 border-rds-4 theme-border pointer border-dashed-style change-step-icon"
-      [class.px-10]="!stepRecorderView"
-      [class.py-8]="!stepRecorderView"
+      [class.px-10]="!stepRecorderView && !(isRest || isStepGroup)"
+      [class.py-8]="!stepRecorderView && !(isRest || isStepGroup)"
+      [class.px-8]="isRest || isStepGroup"
+      [class.py-7]="isRest || isStepGroup"
       [class.px-5]="stepRecorderView"
       [class.py-4]="stepRecorderView">
       <i
-        [class.fa-nlp-new]="isActionText"
+        [class.fa-nlp-new]="isActionText && !testStep?.isForLoop"
         [class.fa-step-group]="isStepGroup"
         [class.fa-rest-new]="isRest"
-        [class.fa-power-loop]="isForLoop"
-        [class.fz-15]="!stepRecorderView"
+        [class.fz-20]="isRest || isStepGroup"
+        [class.lh-1]="isRest || isStepGroup"
+        [class.fa-power-loop]="testStep?.isForLoop"
+        [class.fz-15]="!stepRecorderView && !(isRest || isStepGroup)"
         class="section-action-icons"></i>
     </div>
     <div
@@ -44,9 +48,9 @@
           *ngIf="isIfType || isElseIfType"
           class="my-6 border-separator-b-1 line-height-none"></li>
         <li *ngIf="!version?.workspace?.isRest"
-            [class.active]="isActionText"
+            [class.active]="isActionText && !testStep?.isForLoop"
             class="step-type" (click)="changeStepType(testStepType.ACTION_TEXT)">
-          <i class="fa-nlp-new step-icon"></i>
+          <i class="fa-nlp-new step-icon" style="margin-left: -1px;"></i>
           <span
             class="step-label"
             [translate]="'step.action.label'"></span>
@@ -56,26 +60,26 @@
           (click)="changeStepType(testStepType.STEP_GROUP)"
           [class.active]="isStepGroup"
           class="step-type">
-          <i class="fa-step-group step-icon"></i>
+          <i class="fa-step-group step-icon line-height-none fz-18 ml-n3"></i>
           <span
-            class="step-label"
+            class="step-label ml-n2"
             [translate]="'step.group.label'"></span>
         </li>
         <li
           [class.active]="isRest"
           (click)="changeStepType(testStepType.REST_STEP)"
           class="step-type">
-          <i class="fa-rest-new step-icon"></i>
+          <i class="fa-rest-new step-icon line-height-none fz-18 ml-n3"></i>
           <span
             class="step-label"
             [translate]="'step.rest.label'"></span>
         </li>
         <li
-          [class.active]="isForLoop"
+          [class.active]="testStep?.isForLoop"
           *ngIf="!isWhileParentORCondition && !testStep?.isConditionalIf"
-          (click)="changeStepType(testStepType.FOR_LOOP)"
+          (click)="fetchTestData()"
           class="step-type">
-          <i class="fa-power-loop step-icon"></i>
+          <i class="fa-power-loop step-icon fz-16 ml-n2"></i>
           <span
             class="step-label"
             [translate]="'step.for.label'"></span>
@@ -138,9 +142,25 @@
       (click)="showForm = true;formSubmitted=false"
       [class.w-90]="stepConditionType"
       [class.w-95]="!stepConditionType"
+      [class.d-none-important]="testStep.isForLoop && isNoTestDataProfile"
       type="text" class="pl-14 border-0" [placeholder]="'step.title.place_holder' | translate"/>
+    <div *ngIf="isNoTestDataProfile && testStep.isForLoop"
+         class="result-status-text-2 py-10 bg-white w-95">
+      <i class="fa-warning px-7  bg-white"></i>
+      <span
+        class="bg-white"
+        [translate]="'test_step.for_loop.profile.none'"></span>
+      <a
+        [routerLink]="['/td', version?.id, 'data', 'new']"
+        target="_blank"
+        class="result-status-text-0 px-2  bg-white"
+        [translate]="'message.common.click_here'"></a>
+      <span
+        class="bg-white"
+        [translate]="'test_step.for_loop.profile.none_mgs'"></span>
+    </div>
     <div
-      *ngIf="!isRest && !isConditionalWhileType"
+      *ngIf="!isRest && !isConditionalWhileType && !testStep.isForLoop"
       class="d-inline-block w-100-60"
       [class.show-else-if]="isElseIfType"
       [class.show-while]="isConditionalWhileType"
@@ -163,7 +183,7 @@
     [class.has-if]="isIfType"
     [indentation]="indexPosition().toString().length > 3 ? indexPosition().toString().length : 0"
     [class.has-while-loop]="isConditionalWhileType"
-    *ngIf="isActionText && testSteps"
+    *ngIf="isActionText && testSteps && !(testStep.isForLoop && isNoTestDataProfile)"
     [testStep]="testStep"
     [testSteps]="testSteps"
     [version]="version"
@@ -193,15 +213,6 @@
     (onSubmitted)="setFormSubmitted()"
     class="pb-40 d-block"></app-test-step-rest-form>
 
-  <app-test-step-for-loop-form
-    *ngIf="isForLoop && showForm"
-    [testStep]="testStep"
-    [version]="version"
-    [indentation]="indexPosition().toString().length > 3 ? indexPosition().toString().length : 0"
-    [stepForm]="stepForm"
-    [stepRecorderView]="stepRecorderView"
-    (onSave)="afterSaveStep($event)"
-    (onCancel)="hideForm()"></app-test-step-for-loop-form>
   <app-test-step-group-form
     [class.has-else-if]="isElseIfType"
     [class.has-if]="isIfType"

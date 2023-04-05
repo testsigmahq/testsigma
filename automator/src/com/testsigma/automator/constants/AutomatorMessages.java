@@ -23,6 +23,7 @@ public class AutomatorMessages {
   public final static String MSG_GROUP_PRE_REQUISITE_FAILED = "Test Suite pre-requisite failed";
   public final static String MSG_ITERATION_SUCCESS = "Iteration {?1} executed successfully";
   public final static String MSG_ITERATION_FAILURE = "Iteration {?1} execution failed";
+  public final static String NO_ITERATIONS_FILTERED = "No TestData sets matching with the criteria. ";
   public final static String MSG_CONDITION_IF_SUCCESS = "\"If\" condition matched to proceed with the steps under this condition.";
   public final static String MSG_CONDITION_ELSE_IF_SUCCESS = "\"Else If\" condition matched to proceed with the steps under this condition.";
   public final static String MSG_CONDITION_ELSE_SUCCESS = "\"Else\" condition matched to proceed with the steps under this condition.";

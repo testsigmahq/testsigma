@@ -77,13 +77,13 @@ export class NaturalTextActions extends Base implements PageObject {
           grammar = grammar.replace(new RegExp(item.replace(/\$/g, "\\$").
             replace(/\{/g, "\\{").
             replace(/\}/g, "\\}")),
-            "<span class='"+(span_class+' test_data')+"' data-reference='"+parameter+"'>"+(this.data?.testData?.[parameter] ? (this.data?.testData?.[parameter].replace(/HIGH_LIGHT_START/g, '<em class="nlp-highlight">').replace(/HIGH_LIGHT_END/g, '</em>')) : '' )+"</span>");
+            "<span class='"+(span_class+' test_data '+parameter)+"' data-reference='"+parameter+"'>"+(this.data?.testData?.[parameter] ? (this.data?.testData?.[parameter].replace(/HIGH_LIGHT_START/g, '<em class="action-highlight">').replace(/HIGH_LIGHT_END/g, '</em>')) : '' )+"</span>");
         })
     if(dataList?.length) {
       dataList.forEach(parameter => {
         let rejext = new RegExp("\\$\\{"+parameter+"\\}");
         let span_class= allowedValues?.[parameter]?.length ? 'selected_list':'test_data';
-        grammar = grammar.replace(rejext, "<span class='"+(span_class +' test_data')+"' data-reference='"+parameter+"'>"+this.data?.testData?.[parameter]+"</span>");
+        grammar = grammar.replace(rejext, "<span class='"+(span_class +' test_data '+parameter )+"' data-reference='"+parameter+"'>"+this.data?.testData?.[parameter]+"</span>");
       })
     }
     return grammar;

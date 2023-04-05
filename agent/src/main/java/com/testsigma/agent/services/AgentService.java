@@ -50,7 +50,11 @@ public class AgentService {
         } else if (osVersion.startsWith("10.0.2")){
           osVersion = "11";
         } else if (osVersion.startsWith("10.0")) {
-          osVersion = "10";
+          if(SystemUtils.OS_NAME.startsWith("Windows 11")) {
+            osVersion = "11";
+          } else {
+            osVersion = "10";
+          }
         }
       } else if (SystemUtils.IS_OS_MAC_OSX) {
         if (osVersion.startsWith("10.16")) {

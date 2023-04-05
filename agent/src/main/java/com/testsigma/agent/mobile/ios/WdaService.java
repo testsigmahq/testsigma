@@ -12,6 +12,8 @@ import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.http.HttpResponse;
 import com.testsigma.automator.mobile.ios.IosDeviceCommandExecutor;
 import com.testsigma.agent.utils.ZipUtil;
+
+import java.io.IOException;
 import java.nio.file.Files;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -36,11 +38,12 @@ public class WdaService {
   private static final String WDA_BUNDLE_ID = "com.facebook.WebDriverAgentRunner.xctrunner";
   private final AgentConfig agentConfig;
   private final WebAppHttpClient httpClient;
+  private final IosDeviceCommandExecutor iosDeviceCommandExecutor;
 
   public void installWdaToDevice(MobileDevice device) throws TestsigmaException {
     File downloadedWdaFile = null;
+    File downloadedWdaDir = null;
     try {
-      IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
       log.info("Installing WDA on device - " + device.getUniqueId());
       String wdaPresignedUrl = fetchWdaUrl(device);
       log.info("Wda presigned url: " + wdaPresignedUrl);
@@ -49,7 +52,10 @@ public class WdaService {
       log.info("Downloaded WDA to local file - " + downloadedWdaFile.getAbsolutePath());
       Process p;
       if(device.getIsEmulator()) {
-        p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"install", "--udid", device.getUniqueId(),
+        downloadedWdaDir = Files.createTempDirectory("wda_ipa").toFile();
+        File unZippedFolder = ZipUtil.unZipFile(wdaPresignedUrl, downloadedWdaDir);
+        downloadedWdaFile = new File(unZippedFolder.getAbsolutePath() + "/Payload/wda_simulator.app");
+        p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"install", device.getUniqueId(),
                 downloadedWdaFile.getAbsolutePath()}, false);
       } else {
         p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"-u", device.getUniqueId(), "install",
@@ -74,42 +80,20 @@ public class WdaService {
     }
   }
 
-  public void installXCTestToDevice(MobileDevice device) throws TestsigmaException {
+  private File downloadXCTestFile(MobileDevice device) throws Exception {
     File downloadedXCTestFile = null;
-    try {
-      IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
-      log.info("Installing XCTest on device - " + device.getUniqueId());
-      String xcTestRemotePath = fetchXcTestRunnerUrl(device);
-      File destFolder = Files.createTempDirectory("wda_xctest").toFile();
-      File unZippedFolder = ZipUtil.unZipFile(xcTestRemotePath, destFolder);
-      downloadedXCTestFile = new File(unZippedFolder.getAbsolutePath() + "/WebDriverAgentRunner.xctest");
-      log.info("Downloaded XCTest to local file - " + downloadedXCTestFile.getAbsolutePath());
-      Process p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"xctest", "install", downloadedXCTestFile.getAbsolutePath(),
-              "--udid", device.getUniqueId()}, false);
-      p.waitFor(20, TimeUnit.SECONDS);
-      String devicePropertiesJsonString = iosDeviceCommandExecutor.getProcessStreamResponse(p);
-      log.info("Output from installing XCTest file on the device - " + devicePropertiesJsonString);
-      if (p.exitValue() == 1) {
-        throw new TestsigmaException("Failed to install XCTest on device - " + device.getUniqueId());
-      }
-    } catch (Exception e) {
-      throw new TestsigmaException(e.getMessage(), e);
-    } finally {
-      if ((downloadedXCTestFile != null) && downloadedXCTestFile.exists()) {
-        boolean deleted = downloadedXCTestFile.delete();
-        if (!deleted) {
-          log.error("Error while deleting the downloaded xcTest directory - " + downloadedXCTestFile.getAbsolutePath());
-        }
-      }
-    }
+    String xcTestRemotePath = fetchXcTestRunnerUrl(device);
+    File destFolder = Files.createTempDirectory("wda_xctest").toFile();
+    File unZippedFolder = ZipUtil.unZipFile(xcTestRemotePath, destFolder);
+    downloadedXCTestFile = new File(unZippedFolder.getAbsolutePath() + "/WebDriverAgentRunner.xctest");
+    log.info("Downloaded XCTest to local file - " + downloadedXCTestFile.getAbsolutePath());
+    return downloadedXCTestFile;
   }
 
   public void startWdaOnDevice(MobileDevice device) throws TestsigmaException {
     try {
       log.info("Starting WDA on device - " + device.getName());
       log.info("Checking for any previously started WDA processes on device - " + device.getName());
-      IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
-
       stopWdaOnDevice(device);
       device.setWdaExecutorService(Executors.newSingleThreadExecutor());
       device.setWdaRelayExecutorService(Executors.newSingleThreadExecutor());
@@ -117,9 +101,11 @@ public class WdaService {
       device.getWdaExecutorService().execute(() -> {
         try {
           Process p;
+          String xcTestPath = null;
           if(device.getIsEmulator()) {
-            p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"launch", "--udid", device.getUniqueId(),
-                    WDA_BUNDLE_ID}, false);
+            xcTestPath = downloadXCTestFile(device).getAbsolutePath();
+            p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"launch", device.getUniqueId(),
+                    WDA_BUNDLE_ID, "-XCTest", "All", xcTestPath}, false);
           } else {
             p = iosDeviceCommandExecutor.runDeviceCommand(new String[]{"-u", device.getUniqueId(), "xctest",
                     "-B", WDA_BUNDLE_ID}, true);
@@ -158,7 +144,6 @@ public class WdaService {
   }
 
   private void checkWDAProcessStatus(MobileDevice device) throws TestsigmaException, AutomatorException, InterruptedException {
-    IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
     int retries = 3;
     while (device.getWdaProcess() == null && (device.getWdaProcess().isAlive() || device.getWdaProcess().exitValue() == 0) && retries-- > 0) {
       log.info("WDA process not started yet, waiting for 5 seconds...");
@@ -175,7 +160,6 @@ public class WdaService {
   }
 
   private void checkWDARelayProcessStatus(MobileDevice device) throws TestsigmaException, AutomatorException, InterruptedException {
-    IosDeviceCommandExecutor iosDeviceCommandExecutor = new IosDeviceCommandExecutor();
     int retries = 3;
     while (device.getWdaRelayProcess() == null && !device.getWdaRelayProcess().isAlive() && retries-- > 0) {
       log.info("WDA process not started yet, waiting for 5 seconds...");

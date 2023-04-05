@@ -13,6 +13,7 @@ import java.util.Map;
 public class TestCaseResult {
   List<TestCaseStepResult> testCaseStepResults = new ArrayList<>();
   List<TestCaseResult> testCaseResults = new ArrayList<>();
+  private Map<Long, Long> stepGroupParentForLoopStepIdTestDataSetMap;
   private Long id = 0L;
   private String testCaseName;
   private Long testCaseId;

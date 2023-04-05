@@ -77,8 +77,8 @@
         role="presentation">
       <a
         [routerLinkActive]="'active'"
-        class="normal-text">
-        <i class="fa-test-cases-alt"></i>
+        class="normal-text d-flex align-items-center">
+        <i class="fa-test-cases-alt fz-18 line-height-none"></i>
         <span [translate]="'test_suite.nav.test_case.count' | translate: {count: (testCases ? testCases?.totalElements : 0)}"></span>
       </a>
     </li>
@@ -86,8 +86,8 @@
         role="presentation">
       <a
         [routerLinkActive]="'active'"
-        class="normal-text">
-        <i class="fa-play-filled"></i>
+        class="normal-text d-flex align-items-center">
+        <i class="fa-play-filled line-height-none fz-18"></i>
         <span [translate]="'td_nav.test_plan'"></span>
       </a>
     </li>

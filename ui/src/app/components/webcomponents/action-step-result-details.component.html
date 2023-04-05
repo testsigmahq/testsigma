@@ -159,7 +159,7 @@
           <div
             class="align-items-center d-flex p-0
          text-t-secondary pointer text-nowrap step-detail-p"
-            (click)="testStepResult?.isElementChanged ? '' : openEditElement(testStepResult?.stepDetails?.dataMap?.elementString,true)">
+            (click)="testStepResult?.isElementChanged ? '' : openEditElement(testStepResult?.elementDetails?.name,true)">
             <i class="fa-config-fix fz-18"></i>
             <div
               [translate]="'step_result.fix_element'"

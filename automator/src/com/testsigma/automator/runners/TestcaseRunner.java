@@ -39,6 +39,9 @@ public class TestcaseRunner {
   protected Map<Long, TestCaseStepResult> mapStepResult;
   protected boolean skipExecution;
   protected String resultFailureMessage;
+  @Getter
+  @Setter
+  protected Long hostStepId;
 
   public TestcaseRunner(TestCaseEntity testCaseEntity, TestCaseResult testCaseResult,
                         Map<Long, TestCaseStepResult> mapStepResult, boolean skipExecution,
@@ -108,6 +111,7 @@ public class TestcaseRunner {
         testCaseStepResult.setTestCaseStepId(testCaseStepEntity.getId());
         testCaseStepResult.setSkipExe(skipExecution);
         testCaseStepResult.setSkipMessage(resultFailureMessage);
+        testCaseStepResult.setForLoopCondition(testCaseStepEntity.getForLoopCondition());
       /*  if (!skipExecution && (workspaceType.equals(WorkspaceType.WebApplication) || workspaceType
           .equals(WorkspaceType.MobileWeb))) {
           url = getUrl();
@@ -212,6 +216,9 @@ public class TestcaseRunner {
           processedSteps = 0;
           testCaseStepsResult = new ArrayList<>();
           testCaseResult.setCurrentIndex(currentIndex);
+        }
+        if(testCaseStepEntity.getFailureMessage() != null && !testCaseStepEntity.getFailureMessage().equals(AutomatorMessages.NO_ITERATIONS_FILTERED)) {
+          break;
         }
 
       }

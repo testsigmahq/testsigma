@@ -1,4 +1,4 @@
-<div class="secondary-menu">
+<div class="secondary-menu new-icons">
   <ul id="ul_version_home" class="item-container">
     <app-workspace-switcher
       class="position-relative"
@@ -6,10 +6,6 @@
       (onProjectSwitch)="closeDialog()"
       [version]="version"></app-workspace-switcher>
     <div class="secondary-nav-container">
-        <span
-          [textContent]="'td_nav.design_development' | translate"
-          class="category-header">
-        </span>
       <li
         (click)="closeDialog()"
         [class.active]="detailsAliasName == 'cases' || detailsAliasName == 'step_groups'"
@@ -33,7 +29,7 @@
           [routerLink]="['/td', versionId, 'elements']"
           [routerLinkActive]="'active'"
           class="nav-items">
-          <i class="fa-elements-alt"></i>
+          <i class="fa-ui-identifiers-alt"></i>
           <span [textContent]="'td_nav.elements' | translate"></span>
         </a>
       </li>
@@ -61,8 +57,7 @@
         </a>
       </li>
 
-      <span [textContent]="'td_nav.test_plan_result' | translate"
-            class="category-header"></span>
+      <span class="my-16 theme-border-b"></span>
       <li
         (click)="closeDialog()"
         [class.active]="detailsAliasName == 'suites'"
@@ -112,18 +107,14 @@
           <span [textContent]="'td_nav.environment' | translate"></span>
         </a>
       </li>
-
-      <span *ngIf="!version?.workspace?.isRest"
-            [textContent]="'td_nav.help' | translate"
-            class="category-header">
-        </span>
+      <span class="my-16 theme-border-b"></span>
       <li
         (click)="closeDialog()"
         *ngIf="!version?.workspace?.isRest">
         <a
           [routerLinkActive]="'active'" [routerLink]="['/td', versionId, 'actions']"
           class="nav-items">
-          <i class="fa-action-text"></i>
+          <i class="fa-nlp-grammar-alt"></i>
           <span [textContent]="'td_nav.nl_actions' | translate"></span>
         </a>
       </li>

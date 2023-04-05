@@ -356,5 +356,7 @@ export class StepsListComponent extends BaseComponent implements OnInit {
 
   setTestSteps($event: TestStep[]) {
     this.testSteps = $event;
+    let enableStep=this.testSteps?.find(testStep=> !testStep.disabled)? true: false;
+    this.testCaseService.getDisable(enableStep)
   }
 }

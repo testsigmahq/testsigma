@@ -33,7 +33,7 @@ public class WaitUntilFileDownloadIsCompleteAction extends ElementAction {
         "    return progress_lst";
       //We create a custom wait with long sleep time. Since we are only allowing max of 120 secs for step level timeout(which
       // may not be sufficient for some downloads), we will be giving additional timeout here.
-      WebDriverWait waiter = new WebDriverWait(getDriver(), Duration.ofSeconds(600), Duration.ofSeconds(5000));
+      WebDriverWait waiter = new WebDriverWait(getDriver(), Duration.ofSeconds(600), Duration.ofMillis(5000));
 
       boolean isDownloadComplted = waiter.until(CustomExpectedConditions.downloadToBeCompletedInChrome(chromeJavaScript));
       Assert.isTrue(isDownloadComplted, String.format(FAILURE_MESSAGE, 600));

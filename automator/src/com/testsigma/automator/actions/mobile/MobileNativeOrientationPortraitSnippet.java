@@ -22,7 +22,7 @@ public class MobileNativeOrientationPortraitSnippet extends MobileElementAction 
   @Override
   public void execute() throws Exception {
     getDriver().execute(DriverCommand.SET_SCREEN_ORIENTATION,
-            ImmutableMap.of("orientation", ScreenOrientation.LANDSCAPE.value().toUpperCase()));
+            ImmutableMap.of("orientation", ScreenOrientation.PORTRAIT.value().toUpperCase()));
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 }

@@ -23,6 +23,7 @@ public class IosWebDriver extends MobileWebDriver {
   @Override
   protected void setCommonCapabilities() throws AutomatorException {
     super.setCommonCapabilities();
+    capabilities.add(new WebDriverCapability("automationName","XCUITest"));
     capabilities.add(new WebDriverCapability(MobileCapabilityType.PLATFORM_NAME, Platform.iOS.name()));
   }
 

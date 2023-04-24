@@ -29,7 +29,7 @@ public class PressSpaceSnippet extends MobileElementAction {
     if (getDriver() instanceof AndroidDriver) {
       ((AndroidDriver) getDriver()).pressKey(new KeyEvent(AndroidKey.SPACE));
     } else {
-      getDriver().findElement(AppiumBy.accessibilityId("space")).click();
+      getDriver().findElement(AppiumBy.ByAccessibilityId.accessibilityId(("space"))).click();
     }
     setSuccessMessage(SUCCESS_MESSAGE);
   }

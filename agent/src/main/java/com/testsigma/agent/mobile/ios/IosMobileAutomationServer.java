@@ -59,9 +59,8 @@ public class IosMobileAutomationServer {
       desiredCapabilities.setCapability("xcodeOrgId", "6F4CKCA4LX");
       desiredCapabilities.setCapability("xcodeSigningId", "iPhone Developer");
       desiredCapabilities.setCapability("app", "/Users/vikram/ios-apps/ios-test-app/build/Release-iphoneos/TestApp-iphoneos.app");
-//      device.setRemoteWebDriver(new IOSDriver(new URL(mobileAutomationServerService.getMobileAutomationServer().getServerURL()),
-//        desiredCapabilities));
-      device.setRemoteWebDriver(new AppiumDriver(new URL(mobileAutomationServerService.getMobileAutomationServer().getServerURL()),desiredCapabilities));
+      device.setRemoteWebDriver(new IOSDriver(new URL(mobileAutomationServerService.getMobileAutomationServer().getServerURL()),
+        desiredCapabilities));
     } catch (Exception e) {
       throw new MobileAutomationServerSessionException(e.getMessage());
     }

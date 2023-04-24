@@ -9,24 +9,19 @@
 
 package com.testsigma.automator.actions.mobile;
 
-import com.google.common.collect.ImmutableMap;
+
 import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.actions.DriverAction;
 import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.NoSuchContextException;
+
 import io.appium.java_client.remote.MobileCapabilityType;
 import lombok.extern.log4j.Log4j2;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
+
 import org.openqa.selenium.remote.Command;
-import org.openqa.selenium.remote.DriverCommand;
+
 import org.openqa.selenium.remote.Response;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 
 @Log4j2
 public abstract class MobileDriverAction extends DriverAction {

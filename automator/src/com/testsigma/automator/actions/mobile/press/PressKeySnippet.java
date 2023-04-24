@@ -27,11 +27,10 @@ public class PressKeySnippet extends MobileElementAction {
 
   @Override
   public void execute() throws Exception {
-//    getDriver().getKeyboard().pressKey(Keys.valueOf(getTestData().toUpperCase()));
     if (getDriver() instanceof AndroidDriver) {
       ((AndroidDriver) getDriver()).pressKey(new KeyEvent(AndroidKey.valueOf(getTestData().toUpperCase())));
     } else {
-      getDriver().findElement(AppiumBy.accessibilityId("delete")).click();
+      getDriver().findElement(AppiumBy.ByAccessibilityId.accessibilityId(getTestData().toUpperCase())).click();
     }
     setSuccessMessage(SUCCESS_MESSAGE);
   }

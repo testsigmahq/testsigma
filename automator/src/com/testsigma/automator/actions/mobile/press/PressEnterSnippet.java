@@ -14,6 +14,7 @@ import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.nativekey.AndroidKey;
 import io.appium.java_client.android.nativekey.KeyEvent;
+import io.appium.java_client.ios.IOSDriver;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.By;
 import org.openqa.selenium.InvalidElementStateException;
@@ -32,26 +33,9 @@ public class PressEnterSnippet extends MobileElementAction {
     if (getDriver() instanceof AndroidDriver) {
       ((AndroidDriver) getDriver()).pressKey(new KeyEvent(AndroidKey.ENTER));
     } else {
-      getDriver().findElement(AppiumBy.accessibilityId("Done")).click();
+        getDriver().switchTo().activeElement().sendKeys(Keys.RETURN);
     }
     setSuccessMessage(SUCCESS_MESSAGE);
-  }
-
-  private void clickOnReturnKeys() {
-
-    List.of("Return", "return", "done", "Done", "search", "Search", "Next", "next", "Go", "go").forEach(button -> {
-              try {
-                getDriver().findElement(By.xpath("//*[contains(@name, '" + button + "')]")).click();
-              } catch (Exception e) {
-                log.error(e, e);
-              }
-              try {
-                getDriver().findElement(By.name(button));
-              } catch (Exception e) {
-                log.error(e, e);
-              }
-            }
-    );
   }
 
   @Override

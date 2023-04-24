@@ -12,6 +12,9 @@ package com.testsigma.agent.mobile;
 
 import com.testsigma.agent.utils.NetworkUtil;
 import com.testsigma.agent.utils.PathUtil;
+import io.appium.java_client.service.local.AppiumDriverLocalService;
+import io.appium.java_client.service.local.AppiumServiceBuilder;
+import io.appium.java_client.service.local.flags.GeneralServerFlag;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.SystemUtils;
@@ -29,6 +32,8 @@ public class MobileAutomationServer {
   private Process mobileAutomationServerProcess;
   private File androidHome;
   private File jreHome;
+
+  private File appiumHome;
   private File mobileAutomationServerExecutablePath;
   private File logFilePath;
   private String serverIpAddress;
@@ -44,6 +49,10 @@ public class MobileAutomationServer {
 
   private File jreHome() {
     return new File(PathUtil.getInstance().getJrePath());
+  }
+
+  private File appiumHome(){
+    return new File(PathUtil.getInstance().getMobileAutomationDriverPath());
   }
 
   private String serverIP() {
@@ -64,6 +73,7 @@ public class MobileAutomationServer {
       }
       this.androidHome = androidHome();
       this.jreHome = jreHome();
+      this.appiumHome = appiumHome();
       this.mobileAutomationServerExecutablePath = new File(PathUtil.getInstance().getMobileAutomationServerPath(), "appium");
       if (SystemUtils.IS_OS_WINDOWS) {
         this.mobileAutomationServerExecutablePath = new File(PathUtil.getInstance().getMobileAutomationServerPath(), "appium.exe");
@@ -71,7 +81,7 @@ public class MobileAutomationServer {
       this.serverIpAddress = serverIP();
       this.logFilePath = new File(PathUtil.getInstance().getLogsPath() + File.separator + "appium.log");
       Integer serverPort = NetworkUtil.getFreePort();
-      this.serverURL = String.format("http://%s:%d/wd/hub", serverIpAddress, serverPort);
+      this.serverURL = String.format("http://%s:%d", serverIpAddress, serverPort);
 
       log.info("Starting Mobile Automation Server at - " + serverURL);
 
@@ -87,6 +97,7 @@ public class MobileAutomationServer {
               "--log-timestamp",
               "--allow-insecure", "chromedriver_autodownload");
           processBuilder.directory(new File(PathUtil.getInstance().getMobileAutomationServerPath()));
+          processBuilder.environment().put("APPIUM_HOME", appiumHome.getAbsolutePath());
           processBuilder.environment().put("ANDROID_HOME", androidHome.getAbsolutePath());
           processBuilder.environment().put("JAVA_HOME", jreHome.getAbsolutePath());
           processBuilder.redirectErrorStream(true);

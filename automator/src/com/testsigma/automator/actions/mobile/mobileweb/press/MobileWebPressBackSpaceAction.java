@@ -32,7 +32,7 @@ public class MobileWebPressBackSpaceAction extends PressBackSpaceSnippet {
     if (getDriver() instanceof AndroidDriver) {
       ((AndroidDriver) getDriver()).pressKey(new KeyEvent(AndroidKey.DEL));
     } else {
-      getDriver().findElement(AppiumBy.accessibilityId("delete")).click();
+      getDriver().findElement(AppiumBy.ByAccessibilityId.accessibilityId("delete")).click();
     }
     setSuccessMessage(SUCCESS_MESSAGE);
   }

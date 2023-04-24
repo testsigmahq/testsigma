@@ -24,7 +24,7 @@ public class VerifyOrientationIsPortraitSnippet extends MobileDriverAction {
 
   @Override
   public void execute() throws Exception {
-    String orientation = getDriver().execute(DriverCommand.GET_SCREEN_ORIENTATION).toString();
+    String orientation = getDriver().execute(DriverCommand.GET_SCREEN_ORIENTATION).getValue().toString();
     Assert.isTrue(orientation.equalsIgnoreCase(ScreenOrientation.PORTRAIT.toString()), String.format(SCREEN_NOT_PORTRAIT, orientation));
     setSuccessMessage(SUCCESS_MESSAGE);
   }

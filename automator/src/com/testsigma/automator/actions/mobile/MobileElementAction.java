@@ -50,7 +50,6 @@ public abstract class MobileElementAction extends ElementAction {
     setElementSearchCriteria(elementActionVariableName);
     AppiumDriver driver = getDriver();
     if (this.getElementSearchCriteria().getFindByType().equals(FindByType.ACCESSIBILITY_ID)) {
-//      elements = driver.findElementsByAccessibilityId(getElementSearchCriteria().getByValue());
       elements = driver.findElements(AppiumBy.ByAccessibilityId.accessibilityId(getElementSearchCriteria().getByValue()));
     } else {
       elements = ((WebDriver) driver).findElements(getElementSearchCriteria().getBy());
@@ -100,7 +99,6 @@ public abstract class MobileElementAction extends ElementAction {
   }
 
   public void tapByElementCoOrdinates(WebElement webElement, AppiumDriver driver) throws Exception {
-    Point loc = webElement.getLocation();
     Point center = getCenter(webElement);
     int x = center.getX();
     int y = center.getY();

@@ -22,7 +22,7 @@
     <maven.compiler.plugin>3.8.1</maven.compiler.plugin>
     <selenium.version>4.8.2</selenium.version>
     <guava.version>31.1-jre</guava.version>
-    <lombok.version>1.18.20</lombok.version>
+    <lombok.version>1.18.22</lombok.version>
     <mapstruct.version>1.4.2.Final</mapstruct.version>
     <aws.version>1.11.46</aws.version>
     <android.tools.version>25.3.0</android.tools.version>

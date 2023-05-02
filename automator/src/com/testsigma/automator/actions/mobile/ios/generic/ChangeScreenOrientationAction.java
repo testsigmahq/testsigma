@@ -7,8 +7,11 @@ import org.openqa.selenium.remote.DriverCommand;
 public class ChangeScreenOrientationAction extends com.testsigma.automator.actions.mobile.generic.ChangeScreenOrientationAction {
 
   public void changeOrientation() {
-    if (getDriver().execute(DriverCommand.GET_SCREEN_ORIENTATION).getValue().toString().equalsIgnoreCase(ScreenOrientation.LANDSCAPE.value())) {
+    String orientation = getDriver().execute(DriverCommand.GET_SCREEN_ORIENTATION).getValue().toString();
+    if (ScreenOrientation.LANDSCAPE.value().equalsIgnoreCase(orientation)) {
       changeToPortrait();
+    } else if (ScreenOrientation.PORTRAIT.value().equalsIgnoreCase(orientation)){
+      changeToLandscape();
     } else {
       changeToLandscape();
     }

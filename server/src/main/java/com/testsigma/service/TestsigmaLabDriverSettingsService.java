@@ -114,13 +114,6 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
     capabilities.add(new WebDriverCapability(TSCapabilityType.OS_VERSION, platformOsVersion.getPlatformVersion()));
 
     capabilities.add(new WebDriverCapability(TSCapabilityType.VERSION, platformBrowserVersion.getVersion()));
-    Browsers browser = platformBrowserVersion.getName();
-    if (browser.equals(Browsers.Safari) &&
-      Float.parseFloat(platformBrowserVersion.getDisplayVersion()) > 12) {
-      capabilities.add(new WebDriverCapability(TSCapabilityType.SELENIUM_VERSION, "3.4.0"));
-    } else {
-      capabilities.add(new WebDriverCapability(TSCapabilityType.SELENIUM_VERSION, "4.8.2"));
-    }
     String resolution = platformScreenResolution.getResolution();
     if (!StringUtils.isBlank(resolution)) {
       capabilities.add(new WebDriverCapability(TSCapabilityType.TESTSIGMA_LAB_KEY_SCREEN_RESOLUTION, resolution));

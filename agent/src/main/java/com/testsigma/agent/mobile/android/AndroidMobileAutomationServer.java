@@ -28,7 +28,7 @@ public class AndroidMobileAutomationServer {
   private final CommandExecutor commandExecutor;
 
   private final String UI_AUTOMATOR2_SERVER_TEST_APK = "appium-uiautomator2-server-debug-androidTest.apk";
-  private final String UI_AUTOMATOR2_SERVER_APK = "appium-uiautomator2-server-v5.8.0.apk";
+  private final String UI_AUTOMATOR2_SERVER_APK = "appium-uiautomator2-server-v5.8.2.apk";
   private final String APPIUM_SETTINGS_APK = "settings_apk-debug.apk";
   private final String UI_AUTOMATOR2_PACKAGE = "io.appium.uiautomator2.server";
   private final String UI_AUTOMATOR2_TEST_PACKAGE = "io.appium.uiautomator2.server.test";

@@ -1,5 +1,6 @@
 package com.testsigma.automator.drivers.web;
 
+import com.google.gson.JsonObject;
 import com.testsigma.automator.constants.TSCapabilityType;
 import com.testsigma.automator.drivers.WebDriverCapability;
 import com.testsigma.automator.exceptions.AutomatorException;
@@ -7,6 +8,7 @@ import com.testsigma.automator.utilities.PathUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.log4j.Log4j2;
+import org.json.JSONObject;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -46,6 +48,8 @@ public class EdgeDriver extends WebDriver {
 
   @Override
   protected void setBrowserSpecificCapabilities(List<WebDriverCapability> additionalCapabilitiesList) throws AutomatorException {
-    capabilities.add(new WebDriverCapability(TSCapabilityType.AVOID_PROXY, Boolean.TRUE));
+    JSONObject proxyOptions=new JSONObject();
+    proxyOptions.put("proxyType","system");
+    capabilities.add(new WebDriverCapability(TSCapabilityType.AVOID_PROXY, proxyOptions));
   }
 }

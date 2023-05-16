@@ -50,7 +50,6 @@ public class WebDriver extends TestsigmaDriver {
   @Override
   protected void setCommonCapabilities() throws AutomatorException {
     super.setCommonCapabilities();
-    capabilities.add(new WebDriverCapability(TSCapabilityType.NAME, executionName));
     capabilities.add(new WebDriverCapability(TSCapabilityType.ACCEPT_SSL_CERTS, Boolean.TRUE));
     capabilities.add(new WebDriverCapability(TSCapabilityType.UNHANDLED_PROMPT_BEHAVIOUR_KEY, TSCapabilityType.UNHANDLED_PROMPT_BEHAVIOUR_VALUE));
   }
@@ -64,6 +63,7 @@ public class WebDriver extends TestsigmaDriver {
   @Override
   protected void setHybridCapabilities() throws AutomatorException, MalformedURLException {
     super.setHybridCapabilities();
+    capabilities.add(new WebDriverCapability(TSCapabilityType.NAME, settings.getExecutionName()));
   }
 
   protected void setBrowserSpecificCapabilities(List<WebDriverCapability> additionalCapabilitiesList)

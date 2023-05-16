@@ -38,12 +38,12 @@ public class MobileNativeSwipeMiddleToLeftSnippet extends MobileElementAction {
     int startx = (int) (size.width * 0.50);
     int endx = (int) (size.width * 0.10);
     int starty = (int) (size.height * 0.50);
-    PointerInput FINGER = new PointerInput(TOUCH, "finger");
-    Sequence swipe = new Sequence(FINGER, 1)
-            .addAction(FINGER.createPointerMove(ofMillis(0), viewport(), startx, starty))
-            .addAction(FINGER.createPointerDown(LEFT.asArg()))
-            .addAction(FINGER.createPointerMove(ofSeconds(5), viewport(), endx, starty))
-            .addAction(FINGER.createPointerUp(LEFT.asArg()));
+    PointerInput pointer = new PointerInput(TOUCH, "finger");
+    Sequence swipe = new Sequence(pointer, 1)
+            .addAction(pointer.createPointerMove(ofMillis(0), viewport(), startx, starty))
+            .addAction(pointer.createPointerDown(LEFT.asArg()))
+            .addAction(pointer.createPointerMove(ofSeconds(5), viewport(), endx, starty))
+            .addAction(pointer.createPointerUp(LEFT.asArg()));
     getDriver().perform(Arrays.asList(swipe));
     setSuccessMessage(SUCCESS_MESSAGE);
   }

@@ -34,12 +34,12 @@ public class TapPointAction extends MobileDriverAction {
 
   @Override
   public void execute() throws Exception {
-    PointerInput FINGER = new PointerInput(TOUCH, "finger");
-    Sequence tap = new Sequence(FINGER, 1)
-            .addAction(FINGER.createPointerMove(ofMillis(0), viewport(), tapPoint.getX(), tapPoint.getY()))
-            .addAction(FINGER.createPointerDown(LEFT.asArg()))
-            .addAction(new Pause(FINGER, ofMillis(2)))
-            .addAction(FINGER.createPointerUp(LEFT.asArg()));
+    PointerInput pointer = new PointerInput(TOUCH, "finger");
+    Sequence tap = new Sequence(pointer, 1)
+            .addAction(pointer.createPointerMove(ofMillis(0), viewport(), tapPoint.getX(), tapPoint.getY()))
+            .addAction(pointer.createPointerDown(LEFT.asArg()))
+            .addAction(new Pause(pointer, ofMillis(2)))
+            .addAction(pointer.createPointerUp(LEFT.asArg()));
     getDriver().perform(Arrays.asList(tap));
   }
 }

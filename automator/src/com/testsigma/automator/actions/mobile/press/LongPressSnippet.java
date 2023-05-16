@@ -37,12 +37,12 @@ public class LongPressSnippet extends MobileElementAction {
     findElement();
     WebElement targetElement = getElement();
     Duration duration = Duration.ofSeconds(Long.parseLong(getTestData()));
-    PointerInput FINGER = new PointerInput(TOUCH, "finger");
-    Sequence tap = new Sequence(FINGER, 1)
-            .addAction(FINGER.createPointerMove(ofMillis(0), viewport(), targetElement.getLocation().getX(), targetElement.getLocation().getY()))
-            .addAction(FINGER.createPointerDown(LEFT.asArg()))
-            .addAction(new Pause(FINGER, duration))
-            .addAction(FINGER.createPointerUp(LEFT.asArg()));
+    PointerInput pointer = new PointerInput(TOUCH, "finger");
+    Sequence tap = new Sequence(pointer, 1)
+            .addAction(pointer.createPointerMove(ofMillis(0), viewport(), targetElement.getLocation().getX(), targetElement.getLocation().getY()))
+            .addAction(pointer.createPointerDown(LEFT.asArg()))
+            .addAction(new Pause(pointer, duration))
+            .addAction(pointer.createPointerUp(LEFT.asArg()));
     getDriver().perform(Arrays.asList(tap));
     setSuccessMessage(SUCCESS_MESSAGE);
   }

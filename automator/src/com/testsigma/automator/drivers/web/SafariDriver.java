@@ -1,6 +1,8 @@
 package com.testsigma.automator.drivers.web;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.testsigma.automator.constants.TSCapabilityType;
+import com.testsigma.automator.drivers.WebDriverCapability;
 import com.testsigma.automator.entity.ExecutionLabType;
 import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.http.HttpClient;
@@ -31,6 +33,7 @@ public class SafariDriver extends WebDriver {
 
   @Override
   protected void createDriverInstance(DesiredCapabilities desiredCapabilities) throws AutomatorException {
+    desiredCapabilities.setAcceptInsecureCerts(false);
     if (remoteServerURL != null) {
       remoteWebDriver = new RemoteWebDriver(remoteServerURL, new SafariOptions().merge(desiredCapabilities));
     } else {

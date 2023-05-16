@@ -38,12 +38,12 @@ public class SwipeAction extends MobileDriverAction {
   public void execute() throws Exception {
     PointOption startingPoint = PointOption.point(tapPoints[0].getX(), tapPoints[0].getY());
     PointOption endingPoint = PointOption.point(tapPoints[1].getX(), tapPoints[1].getY());
-    PointerInput FINGER = new PointerInput(TOUCH, "finger");
-    Sequence swipe = new Sequence(FINGER, 1)
-            .addAction(FINGER.createPointerMove(ofMillis(0), viewport(), tapPoints[0].getX(), tapPoints[0].getY()))
-            .addAction(FINGER.createPointerDown(LEFT.asArg()))
-            .addAction(FINGER.createPointerMove(ofSeconds(5), viewport(), tapPoints[1].getX(), tapPoints[1].getY()))
-            .addAction(FINGER.createPointerUp(LEFT.asArg()));
+    PointerInput pointer = new PointerInput(TOUCH, "finger");
+    Sequence swipe = new Sequence(pointer, 1)
+            .addAction(pointer.createPointerMove(ofMillis(0), viewport(), tapPoints[0].getX(), tapPoints[0].getY()))
+            .addAction(pointer.createPointerDown(LEFT.asArg()))
+            .addAction(pointer.createPointerMove(ofSeconds(5), viewport(), tapPoints[1].getX(), tapPoints[1].getY()))
+            .addAction(pointer.createPointerUp(LEFT.asArg()));
     getDriver().perform(Arrays.asList(swipe));
   }
 }

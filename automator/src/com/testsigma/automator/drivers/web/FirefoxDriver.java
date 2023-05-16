@@ -36,7 +36,6 @@ public class FirefoxDriver extends WebDriver {
   @Override
   protected void createDriverInstance(DesiredCapabilities desiredCapabilities) throws AutomatorException {
     if (remoteServerURL != null) {
-
       remoteWebDriver = new RemoteWebDriver(remoteServerURL, firefoxOptions.merge(desiredCapabilities));
     } else {
       remoteWebDriver = new org.openqa.selenium.firefox.FirefoxDriver(new FirefoxOptions().merge(desiredCapabilities));
@@ -47,7 +46,7 @@ public class FirefoxDriver extends WebDriver {
   public void setTestsigmaLabCapabilities() throws AutomatorException {
     if (!"Linux".equals(getPlatform())) {
       MutableCapabilities mutableCapabilities = new MutableCapabilities();
-      mutableCapabilities.setCapability(TSCapabilityType.SELENIUM_VERSION, "3.8.1");
+      mutableCapabilities.setCapability(TSCapabilityType.SELENIUM_VERSION, "4.8.2");
       mutableCapabilities.setCapability(TSCapabilityType.NAME, executionName);
       mutableCapabilities.setCapability(EnvSettingsConstants.KEY_MAX_IDLE_TIME, EnvSettingsConstants.MAX_IDLE_TIME);
       mutableCapabilities.setCapability(EnvSettingsConstants.KEY_MAX_DURATION, EnvSettingsConstants.MAX_DURATION);
@@ -58,7 +57,7 @@ public class FirefoxDriver extends WebDriver {
     } else {
       super.setTestsigmaLabCapabilities();
     }
-    capabilities.add(new WebDriverCapability(CapabilityType.BROWSER_NAME, Browser.FIREFOX));
+    capabilities.add(new WebDriverCapability(CapabilityType.BROWSER_NAME, Browser.FIREFOX.browserName()));
   }
 
   protected void setAdditionalCapabilities(List<WebDriverCapability> additionalCapabilitiesList) {

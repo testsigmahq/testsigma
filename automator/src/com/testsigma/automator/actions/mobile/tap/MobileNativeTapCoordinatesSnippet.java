@@ -36,12 +36,12 @@ public class MobileNativeTapCoordinatesSnippet extends MobileElementAction {
     String[] splitCoordiantes = getTestData().split(",");
     int x = Integer.parseInt(splitCoordiantes[0]);
     int y = Integer.parseInt(splitCoordiantes[1]);
-    PointerInput FINGER = new PointerInput(TOUCH, "finger");
-    Sequence tap = new Sequence(FINGER, 1)
-            .addAction(FINGER.createPointerMove(ofMillis(0), viewport(), x, y))
-            .addAction(FINGER.createPointerDown(LEFT.asArg()))
-            .addAction(new Pause(FINGER, ofMillis(2)))
-            .addAction(FINGER.createPointerUp(LEFT.asArg()));
+    PointerInput pointer = new PointerInput(TOUCH, "finger");
+    Sequence tap = new Sequence(pointer, 1)
+            .addAction(pointer.createPointerMove(ofMillis(0), viewport(), x, y))
+            .addAction(pointer.createPointerDown(LEFT.asArg()))
+            .addAction(new Pause(pointer, ofMillis(2)))
+            .addAction(pointer.createPointerUp(LEFT.asArg()));
     getDriver().perform(Arrays.asList(tap));
     setSuccessMessage(SUCCESS_MESSAGE);
   }

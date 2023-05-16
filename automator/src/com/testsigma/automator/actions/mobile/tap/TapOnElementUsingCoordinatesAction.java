@@ -26,12 +26,12 @@ public class TapOnElementUsingCoordinatesAction extends MobileElementAction {
     findElement();
     Rectangle rect = getElement().getRect();
 
-    PointerInput FINGER = new PointerInput(TOUCH, "finger");
-    Sequence tap = new Sequence(FINGER, 1)
-            .addAction(FINGER.createPointerMove(ofMillis(0), viewport(), rect.x + rect.width /2, rect.y + rect.height /2))
-            .addAction(FINGER.createPointerDown(LEFT.asArg()))
-            .addAction(new Pause(FINGER, ofMillis(2)))
-            .addAction(FINGER.createPointerUp(LEFT.asArg()));
+    PointerInput pointer = new PointerInput(TOUCH, "finger");
+    Sequence tap = new Sequence(pointer, 1)
+            .addAction(pointer.createPointerMove(ofMillis(0), viewport(), rect.x + rect.width /2, rect.y + rect.height /2))
+            .addAction(pointer.createPointerDown(LEFT.asArg()))
+            .addAction(new Pause(pointer, ofMillis(2)))
+            .addAction(pointer.createPointerUp(LEFT.asArg()));
     getDriver().perform(Arrays.asList(tap));
     setSuccessMessage(SUCCESS_MESSAGE);
   }

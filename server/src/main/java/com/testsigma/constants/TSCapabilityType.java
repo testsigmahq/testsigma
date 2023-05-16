@@ -2,7 +2,7 @@ package com.testsigma.constants;
 
 public interface TSCapabilityType {
   String BROWSER_NAME = "browserName";
-  String VERSION = "version";
+  String VERSION = "browserVersion";
   String DEVICE_ORIENTATION = "deviceOrientation";
   String PORTRAIT = "portrait";
   String UI_AUTOMATOR = "UiAutomator2";
@@ -32,7 +32,7 @@ public interface TSCapabilityType {
   String SKIP_DEVICE_INITIALIZATION = "skipDeviceInitialization";
   String SKIP_SERVER_INSTALLATION = "skipServerInstallation";
   String UDID = "udid";
-  String OS_VERSION = "os_version";
+  String OS_VERSION = "osVersion";
   String OS = "os";
 
   String TESTSIGMA_LAB_KEY_SCREEN_RESOLUTION = "screenResolution";
@@ -42,4 +42,7 @@ public interface TSCapabilityType {
   int TESTSIGMA_LAB_COMMAND_TIMEOUT_VAL = 60 * 10 * 1000;
 
   String BROWSER_NAME_SAFARI = "safari";
+
+  String NAME = "name";
+  String TESTSIGMA_LAB_OPTIONS = "testsigma:options";
 }

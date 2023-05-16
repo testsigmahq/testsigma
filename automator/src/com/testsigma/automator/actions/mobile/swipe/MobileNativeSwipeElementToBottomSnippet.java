@@ -42,12 +42,12 @@ public class MobileNativeSwipeElementToBottomSnippet extends MobileElementAction
     int endy = (int) (size.height * 0.9);
     int x = targetElement.getLocation().getX();
     int y = targetElement.getLocation().getY();
-    PointerInput FINGER = new PointerInput(TOUCH, "finger");
-    Sequence swipe = new Sequence(FINGER, 1)
-            .addAction(FINGER.createPointerMove(ofMillis(0), viewport(), x, y))
-            .addAction(FINGER.createPointerDown(LEFT.asArg()))
-            .addAction(FINGER.createPointerMove(ofSeconds(5), viewport(), startx, endy))
-            .addAction(FINGER.createPointerUp(LEFT.asArg()));
+    PointerInput pointer = new PointerInput(TOUCH, "finger");
+    Sequence swipe = new Sequence(pointer, 1)
+            .addAction(pointer.createPointerMove(ofMillis(0), viewport(), x, y))
+            .addAction(pointer.createPointerDown(LEFT.asArg()))
+            .addAction(pointer.createPointerMove(ofSeconds(5), viewport(), startx, endy))
+            .addAction(pointer.createPointerUp(LEFT.asArg()));
     getDriver().perform(Arrays.asList(swipe));
     setSuccessMessage(SUCCESS_MESSAGE);
   }

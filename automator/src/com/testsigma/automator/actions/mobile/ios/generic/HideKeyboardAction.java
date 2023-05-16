@@ -93,12 +93,12 @@ public class HideKeyboardAction extends MobileElementAction {
               try {
                 getDriver().findElement(By.xpath("//*[contains(@name, '" + button + "')]")).click();
               } catch (Exception e) {
-                log.error(e, e);
+                log.error("**Tried to hide keyboard by pressing return keys***", e);
               }
               try {
                 getDriver().findElement(By.name(button));
               } catch (Exception e) {
-                log.error(e, e);
+                log.error("**Couldnt find the button name***"+":"+button, e);
               }
             }
     );

@@ -29,12 +29,12 @@ public class LongPressOnElementAction extends MobileElementAction {
     WebElement targetElement = getElement();
     int noOfSeconds = NumberFormatter.getIntegerValue(getTestData(), String.format(FAILURE_NOT_A_NUMBER, getTestData()));
     Duration time = Duration.ofSeconds(noOfSeconds);
-    PointerInput FINGER = new PointerInput(TOUCH, "finger");
-    Sequence tap = new Sequence(FINGER, 1)
-            .addAction(FINGER.createPointerMove(ofMillis(0), viewport(), targetElement.getLocation().getX(), targetElement.getLocation().getY()))
-            .addAction(FINGER.createPointerDown(LEFT.asArg()))
-            .addAction(new Pause(FINGER, time))
-            .addAction(FINGER.createPointerUp(LEFT.asArg()));
+    PointerInput pointer = new PointerInput(TOUCH, "finger");
+    Sequence tap = new Sequence(pointer, 1)
+            .addAction(pointer.createPointerMove(ofMillis(0), viewport(), targetElement.getLocation().getX(), targetElement.getLocation().getY()))
+            .addAction(pointer.createPointerDown(LEFT.asArg()))
+            .addAction(new Pause(pointer, time))
+            .addAction(pointer.createPointerUp(LEFT.asArg()));
     getDriver().perform(Arrays.asList(tap));
     setSuccessMessage(String.format(SUCCESS_MESSAGE, getTestData()));
   }

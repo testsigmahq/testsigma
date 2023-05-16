@@ -41,12 +41,12 @@ public class TapOnCoordinatesRelativeToScreen extends MobileElementAction {
     Dimension screenDimension = getDriver().manage().window().getSize();
     Double clickLocationX = (xPercent * screenDimension.getWidth() / 100);
     Double clickLocationY = (yPercent * screenDimension.getHeight() / 100);
-    PointerInput FINGER = new PointerInput(TOUCH, "finger");
-    Sequence tap = new Sequence(FINGER, 1)
-            .addAction(FINGER.createPointerMove(ofMillis(0), viewport(), clickLocationX.intValue(), clickLocationY.intValue()))
-            .addAction(FINGER.createPointerDown(LEFT.asArg()))
-            .addAction(new Pause(FINGER, ofMillis(2)))
-            .addAction(FINGER.createPointerUp(LEFT.asArg()));
+    PointerInput pointer = new PointerInput(TOUCH, "finger");
+    Sequence tap = new Sequence(pointer, 1)
+            .addAction(pointer.createPointerMove(ofMillis(0), viewport(), clickLocationX.intValue(), clickLocationY.intValue()))
+            .addAction(pointer.createPointerDown(LEFT.asArg()))
+            .addAction(new Pause(pointer, ofMillis(2)))
+            .addAction(pointer.createPointerUp(LEFT.asArg()));
     getDriver().perform(Arrays.asList(tap));
     setSuccessMessage(String.format(SUCCESS_MESSAGE, screenDimension.getWidth(), screenDimension.getHeight(), clickLocationX, clickLocationY));
   }

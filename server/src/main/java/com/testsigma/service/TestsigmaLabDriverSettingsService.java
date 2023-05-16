@@ -1,13 +1,18 @@
 package com.testsigma.service;
 
+import com.testsigma.automator.entity.TestDeviceEntity;
+import com.testsigma.automator.runners.EnvironmentRunner;
 import com.testsigma.constants.TSCapabilityType;
 import com.testsigma.dto.WebDriverSettingsDTO;
 import com.testsigma.exception.IntegrationNotFoundException;
 import com.testsigma.exception.TestsigmaException;
 import com.testsigma.model.*;
+import com.twilio.rest.api.v2010.Account;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -16,6 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -25,6 +31,9 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
   public static final String PLATFORM_WEB_URL_WITH_PORT = "%s://%s:%s@%s:%s/wd/hub";
   public static final String PLATFORM_MOBILE_URL = "%s://%s:%s@%s/mobile/wd/hub";
   public static final String PLATFORM_MOBILE_URL_WITH_PORT = "%s://%s:%s@%s:%s/mobile/wd/hub";
+
+  protected TestDeviceEntity testDeviceEntity;
+  protected com.testsigma.automator.entity.TestDeviceSettings settings;
 
   @Autowired
   PlatformsService platformsService;
@@ -72,9 +81,9 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
     PlatformDevice device = platformsService.getPlatformDevice(testDevice.getPlatformDeviceId(), testDevice.getTestPlanLabType());
     PlatformOsVersion platformOsVersion = platformsService.getPlatformOsVersion(testDevice.getPlatformOsVersionId(),testDevice.getTestPlanLabType());
     Platform os = device.getPlatform();
+    HashMap<String, Object> tsLabOptions = new HashMap<String, Object>();
     capabilities.add(new WebDriverCapability(TSCapabilityType.DEVICE_NAME, device.getName() == null ? device.getDisplayName() : device.getName()));
     capabilities.add(new WebDriverCapability(TSCapabilityType.PLATFORM_VERSION, platformOsVersion.getPlatformVersion()));
-    capabilities.add(new WebDriverCapability(TSCapabilityType.DEVICE_ORIENTATION, TSCapabilityType.PORTRAIT));
     if (Platform.Android.equals(os)) {
       capabilities.add(new WebDriverCapability(TSCapabilityType.AUTOMATION_NAME, TSCapabilityType.UI_AUTOMATOR));
     } else if (Platform.iOS.equals(os)) {
@@ -86,8 +95,9 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
     }
     capabilities.add(new WebDriverCapability(TSCapabilityType.TESTSIGMA_LAB_NEW_COMMAND_TIMEOUT_CAP,
       TSCapabilityType.TESTSIGMA_LAB_NEW_COMMAND_TIMEOUT_VAL));
-    capabilities.add(new WebDriverCapability(TSCapabilityType.TESTSIGMA_LAB_COMMAND_TIMEOUT_CAP,
-      TSCapabilityType.TESTSIGMA_LAB_COMMAND_TIMEOUT_VAL));
+    tsLabOptions.put(TSCapabilityType.NAME,getExecutionName());
+    tsLabOptions.put(TSCapabilityType.DEVICE_ORIENTATION, TSCapabilityType.PORTRAIT);
+    capabilities.add(new WebDriverCapability(TSCapabilityType.TESTSIGMA_LAB_OPTIONS,tsLabOptions));
     if (webDriverSettings.getWebDriverCapabilities() != null)
       webDriverSettings.getWebDriverCapabilities().addAll(capabilities);
     else
@@ -109,20 +119,22 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
     PlatformOsVersion platformOsVersion = platformsService.getPlatformOsVersion(testDevice.getPlatformOsVersionId(), testDevice.getTestPlanLabType());
     PlatformBrowserVersion platformBrowserVersion = platformsService.getPlatformBrowserVersion(testDevice.getPlatformBrowserVersionId(), testDevice.getTestPlanLabType());
     PlatformScreenResolution platformScreenResolution = platformsService.getPlatformScreenResolution(testDevice.getPlatformScreenResolutionId(), testDevice.getTestPlanLabType());
-    capabilities.add(new WebDriverCapability(TSCapabilityType.PLATFORM, platformOsVersion.getPlatformVersion()));
-    capabilities.add(new WebDriverCapability(TSCapabilityType.OS, platformOsVersion.getPlatform()));
-    capabilities.add(new WebDriverCapability(TSCapabilityType.OS_VERSION, platformOsVersion.getPlatformVersion()));
-
+    HashMap<String, Object> tsLabOptions = new HashMap<String, Object>();
+    capabilities.add(new WebDriverCapability(TSCapabilityType.PLATFORM_NAME, platformOsVersion.getPlatformVersion()));
     capabilities.add(new WebDriverCapability(TSCapabilityType.VERSION, platformBrowserVersion.getVersion()));
     String resolution = platformScreenResolution.getResolution();
     if (!StringUtils.isBlank(resolution)) {
-      capabilities.add(new WebDriverCapability(TSCapabilityType.TESTSIGMA_LAB_KEY_SCREEN_RESOLUTION, resolution));
+      tsLabOptions.put(TSCapabilityType.TESTSIGMA_LAB_KEY_SCREEN_RESOLUTION, resolution);
     } else {
-      capabilities.add(new WebDriverCapability(TSCapabilityType.TESTSIGMA_LAB_KEY_SCREEN_RESOLUTION,
-        TSCapabilityType.DEFAULT_RESOLUTION));
+      tsLabOptions.put(TSCapabilityType.TESTSIGMA_LAB_KEY_SCREEN_RESOLUTION,
+              TSCapabilityType.DEFAULT_RESOLUTION);
     }
-    capabilities.add(new WebDriverCapability(TSCapabilityType.KEY_MAX_IDLE_TIME, TSCapabilityType.MAX_IDLE_TIME));
-    capabilities.add(new WebDriverCapability(TSCapabilityType.KEY_MAX_DURATION, TSCapabilityType.MAX_DURATION));
+    tsLabOptions.put(TSCapabilityType.NAME,getExecutionName());
+    tsLabOptions.put(TSCapabilityType.OS, platformOsVersion.getPlatform());
+    tsLabOptions.put(TSCapabilityType.OS_VERSION, platformOsVersion.getPlatformVersion());
+    tsLabOptions.put(TSCapabilityType.KEY_MAX_IDLE_TIME, TSCapabilityType.MAX_IDLE_TIME);
+    tsLabOptions.put(TSCapabilityType.KEY_MAX_DURATION, TSCapabilityType.MAX_DURATION);
+    capabilities.add(new WebDriverCapability(TSCapabilityType.TESTSIGMA_LAB_OPTIONS,tsLabOptions));
     if (webDriverSettings.getWebDriverCapabilities() != null)
       webDriverSettings.getWebDriverCapabilities().addAll(capabilities);
     else
@@ -138,4 +150,21 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
   public Integrations getLabDetails() throws IntegrationNotFoundException {
     return this.integrationsService.findByApplication(Integration.TestsigmaLab);
   }
+
+  private String getExecutionName() {
+    String name = "[Trial] - Mobile Inspection";
+    testDeviceEntity = EnvironmentRunner.getRunnerEnvironmentEntity();
+    if (testDeviceEntity != null) {
+      this.settings = testDeviceEntity.getEnvSettings();
+        if(settings != null){
+          String runBy = ObjectUtils.defaultIfNull(settings.getRunBy(), "");
+          String executionRunId = settings.getExecutionRunId().toString();
+          String executionName = settings.getExecutionName();
+          name = String.format("[%s] - %s - %s", executionRunId, runBy, executionName);
+          name = name.replaceAll("[^a-zA-Z1-90_\\s\\[\\]\\:\\-@\\.]*", "");
+        }
+      }
+      return name;
+    }
+
 }

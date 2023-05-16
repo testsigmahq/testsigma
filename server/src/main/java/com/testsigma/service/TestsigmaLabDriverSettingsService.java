@@ -7,15 +7,12 @@ import com.testsigma.dto.WebDriverSettingsDTO;
 import com.testsigma.exception.IntegrationNotFoundException;
 import com.testsigma.exception.TestsigmaException;
 import com.testsigma.model.*;
-import com.twilio.rest.api.v2010.Account;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;

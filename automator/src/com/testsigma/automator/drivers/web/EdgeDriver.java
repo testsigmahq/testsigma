@@ -1,6 +1,5 @@
 package com.testsigma.automator.drivers.web;
 
-import com.google.gson.JsonObject;
 import com.testsigma.automator.constants.TSCapabilityType;
 import com.testsigma.automator.drivers.WebDriverCapability;
 import com.testsigma.automator.exceptions.AutomatorException;

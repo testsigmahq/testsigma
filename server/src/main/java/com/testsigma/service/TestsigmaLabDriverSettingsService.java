@@ -1,14 +1,11 @@
 package com.testsigma.service;
 
-import com.testsigma.automator.entity.TestDeviceEntity;
-import com.testsigma.automator.runners.EnvironmentRunner;
 import com.testsigma.constants.TSCapabilityType;
 import com.testsigma.dto.WebDriverSettingsDTO;
 import com.testsigma.exception.IntegrationNotFoundException;
 import com.testsigma.exception.TestsigmaException;
 import com.testsigma.model.*;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,8 +26,7 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
   public static final String PLATFORM_MOBILE_URL = "%s://%s:%s@%s/mobile/wd/hub";
   public static final String PLATFORM_MOBILE_URL_WITH_PORT = "%s://%s:%s@%s:%s/mobile/wd/hub";
 
-  protected TestDeviceEntity testDeviceEntity;
-  protected com.testsigma.automator.entity.TestDeviceSettings settings;
+
 
   @Autowired
   PlatformsService platformsService;
@@ -41,11 +37,11 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
 
   @Override
   public WebDriverSettingsDTO driverSettings(TestDevice testDevice, WorkspaceType workspaceType,
-                                             TestPlanLabType testPlanLabType,
+                                             TestPlanLabType testPlanLabType,TestPlanResult testPlanResult,
                                              Integrations integrations,
                                              WebApplicationContext webApplicationContext)
     throws IOException, TestsigmaException, SQLException {
-    return super.driverSettings(testDevice, workspaceType, testPlanLabType, integrations,
+    return super.driverSettings(testDevice, workspaceType, testPlanLabType, testPlanResult, integrations,
       webApplicationContext);
   }
 
@@ -70,7 +66,7 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
   }
 
   @Override
-  public void setMobileCapabilities(TestDevice testDevice, WorkspaceType workspaceType,
+  public void setMobileCapabilities(TestDevice testDevice, WorkspaceType workspaceType, TestPlanResult testPlanResult,
                                     Integrations integrations,
                                     WebDriverSettingsDTO webDriverSettings)
     throws TestsigmaException, MalformedURLException {
@@ -92,7 +88,7 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
     }
     capabilities.add(new WebDriverCapability(TSCapabilityType.TESTSIGMA_LAB_NEW_COMMAND_TIMEOUT_CAP,
       TSCapabilityType.TESTSIGMA_LAB_NEW_COMMAND_TIMEOUT_VAL));
-    tsLabOptions.put(TSCapabilityType.NAME,getExecutionName());
+    tsLabOptions.put(TSCapabilityType.NAME,getExecutionName(testPlanResult));
     tsLabOptions.put(TSCapabilityType.DEVICE_ORIENTATION, TSCapabilityType.PORTRAIT);
     capabilities.add(new WebDriverCapability(TSCapabilityType.TESTSIGMA_LAB_OPTIONS,tsLabOptions));
     if (webDriverSettings.getWebDriverCapabilities() != null)
@@ -107,7 +103,7 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
   }
 
   @Override
-  public void setWebCapabilities(TestDevice testDevice,
+  public void setWebCapabilities(TestDevice testDevice,TestPlanResult testPlanResult,
                                  Integrations integrations,
                                  WebDriverSettingsDTO webDriverSettings)
     throws MalformedURLException, TestsigmaException {
@@ -126,7 +122,7 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
       tsLabOptions.put(TSCapabilityType.TESTSIGMA_LAB_KEY_SCREEN_RESOLUTION,
               TSCapabilityType.DEFAULT_RESOLUTION);
     }
-    tsLabOptions.put(TSCapabilityType.NAME,getExecutionName());
+    tsLabOptions.put(TSCapabilityType.NAME,getExecutionName(testPlanResult));
     tsLabOptions.put(TSCapabilityType.OS, platformOsVersion.getPlatform());
     tsLabOptions.put(TSCapabilityType.OS_VERSION, platformOsVersion.getPlatformVersion());
     tsLabOptions.put(TSCapabilityType.KEY_MAX_IDLE_TIME, TSCapabilityType.MAX_IDLE_TIME);
@@ -148,20 +144,15 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
     return this.integrationsService.findByApplication(Integration.TestsigmaLab);
   }
 
-  private String getExecutionName() {
-    String name = "[Trial] - Mobile Inspection";
-    testDeviceEntity = EnvironmentRunner.getRunnerEnvironmentEntity();
-    if (testDeviceEntity != null) {
-      this.settings = testDeviceEntity.getEnvSettings();
-        if(settings != null){
-          String runBy = ObjectUtils.defaultIfNull(settings.getRunBy(), "");
-          String executionRunId = settings.getExecutionRunId().toString();
-          String executionName = settings.getExecutionName();
-          name = String.format("[%s] - %s - %s", executionRunId, runBy, executionName);
-          name = name.replaceAll("[^a-zA-Z1-90_\\s\\[\\]\\:\\-@\\.]*", "");
-        }
-      }
-      return name;
+  public String getExecutionName(TestPlanResult testPlanDetails) {
+    String name = "Open source execution run";
+    if(testPlanDetails!= null){
+      String executionRunId = testPlanDetails.getId().toString();
+      String executionName = testPlanDetails.getTestPlan().getName();
+      name = String.format("[%s] - %s", executionRunId, executionName);
+      name = name.replaceAll("[^a-zA-Z1-90_\\s\\[\\]\\:\\-@\\.]*", "");
     }
+    return name;
+  }
 
 }

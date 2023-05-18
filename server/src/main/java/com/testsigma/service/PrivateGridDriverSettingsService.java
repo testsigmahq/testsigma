@@ -33,11 +33,11 @@ public class PrivateGridDriverSettingsService extends DriverSettingsService {
 
   @Override
   public WebDriverSettingsDTO driverSettings(TestDevice testDevice, WorkspaceType workspaceType,
-                                             TestPlanLabType testPlanLabType,
+                                             TestPlanLabType testPlanLabType, TestPlanResult testPlanResult,
                                              Integrations integrations,
                                              WebApplicationContext webApplicationContext)
           throws IOException, TestsigmaException, SQLException {
-    return super.driverSettings(testDevice, workspaceType, testPlanLabType, integrations,
+    return super.driverSettings(testDevice, workspaceType, testPlanLabType, testPlanResult, integrations,
             webApplicationContext);
   }
 
@@ -56,7 +56,7 @@ public class PrivateGridDriverSettingsService extends DriverSettingsService {
 
 
   @Override
-  public void setWebCapabilities(TestDevice testDevice,
+  public void setWebCapabilities(TestDevice testDevice, TestPlanResult testPlanResult,
                                  Integrations integrations,
                                  WebDriverSettingsDTO webDriverSettings)
           throws MalformedURLException, TestsigmaException {
@@ -88,7 +88,7 @@ public class PrivateGridDriverSettingsService extends DriverSettingsService {
   }
 
   @Override
-  public void setMobileCapabilities(TestDevice testDevice, WorkspaceType workspaceType, Integrations integrations, WebDriverSettingsDTO webDriverSettings) throws TestsigmaException, MalformedURLException {
+  public void setMobileCapabilities(TestDevice testDevice, WorkspaceType workspaceType, TestPlanResult testPlanResult, Integrations integrations, WebDriverSettingsDTO webDriverSettings) throws TestsigmaException, MalformedURLException {
 
   }
 }

@@ -29,20 +29,20 @@ public abstract class DriverSettingsService {
     throws MalformedURLException;
 
   public WebDriverSettingsDTO driverSettings(TestDevice testDevice, WorkspaceType workspaceType,
-                                             TestPlanLabType testPlanLabType,
+                                             TestPlanLabType testPlanLabType,TestPlanResult testPlanResult,
                                              Integrations integrations,
                                              WebApplicationContext webApplicationContext)
     throws IOException, TestsigmaException, SQLException {
     WebDriverSettingsDTO webDriverSettings = new WebDriverSettingsDTO();
     workspaceType = testDevice.getWorkspaceVersion().getWorkspace().getWorkspaceType();
-    webDriverSettings.setWebDriverCapabilities(getCapabilities(testDevice, workspaceType, testPlanLabType,
+    webDriverSettings.setWebDriverCapabilities(getCapabilities(testDevice, workspaceType, testPlanLabType,testPlanResult,
             integrations, webApplicationContext));
-    setApplicationSpecificCapabilities(testDevice, workspaceType, integrations, webDriverSettings);
+    setApplicationSpecificCapabilities(testDevice, workspaceType, testPlanResult, integrations, webDriverSettings);
     return webDriverSettings;
   }
 
   public List<WebDriverCapability> getCapabilities(TestDevice testDevice,
-                                                   WorkspaceType workspaceType, TestPlanLabType testPlanLabType,
+                                                   WorkspaceType workspaceType, TestPlanLabType testPlanLabType,TestPlanResult testPlanResult,
                                                    Integrations integrations,
                                                    WebApplicationContext webApplicationContext)
     throws TestsigmaException, IOException {
@@ -59,7 +59,7 @@ public abstract class DriverSettingsService {
     return capabilities.getCapabilities(testDevice, integrations, testPlanLabType);
   }
 
-  public void setWebCapabilities(TestDevice testDevice,
+  public void setWebCapabilities(TestDevice testDevice,TestPlanResult testPlanResult,
                                  Integrations integrations,
                                  WebDriverSettingsDTO webDriverSettings)
     throws MalformedURLException, TestsigmaException {
@@ -75,26 +75,26 @@ public abstract class DriverSettingsService {
   }
 
   public void setApplicationSpecificCapabilities(TestDevice testDevice,
-                                                 WorkspaceType workspaceType,
+                                                 WorkspaceType workspaceType,TestPlanResult testPlanResult,
                                                  Integrations integrations,
                                                  WebDriverSettingsDTO webDriverSettings)
     throws TestsigmaException, MalformedURLException {
     switch (workspaceType) {
       case WebApplication:
-        setWebCapabilities(testDevice, integrations, webDriverSettings);
+        setWebCapabilities(testDevice, testPlanResult, integrations, webDriverSettings);
         break;
       case MobileWeb:
       case IOSWeb:
       case AndroidNative:
       case IOSNative:
-        setMobileCapabilities(testDevice, workspaceType, integrations, webDriverSettings);
+        setMobileCapabilities(testDevice, workspaceType, testPlanResult, integrations, webDriverSettings);
         break;
     }
   }
 
   public abstract Integrations getLabDetails() throws IntegrationNotFoundException;
 
-  public abstract void setMobileCapabilities(TestDevice testDevice, WorkspaceType workspaceType,
+  public abstract void setMobileCapabilities(TestDevice testDevice, WorkspaceType workspaceType,TestPlanResult testPlanResult,
                                              Integrations integrations,
                                              WebDriverSettingsDTO webDriverSettings)
     throws TestsigmaException, MalformedURLException;

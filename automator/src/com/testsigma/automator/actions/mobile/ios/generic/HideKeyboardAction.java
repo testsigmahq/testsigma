@@ -56,9 +56,9 @@ public class HideKeyboardAction extends MobileElementAction {
   private void switchToActiveElementAndPressEnter() {
     try {
       getDriver().switchTo().activeElement().sendKeys(Keys.RETURN);
-      log.error("Hide keyboard by switching to active element and clicking enter");
+      log.info("Hide keyboard by switching to active element and clicking enter");
     } catch (Exception e) {
-      log.error("Could not hide keyboard by switching to active element and clicking enter");
+      log.error("Could not hide keyboard by switching to active element and clicking enter",e);
     }
   }
 

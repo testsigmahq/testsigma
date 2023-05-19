@@ -88,7 +88,7 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
     }
     capabilities.add(new WebDriverCapability(TSCapabilityType.TESTSIGMA_LAB_NEW_COMMAND_TIMEOUT_CAP,
       TSCapabilityType.TESTSIGMA_LAB_NEW_COMMAND_TIMEOUT_VAL));
-    tsLabOptions.put(TSCapabilityType.NAME,getExecutionName(testPlanResult));
+    tsLabOptions.put(TSCapabilityType.NAME,testPlanResult.getTestPlan().getName());
     tsLabOptions.put(TSCapabilityType.DEVICE_ORIENTATION, TSCapabilityType.PORTRAIT);
     capabilities.add(new WebDriverCapability(TSCapabilityType.TESTSIGMA_LAB_OPTIONS,tsLabOptions));
     if (webDriverSettings.getWebDriverCapabilities() != null)
@@ -122,7 +122,7 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
       tsLabOptions.put(TSCapabilityType.TESTSIGMA_LAB_KEY_SCREEN_RESOLUTION,
               TSCapabilityType.DEFAULT_RESOLUTION);
     }
-    tsLabOptions.put(TSCapabilityType.NAME,getExecutionName(testPlanResult));
+    tsLabOptions.put(TSCapabilityType.NAME,testPlanResult.getTestPlan().getName());
     tsLabOptions.put(TSCapabilityType.OS, platformOsVersion.getPlatform());
     tsLabOptions.put(TSCapabilityType.OS_VERSION, platformOsVersion.getPlatformVersion());
     tsLabOptions.put(TSCapabilityType.KEY_MAX_IDLE_TIME, TSCapabilityType.MAX_IDLE_TIME);
@@ -142,17 +142,6 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
   @Override
   public Integrations getLabDetails() throws IntegrationNotFoundException {
     return this.integrationsService.findByApplication(Integration.TestsigmaLab);
-  }
-
-  public String getExecutionName(TestPlanResult testPlanDetails) {
-    String name = "Open source execution run";
-    if(testPlanDetails!= null){
-      String executionRunId = testPlanDetails.getId().toString();
-      String executionName = testPlanDetails.getTestPlan().getName();
-      name = String.format("[%s] - %s", executionRunId, executionName);
-      name = name.replaceAll("[^a-zA-Z1-90_\\s\\[\\]\\:\\-@\\.]*", "");
-    }
-    return name;
   }
 
 }

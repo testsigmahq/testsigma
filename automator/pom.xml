@@ -296,7 +296,7 @@
     <dependency>
       <groupId>com.testsigma</groupId>
       <artifactId>testsigma-java-sdk</artifactId>
-      <version>1.2.0_beta_1</version>
+      <version>1.2.0.beta_selenium4_1</version>
     </dependency>
 
     <dependency>

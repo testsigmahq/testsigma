@@ -17,11 +17,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Log4j2
-public class PrivateGridDriverSettingsService extends DriverSettingsService {
+public class  PrivateGridDriverSettingsService extends DriverSettingsService {
   public static final String PLATFORM_WEB_URL = "/wd/hub";
 
   @Autowired
@@ -60,25 +62,45 @@ public class PrivateGridDriverSettingsService extends DriverSettingsService {
                                  Integrations integrations,
                                  WebDriverSettingsDTO webDriverSettings)
           throws MalformedURLException, TestsigmaException {
+//    List<WebDriverCapability> capabilities = new ArrayList<>();
+//
+//  /*  PlatformOsVersion platformOsVersion = platformsService.getPlatformOsVersion(testDevice.getPlatformOsVersionId(), testDevice.getTestPlan().getTestPlanLabType());
+//    PlatformBrowserVersion platformBrowserVersion = platformsService.getPlatformBrowserVersion(testDevice.getPlatformBrowserVersionId(), testDevice.getTestPlan().getTestPlanLabType());
+//    PlatformScreenResolution platformScreenResolution = platformsService.getPlatformScreenResolution(testDevice.getPlatformScreenResolutionId(), testDevice.getTestPlan().getTestPlanLabType());
+//    */
+//
+//    capabilities.add(new WebDriverCapability(TSCapabilityType.PLATFORM, testDevice.getPlatform()));
+//    if ((testDevice.getBrowserVersion()!=null && !testDevice.getBrowserVersion().equals("Not Available")))
+//    capabilities.add(new WebDriverCapability(TSCapabilityType.VERSION, testDevice.getBrowserVersion()));
+//    Browsers browser = Browsers.getBrowser(testDevice.getBrowser());
+//      capabilities.add(new WebDriverCapability(TSCapabilityType.TESTSIGMA_LAB_KEY_SCREEN_RESOLUTION, TSCapabilityType.DEFAULT_RESOLUTION));
+//    capabilities.add(new WebDriverCapability(TSCapabilityType.KEY_MAX_IDLE_TIME, TSCapabilityType.MAX_IDLE_TIME));
+//    capabilities.add(new WebDriverCapability(TSCapabilityType.KEY_MAX_DURATION, TSCapabilityType.MAX_DURATION));
+//    if (webDriverSettings.getWebDriverCapabilities() != null)
+//      webDriverSettings.getWebDriverCapabilities().addAll(capabilities);
+//    else
+//      webDriverSettings.setWebDriverCapabilities(capabilities);
+//      webDriverSettings.setWebDriverServerUrl(getRemoteDriverUrl(PLATFORM_WEB_URL, integrations));
+
     List<WebDriverCapability> capabilities = new ArrayList<>();
 
-  /*  PlatformOsVersion platformOsVersion = platformsService.getPlatformOsVersion(testDevice.getPlatformOsVersionId(), testDevice.getTestPlan().getTestPlanLabType());
-    PlatformBrowserVersion platformBrowserVersion = platformsService.getPlatformBrowserVersion(testDevice.getPlatformBrowserVersionId(), testDevice.getTestPlan().getTestPlanLabType());
-    PlatformScreenResolution platformScreenResolution = platformsService.getPlatformScreenResolution(testDevice.getPlatformScreenResolutionId(), testDevice.getTestPlan().getTestPlanLabType());
-    */
-
+    capabilities.add(new WebDriverCapability(TSCapabilityType.PLATFORM_NAME, testDevice.getPlatform()));
     capabilities.add(new WebDriverCapability(TSCapabilityType.PLATFORM, testDevice.getPlatform()));
+
     if ((testDevice.getBrowserVersion()!=null && !testDevice.getBrowserVersion().equals("Not Available")))
-    capabilities.add(new WebDriverCapability(TSCapabilityType.VERSION, testDevice.getBrowserVersion()));
-    Browsers browser = Browsers.getBrowser(testDevice.getBrowser());
-      capabilities.add(new WebDriverCapability(TSCapabilityType.TESTSIGMA_LAB_KEY_SCREEN_RESOLUTION, TSCapabilityType.DEFAULT_RESOLUTION));
+      capabilities.add(new WebDriverCapability(TSCapabilityType.VERSION,testDevice.getBrowserVersion()));
+    capabilities.add(new WebDriverCapability(TSCapabilityType.TESTSIGMA_LAB_KEY_SCREEN_RESOLUTION,
+              TSCapabilityType.DEFAULT_RESOLUTION));
+   // tsLabOptions.put(TSCapabilityType.NAME,testPlanResult.getTestPlan().getName());
+   // tsLabOptions.put(TSCapabilityType.OS, platformOsVersion.getPlatform());
+    //tsLabOptions.put(TSCapabilityType.OS_VERSION, platformOsVersion.getPlatformVersion());
     capabilities.add(new WebDriverCapability(TSCapabilityType.KEY_MAX_IDLE_TIME, TSCapabilityType.MAX_IDLE_TIME));
     capabilities.add(new WebDriverCapability(TSCapabilityType.KEY_MAX_DURATION, TSCapabilityType.MAX_DURATION));
     if (webDriverSettings.getWebDriverCapabilities() != null)
       webDriverSettings.getWebDriverCapabilities().addAll(capabilities);
     else
       webDriverSettings.setWebDriverCapabilities(capabilities);
-      webDriverSettings.setWebDriverServerUrl(getRemoteDriverUrl(PLATFORM_WEB_URL, integrations));
+    webDriverSettings.setWebDriverServerUrl(getRemoteDriverUrl(PLATFORM_WEB_URL, integrations));
 
   }
 

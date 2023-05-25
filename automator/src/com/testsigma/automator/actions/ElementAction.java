@@ -63,7 +63,7 @@ public abstract class ElementAction extends DriverAction {
     log.info("Finding an element for Action variable: " + elementActionVariableName);
     setElementSearchCriteria(elementActionVariableName);
     log.info(String.format("Finding element with criteria: %s, Explicit timeout as: %s", elementSearchCriteria, getTimeout()));
-    CustomExpectedConditions.explictWait(getDriver(), elementSearchCriteria.getBy(), (int)getTimeout().getSeconds());
+    CustomExpectedConditions.explicitWait(getDriver(), elementSearchCriteria.getBy(), (int)getTimeout().getSeconds());
     elements = getDriver().findElements(elementSearchCriteria.getBy());
     log.info("No of elements found: " + elements.size());
     if (!elements.isEmpty()) {

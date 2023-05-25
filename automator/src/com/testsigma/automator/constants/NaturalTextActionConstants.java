@@ -54,4 +54,9 @@ public class NaturalTextActionConstants {
   public final static String SET_INDEX = "Test Data Set Index";
   public final static String SET_NAME = "Test Data Set Name";
   public final static String RUNTIME_TEST_DATA_ID= "TestDataId";
+
+  public final static String ELEMENT_xOFFSET = "xOffset";
+  public final static String ELEMENT_yOFFSET = "yOffset";
+  public final static String ELEMENT_HEIGHT = "height";
+  public final static String ELEMENT_WIDTH = "width";
 }

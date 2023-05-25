@@ -18,6 +18,7 @@ import com.testsigma.automator.entity.*;
 import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.service.AddonService;
 import com.testsigma.automator.service.ObjectMapperService;
+import com.testsigma.automator.suggestion.actions.SuggestionAction;
 import com.testsigma.automator.utilities.RuntimeDataProvider;
 import com.testsigma.automator.utilities.ScreenCaptureUtil;
 import com.testsigma.sdk.TestData;
@@ -28,8 +29,10 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.logging.log4j.ThreadContext;
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchSessionException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 
 import java.io.IOException;
@@ -37,6 +40,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.util.*;
+
+import static com.testsigma.automator.suggestion.actions.SuggestionAction.testCaseStepEntity;
 
 @Log4j2
 public abstract class TestcaseStepRunner {
@@ -666,6 +671,9 @@ public abstract class TestcaseStepRunner {
       } else if (testcaseStep.getAction() != null && testcaseStep.getAction().toLowerCase()
         .contains(AutomatorMessages.KEYWORD_SCREENSHOT.toLowerCase())) {
         screenshotType = 2;
+      } else if (testcaseStep.getAction() != null && testcaseStep.getAction().toLowerCase()
+              .contains(AutomatorMessages.KEYWORD_ELEMENT_SCREENSHOT.toLowerCase())) {
+        screenshotType = 3;
       }
 
       if (Arrays.asList(SKIP_SCREENSHOT_KEYWORDS).contains(testcaseStep.getAction())) {
@@ -684,6 +692,10 @@ public abstract class TestcaseStepRunner {
 
       switch (workspaceType) {
         case WebApplication:
+          if (screenshotType == 3) {
+            testcaseStep.elementsMap.get("element").getLocatorValue();
+            screenCaptureUtil.takeElementScreenShot(driver, testcaseStep, localFolderPath, screenshotS3URL);
+          }
         case MobileWeb:
           if (screenshotType == 1) {
             screenCaptureUtil.screenShotWithURL(localFolderPath, screenshotS3URL, driver);

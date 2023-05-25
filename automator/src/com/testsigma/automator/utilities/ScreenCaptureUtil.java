@@ -2,11 +2,14 @@ package com.testsigma.automator.utilities;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.testsigma.automator.actions.ElementAction;
 import com.testsigma.automator.constants.EnvSettingsConstants;
 import com.testsigma.automator.constants.StorageConstants;
+import com.testsigma.automator.entity.TestCaseStepEntity;
 import com.testsigma.automator.entity.TestDeviceSettings;
 import com.testsigma.automator.exceptions.TestsigmaScreenShotException;
 import com.testsigma.automator.runners.EnvironmentRunner;
+import com.testsigma.automator.suggestion.actions.SuggestionAction;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
@@ -26,6 +29,8 @@ import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Map;
 
+import static com.testsigma.automator.suggestion.actions.SuggestionAction.testCaseStepEntity;
+
 
 @Log4j2
 @RequiredArgsConstructor
@@ -42,17 +47,36 @@ public class ScreenCaptureUtil {
   }
 
 
-  public void takeScreenShot(WebDriver webdriver, String loalFolderPath, String relativePath) throws Exception {
+  public void takeScreenShot(WebDriver webdriver, String localFolderPath, String relativePath) throws Exception {
     try {
       byte[] srcFile = ((TakesScreenshot) webdriver).getScreenshotAs(OutputType.BYTES);
-      saveScreenshotFile(srcFile, loalFolderPath, relativePath);
+      saveScreenshotFile(srcFile, localFolderPath, relativePath);
 
     } catch (WebDriverException e) {
       log.debug("Exception in taking screenshot using WebDriver. Details :: " + e.getMessage());
       log.error(e.getMessage(), e);
       if (e instanceof UnhandledAlertException) {
         log.debug("The Exception is caused by Unhandled Alert.");
-        takeScreenShot(loalFolderPath, relativePath);
+        takeScreenShot(localFolderPath, relativePath);
+      }
+    } catch (Exception e) {
+      log.debug("Exception while Tacking screenshot" + e);
+      log.error(e.getMessage(), e);
+    }
+  }
+
+  public void takeElementScreenShot(WebDriver driver, TestCaseStepEntity testCaseStep, String localFolderPath, String relativePath) throws Exception {
+    try {
+      testCaseStep.elementsMap.get("element").getFindByType();
+       WebElement captureElement = driver.findElement(By.xpath(testCaseStepEntity.getLocatorValue()));
+       byte[] srcFile = captureElement.getScreenshotAs(OutputType.BYTES);
+       saveScreenshotFile(srcFile, localFolderPath, relativePath);
+    } catch (WebDriverException e) {
+      log.debug("Exception in taking screenshot of an element. Details :: " + e.getMessage());
+      log.error(e.getMessage(), e);
+      if (e instanceof UnhandledAlertException) {
+        log.debug("The Exception is caused by Unhandled Alert.");
+        takeScreenShot(localFolderPath, relativePath);
       }
     } catch (Exception e) {
       log.debug("Exception while Tacking screenshot" + e);

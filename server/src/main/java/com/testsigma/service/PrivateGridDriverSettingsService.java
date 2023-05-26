@@ -7,7 +7,6 @@ import com.testsigma.exception.IntegrationNotFoundException;
 import com.testsigma.exception.TestsigmaException;
 import com.testsigma.model.*;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
@@ -23,7 +22,7 @@ import java.util.Map;
 
 @Service
 @Log4j2
-public class  PrivateGridDriverSettingsService extends DriverSettingsService {
+public class PrivateGridDriverSettingsService extends DriverSettingsService {
   public static final String PLATFORM_WEB_URL = "/wd/hub";
 
   @Autowired

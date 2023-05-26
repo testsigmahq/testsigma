@@ -27,7 +27,6 @@ public class OpenNewBrowserWindowAction extends ElementAction {
     protected void handleException(Exception e) {
         super.handleException(e);
         if (e instanceof UnreachableBrowserException || e instanceof NoSuchSessionException) {
-            //These two exception types are already handled in super class.
         } else if (e instanceof TimeoutException) {
             setErrorMessage(String.format("The Web Page with URL <b>\"%s\"</b> failed to load within the configured page load timeout duration. " +
                     "Please increase the 'page load timeout' in Test Step Settings or Test Plan Configuration if this delay is expected.", getTestData()));

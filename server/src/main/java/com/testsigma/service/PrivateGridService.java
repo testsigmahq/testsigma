@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
@@ -87,7 +86,6 @@ public class PrivateGridService {
                 }
             ObjectMapper mapper = new ObjectMapper();
             mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-            mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             PrivateGridBrowserRequest[] browsersList = new ObjectMapperService().parseJson(validPlatforms.toString(), PrivateGridBrowserRequest[].class);
 //            PrivateGridBrowserRequest[] browsersList = mapper.convertValue(validPlatforms, PrivateGridBrowserRequest[].class);

@@ -2,14 +2,14 @@ package com.testsigma.automator.utilities;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.testsigma.automator.actions.ElementAction;
+import com.testsigma.automator.actions.ElementSearchCriteria;
+import com.testsigma.automator.actions.FindByType;
 import com.testsigma.automator.constants.EnvSettingsConstants;
 import com.testsigma.automator.constants.StorageConstants;
 import com.testsigma.automator.entity.TestCaseStepEntity;
 import com.testsigma.automator.entity.TestDeviceSettings;
 import com.testsigma.automator.exceptions.TestsigmaScreenShotException;
 import com.testsigma.automator.runners.EnvironmentRunner;
-import com.testsigma.automator.suggestion.actions.SuggestionAction;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
@@ -28,8 +28,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Map;
-
-import static com.testsigma.automator.suggestion.actions.SuggestionAction.testCaseStepEntity;
 
 
 @Log4j2
@@ -67,10 +65,12 @@ public class ScreenCaptureUtil {
 
   public void takeElementScreenShot(WebDriver driver, TestCaseStepEntity testCaseStep, String localFolderPath, String relativePath) throws Exception {
     try {
-      testCaseStep.elementsMap.get("element").getFindByType();
-       WebElement captureElement = driver.findElement(By.xpath(testCaseStepEntity.getLocatorValue()));
-       byte[] srcFile = captureElement.getScreenshotAs(OutputType.BYTES);
-       saveScreenshotFile(srcFile, localFolderPath, relativePath);
+      FindByType findByType = testCaseStep.elementsMap.get("element").getFindByType();
+      String byValue = testCaseStep.elementsMap.get("element").getLocatorValue();
+      ElementSearchCriteria elementSearchCriteria = new ElementSearchCriteria(findByType, byValue);
+      List<WebElement> elements = driver.findElements(elementSearchCriteria.getBy());
+      byte[] srcFile = elements.get(0).getScreenshotAs(OutputType.BYTES);
+      saveScreenshotFile(srcFile, localFolderPath, relativePath);
     } catch (WebDriverException e) {
       log.debug("Exception in taking screenshot of an element. Details :: " + e.getMessage());
       log.error(e.getMessage(), e);

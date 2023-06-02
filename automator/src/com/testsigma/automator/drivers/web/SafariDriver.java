@@ -8,6 +8,8 @@ import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.http.HttpClient;
 import com.testsigma.automator.http.HttpResponse;
 import com.testsigma.automator.runners.EnvironmentRunner;
+import com.testsigma.automator.utilities.PathUtil;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.log4j.Log4j2;
@@ -88,5 +90,18 @@ public class SafariDriver extends WebDriver {
     } else {
       super.setTimeouts();
     }
+  }
+
+  @Override
+  protected void setupWebDriverManager() {
+    log.debug("SafariDriver browser version from EnvironmentsSettings = " + settings.getBrowserVersion());
+
+    WebDriverManager safariDriver = WebDriverManager.safaridriver();
+    String safariDriverLocation = PathUtil.getInstance().getRootPath() + "/web-drivers";
+    log.debug("safariDriverLocation = " + safariDriverLocation);
+    safariDriver.cachePath(safariDriverLocation).setup();
+
+    log.info("Downloaded SafariDriver version = " + safariDriver.getDownloadedDriverVersion());
+    log.info("SafariDriver downloaded location = " + safariDriver.getDownloadedDriverPath());
   }
 }

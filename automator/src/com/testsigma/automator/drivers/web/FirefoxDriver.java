@@ -5,6 +5,7 @@ import com.testsigma.automator.constants.TSCapabilityType;
 import com.testsigma.automator.drivers.WebDriverCapability;
 import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.utilities.PathUtil;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.log4j.Log4j2;
@@ -73,8 +74,6 @@ public class FirefoxDriver extends WebDriver {
   @Override
   public void setHybridCapabilities() throws AutomatorException, MalformedURLException {
     super.setHybridCapabilities();
-    System.setProperty(TSCapabilityType.BROWSER_DRIVER_PROPERTY_FIREFOX,
-      PathUtil.getInstance().getDriversPath() + settings.getHybridBrowserDriverPath());
   }
 
   @Override
@@ -109,6 +108,19 @@ public class FirefoxDriver extends WebDriver {
     if ("Linux".equals(getPlatform())) {
       super.setTimeouts();
     }
+  }
+
+  @Override
+  protected void setupWebDriverManager() {
+    log.debug("Firefox browser version from EnvironmentsSettings = " + settings.getBrowserVersion());
+
+    WebDriverManager firefoxDriver = WebDriverManager.firefoxdriver();
+    String firefoxDriverLocation = PathUtil.getInstance().getRootPath() + "/web-drivers";
+    log.debug("firefoxDriverLocation = " + firefoxDriverLocation);
+    firefoxDriver.cachePath(firefoxDriverLocation).setup();
+
+    log.info("Downloaded FirefoxDriver version = " + firefoxDriver.getDownloadedDriverVersion());
+    log.info("FirefoxDriver downloaded location = " + firefoxDriver.getDownloadedDriverPath());
   }
 
 }

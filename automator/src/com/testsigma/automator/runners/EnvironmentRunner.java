@@ -3,7 +3,6 @@ package com.testsigma.automator.runners;
 
 import com.testsigma.automator.constants.ExecutionStatus;
 import com.testsigma.automator.constants.AutomatorMessages;
-import com.testsigma.automator.drivers.DriversUpdateService;
 import com.testsigma.automator.entity.*;
 import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.exceptions.TestsigmaNoParallelRunException;
@@ -103,9 +102,6 @@ public abstract class EnvironmentRunner {
     checkForEmptyEnvironment();
     new ScreenCaptureUtil().createScreenshotsFolder();
     new ErrorUtil().checkError(testDeviceEntity.getErrorCode(), null);
-    if (testDeviceEntity.getWorkspaceType()==WorkspaceType.WebApplication){
-      new DriversUpdateService().syncBrowserDriver(testDeviceEntity);
-    }
   }
 
   public EnvironmentRunResult run() {

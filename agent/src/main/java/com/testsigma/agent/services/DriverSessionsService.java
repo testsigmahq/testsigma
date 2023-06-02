@@ -136,40 +136,22 @@ public class DriverSessionsService {
   }
 
   private void handleLocalDevice(List<WebDriverCapability> caps, DriverSessionRequest driverSessionRequest)
-    throws TestsigmaException, AutomatorException {
+          throws TestsigmaException, AutomatorException {
     if (driverSessionRequest.getExecutionLabType().equals(ExecutionLabType.Hybrid)) {
-      appendChromeDriverExecutable(caps, driverSessionRequest);
       if (driverSessionRequest.getWorkspaceType() == WorkspaceType.IOSNative) {
         setupIosDevice(caps, driverSessionRequest);
       }
     }
   }
-
-  private void appendChromeDriverExecutable(List<WebDriverCapability> caps, DriverSessionRequest driverSessionRequest)
-    throws TestsigmaException {
-    MobileDevice device = deviceContainer.getDevice(driverSessionRequest.getUniqueId());
-    if (device.getBrowserList() != null && device.getBrowserList().size() > 0) {
-      AgentBrowser browser = device.getBrowserList().get(0);
-      File chromePath = driverExecutableExists(Browsers.GoogleChrome.getKey(),
-        browser.getMajorVersion() + "");
-      if (chromePath != null) {
-        WebDriverCapability cap = new WebDriverCapability(TSCapabilityType.CHROME_DRIVER_EXECUTABLE, chromePath.getAbsolutePath());
-        caps.add(cap);
-      } else {
-        log.warn("Chrome Driver is not yet downloaded.. please try after some time");
-      }
-    }
-  }
-
   public void setupIosDevice(List<WebDriverCapability> caps, DriverSessionRequest driverSessionRequest)
-    throws TestsigmaException, AutomatorException {
+          throws TestsigmaException, AutomatorException {
     MobileDevice device = deviceContainer.getDevice(driverSessionRequest.getUniqueId());
     iosDeviceService.setupWda(device);
     WebDriverCapability bundleIdCapability = caps.stream().filter(cap -> cap.getCapabilityName()
-      .equals(TSCapabilityType.BUNDLE_ID)).findFirst().orElse(null);
+            .equals(TSCapabilityType.BUNDLE_ID)).findFirst().orElse(null);
     if ((bundleIdCapability == null) || StringUtils.isBlank((String) bundleIdCapability.getCapabilityValue())) {
       WebDriverCapability appCapability = caps.stream().filter(cap -> cap.getCapabilityName()
-        .equals(MobileCapabilityType.APP)).findFirst().orElse(null);
+              .equals(MobileCapabilityType.APP)).findFirst().orElse(null);
       AppPathType appPathType = driverSessionRequest.getApplicationPathType();
       if ((appCapability != null) && appPathType != AppPathType.APP_DETAILS) {
         caps.remove(appCapability);

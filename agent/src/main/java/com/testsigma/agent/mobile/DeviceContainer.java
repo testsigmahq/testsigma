@@ -19,7 +19,6 @@ import com.testsigma.agent.http.WebAppHttpClient;
 import com.testsigma.agent.mappers.MobileDeviceMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.testsigma.automator.AutomatorConfig;
-import com.testsigma.automator.drivers.DriversUpdateService;
 import com.testsigma.automator.entity.Browsers;
 import com.testsigma.automator.entity.OsBrowserType;
 import com.testsigma.automator.exceptions.AutomatorException;
@@ -97,7 +96,6 @@ public class DeviceContainer {
         Browsers browser = OsBrowserType.getBrowserType(browserType);
         String driverPath = AutomatorConfig.getInstance().getAppBridge().getDriverExecutablePath(browser.getKey(),
           browserVersion);
-        new DriversUpdateService().syncBrowserDriver(browserType, browserVersion, driverPath);
       } catch (AutomatorException e) {
         log.error(e.getMessage(), e);
       }

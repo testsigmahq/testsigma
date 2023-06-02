@@ -1,6 +1,5 @@
 package com.testsigma.automator.drivers.web;
 
-import com.testsigma.automator.constants.TSCapabilityType;
 import com.testsigma.automator.drivers.WebDriverCapability;
 import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.utilities.PathUtil;
@@ -10,6 +9,7 @@ import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -48,8 +48,6 @@ public class ChromeDriver extends WebDriver {
   @Override
   public void setHybridCapabilities() throws AutomatorException, MalformedURLException {
     super.setHybridCapabilities();
-    System.setProperty(TSCapabilityType.BROWSER_DRIVER_PROPERTY_CHROME,
-      PathUtil.getInstance().getDriversPath() + settings.getHybridBrowserDriverPath());
   }
 
   @Override
@@ -95,5 +93,18 @@ public class ChromeDriver extends WebDriver {
         }
       }
     }
+  }
+
+  @Override
+  protected void setupWebDriverManager() {
+    log.debug("Chrome browser version from EnvironmentsSettings = " + settings.getBrowserVersion());
+
+    WebDriverManager chromeDriver = WebDriverManager.chromedriver();
+    String chromeDriverLocation = PathUtil.getInstance().getRootPath() + "/web-drivers";
+    log.debug("chromeDriverLocation = " + chromeDriverLocation);
+    chromeDriver.cachePath(chromeDriverLocation).setup();
+
+    log.info("Downloaded ChromeDriver version = " + chromeDriver.getDownloadedDriverVersion());
+    log.info("ChromeDriver downloaded location = " + chromeDriver.getDownloadedDriverPath());
   }
 }

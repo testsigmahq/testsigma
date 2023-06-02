@@ -34,7 +34,12 @@ public class WebDriver extends TestsigmaDriver {
 
   public WebDriver() {
     super();
+    if(executionLabType == ExecutionLabType.Hybrid) {
+      setupWebDriverManager();
+    }
   }
+
+  protected void setupWebDriverManager() {};
 
   @Override
   protected void setCapabilities() throws AutomatorException, MalformedURLException {
@@ -135,4 +140,5 @@ public class WebDriver extends TestsigmaDriver {
     String userAgent = (String) remoteWebDriver.executeScript("return navigator.userAgent;");
     return userAgent.substring(userAgent.indexOf("Version") + 8, userAgent.indexOf("Safari") - 1);
   }
+
 }

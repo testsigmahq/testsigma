@@ -41,6 +41,9 @@ public class PathUtil {
 
   @Getter
   private String mobileAutomationDriverPath = null;
+
+  @Getter
+  private String mobileAutomationDriverDestinationPath = null;
   @Getter
   private String upgradePath = null;
   @Getter
@@ -82,7 +85,8 @@ public class PathUtil {
     driversPath = rootPath + File.separator + "drivers";
     jrePath = rootPath + File.separator + "jre";
     mobileAutomationServerPath = rootPath + File.separator + "appium";
-    mobileAutomationDriverPath = mobileAutomationServerPath + "/drivers";
+    mobileAutomationDriverPath = mobileAutomationServerPath + File.separator +"drivers";
+    mobileAutomationDriverDestinationPath = mobileAutomationDriverPath + File.separator + "node_modules";
     androidPath = rootPath + File.separator + "android";
     iosPath = rootPath + File.separator + "ios";
 

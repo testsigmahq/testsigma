@@ -66,11 +66,15 @@ public class PrivateGridService {
                             JSONObject nodeDetails = (JSONObject) nodeStereotypes.get(i);
                             JSONObject stereotype = (JSONObject) nodeDetails.get("stereotype");
                             browserDetails = new JSONObject();
-                            browserDetails.put("browserName", StringUtils.capitalize(stereotype.get("browserName").toString().toLowerCase().replaceAll("\\s", "")));
+                            if (String.valueOf(stereotype.get("browserName")).contains("edge") || String.valueOf(stereotype.get("browserName")).contains("Edge"))
+                            {
+                                browserDetails.put("browserName", "Edge");
+                            } else
+                            {
+                                browserDetails.put("browserName", StringUtils.capitalize(stereotype.get("browserName").toString().toLowerCase().replaceAll("\\s", "")));
+                            }
                             browserDetails.put("maxInstances",Integer.parseInt(nodeDetails.get("slots").toString()));
-//                            if (OSBrowserType.getBrowserEnumValueIfExists(String.valueOf(browserDetails.get("browserName")))==null){
-//                                continue;
-//                            }
+
                             if (String.valueOf(stereotype.get("platformName")).contains("Win") || String.valueOf(stereotype.get("platformName")).contains("WIN"))
                             {
                                 browserDetails.put("platform", "Windows");
@@ -103,7 +107,7 @@ public class PrivateGridService {
             if (e instanceof TestsigmaException)
                 throw new TestsigmaException(e.getMessage());
             else
-            throw new TestsigmaException("Unable extract and save the node configurations from your private grid");
+            throw new TestsigmaException("Unable to extract and save the node configurations from your private grid");
         }
     }
 

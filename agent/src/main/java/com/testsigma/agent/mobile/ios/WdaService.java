@@ -145,7 +145,7 @@ public class WdaService {
 
   private void checkWDAProcessStatus(MobileDevice device) throws TestsigmaException, AutomatorException, InterruptedException {
     int retries = 3;
-    while (device.getWdaProcess() == null && (device.getWdaProcess().isAlive() || device.getWdaProcess().exitValue() == 0) && retries-- > 0) {
+    while (device.getWdaProcess() == null && retries-- > 0) {
       log.info("WDA process not started yet, waiting for 5 seconds...");
       Thread.sleep(5000);
     }
@@ -161,7 +161,7 @@ public class WdaService {
 
   private void checkWDARelayProcessStatus(MobileDevice device) throws TestsigmaException, AutomatorException, InterruptedException {
     int retries = 3;
-    while (device.getWdaRelayProcess() == null && !device.getWdaRelayProcess().isAlive() && retries-- > 0) {
+    while (device.getWdaRelayProcess() == null && retries-- > 0) {
       log.info("WDA process not started yet, waiting for 5 seconds...");
       Thread.sleep(5000);
     }

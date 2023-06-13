@@ -18,8 +18,10 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.net.MalformedURLException;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -68,7 +70,9 @@ public class WebDriver extends TestsigmaDriver {
   @Override
   protected void setHybridCapabilities() throws AutomatorException, MalformedURLException {
     super.setHybridCapabilities();
-    capabilities.add(new WebDriverCapability(TSCapabilityType.NAME, settings.getExecutionName()));
+    Map<String, Object> testsigmaOptions = new HashMap<>();
+    testsigmaOptions.put(TSCapabilityType.NAME, settings.getExecutionName());
+    capabilities.add(new WebDriverCapability(TSCapabilityType.TESTSIGMA_LAB_OPTIONS, testsigmaOptions));
   }
 
   protected void setBrowserSpecificCapabilities(List<WebDriverCapability> additionalCapabilitiesList)

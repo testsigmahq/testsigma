@@ -11,8 +11,6 @@ package com.testsigma.automator.actions.mobile.tap;
 
 import com.testsigma.automator.actions.constants.ErrorCodes;
 import com.testsigma.automator.actions.mobile.MobileElementAction;
-import io.appium.java_client.TouchAction;
-import io.appium.java_client.touch.offset.PointOption;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.InvalidArgumentException;
 import org.openqa.selenium.interactions.Pause;

@@ -10,9 +10,6 @@
 package com.testsigma.automator.actions.mobile.tap;
 
 import com.testsigma.automator.actions.mobile.MobileElementAction;
-import io.appium.java_client.TouchAction;
-import io.appium.java_client.touch.TapOptions;
-import io.appium.java_client.touch.offset.ElementOption;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.interactions.Pause;
 import org.openqa.selenium.interactions.PointerInput;

@@ -38,10 +38,8 @@ public class PathUtil {
   private String iosPath = null;
   @Getter
   private String mobileAutomationServerPath = null;
-
   @Getter
   private String mobileAutomationDriverPath = null;
-
   @Getter
   private String mobileAutomationDriverDestinationPath = null;
   @Getter

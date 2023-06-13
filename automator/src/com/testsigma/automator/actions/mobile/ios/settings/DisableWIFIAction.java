@@ -6,8 +6,6 @@ import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import java.util.HashMap;
-
 @Log4j2
 public class DisableWIFIAction extends MobileElementAction {
   private static final String SUCCESS_MESSAGE = "Successfully disabled WIFI.";

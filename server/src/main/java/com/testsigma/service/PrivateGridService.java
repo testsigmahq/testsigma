@@ -92,7 +92,6 @@ public class PrivateGridService {
             mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             PrivateGridBrowserRequest[] browsersList = new ObjectMapperService().parseJson(validPlatforms.toString(), PrivateGridBrowserRequest[].class);
-//            PrivateGridBrowserRequest[] browsersList = mapper.convertValue(validPlatforms, PrivateGridBrowserRequest[].class);
             PrivateGridNodeRequest request = new PrivateGridNodeRequest();
             request.setNodeName(proxy);
             request.setGridURL(gridURL);

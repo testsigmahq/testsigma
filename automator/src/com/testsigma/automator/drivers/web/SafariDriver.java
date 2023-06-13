@@ -1,8 +1,6 @@
 package com.testsigma.automator.drivers.web;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.testsigma.automator.constants.TSCapabilityType;
-import com.testsigma.automator.drivers.WebDriverCapability;
 import com.testsigma.automator.entity.ExecutionLabType;
 import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.http.HttpClient;

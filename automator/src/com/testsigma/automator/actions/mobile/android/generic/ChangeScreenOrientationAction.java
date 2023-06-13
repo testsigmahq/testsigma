@@ -1,7 +1,6 @@
 package com.testsigma.automator.actions.mobile.android.generic;
 
 import com.google.common.collect.ImmutableMap;
-import com.testsigma.automator.actions.mobile.generic.GetScreenOrientationAction;
 import org.openqa.selenium.ScreenOrientation;
 import org.openqa.selenium.remote.DriverCommand;
 

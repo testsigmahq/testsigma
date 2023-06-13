@@ -37,7 +37,6 @@ import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.util.*;
 
-
 @Log4j2
 public abstract class TestcaseStepRunner {
   private static final String[] SKIP_SCREENSHOT_KEYWORDS = {"Close App", "Close all windows"};

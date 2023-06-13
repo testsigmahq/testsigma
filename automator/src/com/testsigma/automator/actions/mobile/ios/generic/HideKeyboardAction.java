@@ -2,7 +2,6 @@ package com.testsigma.automator.actions.mobile.ios.generic;
 
 import com.testsigma.automator.actions.mobile.MobileElementAction;
 import io.appium.java_client.AppiumBy;
-import io.appium.java_client.MobileBy;
 import io.appium.java_client.ios.IOSDriver;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.By;
@@ -131,6 +130,4 @@ public class HideKeyboardAction extends MobileElementAction {
     }
 
   }
-
-
 }

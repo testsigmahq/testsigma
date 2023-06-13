@@ -15,7 +15,6 @@ import com.testsigma.agent.exception.TestsigmaException;
 import com.testsigma.agent.mobile.MobileAutomationServerService;
 import com.testsigma.agent.mobile.DeviceContainer;
 import com.testsigma.agent.mobile.MobileDevice;
-import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
 import lombok.RequiredArgsConstructor;

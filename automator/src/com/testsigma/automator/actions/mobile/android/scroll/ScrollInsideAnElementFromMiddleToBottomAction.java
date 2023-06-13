@@ -1,15 +1,10 @@
 package com.testsigma.automator.actions.mobile.android.scroll;
 
 import com.testsigma.automator.actions.mobile.MobileElementAction;
-import io.appium.java_client.TouchAction;
-import io.appium.java_client.touch.WaitOptions;
-import io.appium.java_client.touch.offset.PointOption;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.interactions.PointerInput;
 import org.openqa.selenium.interactions.Sequence;
 
-import java.time.Duration;
 import java.util.Arrays;
 
 import static java.time.Duration.ofMillis;

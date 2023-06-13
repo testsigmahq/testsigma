@@ -1,6 +1,5 @@
 package com.testsigma.automator.actions.mobile;
 
-import com.google.common.collect.ImmutableMap;
 import com.testsigma.automator.entity.Platform;
 import com.testsigma.automator.actions.ElementSearchCriteria;
 import io.appium.java_client.AppiumDriver;
@@ -8,7 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DriverCommand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +21,7 @@ public class FindElementByIndexAndSendKeysAction extends MobileElementAction {
   Integer index;
   @Getter
   @Setter
-  String  webViewName;
+  String webViewName;
   @Getter
   @Setter
   String keys;

@@ -25,9 +25,7 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
   public static final String PLATFORM_WEB_URL_WITH_PORT = "%s://%s:%s@%s:%s/wd/hub";
   public static final String PLATFORM_MOBILE_URL = "%s://%s:%s@%s/mobile/wd/hub";
   public static final String PLATFORM_MOBILE_URL_WITH_PORT = "%s://%s:%s@%s:%s/mobile/wd/hub";
-
-
-
+  
   @Autowired
   PlatformsService platformsService;
   @Autowired

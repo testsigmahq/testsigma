@@ -16,9 +16,9 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.SystemUtils;
 import org.springframework.stereotype.Component;
-
 import javax.annotation.PreDestroy;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
@@ -147,7 +147,7 @@ public class MobileAutomationServer {
           int timeoutSeconds = 120;
           unzipAndroidDriver.get(timeoutSeconds, TimeUnit.SECONDS);
           unzipIosDriver.get(timeoutSeconds, TimeUnit.SECONDS);
-          log.info("Unzipped completed successfully");
+          log.info("Unzip completed successfully");
         } catch (Exception e) {
           log.error(e.getMessage(), e);
         } finally {

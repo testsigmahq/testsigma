@@ -31,11 +31,11 @@ public class FindElementByIndexAndClearAction extends MobileElementAction {
     AppiumDriver driver = getDriver();
     List<WebElement> webElements = new ArrayList<WebElement>();
     if (getWebViewName() != null && !getWebViewName().equals("null")) {
-      driver.context(getWebViewName());
+      context(getWebViewName());
       webElements = driver.findElements(getElementSearchCriteria().getBy());
       webElements.get(getIndex()).clear();
-      driver.context("NATIVE_APP");
-    } else if (driver.getContextHandles().size() > 1) {
+      context("NATIVE_APP");
+    } else if (getContextHandles().size() > 1) {
       webElements = driver.findElements(getElementSearchCriteria().getBy());
       tapByElementCoOrdinates(webElements.get(getIndex()), driver);
       webElements.get(getIndex()).clear();

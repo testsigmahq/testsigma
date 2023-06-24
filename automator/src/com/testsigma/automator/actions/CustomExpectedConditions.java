@@ -4,9 +4,9 @@ import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.FluentWait;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 
@@ -198,13 +198,13 @@ public class CustomExpectedConditions {
     };
   }
 
-  final static public void explictWait(WebDriver driver, By by, Integer wait) {
+  final static public void explicitWait(WebDriver driver, By by, Integer wait) {
 
     if (wait == null || wait < 1 || wait > 120) {
       return;
     }
     if (by != null) {
-      (new WebDriverWait(driver, wait)).until(ExpectedConditions.presenceOfElementLocated(by));
+     new FluentWait<>(driver).withTimeout(Duration.ofSeconds(wait)).pollingEvery(Duration.ofSeconds(10)).ignoring(NoSuchElementException.class);
     }
   }
 }

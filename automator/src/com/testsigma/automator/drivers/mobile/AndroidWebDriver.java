@@ -33,12 +33,13 @@ public class AndroidWebDriver extends MobileWebDriver {
         settings.getChromedriverExecutableDir()));
     }
     capabilities.add(new WebDriverCapability(ChromeOptions.CAPABILITY, options));
+    capabilities.add(new WebDriverCapability("automationName","uiAutomator2"));
     capabilities.add(new WebDriverCapability(AndroidMobileCapabilityType.UNICODE_KEYBOARD, Boolean.TRUE));
     capabilities.add(new WebDriverCapability(AndroidMobileCapabilityType.RESET_KEYBOARD, Boolean.TRUE));
   }
 
   @Override
   protected void createDriverInstance(DesiredCapabilities desiredCapabilities) throws AutomatorException {
-    remoteWebDriver = new io.appium.java_client.android.AndroidDriver<>(remoteServerURL, desiredCapabilities);
+    remoteWebDriver = new io.appium.java_client.android.AndroidDriver(remoteServerURL, desiredCapabilities);
   }
 }

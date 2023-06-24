@@ -10,12 +10,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -25,7 +25,7 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
   public static final String PLATFORM_WEB_URL_WITH_PORT = "%s://%s:%s@%s:%s/wd/hub";
   public static final String PLATFORM_MOBILE_URL = "%s://%s:%s@%s/mobile/wd/hub";
   public static final String PLATFORM_MOBILE_URL_WITH_PORT = "%s://%s:%s@%s:%s/mobile/wd/hub";
-
+  
   @Autowired
   PlatformsService platformsService;
   @Autowired
@@ -35,11 +35,11 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
 
   @Override
   public WebDriverSettingsDTO driverSettings(TestDevice testDevice, WorkspaceType workspaceType,
-                                             TestPlanLabType testPlanLabType,
+                                             TestPlanLabType testPlanLabType,TestPlanResult testPlanResult,
                                              Integrations integrations,
                                              WebApplicationContext webApplicationContext)
     throws IOException, TestsigmaException, SQLException {
-    return super.driverSettings(testDevice, workspaceType, testPlanLabType, integrations,
+    return super.driverSettings(testDevice, workspaceType, testPlanLabType, testPlanResult, integrations,
       webApplicationContext);
   }
 
@@ -64,7 +64,7 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
   }
 
   @Override
-  public void setMobileCapabilities(TestDevice testDevice, WorkspaceType workspaceType,
+  public void setMobileCapabilities(TestDevice testDevice, WorkspaceType workspaceType, TestPlanResult testPlanResult,
                                     Integrations integrations,
                                     WebDriverSettingsDTO webDriverSettings)
     throws TestsigmaException, MalformedURLException {
@@ -72,9 +72,9 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
     PlatformDevice device = platformsService.getPlatformDevice(testDevice.getPlatformDeviceId(), testDevice.getTestPlanLabType());
     PlatformOsVersion platformOsVersion = platformsService.getPlatformOsVersion(testDevice.getPlatformOsVersionId(),testDevice.getTestPlanLabType());
     Platform os = device.getPlatform();
+    HashMap<String, Object> tsLabOptions = new HashMap<String, Object>();
     capabilities.add(new WebDriverCapability(TSCapabilityType.DEVICE_NAME, device.getName() == null ? device.getDisplayName() : device.getName()));
     capabilities.add(new WebDriverCapability(TSCapabilityType.PLATFORM_VERSION, platformOsVersion.getPlatformVersion()));
-    capabilities.add(new WebDriverCapability(TSCapabilityType.DEVICE_ORIENTATION, TSCapabilityType.PORTRAIT));
     if (Platform.Android.equals(os)) {
       capabilities.add(new WebDriverCapability(TSCapabilityType.AUTOMATION_NAME, TSCapabilityType.UI_AUTOMATOR));
     } else if (Platform.iOS.equals(os)) {
@@ -86,8 +86,9 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
     }
     capabilities.add(new WebDriverCapability(TSCapabilityType.TESTSIGMA_LAB_NEW_COMMAND_TIMEOUT_CAP,
       TSCapabilityType.TESTSIGMA_LAB_NEW_COMMAND_TIMEOUT_VAL));
-    capabilities.add(new WebDriverCapability(TSCapabilityType.TESTSIGMA_LAB_COMMAND_TIMEOUT_CAP,
-      TSCapabilityType.TESTSIGMA_LAB_COMMAND_TIMEOUT_VAL));
+    tsLabOptions.put(TSCapabilityType.NAME,testPlanResult.getTestPlan().getName());
+    tsLabOptions.put(TSCapabilityType.DEVICE_ORIENTATION, TSCapabilityType.PORTRAIT);
+    capabilities.add(new WebDriverCapability(TSCapabilityType.TESTSIGMA_LAB_OPTIONS,tsLabOptions));
     if (webDriverSettings.getWebDriverCapabilities() != null)
       webDriverSettings.getWebDriverCapabilities().addAll(capabilities);
     else
@@ -100,7 +101,7 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
   }
 
   @Override
-  public void setWebCapabilities(TestDevice testDevice,
+  public void setWebCapabilities(TestDevice testDevice,TestPlanResult testPlanResult,
                                  Integrations integrations,
                                  WebDriverSettingsDTO webDriverSettings)
     throws MalformedURLException, TestsigmaException {
@@ -109,27 +110,22 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
     PlatformOsVersion platformOsVersion = platformsService.getPlatformOsVersion(testDevice.getPlatformOsVersionId(), testDevice.getTestPlanLabType());
     PlatformBrowserVersion platformBrowserVersion = platformsService.getPlatformBrowserVersion(testDevice.getPlatformBrowserVersionId(), testDevice.getTestPlanLabType());
     PlatformScreenResolution platformScreenResolution = platformsService.getPlatformScreenResolution(testDevice.getPlatformScreenResolutionId(), testDevice.getTestPlanLabType());
-    capabilities.add(new WebDriverCapability(TSCapabilityType.PLATFORM, platformOsVersion.getPlatformVersion()));
-    capabilities.add(new WebDriverCapability(TSCapabilityType.OS, platformOsVersion.getPlatform()));
-    capabilities.add(new WebDriverCapability(TSCapabilityType.OS_VERSION, platformOsVersion.getPlatformVersion()));
-
+    HashMap<String, Object> tsLabOptions = new HashMap<String, Object>();
+    capabilities.add(new WebDriverCapability(TSCapabilityType.PLATFORM_NAME, platformOsVersion.getPlatformVersion()));
     capabilities.add(new WebDriverCapability(TSCapabilityType.VERSION, platformBrowserVersion.getVersion()));
-    Browsers browser = platformBrowserVersion.getName();
-    if (browser.equals(Browsers.Safari) &&
-      Float.parseFloat(platformBrowserVersion.getDisplayVersion()) > 12) {
-      capabilities.add(new WebDriverCapability(TSCapabilityType.SELENIUM_VERSION, "3.4.0"));
-    } else {
-      capabilities.add(new WebDriverCapability(TSCapabilityType.SELENIUM_VERSION, "3.8.1"));
-    }
     String resolution = platformScreenResolution.getResolution();
     if (!StringUtils.isBlank(resolution)) {
-      capabilities.add(new WebDriverCapability(TSCapabilityType.TESTSIGMA_LAB_KEY_SCREEN_RESOLUTION, resolution));
+      tsLabOptions.put(TSCapabilityType.TESTSIGMA_LAB_KEY_SCREEN_RESOLUTION, resolution);
     } else {
-      capabilities.add(new WebDriverCapability(TSCapabilityType.TESTSIGMA_LAB_KEY_SCREEN_RESOLUTION,
-        TSCapabilityType.DEFAULT_RESOLUTION));
+      tsLabOptions.put(TSCapabilityType.TESTSIGMA_LAB_KEY_SCREEN_RESOLUTION,
+              TSCapabilityType.DEFAULT_RESOLUTION);
     }
-    capabilities.add(new WebDriverCapability(TSCapabilityType.KEY_MAX_IDLE_TIME, TSCapabilityType.MAX_IDLE_TIME));
-    capabilities.add(new WebDriverCapability(TSCapabilityType.KEY_MAX_DURATION, TSCapabilityType.MAX_DURATION));
+    tsLabOptions.put(TSCapabilityType.NAME,testPlanResult.getTestPlan().getName());
+    tsLabOptions.put(TSCapabilityType.OS, platformOsVersion.getPlatform());
+    tsLabOptions.put(TSCapabilityType.OS_VERSION, platformOsVersion.getPlatformVersion());
+    tsLabOptions.put(TSCapabilityType.KEY_MAX_IDLE_TIME, TSCapabilityType.MAX_IDLE_TIME);
+    tsLabOptions.put(TSCapabilityType.KEY_MAX_DURATION, TSCapabilityType.MAX_DURATION);
+    capabilities.add(new WebDriverCapability(TSCapabilityType.TESTSIGMA_LAB_OPTIONS,tsLabOptions));
     if (webDriverSettings.getWebDriverCapabilities() != null)
       webDriverSettings.getWebDriverCapabilities().addAll(capabilities);
     else
@@ -145,4 +141,5 @@ public class TestsigmaLabDriverSettingsService extends DriverSettingsService {
   public Integrations getLabDetails() throws IntegrationNotFoundException {
     return this.integrationsService.findByApplication(Integration.TestsigmaLab);
   }
+
 }

@@ -10,8 +10,8 @@
 package com.testsigma.automator.actions.mobile.android.alert;
 
 import com.testsigma.automator.actions.mobile.MobileElementAction;
-import io.appium.java_client.MobileElement;
 import lombok.extern.log4j.Log4j2;
+import org.openqa.selenium.WebElement;
 
 @Log4j2
 public class TextAlertAction extends MobileElementAction {
@@ -25,7 +25,7 @@ public class TextAlertAction extends MobileElementAction {
   public void execute() throws Exception {
     constructElementWithDynamicXpath(PARAMETERIZED_XPATH);
     findElement();
-    MobileElement targetElement = (MobileElement) getElement();
+    WebElement targetElement = (WebElement) getElement();
     targetElement.click();
     setSuccessMessage(SUCCESS_MESSAGE);
   }

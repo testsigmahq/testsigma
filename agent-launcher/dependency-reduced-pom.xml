@@ -57,7 +57,7 @@
     </plugins>
   </build>
   <properties>
-    <lombok.version>1.18.10</lombok.version>
+    <lombok.version>1.18.22</lombok.version>
     <systemtray.version>3.17</systemtray.version>
     <maven.compiler.plugin>3.8.1</maven.compiler.plugin>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

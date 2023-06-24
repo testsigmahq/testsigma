@@ -30,6 +30,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <jdk.version>11</jdk.version>
     <maven.compiler.plugin>3.8.1</maven.compiler.plugin>
+    <selenium.version>4.8.2</selenium.version>
     <jackson.version>2.11.4</jackson.version>
     <json.version>20160810</json.version>
     <jjwt.version>0.2</jjwt.version>
@@ -46,7 +47,7 @@
     <flyway.db.version>7.11.0</flyway.db.version>
     <lombok-version>1.18.20</lombok-version>
     <mapstruct-version>1.4.2.Final</mapstruct-version>
-    <google-guava-version>31.0.1-jre</google-guava-version>
+    <google-guava-version>31.1-jre</google-guava-version>
     <one-login-saml-version>2.4.0</one-login-saml-version>
     <spring-data-jpa-version>2.5.2</spring-data-jpa-version>
     <poi.version>3.15</poi.version>

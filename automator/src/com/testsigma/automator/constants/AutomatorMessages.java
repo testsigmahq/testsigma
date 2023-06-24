@@ -48,6 +48,8 @@ public class AutomatorMessages {
 
   public static final String KEYWORD_GO_TO = "Navigate to";
   public static final String KEYWORD_SCREENSHOT = "Take screenshot with URL";
+
+  public static final String KEYWORD_ELEMENT_SCREENSHOT = "Capture";
   public static final String EXCEPTION_DOWNLOAD_LOCAL_FILE = "There is no file with URL ?1";
   final public static String INVALID_NUMBER_ARGUMENT = "Invalid integer provided to generate random test data string. Refer \"https://testsigma.com/docs/test-data/types/random/\" to know the valid integer range and learn more about random test data";
   public static final String MSG_REST_INVALID_URL = "Invalid endpoint URL specified. Make sure the target host in the URL is valid and accessible. Also, the URL begins with HTTP or HTTPS";

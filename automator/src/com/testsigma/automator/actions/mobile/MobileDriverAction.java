@@ -59,4 +59,5 @@ public abstract class MobileDriverAction extends DriverAction {
     }
     return commandTimeout;
   }
+
 }

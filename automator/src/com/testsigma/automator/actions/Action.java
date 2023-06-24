@@ -26,6 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,7 +36,7 @@ public abstract class Action {
   private static final int MESSAGE_MAX_SIZE = 500;
   protected Exception exception;
   protected Object actualValue;
-  protected Long timeout = 30L;
+  protected Duration timeout = Duration.ofSeconds(30);
   protected ErrorCodes errorCode = ErrorCodes.GENERIC_ERROR;
   protected Long globalElementTimeOut;
   protected Map<String, TestDataPropertiesEntity> testDataPropertiesEntityMap;

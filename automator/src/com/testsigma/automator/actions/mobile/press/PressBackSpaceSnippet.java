@@ -10,6 +10,11 @@
 package com.testsigma.automator.actions.mobile.press;
 
 import com.testsigma.automator.actions.mobile.MobileElementAction;
+import io.appium.java_client.AppiumBy;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.android.nativekey.AndroidKey;
+import io.appium.java_client.android.nativekey.KeyEvent;
+import io.appium.java_client.ios.IOSDriver;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.InvalidElementStateException;
 import org.openqa.selenium.Keys;
@@ -22,7 +27,11 @@ public class PressBackSpaceSnippet extends MobileElementAction {
 
   @Override
   public void execute() throws Exception {
-    getDriver().getKeyboard().pressKey(Keys.BACK_SPACE);
+    if (getDriver() instanceof AndroidDriver) {
+      ((AndroidDriver) getDriver()).pressKey(new KeyEvent(AndroidKey.DEL));
+    } else {
+      getDriver().findElement(AppiumBy.ByAccessibilityId.accessibilityId("delete")).click();
+    }
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 

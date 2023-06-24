@@ -13,7 +13,7 @@
     <maven.compiler.plugin>3.8.1</maven.compiler.plugin>
     <commons.lang.version>3.4</commons.lang.version>
     <systemtray.version>3.17</systemtray.version>
-    <lombok.version>1.18.10</lombok.version>
+    <lombok.version>1.18.22</lombok.version>
     <httpcomponents.version>4.5.13</httpcomponents.version>
   </properties>
 

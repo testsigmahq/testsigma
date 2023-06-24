@@ -5,13 +5,15 @@ import com.testsigma.automator.constants.TSCapabilityType;
 import com.testsigma.automator.drivers.WebDriverCapability;
 import com.testsigma.automator.exceptions.AutomatorException;
 import com.testsigma.automator.utilities.PathUtil;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.log4j.Log4j2;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.remote.Browser;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -35,7 +37,6 @@ public class FirefoxDriver extends WebDriver {
   @Override
   protected void createDriverInstance(DesiredCapabilities desiredCapabilities) throws AutomatorException {
     if (remoteServerURL != null) {
-
       remoteWebDriver = new RemoteWebDriver(remoteServerURL, firefoxOptions.merge(desiredCapabilities));
     } else {
       remoteWebDriver = new org.openqa.selenium.firefox.FirefoxDriver(new FirefoxOptions().merge(desiredCapabilities));
@@ -46,7 +47,7 @@ public class FirefoxDriver extends WebDriver {
   public void setTestsigmaLabCapabilities() throws AutomatorException {
     if (!"Linux".equals(getPlatform())) {
       MutableCapabilities mutableCapabilities = new MutableCapabilities();
-      mutableCapabilities.setCapability(TSCapabilityType.SELENIUM_VERSION, "3.8.1");
+      mutableCapabilities.setCapability(TSCapabilityType.SELENIUM_VERSION, "4.8.2");
       mutableCapabilities.setCapability(TSCapabilityType.NAME, executionName);
       mutableCapabilities.setCapability(EnvSettingsConstants.KEY_MAX_IDLE_TIME, EnvSettingsConstants.MAX_IDLE_TIME);
       mutableCapabilities.setCapability(EnvSettingsConstants.KEY_MAX_DURATION, EnvSettingsConstants.MAX_DURATION);
@@ -57,7 +58,7 @@ public class FirefoxDriver extends WebDriver {
     } else {
       super.setTestsigmaLabCapabilities();
     }
-    capabilities.add(new WebDriverCapability(CapabilityType.BROWSER_NAME, BrowserType.FIREFOX));
+    capabilities.add(new WebDriverCapability(CapabilityType.BROWSER_NAME, Browser.FIREFOX.browserName()));
   }
 
   protected void setAdditionalCapabilities(List<WebDriverCapability> additionalCapabilitiesList) {
@@ -73,8 +74,6 @@ public class FirefoxDriver extends WebDriver {
   @Override
   public void setHybridCapabilities() throws AutomatorException, MalformedURLException {
     super.setHybridCapabilities();
-    System.setProperty(TSCapabilityType.BROWSER_DRIVER_PROPERTY_FIREFOX,
-      PathUtil.getInstance().getDriversPath() + settings.getHybridBrowserDriverPath());
   }
 
   @Override
@@ -97,7 +96,7 @@ public class FirefoxDriver extends WebDriver {
               profile.setPreference(pro.getKey(), (String) pro.getValue());
             }
           }
-          capabilities.add(new WebDriverCapability(org.openqa.selenium.firefox.FirefoxDriver.PROFILE, profile));
+          capabilities.add(new WebDriverCapability(org.openqa.selenium.firefox.FirefoxDriver.SystemProperty.BROWSER_PROFILE, profile));
           single.remove();
         }
       }
@@ -109,6 +108,19 @@ public class FirefoxDriver extends WebDriver {
     if ("Linux".equals(getPlatform())) {
       super.setTimeouts();
     }
+  }
+
+  @Override
+  protected void setupWebDriverManager() {
+    log.debug("Firefox browser version from EnvironmentsSettings = " + settings.getBrowserVersion());
+
+    WebDriverManager firefoxDriver = WebDriverManager.firefoxdriver();
+    String firefoxDriverLocation = PathUtil.getInstance().getRootPath() + "/web-drivers";
+    log.debug("firefoxDriverLocation = " + firefoxDriverLocation);
+    firefoxDriver.cachePath(firefoxDriverLocation).setup();
+
+    log.info("Downloaded FirefoxDriver version = " + firefoxDriver.getDownloadedDriverVersion());
+    log.info("FirefoxDriver downloaded location = " + firefoxDriver.getDownloadedDriverPath());
   }
 
 }

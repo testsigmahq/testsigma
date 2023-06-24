@@ -13,7 +13,7 @@ public class VerifyBrowserVersionAction extends ElementAction {
   @Override
   public void execute() throws Exception {
     Capabilities sysCaps = getRemoteWebDriver().getCapabilities();
-    setActualValue(sysCaps.getVersion());
+    setActualValue(sysCaps.getBrowserVersion());
     Assert.isTrue(getTestData().equalsIgnoreCase(getActualValue().toString()),
       String.format(FAILURE_MESSAGE, getTestData(), getActualValue()));
 

@@ -1,6 +1,7 @@
 package com.testsigma.automator.actions.mobile.ios.settings;
 
 import com.testsigma.automator.actions.mobile.MobileElementAction;
+import io.appium.java_client.ios.IOSDriver;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -17,7 +18,7 @@ public class EnableWIFIAction extends MobileElementAction {
   @Override
   protected void execute() throws Exception {
     //Switch to settings app
-    getDriver().activateApp("com.apple.Preferences");
+    ((IOSDriver) getDriver()).activateApp("com.apple.Preferences");
     WebElement wifiSettingsElement = getDriver().findElement(By.name("Wi-Fi"));
     wifiSettingsElement.click();
     String switchValue = null;
@@ -38,7 +39,7 @@ public class EnableWIFIAction extends MobileElementAction {
     boolean appRedirected = false;
     if (parentAppBundleID != null) {
       try {
-        getDriver().activateApp(parentAppBundleID);
+        ((IOSDriver) getDriver()).activateApp(parentAppBundleID);
         appRedirected = true;
       } catch (Exception e) {
         //We ignore this exception, User can execute open app with bundleId step if switching failed.

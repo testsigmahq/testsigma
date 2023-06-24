@@ -16,7 +16,6 @@ public class ChromeCapabilities extends Capabilities {
   public void setTestsigmaLabCapabilities(TestDevice testDevice,
                                           Integrations integrations,
                                           List<WebDriverCapability> capabilities) {
-    capabilities.add(new WebDriverCapability(TSCapabilityType.EXTENDED_DEBUGGING, true));
     capabilities.add(new WebDriverCapability(TSCapabilityType.BROWSER_NAME, BrowserType.CHROME));
   }
 

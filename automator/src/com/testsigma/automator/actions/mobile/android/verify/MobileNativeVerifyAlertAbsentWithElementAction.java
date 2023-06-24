@@ -10,9 +10,9 @@
 package com.testsigma.automator.actions.mobile.android.verify;
 
 import com.testsigma.automator.actions.mobile.MobileElementAction;
-import io.appium.java_client.MobileElement;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.NotFoundException;
+import org.openqa.selenium.WebElement;
 import org.springframework.util.Assert;
 
 @Log4j2
@@ -31,7 +31,7 @@ public class MobileNativeVerifyAlertAbsentWithElementAction extends MobileElemen
       setSuccessMessage(SUCCESS_MESSAGE);
       return;
     }
-    MobileElement targetElement = (MobileElement) getElement();
+    WebElement targetElement = (WebElement) getElement();
     Assert.isTrue(!targetElement.isDisplayed(),
       String.format("The Alert contains element with given locator %s:%s which is not expected.",
         getElementSearchCriteria().getFindByType(), getElementSearchCriteria().getByValue()));

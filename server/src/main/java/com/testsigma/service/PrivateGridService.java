@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
@@ -28,15 +27,11 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.apache.http.message.BasicHeader;
 import org.json.JSONArray;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,25 +48,50 @@ public class PrivateGridService {
     private Integrations applicationConfig;
 
     private void fetchBrowsersFromNode(String proxy, String gridURL) throws TestsigmaException {
-        HttpResponse<JsonNode> response = httpClient.get(gridURL + "/grid/api/proxy?id=" + proxy, getHeaders(), new TypeReference<JsonNode>() {
-        });
+        List<Header> headers = getHeaders();
+        JSONObject query = new JSONObject();
+        query.put("query", "{ nodesInfo { nodes { stereotypes } } }");
+        HttpResponse<JsonNode> response = httpClient.post(gridURL + "/graphql",
+                headers, query.toString(), new TypeReference<>() {
+                });
         try {
-            JsonNode browsers = response.getResponseEntity().get("request").get("configuration").get("capabilities");
+            JsonNode nodes = response.getResponseEntity().get("data").get("nodesInfo").get("nodes");
             JSONArray validPlatforms = new JSONArray();
-            for (JsonNode browser : browsers) {
-                ((ObjectNode) browser).put("browserName", StringUtils.capitalize(browser.get("browserName").asText().toLowerCase().replaceAll("\\s", "")));
-                ((ObjectNode) browser).put("platform", StringUtils.capitalize(browser.get("platform").asText().toLowerCase().replaceAll("\\s", "")));
-                if (OSBrowserType.getBrowserEnumValueIfExists(browser.get("browserName").asText())==null){
-                    continue;
+            JSONObject browserDetails;
+            if (!nodes.isEmpty()) {
+                    for (JsonNode node : nodes) {
+                        String stereotypes = node.get("stereotypes").asText().replaceAll("\n", "");
+                        JSONArray nodeStereotypes = new JSONArray(stereotypes);
+                        for (int i = 0; i < nodeStereotypes.length(); i++) {
+                            JSONObject nodeDetails = (JSONObject) nodeStereotypes.get(i);
+                            JSONObject stereotype = (JSONObject) nodeDetails.get("stereotype");
+                            browserDetails = new JSONObject();
+                            if (String.valueOf(stereotype.get("browserName")).contains("edge") || String.valueOf(stereotype.get("browserName")).contains("Edge"))
+                            {
+                                browserDetails.put("browserName", "Edge");
+                            } else
+                            {
+                                browserDetails.put("browserName", StringUtils.capitalize(stereotype.get("browserName").toString().toLowerCase().replaceAll("\\s", "")));
+                            }
+                            browserDetails.put("maxInstances",Integer.parseInt(nodeDetails.get("slots").toString()));
+
+                            if (String.valueOf(stereotype.get("platformName")).contains("Win") || String.valueOf(stereotype.get("platformName")).contains("WIN"))
+                            {
+                                browserDetails.put("platform", "Windows");
+                                browserDetails.put("platformName", "Windows");
+                            } else
+                            {
+                                browserDetails.put("platform", StringUtils.capitalize(stereotype.get("platformName").toString().toLowerCase().replaceAll("\\s", "")));
+                                browserDetails.put("platformName", StringUtils.capitalize(stereotype.get("platformName").toString().toLowerCase().replaceAll("\\s", "")));
+                            }
+                            validPlatforms.put(browserDetails);
+                        }
+                    }
                 }
-                if (browser.get("platform").asText().contains("Win") || browser.get("platform").asText().contains("WIN"))
-                    ((ObjectNode) browser).put("platform", "Windows");
-                validPlatforms.put(browser);
-            }
             ObjectMapper mapper = new ObjectMapper();
             mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            PrivateGridBrowserRequest[] browsersList = mapper.convertValue(validPlatforms, PrivateGridBrowserRequest[].class);
+            PrivateGridBrowserRequest[] browsersList = new ObjectMapperService().parseJson(validPlatforms.toString(), PrivateGridBrowserRequest[].class);
             PrivateGridNodeRequest request = new PrivateGridNodeRequest();
             request.setNodeName(proxy);
             request.setGridURL(gridURL);
@@ -86,34 +106,37 @@ public class PrivateGridService {
             if (e instanceof TestsigmaException)
                 throw new TestsigmaException(e.getMessage());
             else
-            throw new TestsigmaException("Unable extract and save the node configurations from your private grid");
+            throw new TestsigmaException("Unable to extract and save the node configurations from your private grid");
         }
     }
 
     public List<String> ParseProxyIds(String gridUrl) throws TestsigmaException {
-        HttpResponse<JsonNode> response = httpClient.get(gridUrl + "/grid/console", getHeaders(), new TypeReference<JsonNode>() {
-        });
 
-        Document doc = Jsoup.parse(response.toString());
-        Elements proxies = doc.select("p.proxyid");
-        // "((https?|ftp|gopher|telnet|file):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)";
-        String urlRegex = "\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+        List<Header> headers = getHeaders();
+        JSONObject query = new JSONObject();
+        query.put("query", "{ nodesInfo { nodes { uri } } }");
+        HttpResponse<JsonNode> response = httpClient.post(gridUrl + "/graphql",
+                headers, query.toString(), new TypeReference<>() {
+                });
+
+        JsonNode proxies = response.getResponseEntity().get("data").get("nodesInfo").get("nodes");
         List<String> parsedURLs = new ArrayList<String>();
 
         try {
-            Pattern pattern = Pattern.compile(urlRegex, Pattern.CASE_INSENSITIVE);
-            Matcher matcher = pattern.matcher(proxies.text());
-            while (matcher.find()) {
-                String URL = proxies.text().substring(matcher.start(0), matcher.end(0));
-                if (!parsedURLs.contains(URL)) {
-                    parsedURLs.add(URL);
-                    this.fetchBrowsersFromNode(URL, gridUrl);
+            if (!proxies.isEmpty()) {
+                for (JsonNode proxy : proxies) {
+                    String url = proxy.get("uri").asText();
+                    if (!parsedURLs.contains(url)) {
+                        parsedURLs.add(url);
+                        this.fetchBrowsersFromNode(url, gridUrl);
+                    }
+                }
+                if (!(parsedURLs.size() > 0)) {
+                    log.error(" No URL found with the given regex in the response message.");
                 }
             }
-            if (!(parsedURLs.size() > 0)) {
-                log.error(" No URL found with the given regex in the response message.");
-            }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error(e.getMessage(), e);
             if (e instanceof TestsigmaException)
                 throw new TestsigmaException(e.getMessage());

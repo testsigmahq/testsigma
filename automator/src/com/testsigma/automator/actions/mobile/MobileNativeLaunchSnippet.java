@@ -18,7 +18,7 @@ public class MobileNativeLaunchSnippet extends MobileElementAction {
 
   @Override
   public void execute() throws Exception {
-    getDriver().launchApp();
+    getDriver().execute(io.appium.java_client.MobileCommand.LAUNCH_APP);
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 }

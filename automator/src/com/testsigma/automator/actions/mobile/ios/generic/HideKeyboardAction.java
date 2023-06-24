@@ -1,15 +1,26 @@
 package com.testsigma.automator.actions.mobile.ios.generic;
 
 import com.testsigma.automator.actions.mobile.MobileElementAction;
-import io.appium.java_client.TouchAction;
+import io.appium.java_client.AppiumBy;
 import io.appium.java_client.ios.IOSDriver;
-import io.appium.java_client.ios.IOSElement;
-import io.appium.java_client.touch.offset.PointOption;
 import lombok.extern.log4j.Log4j2;
+import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Pause;
+import org.openqa.selenium.interactions.PointerInput;
+import org.openqa.selenium.interactions.Sequence;
 import org.springframework.util.Assert;
 
+import java.time.Duration;
+import java.util.Arrays;
+import java.util.List;
+
+import static java.time.Duration.ofMillis;
+import static org.openqa.selenium.interactions.PointerInput.Kind.TOUCH;
+import static org.openqa.selenium.interactions.PointerInput.MouseButton.LEFT;
+import static org.openqa.selenium.interactions.PointerInput.Origin.viewport;
 @Log4j2
 public class HideKeyboardAction extends MobileElementAction {
   private static final String SUCCESS_MESSAGE = "Hide Keyboard executed successfully.";
@@ -17,24 +28,37 @@ public class HideKeyboardAction extends MobileElementAction {
 
   @Override
   protected void execute() throws Exception {
-    IOSDriver driver = (IOSDriver) getDriver();
     int i = 0;
-    while (driver.isKeyboardShown() && i < 5) {
+    boolean keyboardShown = true;
+    while (i < 5) {
       if (i == 0) {
-        clickOnHideKeyBoardAccessibilityID();
+        switchToActiveElementAndPressEnter();
       } else if (i == 1) {
-        clickOnReturnToHideKeyboard();
+        hideKeyboardByTappingOutsideKeyboard();
       } else if (i == 2) {
-        sendKeysToHideKeyboard(Keys.RETURN);
+        clickOnReturnKeys();
       } else if (i == 3) {
         hideKeyboardByTappingOutsideKeyboard();
       } else {
         break;
       }
       i++;
+      if (!isKeyboardShown()) {
+        keyboardShown = false;
+        break;
+      }
     }
-    Assert.isTrue(Boolean.FALSE.equals(driver.isKeyboardShown()), FAILURE_MESSAGE);
+    Assert.isTrue(Boolean.FALSE.equals(keyboardShown), FAILURE_MESSAGE);
     setSuccessMessage(SUCCESS_MESSAGE);
+  }
+
+  private void switchToActiveElementAndPressEnter() {
+    try {
+      getDriver().switchTo().activeElement().sendKeys(Keys.RETURN);
+      log.info("Hide keyboard by switching to active element and clicking enter");
+    } catch (Exception e) {
+      log.error("Could not hide keyboard by switching to active element and clicking enter",e);
+    }
   }
 
   private void hideKeyboardByTappingOutsideKeyboard() {
@@ -42,10 +66,15 @@ public class HideKeyboardAction extends MobileElementAction {
     log.info("Using KEYBOARD ELEMENT(Tap/touch above keyboard) to hide keyboard, Element classname:" + keyboardElementClassName);
 
     try {
-      IOSElement element = (IOSElement) getDriver().findElementByClassName(keyboardElementClassName);
-      Point keyboardPoint = element.getLocation();
-      TouchAction touchAction = new TouchAction(getDriver());
-      touchAction.tap(PointOption.point(keyboardPoint.getX() + 2, keyboardPoint.getY() - 2)).perform();
+      WebElement element = getDriver().findElement(By.className(keyboardElementClassName));
+      Point keyboardPoint =  element.getLocation();
+      PointerInput finger = new PointerInput(TOUCH,"finger");
+      Sequence tap = new Sequence(finger,1)
+              .addAction(finger.createPointerMove(ofMillis(0), viewport(),keyboardPoint.getX() + 2, keyboardPoint.getY() - 2))
+              .addAction(finger.createPointerDown(LEFT.asArg()))
+              .addAction(new Pause(finger,ofMillis(1)))
+              .addAction(finger.createPointerUp(LEFT.asArg()));
+      getDriver().perform(Arrays.asList(tap));
       try {
         Thread.sleep(200);
       } catch (InterruptedException e) {
@@ -57,34 +86,47 @@ public class HideKeyboardAction extends MobileElementAction {
     }
   }
 
-  private void sendKeysToHideKeyboard(Keys aReturn) {
+  private void clickOnReturnKeys() {
 
-    log.info("Using SEND KEYS to hide keyboard, key sent:" + aReturn.toString());
-    try {
-      getDriver().getKeyboard().sendKeys(aReturn);
-      log.info("Using SEND KEYS to hide keyboard didn't throw any exception,key sent:" + aReturn);
-    } catch (Exception e) {
-      log.error("**Tried to hide keyboard using SEND KEYS,Key sent:" + aReturn + " ***", e);
-    }
-  }
-
-  private void clickOnReturnToHideKeyboard() {
-    log.info("Using PRESS on return key to hide keyboard");
-    try {
-      getDriver().getKeyboard().pressKey(Keys.RETURN);
-      log.info("Using PRESS on return key to hide keyboard didn't throw any exception");
-    } catch (Exception e) {
-      log.error("**Tried to hide keyboard using PRESS on return key ***", e);
-    }
+    List.of("Return", "return", "done", "Done", "search", "Search", "Next", "next", "Go", "go").forEach(button -> {
+              try {
+                getDriver().findElement(By.xpath("//*[contains(@name, '" + button + "')]")).click();
+              } catch (Exception e) {
+                log.error("**Tried to hide keyboard by pressing return keys***", e);
+              }
+              try {
+                getDriver().findElement(By.name(button));
+              } catch (Exception e) {
+                log.error("**Couldnt find the button name***"+":"+button, e);
+              }
+            }
+    );
   }
 
   private void clickOnHideKeyBoardAccessibilityID() {
     log.info("Using Hide Keyboard accessibilityId to hide keyboard");
     try {
-      getDriver().findElementByAccessibilityId("Hide keyboard").click();
+      getDriver().findElement(AppiumBy.ByAccessibilityId.accessibilityId("Hide keyboard")).click();
       log.info("Using Hide Keyboard accessibilityId to hide keyboard didn't throw any exception");
     } catch (Exception e) {
       log.error("**Tried to hide keyboard using Hide Keyboard id***", e);
+    }
+
+  }
+
+  protected boolean isKeyboardShown() {
+    setDriverImplicitTimeout(Duration.ofSeconds(5));
+    boolean keyboardShown = ((IOSDriver) getDriver()).isKeyboardShown();
+    resetImplicitTimeout();
+    return keyboardShown;
+  }
+
+  protected void resetImplicitTimeout() {
+    try {
+      long webkitResponseTimeout = (Long) getDriver().getCapabilities().getCapability("webkitResponseTimeout");
+      setDriverImplicitTimeout(Duration.ofSeconds(webkitResponseTimeout / 1000));
+    } catch (Exception e) {
+      setDriverImplicitTimeout(Duration.ofSeconds(getGlobalElementTimeOut()));
     }
 
   }

@@ -110,6 +110,7 @@ public class MobileNativeSwipeElementProxyAction extends com.testsigma.automator
         MobileNativeSwipeMiddleToBottomAction middleToBottom = (MobileNativeSwipeMiddleToBottomAction) this.initializeChildSnippet(MobileNativeSwipeMiddleToBottomAction.class);
         middleToBottom.execute();
         this.setSuccessMessage(middleToBottom.getSuccessMessage());
+        break;
       default:
         setErrorMessage("Unable to Perform Swipe Action due to error at swipe direction");
         throw new AutomatorException("Unable to Perform Swipe Action due to error at swipe direction");

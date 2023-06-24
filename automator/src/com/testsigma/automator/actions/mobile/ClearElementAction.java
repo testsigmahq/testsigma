@@ -22,7 +22,7 @@ public class ClearElementAction extends MobileElementAction {
   public void execute() throws Exception {
     AppiumDriver driver = getDriver();
     findElement();
-    if (driver.getContextHandles().size() > 1) {
+    if (getContextHandles().size() > 1) {
       tapByElementCoOrdinates(getElement(), driver);
     }
     getElement().clear();

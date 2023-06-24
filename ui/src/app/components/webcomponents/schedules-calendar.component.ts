@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, Input, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {SchedulePlanService} from "../../services/schedule-plan.service";
 import {CalendarEvent, CalendarMonthViewBeforeRenderEvent, CalendarWeekViewBeforeRenderEvent} from 'angular-calendar';
-import RRule from 'rrule';
+import {RRule} from 'rrule';
 import {ViewPeriod} from 'calendar-utils';
 import {Page} from "../../shared/models/page";
 import {SchedulePlan} from "../../models/schedule-plan.model";

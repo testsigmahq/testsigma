@@ -10,10 +10,10 @@ public interface TSCapabilityType extends CapabilityType {
   String OS = "os";
   String BUNDLE_ID = "bundleId";
   String SELENIUM_VERSION = "seleniumVersion";
-  String ACCEPT_SSL_CERTS = "acceptSslCerts";
+  String ACCEPT_SSL_CERTS = "acceptInsecureCerts";
   String UNHANDLED_PROMPT_BEHAVIOUR_KEY = "unhandledPromptBehavior";
   String UNHANDLED_PROMPT_BEHAVIOUR_VALUE = "ignore";
-  String AVOID_PROXY = "avoidProxy";
+  String AVOID_PROXY = "proxy";
   String BROWSER_DRIVER_PROPERTY_CHROME = "webdriver.chrome.driver";
   String BROWSER_DRIVER_PROPERTY_FIREFOX = "webdriver.gecko.driver";
   String BROWSER_DRIVER_PROPERTY_EDGE = "webdriver.edge.driver";

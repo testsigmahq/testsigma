@@ -7,7 +7,6 @@ import com.testsigma.exception.IntegrationNotFoundException;
 import com.testsigma.exception.TestsigmaException;
 import com.testsigma.model.*;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
@@ -17,7 +16,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Log4j2
@@ -33,11 +34,11 @@ public class PrivateGridDriverSettingsService extends DriverSettingsService {
 
   @Override
   public WebDriverSettingsDTO driverSettings(TestDevice testDevice, WorkspaceType workspaceType,
-                                             TestPlanLabType testPlanLabType,
+                                             TestPlanLabType testPlanLabType, TestPlanResult testPlanResult,
                                              Integrations integrations,
                                              WebApplicationContext webApplicationContext)
           throws IOException, TestsigmaException, SQLException {
-    return super.driverSettings(testDevice, workspaceType, testPlanLabType, integrations,
+    return super.driverSettings(testDevice, workspaceType, testPlanLabType, testPlanResult, integrations,
             webApplicationContext);
   }
 
@@ -56,29 +57,28 @@ public class PrivateGridDriverSettingsService extends DriverSettingsService {
 
 
   @Override
-  public void setWebCapabilities(TestDevice testDevice,
+  public void setWebCapabilities(TestDevice testDevice, TestPlanResult testPlanResult,
                                  Integrations integrations,
                                  WebDriverSettingsDTO webDriverSettings)
-          throws MalformedURLException, TestsigmaException {
+          throws MalformedURLException {
+
     List<WebDriverCapability> capabilities = new ArrayList<>();
+    Map<String, Object> testsigmaOptions = new HashMap<>();
 
-  /*  PlatformOsVersion platformOsVersion = platformsService.getPlatformOsVersion(testDevice.getPlatformOsVersionId(), testDevice.getTestPlan().getTestPlanLabType());
-    PlatformBrowserVersion platformBrowserVersion = platformsService.getPlatformBrowserVersion(testDevice.getPlatformBrowserVersionId(), testDevice.getTestPlan().getTestPlanLabType());
-    PlatformScreenResolution platformScreenResolution = platformsService.getPlatformScreenResolution(testDevice.getPlatformScreenResolutionId(), testDevice.getTestPlan().getTestPlanLabType());
-    */
+    capabilities.add(new WebDriverCapability(TSCapabilityType.PLATFORM_NAME, testDevice.getPlatform()));
+    testsigmaOptions.put(TSCapabilityType.TESTSIGMA_LAB_KEY_SCREEN_RESOLUTION,
+              TSCapabilityType.DEFAULT_RESOLUTION);
+    testsigmaOptions.put(TSCapabilityType.NAME,testPlanResult.getTestPlan().getName());
+    testsigmaOptions.put(TSCapabilityType.KEY_MAX_IDLE_TIME, TSCapabilityType.MAX_IDLE_TIME);
+    testsigmaOptions.put(TSCapabilityType.KEY_MAX_DURATION, TSCapabilityType.MAX_DURATION);
 
-    capabilities.add(new WebDriverCapability(TSCapabilityType.PLATFORM, testDevice.getPlatform()));
-    if ((testDevice.getBrowserVersion()!=null && !testDevice.getBrowserVersion().equals("Not Available")))
-    capabilities.add(new WebDriverCapability(TSCapabilityType.VERSION, testDevice.getBrowserVersion()));
-    Browsers browser = Browsers.getBrowser(testDevice.getBrowser());
-      capabilities.add(new WebDriverCapability(TSCapabilityType.TESTSIGMA_LAB_KEY_SCREEN_RESOLUTION, TSCapabilityType.DEFAULT_RESOLUTION));
-    capabilities.add(new WebDriverCapability(TSCapabilityType.KEY_MAX_IDLE_TIME, TSCapabilityType.MAX_IDLE_TIME));
-    capabilities.add(new WebDriverCapability(TSCapabilityType.KEY_MAX_DURATION, TSCapabilityType.MAX_DURATION));
+    capabilities.add(new WebDriverCapability(TSCapabilityType.TESTSIGMA_LAB_OPTIONS, testsigmaOptions));
+
     if (webDriverSettings.getWebDriverCapabilities() != null)
       webDriverSettings.getWebDriverCapabilities().addAll(capabilities);
     else
       webDriverSettings.setWebDriverCapabilities(capabilities);
-      webDriverSettings.setWebDriverServerUrl(getRemoteDriverUrl(PLATFORM_WEB_URL, integrations));
+    webDriverSettings.setWebDriverServerUrl(getRemoteDriverUrl(PLATFORM_WEB_URL, integrations));
 
   }
 
@@ -88,7 +88,7 @@ public class PrivateGridDriverSettingsService extends DriverSettingsService {
   }
 
   @Override
-  public void setMobileCapabilities(TestDevice testDevice, WorkspaceType workspaceType, Integrations integrations, WebDriverSettingsDTO webDriverSettings) throws TestsigmaException, MalformedURLException {
+  public void setMobileCapabilities(TestDevice testDevice, WorkspaceType workspaceType, TestPlanResult testPlanResult, Integrations integrations, WebDriverSettingsDTO webDriverSettings) throws TestsigmaException, MalformedURLException {
 
   }
 }

@@ -15,6 +15,7 @@ import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.StaleElementReferenceException;
 
 import java.lang.reflect.InvocationTargetException;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,7 @@ public class ActionStepExecutor {
     DriverAction snippet = (DriverAction) className.getDeclaredConstructor().newInstance();
 
     snippet.setDriver(DriverManager.getRemoteWebDriver());
-    snippet.setTimeout(testCaseStepEntity.getWaitTime().longValue());
+    snippet.setTimeout(Duration.ofSeconds(testCaseStepEntity.getWaitTime().longValue()));
     snippet.setTestDataPropertiesEntityMap(testCaseStepEntity.getTestDataMap());
     snippet.setElementPropertiesEntityMap(testCaseStepEntity.getElementsMap());
     snippet.setAttributesMap(testCaseStepEntity.getAttributesMap());

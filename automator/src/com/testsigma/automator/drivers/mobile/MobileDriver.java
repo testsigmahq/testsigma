@@ -48,12 +48,12 @@ public class MobileDriver extends TestsigmaDriver {
   @Override
   protected void setCommonCapabilities() throws AutomatorException {
     super.setCommonCapabilities();
-    capabilities.add(new WebDriverCapability(TSCapabilityType.NAME, executionName));
   }
 
   @Override
   protected void setHybridCapabilities() throws AutomatorException, MalformedURLException {
     super.setHybridCapabilities();
+    capabilities.add(new WebDriverCapability(TSCapabilityType.NAME, executionName));
     setHybridRemoteServerUrl(settings.getAppiumUrl());
     if (WorkspaceType.isIOSNative(testDeviceEntity.getWorkspaceType()) &&
       (AppPathType.APP_DETAILS != settings.getAppPathType())) {

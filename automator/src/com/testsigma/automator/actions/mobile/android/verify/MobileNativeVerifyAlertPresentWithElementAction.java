@@ -10,8 +10,8 @@
 package com.testsigma.automator.actions.mobile.android.verify;
 
 import com.testsigma.automator.actions.mobile.MobileElementAction;
-import io.appium.java_client.MobileElement;
 import lombok.extern.log4j.Log4j2;
+import org.openqa.selenium.WebElement;
 import org.springframework.util.Assert;
 
 @Log4j2
@@ -24,7 +24,7 @@ public class MobileNativeVerifyAlertPresentWithElementAction extends MobileEleme
   public void execute() throws Exception {
     verifyAlertPresence(FAILURE_MESSAGE_NULL);
     findElement();
-    MobileElement targetElement = (MobileElement) getElement();
+    WebElement targetElement = (WebElement) getElement();
     Assert.isTrue(targetElement.isDisplayed(),
       String.format("The Alert` with locator %s:%s is not in displayed on the page",
         getElementSearchCriteria().getFindByType(), getElementSearchCriteria().getByValue()));

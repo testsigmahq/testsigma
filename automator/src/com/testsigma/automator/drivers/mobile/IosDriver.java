@@ -46,6 +46,6 @@ public class IosDriver extends MobileDriver {
 
   @Override
   protected void createDriverInstance(DesiredCapabilities desiredCapabilities) throws AutomatorException {
-    remoteWebDriver = new IOSDriver<>(getRemoteServerURL(), desiredCapabilities);
+    remoteWebDriver = new IOSDriver(getRemoteServerURL(), desiredCapabilities);
   }
 }

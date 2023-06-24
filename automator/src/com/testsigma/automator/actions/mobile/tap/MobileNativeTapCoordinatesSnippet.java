@@ -11,10 +11,18 @@ package com.testsigma.automator.actions.mobile.tap;
 
 import com.testsigma.automator.actions.constants.ErrorCodes;
 import com.testsigma.automator.actions.mobile.MobileElementAction;
-import io.appium.java_client.TouchAction;
-import io.appium.java_client.touch.offset.PointOption;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.InvalidArgumentException;
+import org.openqa.selenium.interactions.Pause;
+import org.openqa.selenium.interactions.PointerInput;
+import org.openqa.selenium.interactions.Sequence;
+
+import java.util.Arrays;
+
+import static java.time.Duration.ofMillis;
+import static org.openqa.selenium.interactions.PointerInput.Kind.TOUCH;
+import static org.openqa.selenium.interactions.PointerInput.MouseButton.LEFT;
+import static org.openqa.selenium.interactions.PointerInput.Origin.viewport;
 
 @Log4j2
 public class MobileNativeTapCoordinatesSnippet extends MobileElementAction {
@@ -26,7 +34,13 @@ public class MobileNativeTapCoordinatesSnippet extends MobileElementAction {
     String[] splitCoordiantes = getTestData().split(",");
     int x = Integer.parseInt(splitCoordiantes[0]);
     int y = Integer.parseInt(splitCoordiantes[1]);
-    new TouchAction(getDriver()).tap(PointOption.point(x, y)).perform();
+    PointerInput pointer = new PointerInput(TOUCH, "finger");
+    Sequence tap = new Sequence(pointer, 1)
+            .addAction(pointer.createPointerMove(ofMillis(0), viewport(), x, y))
+            .addAction(pointer.createPointerDown(LEFT.asArg()))
+            .addAction(new Pause(pointer, ofMillis(2)))
+            .addAction(pointer.createPointerUp(LEFT.asArg()));
+    getDriver().perform(Arrays.asList(tap));
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 

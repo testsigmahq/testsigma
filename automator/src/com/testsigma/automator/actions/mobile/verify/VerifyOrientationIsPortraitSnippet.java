@@ -12,6 +12,7 @@ package com.testsigma.automator.actions.mobile.verify;
 import com.testsigma.automator.actions.mobile.MobileDriverAction;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.ScreenOrientation;
+import org.openqa.selenium.remote.DriverCommand;
 import org.springframework.util.Assert;
 
 @Log4j2
@@ -23,8 +24,8 @@ public class VerifyOrientationIsPortraitSnippet extends MobileDriverAction {
 
   @Override
   public void execute() throws Exception {
-    ScreenOrientation orientation = getDriver().getOrientation();
-    Assert.isTrue(orientation.equals(ScreenOrientation.PORTRAIT), String.format(SCREEN_NOT_PORTRAIT, orientation));
+    String orientation = getDriver().execute(DriverCommand.GET_SCREEN_ORIENTATION).getValue().toString();
+    Assert.isTrue(orientation.equalsIgnoreCase(ScreenOrientation.PORTRAIT.toString()), String.format(SCREEN_NOT_PORTRAIT, orientation));
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 }

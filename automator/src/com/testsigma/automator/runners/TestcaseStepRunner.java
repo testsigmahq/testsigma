@@ -12,7 +12,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.testsigma.automator.constants.EnvSettingsConstants;
 import com.testsigma.automator.constants.NaturalTextActionConstants;
 import com.testsigma.automator.constants.AutomatorMessages;
-import com.testsigma.automator.constants.TestStepConditionType;
 import com.testsigma.automator.drivers.DriverManager;
 import com.testsigma.automator.entity.*;
 import com.testsigma.automator.exceptions.AutomatorException;
@@ -666,6 +665,9 @@ public abstract class TestcaseStepRunner {
       } else if (testcaseStep.getAction() != null && testcaseStep.getAction().toLowerCase()
         .contains(AutomatorMessages.KEYWORD_SCREENSHOT.toLowerCase())) {
         screenshotType = 2;
+      } else if (testcaseStep.getAction() != null && testcaseStep.getAction().toLowerCase()
+              .contains(AutomatorMessages.KEYWORD_ELEMENT_SCREENSHOT.toLowerCase())) {
+        screenshotType = 3;
       }
 
       if (Arrays.asList(SKIP_SCREENSHOT_KEYWORDS).contains(testcaseStep.getAction())) {
@@ -684,13 +686,18 @@ public abstract class TestcaseStepRunner {
 
       switch (workspaceType) {
         case WebApplication:
+          if (screenshotType == 3) {
+            screenCaptureUtil.takeElementScreenShot(driver, testcaseStep, localFolderPath, screenshotS3URL);
+          }
         case MobileWeb:
           if (screenshotType == 1) {
             screenCaptureUtil.screenShotWithURL(localFolderPath, screenshotS3URL, driver);
 
           } else if (screenshotType == 2) {
             screenCaptureUtil.fullPageScreenshotWithURL(localFolderPath, screenshotS3URL, driver);
-          } else {
+          } else if (screenshotType == 3) {
+          screenCaptureUtil.takeElementScreenShot(driver, testcaseStep, localFolderPath, screenshotS3URL);
+        } else {
             screenCaptureUtil.takeScreenShot(driver, localFolderPath, screenshotS3URL);
           }
           break;

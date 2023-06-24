@@ -25,21 +25,21 @@ public class HybridDriverSettingsService extends DriverSettingsService {
 
   @Override
   public WebDriverSettingsDTO driverSettings(TestDevice testDevice, WorkspaceType workspaceType,
-                                             TestPlanLabType testPlanLabType,
+                                             TestPlanLabType testPlanLabType,TestPlanResult testPlanResult,
                                              Integrations integrations,
                                              WebApplicationContext webApplicationContext)
     throws IOException, TestsigmaException, SQLException {
     WebDriverSettingsDTO webDriverSettings = new WebDriverSettingsDTO();
     List<WebDriverCapability> webDriverCapabilities = getCapabilities(testDevice, workspaceType,
-        testPlanLabType, integrations, webApplicationContext);
+        testPlanLabType, testPlanResult, integrations, webApplicationContext);
     webDriverSettings.setWebDriverCapabilities(webDriverCapabilities);
-    setApplicationSpecificCapabilities(testDevice, workspaceType, integrations, webDriverSettings);
+    setApplicationSpecificCapabilities(testDevice, workspaceType, testPlanResult, integrations, webDriverSettings);
     webDriverSettings.setWebDriverServerUrl(getRemoteDriverUrl(LOCAL_HOST_URL, integrations));
     return webDriverSettings;
   }
 
   @Override
-  public void setMobileCapabilities(TestDevice testDevice, WorkspaceType workspaceType,
+  public void setMobileCapabilities(TestDevice testDevice, WorkspaceType workspaceType, TestPlanResult testPlanResult,
                                     Integrations integrations,
                                     WebDriverSettingsDTO webDriverSettings)
     throws TestsigmaException, MalformedURLException {
@@ -67,7 +67,7 @@ public class HybridDriverSettingsService extends DriverSettingsService {
   }
 
   @Override
-  public void setWebCapabilities(TestDevice testDevice,
+  public void setWebCapabilities(TestDevice testDevice, TestPlanResult testPlanResult,
                                  Integrations integrations,
                                  WebDriverSettingsDTO webDriverSettings) throws MalformedURLException {
   }

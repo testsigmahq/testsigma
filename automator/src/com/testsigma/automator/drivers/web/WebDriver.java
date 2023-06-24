@@ -18,8 +18,10 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.net.MalformedURLException;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -34,7 +36,12 @@ public class WebDriver extends TestsigmaDriver {
 
   public WebDriver() {
     super();
+    if(executionLabType == ExecutionLabType.Hybrid) {
+      setupWebDriverManager();
+    }
   }
+
+  protected void setupWebDriverManager() {};
 
   @Override
   protected void setCapabilities() throws AutomatorException, MalformedURLException {
@@ -50,7 +57,6 @@ public class WebDriver extends TestsigmaDriver {
   @Override
   protected void setCommonCapabilities() throws AutomatorException {
     super.setCommonCapabilities();
-    capabilities.add(new WebDriverCapability(TSCapabilityType.NAME, executionName));
     capabilities.add(new WebDriverCapability(TSCapabilityType.ACCEPT_SSL_CERTS, Boolean.TRUE));
     capabilities.add(new WebDriverCapability(TSCapabilityType.UNHANDLED_PROMPT_BEHAVIOUR_KEY, TSCapabilityType.UNHANDLED_PROMPT_BEHAVIOUR_VALUE));
   }
@@ -64,6 +70,9 @@ public class WebDriver extends TestsigmaDriver {
   @Override
   protected void setHybridCapabilities() throws AutomatorException, MalformedURLException {
     super.setHybridCapabilities();
+    Map<String, Object> testsigmaOptions = new HashMap<>();
+    testsigmaOptions.put(TSCapabilityType.NAME, settings.getExecutionName());
+    capabilities.add(new WebDriverCapability(TSCapabilityType.TESTSIGMA_LAB_OPTIONS, testsigmaOptions));
   }
 
   protected void setBrowserSpecificCapabilities(List<WebDriverCapability> additionalCapabilitiesList)
@@ -135,4 +144,5 @@ public class WebDriver extends TestsigmaDriver {
     String userAgent = (String) remoteWebDriver.executeScript("return navigator.userAgent;");
     return userAgent.substring(userAgent.indexOf("Version") + 8, userAgent.indexOf("Safari") - 1);
   }
+
 }

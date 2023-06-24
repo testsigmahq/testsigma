@@ -18,7 +18,7 @@ public class MobileNativeHideSnippet extends MobileElementAction {
 
   @Override
   public void execute() throws Exception {
-    getDriver().hideKeyboard();
+    getDriver().execute("hideKeyboard");
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 }

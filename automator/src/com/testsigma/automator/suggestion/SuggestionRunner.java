@@ -14,6 +14,7 @@ import com.testsigma.automator.utilities.RuntimeDataProvider;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.ObjectUtils;
 
+import java.time.Duration;
 import java.util.*;
 
 @Log4j2
@@ -100,7 +101,7 @@ public class SuggestionRunner {
     //convertTestStepDataToNewFormat(testCaseStepEntity);
     snippet.setDriver(DriverManager.getRemoteWebDriver());
     //  snippet.setTimeout(testCaseStepEntity.getWaitTime().longValue());
-    snippet.setTimeout(0l);
+    snippet.setTimeout(Duration.ofSeconds(0l));
     SuggestionAction.setTestCaseStepEntity(testCaseStepEntity);
     snippet.setTestDataPropertiesEntityMap(testCaseStepEntity.getTestDataMap());
     snippet.setElementPropertiesEntityMap(testCaseStepEntity.getElementsMap());

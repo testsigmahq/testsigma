@@ -36,9 +36,12 @@ public class WebDriverSettingsService {
   private final TestDeviceResultService testDeviceResultService;
   private final TestDeviceService testDeviceService;
 
+  private final TestPlanResultService testPlanResultService;
+
   public WebDriverSettingsDTO getWebDriverSettings(WebDriverSettingsRequest webDriverSettingsRequest) throws SQLException,
     TestsigmaException, IOException {
     TestDevice testDevice = new TestDevice();
+    TestPlanResult testPlanResult = new TestPlanResult();
     WorkspaceType workspaceType = webDriverSettingsRequest.getWorkspaceType();
 
     MobileInspection mobileInspection = this.mobileInspectionService.find(webDriverSettingsRequest.getMobileSessionId());
@@ -63,7 +66,7 @@ public class WebDriverSettingsService {
     testDevice.setDeviceId(mobileInspection.getAgentDeviceId());
 
     WebDriverSettingsDTO webDriverSettingsDTO = getDriverCapabilities(testDevice, workspaceType,
-      webDriverSettingsRequest.getExecutionLabType());
+      webDriverSettingsRequest.getExecutionLabType(), testPlanResult);
 
     List<Capability> capabilitiesSettings = mobileInspection.getCapabilities();
     List<WebDriverCapability> desiredCapabilities = new ArrayList<>();
@@ -77,11 +80,11 @@ public class WebDriverSettingsService {
   }
 
   public WebDriverSettingsDTO getDriverCapabilities(TestDevice testDevice,
-                                                    WorkspaceType workspaceType, TestPlanLabType testPlanLabType)
+                                                    WorkspaceType workspaceType, TestPlanLabType testPlanLabType,TestPlanResult testPlanResult)
     throws SQLException, TestsigmaException, IOException {
     DriverSettingsServiceFactory driverSettingsServiceFactory = new DriverSettingsServiceFactory(webApplicationContext);
     DriverSettingsService driverSettingsService = driverSettingsServiceFactory.driverSettingsService(testPlanLabType);
-    return driverSettingsService.driverSettings(testDevice, workspaceType, testPlanLabType,
+    return driverSettingsService.driverSettings(testDevice, workspaceType, testPlanLabType, testPlanResult,
       driverSettingsService.getLabDetails(), webApplicationContext);
   }
 
@@ -92,6 +95,7 @@ public class WebDriverSettingsService {
       .getWorkspaceVersion().getWorkspace().getWorkspaceType();
     TestPlanLabType testPlanLabType = testDeviceResult.getTestDevice()
       .getTestPlanLabType();
-    return getDriverCapabilities(testDevice, workspaceType, testPlanLabType);
+    TestPlanResult testPlanResult = testPlanResultService.find(testDeviceResult.getTestPlanResultId());
+    return getDriverCapabilities(testDevice, workspaceType, testPlanLabType, testPlanResult);
   }
 }

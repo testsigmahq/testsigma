@@ -675,6 +675,7 @@
   "mobile_recorder.message.preparing": "<span class=\"text-center\"> Please wait <br>while the Testsigma Mobile Inspector finishes loading <span class=\"loading-dots\"></span></span>",
   "mobile_recorder.message.refresh": "Loading. Please wait...",
   "mobile_recorder.message.error": "Error, please contact support",
+  "mobile_recorder.message.session.error": "Error while creating mobile inspector session",
   "mobile_recorder.message.ipa.error": "Select iOS ipa file type based on execution on simulator or real device",
   "mobile_recorder.message.incompatible.error": "Incompatible app and device architecture",
   "mobile_recorder.notification.start.failure_troubleshoot": "Mobile inspector Failed to Load, please <a href='https://testsigma.com/docs/troubleshooting/mobile-apps/failed-to-launch-test-recorder/' target='_blank'>Click Here</a> to access the Trouble Shooting guide to understand how to fix this",

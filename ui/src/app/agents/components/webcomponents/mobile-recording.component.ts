@@ -215,7 +215,7 @@ export class MobileRecordingComponent extends BaseComponent implements OnInit {
           this.mobileSessionId = null;
         }
         console.log("Error while creating the session - ", error);
-        this.showNotification(NotificationType.Error, this.translate.instant("mobile_recorder.message.error"));
+        this.showNotification(NotificationType.Error, this.translate.instant("mobile_recorder.message.session.error"));
         this.loadingActions = false;
         this.loading = false;
       }

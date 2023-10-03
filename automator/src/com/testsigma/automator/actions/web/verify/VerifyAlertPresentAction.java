@@ -17,7 +17,7 @@ public class VerifyAlertPresentAction extends MobileElementAction {
   public void execute() throws Exception {
     WebDriverWait waiter = new WebDriverWait(getDriver(), Duration.ofSeconds(30));
     Alert alert = waiter.until(ExpectedConditions.alertIsPresent());
-    Assert.isTrue(alert != null, ALERT_VERIFICATION_FAILURE);
+    Assert.notNull(alert, ALERT_VERIFICATION_FAILURE);
     setSuccessMessage(SUCCESS_MESSAGE);
   }
 }

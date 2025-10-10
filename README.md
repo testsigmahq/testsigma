@@ -25,16 +25,29 @@
 &emsp;
 
 ## Overview
-Testsigma is an open-source, extensible test automation platform that works out of the box. Rapidly(5X faster) automate web, mobile app, and API tests in plain English. 
-  
-  - Eliminate complex setups, multiple tools and frameworks.
-  - Let everyone write tests 5X faster using plain English. 
-  - Smart test recorder auto-converts user actions into editable steps.
-  - Automate end-to-end testing for web, mobile apps & APIs.
-  - Minimal to no maintenance of tests and frameworks
-  - Built-in test data management for parameterized testing
-  - Seamless integrations with CI/CD, bug reporting, product management tools, & collaboration tools & test labs for continuous testing.
-  - Extend the platform with 100+ pre-built add-ons (for custom actions, data generators, integrations) or build your own with Testsigma SDKs.
+AI-Driven Test Automation & Agentic Testing Platform
+Testsigma is a low-code, AI-powered test automation platform designed to empower development and QA teams to build, execute, analyze, and maintain tests more intelligently and efficiently in plain English.
+Unlike traditional or open-source frameworks, Testsigma provides built-in AI agents that simplify and accelerate every stage of the testing lifecycle, from creation to optimization.
+With a low-code, natural language interface, anyone in your team - QA engineers, developers, or product managers can contribute to test automation without writing complex scripts.
+Testsigma integrates seamlessly with your CI/CD pipelines and cloud infrastructure, enabling continuous testing at scale.
+
+**Highlights**
+
+- AI Agents for test generation, execution, and maintenance
+- Low-code authoring in natural language
+- Unified testing for Web, Mobile, API, and AI
+- Intelligent test healing and analytics
+- Cloud-first, scalable execution
+- Enterprise-grade security, collaboration, and integrations
+
+**Why Testsigma**
+
+- Agentic, not just automated - Uses AI “agents” (Generator, Runner, Analyzer, Healer, Optimizer) to proactively assist in test creation, maintenance, execution, analysis, and optimization
+- Low-code / Natural Language - Users can author tests using English-like sentences or minimal scripting, dramatically lowering the barrier for test automation
+- Unified Across Layers - Supports Web, Mobile, API, ERP (e.g. Salesforce, SAP) testing from a single platform
+- CI/CD & DevOps Friendly - Integrates seamlessly with popular CI/CD pipelines for continuous testing
+- Scalable & Cloud-First - Deploys as a cloud-native SaaS solution, enabling parallel execution across multiple browsers/devices
+- Intelligent Maintenance - Automatic test healing and optimization reduce long-term costs of flaky tests
 
 
 [![Testsigma Overview](https://docs.testsigma.com/images/github/banner-video.png)](https://docs.testsigma.com/videos/testsigma-overview.mp4)
@@ -66,29 +79,18 @@ We have 2 more deployment options to choose from
 
 ## **Features**
 
-#### Test Development
-- Write code-agnostic, human-readable tests in plain English.
-- Generate airtight test scripts for web and mobile apps using Test Recorder.
-- Integrate automated API calls within your functional/UI test steps.
-
-#### Data-Driven/Parameterized Testing
-- Upload test data sets as (XLS) files or create within Testsigma.
-- Use built-in data generators for mock test data.
-- Create your own custom data generators as add-ons.
-
-#### Results & Reports
-- Debug using screenshots, videos, text logs, and more. 
-- Generate custom reports at test, module, test suite, and device/system levels. 
-
-#### Integrations
-- Integrate with any CI tool to run regression tests at every build.
-- Integrate with Collaboration tools,  Bug Reporting tools, Product Management tools, Cloud based Test Labs
-
 #### Unified Platform
 - Automate Web, Mobile Web, Android, iOS apps, and API testing using one platform
 
-#### Visual Testing
-- Enable visual testing with a toggle while creating a test plan.
+**Generator Agent** - Automatically generates test scenarios based on requirements, UI, or APIs
+**Runner Agent** - Executes tests across hundreds or thousands of parallel sessions to speed up validation
+**Analyzer Agent** - Diagnoses test failures, highlights root causes, and recommends fixes
+**Healer / Maintenance Agent** - Detects and auto-adapts to UI changes, minimizing manual repair effort
+**Optimizer Agent** - Suggests test suite pruning, prioritization, and coverage improvements
+**Cross-Platform Support** - Web, mobile (iOS/Android), API, desktop, and ERP systems
+**Reporting & Analytics** - Dashboards, traceability, metrics, and failure insights
+**CI/CD & Tooling Integrations** - Works with Jenkins, GitHub Actions, GitLab CI, Azure DevOps, etc.
+**Role-Based Access & Collaboration** - Teams can share test assets, version control, audit logs
 
 [See more on our website](https://testsigma.com)
 

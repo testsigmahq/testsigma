@@ -34,15 +34,23 @@ Testsigma is headquartered in San Francisco with engineering teams in Bangalore 
 
 **Features**
 
-**Generator Agent** - Automatically generates test scenarios based on requirements, UI, or APIs
-**Runner Agent** - Executes tests across hundreds or thousands of parallel sessions to speed up validation
-**Analyzer Agent** - Diagnoses test failures, highlights root causes, and recommends fixes
-**Healer / Maintenance Agent** - Detects and auto-adapts to UI changes, minimizing manual repair effort
-**Optimizer Agent** - Suggests test suite pruning, prioritization, and coverage improvements
-**Cross-Platform Support** - Web, mobile (iOS/Android), API, desktop, and ERP systems
-**Reporting & Analytics** - Dashboards, traceability, metrics, and failure insights
-**CI/CD & Tooling Integrations** - Works with Jenkins, GitHub Actions, GitLab CI, Azure DevOps, etc.
-**Role-Based Access & Collaboration** - Teams can share test assets, version control, audit logs
+ - **Generator Agent** - Automatically generates test scenarios based on requirements, UI, or APIs
+
+ - **Runner Agent** - Executes tests across hundreds or thousands of parallel sessions to speed up validation
+
+ - **Analyzer Agent** - Diagnoses test failures, highlights root causes, and recommends fixes
+
+ - **Healer / Maintenance Agent** - Detects and auto-adapts to UI changes, minimizing manual repair effort
+
+ - **Optimizer Agent** - Suggests test suite pruning, prioritization, and coverage improvements
+
+ - **Cross-Platform Support** - Web, mobile (iOS/Android), API, desktop, and ERP systems
+
+ - **Reporting & Analytics** - Dashboards, traceability, metrics, and failure insights
+
+ - **CI/CD & Tooling Integrations** - Works with Jenkins, GitHub Actions, GitLab CI, Azure DevOps, etc.
+
+ - **Role-Based Access & Collaboration** - Teams can share test assets, version control, audit logs
 
 
 

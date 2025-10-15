@@ -5,7 +5,7 @@
 
 
 
-<a href="https://testsigma.com/signup?utm_source=github&utm_medium=social">![testsigma-os-banner](https://docs.testsigma.com/images/github/testsigma-opensource-banner-new.png)</a>
+<a href="https://testsigma.com/signup?utm_source=github&utm_medium=social">![testsigma-os-banner](https://s3.amazonaws.com/blog-assets-production.testsigma.com/blogs/wp-content/uploads/2025/10/14220457/image-28-1-1.png)</a>
 
 <p align="center">
   <a href="https://testsigma.com/signup?utm_source=github&utm_medium=social" target="_bank">Getting started</a>
@@ -25,16 +25,33 @@
 &emsp;
 
 ## Overview
-Testsigma is an open-source, extensible test automation platform that works out of the box. Rapidly(5X faster) automate web, mobile app, and API tests in plain English. 
-  
-  - Eliminate complex setups, multiple tools and frameworks.
-  - Let everyone write tests 5X faster using plain English. 
-  - Smart test recorder auto-converts user actions into editable steps.
-  - Automate end-to-end testing for web, mobile apps & APIs.
-  - Minimal to no maintenance of tests and frameworks
-  - Built-in test data management for parameterized testing
-  - Seamless integrations with CI/CD, bug reporting, product management tools, & collaboration tools & test labs for continuous testing.
-  - Extend the platform with 100+ pre-built add-ons (for custom actions, data generators, integrations) or build your own with Testsigma SDKs.
+Testsigma is a GenAI-powered, codeless test automation platform that makes it fast and easy for quality engineering teams to automate tests at speed and scale without dependence on developers to build and maintain traditional test frameworks. 
+With Testsigma Copilot and Atto built into its codeless automation platform, Testsigma lets QA teams generate test cases and scenarios based on various input sources like user stories, designs, user journeys and even live applications across web, mobile, desktop and enterprise applications like Salesforce and SAP using prompt engineering.
+Requiring near-zero initial setup cost and training time, Testsigma enables anyone in the QA team to instantly write automated tests 10X faster using Testsigma Copilot and run them on thousands of devices available on the public cloud or your own private cloud. Put your test maintenance on autopilot mode using Testsigma’s AI-driven self-healing, thus reducing maintenance time and effort by 90%.
+Testsigma integrates natively with more than 30 popular tools and technologies used by QA teams, including CI/CD, bug reporting, real device labs, project management and collaboration tools.
+Hundreds of leading enterprises across the world use Testsigma to release quality software. Some notable customers of Testsigma include Cisco, Samsung, KFC, Nestle, and Zeiss.
+Testsigma is headquartered in San Francisco with engineering teams in Bangalore and Chennai. Testsigma is backed by marquee investors like MassMutual, Accel, Strive, and Bold Cap.
+
+**Features**
+
+ - **Generator Agent** - Automatically generates test scenarios based on requirements, UI, or APIs
+
+ - **Runner Agent** - Executes tests across hundreds or thousands of parallel sessions to speed up validation
+
+ - **Analyzer Agent** - Diagnoses test failures, highlights root causes, and recommends fixes
+
+ - **Healer / Maintenance Agent** - Detects and auto-adapts to UI changes, minimizing manual repair effort
+
+ - **Optimizer Agent** - Suggests test suite pruning, prioritization, and coverage improvements
+
+ - **Cross-Platform Support** - Web, mobile (iOS/Android), API, desktop, and ERP systems
+
+ - **Reporting & Analytics** - Dashboards, traceability, metrics, and failure insights
+
+ - **CI/CD & Tooling Integrations** - Works with Jenkins, GitHub Actions, GitLab CI, Azure DevOps, etc.
+
+ - **Role-Based Access & Collaboration** - Teams can share test assets, version control, audit logs
+
 
 
 [![Testsigma Overview](https://docs.testsigma.com/images/github/banner-video.png)](https://docs.testsigma.com/videos/testsigma-overview.mp4)
@@ -66,29 +83,18 @@ We have 2 more deployment options to choose from
 
 ## **Features**
 
-#### Test Development
-- Write code-agnostic, human-readable tests in plain English.
-- Generate airtight test scripts for web and mobile apps using Test Recorder.
-- Integrate automated API calls within your functional/UI test steps.
-
-#### Data-Driven/Parameterized Testing
-- Upload test data sets as (XLS) files or create within Testsigma.
-- Use built-in data generators for mock test data.
-- Create your own custom data generators as add-ons.
-
-#### Results & Reports
-- Debug using screenshots, videos, text logs, and more. 
-- Generate custom reports at test, module, test suite, and device/system levels. 
-
-#### Integrations
-- Integrate with any CI tool to run regression tests at every build.
-- Integrate with Collaboration tools,  Bug Reporting tools, Product Management tools, Cloud based Test Labs
-
 #### Unified Platform
 - Automate Web, Mobile Web, Android, iOS apps, and API testing using one platform
 
-#### Visual Testing
-- Enable visual testing with a toggle while creating a test plan.
+**Generator Agent** - Automatically generates test scenarios based on requirements, UI, or APIs
+**Runner Agent** - Executes tests across hundreds or thousands of parallel sessions to speed up validation
+**Analyzer Agent** - Diagnoses test failures, highlights root causes, and recommends fixes
+**Healer / Maintenance Agent** - Detects and auto-adapts to UI changes, minimizing manual repair effort
+**Optimizer Agent** - Suggests test suite pruning, prioritization, and coverage improvements
+**Cross-Platform Support** - Web, mobile (iOS/Android), API, desktop, and ERP systems
+**Reporting & Analytics** - Dashboards, traceability, metrics, and failure insights
+**CI/CD & Tooling Integrations** - Works with Jenkins, GitHub Actions, GitLab CI, Azure DevOps, etc.
+**Role-Based Access & Collaboration** - Teams can share test assets, version control, audit logs
 
 [See more on our website](https://testsigma.com)
 

@@ -12,6 +12,9 @@ on:
       buildVersion:
         description: 'Build Version'
         required: true
+permissions:
+  id-token: write
+  contents: write
 jobs:
   Build:
     runs-on: ubuntu-latest
@@ -21,15 +24,24 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '11'
+          
+      - name: Set AWS environment
+        run: |
+          echo "AWS_DEFAULT_REGION=us-east-1" >> $GITHUB_ENV
+          echo "AWS_DEFAULT_OUTPUT=json" >> $GITHUB_ENV
+          echo "AWS_ROLE_ARN=${{ secrets.STAGE_AWS_GITHUB_OIDC_ROLE_ARN }}" >> $GITHUB_ENV
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
       - name: Downloading Packages
         run: |
           mkdir $HOME/.testsigma_os
           aws s3 cp s3://hybrid-staging.testsigma.com/testsigma_os $HOME/.testsigma_os --recursive
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: 'us-east-1'
-          AWS_DEFAULT_OUTPUT: json
+          
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
         
@@ -50,8 +62,3 @@ jobs:
           if [[ "${{ github.event.inputs.buildType }}" == "Release" ]]; then
             bash deploy/docker/build.sh --DOCKER_VERSION=v${{ github.event.inputs.buildVersion }}-m1 --AGENT_TAG=v${{ github.event.inputs.buildVersion }} --IMAGE_NAME=server
           fi
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: 'us-east-1'
-          AWS_DEFAULT_OUTPUT: json
